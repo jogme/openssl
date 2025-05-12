@@ -26,8 +26,11 @@ RUN git clone --depth 1 https://github.com/ngtcp2/nghttp3.git && \
     rm -rf /nghttp3
 
 # download and build openssl 
-RUN git clone --depth 1 -b $OPENSSL_BRANCH $OPENSSL_URL && \
-    cd openssl && \
+#RUN git clone --depth 1 -b $OPENSSL_BRANCH $OPENSSL_URL && \
+#    cd openssl && \
+RUN mkdir /openssl
+COPY . /openssl
+RUN cd /openssl && \
     ./Configure enable-sslkeylog enable-fips enable-demos enable-h3demo enable-hqinterop disable-docs --prefix=/usr --openssldir=/etc/pki/tls && \
     make -j 4 && make install && cp test/quic-openssl-docker/hq-interop/quic-hq-interop /usr/local/bin && \
     cp test/quic-openssl-docker/hq-interop/quic-hq-interop-server /usr/local/bin && \
@@ -43,8 +46,7 @@ RUN git clone --depth 1 https://github.com/curl/curl.git && \
     rm -rf /curl
 
 # copy run script and run it
-COPY run_endpoint.sh .
+COPY test/quic-openssl-docker/run_endpoint.sh .
 RUN chmod +x run_endpoint.sh
 RUN apt-get clean
 ENTRYPOINT [ "./run_endpoint.sh" ]
-
