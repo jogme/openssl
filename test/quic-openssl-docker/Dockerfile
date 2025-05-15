@@ -39,8 +39,9 @@ RUN cd /openssl && \
     rm -rf /openssl
 
 # Build curl
-RUN git clone --depth 1 https://github.com/curl/curl.git && \
+RUN git clone --depth 100 https://github.com/curl/curl.git && \
     cd curl && \
+    git checkout 838dc53bb7bf52039b23af0e9ccffa51cf9ad7d0 && \
     autoreconf -fi && ./configure --with-openssl-quic --with-openssl --with-nghttp3 --prefix=/usr && \
     make -j 4 && \
     make install && \
