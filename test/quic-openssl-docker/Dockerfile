@@ -16,8 +16,9 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /
 
 # build nghttp3
-RUN git clone --depth 1 https://github.com/ngtcp2/nghttp3.git && \
+RUN git clone --depth 3 https://github.com/ngtcp2/nghttp3.git && \
     cd nghttp3 && \
+    git checkout 191bff055277a826acbf7e42203e4c9bfddfb4f2 && \
     git submodule update --init && \
     autoreconf -i && \
     ./configure --prefix=/usr && \
