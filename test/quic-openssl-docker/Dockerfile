@@ -32,6 +32,7 @@ RUN git clone --depth 3 https://github.com/ngtcp2/nghttp3.git && \
 RUN mkdir /openssl
 COPY . /openssl
 RUN cd /openssl && \
+    git checkout 995e9489e62ff1965553c4e127183565ccfe4265 && \
     ./Configure enable-sslkeylog enable-fips enable-demos enable-h3demo enable-hqinterop disable-docs --prefix=/usr --openssldir=/etc/pki/tls && \
     make -j 4 && make install && cp test/quic-openssl-docker/hq-interop/quic-hq-interop /usr/local/bin && \
     cp test/quic-openssl-docker/hq-interop/quic-hq-interop-server /usr/local/bin && \
