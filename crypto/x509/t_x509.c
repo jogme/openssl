@@ -287,7 +287,9 @@ int X509_signature_dump(BIO *bp, const ASN1_STRING *sig, int indent)
 int X509_signature_print(BIO *bp, const X509_ALGOR *sigalg,
                          const ASN1_STRING *sig)
 {
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     int sig_nid;
+#endif
     int indent = 4;
     if (BIO_printf(bp, "%*sSignature Algorithm: ", indent, "") <= 0)
         return 0;
@@ -296,8 +298,8 @@ int X509_signature_print(BIO *bp, const X509_ALGOR *sigalg,
 
     if (sig && BIO_printf(bp, "\n%*sSignature Value:", indent, "") <= 0)
         return 0;
-    sig_nid = OBJ_obj2nid(sigalg->algorithm);
 #ifndef OPENSSL_NO_DEPRECATED_3_6
+    sig_nid = OBJ_obj2nid(sigalg->algorithm);
     if (sig_nid != NID_undef) {
         int pkey_nid, dig_nid;
         const EVP_PKEY_ASN1_METHOD *ameth;

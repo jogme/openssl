@@ -1023,12 +1023,11 @@ DH *EVP_PKEY_get1_DH(EVP_PKEY *pkey)
 }
 # endif
 
+// TODO
 int EVP_PKEY_type(int type)
 {
-    int ret;
-# ifndef OPENSSL_NO_ENGINE
+    int ret = NID_undef;
     ENGINE *e;
-# endif
 # ifndef OPENSSL_NO_DEPRECATED_3_6
     const EVP_PKEY_ASN1_METHOD *ameth;
     ameth = EVP_PKEY_asn1_find(&e, type);
@@ -1036,15 +1035,6 @@ int EVP_PKEY_type(int type)
         ret = ameth->pkey_id;
     else
         ret = NID_undef;
-# else
-    const char *algname = OBJ_nid2sn(type);
-    if (algname != NULL) {
-        EVP_KEYMGMT *keymgmt = EVP_KEYMGMT_fetch(NULL, algname, NULL);
-        if (keymgmt != NULL) {
-            ret = type;
-            EVP_KEYMGMT_free(keymgmt);
-        }
-    }
 # endif
 # ifndef OPENSSL_NO_ENGINE
     ENGINE_finish(e);

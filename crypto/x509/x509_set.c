@@ -214,7 +214,9 @@ static int x509_sig_info_init(X509_SIG_INFO *siginf, const X509_ALGOR *alg,
 {
     int pknid, mdnid, md_size;
     const EVP_MD *md;
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     const EVP_PKEY_ASN1_METHOD *ameth;
+#endif
 
     siginf->mdnid = NID_undef;
     siginf->pknid = NID_undef;

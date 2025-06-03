@@ -275,11 +275,12 @@ static const SSL_CIPHER cipher_aliases[] = {
 
 };
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 /*
  * Search for public key algorithm with given name and return its pkey_id if
  * it is available. Otherwise return 0
  */
-#ifdef OPENSSL_NO_ENGINE
+# ifdef OPENSSL_NO_ENGINE
 
 static int get_optional_pkey_id(const char *pkey_name)
 {
@@ -292,9 +293,8 @@ static int get_optional_pkey_id(const char *pkey_name)
     return 0;
 }
 
-#else
+# else
 
-# ifndef OPENSSL_NO_DEPRECATED_3_6
 static int get_optional_pkey_id(const char *pkey_name)
 {
     const EVP_PKEY_ASN1_METHOD *ameth;
@@ -310,7 +310,6 @@ static int get_optional_pkey_id(const char *pkey_name)
     return pkey_id;
 }
 # endif
-
 #endif
 
 int ssl_load_ciphers(SSL_CTX *ctx)
