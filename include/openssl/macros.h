@@ -169,6 +169,7 @@
  * 'no-deprecated'.
  */
 
+# undef OPENSSL_NO_DEPRECATED_3_6
 # undef OPENSSL_NO_DEPRECATED_3_4
 # undef OPENSSL_NO_DEPRECATED_3_1
 # undef OPENSSL_NO_DEPRECATED_3_0
