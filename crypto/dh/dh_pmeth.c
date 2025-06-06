@@ -11,7 +11,7 @@
  * DH & DSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include "internal/cryptlib.h"
@@ -24,6 +24,7 @@
 #include <openssl/objects.h>
 #include "crypto/evp.h"
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 /* DH pkey context structure */
 
 typedef struct {
@@ -536,3 +537,4 @@ const EVP_PKEY_METHOD *ossl_dhx_pkey_method(void)
 {
     return &dhx_pkey_meth;
 }
+#endif

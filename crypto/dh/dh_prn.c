@@ -11,14 +11,14 @@
  * DH low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include "internal/cryptlib.h"
 #include <openssl/evp.h>
 #include <openssl/dh.h>
 
-#ifndef OPENSSL_NO_STDIO
+#if !defined(OPENSSL_NO_STDIO) && !defined(OPENSSL_NO_DEPRECATED_3_6)
 int DHparams_print_fp(FILE *fp, const DH *x)
 {
     BIO *b;

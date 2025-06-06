@@ -195,6 +195,7 @@ DEFINE_STACK_OF_CONST(EVP_PKEY_METHOD)
 
 void evp_pkey_set_cb_translate(BN_GENCB *cb, EVP_PKEY_CTX *ctx);
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 const EVP_PKEY_METHOD *ossl_dh_pkey_method(void);
 const EVP_PKEY_METHOD *ossl_dhx_pkey_method(void);
 const EVP_PKEY_METHOD *ossl_dsa_pkey_method(void);
@@ -205,6 +206,7 @@ const EVP_PKEY_METHOD *ossl_ed25519_pkey_method(void);
 const EVP_PKEY_METHOD *ossl_ed448_pkey_method(void);
 const EVP_PKEY_METHOD *ossl_rsa_pkey_method(void);
 const EVP_PKEY_METHOD *ossl_rsa_pss_pkey_method(void);
+#endif
 
 struct evp_mac_st {
     OSSL_PROVIDER *prov;
@@ -767,7 +769,9 @@ struct evp_skey_st {
 void openssl_add_all_ciphers_int(void);
 void openssl_add_all_digests_int(void);
 void evp_cleanup_int(void);
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 void evp_app_cleanup_int(void);
+#endif
 void *evp_pkey_export_to_provider(EVP_PKEY *pk, OSSL_LIB_CTX *libctx,
                                   EVP_KEYMGMT **keymgmt,
                                   const char *propquery);
@@ -959,8 +963,10 @@ int evp_pkey_ctx_ctrl_str_to_param(EVP_PKEY_CTX *ctx,
 int evp_pkey_ctx_set_params_to_ctrl(EVP_PKEY_CTX *ctx, const OSSL_PARAM *params);
 int evp_pkey_ctx_get_params_to_ctrl(EVP_PKEY_CTX *ctx, OSSL_PARAM *params);
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 /* This must ONLY be called for legacy EVP_PKEYs */
 int evp_pkey_get_params_to_ctrl(const EVP_PKEY *pkey, OSSL_PARAM *params);
+#endif
 
 /* Same as the public get0 functions but are not const */
 # ifndef OPENSSL_NO_DEPRECATED_3_0

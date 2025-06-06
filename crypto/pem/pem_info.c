@@ -286,10 +286,12 @@ int PEM_X509_INFO_write_bio(BIO *bp, const X509_INFO *xi, EVP_CIPHER *enc,
         } else {
             /* Add DSA/DH */
             /* normal optionally encrypted stuff */
+#ifndef OPENSSL_NO_DEPRECATED_3_6
             if (PEM_write_bio_RSAPrivateKey(bp,
                                             EVP_PKEY_get0_RSA(xi->x_pkey->dec_pkey),
                                             enc, kstr, klen, cb, u) <= 0)
                 goto err;
+#endif
         }
     }
 

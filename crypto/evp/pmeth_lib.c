@@ -11,7 +11,7 @@
  * Low level key APIs (DH etc) are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -48,6 +48,7 @@ static void evp_pkey_ctx_free_all_cached_data(EVP_PKEY_CTX *ctx);
 typedef const EVP_PKEY_METHOD *(*pmeth_fn)(void);
 typedef int sk_cmp_fn_type(const char *const *a, const char *const *b);
 
+# ifndef OPENSSL_NO_DEPRECATED_3_6
 static STACK_OF(EVP_PKEY_METHOD) *app_pkey_methods = NULL;
 
 /* This array needs to be in order of NIDs */
@@ -133,6 +134,7 @@ EVP_PKEY_METHOD *EVP_PKEY_meth_new(int id, int flags)
     pmeth->flags = flags | EVP_PKEY_FLAG_DYNAMIC;
     return pmeth;
 }
+# endif
 #endif /* FIPS_MODULE */
 
 int evp_pkey_ctx_state(const EVP_PKEY_CTX *ctx)
@@ -231,10 +233,12 @@ static EVP_PKEY_CTX *int_ctx_new(OSSL_LIB_CTX *libctx,
         pmeth = ENGINE_get_pkey_meth(e, id);
     else
 # endif /* OPENSSL_NO_ENGINE */
+#  ifndef OPENSSL_NO_DEPRECATED_3_6
     if (pkey != NULL && pkey->foreign)
         pmeth = EVP_PKEY_meth_find(id);
     else
         app_pmeth = pmeth = evp_pkey_meth_find_added_by_application(id);
+#  endif
 
     /* END legacy */
 #endif /* FIPS_MODULE */
@@ -413,6 +417,7 @@ void EVP_PKEY_CTX_free(EVP_PKEY_CTX *ctx)
 
 #ifndef FIPS_MODULE
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 void EVP_PKEY_meth_get0_info(int *ppkey_id, int *pflags,
                              const EVP_PKEY_METHOD *meth)
 {
@@ -439,6 +444,7 @@ void EVP_PKEY_meth_free(EVP_PKEY_METHOD *pmeth)
     if (pmeth && (pmeth->flags & EVP_PKEY_FLAG_DYNAMIC))
         OPENSSL_free(pmeth);
 }
+#endif
 
 EVP_PKEY_CTX *EVP_PKEY_CTX_new(EVP_PKEY *pkey, ENGINE *e)
 {
@@ -575,7 +581,9 @@ EVP_PKEY_CTX *EVP_PKEY_CTX_dup(const EVP_PKEY_CTX *pctx)
         goto err;
     }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     rctx->pmeth = pctx->pmeth;
+#endif
 # ifndef OPENSSL_NO_ENGINE
     rctx->engine = pctx->engine;
 # endif
@@ -609,6 +617,7 @@ err:
     return NULL;
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 int EVP_PKEY_meth_add0(const EVP_PKEY_METHOD *pmeth)
 {
     if (app_pkey_methods == NULL) {
@@ -661,6 +670,7 @@ const EVP_PKEY_METHOD *EVP_PKEY_meth_get0(size_t idx)
         return NULL;
     return sk_EVP_PKEY_METHOD_value(app_pkey_methods, idx);
 }
+#endif
 #endif
 
 int EVP_PKEY_CTX_is_a(EVP_PKEY_CTX *ctx, const char *keytype)

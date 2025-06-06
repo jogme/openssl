@@ -11,7 +11,7 @@
  * low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include <openssl/byteorder.h>
 #include <openssl/core_dispatch.h>
@@ -28,7 +28,9 @@
 #include <openssl/asn1t.h>
 #include "internal/cryptlib.h"   /* ossl_assert() */
 #include "crypto/dh.h"
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 #include "crypto/dsa.h"
+#endif
 #include "crypto/ec.h"
 #include "crypto/evp.h"
 #include "crypto/ecx.h"
@@ -127,6 +129,7 @@ struct der2key_ctx_st {
     unsigned int flag_fatal : 1;
 };
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 typedef void *key_from_pkcs8_t(const PKCS8_PRIV_KEY_INFO *p8inf,
                                OSSL_LIB_CTX *libctx, const char *propq);
 static void *der2key_decode_p8(const unsigned char **input_der,
@@ -148,6 +151,7 @@ static void *der2key_decode_p8(const unsigned char **input_der,
 
     return key;
 }
+#endif
 
 /* ---------------------------------------------------------------------- */
 
@@ -345,7 +349,7 @@ static int der2key_decode(void *vctx, OSSL_CORE_BIO *cin, int selection,
 
         params[0] =
             OSSL_PARAM_construct_int(OSSL_OBJECT_PARAM_TYPE, &object_type);
-
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 #ifndef OPENSSL_NO_SM2
         if (strcmp(ctx->desc->keytype_name, "EC") == 0
             && (EC_KEY_get_flags(key) & EC_FLAG_SM2_RANGE) != 0)
@@ -354,6 +358,7 @@ static int der2key_decode(void *vctx, OSSL_CORE_BIO *cin, int selection,
                                                  "SM2", 0);
         else
 #endif
+#endif        
             params[1] =
                 OSSL_PARAM_construct_utf8_string(OSSL_OBJECT_PARAM_DATA_TYPE,
                                                  (char *)ctx->desc->keytype_name,
@@ -406,6 +411,7 @@ static int der2key_export_object(void *vctx,
 
 /* ---------------------------------------------------------------------- */
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 #ifndef OPENSSL_NO_DH
 # define dh_evp_type                    EVP_PKEY_DH
 # define dh_d2i_private_key             NULL
@@ -515,10 +521,12 @@ static void *ecx_d2i_PKCS8(const unsigned char **der, long der_len,
                              (key_from_pkcs8_t *)ossl_ecx_key_from_pkcs8);
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 D2I_PUBKEY_NOCTX(ed25519, ossl_d2i_ED25519_PUBKEY)
 D2I_PUBKEY_NOCTX(ed448, ossl_d2i_ED448_PUBKEY)
 D2I_PUBKEY_NOCTX(x25519, ossl_d2i_X25519_PUBKEY)
 D2I_PUBKEY_NOCTX(x448, ossl_d2i_X448_PUBKEY)
+#endif
 
 static void ecx_key_adjust(void *key, struct der2key_ctx_st *ctx)
 {
@@ -562,6 +570,7 @@ static void ecx_key_adjust(void *key, struct der2key_ctx_st *ctx)
 #  define x448_adjust                    ecx_key_adjust
 # endif /* OPENSSL_NO_ECX */
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 # ifndef OPENSSL_NO_SM2
 #  define sm2_evp_type                  EVP_PKEY_SM2
 #  define sm2_d2i_private_key           (d2i_of_void *)d2i_ECPrivateKey
@@ -579,6 +588,8 @@ static void *sm2_d2i_PKCS8(const unsigned char **der, long der_len,
                              (key_from_pkcs8_t *)ossl_ec_key_from_pkcs8);
 }
 # endif
+#endif
+#endif
 
 #endif
 
@@ -886,6 +897,7 @@ static ossl_inline void *slh_dsa_d2i_PUBKEY(const uint8_t **der, long der_len,
 
 /* ---------------------------------------------------------------------- */
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 #define rsa_evp_type                    EVP_PKEY_RSA
 #define rsa_d2i_private_key             (d2i_of_void *)d2i_RSAPrivateKey
 #define rsa_d2i_public_key              (d2i_of_void *)d2i_RSAPublicKey
@@ -941,6 +953,7 @@ static void rsa_adjust(void *key, struct der2key_ctx_st *ctx)
 #define rsapss_free                     (free_key_fn *)RSA_free
 #define rsapss_check                    rsa_check
 #define rsapss_adjust                   rsa_adjust
+#endif
 
 /* ---------------------------------------------------------------------- */
 
@@ -1104,6 +1117,7 @@ static ossl_inline void * ml_dsa_d2i_PUBKEY(const uint8_t **der, long der_len,
         keytype##_adjust,                               \
         keytype##_free
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 #define DO_DH(keytype)                                  \
     "DH", keytype##_evp_type,                           \
         ( OSSL_KEYMGMT_SELECT_ALL_PARAMETERS ),         \
@@ -1164,6 +1178,7 @@ static ossl_inline void * ml_dsa_d2i_PUBKEY(const uint8_t **der, long der_len,
         keytype##_check,                                \
         keytype##_adjust,                               \
         keytype##_free
+#endif
 
 /*
  * MAKE_DECODER is the single driver for creating OSSL_DISPATCH tables.
@@ -1218,6 +1233,7 @@ static ossl_inline void * ml_dsa_d2i_PUBKEY(const uint8_t **der, long der_len,
         OSSL_DISPATCH_END                                               \
     }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 #ifndef OPENSSL_NO_DH
 MAKE_DECODER("DH", dh, dh, PrivateKeyInfo);
 MAKE_DECODER("DH", dh, dh, SubjectPublicKeyInfo);
@@ -1255,6 +1271,7 @@ MAKE_DECODER("SM2", sm2, ec, SubjectPublicKeyInfo);
 MAKE_DECODER("SM2", sm2, sm2, type_specific_no_pub);
 # endif
 #endif
+#endif
 #ifndef OPENSSL_NO_ML_KEM
 MAKE_DECODER("ML-KEM-512", ml_kem_512, ml_kem_512, PrivateKeyInfo);
 MAKE_DECODER("ML-KEM-512", ml_kem_512, ml_kem_512, SubjectPublicKeyInfo);
@@ -1290,12 +1307,14 @@ MAKE_DECODER("SLH-DSA-SHAKE-192f", slh_dsa_shake_192f, slh_dsa, SubjectPublicKey
 MAKE_DECODER("SLH-DSA-SHAKE-256s", slh_dsa_shake_256s, slh_dsa, SubjectPublicKeyInfo);
 MAKE_DECODER("SLH-DSA-SHAKE-256f", slh_dsa_shake_256f, slh_dsa, SubjectPublicKeyInfo);
 #endif /* OPENSSL_NO_SLH_DSA */
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 MAKE_DECODER("RSA", rsa, rsa, PrivateKeyInfo);
 MAKE_DECODER("RSA", rsa, rsa, SubjectPublicKeyInfo);
 MAKE_DECODER("RSA", rsa, rsa, type_specific_keypair);
 MAKE_DECODER("RSA", rsa, rsa, RSA);
 MAKE_DECODER("RSA-PSS", rsapss, rsapss, PrivateKeyInfo);
 MAKE_DECODER("RSA-PSS", rsapss, rsapss, SubjectPublicKeyInfo);
+#endif
 
 #ifndef OPENSSL_NO_ML_DSA
 MAKE_DECODER("ML-DSA-44", ml_dsa_44, ml_dsa_44, PrivateKeyInfo);

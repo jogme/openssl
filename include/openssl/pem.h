@@ -537,9 +537,11 @@ EVP_PKEY *b2i_PVK_bio_ex(BIO *in, pem_password_cb *cb, void *u,
                          OSSL_LIB_CTX *libctx, const char *propq);
 int i2b_PVK_bio(BIO *out, const EVP_PKEY *pk, int enclevel,
                 pem_password_cb *cb, void *u);
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 int i2b_PVK_bio_ex(BIO *out, const EVP_PKEY *pk, int enclevel,
                    pem_password_cb *cb, void *u,
                    OSSL_LIB_CTX *libctx, const char *propq);
+#endif
 
 # ifdef  __cplusplus
 }

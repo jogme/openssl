@@ -11,7 +11,7 @@
  * DSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include "internal/cryptlib.h"
@@ -599,6 +599,7 @@ int i2d_PUBKEY(const EVP_PKEY *a, unsigned char **pp)
     return ret;
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 /*
  * The following are equivalents but which return RSA and DSA keys
  */
@@ -1005,6 +1006,7 @@ int ossl_i2d_X448_PUBKEY(const ECX_KEY *a, unsigned char **pp)
 }
 
 # endif /* OPENSSL_NO_ECX */
+#endif
 #endif
 
 void X509_PUBKEY_set0_public_key(X509_PUBKEY *pub,

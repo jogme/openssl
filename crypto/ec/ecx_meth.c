@@ -11,7 +11,8 @@
  * ECDSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
+//^TODO
 
 #include <stdio.h>
 #include <openssl/x509.h>
@@ -28,6 +29,7 @@
 #include "curve448/curve448_local.h"
 #include "ecx_backend.h"
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 static int ecx_pub_encode(X509_PUBKEY *pk, const EVP_PKEY *pkey)
 {
     const ECX_KEY *ecxkey = pkey->pkey.ecx;
@@ -1425,3 +1427,4 @@ const EVP_PKEY_METHOD *ossl_ed448_pkey_method(void)
 #endif
     return &ed448_pkey_meth;
 }
+#endif

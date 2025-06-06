@@ -10,7 +10,7 @@
 /*
  * Low level APIs are deprecated for public use, but still ok for internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include <string.h>
 #include <openssl/core.h>
@@ -27,6 +27,7 @@
 #include "prov/provider_ctx.h"
 #include "endecoder_local.h"
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 struct key2ms_ctx_st {
     PROV_CTX *provctx;
 
@@ -232,3 +233,4 @@ MAKE_MS_ENCODER(dsa, msblob, dsa);
 
 MAKE_MS_ENCODER(rsa, pvk, rsa);
 MAKE_MS_ENCODER(rsa, msblob, rsa);
+#endif

@@ -11,13 +11,14 @@
  * DSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include "internal/cryptlib.h"
 #include <openssl/evp.h>
 #include <openssl/dsa.h>
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 #ifndef OPENSSL_NO_STDIO
 int DSA_print_fp(FILE *fp, const DSA *x, int off)
 {
@@ -77,3 +78,4 @@ int DSAparams_print(BIO *bp, const DSA *x)
     EVP_PKEY_free(pk);
     return ret;
 }
+#endif

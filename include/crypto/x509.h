@@ -339,18 +339,19 @@ X509_PUBKEY *ossl_d2i_X509_PUBKEY_INTERNAL(const unsigned char **pp,
                                            const char *propq);
 void ossl_X509_PUBKEY_INTERNAL_free(X509_PUBKEY *xpub);
 
+# ifndef OPENSSL_NO_DEPRECATED_3_6
 RSA *ossl_d2i_RSA_PSS_PUBKEY(RSA **a, const unsigned char **pp, long length);
 int ossl_i2d_RSA_PSS_PUBKEY(const RSA *a, unsigned char **pp);
-# ifndef OPENSSL_NO_DSA
+#  ifndef OPENSSL_NO_DSA
 DSA *ossl_d2i_DSA_PUBKEY(DSA **a, const unsigned char **pp, long length);
 # endif /* OPENSSL_NO_DSA */
-# ifndef OPENSSL_NO_DH
+#  ifndef OPENSSL_NO_DH
 DH *ossl_d2i_DH_PUBKEY(DH **a, const unsigned char **pp, long length);
 int ossl_i2d_DH_PUBKEY(const DH *a, unsigned char **pp);
 DH *ossl_d2i_DHx_PUBKEY(DH **a, const unsigned char **pp, long length);
 int ossl_i2d_DHx_PUBKEY(const DH *a, unsigned char **pp);
-# endif /* OPENSSL_NO_DH */
-# ifndef OPENSSL_NO_EC
+#  endif /* OPENSSL_NO_DH */
+#  ifndef OPENSSL_NO_EC
 ECX_KEY *ossl_d2i_ED25519_PUBKEY(ECX_KEY **a,
                                  const unsigned char **pp, long length);
 int ossl_i2d_ED25519_PUBKEY(const ECX_KEY *a, unsigned char **pp);
@@ -363,7 +364,8 @@ int ossl_i2d_X25519_PUBKEY(const ECX_KEY *a, unsigned char **pp);
 ECX_KEY *ossl_d2i_X448_PUBKEY(ECX_KEY **a,
                               const unsigned char **pp, long length);
 int ossl_i2d_X448_PUBKEY(const ECX_KEY *a, unsigned char **pp);
-# endif /* OPENSSL_NO_EC */
+#  endif /* OPENSSL_NO_EC */
+# endif /* OPENSSL_NO_DEPRECATED_3_6 */
 
 EVP_PKEY *ossl_d2i_PUBKEY_legacy(EVP_PKEY **a, const unsigned char **pp,
                                  long length);
