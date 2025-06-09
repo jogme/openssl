@@ -215,6 +215,7 @@ static int rsa_cms_sign(CMS_SignerInfo *si)
     if (pad_mode != RSA_PKCS1_PSS_PADDING)
         return 0;
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     if (evp_pkey_ctx_is_legacy(pkctx)) {
         /* No provider -> we cannot query it for algorithm ID. */
         ASN1_STRING *os = NULL;
@@ -227,6 +228,7 @@ static int rsa_cms_sign(CMS_SignerInfo *si)
         ASN1_STRING_free(os);
         return 0;
     }
+#endif
 
     params[0] = OSSL_PARAM_construct_octet_string(
         OSSL_SIGNATURE_PARAM_ALGORITHM_ID, aid, sizeof(aid));
@@ -250,8 +252,10 @@ static int rsa_cms_verify(CMS_SignerInfo *si)
 
     CMS_SignerInfo_get0_algs(si, NULL, NULL, NULL, &alg);
     nid = OBJ_obj2nid(alg->algorithm);
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     if (nid == EVP_PKEY_RSA_PSS)
         return ossl_rsa_pss_to_ctx(NULL, pkctx, alg, NULL) > 0;
+#endif
     /* Only PSS allowed for PSS keys */
     if (EVP_PKEY_is_a(pkey, "RSA-PSS")) {
         ERR_raise(ERR_LIB_RSA, RSA_R_ILLEGAL_OR_UNSUPPORTED_PADDING_MODE);

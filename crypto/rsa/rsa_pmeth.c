@@ -11,7 +11,7 @@
  * RSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include "internal/constant_time.h"
 
@@ -28,6 +28,7 @@
 #include "crypto/rsa.h"
 #include "rsa_local.h"
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 /* RSA pkey context structure */
 
 typedef struct {
@@ -938,3 +939,4 @@ const EVP_PKEY_METHOD *ossl_rsa_pss_pkey_method(void)
 {
     return &rsa_pss_pkey_meth;
 }
+#endif
