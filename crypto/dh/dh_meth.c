@@ -11,12 +11,13 @@
  * DH low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include "dh_local.h"
 #include <string.h>
 #include <openssl/err.h>
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 DH_METHOD *DH_meth_new(const char *name, int flags)
 {
     DH_METHOD *dhm = OPENSSL_zalloc(sizeof(*dhm));
@@ -173,3 +174,4 @@ int DH_meth_set_generate_params(DH_METHOD *dhm,
     dhm->generate_params = generate_params;
     return 1;
 }
+#endif

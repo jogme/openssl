@@ -11,7 +11,8 @@
  * DH low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
+//^TODO
 
 #include <stdio.h>
 #include <openssl/x509.h>
@@ -25,6 +26,8 @@
 #include "crypto/dh.h"
 #include "crypto/evp.h"
 #include "dh_local.h"
+
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 
 /*
  * i2d/d2i like DH parameter functions which use the appropriate routine for
@@ -646,3 +649,4 @@ const EVP_PKEY_ASN1_METHOD ossl_dhx_asn1_meth = {
     dhx_pkey_import_from,
     dh_pkey_copy
 };
+#endif
