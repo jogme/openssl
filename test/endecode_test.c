@@ -429,6 +429,7 @@ static int encode_EVP_PKEY_legacy_PEM(const char *file, const int line,
     return ok;
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 static int encode_EVP_PKEY_MSBLOB(const char *file, const int line,
                                   void **encoded, long *encoded_len,
                                   void *object, int selection,
@@ -473,6 +474,7 @@ static int pass_pw(char *buf, int size, int rwflag, void *userdata)
     OPENSSL_strlcpy(buf, userdata, size);
     return strlen(userdata);
 }
+#endif
 
 static int encode_EVP_PKEY_PVK(const char *file, const int line,
                                void **encoded, long *encoded_len,
@@ -482,17 +484,23 @@ static int encode_EVP_PKEY_PVK(const char *file, const int line,
                                const char *pass,
                                ossl_unused const char *pcipher)
 {
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     EVP_PKEY *pkey = object;
+#endif
     BIO *mem_ser = NULL;
     BUF_MEM *mem_buf = NULL;
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     int enc = (pass != NULL);
+#endif
     int ok = 0;
 
     if (!TEST_FL_true(ossl_assert((selection
                                 & OSSL_KEYMGMT_SELECT_PRIVATE_KEY) != 0))
         || !TEST_FL_ptr(mem_ser = BIO_new(BIO_s_mem()))
+#ifndef OPENSSL_NO_DEPRECATED_3_6
         || !TEST_FL_int_ge(i2b_PVK_bio_ex(mem_ser, pkey, enc,
                                           pass_pw, (void *)pass, testctx, testpropq), 0)
+#endif
         || !TEST_FL_true(BIO_get_mem_ptr(mem_ser, &mem_buf) > 0)
         || !TEST_FL_ptr(*encoded = mem_buf->data)
         || !TEST_FL_long_gt(*encoded_len = mem_buf->length, 0))
@@ -714,6 +722,7 @@ static int test_unprotected_via_legacy_PEM(const char *type, EVP_PKEY *key)
                               dump_pem, 0);
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 static int check_MSBLOB(const char *file, const int line,
                         const char *type, const void *data, size_t data_len)
 {
@@ -735,6 +744,7 @@ static int test_unprotected_via_MSBLOB(const char *type, EVP_PKEY *key)
                               test_mem, check_MSBLOB,
                               dump_der, 0);
 }
+#endif
 
 static int check_PVK(const char *file, const int line,
                      const char *type, const void *data, size_t data_len)
@@ -898,6 +908,7 @@ static int test_public_via_PEM(const char *type, EVP_PKEY *key, int fips)
                               fips ? 0 : FLAG_FAIL_IF_FIPS);
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 static int check_public_MSBLOB(const char *file, const int line,
                                const char *type,
                                const void *data, size_t data_len)
@@ -918,6 +929,7 @@ static int test_public_via_MSBLOB(const char *type, EVP_PKEY *key)
                               encode_EVP_PKEY_MSBLOB, decode_EVP_PKEY_prov,
                               test_mem, check_public_MSBLOB, dump_der, 0);
 }
+#endif
 
 #define KEYS(KEYTYPE)                           \
     static EVP_PKEY *key_##KEYTYPE = NULL
@@ -1019,9 +1031,11 @@ static int test_public_via_MSBLOB(const char *type, EVP_PKEY *key)
         return test_public_via_MSBLOB(KEYTYPEstr, key_##KEYTYPE);       \
     }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 #define ADD_TEST_SUITE_MSBLOB(KEYTYPE)                                  \
     ADD_TEST(test_unprotected_##KEYTYPE##_via_MSBLOB);                  \
     ADD_TEST(test_public_##KEYTYPE##_via_MSBLOB)
+#endif
 
 #define IMPLEMENT_TEST_SUITE_UNPROTECTED_PVK(KEYTYPE, KEYTYPEstr)       \
     static int test_unprotected_##KEYTYPE##_via_PVK(void)               \
@@ -1057,7 +1071,9 @@ DOMAIN_KEYS(DSA);
 IMPLEMENT_TEST_SUITE(DSA, "DSA", 1)
 IMPLEMENT_TEST_SUITE_PARAMS(DSA, "DSA")
 IMPLEMENT_TEST_SUITE_LEGACY(DSA, "DSA")
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 IMPLEMENT_TEST_SUITE_MSBLOB(DSA, "DSA")
+#endif
 IMPLEMENT_TEST_SUITE_UNPROTECTED_PVK(DSA, "DSA")
 # ifndef OPENSSL_NO_RC4
 IMPLEMENT_TEST_SUITE_PROTECTED_PVK(DSA, "DSA")
@@ -1148,7 +1164,9 @@ IMPLEMENT_TEST_SUITE(RSA_PSS, "RSA-PSS", 1)
  * RSA-PSS has no support for PEM_write_bio_PrivateKey_traditional(),
  * so no legacy tests.
  */
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 IMPLEMENT_TEST_SUITE_MSBLOB(RSA, "RSA")
+#endif
 IMPLEMENT_TEST_SUITE_UNPROTECTED_PVK(RSA, "RSA")
 #ifndef OPENSSL_NO_RC4
 IMPLEMENT_TEST_SUITE_PROTECTED_PVK(RSA, "RSA")
@@ -1584,7 +1602,9 @@ int setup_tests(void)
         ADD_TEST_SUITE(DSA);
         ADD_TEST_SUITE_PARAMS(DSA);
         ADD_TEST_SUITE_LEGACY(DSA);
+#ifndef OPENSSL_NO_DEPRECATED_3_6
         ADD_TEST_SUITE_MSBLOB(DSA);
+#endif
         ADD_TEST_SUITE_UNPROTECTED_PVK(DSA);
 # ifndef OPENSSL_NO_RC4
         ADD_TEST_SUITE_PROTECTED_PVK(DSA);
@@ -1636,7 +1656,9 @@ int setup_tests(void)
          * RSA-PSS has no support for PEM_write_bio_PrivateKey_traditional(),
          * so no legacy tests.
          */
+#ifndef OPENSSL_NO_DEPRECATED_3_6
         ADD_TEST_SUITE_MSBLOB(RSA);
+#endif
         ADD_TEST_SUITE_UNPROTECTED_PVK(RSA);
 # ifndef OPENSSL_NO_RC4
         ADD_TEST_SUITE_PROTECTED_PVK(RSA);

@@ -11,7 +11,7 @@
  * RSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include <string.h>
 
@@ -37,6 +37,7 @@ typedef struct {
 /* Collected arguments */
 static const char *cert_filename = NULL;
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 static void tear_down(FIXTURE *fixture)
 {
     if (fixture != NULL) {
@@ -292,6 +293,7 @@ static int test_pass_key(int n)
     EXECUTE_TEST(tests[n], tear_down);
     return result;
 }
+#endif
 
 static int test_evp_pkey_export_to_provider(int n)
 {
@@ -356,7 +358,9 @@ int setup_tests(void)
     if (!TEST_ptr(cert_filename = test_get_argument(0)))
         return 0;
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     ADD_ALL_TESTS(test_pass_key, 1);
+#endif
     ADD_ALL_TESTS(test_evp_pkey_export_to_provider, 3);
     return 1;
 }

@@ -13,7 +13,7 @@
  * RSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -29,6 +29,7 @@
 
 #include <openssl/rsa.h>
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 #define SetKey \
     RSA_set0_key(key,                                           \
                  BN_bin2bn(n, sizeof(n)-1, NULL),               \
@@ -708,13 +709,18 @@ err:
     RSA_free(rsa_pub);
     return ret;
 }
+#endif
 
 int setup_tests(void)
 {
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     ADD_ALL_TESTS(test_rsa_pkcs1, 3);
     ADD_ALL_TESTS(test_rsa_oaep, 3);
     ADD_ALL_TESTS(test_rsa_security_bit, OSSL_NELEM(rsa_security_bits_cases));
     ADD_TEST(test_rsa_saos);
     ADD_TEST(test_EVP_rsa_legacy_key);
+#else
+    TEST_info("RSA legacy tests skipped, no deprecated APIs available");
+#endif
     return 1;
 }
