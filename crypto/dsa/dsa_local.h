@@ -11,6 +11,7 @@
 #include "internal/refcount.h"
 #include "internal/ffc.h"
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 struct dsa_st {
     /*
      * This first variable is used to pick up errors where a DSA is passed
@@ -72,3 +73,4 @@ struct dsa_method {
 DSA_SIG *ossl_dsa_do_sign_int(const unsigned char *dgst, int dlen, DSA *dsa,
                               unsigned int nonce_type, const char *digestname,
                               OSSL_LIB_CTX *libctx, const char *propq);
+#endif

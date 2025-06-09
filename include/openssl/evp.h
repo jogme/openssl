@@ -523,10 +523,12 @@ typedef int (EVP_PBE_KEYGEN_EX) (EVP_CIPHER_CTX *ctx, const char *pass,
                                                          (rsa))
 # endif
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 # ifndef OPENSSL_NO_DSA
 #  define EVP_PKEY_assign_DSA(pkey,dsa) EVP_PKEY_assign((pkey),EVP_PKEY_DSA,\
                                         (dsa))
 # endif
+#endif
 
 # if !defined(OPENSSL_NO_DH) && !defined(OPENSSL_NO_DEPRECATED_3_0)
 #  define EVP_PKEY_assign_DH(pkey,dh) EVP_PKEY_assign((pkey),EVP_PKEY_DH,(dh))
@@ -538,6 +540,7 @@ typedef int (EVP_PBE_KEYGEN_EX) (EVP_CIPHER_CTX *ctx, const char *pass,
         EVP_PKEY_assign((pkey), EVP_PKEY_EC, (eckey))
 #  endif
 # endif
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 # ifndef OPENSSL_NO_SIPHASH
 #  define EVP_PKEY_assign_SIPHASH(pkey,shkey) EVP_PKEY_assign((pkey),\
                                         EVP_PKEY_SIPHASH,(shkey))
@@ -547,6 +550,7 @@ typedef int (EVP_PBE_KEYGEN_EX) (EVP_CIPHER_CTX *ctx, const char *pass,
 #  define EVP_PKEY_assign_POLY1305(pkey,polykey) EVP_PKEY_assign((pkey),\
                                         EVP_PKEY_POLY1305,(polykey))
 # endif
+#endif
 
 /* Add some extra combinations */
 # define EVP_get_digestbynid(a) EVP_get_digestbyname(OBJ_nid2sn(a))

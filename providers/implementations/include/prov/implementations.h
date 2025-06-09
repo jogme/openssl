@@ -478,8 +478,10 @@ extern const OSSL_DISPATCH ossl_rsa_to_RSA_der_encoder_functions[];
 extern const OSSL_DISPATCH ossl_rsa_to_RSA_pem_encoder_functions[];
 extern const OSSL_DISPATCH ossl_rsa_to_SubjectPublicKeyInfo_der_encoder_functions[];
 extern const OSSL_DISPATCH ossl_rsa_to_SubjectPublicKeyInfo_pem_encoder_functions[];
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 extern const OSSL_DISPATCH ossl_rsa_to_msblob_encoder_functions[];
 extern const OSSL_DISPATCH ossl_rsa_to_pvk_encoder_functions[];
+#endif
 extern const OSSL_DISPATCH ossl_rsa_to_text_encoder_functions[];
 extern const OSSL_DISPATCH ossl_rsa_to_type_specific_keypair_der_encoder_functions[];
 extern const OSSL_DISPATCH ossl_rsa_to_type_specific_keypair_pem_encoder_functions[];
@@ -532,8 +534,10 @@ extern const OSSL_DISPATCH ossl_dsa_to_SubjectPublicKeyInfo_der_encoder_function
 extern const OSSL_DISPATCH ossl_dsa_to_SubjectPublicKeyInfo_pem_encoder_functions[];
 extern const OSSL_DISPATCH ossl_dsa_to_type_specific_pem_encoder_functions[];
 extern const OSSL_DISPATCH ossl_dsa_to_type_specific_der_encoder_functions[];
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 extern const OSSL_DISPATCH ossl_dsa_to_msblob_encoder_functions[];
 extern const OSSL_DISPATCH ossl_dsa_to_pvk_encoder_functions[];
+#endif
 extern const OSSL_DISPATCH ossl_dsa_to_text_encoder_functions[];
 
 extern const OSSL_DISPATCH ossl_ec_to_EC_der_encoder_functions[];
@@ -731,6 +735,7 @@ extern const OSSL_DISPATCH ossl_slh_dsa_shake_256s_to_text_encoder_functions[];
 extern const OSSL_DISPATCH ossl_slh_dsa_shake_256f_to_text_encoder_functions[];
 
 /* Decoders */
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 extern const OSSL_DISPATCH ossl_PrivateKeyInfo_der_to_dh_decoder_functions[];
 extern const OSSL_DISPATCH ossl_SubjectPublicKeyInfo_der_to_dh_decoder_functions[];
 extern const OSSL_DISPATCH ossl_type_specific_params_der_to_dh_decoder_functions[];
@@ -746,6 +751,7 @@ extern const OSSL_DISPATCH ossl_SubjectPublicKeyInfo_der_to_dsa_decoder_function
 extern const OSSL_DISPATCH ossl_type_specific_der_to_dsa_decoder_functions[];
 extern const OSSL_DISPATCH ossl_DSA_der_to_dsa_decoder_functions[];
 extern const OSSL_DISPATCH ossl_msblob_to_dsa_decoder_functions[];
+#endif
 extern const OSSL_DISPATCH ossl_pvk_to_dsa_decoder_functions[];
 
 extern const OSSL_DISPATCH ossl_PrivateKeyInfo_der_to_ec_decoder_functions[];
@@ -828,6 +834,7 @@ extern const OSSL_DISPATCH ossl_SubjectPublicKeyInfo_der_to_slh_dsa_shake_192f_d
 extern const OSSL_DISPATCH ossl_SubjectPublicKeyInfo_der_to_slh_dsa_shake_256s_decoder_functions[];
 extern const OSSL_DISPATCH ossl_SubjectPublicKeyInfo_der_to_slh_dsa_shake_256f_decoder_functions[];
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 extern const OSSL_DISPATCH ossl_PrivateKeyInfo_der_to_rsa_decoder_functions[];
 extern const OSSL_DISPATCH ossl_SubjectPublicKeyInfo_der_to_rsa_decoder_functions[];
 extern const OSSL_DISPATCH ossl_type_specific_keypair_der_to_rsa_decoder_functions[];
@@ -837,6 +844,7 @@ extern const OSSL_DISPATCH ossl_pvk_to_rsa_decoder_functions[];
 
 extern const OSSL_DISPATCH ossl_PrivateKeyInfo_der_to_rsapss_decoder_functions[];
 extern const OSSL_DISPATCH ossl_SubjectPublicKeyInfo_der_to_rsapss_decoder_functions[];
+#endif
 
 extern const OSSL_DISPATCH ossl_EncryptedPrivateKeyInfo_der_to_der_decoder_functions[];
 extern const OSSL_DISPATCH ossl_SubjectPublicKeyInfo_der_to_der_decoder_functions[];
