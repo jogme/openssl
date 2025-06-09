@@ -11,7 +11,7 @@
  * DSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include "internal/cryptlib.h"
@@ -25,6 +25,7 @@
 #include <openssl/dh.h>
 #include "pem_local.h"
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 static RSA *pkey_get_rsa(EVP_PKEY *key, RSA **rsa);
 #ifndef OPENSSL_NO_DSA
 static DSA *pkey_get_dsa(EVP_PKEY *key, DSA **dsa);
@@ -32,6 +33,7 @@ static DSA *pkey_get_dsa(EVP_PKEY *key, DSA **dsa);
 
 #ifndef OPENSSL_NO_EC
 static EC_KEY *pkey_get_eckey(EVP_PKEY *key, EC_KEY **eckey);
+#endif
 #endif
 
 IMPLEMENT_PEM_rw(X509_REQ, X509_REQ, PEM_STRING_X509_REQ, X509_REQ)
@@ -88,7 +90,6 @@ RSA *PEM_read_RSAPrivateKey(FILE *fp, RSA **rsa, pem_password_cb *cb, void *u)
 IMPLEMENT_PEM_write_cb(RSAPrivateKey, RSA, PEM_STRING_RSA, RSAPrivateKey)
 IMPLEMENT_PEM_rw(RSAPublicKey, RSA, PEM_STRING_RSA_PUBLIC, RSAPublicKey)
 IMPLEMENT_PEM_rw(RSA_PUBKEY, RSA, PEM_STRING_PUBLIC, RSA_PUBKEY)
-#endif
 #ifndef OPENSSL_NO_DSA
 static DSA *pkey_get_dsa(EVP_PKEY *key, DSA **dsa)
 {
@@ -127,6 +128,7 @@ DSA *PEM_read_DSAPrivateKey(FILE *fp, DSA **dsa, pem_password_cb *cb, void *u)
 # endif
 
 IMPLEMENT_PEM_rw(DSAparams, DSA, PEM_STRING_DSAPARAMS, DSAparams)
+#endif
 #endif
 
 #ifndef OPENSSL_NO_DEPRECATED_3_0
@@ -176,6 +178,7 @@ EC_KEY *PEM_read_ECPrivateKey(FILE *fp, EC_KEY **eckey, pem_password_cb *cb,
 
 #ifndef OPENSSL_NO_DH
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 IMPLEMENT_PEM_write(DHparams, DH, PEM_STRING_DHPARAMS, DHparams)
 IMPLEMENT_PEM_write(DHxparams, DH, PEM_STRING_DHXPARAMS, DHxparams)
 
@@ -221,6 +224,7 @@ DH *PEM_read_DHparams(FILE *fp, DH **x, pem_password_cb *cb, void *u)
     return ret;
 }
 # endif
+#endif
 
 #endif
 IMPLEMENT_PEM_provided_write(PUBKEY, EVP_PKEY, pkey, PEM_STRING_PUBLIC, PUBKEY)
