@@ -19,7 +19,7 @@
  * DSA/DH low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 #include <assert.h>
 #include <string.h>
 #include <openssl/evp.h>
@@ -63,7 +63,7 @@ const OPTIONS *test_get_options(void)
     return test_options;
 }
 
-#ifndef OPENSSL_NO_DH
+#if !defined(OPENSSL_NO_DH) && !defined(OPENSSL_NO_DEPRECATED_3_6)
 static const char *getname(int id)
 {
     const char *name[] = {"p", "q", "g" };
@@ -109,7 +109,7 @@ err:
  * We're using some DH specific values in this test, so we skip compilation if
  * we're in a no-dh build.
  */
-#if !defined(OPENSSL_NO_DSA) && !defined(OPENSSL_NO_DH)
+#if !defined(OPENSSL_NO_DSA) && !defined(OPENSSL_NO_DH) && !defined(OPENSSL_NO_DEPRECATED_3_6)
 
 static int test_dsa_param_keygen(int tstid)
 {
@@ -183,6 +183,7 @@ err:
 #endif /* OPENSSL_NO_DSA */
 
 #ifndef OPENSSL_NO_DH
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 static int do_dh_param_keygen(int tstid, const BIGNUM **bn)
 {
     int ret = 0;
@@ -342,6 +343,7 @@ err:
     BIO_free(bio);
     return ret;
 }
+#endif
 
 #endif /* OPENSSL_NO_DH */
 
@@ -810,6 +812,7 @@ int setup_tests(void)
 
     is_fips_lt_3_5 = is_fips && fips_provider_version_lt(libctx, 3, 5, 0);
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 #if !defined(OPENSSL_NO_DSA) && !defined(OPENSSL_NO_DH)
     if (!is_fips || fips_provider_version_lt(libctx, 3, 4, 0))
         ADD_ALL_TESTS(test_dsa_param_keygen, 3 * 3 * 3);
@@ -817,6 +820,7 @@ int setup_tests(void)
 #ifndef OPENSSL_NO_DH
     ADD_ALL_TESTS(test_dh_safeprime_param_keygen, 3 * 3 * 3);
     ADD_TEST(dhx_cert_load);
+#endif
 #endif
 
     if (!TEST_ptr(cipher_names = sk_OPENSSL_STRING_new(name_cmp)))

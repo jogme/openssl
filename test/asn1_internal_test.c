@@ -13,7 +13,7 @@
  * RSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -59,6 +59,7 @@ static int test_tbl_standard(void)
     return 0;
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 /**********************************************************************
  *
  * Test of ameth_lib's standard_methods
@@ -149,6 +150,7 @@ static int test_empty_nonoptional_content(void)
     BN_free(e);
     return ok;
 }
+#endif
 
 /**********************************************************************
  *
@@ -267,8 +269,10 @@ static int test_obj_nid_undef(void)
 int setup_tests(void)
 {
     ADD_TEST(test_tbl_standard);
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     ADD_TEST(test_standard_methods);
     ADD_TEST(test_empty_nonoptional_content);
+#endif
     ADD_TEST(test_unicode_range);
     ADD_TEST(test_obj_create);
     ADD_TEST(test_obj_nid_undef);
