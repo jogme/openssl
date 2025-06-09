@@ -7,7 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 /* We need to use some engine deprecated APIs */
 #define OPENSSL_SUPPRESS_DEPRECATED
 
@@ -21,6 +20,7 @@
 
 #include "standard_methods.h"
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 typedef int sk_cmp_fn_type(const char *const *a, const char *const *b);
 static STACK_OF(EVP_PKEY_ASN1_METHOD) *app_methods = NULL;
 

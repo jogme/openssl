@@ -35,6 +35,7 @@
       ",structure=" DECODER_STRUCTURE_##_structure,                     \
       (ossl_##_structure##_##_input##_to_##_output##_decoder_functions) }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 #ifndef OPENSSL_NO_DH
 DECODER_w_structure("DH", der, PrivateKeyInfo, dh, yes),
 DECODER_w_structure("DH", der, SubjectPublicKeyInfo, dh, yes),
@@ -74,6 +75,7 @@ DECODER_w_structure("SM2", der, SubjectPublicKeyInfo, sm2, no),
 DECODER_w_structure("SM2", der, type_specific_no_pub, sm2, no),
 # endif
 #endif
+#endif
 #ifndef OPENSSL_NO_ML_KEM
 DECODER_w_structure("ML-KEM-512", der, PrivateKeyInfo, ml_kem_512, yes),
 DECODER_w_structure("ML-KEM-512", der, SubjectPublicKeyInfo, ml_kem_512, yes),
@@ -108,6 +110,7 @@ DECODER_w_structure("SLH-DSA-SHAKE-192f", der, SubjectPublicKeyInfo, slh_dsa_sha
 DECODER_w_structure("SLH-DSA-SHAKE-256s", der, SubjectPublicKeyInfo, slh_dsa_shake_256s, yes),
 DECODER_w_structure("SLH-DSA-SHAKE-256f", der, SubjectPublicKeyInfo, slh_dsa_shake_256f, yes),
 #endif /* OPENSSL_NO_SLH_DSA */
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 DECODER_w_structure("RSA", der, PrivateKeyInfo, rsa, yes),
 DECODER_w_structure("RSA", der, SubjectPublicKeyInfo, rsa, yes),
 DECODER_w_structure("RSA", der, type_specific_keypair, rsa, yes),
@@ -116,6 +119,7 @@ DECODER_w_structure("RSA-PSS", der, PrivateKeyInfo, rsapss, yes),
 DECODER_w_structure("RSA-PSS", der, SubjectPublicKeyInfo, rsapss, yes),
 DECODER("RSA", msblob, rsa, yes),
 DECODER("RSA", pvk, rsa, yes),
+#endif
 #ifndef OPENSSL_NO_ML_DSA
 DECODER_w_structure("ML-DSA-44", der, PrivateKeyInfo, ml_dsa_44, yes),
 DECODER_w_structure("ML-DSA-65", der, PrivateKeyInfo, ml_dsa_65, yes),
