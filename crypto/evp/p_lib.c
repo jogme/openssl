@@ -12,6 +12,7 @@
  * internal use.
  */
 //#include "internal/deprecated.h"
+//.
 
 #include <assert.h>
 #include <stdio.h>
