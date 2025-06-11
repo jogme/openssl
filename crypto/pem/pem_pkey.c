@@ -96,6 +96,7 @@ static EVP_PKEY *pem_read_bio_key_decoder(BIO *bp, EVP_PKEY **x,
     return pkey;
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 static EVP_PKEY *pem_read_bio_key_legacy(BIO *bp, EVP_PKEY **x,
                                          pem_password_cb *cb, void *u,
                                          OSSL_LIB_CTX *libctx,
@@ -212,6 +213,7 @@ static EVP_PKEY *pem_read_bio_key_legacy(BIO *bp, EVP_PKEY **x,
     OPENSSL_secure_clear_free(data, len);
     return ret;
 }
+#endif
 
 static EVP_PKEY *pem_read_bio_key(BIO *bp, EVP_PKEY **x,
                                   pem_password_cb *cb, void *u,
@@ -239,9 +241,12 @@ static EVP_PKEY *pem_read_bio_key(BIO *bp, EVP_PKEY **x,
         || !ossl_pw_enable_passphrase_caching(&pwdata))
         goto err;
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     ERR_set_mark();
+#endif
     ret = pem_read_bio_key_decoder(bp, x, ossl_pw_pem_password, &pwdata,
                                    libctx, propq, selection);
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     if (ret == NULL
         && (BIO_seek(bp, pos) < 0
             || (ret = pem_read_bio_key_legacy(bp, x,
@@ -251,6 +256,7 @@ static EVP_PKEY *pem_read_bio_key(BIO *bp, EVP_PKEY **x,
         ERR_clear_last_mark();
     else
         ERR_pop_to_mark();
+#endif
 
  err:
     ossl_pw_clear_passphrase_data(&pwdata);

@@ -3090,7 +3090,9 @@ static int ec_d2i_publickey_test(void)
 {
    unsigned char buf[1000];
    unsigned char *pubkey_enc = buf;
+#ifndef OPENSSL_NO_DEPRECATED_3_6
    const unsigned char *pk_enc = pubkey_enc;
+#endif
    EVP_PKEY *gen_key = NULL, *decoded_key = NULL;
    EVP_PKEY_CTX *pctx = NULL;
    int pklen, ret = 0;
@@ -3111,9 +3113,16 @@ static int ec_d2i_publickey_test(void)
        || !TEST_true(EVP_PKEY_fromdata(pctx, &decoded_key,
                                        OSSL_KEYMGMT_SELECT_DOMAIN_PARAMETERS,
                                        params))
+#ifndef OPENSSL_NO_DEPRECATED_3_6
        || !TEST_ptr(decoded_key)
+#else
+       || !TEST_ptr(decoded_key))    
+#endif
+//FIXME
+#ifndef OPENSSL_NO_DEPRECATED_3_6
        || !TEST_ptr(decoded_key = d2i_PublicKey(EVP_PKEY_EC, &decoded_key,
                                                 &pk_enc, pklen)))
+#endif
        goto err;
 
    if (!TEST_true(EVP_PKEY_eq(gen_key, decoded_key)))

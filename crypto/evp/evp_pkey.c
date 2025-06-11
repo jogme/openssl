@@ -21,7 +21,7 @@
 #include "crypto/x509.h"
 
 /* Extract a private key from a PKCS8 structure */
-
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 EVP_PKEY *evp_pkcs82pkey_legacy(const PKCS8_PRIV_KEY_INFO *p8, OSSL_LIB_CTX *libctx,
                                 const char *propq)
 {
@@ -63,6 +63,7 @@ EVP_PKEY *evp_pkcs82pkey_legacy(const PKCS8_PRIV_KEY_INFO *p8, OSSL_LIB_CTX *lib
     EVP_PKEY_free(pkey);
     return NULL;
 }
+#endif
 
 EVP_PKEY *EVP_PKCS82PKEY_ex(const PKCS8_PRIV_KEY_INFO *p8, OSSL_LIB_CTX *libctx,
                             const char *propq)
@@ -106,8 +107,12 @@ EVP_PKEY *EVP_PKCS82PKEY_ex(const PKCS8_PRIV_KEY_INFO *p8, OSSL_LIB_CTX *libctx,
 
     if (dctx == NULL
         || !OSSL_DECODER_from_data(dctx, &p8_data, &len))
+#ifndef OPENSSL_NO_DEPRECATED_3_6
         /* try legacy */
         pkey = evp_pkcs82pkey_legacy(p8, libctx, propq);
+#else
+        ERR_raise(ERR_LIB_EVP, EVP_R_DECODE_ERROR);
+#endif
 
     OPENSSL_clear_free(encoded_data, encoded_len);
     OSSL_DECODER_CTX_free(dctx);

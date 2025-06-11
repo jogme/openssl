@@ -15,6 +15,7 @@
 #include "crypto/asn1.h"
 #include "crypto/evp.h"
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 EVP_PKEY *d2i_KeyParams(int type, EVP_PKEY **a, const unsigned char **pp,
                         long length)
 {
@@ -63,3 +64,4 @@ err:
     BUF_MEM_free(b);
     return ret;
 }
+#endif

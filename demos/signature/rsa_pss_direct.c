@@ -131,11 +131,17 @@ static int verify(OSSL_LIB_CTX *libctx, const unsigned char *sig, size_t sig_len
 
     /* Load DER-encoded RSA public key. */
     ppub_key = rsa_pub_key;
+/*
+ * TODO
+ * This is legacy.
+ */
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     pkey = d2i_PublicKey(EVP_PKEY_RSA, NULL, &ppub_key, sizeof(rsa_pub_key));
     if (pkey == NULL) {
         fprintf(stderr, "Failed to load public key\n");
         goto end;
     }
+#endif
 
     /* Fetch hash algorithm we want to use. */
     md = EVP_MD_fetch(libctx, "SHA256", propq);

@@ -550,7 +550,9 @@ static int rsa_keygen(int bits, EVP_PKEY **pub, EVP_PKEY **priv)
 {
     int ret = 0;
     unsigned char *pub_der = NULL;
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     const unsigned char *pp = NULL;
+#endif
     size_t len = 0;
     OSSL_ENCODER_CTX *ectx = NULL;
 
@@ -562,9 +564,12 @@ static int rsa_keygen(int bits, EVP_PKEY **pub, EVP_PKEY **priv)
                                                    NULL))
         || !TEST_true(OSSL_ENCODER_to_data(ectx, &pub_der, &len)))
         goto err;
+//FIXME
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     pp = pub_der;
     if (!TEST_ptr(d2i_PublicKey(EVP_PKEY_RSA, pub, &pp, len)))
         goto err;
+#endif
     ret = 1;
 err:
     OSSL_ENCODER_CTX_free(ectx);

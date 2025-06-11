@@ -42,7 +42,9 @@ struct X509_pubkey_st {
     unsigned int flag_force_legacy : 1;
 };
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 static int x509_pubkey_decode(EVP_PKEY **pk, const X509_PUBKEY *key);
+#endif
 
 static int x509_pubkey_set0_libctx(X509_PUBKEY *x, OSSL_LIB_CTX *libctx,
                                    const char *propq)
@@ -170,6 +172,7 @@ static int x509_pubkey_ex_d2i_ex(ASN1_VALUE **pval,
      */
     ERR_set_mark();
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     /*
      * Try to decode with legacy method first.  This ensures that engines
      * aren't overridden by providers.
@@ -179,6 +182,7 @@ static int x509_pubkey_ex_d2i_ex(ASN1_VALUE **pval,
         ERR_clear_last_mark();
         goto end;
     }
+#endif
 
     /* Try to decode it into an EVP_PKEY with OSSL_DECODER */
     if (ret <= 0 && !pubkey->flag_force_legacy) {
@@ -304,8 +308,11 @@ X509_PUBKEY *X509_PUBKEY_dup(const X509_PUBKEY *a)
     }
 
     if (a->pkey != NULL) {
+#ifndef OPENSSL_NO_DEPRECATED_3_6
         ERR_set_mark();
+#endif
         pubkey->pkey = EVP_PKEY_dup(a->pkey);
+#ifndef OPENSSL_NO_DEPRECATED_3_6
         if (pubkey->pkey == NULL) {
             pubkey->flag_force_legacy = 1;
             if (x509_pubkey_decode(&pubkey->pkey, pubkey) <= 0) {
@@ -316,6 +323,7 @@ X509_PUBKEY *X509_PUBKEY_dup(const X509_PUBKEY *a)
             }
         }
         ERR_pop_to_mark();
+#endif
     }
     return pubkey;
 }
@@ -394,6 +402,7 @@ int X509_PUBKEY_set(X509_PUBKEY **x, EVP_PKEY *pkey)
     return 0;
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 /*
  * Attempt to decode a public key.
  * Returns 1 on success, 0 for a decode failure and -1 for a fatal
@@ -451,6 +460,7 @@ static int x509_pubkey_decode(EVP_PKEY **ppkey, const X509_PUBKEY *key)
     EVP_PKEY_free(pkey);
     return 0;
 }
+#endif
 
 EVP_PKEY *X509_PUBKEY_get0(const X509_PUBKEY *key)
 {
@@ -530,12 +540,14 @@ static EVP_PKEY *d2i_PUBKEY_int(EVP_PKEY **a,
     return pktmp;
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 /* For the algorithm specific d2i functions further down */
 EVP_PKEY *ossl_d2i_PUBKEY_legacy(EVP_PKEY **a, const unsigned char **pp,
                                  long length)
 {
     return d2i_PUBKEY_int(a, pp, length, NULL, NULL, 1, d2i_X509_PUBKEY);
 }
+#endif
 
 EVP_PKEY *d2i_PUBKEY_ex(EVP_PKEY **a, const unsigned char **pp, long length,
                         OSSL_LIB_CTX *libctx, const char *propq)

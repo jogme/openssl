@@ -1379,8 +1379,10 @@ int EVP_PKEY_get_security_category(const EVP_PKEY *pkey);
 int EVP_PKEY_get_size(const EVP_PKEY *pkey);
 # define EVP_PKEY_size EVP_PKEY_get_size
 int EVP_PKEY_can_sign(const EVP_PKEY *pkey);
+# ifndef OPENSSL_NO_DEPRECATED_3_6
 int EVP_PKEY_set_type(EVP_PKEY *pkey, int type);
 int EVP_PKEY_set_type_str(EVP_PKEY *pkey, const char *str, int len);
+#endif
 int EVP_PKEY_set_type_by_keymgmt(EVP_PKEY *pkey, EVP_KEYMGMT *keymgmt);
 # ifndef OPENSSL_NO_DEPRECATED_3_0
 #  ifndef OPENSSL_NO_ENGINE
@@ -1447,8 +1449,10 @@ void EVP_PKEY_free(EVP_PKEY *pkey);
 const char *EVP_PKEY_get0_description(const EVP_PKEY *pkey);
 const OSSL_PROVIDER *EVP_PKEY_get0_provider(const EVP_PKEY *key);
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 EVP_PKEY *d2i_PublicKey(int type, EVP_PKEY **a, const unsigned char **pp,
                         long length);
+#endif
 int i2d_PublicKey(const EVP_PKEY *a, unsigned char **pp);
 
 
@@ -1465,11 +1469,17 @@ EVP_PKEY *d2i_AutoPrivateKey(EVP_PKEY **a, const unsigned char **pp,
 int i2d_PrivateKey(const EVP_PKEY *a, unsigned char **pp);
 int i2d_PKCS8PrivateKey(const EVP_PKEY *a, unsigned char **pp);
 
+//TODO?
 int i2d_KeyParams(const EVP_PKEY *a, unsigned char **pp);
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 EVP_PKEY *d2i_KeyParams(int type, EVP_PKEY **a, const unsigned char **pp,
                         long length);
+#endif
+//TODO?
 int i2d_KeyParams_bio(BIO *bp, const EVP_PKEY *pkey);
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 EVP_PKEY *d2i_KeyParams_bio(int type, EVP_PKEY **a, BIO *in);
+#endif
 
 int EVP_PKEY_copy_parameters(EVP_PKEY *to, const EVP_PKEY *from);
 int EVP_PKEY_missing_parameters(const EVP_PKEY *pkey);

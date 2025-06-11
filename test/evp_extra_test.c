@@ -4162,6 +4162,9 @@ static int test_keygen_with_empty_template(int n)
     EVP_PKEY_CTX *ctx = NULL;
     EVP_PKEY *pkey = NULL;
     EVP_PKEY *tkey = NULL;
+#ifdef OPENSSL_NO_DEPRECATED_3_6
+    EVP_KEYMGMT *keymgmt = NULL;
+#endif
     int ret = 0;
 
     if (nullprov != NULL)
@@ -4176,7 +4179,12 @@ static int test_keygen_with_empty_template(int n)
     case 1:
         /* Here we create an empty RSA key that serves as our template */
         if (!TEST_ptr(tkey = EVP_PKEY_new())
+#ifndef OPENSSL_NO_DEPRECATED_3_6
             || !TEST_true(EVP_PKEY_set_type(tkey, EVP_PKEY_RSA))
+#else
+            || !TEST_ptr(keymgmt = EVP_KEYMGMT_fetch(testctx, "RSA", testpropq))
+            || !TEST_true(EVP_PKEY_set_type_by_keymgmt(tkey, keymgmt))
+#endif
             || !TEST_ptr(ctx = EVP_PKEY_CTX_new(tkey, NULL)))
             goto err;
         break;
@@ -4191,6 +4199,9 @@ static int test_keygen_with_empty_template(int n)
     EVP_PKEY_CTX_free(ctx);
     EVP_PKEY_free(pkey);
     EVP_PKEY_free(tkey);
+#ifdef OPENSSL_NO_DEPRECATED_3_6
+    EVP_KEYMGMT_free(keymgmt);
+#endif
     return ret;
 }
 

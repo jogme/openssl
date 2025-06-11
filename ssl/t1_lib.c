@@ -2205,7 +2205,9 @@ int ssl_setup_sigalgs(SSL_CTX *ctx)
     /* First fill cache and tls12_sigalgs list from legacy algorithm list */
     for (i = 0, lu = sigalg_lookup_tbl;
          i < OSSL_NELEM(sigalg_lookup_tbl); lu++, i++) {
+#ifndef OPENSSL_NO_DEPRECATED_3_6
         EVP_PKEY_CTX *pctx;
+#endif
 
         cache[i] = *lu;
 
@@ -2223,6 +2225,7 @@ int ssl_setup_sigalgs(SSL_CTX *ctx)
             continue;
         }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
         if (!EVP_PKEY_set_type(tmpkey, lu->sig)) {
             cache[i].available = 0;
             continue;
@@ -2232,6 +2235,7 @@ int ssl_setup_sigalgs(SSL_CTX *ctx)
         if (pctx == NULL)
             cache[i].available = 0;
         EVP_PKEY_CTX_free(pctx);
+#endif
     }
 
     /* Now complete cache and tls12_sigalgs list with provider sig information */
@@ -2307,6 +2311,9 @@ char *SSL_get1_builtin_sigalgs(OSSL_LIB_CTX *libctx)
     const SIGALG_LOOKUP *lu;
     EVP_PKEY *tmpkey = EVP_PKEY_new();
     char *retval = OPENSSL_malloc(maxretlen);
+#ifdef OPENSSL_NO_DEPRECATED_3_6
+    EVP_KEYMGMT *keymgmt = NULL;
+#endif
 
     if (retval == NULL)
         return NULL;
@@ -2316,7 +2323,9 @@ char *SSL_get1_builtin_sigalgs(OSSL_LIB_CTX *libctx)
 
     for (i = 0, lu = sigalg_lookup_tbl;
          i < OSSL_NELEM(sigalg_lookup_tbl); lu++, i++) {
+#ifndef OPENSSL_NO_DEPRECATED_3_6
         EVP_PKEY_CTX *pctx;
+#endif
         int enabled = 1;
 
         ERR_set_mark();
@@ -2333,6 +2342,7 @@ char *SSL_get1_builtin_sigalgs(OSSL_LIB_CTX *libctx)
             EVP_MD_free(hash);
         }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
         if (!EVP_PKEY_set_type(tmpkey, lu->sig)) {
             enabled = 0;
             ERR_pop_to_mark();
@@ -2344,6 +2354,17 @@ char *SSL_get1_builtin_sigalgs(OSSL_LIB_CTX *libctx)
             enabled = 0;
         ERR_pop_to_mark();
         EVP_PKEY_CTX_free(pctx);
+#else
+        /*
+         * Try to fetch the key management for the signature algorithm to see if
+         * it's available.
+         */
+        keymgmt = EVP_KEYMGMT_fetch(libctx, OBJ_nid2sn(lu->sig), NULL);
+        if (keymgmt == NULL)
+            enabled = 0;
+        ERR_pop_to_mark();
+        EVP_KEYMGMT_free(keymgmt);
+#endif
 
         if (enabled) {
             const char *sa = lu->name;

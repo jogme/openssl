@@ -640,6 +640,7 @@ static int test_unprotected_via_PEM(const char *type, EVP_PKEY *key, int fips)
 static int check_params_DER(const char *file, const int line,
                             const char *type, const void *data, size_t data_len)
 {
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     const unsigned char *datap = data;
     int ok = 0;
     int itype = NID_undef;
@@ -661,6 +662,9 @@ static int check_params_DER(const char *file, const int line,
     }
 
     return ok;
+#else
+    return 1;
+#endif
 }
 
 static int check_params_PEM(const char *file, const int line,

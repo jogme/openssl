@@ -98,6 +98,7 @@ d2i_PrivateKey_decoder(int keytype, EVP_PKEY **a, const unsigned char **pp,
     return NULL;
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 EVP_PKEY *
 ossl_d2i_PrivateKey_legacy(int keytype, EVP_PKEY **a, const unsigned char **pp,
                            long length, OSSL_LIB_CTX *libctx, const char *propq)
@@ -163,6 +164,7 @@ ossl_d2i_PrivateKey_legacy(int keytype, EVP_PKEY **a, const unsigned char **pp,
         EVP_PKEY_free(ret);
     return NULL;
 }
+#endif
 
 EVP_PKEY *d2i_PrivateKey_ex(int keytype, EVP_PKEY **a, const unsigned char **pp,
                             long length, OSSL_LIB_CTX *libctx,
@@ -171,9 +173,11 @@ EVP_PKEY *d2i_PrivateKey_ex(int keytype, EVP_PKEY **a, const unsigned char **pp,
     EVP_PKEY *ret;
 
     ret = d2i_PrivateKey_decoder(keytype, a, pp, length, libctx, propq);
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     /* try the legacy path if the decoder failed */
     if (ret == NULL)
         ret = ossl_d2i_PrivateKey_legacy(keytype, a, pp, length, libctx, propq);
+#endif
     return ret;
 }
 
@@ -183,6 +187,7 @@ EVP_PKEY *d2i_PrivateKey(int type, EVP_PKEY **a, const unsigned char **pp,
     return d2i_PrivateKey_ex(type, a, pp, length, NULL, NULL);
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 static EVP_PKEY *d2i_AutoPrivateKey_legacy(EVP_PKEY **a,
                                            const unsigned char **pp,
                                            long length,
@@ -234,6 +239,7 @@ static EVP_PKEY *d2i_AutoPrivateKey_legacy(EVP_PKEY **a,
     sk_ASN1_TYPE_pop_free(inkey, ASN1_TYPE_free);
     return ossl_d2i_PrivateKey_legacy(keytype, a, pp, length, libctx, propq);
 }
+#endif
 
 /*
  * This works like d2i_PrivateKey() except it passes the keytype as
@@ -246,9 +252,11 @@ EVP_PKEY *d2i_AutoPrivateKey_ex(EVP_PKEY **a, const unsigned char **pp,
     EVP_PKEY *ret;
 
     ret = d2i_PrivateKey_decoder(EVP_PKEY_NONE, a, pp, length, libctx, propq);
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     /* try the legacy path if the decoder failed */
     if (ret == NULL)
         ret = d2i_AutoPrivateKey_legacy(a, pp, length, libctx, propq);
+#endif
     return ret;
 }
 

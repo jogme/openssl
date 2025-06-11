@@ -163,7 +163,7 @@ int EVP_PKEY_copy_parameters(EVP_PKEY *to, const EVP_PKEY *from)
      * further down help us find out if they are the same or not.
      */
     if (evp_pkey_is_blank(to)) {
-#ifndef FIPS_MODULE
+#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
         if (evp_pkey_is_legacy(from)) {
             if (EVP_PKEY_set_type(to, from->type) == 0)
                 goto end;
@@ -720,7 +720,11 @@ EVP_PKEY *EVP_PKEY_new_CMAC_key(ENGINE *e, const unsigned char *priv,
     return new_cmac_key_int(priv, len, NULL, cipher, NULL, NULL, e);
 }
 
-// TODO?
+//FIXME
+/*
+ * This has to be fixed, because now it will always fail
+ */
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 int EVP_PKEY_set_type(EVP_PKEY *pkey, int type)
 {
     return pkey_set_type(pkey, NULL, type, NULL, -1, NULL);
@@ -730,6 +734,7 @@ int EVP_PKEY_set_type_str(EVP_PKEY *pkey, const char *str, int len)
 {
     return pkey_set_type(pkey, NULL, EVP_PKEY_NONE, str, len, NULL);
 }
+#endif
 
 # ifndef OPENSSL_NO_ENGINE
 int EVP_PKEY_set1_engine(EVP_PKEY *pkey, ENGINE *e)
@@ -1684,7 +1689,7 @@ static int pkey_set_type(EVP_PKEY *pkey, ENGINE *e, int type, const char *str,
     return 1;
 }
 
-#ifndef FIPS_MODULE
+#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
 static void find_ameth(const char *name, void *data)
 {
     const char **str = data;
@@ -1709,7 +1714,13 @@ static void find_ameth(const char *name, void *data)
 
 int EVP_PKEY_set_type_by_keymgmt(EVP_PKEY *pkey, EVP_KEYMGMT *keymgmt)
 {
-#ifndef FIPS_MODULE
+#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+    /*
+     * If the key management method is NULL, then we are setting the type
+     * to EVP_PKEY_NONE, which is a valid operation.
+     */
+    if (keymgmt == NULL)
+        return pkey_set_type(pkey, NULL, EVP_PKEY_NONE, NULL, 0, NULL);
 # define EVP_PKEY_TYPE_STR str[0]
 # define EVP_PKEY_TYPE_STRLEN (str[0] == NULL ? -1 : (int)strlen(str[0]))
     /*
@@ -1773,7 +1784,7 @@ EVP_PKEY *EVP_PKEY_dup(EVP_PKEY *pkey)
         goto done;
     }
 
-#ifndef FIPS_MODULE
+#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
     if (evp_pkey_is_legacy(pkey)) {
         const EVP_PKEY_ASN1_METHOD *ameth = pkey->ameth;
 
@@ -2108,7 +2119,9 @@ int evp_pkey_copy_downgraded(EVP_PKEY **dest, const EVP_PKEY *src)
 
     if (evp_pkey_is_assigned(src) && evp_pkey_is_provided(src)) {
         EVP_KEYMGMT *keymgmt = src->keymgmt;
+#ifndef OPENSSL_NO_DEPRECATED_3_6
         void *keydata = src->keydata;
+#endif
         int type = src->type;
         const char *keytype = NULL;
 
@@ -2142,6 +2155,8 @@ int evp_pkey_copy_downgraded(EVP_PKEY **dest, const EVP_PKEY *src)
             evp_pkey_free_it(*dest);
         }
 
+//TODO?
+#ifndef OPENSSL_NO_DEPRECATED_3_6
         if (EVP_PKEY_set_type(*dest, type)) {
             /* If the key is typed but empty, we're done */
             if (keydata == NULL)
@@ -2180,6 +2195,7 @@ int evp_pkey_copy_downgraded(EVP_PKEY **dest, const EVP_PKEY *src)
             ERR_raise_data(ERR_LIB_EVP, EVP_R_KEYMGMT_EXPORT_FAILURE,
                            "key type = %s", keytype);
         }
+#endif
     }
 
     if (allocpkey != NULL) {

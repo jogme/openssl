@@ -33,6 +33,7 @@ struct pubkey {
     size_t key_bin_len;
 };
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 # ifndef OPENSSL_NO_DH
 static const unsigned char dhparam_bin[] = {
 0x30,0x82,0x01,0x08,0x02,0x82,0x01,0x01,0x00,0xc0,0xd1,0x2e,0x14,0x18,0xbd,0x03,
@@ -311,14 +312,17 @@ static int set_enc_pubkey_test(int id)
     return ret;
 }
 #endif
+#endif
 
 int setup_tests(void)
 {
 #ifdef OPENSSL_NO_KEYPARAMS
     TEST_note("No DH/DSA/EC support");
 #else
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     ADD_ALL_TESTS(params_bio_test, OSSL_NELEM(pkey_params));
     ADD_ALL_TESTS(set_enc_pubkey_test, OSSL_NELEM(pkey_params));
+#endif
 #endif
     return 1;
 }

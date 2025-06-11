@@ -11,7 +11,7 @@
  * DSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-#include "internal/deprecated.h"
+//#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include "internal/cryptlib.h"
@@ -25,6 +25,7 @@
 
 #include "crypto/evp.h"
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 EVP_PKEY *d2i_PublicKey(int type, EVP_PKEY **a, const unsigned char **pp,
                         long length)
 {
@@ -96,3 +97,4 @@ EVP_PKEY *d2i_PublicKey(int type, EVP_PKEY **a, const unsigned char **pp,
     EVP_PKEY_free(copy);
     return NULL;
 }
+#endif
