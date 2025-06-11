@@ -67,7 +67,6 @@ static int read_lebn(const unsigned char **in, unsigned int nbyte, BIGNUM **r)
     return 1;
 }
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 /*
  * Create an EVP_PKEY from a type specific key.
  * This takes ownership of |key|, as long as the |evp_type| is acceptable
@@ -154,12 +153,14 @@ static EVP_PKEY *evp_pkey_new0_key(void *key, int evp_type)
 # define PVK_MAX_SALTLEN         10240
 
 
+#ifdef OPENSSL_NO_DEPRECATED_3_6
 EVP_PKEY *ossl_b2i_RSA_after_header(const unsigned char **in,
                                     unsigned int bitlen,
                                     int ispub);
 EVP_PKEY *ossl_b2i_DSA_after_header(const unsigned char **in,
                                     unsigned int bitlen,
                                     int ispub);
+#endif
 
 /*
  * Read the MSBLOB header and get relevant data from it.
@@ -806,6 +807,7 @@ static void write_dsa(unsigned char **out, const DSA *dsa, int ispub);
 static int check_bitlen_dsa(const EVP_PKEY *pkey, int ispub, unsigned int *magic);
 static int write_dsa(unsigned char **out, const EVP_PKEY *pkey, int ispub);
 #endif
+#endif
 
 static int do_i2b(unsigned char **out, const EVP_PKEY *pk, int ispub)
 {
@@ -1136,6 +1138,29 @@ static int check_bitlen_dsa(const EVP_PKEY *pkey, int ispub, unsigned int *pmagi
 }
 #endif
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
+static void write_dsa(unsigned char **out, const DSA *dsa, int ispub)
+{
+    int nbyte;
+    const BIGNUM *p = NULL, *q = NULL, *g = NULL;
+    const BIGNUM *pub_key = NULL, *priv_key = NULL;
+
+    DSA_get0_pqg(dsa, &p, &q, &g);
+    DSA_get0_key(dsa, &pub_key, &priv_key);
+    nbyte = BN_num_bytes(p);
+    write_lebn(out, p, nbyte);
+    write_lebn(out, q, 20);
+    write_lebn(out, g, nbyte);
+    if (ispub)
+        write_lebn(out, pub_key, nbyte);
+    else
+        write_lebn(out, priv_key, 20);
+    /* Set "invalid" for seed structure values */
+    memset(*out, 0xff, 24);
+    *out += 24;
+    return;
+}
+#else
 static int write_dsa(unsigned char **out, const EVP_PKEY *pkey, int ispub)
 {
     int nbyte, ret = 0;
@@ -1168,6 +1193,7 @@ out:
     BN_free(priv_key);
     return ret;
 }
+#endif
 #endif
 
 int i2b_PrivateKey_bio(BIO *out, const EVP_PKEY *pk)

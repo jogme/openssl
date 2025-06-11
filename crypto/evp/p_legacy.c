@@ -11,7 +11,7 @@
  * Legacy EVP_PKEY assign/set/get APIs are deprecated for public use, but
  * still ok for internal use, particularly in providers.
  */
-//#include "internal/deprecated.h"
+#include "internal/deprecated.h"
 
 #include <openssl/types.h>
 #include <openssl/evp.h>
@@ -22,7 +22,6 @@
 #include "crypto/evp.h"
 #include "evp_local.h"
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 int EVP_PKEY_set1_RSA(EVP_PKEY *pkey, RSA *key)
 {
     int ret;
@@ -97,4 +96,3 @@ EC_KEY *EVP_PKEY_get1_EC_KEY(EVP_PKEY *pkey)
     return ret;
 }
 #endif /* OPENSSL_NO_EC */
-#endif
