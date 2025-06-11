@@ -11,8 +11,7 @@
  * DSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-//#include "internal/deprecated.h"
-//.
+#include "internal/deprecated.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -887,8 +886,7 @@ const unsigned char *EVP_PKEY_get0_siphash(const EVP_PKEY *pkey, size_t *len)
 }
 # endif
 
-# if !defined(OPENSSL_NO_DSA) && !defined(OPENSSL_NO_DEPRECATED_3_0)
-#if 0
+# ifndef OPENSSL_NO_DSA
 static DSA *evp_pkey_get0_DSA_int(const EVP_PKEY *pkey)
 {
     if (pkey->type != EVP_PKEY_DSA) {
@@ -926,7 +924,6 @@ DSA *EVP_PKEY_get1_DSA(EVP_PKEY *pkey)
 
     return ret;
 }
-#endif
 # endif /*  OPENSSL_NO_DSA */
 
 # ifndef OPENSSL_NO_ECX
@@ -1026,12 +1023,11 @@ DH *EVP_PKEY_get1_DH(EVP_PKEY *pkey)
 }
 # endif
 
+// TODO
 int EVP_PKEY_type(int type)
 {
     int ret = NID_undef;
-# ifndef OPENSSL_NO_ENGINE
     ENGINE *e;
-# endif
 # ifndef OPENSSL_NO_DEPRECATED_3_6
     const EVP_PKEY_ASN1_METHOD *ameth;
     ameth = EVP_PKEY_asn1_find(&e, type);
@@ -1142,7 +1138,7 @@ int EVP_PKEY_can_sign(const EVP_PKEY *pkey)
         case EVP_PKEY_RSA:
         case EVP_PKEY_RSA_PSS:
             return 1;
-# if !defined(OPENSSL_NO_DSA) && !defined(OPENSSL_NO_DEPRECATED_3_0)
+# ifndef OPENSSL_NO_DSA
         case EVP_PKEY_DSA:
             return 1;
 # endif
@@ -1150,10 +1146,8 @@ int EVP_PKEY_can_sign(const EVP_PKEY *pkey)
         case EVP_PKEY_ED25519:
         case EVP_PKEY_ED448:
             return 1;
-#  ifndef OPENSSL_NO_DEPRECATED_3_0
         case EVP_PKEY_EC:        /* Including SM2 */
             return EC_KEY_can_sign(pkey->pkey.ec);
-#  endif
 # endif
         default:
             break;
@@ -1570,9 +1564,7 @@ static int pkey_set_type(EVP_PKEY *pkey, ENGINE *e, int type, const char *str,
 # ifndef OPENSSL_NO_DEPRECATED_3_6
     const EVP_PKEY_ASN1_METHOD *ameth = NULL;
 # endif
-# ifndef OPENSSL_NO_ENGINE
     ENGINE **eptr = (e == NULL) ? &e :  NULL;
-# endif
 #endif
 
     /*
@@ -1622,6 +1614,7 @@ static int pkey_set_type(EVP_PKEY *pkey, ENGINE *e, int type, const char *str,
         ENGINE_finish(e);
 # endif
 #endif
+
 
     {
         int check = 1;
@@ -2456,7 +2449,7 @@ int EVP_PKEY_set_params(EVP_PKEY *pkey, OSSL_PARAM params[])
             pkey->dirty_cnt++;
             return evp_keymgmt_set_params(pkey->keymgmt, pkey->keydata, params);
         }
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
         /*
          * We will hopefully never find the need to set individual data in
          * EVP_PKEYs with a legacy internal key, but we can't be entirely
@@ -2486,7 +2479,7 @@ int EVP_PKEY_get_params(const EVP_PKEY *pkey, OSSL_PARAM params[])
     if (pkey != NULL) {
         if (evp_pkey_is_provided(pkey))
             return evp_keymgmt_get_params(pkey->keymgmt, pkey->keydata, params) > 0;
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
         else if (evp_pkey_is_legacy(pkey))
             return evp_pkey_get_params_to_ctrl(pkey, params) > 0;
 #endif
@@ -2506,7 +2499,7 @@ int EVP_PKEY_get_ec_point_conv_form(const EVP_PKEY *pkey)
 
     if (pkey->keymgmt == NULL
             || pkey->keydata == NULL) {
-# if !defined(OPENSSL_NO_EC) && !defined(OPENSSL_NO_DEPRECATED_3_0)
+# ifndef OPENSSL_NO_EC
         /* Might work through the legacy route */
         const EC_KEY *ec = EVP_PKEY_get0_EC_KEY(pkey);
 
@@ -2546,7 +2539,7 @@ int EVP_PKEY_get_field_type(const EVP_PKEY *pkey)
 
     if (pkey->keymgmt == NULL
             || pkey->keydata == NULL) {
-# if !defined(OPENSSL_NO_EC) && !defined(OPENSSL_NO_DEPRECATED_3_0)
+# ifndef OPENSSL_NO_EC
         /* Might work through the legacy route */
         const EC_KEY *ec = EVP_PKEY_get0_EC_KEY(pkey);
         const EC_GROUP *grp;

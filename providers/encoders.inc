@@ -146,13 +146,11 @@ ENCODER("SM2", sm2, no, blob),
 /*
  * Entries for the output formats MSBLOB and PVK
  */
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 ENCODER("RSA", rsa, yes, msblob),
 ENCODER("RSA", rsa, yes, pvk),
 #ifndef OPENSSL_NO_DSA
 ENCODER("DSA", dsa, yes, msblob),
 ENCODER("DSA", dsa, yes, pvk),
-#endif
 #endif
 
 /*

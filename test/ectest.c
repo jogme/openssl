@@ -12,7 +12,7 @@
  * EC_KEY low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-//#include "internal/deprecated.h"
+#include "internal/deprecated.h"
 
 #include <string.h>
 #include "internal/nelem.h"
@@ -2345,7 +2345,6 @@ static int cardinality_test(int n)
     return ret;
 }
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 static int check_ec_key_field_public_range_test(int id)
 {
     int ret = 0, type = 0;
@@ -2398,7 +2397,6 @@ err:
     EC_KEY_free(key);
     return ret;
 }
-#endif
 
 /*
  * Helper for ec_point_hex2point_test
@@ -2803,7 +2801,6 @@ static int custom_generator_test(int id)
     return ret;
 }
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 /*
  * check creation of curves from explicit params through the public API
  */
@@ -2975,7 +2972,6 @@ static int custom_params_test(int id)
                                                pub2, bsize, ctx), bsize))
         goto err;
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     /* create two `EVP_PKEY`s from the `EC_KEY`s */
     if (!TEST_ptr(pkey1 = EVP_PKEY_new())
             || !TEST_int_eq(EVP_PKEY_assign_EC_KEY(pkey1, eckey1), 1))
@@ -3006,7 +3002,6 @@ static int custom_params_test(int id)
     /* Both sides should expect the same shared secret */
     if (!TEST_mem_eq(buf1, sslen, buf2, t))
         goto err;
-#endif
 
     /* Build parameters for provider-native keys */
     if (!TEST_ptr(param_bld = OSSL_PARAM_BLD_new())
@@ -3084,7 +3079,6 @@ static int custom_params_test(int id)
 
     return ret;
 }
-#endif
 
 static int ec_d2i_publickey_test(void)
 {
@@ -3150,15 +3144,11 @@ int setup_tests(void)
     ADD_TEST(group_field_test);
     ADD_ALL_TESTS(check_named_curve_test, crv_len);
     ADD_ALL_TESTS(check_named_curve_lookup_test, crv_len);
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     ADD_ALL_TESTS(check_ec_key_field_public_range_test, crv_len);
-#endif
     ADD_ALL_TESTS(check_named_curve_from_ecparameters, crv_len);
     ADD_ALL_TESTS(ec_point_hex2point_test, crv_len);
     ADD_ALL_TESTS(custom_generator_test, crv_len);
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     ADD_ALL_TESTS(custom_params_test, crv_len);
-#endif
     ADD_TEST(ec_d2i_publickey_test);
     return 1;
 }

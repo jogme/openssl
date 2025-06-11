@@ -11,7 +11,7 @@
  * Low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-//#include "internal/deprecated.h"
+#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include "internal/cryptlib.h"
@@ -146,7 +146,6 @@ int i2d_PublicKey(const EVP_PKEY *a, unsigned char **pp)
         return i2d_provided(a, EVP_PKEY_PUBLIC_KEY, output_info, pp);
     }
     switch (EVP_PKEY_get_base_id(a)) {
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     case EVP_PKEY_RSA:
         return i2d_RSAPublicKey(EVP_PKEY_get0_RSA(a), pp);
 #ifndef OPENSSL_NO_DSA
@@ -156,7 +155,6 @@ int i2d_PublicKey(const EVP_PKEY *a, unsigned char **pp)
 #ifndef OPENSSL_NO_EC
     case EVP_PKEY_EC:
         return i2o_ECPublicKey(EVP_PKEY_get0_EC_KEY(a), pp);
-#endif
 #endif
     default:
         ERR_raise(ERR_LIB_ASN1, ASN1_R_UNSUPPORTED_PUBLIC_KEY_TYPE);

@@ -191,9 +191,7 @@ void evp_cleanup_int(void)
     EVP_PBE_cleanup();
     OBJ_sigid_free();
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     evp_app_cleanup_int();
-#endif
 }
 
 struct doall_cipher {

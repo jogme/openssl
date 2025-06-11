@@ -11,7 +11,7 @@
  * low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-//#include "internal/deprecated.h"
+#include "internal/deprecated.h"
 
 #include <string.h>
 
@@ -46,11 +46,9 @@ struct keytype_desc_st {
     free_key_fn *free_key;
 };
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 static OSSL_FUNC_decoder_freectx_fn msblob2key_freectx;
 static OSSL_FUNC_decoder_decode_fn msblob2key_decode;
 static OSSL_FUNC_decoder_export_object_fn msblob2key_export_object;
-#endif
 
 /*
  * Context used for DER to key decoding.
@@ -62,7 +60,6 @@ struct msblob2key_ctx_st {
     int selection;
 };
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 static struct msblob2key_ctx_st *
 msblob2key_newctx(void *provctx, const struct keytype_desc_st *desc)
 {
@@ -235,7 +232,6 @@ msblob2key_export_object(void *vctx,
     }
     return 0;
 }
-#endif
 
 /* ---------------------------------------------------------------------- */
 
@@ -246,7 +242,6 @@ msblob2key_export_object(void *vctx,
 
 /* ---------------------------------------------------------------------- */
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 #define rsa_decode_private_key  (b2i_of_void_fn *)ossl_b2i_RSA_after_header
 #define rsa_decode_public_key   (b2i_of_void_fn *)ossl_b2i_RSA_after_header
 
@@ -254,7 +249,6 @@ static void rsa_adjust(void *key, struct msblob2key_ctx_st *ctx)
 {
     ossl_rsa_set0_libctx(key, PROV_LIBCTX_OF(ctx->provctx));
 }
-#endif
 
 #define rsa_free                        (void (*)(void *))RSA_free
 
@@ -289,9 +283,7 @@ static void rsa_adjust(void *key, struct msblob2key_ctx_st *ctx)
         OSSL_DISPATCH_END                                               \
     }
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 #ifndef OPENSSL_NO_DSA
 IMPLEMENT_MSBLOB(DSA, dsa);
 #endif
 IMPLEMENT_MSBLOB(RSA, rsa);
-#endif

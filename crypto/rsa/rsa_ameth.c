@@ -11,8 +11,7 @@
  * RSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-//#include "internal/deprecated.h"
-//^TODO
+#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include "internal/cryptlib.h"
@@ -25,8 +24,6 @@
 #include "crypto/evp.h"
 #include "crypto/rsa.h"
 #include "rsa_local.h"
-
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 
 /* Set any parameters associated with pkey */
 static int rsa_param_encode(const EVP_PKEY *pkey,
@@ -1054,4 +1051,3 @@ const EVP_PKEY_ASN1_METHOD ossl_rsa_pss_asn1_meth = {
      rsa_pss_pkey_import_from,
      rsa_pkey_copy
 };
-#endif

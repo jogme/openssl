@@ -11,12 +11,8 @@
  * DSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-//#include "internal/deprecated.h"
-//^TODO
+#include "internal/deprecated.h"
 
-#include <openssl/macros.h>
-
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 #include <stdio.h>
 #include <openssl/x509.h>
 #include <openssl/asn1.h>
@@ -584,4 +580,3 @@ const EVP_PKEY_ASN1_METHOD ossl_dsa_asn1_meths[4] = {
      dsa_pkey_copy
     }
 };
-#endif

@@ -11,7 +11,7 @@
  * DSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-//#include "internal/deprecated.h"
+#include "internal/deprecated.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -22,7 +22,7 @@
 #include <openssl/err.h>
 #include <openssl/rand.h>
 
-#if !defined(OPENSSL_NO_DSA) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef OPENSSL_NO_DSA
 #include <openssl/dsa.h>
 
 static DSA *dsakey;
@@ -238,7 +238,7 @@ void cleanup_tests(void)
 
 int setup_tests(void)
 {
-#if !defined(OPENSSL_NO_DSA) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef OPENSSL_NO_DSA
     if (!genkeys())
         return 0;
 

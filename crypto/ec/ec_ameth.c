@@ -11,12 +11,8 @@
  * ECDH and ECDSA low level APIs are deprecated for public use, but still ok
  * for internal use.
  */
-//#include "internal/deprecated.h"
-//^TODO
+#include "internal/deprecated.h"
 
-#include <openssl/macros.h>
-
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 #include <stdio.h>
 #include "internal/cryptlib.h"
 #include <openssl/x509.h>
@@ -723,4 +719,3 @@ int ECParameters_print(BIO *bp, const EC_KEY *x)
 {
     return do_EC_KEY_print(bp, x, 4, EC_KEY_PRINT_PARAM);
 }
-#endif

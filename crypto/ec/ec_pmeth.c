@@ -11,7 +11,7 @@
  * ECDH and ECDSA low level APIs are deprecated for public use, but still ok
  * for internal use.
  */
-//#include "internal/deprecated.h"
+#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include "internal/cryptlib.h"
@@ -22,7 +22,6 @@
 #include <openssl/evp.h>
 #include "crypto/evp.h"
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 /* EC pkey context structure */
 
 typedef struct {
@@ -514,4 +513,3 @@ const EVP_PKEY_METHOD *ossl_ec_pkey_method(void)
 {
     return &ec_pkey_meth;
 }
-#endif

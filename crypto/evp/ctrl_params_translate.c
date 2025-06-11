@@ -13,9 +13,7 @@
  * configured.  When we drop #legacy EVP_PKEYs, this source should be
  * possible to drop as well.
  */
-//#include "internal/deprecated.h"
-
-#define OPENSSL_SUPPRESS_DEPRECATED
+#include "internal/deprecated.h"
 
 #include <string.h>
 
@@ -1510,7 +1508,6 @@ static int fix_hkdf_mode(enum state state,
  * p1, sz
  */
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 /* Pilfering DH, DSA and EC_KEY */
 static int get_payload_group_name(enum state state,
                                   const struct translation_st *translation,
@@ -2039,7 +2036,6 @@ IMPL_GET_RSA_PAYLOAD_COEFFICIENT(6)
 IMPL_GET_RSA_PAYLOAD_COEFFICIENT(7)
 IMPL_GET_RSA_PAYLOAD_COEFFICIENT(8)
 IMPL_GET_RSA_PAYLOAD_COEFFICIENT(9)
-#endif
 
 static int fix_group_ecx(enum state state,
                          const struct translation_st *translation,
@@ -2447,7 +2443,6 @@ static const struct translation_st evp_pkey_ctx_translations[] = {
       OSSL_PKEY_PARAM_GROUP_NAME, OSSL_PARAM_UTF8_STRING, fix_group_ecx },
 };
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 static const struct translation_st evp_pkey_translations[] = {
     /*
      * The following contain no ctrls, they are exclusively here to extract
@@ -2588,7 +2583,6 @@ static const struct translation_st evp_pkey_translations[] = {
       OSSL_PKEY_PARAM_EC_DECODED_FROM_EXPLICIT_PARAMS, OSSL_PARAM_INTEGER,
       get_ec_decoded_from_explicit_params },
 };
-#endif
 
 static const struct translation_st *
 lookup_translation(struct translation_st *tmpl,
@@ -2702,14 +2696,12 @@ lookup_evp_pkey_ctx_translation(struct translation_st *tmpl)
                               OSSL_NELEM(evp_pkey_ctx_translations));
 }
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 static const struct translation_st *
 lookup_evp_pkey_translation(struct translation_st *tmpl)
 {
     return lookup_translation(tmpl, evp_pkey_translations,
                               OSSL_NELEM(evp_pkey_translations));
 }
-#endif
 
 /* This must ONLY be called for provider side operations */
 int evp_pkey_ctx_ctrl_to_param(EVP_PKEY_CTX *pctx,
@@ -2915,7 +2907,6 @@ int evp_pkey_ctx_get_params_to_ctrl(EVP_PKEY_CTX *ctx, OSSL_PARAM *params)
     return evp_pkey_ctx_setget_params_to_ctrl(ctx, GET, params);
 }
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 /* This must ONLY be called for legacy EVP_PKEYs */
 static int evp_pkey_setget_params_to_ctrl(const EVP_PKEY *pkey,
                                           enum action action_type,
@@ -2963,4 +2954,3 @@ int evp_pkey_get_params_to_ctrl(const EVP_PKEY *pkey, OSSL_PARAM *params)
 {
     return evp_pkey_setget_params_to_ctrl(pkey, GET, params);
 }
-#endif

@@ -14,7 +14,6 @@
 #include <openssl/rsa.h>
 #include <openssl/ssl.h>
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 int SSL_use_RSAPrivateKey(SSL *ssl, RSA *rsa)
 {
     EVP_PKEY *pkey;
@@ -197,4 +196,3 @@ int SSL_CTX_use_RSAPrivateKey_ASN1(SSL_CTX *ctx, const unsigned char *d,
     RSA_free(rsa);
     return ret;
 }
-#endif

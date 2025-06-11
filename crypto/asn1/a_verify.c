@@ -165,13 +165,11 @@ int ASN1_item_verify_ctx(const ASN1_ITEM *it, const X509_ALGOR *alg,
                 ERR_raise(ERR_LIB_ASN1, ASN1_R_WRONG_PUBLIC_KEY_TYPE);
                 goto err;
             }
-#ifndef OPENSSL_NO_DEPRECATED_3_6
             /* This function also calls EVP_DigestVerifyInit */
             if (ossl_rsa_pss_to_ctx(ctx, NULL, alg, pkey) <= 0) {
                 ERR_raise(ERR_LIB_ASN1, ERR_R_INTERNAL_ERROR);
                 goto err;
             }
-#endif
         } else {
             /* Check public key OID matches public key type */
             if (!EVP_PKEY_is_a(pkey, OBJ_nid2sn(pknid))) {

@@ -11,7 +11,7 @@
  * Low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-//#include "internal/deprecated.h"
+#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include "internal/cryptlib.h"
@@ -335,7 +335,6 @@ int i2d_X509_REQ_bio(BIO *bp, const X509_REQ *req)
     return ASN1_item_i2d_bio(ASN1_ITEM_rptr(X509_REQ), bp, req);
 }
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 #ifndef OPENSSL_NO_STDIO
 RSA *d2i_RSAPrivateKey_fp(FILE *fp, RSA **rsa)
 {
@@ -486,7 +485,6 @@ int i2d_ECPrivateKey_bio(BIO *bp, const EC_KEY *eckey)
 {
     return ASN1_i2d_bio_of(EC_KEY, i2d_ECPrivateKey, bp, eckey);
 }
-#endif
 #endif
 
 int X509_pubkey_digest(const X509 *data, const EVP_MD *type,

@@ -16,7 +16,7 @@
  * RSA and DSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-//#include "internal/deprecated.h"
+#include "internal/deprecated.h"
 
 #include <openssl/pem.h>
 #include <openssl/rand.h>
@@ -128,7 +128,6 @@ static EVP_PKEY *evp_pkey_new0_key(void *key, int evp_type)
 
     return pkey;
 }
-#endif
 
 /* Convert private key blob to EVP_PKEY: RSA and DSA keys supported */
 
@@ -1180,7 +1179,6 @@ int i2b_PublicKey_bio(BIO *out, const EVP_PKEY *pk)
 {
     return do_i2b_bio(out, pk, 1);
 }
-#endif
 
 int ossl_do_PVK_header(const unsigned char **in, unsigned int length,
                        int skip_magic, int *isdss,
@@ -1579,3 +1577,4 @@ int i2b_PVK_bio(BIO *out, const EVP_PKEY *pk, int enclevel,
 {
     return i2b_PVK_bio_ex(out, pk, enclevel, cb, u, NULL, NULL);
 }
+

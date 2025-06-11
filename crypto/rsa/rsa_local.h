@@ -155,12 +155,10 @@ int ossl_rsa_multiprime_derive(RSA *rsa, int bits, int primes,
                                  STACK_OF(BIGNUM) *factors, STACK_OF(BIGNUM) *exps,
                                  STACK_OF(BIGNUM) *coeffs);
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 RSA_PSS_PARAMS *ossl_rsa_pss_params_create(const EVP_MD *sigmd,
                                            const EVP_MD *mgf1md, int saltlen);
 int ossl_rsa_pss_get_param(const RSA_PSS_PARAMS *pss, const EVP_MD **pmd,
                            const EVP_MD **pmgf1md, int *psaltlen);
-#endif
 /* internal function to clear and free multi-prime parameters */
 void ossl_rsa_multip_info_free_ex(RSA_PRIME_INFO *pinfo);
 void ossl_rsa_multip_info_free(RSA_PRIME_INFO *pinfo);
