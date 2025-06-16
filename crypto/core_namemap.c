@@ -7,6 +7,11 @@
  * https://www.openssl.org/source/license.html
  */
 
+/*
+ * because of EVP_PKEY_asn1_get0_info, EVP_PKEY_asn1_get_count deprecation
+ */
+#include "internal/deprecated.h"
+
 #include "internal/namemap.h"
 #include "internal/tsan_assist.h"
 #include "internal/hashtable.h"
@@ -498,9 +503,7 @@ OSSL_NAMEMAP *ossl_namemap_stored(OSSL_LIB_CTX *libctx)
         return NULL;
     }
     if (nms == 1) {
-#ifndef OPENSSL_NO_DEPRECATED_3_6
         int i, end;
-#endif
 
         /* Before pilfering, we make sure the legacy database is populated */
         OPENSSL_init_crypto(OPENSSL_INIT_ADD_ALL_CIPHERS

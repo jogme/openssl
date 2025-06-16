@@ -12,7 +12,11 @@
  * ENGINE API is disabled / removed.
  * We need to suppress deprecation warnings to make this work.
  */
-#define OPENSSL_SUPPRESS_DEPRECATED
+//#define OPENSSL_SUPPRESS_DEPRECATED
+/*
+ * because of EVP_PKEY_asn1_get_count, EVP_PKEY_asn1_find_str is deprecated
+ */
+#include "internal/deprecated.h"
 
 #include <string.h> /* strcmp */
 
