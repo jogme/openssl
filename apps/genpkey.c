@@ -379,10 +379,12 @@ int init_gen_str(EVP_PKEY_CTX **pctx,
         return 0;
     }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
     pkey_id = get_legacy_pkey_id(libctx, algname, e);
     if (pkey_id != NID_undef)
         ctx = EVP_PKEY_CTX_new_id(pkey_id, e);
     else
+#endif
         ctx = EVP_PKEY_CTX_new_from_name(libctx, algname, propq);
 
     if (ctx == NULL)

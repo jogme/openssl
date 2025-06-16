@@ -12,11 +12,7 @@
  * ENGINE API is disabled / removed.
  * We need to suppress deprecation warnings to make this work.
  */
-//#define OPENSSL_SUPPRESS_DEPRECATED
-/*
- * because of EVP_PKEY_asn1_get_count, EVP_PKEY_asn1_find_str is deprecated
- */
-#include "internal/deprecated.h"
+#define OPENSSL_SUPPRESS_DEPRECATED
 
 #include <string.h> /* strcmp */
 
@@ -139,6 +135,7 @@ char *make_engine_uri(ENGINE *e, const char *key_id, const char *desc)
     return new_uri;
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_6
 int get_legacy_pkey_id(OSSL_LIB_CTX *libctx, const char *algname, ENGINE *e)
 {
     const EVP_PKEY_ASN1_METHOD *ameth;
@@ -167,6 +164,7 @@ int get_legacy_pkey_id(OSSL_LIB_CTX *libctx, const char *algname, ENGINE *e)
 
     return pkey_id;
 }
+#endif
 
 const EVP_MD *get_digest_from_engine(const char *name)
 {
