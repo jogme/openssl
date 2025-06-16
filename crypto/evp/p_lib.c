@@ -11,7 +11,7 @@
  * DSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-//#include "internal/deprecated.h"
+#include "internal/deprecated.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -64,10 +64,8 @@ int EVP_PKEY_get_bits(const EVP_PKEY *pkey)
 
     if (pkey != NULL) {
         size = pkey->cache.bits;
-#ifndef OPENSSL_NO_DEPRECATED_3_6
         if (pkey->ameth != NULL && pkey->ameth->pkey_bits != NULL)
             size = pkey->ameth->pkey_bits(pkey);
-#endif
     }
     if (size <= 0) {
         ERR_raise(ERR_LIB_EVP, EVP_R_UNKNOWN_BITS);
@@ -82,10 +80,8 @@ int EVP_PKEY_get_security_bits(const EVP_PKEY *pkey)
 
     if (pkey != NULL) {
         size = pkey->cache.security_bits;
-#ifndef OPENSSL_NO_DEPRECATED_3_6
         if (pkey->ameth != NULL && pkey->ameth->pkey_security_bits != NULL)
             size = pkey->ameth->pkey_security_bits(pkey);
-#endif
     }
     if (size <= 0) {
         ERR_raise(ERR_LIB_EVP, EVP_R_UNKNOWN_SECURITY_BITS);
@@ -233,11 +229,9 @@ int EVP_PKEY_copy_parameters(EVP_PKEY *to, const EVP_PKEY *from)
         goto end;
     }
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     /* Both keys are legacy */
     if (from->ameth != NULL && from->ameth->param_copy != NULL)
         ok = from->ameth->param_copy(to, from);
-#endif
 #endif  /* !FIPS_MODULE */
  end:
     EVP_PKEY_free(downgraded_from);
@@ -252,10 +246,8 @@ int EVP_PKEY_missing_parameters(const EVP_PKEY *pkey)
 #else
         if (pkey->keymgmt != NULL)
             return !evp_keymgmt_util_has((EVP_PKEY *)pkey, SELECT_PARAMETERS);
-#ifndef OPENSSL_NO_DEPRECATED_3_6
         if (pkey->ameth != NULL && pkey->ameth->param_missing != NULL)
             return pkey->ameth->param_missing(pkey);
-#endif
 #endif  /* FIPS_MODULE */
     }
     return 0;
@@ -358,10 +350,8 @@ int EVP_PKEY_parameters_eq(const EVP_PKEY *a, const EVP_PKEY *b)
     /* All legacy keys */
     if (a->type != b->type)
         return -1;
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     if (a->ameth != NULL && a->ameth->param_cmp != NULL)
         return a->ameth->param_cmp(a, b);
-#endif
     return -2;
 #endif  /* !FIPS_MODULE */
 }
@@ -407,7 +397,6 @@ int EVP_PKEY_eq(const EVP_PKEY *a, const EVP_PKEY *b)
     if (a->type != b->type)
         return -1;
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     if (a->ameth != NULL) {
         int ret;
         /* Compare parameters if the algorithm has them */
@@ -420,7 +409,6 @@ int EVP_PKEY_eq(const EVP_PKEY *a, const EVP_PKEY *b)
         if (a->ameth->pub_cmp != NULL)
             return a->ameth->pub_cmp(a, b);
     }
-#endif
 
     return -2;
 #endif  /* !FIPS_MODULE */
@@ -438,12 +426,10 @@ static EVP_PKEY *new_raw_key_int(OSSL_LIB_CTX *libctx,
 {
     EVP_PKEY *pkey = NULL;
     EVP_PKEY_CTX *ctx = NULL;
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     const EVP_PKEY_ASN1_METHOD *ameth = NULL;
-#endif
     int result = 0;
 
-# if !defined(OPENSSL_NO_ENGINE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+# ifndef OPENSSL_NO_ENGINE
     /* Check if there is an Engine for this type */
     if (e == NULL) {
         ENGINE *tmpe = NULL;
@@ -461,11 +447,7 @@ static EVP_PKEY *new_raw_key_int(OSSL_LIB_CTX *libctx,
     }
 # endif
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     if (e == NULL && ameth == NULL) {
-#else
-    if (e == NULL) {
-#endif
         /*
          * No engine is claiming to support this type, so lets see if we have
          * a provider.
@@ -500,7 +482,6 @@ static EVP_PKEY *new_raw_key_int(OSSL_LIB_CTX *libctx,
         /* else not supported so fallback to legacy */
     }
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     /* Legacy code path */
 
     pkey = EVP_PKEY_new();
@@ -540,7 +521,6 @@ static EVP_PKEY *new_raw_key_int(OSSL_LIB_CTX *libctx,
     }
 
     result = 1;
-#endif
  err:
     if (!result) {
         EVP_PKEY_free(pkey);
@@ -624,7 +604,6 @@ int EVP_PKEY_get_raw_private_key(const EVP_PKEY *pkey, unsigned char *priv,
                                        get_raw_key_details, &raw_key);
     }
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     if (pkey->ameth == NULL) {
         ERR_raise(ERR_LIB_EVP, EVP_R_OPERATION_NOT_SUPPORTED_FOR_THIS_KEYTYPE);
         return 0;
@@ -639,7 +618,6 @@ int EVP_PKEY_get_raw_private_key(const EVP_PKEY *pkey, unsigned char *priv,
         ERR_raise(ERR_LIB_EVP, EVP_R_GET_RAW_KEY_FAILED);
         return 0;
     }
-#endif
 
     return 1;
 }
@@ -658,7 +636,6 @@ int EVP_PKEY_get_raw_public_key(const EVP_PKEY *pkey, unsigned char *pub,
                                        get_raw_key_details, &raw_key);
     }
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     if (pkey->ameth == NULL) {
         ERR_raise(ERR_LIB_EVP, EVP_R_OPERATION_NOT_SUPPORTED_FOR_THIS_KEYTYPE);
         return 0;
@@ -673,7 +650,6 @@ int EVP_PKEY_get_raw_public_key(const EVP_PKEY *pkey, unsigned char *pub,
         ERR_raise(ERR_LIB_EVP, EVP_R_GET_RAW_KEY_FAILED);
         return 0;
     }
-#endif
 
     return 1;
 }
@@ -744,14 +720,9 @@ EVP_PKEY *EVP_PKEY_new_CMAC_key(ENGINE *e, const unsigned char *priv,
     return new_cmac_key_int(priv, len, NULL, cipher, NULL, NULL, e);
 }
 
-// TODO?
 int EVP_PKEY_set_type(EVP_PKEY *pkey, int type)
 {
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     return pkey_set_type(pkey, NULL, type, NULL, -1, NULL);
-#else
-    return 0;   
-#endif
 }
 
 int EVP_PKEY_set_type_str(EVP_PKEY *pkey, const char *str, int len)
@@ -914,7 +885,6 @@ const unsigned char *EVP_PKEY_get0_siphash(const EVP_PKEY *pkey, size_t *len)
 }
 # endif
 
-#if 0
 # ifndef OPENSSL_NO_DSA
 static DSA *evp_pkey_get0_DSA_int(const EVP_PKEY *pkey)
 {
@@ -1051,20 +1021,17 @@ DH *EVP_PKEY_get1_DH(EVP_PKEY *pkey)
     return ret;
 }
 # endif
-#endif /* if 0 */
 
 int EVP_PKEY_type(int type)
 {
     int ret = NID_undef;
     ENGINE *e;
-# ifndef OPENSSL_NO_DEPRECATED_3_6
     const EVP_PKEY_ASN1_METHOD *ameth;
     ameth = EVP_PKEY_asn1_find(&e, type);
     if (ameth)
         ret = ameth->pkey_id;
     else
         ret = NID_undef;
-# endif
 # ifndef OPENSSL_NO_ENGINE
     ENGINE_finish(e);
 # endif
@@ -1370,13 +1337,9 @@ static int evp_pkey_asn1_ctrl(EVP_PKEY *pkey, int op, int arg1, void *arg2)
 {
     if (pkey->ameth == NULL)
         return legacy_asn1_ctrl_to_param(pkey, op, arg1, arg2);
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     if (pkey->ameth->pkey_ctrl == NULL)
         return -2;
     return pkey->ameth->pkey_ctrl(pkey, op, arg1, arg2);
-#else
-    return 0;
-#endif
 }
 
 int EVP_PKEY_get_default_digest_nid(EVP_PKEY *pkey, int *pnid)
@@ -1389,14 +1352,11 @@ int EVP_PKEY_get_default_digest_nid(EVP_PKEY *pkey, int *pnid)
 int EVP_PKEY_get_default_digest_name(EVP_PKEY *pkey,
                                      char *mdname, size_t mdname_sz)
 {
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     if (pkey->ameth == NULL)
-#endif
         return evp_keymgmt_util_get_deflt_digest_name(pkey->keymgmt,
                                                       pkey->keydata,
                                                       mdname, mdname_sz);
 
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     {
         int nid = NID_undef;
         int rv = EVP_PKEY_get_default_digest_nid(pkey, &nid);
@@ -1406,7 +1366,6 @@ int EVP_PKEY_get_default_digest_name(EVP_PKEY *pkey,
             OPENSSL_strlcpy(mdname, name, mdname_sz);
         return rv;
     }
-#endif
 }
 
 int EVP_PKEY_get_group_name(const EVP_PKEY *pkey, char *gname, size_t gname_sz,
@@ -1448,7 +1407,7 @@ int EVP_PKEY_set1_encoded_public_key(EVP_PKEY *pkey, const unsigned char *pub,
                                             OSSL_PKEY_PARAM_ENCODED_PUBLIC_KEY,
                                             (unsigned char *)pub, publen);
 
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
     if (publen > INT_MAX)
         return 0;
     /* Historically this function was EVP_PKEY_set1_tls_encodedpoint */
@@ -1497,7 +1456,7 @@ size_t EVP_PKEY_get1_encoded_public_key(EVP_PKEY *pkey, unsigned char **ppub)
         return return_size;
     }
 
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
     {
         int rv = evp_pkey_asn1_ctrl(pkey, ASN1_PKEY_CTRL_GET1_TLS_ENCPT, 0, ppub);
         if (rv <= 0)
@@ -1563,12 +1522,8 @@ static int pkey_set_type(EVP_PKEY *pkey, ENGINE *e, int type, const char *str,
                          int len, EVP_KEYMGMT *keymgmt)
 {
 #ifndef FIPS_MODULE
-# ifndef OPENSSL_NO_DEPRECATED_3_6
     const EVP_PKEY_ASN1_METHOD *ameth = NULL;
-# endif
-# ifndef OPENSSL_NO_ENGINE
     ENGINE **eptr = (e == NULL) ? &e :  NULL;
-# endif
 #endif
 
     /*
@@ -1596,12 +1551,8 @@ static int pkey_set_type(EVP_PKEY *pkey, ENGINE *e, int type, const char *str,
          * succeeded once so just indicate success.
          */
         if (pkey->type != EVP_PKEY_NONE
-#ifndef OPENSSL_NO_DEPRECATED_3_6
             && type == pkey->save_type
             && pkey->ameth != NULL)
-#else
-            && type == pkey->save_type)
-#endif
             return 1;
 # ifndef OPENSSL_NO_ENGINE
         /* If we have ENGINEs release them */
@@ -1612,7 +1563,7 @@ static int pkey_set_type(EVP_PKEY *pkey, ENGINE *e, int type, const char *str,
 # endif
 #endif
     }
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
     if (str != NULL)
         ameth = EVP_PKEY_asn1_find_str(eptr, str, len);
     else if (type != EVP_PKEY_NONE)
@@ -1627,7 +1578,7 @@ static int pkey_set_type(EVP_PKEY *pkey, ENGINE *e, int type, const char *str,
     {
         int check = 1;
 
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
         check = check && ameth == NULL;
 #endif
         check = check && keymgmt == NULL;
@@ -1653,7 +1604,6 @@ static int pkey_set_type(EVP_PKEY *pkey, ENGINE *e, int type, const char *str,
          * The main reason is that |ameth| is one factor to detect that the
          * internal "origin" key is a legacy one.
          */
-# ifndef OPENSSL_NO_DEPRECATED_3_6
         if (keymgmt == NULL)
             pkey->ameth = ameth;
 
@@ -1671,9 +1621,6 @@ static int pkey_set_type(EVP_PKEY *pkey, ENGINE *e, int type, const char *str,
         } else {
             pkey->type = EVP_PKEY_KEYMGMT;
         }
-# else
-        pkey->type = EVP_PKEY_KEYMGMT;
-# endif
 # ifndef OPENSSL_NO_ENGINE
         if (eptr == NULL && e != NULL && !ENGINE_init(e)) {
             ERR_raise(ERR_LIB_EVP, EVP_R_INITIALIZATION_ERROR);
@@ -1686,7 +1633,7 @@ static int pkey_set_type(EVP_PKEY *pkey, ENGINE *e, int type, const char *str,
     return 1;
 }
 
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
 static void find_ameth(const char *name, void *data)
 {
     const char **str = data;
@@ -1711,7 +1658,7 @@ static void find_ameth(const char *name, void *data)
 
 int EVP_PKEY_set_type_by_keymgmt(EVP_PKEY *pkey, EVP_KEYMGMT *keymgmt)
 {
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
 # define EVP_PKEY_TYPE_STR str[0]
 # define EVP_PKEY_TYPE_STRLEN (str[0] == NULL ? -1 : (int)strlen(str[0]))
     /*
@@ -1775,7 +1722,7 @@ EVP_PKEY *EVP_PKEY_dup(EVP_PKEY *pkey)
         goto done;
     }
 
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
     if (evp_pkey_is_legacy(pkey)) {
         const EVP_PKEY_ASN1_METHOD *ameth = pkey->ameth;
 
@@ -1811,7 +1758,7 @@ err:
     return NULL;
 }
 
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
 void evp_pkey_free_legacy(EVP_PKEY *x)
 {
     const EVP_PKEY_ASN1_METHOD *ameth = x->ameth;
@@ -1846,13 +1793,13 @@ void evp_pkey_free_legacy(EVP_PKEY *x)
     x->pmeth_engine = NULL;
 # endif
 }
-#endif  /* FIPS_MODULE and 3.6 */
+#endif  /* FIPS_MODULE */
 
 static void evp_pkey_free_it(EVP_PKEY *x)
 {
     /* internal function; x is never NULL */
     evp_keymgmt_util_clear_operation_cache(x);
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
     evp_pkey_free_legacy(x);
 #endif
 
@@ -1895,7 +1842,7 @@ int EVP_PKEY_get_size(const EVP_PKEY *pkey)
 
     if (pkey != NULL) {
         size = pkey->cache.size;
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
         if (pkey->ameth != NULL && pkey->ameth->pkey_size != NULL)
             size = pkey->ameth->pkey_size(pkey);
 #endif
@@ -1914,7 +1861,7 @@ const char *EVP_PKEY_get0_description(const EVP_PKEY *pkey)
 
     if (evp_pkey_is_provided(pkey) && pkey->keymgmt->description != NULL)
         return pkey->keymgmt->description;
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
     if (pkey->ameth != NULL)
         return pkey->ameth->info;
 #endif
@@ -1943,7 +1890,7 @@ void *evp_pkey_export_to_provider(EVP_PKEY *pk, OSSL_LIB_CTX *libctx,
     if (check)
         return NULL;
 
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
     if (pk->pkey.ptr != NULL) {
         /*
          * If the legacy key doesn't have an dirty counter or export function,
@@ -1977,8 +1924,7 @@ void *evp_pkey_export_to_provider(EVP_PKEY *pk, OSSL_LIB_CTX *libctx,
     if (tmp_keymgmt == NULL)
         goto end;
 
-// NOT SURE ABOUT THIS
-#if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef FIPS_MODULE
     if (pk->pkey.ptr != NULL) {
         OP_CACHE_ELEM *op;
 
