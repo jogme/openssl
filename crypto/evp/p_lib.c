@@ -1573,7 +1573,9 @@ static int pkey_set_type(EVP_PKEY *pkey, ENGINE *e, int type, const char *str,
 # ifndef OPENSSL_NO_DEPRECATED_3_6
     const EVP_PKEY_ASN1_METHOD *ameth = NULL;
 # endif
+# ifndef OPENSSL_NO_ENGINE
     ENGINE **eptr = (e == NULL) ? &e :  NULL;
+# endif
 #endif
 
     /*
