@@ -1127,6 +1127,45 @@ int EVP_PKEY_type_names_do_all(const EVP_PKEY *pkey,
     return EVP_KEYMGMT_names_do_all(pkey->keymgmt, fn, data);
 }
 
+int EVP_PKEY_can_sign(const EVP_PKEY *pkey)
+{
+    if (pkey->keymgmt == NULL) {
+        switch (EVP_PKEY_get_base_id(pkey)) {
+        case EVP_PKEY_RSA:
+        case EVP_PKEY_RSA_PSS:
+            return 1;
+# ifndef OPENSSL_NO_DSA
+        case EVP_PKEY_DSA:
+            return 1;
+# endif
+# ifndef OPENSSL_NO_EC
+        case EVP_PKEY_ED25519:
+        case EVP_PKEY_ED448:
+            return 1;
+        case EVP_PKEY_EC:        /* Including SM2 */
+            return EC_KEY_can_sign(pkey->pkey.ec);
+# endif
+        default:
+            break;
+        }
+    } else {
+        const OSSL_PROVIDER *prov = EVP_KEYMGMT_get0_provider(pkey->keymgmt);
+        OSSL_LIB_CTX *libctx = ossl_provider_libctx(prov);
+        const char *supported_sig =
+            pkey->keymgmt->query_operation_name != NULL
+            ? pkey->keymgmt->query_operation_name(OSSL_OP_SIGNATURE)
+            : EVP_KEYMGMT_get0_name(pkey->keymgmt);
+        EVP_SIGNATURE *signature = NULL;
+
+        signature = EVP_SIGNATURE_fetch(libctx, supported_sig, NULL);
+        if (signature != NULL) {
+            EVP_SIGNATURE_free(signature);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 static int print_reset_indent(BIO **out, int pop_f_prefix, long saved_indent)
 {
     BIO_set_indent(*out, saved_indent);
@@ -1415,8 +1454,6 @@ int EVP_PKEY_set1_encoded_public_key(EVP_PKEY *pkey, const unsigned char *pub,
                            (void *)pub) <= 0)
         return 0;
     return 1;
-#else
-    return 0;
 #endif  /* !FIPS_MODULE */
 }
 
@@ -1463,8 +1500,6 @@ size_t EVP_PKEY_get1_encoded_public_key(EVP_PKEY *pkey, unsigned char **ppub)
             return 0;
         return rv;
     }
-#else
-    return 0;
 #endif  /* !FIPS_MODULE */
 }
 
@@ -1509,8 +1544,8 @@ EVP_PKEY *EVP_PKEY_new(void)
  * Setup a public key management method.
  *
  * For legacy keys, either |type| or |str| is expected to have the type
- * information. In favor of deprecating asn1 functions, the |keymgmt| will
- * be also used for the legacy key, therefore it is expected to be non-NULL.
+ * information.  In this case, the setup consists of finding an ASN1 method
+ * and potentially an ENGINE, and setting those fields in |pkey|.
  *
  * For provider side keys, |keymgmt| is expected to be non-NULL.  In this
  * case, the setup consists of setting the |keymgmt| field in |pkey|.
@@ -2442,3 +2477,84 @@ int EVP_PKEY_get_params(const EVP_PKEY *pkey, OSSL_PARAM params[])
     ERR_raise(ERR_LIB_EVP, EVP_R_INVALID_KEY);
     return 0;
 }
+
+#ifndef FIPS_MODULE
+int EVP_PKEY_get_ec_point_conv_form(const EVP_PKEY *pkey)
+{
+    char name[80];
+    size_t name_len;
+
+    if (pkey == NULL)
+        return 0;
+
+    if (pkey->keymgmt == NULL
+            || pkey->keydata == NULL) {
+# ifndef OPENSSL_NO_EC
+        /* Might work through the legacy route */
+        const EC_KEY *ec = EVP_PKEY_get0_EC_KEY(pkey);
+
+        if (ec == NULL)
+            return 0;
+
+        return EC_KEY_get_conv_form(ec);
+# else
+        return 0;
+# endif
+    }
+
+    if (!EVP_PKEY_get_utf8_string_param(pkey,
+                                        OSSL_PKEY_PARAM_EC_POINT_CONVERSION_FORMAT,
+                                        name, sizeof(name), &name_len))
+        return 0;
+
+    if (strcmp(name, "uncompressed") == 0)
+        return POINT_CONVERSION_UNCOMPRESSED;
+
+    if (strcmp(name, "compressed") == 0)
+        return POINT_CONVERSION_COMPRESSED;
+
+    if (strcmp(name, "hybrid") == 0)
+        return POINT_CONVERSION_HYBRID;
+
+    return 0;
+}
+
+int EVP_PKEY_get_field_type(const EVP_PKEY *pkey)
+{
+    char fstr[80];
+    size_t fstrlen;
+
+    if (pkey == NULL)
+        return 0;
+
+    if (pkey->keymgmt == NULL
+            || pkey->keydata == NULL) {
+# ifndef OPENSSL_NO_EC
+        /* Might work through the legacy route */
+        const EC_KEY *ec = EVP_PKEY_get0_EC_KEY(pkey);
+        const EC_GROUP *grp;
+
+        if (ec == NULL)
+            return 0;
+        grp = EC_KEY_get0_group(ec);
+        if (grp == NULL)
+            return 0;
+
+        return EC_GROUP_get_field_type(grp);
+# else
+        return 0;
+# endif
+    }
+
+    if (!EVP_PKEY_get_utf8_string_param(pkey, OSSL_PKEY_PARAM_EC_FIELD_TYPE,
+                                        fstr, sizeof(fstr), &fstrlen))
+        return 0;
+
+    if (strcmp(fstr, SN_X9_62_prime_field) == 0)
+        return NID_X9_62_prime_field;
+    else if (strcmp(fstr, SN_X9_62_characteristic_two_field))
+        return NID_X9_62_characteristic_two_field;
+
+    return 0;
+}
+#endif
