@@ -750,14 +750,7 @@ int EVP_PKEY_set_type(EVP_PKEY *pkey, int type)
 #ifndef OPENSSL_NO_DEPRECATED_3_6
     return pkey_set_type(pkey, NULL, type, NULL, -1, NULL);
 #else
-/*
- * Try to use keymgmt for now
- */
-    EVP_KEYMGMT *keymgmt = NULL;
-    // Set keymgmth based on type for pkey
-    keymgmt = EVP_KEYMGMT_fetch(pkey->libctx, OBJ_nid2sn(type),
-                                pkey->propq);
-    
+    return 0;   
 #endif
 }
 
