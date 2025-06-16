@@ -11,7 +11,7 @@
  * DH low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
-//#include "internal/deprecated.h"
+#include "internal/deprecated.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,7 +27,7 @@
 #include <openssl/core_names.h>
 #include "testutil.h"
 
-#if !defined(OPENSSL_NO_DH) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef OPENSSL_NO_DH
 # include <openssl/dh.h>
 # include "crypto/bn_dh.h"
 # include "crypto/dh.h"
@@ -939,7 +939,6 @@ static int dh_load_pkcs3_namedgroup_privlen_test(void)
 
 int setup_tests(void)
 {
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 #ifdef OPENSSL_NO_DH
     TEST_note("No DH support");
 #else
@@ -952,9 +951,6 @@ int setup_tests(void)
     ADD_TEST(dh_load_pkcs3_namedgroup_privlen_test);
     ADD_TEST(dh_rfc5114_fix_nid_test);
     ADD_TEST(dh_set_dh_nid_test);
-#endif
-#else
-    TEST_note("Deprecated tests are disabled.");
 #endif
     return 1;
 }

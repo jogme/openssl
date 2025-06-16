@@ -11,12 +11,12 @@
 /*
  * Low level APIs are deprecated for public use, but still ok for internal use.
  */
-//#include "internal/deprecated.h"
+#include "internal/deprecated.h"
 
 #include <openssl/opensslconf.h> /* To see if OPENSSL_NO_EC is defined */
 #include "testutil.h"
 
-#if !defined(OPENSSL_NO_EC) && !defined(OPENSSL_NO_DEPRECATED_3_6)
+#ifndef OPENSSL_NO_EC
 
 # include <openssl/evp.h>
 # include <openssl/bn.h>
@@ -390,7 +390,6 @@ static int test_ecdsa_sig_NULL(void)
 
 int setup_tests(void)
 {
-#ifndef OPENSSL_NO_DEPRECATED_3_6
 #ifdef OPENSSL_NO_EC
     TEST_note("Elliptic curves are disabled.");
 #else
@@ -411,9 +410,6 @@ int setup_tests(void)
     ADD_ALL_TESTS(test_builtin_as_sm2, crv_len);
 # endif
     ADD_ALL_TESTS(x9_62_tests, OSSL_NELEM(ecdsa_cavs_kats));
-#endif
-#else
-    TEST_note("Deprecated tests are disabled.");
 #endif
     return 1;
 }
