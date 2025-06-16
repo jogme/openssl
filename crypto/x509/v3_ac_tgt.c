@@ -7,6 +7,11 @@
  * https://www.openssl.org/source/license.html
  */
 
+/*
+ * because of EVP_PKEY_asn1_find deprecation
+ */
+#include "internal/deprecated.h"
+
 #include <stdio.h>
 #include <openssl/x509_acert.h>
 #include <crypto/x509_acert.h>
@@ -103,10 +108,8 @@ static int i2r_OBJECT_DIGEST_INFO(X509V3_EXT_METHOD *method,
                            BIO *out, int indent)
 {
     int64_t dot = 0;
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     int sig_nid;
     X509_ALGOR *digalg;
-#endif
     ASN1_STRING *sig;
 
     if (odi == NULL) {
@@ -140,7 +143,6 @@ static int i2r_OBJECT_DIGEST_INFO(X509V3_EXT_METHOD *method,
     BIO_puts(out, "\n");
     if (BIO_printf(out, "\n%*sSignature Value: ", indent, "") <= 0)
         return 0;
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     digalg = &odi->digestAlgorithm;
     sig_nid = OBJ_obj2nid(odi->digestAlgorithm.algorithm);
     if (sig_nid != NID_undef) {
@@ -152,7 +154,6 @@ static int i2r_OBJECT_DIGEST_INFO(X509V3_EXT_METHOD *method,
                 return ameth->sig_print(out, digalg, sig, indent + 4, 0);
         }
     }
-#endif
     if (BIO_write(out, "\n", 1) != 1)
         return 0;
     if (sig)

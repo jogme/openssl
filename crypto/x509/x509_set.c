@@ -7,6 +7,11 @@
  * https://www.openssl.org/source/license.html
  */
 
+/*
+ * because of EVP_PKEY_asn1_find deprecation
+ */
+#include "internal/deprecated.h"
+
 #include <stdio.h>
 #include "internal/cryptlib.h"
 #include "internal/refcount.h"
@@ -214,9 +219,7 @@ static int x509_sig_info_init(X509_SIG_INFO *siginf, const X509_ALGOR *alg,
 {
     int pknid, mdnid, md_size;
     const EVP_MD *md;
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     const EVP_PKEY_ASN1_METHOD *ameth;
-#endif
 
     siginf->mdnid = NID_undef;
     siginf->pknid = NID_undef;
@@ -232,13 +235,11 @@ static int x509_sig_info_init(X509_SIG_INFO *siginf, const X509_ALGOR *alg,
 
     switch (mdnid) {
     case NID_undef:
-#ifndef OPENSSL_NO_DEPRECATED_3_6
         /* If we have one, use a custom handler for this algorithm */
         ameth = EVP_PKEY_asn1_find(NULL, pknid);
         if (ameth != NULL && ameth->siginf_set != NULL
                 && ameth->siginf_set(siginf, alg, sig))
            break;
-#endif
         if (pubkey != NULL) {
             int secbits;
 
