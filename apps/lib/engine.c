@@ -137,7 +137,6 @@ char *make_engine_uri(ENGINE *e, const char *key_id, const char *desc)
 
 int get_legacy_pkey_id(OSSL_LIB_CTX *libctx, const char *algname, ENGINE *e)
 {
-#ifndef OPENSSL_NO_DEPRECATED_3_6
     const EVP_PKEY_ASN1_METHOD *ameth;
     ENGINE *tmpeng = NULL;
     int pkey_id = NID_undef;
@@ -163,9 +162,6 @@ int get_legacy_pkey_id(OSSL_LIB_CTX *libctx, const char *algname, ENGINE *e)
     EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, NULL, NULL, ameth);
 
     return pkey_id;
-#else
-    return NID_undef;
-#endif
 }
 
 const EVP_MD *get_digest_from_engine(const char *name)
