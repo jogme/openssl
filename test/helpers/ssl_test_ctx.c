@@ -532,7 +532,7 @@ __owur static int parse_expected_key_type(int *ptype, const char *value)
     else
         nid = OBJ_sn2nid(value);
 #else
-    nid = OBJ_sn2nid(value);
+    nid = OBJ_ln2nid(value);
 #endif
     if (nid == NID_undef)
         nid = OBJ_ln2nid(value);
