@@ -54,7 +54,7 @@ if [ "$ROLE" == "client" ]; then
             fi
             echo -n "$OUTFILE " >> ./reqfile.txt
         done
-        SSLKEYLOGFILE=/logs/keys.log SSL_CERT_FILE=/certs/ca.pem SSL_CERT_DIR=/certs quic-hq-interop $HOSTNAME $HOSTPORT ./reqfile.txt || exit 1
+        OPENSSL_CONF=/etc/pki/tls/client_config SSLKEYLOGFILE=/logs/keys.log SSL_CERT_FILE=/certs/ca.pem SSL_CERT_DIR=/certs quic-hq-interop $HOSTNAME $HOSTPORT ./reqfile.txt || exit 1
         exit 0
         ;;
     "resumption")
