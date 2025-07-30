@@ -1339,11 +1339,15 @@ static int ch_on_transport_params(const unsigned char *params,
      */
     if (ch->is_server && sc->hello_retry_request != SSL_HRR_NONE
         && ch->got_remote_transport_params) {
+        // trying CI
+        return 1;
+        /*
         ch->max_local_streams_bidi = 0;
         ch->max_local_streams_uni = 0;
         ch->got_local_transport_params = 0;
         OPENSSL_free(ch->local_transport_params);
         ch->local_transport_params = NULL;
+        */
     } else if (ch->got_remote_transport_params) {
         reason = "multiple transport parameter extensions";
         goto malformed;
