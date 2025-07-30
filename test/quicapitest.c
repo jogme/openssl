@@ -3035,9 +3035,9 @@ static int test_client_hello_retry(void)
     /*
      * set the specific groups for the test
      */
-    if (!TEST_true(SSL_CTX_set1_groups_list(cctx, "x25519:secp256r1")))
+    if (!TEST_int_gt(SSL_CTX_set1_groups_list(cctx, "x25519:secp256r1"), 0))
         goto err;
-    if (!TEST_true(SSL_CTX_set1_groups_list(sctx, "secp256r1")))
+    if (!TEST_int_gt(SSL_CTX_set1_groups_list(sctx, "secp256r1"), 0))
         goto err;
 
     if (!create_quic_ssl_objects(sctx, cctx, &qlistener, &clientssl))
