@@ -171,6 +171,14 @@ int ossl_quic_provide_initial_secret(OSSL_LIB_CTX *libctx,
                                     sizeof(server_initial_secret)))
         goto err;
 
+    if (is_server) {
+        printf("server | ");
+    } else {
+        printf("client | ");
+    }
+    printf("client IS: %s\n", client_initial_secret);
+    printf("server IS: %s\n", server_initial_secret);
+
     return 1;
 
 err:
