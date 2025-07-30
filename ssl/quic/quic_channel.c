@@ -3019,12 +3019,15 @@ static int ch_retry(QUIC_CHANNEL *ch,
      * Plug in new secrets for the Initial EL. This is the only time we change
      * the secrets for an EL after we already provisioned it.
      */
+    /* we shouldn't do this on retry */
+#if 0
     if (!ossl_quic_provide_initial_secret(ch->port->engine->libctx,
                                           ch->port->engine->propq,
                                           &ch->retry_scid,
                                           /*is_server=*/0,
                                           ch->qrx, ch->qtx))
         return 0;
+#endif
 
     return 1;
 }
