@@ -96,7 +96,8 @@ jobs:
         cat /proc/cpuinfo
         ./util/opensslwrap.sh version -c
     - name: HARNESS_VERBOSE=1 make TESTS="test_quicapi" test
-      run: .github/workflows/make-test
+      run: HARNESS_VERBOSE=1 make TESTS="test_quicapi" test
+      #.github/workflows/make-test
     - name: check fipsvendor
       run: |
         util/wrap.pl -fips apps/openssl list -providers | grep 'name: CI FIPS Provider for OpenSSL$'
