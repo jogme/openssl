@@ -95,7 +95,7 @@ jobs:
       run: |
         cat /proc/cpuinfo
         ./util/opensslwrap.sh version -c
-    - name: make test
+    - name: HARNESS_VERBOSE=1 make TESTS="test_quicapi" test
       run: .github/workflows/make-test
     - name: check fipsvendor
       run: |
