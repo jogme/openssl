@@ -1596,11 +1596,15 @@ int tls1_set_groups_list(SSL_CTX *ctx,
     int ret = 0, parse_ret = 0;
     gid_cb_st gcb;
 
+    printf("Inside tls1_set_groups_list\n");
+
     /* Sanity check */
     if (ctx == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_PASSED_NULL_PARAMETER);
         return 0;
     }
+
+    printf("ctx == NULL passed\n");
 
     memset(&gcb, 0, sizeof(gcb));
     gcb.tuple_mode = 1; /* We prepare to collect the first tuple */
@@ -1622,10 +1626,14 @@ int tls1_set_groups_list(SSL_CTX *ctx,
     if (gcb.ksid_arr == NULL)
         goto end;
 
+    printf("mem allocations passed\n");
+
     while (str[0] != '\0' && isspace((unsigned char)*str))
         str++;
     if (str[0] == '\0')
         goto empty_list;
+
+    printf("arg not empty\n");
 
     /*
      * Start the (potentially recursive) tuple processing by calling CONF_parse_list
@@ -1640,6 +1648,8 @@ int tls1_set_groups_list(SSL_CTX *ctx,
                        "Syntax error in '%s'", str);
         goto end;
     }
+
+    printf("CONF_parse_list passed\n");
 
     /*
      * We check whether a tuple was completly emptied by using "-" prefix
@@ -1662,6 +1672,8 @@ int tls1_set_groups_list(SSL_CTX *ctx,
                        str, OPENSSL_CLIENT_MAX_KEY_SHARES);
         goto end;
     }
+
+    printf("OPENSSL_CLIENT_MAX_KEY_SHARES passed\n");
 
     /*
      * For backward compatibility we let the rest of the code know that a key share
