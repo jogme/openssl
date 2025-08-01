@@ -29,7 +29,7 @@ RUN git clone --depth 1 https://github.com/ngtcp2/nghttp3.git && \
 #RUN git clone --depth 1 -b $OPENSSL_BRANCH $OPENSSL_URL && \
 RUN git clone --depth 1 -b "quic_initial_secret_recalculation" "https://github.com/jogme/openssl.git" && \
     cd openssl && \
-    ./Configure enable-sslkeylog enable-fips enable-demos enable-h3demo enable-hqinterop disable-docs --prefix=/usr --openssldir=/etc/pki/tls && \
+    ./Configure enable-trace enable-sslkeylog enable-fips enable-demos enable-h3demo enable-hqinterop disable-docs --prefix=/usr --openssldir=/etc/pki/tls && \
     make -j 4 && make install && cp test/quic-openssl-docker/hq-interop/quic-hq-interop /usr/local/bin && \
     cp test/quic-openssl-docker/hq-interop/quic-hq-interop-server /usr/local/bin && \
     cp demos/http3/ossl-nghttp3-demo-server /usr/local/bin && \

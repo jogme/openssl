@@ -54,7 +54,7 @@ if [ "$ROLE" == "client" ]; then
             fi
             echo -n "$OUTFILE " >> ./reqfile.txt
         done
-        OPENSSL_CONF=/etc/pki/tls/client_config SSLKEYLOGFILE=/logs/keys.log SSL_CERT_FILE=/certs/ca.pem SSL_CERT_DIR=/certs quic-hq-interop $HOSTNAME $HOSTPORT ./reqfile.txt || exit 1
+        OPENSSL_TRACE=ALL OPENSSL_CONF=/etc/pki/tls/client_config SSLKEYLOGFILE=/logs/keys.log SSL_CERT_FILE=/certs/ca.pem SSL_CERT_DIR=/certs quic-hq-interop $HOSTNAME $HOSTPORT ./reqfile.txt || exit 1
         exit 0
         ;;
     "resumption")
@@ -64,7 +64,7 @@ if [ "$ROLE" == "client" ]; then
             echo -n "$OUTFILE " > ./reqfile.txt
             HOSTNAME=$(printf "%s\n" "$req" | sed -ne 's,^https://\([^/:]*\).*,\1,p')
             HOSTPORT=$(printf "%s\n" "$req" | sed -ne 's,^https://[^:/]*:\([^/]*\).*,\1,p')
-            SSL_SESSION_FILE=./session.db SSLKEYLOGFILE=/logs/keys.log SSL_CERT_FILE=/certs/ca.pem SSL_CERT_DIR=/certs quic-hq-interop $HOSTNAME $HOSTPORT ./reqfile.txt || exit 1
+            OPENSSL_TRACE=ALL SSL_SESSION_FILE=./session.db SSLKEYLOGFILE=/logs/keys.log SSL_CERT_FILE=/certs/ca.pem SSL_CERT_DIR=/certs quic-hq-interop $HOSTNAME $HOSTPORT ./reqfile.txt || exit 1
         done
         exit 0
         ;;
@@ -76,7 +76,7 @@ if [ "$ROLE" == "client" ]; then
             HOSTNAME=$(printf "%s\n" "$req" | sed -ne 's,^https://\([^/:]*\).*,\1,p')
             HOSTPORT=$(printf "%s\n" "$req" | sed -ne 's,^https://[^:/]*:\([^/]*\).*,\1,p')
         done
-        SSL_CIPHER_SUITES=TLS_CHACHA20_POLY1305_SHA256 SSL_SESSION_FILE=./session.db SSLKEYLOGFILE=/logs/keys.log SSL_CERT_FILE=/certs/ca.pem SSL_CERT_DIR=/certs quic-hq-interop $HOSTNAME $HOSTPORT ./reqfile.txt || exit 1
+        SOPENSSL_TRACE=ALL SL_CIPHER_SUITES=TLS_CHACHA20_POLY1305_SHA256 SSL_SESSION_FILE=./session.db SSLKEYLOGFILE=/logs/keys.log SSL_CERT_FILE=/certs/ca.pem SSL_CERT_DIR=/certs quic-hq-interop $HOSTNAME $HOSTPORT ./reqfile.txt || exit 1
         exit 0
         ;;
     *)
@@ -89,19 +89,19 @@ elif [ "$ROLE" == "server" ]; then
     rm -f $CURLRC 
     case "$TESTCASE" in
     "handshake"|"transfer"|"ipv6")
-        NO_ADDR_VALIDATE=yes SSLKEYLOGFILE=/logs/keys.log FILEPREFIX=/www quic-hq-interop-server 443 /certs/cert.pem /certs/priv.key
+        OPENSSL_TRACE=ALL NO_ADDR_VALIDATE=yes SSLKEYLOGFILE=/logs/keys.log FILEPREFIX=/www quic-hq-interop-server 443 /certs/cert.pem /certs/priv.key
         ;;
     "retry")
-        SSLKEYLOGFILE=/logs/keys.log FILEPREFIX=/www quic-hq-interop-server 443 /certs/cert.pem /certs/priv.key
+        OPENSSL_TRACE=ALL SSLKEYLOGFILE=/logs/keys.log FILEPREFIX=/www quic-hq-interop-server 443 /certs/cert.pem /certs/priv.key
         ;;
     "resumption")
-        NO_ADDR_VALIDATE=yes SSLKEYLOGFILE=/logs/keys.log FILEPREFIX=/www quic-hq-interop-server 443 /certs/cert.pem /certs/priv.key
+        OPENSSL_TRACE=ALL NO_ADDR_VALIDATE=yes SSLKEYLOGFILE=/logs/keys.log FILEPREFIX=/www quic-hq-interop-server 443 /certs/cert.pem /certs/priv.key
         ;;
     "http3")
         FILEPREFIX=/www/ SSLKEYLOGFILE=/logs/keys.log ossl-nghttp3-demo-server 443 /certs/cert.pem /certs/priv.key
         ;;
     "chacha20")
-        SSL_CIPHER_SUITES=TLS_CHACHA20_POLY1305_SHA256 SSLKEYLOGFILE=/logs/keys.log FILEPREFIX=/www quic-hq-interop-server 443 /certs/cert.pem /certs/priv.key
+        OPENSSL_TRACE=ALL SSL_CIPHER_SUITES=TLS_CHACHA20_POLY1305_SHA256 SSLKEYLOGFILE=/logs/keys.log FILEPREFIX=/www quic-hq-interop-server 443 /certs/cert.pem /certs/priv.key
         ;;
     *)
         echo "UNSUPPORTED TESTCASE $TESTCASE"
