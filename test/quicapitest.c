@@ -3029,17 +3029,17 @@ static int test_client_hello_retry(void)
     SSL *clientssl = NULL, *serverssl = NULL, *qlistener = NULL;
     int testresult = 0, i = 0, ret = 0;
 
-    printf("create ctxs");
+    printf("create ctxs\n");
     if (!TEST_ptr(sctx = create_server_ctx())
         || !TEST_ptr(cctx = create_client_ctx()))
         goto err;
     /*
      * set the specific groups for the test
      */
-    printf("try x25519:secp256r1");
+    printf("try x25519:secp256r1\n");
     if (!TEST_int_gt(SSL_CTX_set1_groups_list(cctx, "X25519:secp256r1"), 0))
         goto err;
-    printf("try secp256r1");
+    printf("try secp256r1\n");
     if (!TEST_int_gt(SSL_CTX_set1_groups_list(sctx, "secp256r1"), 0))
         goto err;
 
