@@ -744,9 +744,9 @@ int CONF_parse_list(const char *list_, int sep, int nospc,
                 lstart++;
         }
         p = strchr(lstart, sep);
-        if (p == lstart || *lstart == '\0')
+        if (p == lstart || *lstart == '\0') {
             ret = list_cb(NULL, 0, arg);
-        else {
+        } else {
             if (p)
                 tmpend = p - 1;
             else
@@ -755,6 +755,7 @@ int CONF_parse_list(const char *list_, int sep, int nospc,
                 while (isspace((unsigned char)*tmpend))
                     tmpend--;
             }
+            printf("list_cb called with %s\n", lstart+(tmpend-lstart+1));
             ret = list_cb(lstart, (int)(tmpend - lstart + 1), arg);
         }
         if (ret <= 0)

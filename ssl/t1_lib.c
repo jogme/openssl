@@ -1535,6 +1535,7 @@ static int tuple_cb(const char *tuple, int len, void *arg)
 
     /* Sanity checks */
     if (garg == NULL || tuple == NULL || len <= 0) {
+        printf("tuple_cb: something went wrong\n");
         ERR_raise(ERR_LIB_SSL, SSL_R_UNSUPPORTED_CONFIG_VALUE);
         return 0;
     }
@@ -1558,8 +1559,10 @@ static int tuple_cb(const char *tuple, int len, void *arg)
     memcpy(restored_tuple_string, tuple, len);
     restored_tuple_string[len] = '\0';
 
+    printf("calling CONF_parse_list with the GROUP_DELIMITER_CHARACTER: %d\n", GROUP_DELIMITER_CHARACTER);
     /* Analyze group list of this tuple */
     retval = CONF_parse_list(restored_tuple_string, GROUP_DELIMITER_CHARACTER, 1, gid_cb, arg);
+    printf("retval: %d", retval);
 
     /* We don't need the \o-terminated string anymore */
     OPENSSL_free(restored_tuple_string);
