@@ -3028,6 +3028,7 @@ static int test_client_hello_retry(void)
     SSL_CTX *cctx = NULL, *sctx = NULL;
     SSL *clientssl = NULL, *serverssl = NULL, *qlistener = NULL;
     int testresult = 0, i = 0, ret = 0;
+    int groups[2] = {NID_X25519, NID_X9_62_prime256v1};
 
     printf("create ctxs\n");
     if (!TEST_ptr(sctx = create_server_ctx())
@@ -3037,7 +3038,8 @@ static int test_client_hello_retry(void)
      * set the specific groups for the test
      */
     printf("try x25519:secp256r1\n");
-    if (!TEST_int_gt(SSL_CTX_set1_groups_list(cctx, "X25519:secp256r1"), 0))
+    //if (!TEST_int_gt(SSL_CTX_set1_groups_list(cctx, "x25519:secp256r1"), 0))
+    if(!TEST_int_gt(SSL_CTX_set1_groups(cctx, groups, 2), 0))
         goto err;
     printf("try secp256r1\n");
     if (!TEST_int_gt(SSL_CTX_set1_groups_list(sctx, "secp256r1"), 0))
