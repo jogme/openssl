@@ -1491,6 +1491,7 @@ size_t EVP_PKEY_get1_encoded_public_key(EVP_PKEY *pkey, unsigned char **ppub)
 
 EVP_PKEY *EVP_PKEY_new(void)
 {
+    printf("OpenSSL implementation here\n");
     EVP_PKEY *ret = OPENSSL_zalloc(sizeof(*ret));
 
     if (ret == NULL)
