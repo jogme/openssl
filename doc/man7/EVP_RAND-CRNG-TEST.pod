@@ -15,7 +15,7 @@ its parent reference or via the provider entropy upcalls.
 =head2 Identity
 
 "CRNG-TEST" is the name for this implementation; it can be used with the
-EVP_RAND_fetch() function.
+OPENSSL_BOX_EVP_RAND_fetch() function.
 
 =head2 Supported parameters
 
@@ -49,7 +49,7 @@ This EVP_RAND is only implemented by the OpenSSL FIPS provider.
 A context for a health test filter can be obtained by calling:
 
  EVP_RAND *parent = ...;
- EVP_RAND *rand = EVP_RAND_fetch(NULL, "CRNG-TEST", NULL);
+ EVP_RAND *rand = OPENSSL_BOX_EVP_RAND_fetch(NULL, "CRNG-TEST", NULL);
  EVP_RAND_CTX *rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, parent);
 
 =head1 SEE ALSO

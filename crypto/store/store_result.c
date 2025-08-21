@@ -214,7 +214,7 @@ static EVP_PKEY *try_key_ref(struct extracted_param_data_st *data,
     if (data->data_type == NULL)
         return 0;
 
-    keymgmt = EVP_KEYMGMT_fetch(libctx, data->data_type, propq);
+    keymgmt = OPENSSL_BOX_EVP_KEYMGMT_fetch(libctx, data->data_type, propq);
     ERR_set_mark();
     while (keymgmt != NULL && keydata == NULL && try_fallback-- > 0) {
         /*

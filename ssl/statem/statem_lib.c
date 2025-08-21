@@ -349,7 +349,7 @@ CON_FUNC_RETURN tls_construct_cert_verify(SSL_CONNECTION *s, WPACKET *pkt)
         goto err;
     }
 
-    if (EVP_DigestSignInit_ex(mctx, &pctx,
+    if (OPENSSL_BOX_EVP_DigestSignInit_ex(mctx, &pctx,
                               md == NULL ? NULL : OPENSSL_BOX_EVP_MD_get0_name(md),
                               sctx->libctx, sctx->propq, pkey,
                               NULL) <= 0) {
@@ -367,36 +367,36 @@ CON_FUNC_RETURN tls_construct_cert_verify(SSL_CONNECTION *s, WPACKET *pkt)
     }
     if (s->version == SSL3_VERSION) {
         /*
-         * Here we use OPENSSL_BOX_EVP_DigestSignUpdate followed by EVP_DigestSignFinal
+         * Here we use OPENSSL_BOX_EVP_DigestSignUpdate followed by OPENSSL_BOX_EVP_DigestSignFinal
          * in order to add the EVP_CTRL_SSL3_MASTER_SECRET call between them.
          */
         if (OPENSSL_BOX_EVP_DigestSignUpdate(mctx, hdata, hdatalen) <= 0
             || OPENSSL_BOX_EVP_MD_CTX_ctrl(mctx, EVP_CTRL_SSL3_MASTER_SECRET,
                                (int)s->session->master_key_length,
                                s->session->master_key) <= 0
-            || EVP_DigestSignFinal(mctx, NULL, &siglen) <= 0) {
+            || OPENSSL_BOX_EVP_DigestSignFinal(mctx, NULL, &siglen) <= 0) {
 
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
             goto err;
         }
         sig = OPENSSL_malloc(siglen);
         if (sig == NULL
-                || EVP_DigestSignFinal(mctx, sig, &siglen) <= 0) {
+                || OPENSSL_BOX_EVP_DigestSignFinal(mctx, sig, &siglen) <= 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
             goto err;
         }
     } else {
         /*
-         * Here we *must* use EVP_DigestSign() because Ed25519/Ed448 does not
-         * support streaming via OPENSSL_BOX_EVP_DigestSignUpdate/EVP_DigestSignFinal
+         * Here we *must* use OPENSSL_BOX_EVP_DigestSign() because Ed25519/Ed448 does not
+         * support streaming via OPENSSL_BOX_EVP_DigestSignUpdate/OPENSSL_BOX_EVP_DigestSignFinal
          */
-        if (EVP_DigestSign(mctx, NULL, &siglen, hdata, hdatalen) <= 0) {
+        if (OPENSSL_BOX_EVP_DigestSign(mctx, NULL, &siglen, hdata, hdatalen) <= 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
             goto err;
         }
         sig = OPENSSL_malloc(siglen);
         if (sig == NULL
-                || EVP_DigestSign(mctx, sig, &siglen, hdata, hdatalen) <= 0) {
+                || OPENSSL_BOX_EVP_DigestSign(mctx, sig, &siglen, hdata, hdatalen) <= 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
             goto err;
         }
@@ -531,7 +531,7 @@ MSG_PROCESS_RETURN tls_process_cert_verify(SSL_CONNECTION *s, PACKET *pkt)
     OSSL_TRACE1(TLS, "Using client verify alg %s\n",
                 md == NULL ? "n/a" : OPENSSL_BOX_EVP_MD_get0_name(md));
 
-    if (EVP_DigestVerifyInit_ex(mctx, &pctx,
+    if (OPENSSL_BOX_EVP_DigestVerifyInit_ex(mctx, &pctx,
                                 md == NULL ? NULL : OPENSSL_BOX_EVP_MD_get0_name(md),
                                 sctx->libctx, sctx->propq, pkey,
                                 NULL) <= 0) {
@@ -568,12 +568,12 @@ MSG_PROCESS_RETURN tls_process_cert_verify(SSL_CONNECTION *s, PACKET *pkt)
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
             goto err;
         }
-        if (EVP_DigestVerifyFinal(mctx, data, len) <= 0) {
+        if (OPENSSL_BOX_EVP_DigestVerifyFinal(mctx, data, len) <= 0) {
             SSLfatal(s, SSL_AD_DECRYPT_ERROR, SSL_R_BAD_SIGNATURE);
             goto err;
         }
     } else {
-        j = EVP_DigestVerify(mctx, data, len, hdata, hdatalen);
+        j = OPENSSL_BOX_EVP_DigestVerify(mctx, data, len, hdata, hdatalen);
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
         /* Ignore bad signatures when fuzzing */
         if (SSL_IS_QUIC_HANDSHAKE(s))

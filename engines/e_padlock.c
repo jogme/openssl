@@ -509,15 +509,15 @@ static const EVP_CIPHER *padlock_aes_##ksize##_##lmode(void) \
                                               AES_BLOCK_SIZE)           \
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_flags(_hidden_aes_##ksize##_##lmode, \
                                           0 | EVP_CIPH_##umode##_MODE)  \
-            || !EVP_CIPHER_meth_set_init(_hidden_aes_##ksize##_##lmode, \
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_init(_hidden_aes_##ksize##_##lmode, \
                                          padlock_aes_init_key)          \
-            || !EVP_CIPHER_meth_set_do_cipher(_hidden_aes_##ksize##_##lmode, \
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(_hidden_aes_##ksize##_##lmode, \
                                               padlock_##lmode##_cipher) \
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(_hidden_aes_##ksize##_##lmode, \
                                                   sizeof(struct padlock_cipher_data) + 16) \
-            || !EVP_CIPHER_meth_set_set_asn1_params(_hidden_aes_##ksize##_##lmode, \
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_set_asn1_params(_hidden_aes_##ksize##_##lmode, \
                                                     OPENSSL_BOX_EVP_CIPHER_set_asn1_iv) \
-            || !EVP_CIPHER_meth_set_get_asn1_params(_hidden_aes_##ksize##_##lmode, \
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_get_asn1_params(_hidden_aes_##ksize##_##lmode, \
                                                     OPENSSL_BOX_EVP_CIPHER_get_asn1_iv))) { \
         OPENSSL_BOX_EVP_CIPHER_meth_free(_hidden_aes_##ksize##_##lmode);            \
         _hidden_aes_##ksize##_##lmode = NULL;                           \

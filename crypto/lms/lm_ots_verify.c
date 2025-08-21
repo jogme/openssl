@@ -49,13 +49,13 @@ int ossl_lm_ots_compute_pubkey(EVP_MD_CTX *ctx, EVP_MD_CTX *ctxIq,
     OPENSSL_store_u32_be(qbuf, q);
     OPENSSL_store_u16_be(d_mesg, OSSL_LMS_D_MESG);
 
-    return (EVP_DigestUpdate(ctxIq, Id, LMS_SIZE_I)
-            && EVP_DigestUpdate(ctxIq, qbuf, sizeof(qbuf))
+    return (OPENSSL_BOX_EVP_DigestUpdate(ctxIq, Id, LMS_SIZE_I)
+            && OPENSSL_BOX_EVP_DigestUpdate(ctxIq, qbuf, sizeof(qbuf))
             && OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx, ctxIq)
             /* Q = H(I || u32str(q) || u16str(D_MESG) || C || msg) */
-            && EVP_DigestUpdate(ctx, d_mesg, sizeof(d_mesg))
-            && EVP_DigestUpdate(ctx, sig->C, sig->params->n)
-            && EVP_DigestUpdate(ctx, msg, msglen)
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, d_mesg, sizeof(d_mesg))
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, sig->C, sig->params->n)
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, msg, msglen)
             && lm_ots_compute_pubkey_final(ctx, ctxIq, sig, Kc));
 }
 
@@ -100,7 +100,7 @@ static int lm_ots_compute_pubkey_final(EVP_MD_CTX *ctx, EVP_MD_CTX *ctxIq,
     int a;
     unsigned char *y;
 
-    if (!EVP_DigestFinal_ex(ctx, Q, NULL)
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, Q, NULL)
             || (ctxKc = EVP_MD_CTX_create()) == NULL)
         return 0;
 
@@ -111,7 +111,7 @@ static int lm_ots_compute_pubkey_final(EVP_MD_CTX *ctx, EVP_MD_CTX *ctxIq,
     OPENSSL_store_u16_be(d_pblc, OSSL_LMS_D_PBLC);
 
     if (!(OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctxKc, ctxIq))
-            || !EVP_DigestUpdate(ctxKc, d_pblc, sizeof(d_pblc)))
+            || !OPENSSL_BOX_EVP_DigestUpdate(ctxKc, d_pblc, sizeof(d_pblc)))
         goto err;
 
     y = sig->y;
@@ -130,18 +130,18 @@ static int lm_ots_compute_pubkey_final(EVP_MD_CTX *ctx, EVP_MD_CTX *ctxIq,
         for (j = a; j < end; ++j) {
             *tag2 = (j & 0xFF);
             if (!(OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx, ctxIq))
-                    || !EVP_DigestUpdate(ctx, tag, sizeof(tag))
-                    || !EVP_DigestUpdate(ctx, z, n)
-                    || !EVP_DigestFinal_ex(ctx, z, NULL))
+                    || !OPENSSL_BOX_EVP_DigestUpdate(ctx, tag, sizeof(tag))
+                    || !OPENSSL_BOX_EVP_DigestUpdate(ctx, z, n)
+                    || !OPENSSL_BOX_EVP_DigestFinal_ex(ctx, z, NULL))
                 goto err;
         }
         INC16(tag);
-        if (!EVP_DigestUpdate(ctxKc, z, n))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(ctxKc, z, n))
             goto err;
     }
 
     /* Kc = H(I || u32str(q) || u16str(D_PBLC) || z[0] || ... || z[p-1]) */
-    if (!EVP_DigestFinal(ctxKc, Kc, NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal(ctxKc, Kc, NULL))
         goto err;
     ret = 1;
 err:

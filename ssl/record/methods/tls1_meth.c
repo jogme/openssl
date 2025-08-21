@@ -61,7 +61,7 @@ static int tls1_set_crypto_state(OSSL_RECORD_LAYER *rl, int level,
      */
     if ((OPENSSL_BOX_EVP_CIPHER_get_flags(ciph) & EVP_CIPH_FLAG_AEAD_CIPHER) == 0) {
         if (mactype == EVP_PKEY_HMAC) {
-            mac_key = EVP_PKEY_new_raw_private_key_ex(rl->libctx, "HMAC",
+            mac_key = OPENSSL_BOX_EVP_PKEY_new_raw_private_key_ex(rl->libctx, "HMAC",
                                                       rl->propq, mackey,
                                                       mackeylen);
         } else {
@@ -70,11 +70,11 @@ static int tls1_set_crypto_state(OSSL_RECORD_LAYER *rl, int level,
              * the GOST MACs, so we need to use the old style way of creating
              * a MAC key.
              */
-            mac_key = EVP_PKEY_new_mac_key(mactype, NULL, mackey,
+            mac_key = OPENSSL_BOX_EVP_PKEY_new_mac_key(mactype, NULL, mackey,
                                            (int)mackeylen);
         }
         if (mac_key == NULL
-            || EVP_DigestSignInit_ex(rl->md_ctx, NULL, OPENSSL_BOX_EVP_MD_get0_name(md),
+            || OPENSSL_BOX_EVP_DigestSignInit_ex(rl->md_ctx, NULL, OPENSSL_BOX_EVP_MD_get0_name(md),
                                      rl->libctx, rl->propq, mac_key,
                                      NULL) <= 0) {
             OPENSSL_BOX_EVP_PKEY_free(mac_key);
@@ -85,26 +85,26 @@ static int tls1_set_crypto_state(OSSL_RECORD_LAYER *rl, int level,
     }
 
     if (OPENSSL_BOX_EVP_CIPHER_get_mode(ciph) == EVP_CIPH_GCM_MODE) {
-        if (!EVP_CipherInit_ex(ciph_ctx, ciph, NULL, key, NULL, enc)
+        if (!OPENSSL_BOX_EVP_CipherInit_ex(ciph_ctx, ciph, NULL, key, NULL, enc)
                 || OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ciph_ctx, EVP_CTRL_GCM_SET_IV_FIXED,
                                        (int)ivlen, iv) <= 0) {
             ERR_raise(ERR_LIB_SSL, ERR_R_INTERNAL_ERROR);
             return OSSL_RECORD_RETURN_FATAL;
         }
     } else if (OPENSSL_BOX_EVP_CIPHER_get_mode(ciph) == EVP_CIPH_CCM_MODE) {
-        if (!EVP_CipherInit_ex(ciph_ctx, ciph, NULL, NULL, NULL, enc)
+        if (!OPENSSL_BOX_EVP_CipherInit_ex(ciph_ctx, ciph, NULL, NULL, NULL, enc)
                 || OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ciph_ctx, EVP_CTRL_AEAD_SET_IVLEN, 12,
                                        NULL) <= 0
                 || OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ciph_ctx, EVP_CTRL_AEAD_SET_TAG,
                                        (int)taglen, NULL) <= 0
                 || OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ciph_ctx, EVP_CTRL_CCM_SET_IV_FIXED,
                                        (int)ivlen, iv) <= 0
-                || !EVP_CipherInit_ex(ciph_ctx, NULL, NULL, key, NULL, enc)) {
+                || !OPENSSL_BOX_EVP_CipherInit_ex(ciph_ctx, NULL, NULL, key, NULL, enc)) {
             ERR_raise(ERR_LIB_SSL, ERR_R_INTERNAL_ERROR);
             return OSSL_RECORD_RETURN_FATAL;
         }
     } else {
-        if (!EVP_CipherInit_ex(ciph_ctx, ciph, NULL, key, iv, enc)) {
+        if (!OPENSSL_BOX_EVP_CipherInit_ex(ciph_ctx, ciph, NULL, key, iv, enc)) {
             ERR_raise(ERR_LIB_SSL, ERR_R_INTERNAL_ERROR);
             return OSSL_RECORD_RETURN_FATAL;
         }
@@ -363,13 +363,13 @@ static int tls1_cipher(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *recs,
             return 0;
         }
 
-        if (!EVP_CipherUpdate(ds, recs[0].data, &outlen, recs[0].input,
+        if (!OPENSSL_BOX_EVP_CipherUpdate(ds, recs[0].data, &outlen, recs[0].input,
                               (unsigned int)reclen[0]))
             return 0;
         recs[0].length = outlen;
 
         /*
-         * The length returned from EVP_CipherUpdate above is the actual
+         * The length returned from OPENSSL_BOX_EVP_CipherUpdate above is the actual
          * payload length. We need to adjust the data/input ptr to skip over
          * any explicit IV
          */
@@ -409,7 +409,7 @@ static int tls1_cipher(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *recs,
     } else {
         /* Legacy cipher */
 
-        tmpr = EVP_Cipher(ds, recs[0].data, recs[0].input,
+        tmpr = OPENSSL_BOX_EVP_Cipher(ds, recs[0].data, recs[0].input,
                           (unsigned int)reclen[0]);
         if ((OPENSSL_BOX_EVP_CIPHER_get_flags(OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(ds))
                  & EVP_CIPH_FLAG_CUSTOM_CIPHER) != 0
@@ -527,7 +527,7 @@ static int tls1_mac(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *rec, unsigned char *md
 
     if (OPENSSL_BOX_EVP_DigestSignUpdate(mac_ctx, header, sizeof(header)) <= 0
         || OPENSSL_BOX_EVP_DigestSignUpdate(mac_ctx, rec->input, rec->length) <= 0
-        || EVP_DigestSignFinal(mac_ctx, md, &md_size) <= 0)
+        || OPENSSL_BOX_EVP_DigestSignFinal(mac_ctx, md, &md_size) <= 0)
         goto end;
 
     OSSL_TRACE_BEGIN(TLS) {

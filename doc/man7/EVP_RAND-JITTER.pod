@@ -19,7 +19,7 @@ option. When available it is listed in B<openssl list
 =head2 Identity
 
 "JITTER" is the name for this implementation; it can be used with the
-EVP_RAND_fetch() function.
+OPENSSL_BOX_EVP_RAND_fetch() function.
 
 =head2 Supported parameters
 
@@ -41,7 +41,7 @@ These parameters work as described in L<EVP_RAND(3)/PARAMETERS>.
 
 A context for the seed source can be obtained by calling:
 
- EVP_RAND *rand = EVP_RAND_fetch(NULL, "JITTER", NULL);
+ EVP_RAND *rand = OPENSSL_BOX_EVP_RAND_fetch(NULL, "JITTER", NULL);
  EVP_RAND_CTX *rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
 
 The B<enable-jitter> option was added in OpenSSL 3.4.
@@ -64,13 +64,13 @@ are additionally conducted.  This option was added in OpenSSL 3.5.
  unsigned int strength = 128;
 
  /* Create and instantiate a seed source */
- rand = EVP_RAND_fetch(NULL, "JITTER", NULL);
+ rand = OPENSSL_BOX_EVP_RAND_fetch(NULL, "JITTER", NULL);
  seed = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
- EVP_RAND_instantiate(seed, strength, 0, NULL, 0, NULL);
+ OPENSSL_BOX_EVP_RAND_instantiate(seed, strength, 0, NULL, 0, NULL);
  OPENSSL_BOX_EVP_RAND_free(rand);
 
  /* Feed this into a DRBG */
- rand = EVP_RAND_fetch(NULL, "CTR-DRBG", NULL);
+ rand = OPENSSL_BOX_EVP_RAND_fetch(NULL, "CTR-DRBG", NULL);
  rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, seed);
  OPENSSL_BOX_EVP_RAND_free(rand);
 
@@ -78,9 +78,9 @@ are additionally conducted.  This option was added in OpenSSL 3.5.
  *p++ = OSSL_PARAM_construct_utf8_string(OSSL_DRBG_PARAM_CIPHER,
                                          SN_aes_256_ctr, 0);
  *p = OSSL_PARAM_construct_end();
- EVP_RAND_instantiate(rctx, strength, 0, NULL, 0, params);
+ OPENSSL_BOX_EVP_RAND_instantiate(rctx, strength, 0, NULL, 0, params);
 
- EVP_RAND_generate(rctx, bytes, sizeof(bytes), strength, 0, NULL, 0);
+ OPENSSL_BOX_EVP_RAND_generate(rctx, bytes, sizeof(bytes), strength, 0, NULL, 0);
 
  OPENSSL_BOX_EVP_RAND_CTX_free(rctx);
  OPENSSL_BOX_EVP_RAND_CTX_free(seed);

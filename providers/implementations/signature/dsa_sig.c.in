@@ -164,7 +164,7 @@ static int dsa_setup_md(PROV_DSA_CTX *ctx,
         size_t mdname_len = strlen(mdname);
         unsigned char *aid = NULL;
 
-        md = EVP_MD_fetch(ctx->libctx, mdname, mdprops);
+        md = OPENSSL_BOX_EVP_MD_fetch(ctx->libctx, mdname, mdprops);
         md_nid = ossl_digest_get_approved_nid(md);
 
         if (md == NULL) {
@@ -378,7 +378,7 @@ static int dsa_signverify_message_update(void *vpdsactx,
     if (pdsactx == NULL)
         return 0;
 
-    return EVP_DigestUpdate(pdsactx->mdctx, data, datalen);
+    return OPENSSL_BOX_EVP_DigestUpdate(pdsactx->mdctx, data, datalen);
 }
 
 static int dsa_sign_message_final(void *vpdsactx, unsigned char *sig,
@@ -401,7 +401,7 @@ static int dsa_sign_message_final(void *vpdsactx, unsigned char *sig,
          * exceed EVP_MAX_MD_SIZE. We should probably handle that
          * somehow but that problem is much larger than just in DSA.
          */
-        if (!EVP_DigestFinal_ex(pdsactx->mdctx, digest, &dlen))
+        if (!OPENSSL_BOX_EVP_DigestFinal_ex(pdsactx->mdctx, digest, &dlen))
             return 0;
     }
 
@@ -481,7 +481,7 @@ static int dsa_verify_message_final(void *vpdsactx)
      * The digests used here are all known (see dsa_get_md_nid()), so they
      * should not exceed the internal buffer size of EVP_MAX_MD_SIZE.
      */
-    if (!EVP_DigestFinal_ex(pdsactx->mdctx, digest, &dlen))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(pdsactx->mdctx, digest, &dlen))
         return 0;
 
     return dsa_verify_directly(vpdsactx, pdsactx->sig, pdsactx->siglen,
@@ -537,7 +537,7 @@ static int dsa_digest_signverify_init(void *vpdsactx, const char *mdname,
             goto error;
     }
 
-    if (!EVP_DigestInit_ex2(pdsactx->mdctx, pdsactx->md, params))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex2(pdsactx->mdctx, pdsactx->md, params))
         goto error;
 
     return 1;
@@ -918,7 +918,7 @@ static int dsa_sigalg_signverify_init(void *vpdsactx, void *vdsa,
             goto error;
     }
 
-    if (!EVP_DigestInit_ex2(pdsactx->mdctx, pdsactx->md, params))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex2(pdsactx->mdctx, pdsactx->md, params))
         goto error;
 
     return 1;

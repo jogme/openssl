@@ -14,7 +14,7 @@ cipher.
 =head2 Identity
 
 This implementation is identified with this name and properties, to be
-used with EVP_MAC_fetch():
+used with OPENSSL_BOX_EVP_MAC_fetch():
 
 =over 4
 
@@ -34,7 +34,7 @@ The following parameter can be set with OPENSSL_BOX_EVP_MAC_CTX_set_params():
 =item "key" (B<OSSL_MAC_PARAM_KEY>) <octet string>
 
 Sets the MAC key.
-Setting this parameter is identical to passing a I<key> to L<EVP_MAC_init(3)>.
+Setting this parameter is identical to passing a I<key> to L<OPENSSL_BOX_EVP_MAC_init(3)>.
 
 =item "cipher" (B<OSSL_MAC_PARAM_CIPHER>) <UTF8 string>
 
@@ -50,7 +50,7 @@ valid.
 =item "encrypt-check" (B<OSSL_CIPHER_PARAM_FIPS_ENCRYPT_CHECK>) <integer>
 
 This option is used by the OpenSSL FIPS provider.
-If required this parameter should be set before EVP_MAC_init()
+If required this parameter should be set before OPENSSL_BOX_EVP_MAC_init()
 
 The default value of 1 causes an error when a unapproved Triple-DES encryption
 operation is triggered.
@@ -82,7 +82,7 @@ OPENSSL_BOX_EVP_MAC_CTX_get_block_size().
 This option is used by the OpenSSL FIPS provider.
 
 A getter that returns 1 if the operation is FIPS approved, or 0 otherwise.
-This may be used after calling EVP_MAC_final().
+This may be used after calling OPENSSL_BOX_EVP_MAC_final().
 It may return 0 if the "encrypt-check" option is set to 0.
 
 =back

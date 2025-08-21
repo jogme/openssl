@@ -41,7 +41,7 @@ int ASN1_digest(i2d_of_void *i2d, const EVP_MD *type, char *data,
     p = str;
     i2d(data, &p);
 
-    if (!EVP_Digest(str, inl, md, len, type, NULL)) {
+    if (!OPENSSL_BOX_EVP_Digest(str, inl, md, len, type, NULL)) {
         OPENSSL_free(str);
         return 0;
     }
@@ -71,12 +71,12 @@ int ossl_asn1_item_digest_ex(const ASN1_ITEM *it, const EVP_MD *md, void *asn,
             ENGINE_finish(tmpeng);
         else
 #endif
-            fetched_md = EVP_MD_fetch(libctx, OPENSSL_BOX_EVP_MD_get0_name(md), propq);
+            fetched_md = OPENSSL_BOX_EVP_MD_fetch(libctx, OPENSSL_BOX_EVP_MD_get0_name(md), propq);
     }
     if (fetched_md == NULL)
         goto err;
 
-    ret = EVP_Digest(str, i, data, len, fetched_md, NULL);
+    ret = OPENSSL_BOX_EVP_Digest(str, i, data, len, fetched_md, NULL);
 err:
     OPENSSL_free(str);
     if (fetched_md != md)

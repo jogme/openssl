@@ -2,16 +2,16 @@
 
 =head1 NAME
 
-EVP_MAC, EVP_MAC_fetch, OPENSSL_BOX_EVP_MAC_up_ref, OPENSSL_BOX_EVP_MAC_free, OPENSSL_BOX_EVP_MAC_is_a,
-OPENSSL_BOX_EVP_MAC_get0_name, EVP_MAC_names_do_all, OPENSSL_BOX_EVP_MAC_get0_description,
+EVP_MAC, OPENSSL_BOX_EVP_MAC_fetch, OPENSSL_BOX_EVP_MAC_up_ref, OPENSSL_BOX_EVP_MAC_free, OPENSSL_BOX_EVP_MAC_is_a,
+OPENSSL_BOX_EVP_MAC_get0_name, OPENSSL_BOX_EVP_MAC_names_do_all, OPENSSL_BOX_EVP_MAC_get0_description,
 OPENSSL_BOX_EVP_MAC_get0_provider, OPENSSL_BOX_EVP_MAC_get_params, OPENSSL_BOX_EVP_MAC_gettable_params,
 EVP_MAC_CTX, OPENSSL_BOX_EVP_MAC_CTX_new, OPENSSL_BOX_EVP_MAC_CTX_free, OPENSSL_BOX_EVP_MAC_CTX_dup,
 OPENSSL_BOX_EVP_MAC_CTX_get0_mac, OPENSSL_BOX_EVP_MAC_CTX_get_params, OPENSSL_BOX_EVP_MAC_CTX_set_params,
-OPENSSL_BOX_EVP_MAC_CTX_get_mac_size, OPENSSL_BOX_EVP_MAC_CTX_get_block_size, EVP_Q_mac,
-EVP_MAC_init, OPENSSL_BOX_EVP_MAC_init_SKEY, OPENSSL_BOX_EVP_MAC_update, EVP_MAC_final, OPENSSL_BOX_EVP_MAC_finalXOF,
+OPENSSL_BOX_EVP_MAC_CTX_get_mac_size, OPENSSL_BOX_EVP_MAC_CTX_get_block_size, OPENSSL_BOX_EVP_Q_mac,
+OPENSSL_BOX_EVP_MAC_init, OPENSSL_BOX_EVP_MAC_init_SKEY, OPENSSL_BOX_EVP_MAC_update, OPENSSL_BOX_EVP_MAC_final, OPENSSL_BOX_EVP_MAC_finalXOF,
 OPENSSL_BOX_EVP_MAC_gettable_ctx_params, OPENSSL_BOX_EVP_MAC_settable_ctx_params,
 OPENSSL_BOX_EVP_MAC_CTX_gettable_params, OPENSSL_BOX_EVP_MAC_CTX_settable_params,
-EVP_MAC_do_all_provided - EVP MAC routines
+OPENSSL_BOX_EVP_MAC_do_all_provided - EVP MAC routines
 
 =head1 SYNOPSIS
 
@@ -20,13 +20,13 @@ EVP_MAC_do_all_provided - EVP MAC routines
  typedef struct evp_mac_st EVP_MAC;
  typedef struct evp_mac_ctx_st EVP_MAC_CTX;
 
- EVP_MAC *EVP_MAC_fetch(OSSL_LIB_CTX *libctx, const char *algorithm,
+ EVP_MAC *OPENSSL_BOX_EVP_MAC_fetch(OSSL_LIB_CTX *libctx, const char *algorithm,
                         const char *properties);
  int OPENSSL_BOX_EVP_MAC_up_ref(EVP_MAC *mac);
  void OPENSSL_BOX_EVP_MAC_free(EVP_MAC *mac);
  int OPENSSL_BOX_EVP_MAC_is_a(const EVP_MAC *mac, const char *name);
  const char *OPENSSL_BOX_EVP_MAC_get0_name(const EVP_MAC *mac);
- int EVP_MAC_names_do_all(const EVP_MAC *mac,
+ int OPENSSL_BOX_EVP_MAC_names_do_all(const EVP_MAC *mac,
                           void (*fn)(const char *name, void *data),
                           void *data);
  const char *OPENSSL_BOX_EVP_MAC_get0_description(const EVP_MAC *mac);
@@ -42,16 +42,16 @@ EVP_MAC_do_all_provided - EVP MAC routines
 
  size_t OPENSSL_BOX_EVP_MAC_CTX_get_mac_size(EVP_MAC_CTX *ctx);
  size_t OPENSSL_BOX_EVP_MAC_CTX_get_block_size(EVP_MAC_CTX *ctx);
- unsigned char *EVP_Q_mac(OSSL_LIB_CTX *libctx, const char *name, const char *propq,
+ unsigned char *OPENSSL_BOX_EVP_Q_mac(OSSL_LIB_CTX *libctx, const char *name, const char *propq,
                           const char *subalg, const OSSL_PARAM *params,
                           const void *key, size_t keylen,
                           const unsigned char *data, size_t datalen,
                           unsigned char *out, size_t outsize, size_t *outlen);
- int EVP_MAC_init(EVP_MAC_CTX *ctx, const unsigned char *key, size_t keylen,
+ int OPENSSL_BOX_EVP_MAC_init(EVP_MAC_CTX *ctx, const unsigned char *key, size_t keylen,
                   const OSSL_PARAM params[]);
  int OPENSSL_BOX_EVP_MAC_init_SKEY(EVP_MAC_CTX *ctx, EVP_SKEY *skey, const OSSL_PARAM params[]);
  int OPENSSL_BOX_EVP_MAC_update(EVP_MAC_CTX *ctx, const unsigned char *data, size_t datalen);
- int EVP_MAC_final(EVP_MAC_CTX *ctx,
+ int OPENSSL_BOX_EVP_MAC_final(EVP_MAC_CTX *ctx,
                    unsigned char *out, size_t *outl, size_t outsize);
  int OPENSSL_BOX_EVP_MAC_finalXOF(EVP_MAC_CTX *ctx, unsigned char *out, size_t outsize);
 
@@ -61,7 +61,7 @@ EVP_MAC_do_all_provided - EVP MAC routines
  const OSSL_PARAM *OPENSSL_BOX_EVP_MAC_CTX_gettable_params(EVP_MAC_CTX *ctx);
  const OSSL_PARAM *OPENSSL_BOX_EVP_MAC_CTX_settable_params(EVP_MAC_CTX *ctx);
 
- void EVP_MAC_do_all_provided(OSSL_LIB_CTX *libctx,
+ void OPENSSL_BOX_EVP_MAC_do_all_provided(OSSL_LIB_CTX *libctx,
                               void (*fn)(EVP_MAC *mac, void *arg),
                               void *arg);
 
@@ -92,7 +92,7 @@ rely on an underlying computation algorithm.
 
 =head2 Algorithm implementation fetching
 
-EVP_MAC_fetch() fetches an implementation of a MAC I<algorithm>, given
+OPENSSL_BOX_EVP_MAC_fetch() fetches an implementation of a MAC I<algorithm>, given
 a library context I<libctx> and a set of I<properties>.
 See L<crypto(7)/ALGORITHM FETCHING> for further information.
 
@@ -126,7 +126,7 @@ I<ctx>.
 
 =head2 Computing functions
 
-EVP_Q_mac() computes the message authentication code
+OPENSSL_BOX_EVP_Q_mac() computes the message authentication code
 of I<data> with length I<datalen>
 using the MAC algorithm I<name> and the key I<key> with length I<keylen>.
 The MAC algorithm is fetched using any given I<libctx> and property query
@@ -139,7 +139,7 @@ which will be returned on success and must be freed by the caller.
 In either case, also on error,
 it assigns the number of bytes written to I<*outlen> unless I<outlen> is NULL.
 
-EVP_MAC_init() sets up the underlying context I<ctx> with information given
+OPENSSL_BOX_EVP_MAC_init() sets up the underlying context I<ctx> with information given
 via the I<key> and I<params> arguments.  The MAC I<key> has a length of
 I<keylen> and the parameters in I<params> are processed before setting
 the key.  If I<key> is NULL, the key must be set via I<params> either
@@ -147,17 +147,17 @@ as part of this call or separately using OPENSSL_BOX_EVP_MAC_CTX_set_params().
 Providing non-NULL I<params> to this function is equivalent to calling
 OPENSSL_BOX_EVP_MAC_CTX_set_params() with those I<params> for the same I<ctx> beforehand.
 Note: There are additional requirements for some MAC algorithms during
-re-initalization (i.e. calling EVP_MAC_init() on an EVP_MAC after EVP_MAC_final()
+re-initalization (i.e. calling OPENSSL_BOX_EVP_MAC_init() on an EVP_MAC after OPENSSL_BOX_EVP_MAC_final()
 has been called on the same object).  See the NOTES section below.
 
-EVP_MAC_init() should be called before OPENSSL_BOX_EVP_MAC_update() and EVP_MAC_final().
+OPENSSL_BOX_EVP_MAC_init() should be called before OPENSSL_BOX_EVP_MAC_update() and OPENSSL_BOX_EVP_MAC_final().
 
-OPENSSL_BOX_EVP_MAC_init_SKEY() is similar to EVP_MAC_init() but it accepts an opaque
+OPENSSL_BOX_EVP_MAC_init_SKEY() is similar to OPENSSL_BOX_EVP_MAC_init() but it accepts an opaque
 B<EVP_SKEY> object as a key.
 
 OPENSSL_BOX_EVP_MAC_update() adds I<datalen> bytes from I<data> to the MAC input.
 
-EVP_MAC_final() does the final computation and stores the result in
+OPENSSL_BOX_EVP_MAC_final() does the final computation and stores the result in
 the memory pointed at by I<out> of size I<outsize>, and sets the number
 of bytes written in I<*outl> at.
 If I<out> is NULL or I<outsize> is too small, then no computation
@@ -225,16 +225,16 @@ algorithm that's identifiable with I<name>.
 OPENSSL_BOX_EVP_MAC_get0_provider() returns the provider that holds the implementation
 of the given I<mac>.
 
-EVP_MAC_do_all_provided() traverses all MAC implemented by all activated
+OPENSSL_BOX_EVP_MAC_do_all_provided() traverses all MAC implemented by all activated
 providers in the given library context I<libctx>, and for each of the
 implementations, calls the given function I<fn> with the implementation method
 and the given I<arg> as argument.
 
 OPENSSL_BOX_EVP_MAC_get0_name() return the name of the given MAC.  For fetched MACs
 with multiple names, only one of them is returned; it's
-recommended to use EVP_MAC_names_do_all() instead.
+recommended to use OPENSSL_BOX_EVP_MAC_names_do_all() instead.
 
-EVP_MAC_names_do_all() traverses all names for I<mac>, and calls
+OPENSSL_BOX_EVP_MAC_names_do_all() traverses all names for I<mac>, and calls
 I<fn> with each name and I<data>.
 
 OPENSSL_BOX_EVP_MAC_get0_description() returns a description of the I<mac>, meant
@@ -316,7 +316,7 @@ or SHAKE256.
 =item "size" (B<OSSL_MAC_PARAM_SIZE>) <unsigned integer>
 
 For MAC implementations that support it, set the output size that
-EVP_MAC_final() should produce.
+OPENSSL_BOX_EVP_MAC_final() should produce.
 The allowed sizes vary between MAC implementations, but must never exceed
 what can be given with a B<size_t>.
 
@@ -338,7 +338,7 @@ record after the MAC and any padding has been removed.
 =back
 
 All these parameters should be used before the calls to any of
-EVP_MAC_init(), OPENSSL_BOX_EVP_MAC_update() and EVP_MAC_final() for a full
+OPENSSL_BOX_EVP_MAC_init(), OPENSSL_BOX_EVP_MAC_update() and OPENSSL_BOX_EVP_MAC_final() for a full
 computation.
 Anything else may give undefined results.
 
@@ -353,19 +353,19 @@ the names used in the standard where the algorithm was defined.
 
 Some MAC algorithms store internal state that cannot be extracted during
 re-initalization.  For example GMAC cannot extract an B<IV> from the
-underlying CIPHER context, and so calling EVP_MAC_init() on an EVP_MAC object
-after EVP_MAC_final() has been called cannot reset its cipher state to what it
+underlying CIPHER context, and so calling OPENSSL_BOX_EVP_MAC_init() on an EVP_MAC object
+after OPENSSL_BOX_EVP_MAC_final() has been called cannot reset its cipher state to what it
 was when the B<IV> was initially generated.  For such instances, an
-B<OSSL_MAC_PARAM_IV> parameter must be passed with each call to EVP_MAC_init().
+B<OSSL_MAC_PARAM_IV> parameter must be passed with each call to OPENSSL_BOX_EVP_MAC_init().
 
 =head1 RETURN VALUES
 
-EVP_MAC_fetch() returns a pointer to a newly fetched B<EVP_MAC>, or
+OPENSSL_BOX_EVP_MAC_fetch() returns a pointer to a newly fetched B<EVP_MAC>, or
 NULL if allocation failed.
 
 OPENSSL_BOX_EVP_MAC_up_ref() returns 1 on success, 0 on error.
 
-EVP_MAC_names_do_all() returns 1 if the callback was called for all names. A
+OPENSSL_BOX_EVP_MAC_names_do_all() returns 1 if the callback was called for all names. A
 return value of 0 means that the callback was not called for any names.
 
 OPENSSL_BOX_EVP_MAC_free() returns nothing at all.
@@ -386,18 +386,18 @@ OPENSSL_BOX_EVP_MAC_CTX_free() returns nothing at all.
 OPENSSL_BOX_EVP_MAC_CTX_get_params() and OPENSSL_BOX_EVP_MAC_CTX_set_params() return 1 on
 success, 0 on error.
 
-EVP_Q_mac() returns a pointer to the computed MAC value, or NULL on error.
+OPENSSL_BOX_EVP_Q_mac() returns a pointer to the computed MAC value, or NULL on error.
 
-EVP_MAC_init(), OPENSSL_BOX_EVP_MAC_init_SKEY(), OPENSSL_BOX_EVP_MAC_update(), EVP_MAC_final(), and
+OPENSSL_BOX_EVP_MAC_init(), OPENSSL_BOX_EVP_MAC_init_SKEY(), OPENSSL_BOX_EVP_MAC_update(), OPENSSL_BOX_EVP_MAC_final(), and
 OPENSSL_BOX_EVP_MAC_finalXOF() return 1 on success, 0 on error.
 
 OPENSSL_BOX_EVP_MAC_CTX_get_mac_size() returns the expected output size, or 0 if it isn't
-set.  If it isn't set, a call to EVP_MAC_init() will set it.
+set.  If it isn't set, a call to OPENSSL_BOX_EVP_MAC_init() will set it.
 
 OPENSSL_BOX_EVP_MAC_CTX_get_block_size() returns the block size, or 0 if it isn't set.
-If it isn't set, a call to EVP_MAC_init() will set it.
+If it isn't set, a call to OPENSSL_BOX_EVP_MAC_init() will set it.
 
-EVP_MAC_do_all_provided() returns nothing at all.
+OPENSSL_BOX_EVP_MAC_do_all_provided() returns nothing at all.
 
 =head1 EXAMPLES
 
@@ -412,7 +412,7 @@ EVP_MAC_do_all_provided() returns nothing at all.
   #include <openssl/params.h>
 
   int main() {
-      EVP_MAC *mac = EVP_MAC_fetch(NULL, getenv("MY_MAC"), NULL);
+      EVP_MAC *mac = OPENSSL_BOX_EVP_MAC_fetch(NULL, getenv("MY_MAC"), NULL);
       const char *cipher = getenv("MY_MAC_CIPHER");
       const char *digest = getenv("MY_MAC_DIGEST");
       const char *key = getenv("MY_KEY");
@@ -438,7 +438,7 @@ EVP_MAC_do_all_provided() returns nothing at all.
       if (mac == NULL
           || key == NULL
           || (ctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac)) == NULL
-          || !EVP_MAC_init(ctx, (const unsigned char *)key, strlen(key),
+          || !OPENSSL_BOX_EVP_MAC_init(ctx, (const unsigned char *)key, strlen(key),
                            params))
           goto err;
 
@@ -447,7 +447,7 @@ EVP_MAC_do_all_provided() returns nothing at all.
               goto err;
       }
 
-      if (!EVP_MAC_final(ctx, buf, &final_l, sizeof(buf)))
+      if (!OPENSSL_BOX_EVP_MAC_final(ctx, buf, &final_l, sizeof(buf)))
           goto err;
 
       printf("Result: ");

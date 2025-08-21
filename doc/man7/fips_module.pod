@@ -241,7 +241,7 @@ standards you can specify the property query C<fips=yes> like this:
 
     EVP_MD *sha256;
 
-    sha256 = EVP_MD_fetch(NULL, "SHA2-256", "fips=yes");
+    sha256 = OPENSSL_BOX_EVP_MD_fetch(NULL, "SHA2-256", "fips=yes");
 
 If no property query is specified, or more than one implementation matches the
 property query then it is unspecified which implementation of a particular
@@ -252,7 +252,7 @@ default provider:
 
     EVP_MD *sha256;
 
-    sha256 = EVP_MD_fetch(NULL, "SHA2-256", "provider=default");
+    sha256 = OPENSSL_BOX_EVP_MD_fetch(NULL, "SHA2-256", "provider=default");
 
 It is also possible to set a default property query string. The following
 example sets the default property query of C<fips=yes> for all fetches within
@@ -356,12 +356,12 @@ base providers. The other library context will just use the default provider.
     /* As an example get some digests */
 
     /* Get a FIPS validated digest */
-    fipssha256 = EVP_MD_fetch(fips_libctx, "SHA2-256", NULL);
+    fipssha256 = OPENSSL_BOX_EVP_MD_fetch(fips_libctx, "SHA2-256", NULL);
     if (fipssha256 == NULL)
         goto err;
 
     /* Get a non-FIPS validated digest */
-    nonfipssha256 = EVP_MD_fetch(nonfips_libctx, "SHA2-256", NULL);
+    nonfipssha256 = OPENSSL_BOX_EVP_MD_fetch(nonfips_libctx, "SHA2-256", NULL);
     if (nonfipssha256 == NULL)
         goto err;
 
@@ -575,7 +575,7 @@ indicator callback.
 
 =item AES-GCM ciphers support the indicator "iv-generated"
 
-See L<EVP_EncryptInit(3)/PARAMETERS> for further information.
+See L<OPENSSL_BOX_EVP_EncryptInit(3)/PARAMETERS> for further information.
 
 =item ECDSA and RSA Signatures support the indicator "verify-message".
 

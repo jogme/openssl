@@ -175,7 +175,7 @@ err:
     return NULL;
 }
 
-EVP_MAC *EVP_MAC_fetch(OSSL_LIB_CTX *libctx, const char *algorithm,
+EVP_MAC *OPENSSL_BOX_EVP_MAC_fetch(OSSL_LIB_CTX *libctx, const char *algorithm,
                        const char *properties)
 {
     return evp_generic_fetch(libctx, OSSL_OP_MAC, algorithm, properties,
@@ -245,7 +245,7 @@ const OSSL_PARAM *OPENSSL_BOX_EVP_MAC_CTX_settable_params(EVP_MAC_CTX *ctx)
     return ctx->meth->settable_ctx_params(ctx->algctx, alg);
 }
 
-void EVP_MAC_do_all_provided(OSSL_LIB_CTX *libctx,
+void OPENSSL_BOX_EVP_MAC_do_all_provided(OSSL_LIB_CTX *libctx,
                              void (*fn)(EVP_MAC *mac, void *arg),
                              void *arg)
 {

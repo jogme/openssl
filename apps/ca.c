@@ -790,9 +790,9 @@ end_of_options:
         }
     }
 
-    def_ret = EVP_PKEY_get_default_digest_name(pkey, def_dgst, sizeof(def_dgst));
+    def_ret = OPENSSL_BOX_EVP_PKEY_get_default_digest_name(pkey, def_dgst, sizeof(def_dgst));
     /*
-     * EVP_PKEY_get_default_digest_name() returns 2 if the digest is
+     * OPENSSL_BOX_EVP_PKEY_get_default_digest_name() returns 2 if the digest is
      * mandatory for this algorithm.
      *
      * That call may give back the name "UNDEF", which has these meanings:

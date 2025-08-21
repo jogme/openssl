@@ -95,7 +95,7 @@ int skeyutl_main(int argc, char **argv)
     if (genkey) {
         OSSL_PARAM *params = NULL;
 
-        mgmt = EVP_SKEYMGMT_fetch(app_get0_libctx(),
+        mgmt = OPENSSL_BOX_EVP_SKEYMGMT_fetch(app_get0_libctx(),
                                   skeymgmt ? skeymgmt : EVP_CIPHER_name(cipher),
                                   app_get0_propq());
         if (mgmt == NULL)
@@ -103,7 +103,7 @@ int skeyutl_main(int argc, char **argv)
         params = app_params_new_from_opts(skeyopts,
                                           OPENSSL_BOX_EVP_SKEYMGMT_get0_gen_settable_params(mgmt));
 
-        skey = EVP_SKEY_generate(app_get0_libctx(),
+        skey = OPENSSL_BOX_EVP_SKEY_generate(app_get0_libctx(),
                                  skeymgmt ? skeymgmt : EVP_CIPHER_name(cipher),
                                  app_get0_propq(), params);
         OSSL_PARAM_free(params);

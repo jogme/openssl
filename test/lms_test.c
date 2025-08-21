@@ -37,9 +37,9 @@ static EVP_PKEY *lms_pubkey_from_data(const unsigned char *data, size_t datalen)
     params[0] = OSSL_PARAM_construct_octet_string(OSSL_PKEY_PARAM_PUB_KEY,
                                                   (unsigned char *)data, datalen);
     params[1] = OSSL_PARAM_construct_end();
-    ret = TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "LMS", propq))
+    ret = TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "LMS", propq))
         && TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
-        && (EVP_PKEY_fromdata(ctx, &key, EVP_PKEY_PUBLIC_KEY, params) == 1);
+        && (OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &key, EVP_PKEY_PUBLIC_KEY, params) == 1);
     if (ret == 0) {
         OPENSSL_BOX_EVP_PKEY_free(key);
         key = NULL;
@@ -222,7 +222,7 @@ static int lms_key_eq_test(void)
         goto end;
 
 #ifndef OPENSSL_NO_EC
-    if (!TEST_ptr(eckey = EVP_PKEY_Q_keygen(libctx, NULL, "EC", "P-256")))
+    if (!TEST_ptr(eckey = OPENSSL_BOX_EVP_PKEY_Q_keygen(libctx, NULL, "EC", "P-256")))
         goto end;
     ret = TEST_int_ne(OPENSSL_BOX_EVP_PKEY_eq(key[0], eckey), 1);
     OPENSSL_BOX_EVP_PKEY_free(eckey);
@@ -244,7 +244,7 @@ static int lms_key_validate_test(void)
 
     if (!TEST_ptr(key = lms_pubkey_from_data(td->pub, td->publen)))
         return 0;
-    if (!TEST_ptr(vctx = EVP_PKEY_CTX_new_from_pkey(libctx, key, NULL)))
+    if (!TEST_ptr(vctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, key, NULL)))
         goto end;
     ret = TEST_int_eq(OPENSSL_BOX_EVP_PKEY_check(vctx), 1);
     OPENSSL_BOX_EVP_PKEY_CTX_free(vctx);
@@ -262,10 +262,10 @@ static int lms_verify_test(int tst)
     EVP_SIGNATURE *sig = NULL;
 
     ret = TEST_ptr(pkey = lms_pubkey_from_data(td->pub, td->publen))
-        && TEST_ptr(sig = EVP_SIGNATURE_fetch(libctx, "LMS", NULL))
-        && TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL))
-        && TEST_int_eq(EVP_PKEY_verify_message_init(ctx, sig, NULL), 1)
-        && TEST_int_eq(EVP_PKEY_verify(ctx, td->sig, td->siglen,
+        && TEST_ptr(sig = OPENSSL_BOX_EVP_SIGNATURE_fetch(libctx, "LMS", NULL))
+        && TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL))
+        && TEST_int_eq(OPENSSL_BOX_EVP_PKEY_verify_message_init(ctx, sig, NULL), 1)
+        && TEST_int_eq(OPENSSL_BOX_EVP_PKEY_verify(ctx, td->sig, td->siglen,
                                        td->msg, td->msglen), 1);
 
     OPENSSL_BOX_EVP_PKEY_free(pkey);
@@ -286,7 +286,7 @@ static int lms_digest_verify_fail_test(void)
     if (!TEST_ptr(vctx = OPENSSL_BOX_EVP_MD_CTX_new()))
         goto err;
     /* Only one shot mode is supported, streaming fails to initialise */
-    if (!TEST_int_eq(EVP_DigestVerifyInit_ex(vctx, NULL, NULL, libctx, NULL,
+    if (!TEST_int_eq(OPENSSL_BOX_EVP_DigestVerifyInit_ex(vctx, NULL, NULL, libctx, NULL,
                                              pub, NULL), 0))
         goto err;
     ret = 1;
@@ -307,7 +307,7 @@ static int lms_digest_signing_fail_test(void)
         return 0;
     if (!TEST_ptr(vctx = OPENSSL_BOX_EVP_MD_CTX_new()))
         goto err;
-    if (!TEST_int_eq(EVP_DigestSignInit_ex(vctx, NULL, NULL, libctx, NULL,
+    if (!TEST_int_eq(OPENSSL_BOX_EVP_DigestSignInit_ex(vctx, NULL, NULL, libctx, NULL,
                                            pub, NULL), 0))
         goto err;
     ret = 1;
@@ -326,9 +326,9 @@ static int lms_message_signing_fail_test(void)
     EVP_SIGNATURE *sig = NULL;
 
     ret = TEST_ptr(pkey = lms_pubkey_from_data(td->pub, td->publen))
-        && TEST_ptr(sig = EVP_SIGNATURE_fetch(libctx, "LMS", NULL))
-        && TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL))
-        && TEST_int_eq(EVP_PKEY_sign_message_init(ctx, sig, NULL), -2);
+        && TEST_ptr(sig = OPENSSL_BOX_EVP_SIGNATURE_fetch(libctx, "LMS", NULL))
+        && TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL))
+        && TEST_int_eq(OPENSSL_BOX_EVP_PKEY_sign_message_init(ctx, sig, NULL), -2);
 
     OPENSSL_BOX_EVP_PKEY_free(pkey);
     OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
@@ -341,7 +341,7 @@ static int lms_paramgen_fail_test(void)
     int ret;
     EVP_PKEY_CTX *ctx = NULL;
 
-    ret = TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "LMS", NULL))
+    ret = TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "LMS", NULL))
         && TEST_int_eq(OPENSSL_BOX_EVP_PKEY_paramgen_init(ctx), -2);
 
     OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
@@ -353,7 +353,7 @@ static int lms_keygen_fail_test(void)
     int ret;
     EVP_PKEY_CTX *ctx = NULL;
 
-    ret = TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "LMS", NULL))
+    ret = TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "LMS", NULL))
         && TEST_int_eq(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx), -2);
 
     OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
@@ -368,7 +368,7 @@ static int lms_verify_fail_test(void)
     EVP_PKEY *pkey = NULL;
 
     if (!TEST_ptr(pkey = lms_pubkey_from_data(td->pub, td->publen))
-            || !TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL)))
+            || !TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL)))
         goto end;
     /* Only one shot mode is supported, streaming fails to initialise */
     if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_verify_init(ctx), -2))
@@ -405,11 +405,11 @@ static int lms_verify_bad_sig_test(void)
         return 0;
 
     if (!TEST_ptr(pkey = lms_pubkey_from_data(td->pub, td->publen))
-            || !TEST_ptr(sig = EVP_SIGNATURE_fetch(libctx, "LMS", NULL))
-            || !TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL)))
+            || !TEST_ptr(sig = OPENSSL_BOX_EVP_SIGNATURE_fetch(libctx, "LMS", NULL))
+            || !TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL)))
         goto end;
 
-    if (!TEST_int_eq(EVP_PKEY_verify_message_init(ctx, sig, NULL), 1))
+    if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_verify_message_init(ctx, sig, NULL), 1))
         goto end;
 
     for (i = 0; i < (int)td->siglen; i += step) {
@@ -417,7 +417,7 @@ static int lms_verify_bad_sig_test(void)
         if (i > 0)
             sig_data[i - step] ^= corrupt_mask; /* Reset the previously corrupt byte */
 
-        if (!TEST_int_eq(EVP_PKEY_verify(ctx, sig_data, td->siglen,
+        if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_verify(ctx, sig_data, td->siglen,
                                          td->msg, td->msglen), 0)) {
             TEST_note("Incorrectly passed when %dth byte of signature"
                       " was corrupted", i);
@@ -453,8 +453,8 @@ static int lms_verify_bad_sig_len_test(void)
     unsigned char sigdata[4096];
 
     if (!TEST_ptr(pkey = lms_pubkey_from_data(td->pub, td->publen))
-            || !TEST_ptr(sig = EVP_SIGNATURE_fetch(libctx, "LMS", NULL))
-            || !TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL)))
+            || !TEST_ptr(sig = OPENSSL_BOX_EVP_SIGNATURE_fetch(libctx, "LMS", NULL))
+            || !TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL)))
         goto end;
 
     if (!TEST_size_t_le(td->siglen + 16, sizeof(sigdata)))
@@ -467,9 +467,9 @@ static int lms_verify_bad_sig_len_test(void)
     for (siglen = 0; siglen < td->siglen + 16; siglen += step) {
         if (siglen == td->siglen)   /* ignore the size that should pass */
             continue;
-        if (!TEST_int_eq(EVP_PKEY_verify_message_init(ctx, sig, NULL), 1))
+        if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_verify_message_init(ctx, sig, NULL), 1))
             goto end;
-        if (!TEST_int_eq(EVP_PKEY_verify(ctx, sigdata, siglen,
+        if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_verify(ctx, sigdata, siglen,
                                          td->msg, td->msglen), 0)) {
             TEST_note("Incorrectly accepted signature key of length"
                       " %u (expected %u)", (unsigned)siglen, (unsigned)td->siglen);
@@ -500,7 +500,7 @@ static int lms_verify_bad_pub_sig_test(void)
     if (!TEST_ptr(pub = OPENSSL_memdup(td->pub, td->publen)))
         return 0;
 
-    if (!TEST_ptr(sig = EVP_SIGNATURE_fetch(libctx, "LMS", NULL)))
+    if (!TEST_ptr(sig = OPENSSL_BOX_EVP_SIGNATURE_fetch(libctx, "LMS", NULL)))
         goto end;
 
     for (i = 0; i < (int)td->publen; i += step) {
@@ -508,11 +508,11 @@ static int lms_verify_bad_pub_sig_test(void)
         /* Corrupting the public key may cause the key load to fail */
         pkey = lms_pubkey_from_data(pub, td->publen);
         if (pkey != NULL) {
-            if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL)))
+            if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL)))
                 goto end;
             /* We expect the verify to fail */
-            if ((EVP_PKEY_verify_message_init(ctx, sig, NULL) == 1)
-                    && !TEST_int_eq(EVP_PKEY_verify(ctx, td->sig, td->siglen,
+            if ((OPENSSL_BOX_EVP_PKEY_verify_message_init(ctx, sig, NULL) == 1)
+                    && !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_verify(ctx, td->sig, td->siglen,
                                                     td->msg, td->msglen), 0)) {
                 TEST_note("Incorrectly passed when byte %d of the public key"
                           " was corrupted", i);

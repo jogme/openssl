@@ -65,18 +65,18 @@ static EVP_PKEY *slh_dsa_gen_key(const char *name, uint32_t keysize,
     EVP_PKEY *new = NULL;
     int rc;
 
-    ctx = EVP_PKEY_CTX_new_from_name(NULL, name, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, name, NULL);
     OPENSSL_assert(ctx != NULL);
     if (params != NULL) {
         new = OPENSSL_BOX_EVP_PKEY_new();
         OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx));
         if (*param_broken) {
-            rc = EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params);
+            rc = OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params);
             OPENSSL_assert(rc == 0);
             OPENSSL_BOX_EVP_PKEY_free(new);
             new = NULL;
         } else {
-            OPENSSL_assert(EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params) == 1);
+            OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params) == 1);
         }
         goto out;
     }
@@ -368,13 +368,13 @@ static void slh_dsa_sign_verify(uint8_t **buf, size_t *len, void *key1,
     OPENSSL_assert(key != NULL);
     *out1 = key; /* for cleanup */
 
-    ctx = EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL);
     OPENSSL_assert(ctx != NULL);
 
-    sig_alg = EVP_SIGNATURE_fetch(NULL, keytype, NULL);
+    sig_alg = OPENSSL_BOX_EVP_SIGNATURE_fetch(NULL, keytype, NULL);
     OPENSSL_assert(sig_alg != NULL);
 
-    OPENSSL_assert(EVP_PKEY_sign_message_init(ctx, sig_alg, params) == expect_init_rc);
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_sign_message_init(ctx, sig_alg, params) == expect_init_rc);
     /*
      * the context_string parameter can be no more than 255 bytes, so if
      * our random input buffer is greater than that, we expect failure above,
@@ -384,14 +384,14 @@ static void slh_dsa_sign_verify(uint8_t **buf, size_t *len, void *key1,
     if (expect_init_rc == 0)
         goto out;
 
-    OPENSSL_assert(EVP_PKEY_sign(ctx, NULL, &sig_len, msg, msg_len));
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_sign(ctx, NULL, &sig_len, msg, msg_len));
     sig = OPENSSL_zalloc(sig_len);
     OPENSSL_assert(sig != NULL);
 
-    OPENSSL_assert(EVP_PKEY_sign(ctx, sig, &sig_len, msg, msg_len));
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_sign(ctx, sig, &sig_len, msg, msg_len));
 
-    OPENSSL_assert(EVP_PKEY_verify_message_init(ctx, sig_alg, params));
-    OPENSSL_assert(EVP_PKEY_verify(ctx, sig, sig_len, msg, msg_len));
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_verify_message_init(ctx, sig_alg, params));
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_verify(ctx, sig, sig_len, msg, msg_len));
 
 out:
     OPENSSL_free(sig);
@@ -426,14 +426,14 @@ static void slh_dsa_export_import(uint8_t **buf, size_t *len, void *key1,
 
     OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_todata(alice, EVP_PKEY_KEYPAIR, &params) == 1);
 
-    ctx = EVP_PKEY_CTX_new_from_pkey(NULL, alice, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, alice, NULL);
     OPENSSL_assert(ctx != NULL);
 
     OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx));
 
     new = OPENSSL_BOX_EVP_PKEY_new();
     OPENSSL_assert(new != NULL);
-    OPENSSL_assert(EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params) == 1);
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params) == 1);
 
     /*
      * EVP_PKEY returns:
@@ -452,14 +452,14 @@ static void slh_dsa_export_import(uint8_t **buf, size_t *len, void *key1,
 
     OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_todata(bob, EVP_PKEY_KEYPAIR, &params) == 1);
 
-    ctx = EVP_PKEY_CTX_new_from_pkey(NULL, bob, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, bob, NULL);
     OPENSSL_assert(ctx != NULL);
 
     OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx));
 
     new = OPENSSL_BOX_EVP_PKEY_new();
     OPENSSL_assert(new != NULL);
-    OPENSSL_assert(EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params) == 1);
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params) == 1);
 
     OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_eq(bob, new) == 1);
 

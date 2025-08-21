@@ -173,7 +173,7 @@ e.g.
 ```c
 int strict = 0;
 params[0] = OSSL_PARAM_construct_int(OSSL_PKEY_PARAM_FIPS_KEY_CHECK, strict);
-EVP_DigestSignInit_ex(ctx, &pctx, name, libctx, NULL, pkey, params);
+OPENSSL_BOX_EVP_DigestSignInit_ex(ctx, &pctx, name, libctx, NULL, pkey, params);
 // using OPENSSL_BOX_EVP_PKEY_CTX_set_params() here would be too late
 ```
 

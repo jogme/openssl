@@ -382,7 +382,7 @@ static int rsa_setup_md(PROV_RSA_CTX *ctx, const char *mdname,
         int md_nid;
         size_t mdname_len = strlen(mdname);
 
-        md = EVP_MD_fetch(ctx->libctx, mdname, mdprops);
+        md = OPENSSL_BOX_EVP_MD_fetch(ctx->libctx, mdname, mdprops);
 
         if (md == NULL) {
             ERR_raise_data(ERR_LIB_PROV, PROV_R_INVALID_DIGEST,
@@ -473,7 +473,7 @@ static int rsa_setup_mgf1_md(PROV_RSA_CTX *ctx, const char *mdname,
     if (mdprops == NULL)
         mdprops = ctx->propq;
 
-    if ((md = EVP_MD_fetch(ctx->libctx, mdname, mdprops)) == NULL) {
+    if ((md = OPENSSL_BOX_EVP_MD_fetch(ctx->libctx, mdname, mdprops)) == NULL) {
         ERR_raise_data(ERR_LIB_PROV, PROV_R_INVALID_DIGEST,
                        "%s could not be fetched", mdname);
         return 0;
@@ -845,7 +845,7 @@ static int rsa_signverify_message_update(void *vprsactx,
     }
     prsactx->flag_allow_oneshot = 0;
 
-    return EVP_DigestUpdate(prsactx->mdctx, data, datalen);
+    return OPENSSL_BOX_EVP_DigestUpdate(prsactx->mdctx, data, datalen);
 }
 
 static int rsa_sign_message_final(void *vprsactx, unsigned char *sig,
@@ -873,7 +873,7 @@ static int rsa_sign_message_final(void *vprsactx, unsigned char *sig,
          * The digests used here are all known (see rsa_get_md_nid()), so they
          * should not exceed the internal buffer size of EVP_MAX_MD_SIZE.
          */
-        if (!EVP_DigestFinal_ex(prsactx->mdctx, digest, &dlen))
+        if (!OPENSSL_BOX_EVP_DigestFinal_ex(prsactx->mdctx, digest, &dlen))
             return 0;
 
         prsactx->flag_allow_update = 0;
@@ -1150,7 +1150,7 @@ static int rsa_verify_message_final(void *vprsactx)
      * The digests used here are all known (see rsa_get_md_nid()), so they
      * should not exceed the internal buffer size of EVP_MAX_MD_SIZE.
      */
-    if (!EVP_DigestFinal_ex(prsactx->mdctx, digest, &dlen))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(prsactx->mdctx, digest, &dlen))
         return 0;
 
     prsactx->flag_allow_update = 0;
@@ -1216,7 +1216,7 @@ static int rsa_digest_signverify_init(void *vprsactx, const char *mdname,
             goto error;
     }
 
-    if (!EVP_DigestInit_ex2(prsactx->mdctx, prsactx->md, params))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex2(prsactx->mdctx, prsactx->md, params))
         goto error;
 
     return 1;
@@ -1931,7 +1931,7 @@ static int rsa_sigalg_signverify_init(void *vprsactx, void *vrsa,
             goto error;
     }
 
-    if (!EVP_DigestInit_ex2(prsactx->mdctx, prsactx->md, params))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex2(prsactx->mdctx, prsactx->md, params))
         goto error;
 
     return 1;

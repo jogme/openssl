@@ -61,10 +61,10 @@ TwIDAQAB
 
 PrivPubKeyPair = RSA-2048:RSA-2048-PUBLIC
 
-Title = RSA tests with EVP_PKEY_sign, EVP_PKEY_verify, EVP_PKEY_verify_recover
+Title = RSA tests with OPENSSL_BOX_EVP_PKEY_sign, OPENSSL_BOX_EVP_PKEY_verify, OPENSSL_BOX_EVP_PKEY_verify_recover
 
 # Demonstrate the possibility to use the RSA (not RSA-SHA1) signature
-# implementation with EVP_PKEY_sign_init_ex2() the same way as with
+# implementation with OPENSSL_BOX_EVP_PKEY_sign_init_ex2() the same way as with
 #  OPENSSL_BOX_EVP_PKEY_sign_init_ex().
 Availablein = default
 Sign = RSA:RSA-2048
@@ -129,7 +129,7 @@ Output = ba8c24b86f18633767ed1778ef12d283a508d0bef32dd50b4a67cbd6b75df0f4ef6e69b
 #
 #     echo -n 'Hello World' | openssl dgst -hex -sign key.pem -{hashname}
 #
-# That command uses the EVP_DigestSign API.
+# That command uses the OPENSSL_BOX_EVP_DigestSign API.
 
 Title = Test RSA with different digests
 

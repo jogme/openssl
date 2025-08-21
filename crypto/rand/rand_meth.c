@@ -19,7 +19,7 @@ static int drbg_add(const void *buf, int num, double randomness)
     if (drbg == NULL || num <= 0)
         return 0;
 
-    return EVP_RAND_reseed(drbg, 0, NULL, 0, buf, num);
+    return OPENSSL_BOX_EVP_RAND_reseed(drbg, 0, NULL, 0, buf, num);
 }
 
 /* Implements the default OpenSSL RAND_seed() method */
@@ -47,7 +47,7 @@ static int drbg_bytes(unsigned char *out, int count)
     if (drbg == NULL)
         return 0;
 
-    return EVP_RAND_generate(drbg, out, count, 0, 0, NULL, 0);
+    return OPENSSL_BOX_EVP_RAND_generate(drbg, out, count, 0, 0, NULL, 0);
 }
 
 RAND_METHOD ossl_rand_meth = {

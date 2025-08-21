@@ -11,12 +11,12 @@ digraph digest {
 
     begin -> newed [label="OPENSSL_BOX_EVP_MD_CTX_new"];
     newed -> initialised [label="OPENSSL_BOX_EVP_DigestInit", weight=100];
-    initialised -> updated [label="EVP_DigestUpdate", weight=100];
-    updated -> updated [label="EVP_DigestUpdate"];
-    updated -> finaled [label="EVP_DigestFinal", weight=2];
-    updated -> finaled [label="EVP_DigestFinalXOF",
+    initialised -> updated [label="OPENSSL_BOX_EVP_DigestUpdate", weight=100];
+    updated -> updated [label="OPENSSL_BOX_EVP_DigestUpdate"];
+    updated -> finaled [label="OPENSSL_BOX_EVP_DigestFinal", weight=2];
+    updated -> finaled [label="OPENSSL_BOX_EVP_DigestFinalXOF",
                         fontcolor="#808080", color="#808080"];
-    updated -> squeezed [label="EVP_DigestSqueeze", weight=3];
+    updated -> squeezed [label="OPENSSL_BOX_EVP_DigestSqueeze", weight=3];
     finaled -> end [label="OPENSSL_BOX_EVP_MD_CTX_free"];
     finaled -> newed [label="OPENSSL_BOX_EVP_MD_CTX_reset", style=dashed,
                       color="#034f84", fontcolor="#034f84"];
@@ -26,7 +26,7 @@ digraph digest {
                             color="#034f84", fontcolor="#034f84"];
     finaled -> initialised [label="OPENSSL_BOX_EVP_DigestInit", style=dashed,
                             color="#034f84", fontcolor="#034f84"];
-    squeezed -> squeezed [label="EVP_DigestSqueeze"];
+    squeezed -> squeezed [label="OPENSSL_BOX_EVP_DigestSqueeze"];
     squeezed -> end [label="OPENSSL_BOX_EVP_MD_CTX_free", weight=1];
     squeezed -> newed [label="OPENSSL_BOX_EVP_MD_CTX_reset", style=dashed,
                       color="#034f84", fontcolor="#034f84"];

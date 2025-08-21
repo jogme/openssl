@@ -89,17 +89,17 @@ int ossl_sm2_compute_z_digest(uint8_t *out,
     entl = (uint16_t)(8 * id_len);
 
     e_byte = entl >> 8;
-    if (!EVP_DigestUpdate(hash, &e_byte, 1)) {
+    if (!OPENSSL_BOX_EVP_DigestUpdate(hash, &e_byte, 1)) {
         ERR_raise(ERR_LIB_SM2, ERR_R_EVP_LIB);
         goto done;
     }
     e_byte = entl & 0xFF;
-    if (!EVP_DigestUpdate(hash, &e_byte, 1)) {
+    if (!OPENSSL_BOX_EVP_DigestUpdate(hash, &e_byte, 1)) {
         ERR_raise(ERR_LIB_SM2, ERR_R_EVP_LIB);
         goto done;
     }
 
-    if (id_len > 0 && !EVP_DigestUpdate(hash, id, id_len)) {
+    if (id_len > 0 && !OPENSSL_BOX_EVP_DigestUpdate(hash, id, id_len)) {
         ERR_raise(ERR_LIB_SM2, ERR_R_EVP_LIB);
         goto done;
     }
@@ -115,24 +115,24 @@ int ossl_sm2_compute_z_digest(uint8_t *out,
         goto done;
 
     if (BN_bn2binpad(a, buf, p_bytes) < 0
-            || !EVP_DigestUpdate(hash, buf, p_bytes)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hash, buf, p_bytes)
             || BN_bn2binpad(b, buf, p_bytes) < 0
-            || !EVP_DigestUpdate(hash, buf, p_bytes)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hash, buf, p_bytes)
             || !EC_POINT_get_affine_coordinates(group,
                                                 EC_GROUP_get0_generator(group),
                                                 xG, yG, ctx)
             || BN_bn2binpad(xG, buf, p_bytes) < 0
-            || !EVP_DigestUpdate(hash, buf, p_bytes)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hash, buf, p_bytes)
             || BN_bn2binpad(yG, buf, p_bytes) < 0
-            || !EVP_DigestUpdate(hash, buf, p_bytes)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hash, buf, p_bytes)
             || !EC_POINT_get_affine_coordinates(group,
                                                 pubkey,
                                                 xA, yA, ctx)
             || BN_bn2binpad(xA, buf, p_bytes) < 0
-            || !EVP_DigestUpdate(hash, buf, p_bytes)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hash, buf, p_bytes)
             || BN_bn2binpad(yA, buf, p_bytes) < 0
-            || !EVP_DigestUpdate(hash, buf, p_bytes)
-            || !EVP_DigestFinal(hash, out, NULL)) {
+            || !OPENSSL_BOX_EVP_DigestUpdate(hash, buf, p_bytes)
+            || !OPENSSL_BOX_EVP_DigestFinal(hash, out, NULL)) {
         ERR_raise(ERR_LIB_SM2, ERR_R_INTERNAL_ERROR);
         goto done;
     }
@@ -173,7 +173,7 @@ static BIGNUM *sm2_compute_msg_hash(const EVP_MD *digest,
     if (z == NULL)
         goto done;
 
-    fetched_digest = EVP_MD_fetch(libctx, OPENSSL_BOX_EVP_MD_get0_name(digest), propq);
+    fetched_digest = OPENSSL_BOX_EVP_MD_fetch(libctx, OPENSSL_BOX_EVP_MD_get0_name(digest), propq);
     if (fetched_digest == NULL) {
         ERR_raise(ERR_LIB_SM2, ERR_R_INTERNAL_ERROR);
         goto done;
@@ -185,10 +185,10 @@ static BIGNUM *sm2_compute_msg_hash(const EVP_MD *digest,
     }
 
     if (!OPENSSL_BOX_EVP_DigestInit(hash, fetched_digest)
-            || !EVP_DigestUpdate(hash, z, md_size)
-            || !EVP_DigestUpdate(hash, msg, msg_len)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hash, z, md_size)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hash, msg, msg_len)
                /* reuse z buffer to hold H(Z || M) */
-            || !EVP_DigestFinal(hash, z, NULL)) {
+            || !OPENSSL_BOX_EVP_DigestFinal(hash, z, NULL)) {
         ERR_raise(ERR_LIB_SM2, ERR_R_EVP_LIB);
         goto done;
     }

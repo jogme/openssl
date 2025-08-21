@@ -57,19 +57,19 @@ The usual life-cycle of a MAC is illustrated:
                  |       newed       |
                  +-------------------+
                    |
-                   | EVP_MAC_init
+                   | OPENSSL_BOX_EVP_MAC_init
                    v
                  +-------------------+
               +> |    initialised    | <+
               |  +-------------------+  |
               |    |                    |
-              |    | OPENSSL_BOX_EVP_MAC_update     | EVP_MAC_init
+              |    | OPENSSL_BOX_EVP_MAC_update     | OPENSSL_BOX_EVP_MAC_init
               |    v                    |
- EVP_MAC_init |  +-------------------+  |
+ OPENSSL_BOX_EVP_MAC_init |  +-------------------+  |
               |  |      updated      | -+
               |  +-------------------+
               |    |               |
-              |    | EVP_MAC_final | OPENSSL_BOX_EVP_MAC_finalXOF
+              |    | OPENSSL_BOX_EVP_MAC_final | OPENSSL_BOX_EVP_MAC_finalXOF
               |    v               v
               |  +-------------------+
               +- |      finaled      |
@@ -95,9 +95,9 @@ This is the canonical list.
  Function Call                   --------------------- Current State ----------------------
                                  start   newed    initialised   updated     finaled   freed
  OPENSSL_BOX_EVP_MAC_CTX_new                 newed
- EVP_MAC_init                         initialised initialised initialised initialised
+ OPENSSL_BOX_EVP_MAC_init                         initialised initialised initialised initialised
  OPENSSL_BOX_EVP_MAC_update                                     updated     updated
- EVP_MAC_final                                                  finaled
+ OPENSSL_BOX_EVP_MAC_final                                                  finaled
  OPENSSL_BOX_EVP_MAC_finalXOF                                               finaled
  OPENSSL_BOX_EVP_MAC_CTX_free                freed   freed       freed       freed       freed
  OPENSSL_BOX_EVP_MAC_CTX_get_params                  newed    initialised   updated
@@ -126,7 +126,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MAC_init</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MAC_init</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">initialised</td>
     <td style="border:1px solid" align="center">initialised</td>
@@ -140,7 +140,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">updated</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MAC_final</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MAC_final</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>

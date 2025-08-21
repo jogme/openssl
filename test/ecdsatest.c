@@ -104,9 +104,9 @@ static int x9_62_tests(int n)
     if (!TEST_ptr(mctx = OPENSSL_BOX_EVP_MD_CTX_new())
         /* get the message digest */
         || !TEST_ptr(message = OPENSSL_hexstr2buf(tbs, &msg_len))
-        || !TEST_true(EVP_DigestInit_ex(mctx, EVP_get_digestbynid(md_nid), NULL))
-        || !TEST_true(EVP_DigestUpdate(mctx, message, msg_len))
-        || !TEST_true(EVP_DigestFinal_ex(mctx, digest, &dgst_len))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestInit_ex(mctx, EVP_get_digestbynid(md_nid), NULL))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestUpdate(mctx, message, msg_len))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestFinal_ex(mctx, digest, &dgst_len))
         /* create the key */
         || !TEST_ptr(key = EC_KEY_new_by_curve_name(nid))
         /* load KAT variables */
@@ -159,8 +159,8 @@ static int x9_62_tests(int n)
 
 /*-
  * Positive and negative ECDSA testing through EVP interface:
- * - EVP_DigestSign (this is the one-shot version)
- * - EVP_DigestVerify
+ * - OPENSSL_BOX_EVP_DigestSign (this is the one-shot version)
+ * - OPENSSL_BOX_EVP_DigestVerify
  *
  * Tests the library can successfully:
  * - create a key
@@ -246,40 +246,40 @@ static int test_builtin(int n, int as)
     if (!TEST_int_ge(temp, 0)
         || !TEST_ptr(sig = OPENSSL_malloc(sig_len = (size_t)temp))
         /* create a signature */
-        || !TEST_true(EVP_DigestSignInit(mctx, NULL, NULL, NULL, pkey))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestSignInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
-        || !TEST_true(EVP_DigestSign(mctx, sig, &sig_len, tbs, sizeof(tbs)))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestSign(mctx, sig, &sig_len, tbs, sizeof(tbs)))
         || !TEST_size_t_le(sig_len, (size_t)ECDSA_size(eckey))
         || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx))
         /* negative test, verify with wrong key, 0 return */
-        || !TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey_neg))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey_neg))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey_neg))
-        || !TEST_int_eq(EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 0)
+        || !TEST_int_eq(OPENSSL_BOX_EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 0)
         || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx))
         /* negative test, verify with wrong signature length, -1 return */
-        || !TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
-        || !TEST_int_eq(EVP_DigestVerify(mctx, sig, sig_len - 1, tbs, sizeof(tbs)), -1)
+        || !TEST_int_eq(OPENSSL_BOX_EVP_DigestVerify(mctx, sig, sig_len - 1, tbs, sizeof(tbs)), -1)
         || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx))
         /* positive test, verify with correct key, 1 return */
-        || !TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
-        || !TEST_int_eq(EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 1)
+        || !TEST_int_eq(OPENSSL_BOX_EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 1)
         || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx)))
         goto err;
 
     /* muck with the message, test it fails with 0 return */
     tbs[0] ^= 1;
-    if (!TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
-        || !TEST_int_eq(EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 0)
+        || !TEST_int_eq(OPENSSL_BOX_EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 0)
         || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx)))
         goto err;
     /* un-muck and test it verifies */
     tbs[0] ^= 1;
-    if (!TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
-        || !TEST_int_eq(EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 1)
+        || !TEST_int_eq(OPENSSL_BOX_EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 1)
         || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx)))
         goto err;
 
@@ -307,21 +307,21 @@ static int test_builtin(int n, int as)
      * Because the ratio of DER overhead to signature bytes is small.
      * So most of the time it will be one of the last two cases.
      *
-     * In any case, EVP_PKEY_verify should not return 1 for valid.
+     * In any case, OPENSSL_BOX_EVP_PKEY_verify should not return 1 for valid.
      */
     offset = tbs[0] % sig_len;
     dirt = tbs[1] ? tbs[1] : 1;
     sig[offset] ^= dirt;
-    if (!TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
-        || !TEST_int_ne(EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 1)
+        || !TEST_int_ne(OPENSSL_BOX_EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 1)
         || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx)))
         goto err;
     /* un-muck and test it verifies */
     sig[offset] ^= dirt;
-    if (!TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
-        || !TEST_int_eq(EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 1)
+        || !TEST_int_eq(OPENSSL_BOX_EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 1)
         || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx)))
         goto err;
 

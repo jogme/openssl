@@ -139,7 +139,7 @@ EVP_SKEYMGMT *evp_skeymgmt_fetch_from_prov(OSSL_PROVIDER *prov,
                                        (void (*)(void *))OPENSSL_BOX_EVP_SKEYMGMT_free);
 }
 
-EVP_SKEYMGMT *EVP_SKEYMGMT_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
+EVP_SKEYMGMT *OPENSSL_BOX_EVP_SKEYMGMT_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
                                  const char *properties)
 {
     return evp_generic_fetch(ctx, OSSL_OP_SKEYMGMT, algorithm, properties,
@@ -193,7 +193,7 @@ int OPENSSL_BOX_EVP_SKEYMGMT_is_a(const EVP_SKEYMGMT *skeymgmt, const char *name
         && evp_is_a(skeymgmt->prov, skeymgmt->name_id, NULL, name);
 }
 
-void EVP_SKEYMGMT_do_all_provided(OSSL_LIB_CTX *libctx,
+void OPENSSL_BOX_EVP_SKEYMGMT_do_all_provided(OSSL_LIB_CTX *libctx,
                                   void (*fn)(EVP_SKEYMGMT *skeymgmt, void *arg),
                                   void *arg)
 {
@@ -204,7 +204,7 @@ void EVP_SKEYMGMT_do_all_provided(OSSL_LIB_CTX *libctx,
                        (void (*)(void *))OPENSSL_BOX_EVP_SKEYMGMT_free);
 }
 
-int EVP_SKEYMGMT_names_do_all(const EVP_SKEYMGMT *skeymgmt,
+int OPENSSL_BOX_EVP_SKEYMGMT_names_do_all(const EVP_SKEYMGMT *skeymgmt,
                               void (*fn)(const char *name, void *data),
                               void *data)
 {

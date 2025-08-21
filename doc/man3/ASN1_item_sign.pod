@@ -167,7 +167,7 @@ then output in DER format and then loaded back in and verified.
     /* Set the key and digest used for signing */
     sctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (sctx == NULL
-        || !EVP_DigestSignInit_ex(sctx, NULL, mdname, NULL, NULL, pkey))
+        || !OPENSSL_BOX_EVP_DigestSignInit_ex(sctx, NULL, mdname, NULL, NULL, pkey))
         goto err;
 
     /*
@@ -193,7 +193,7 @@ then output in DER format and then loaded back in and verified.
     /* Set the key and digest used for verifying */
     vctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (vctx == NULL
-        || !EVP_DigestVerifyInit_ex(vctx, NULL, mdname, NULL, NULL, pkey))
+        || !OPENSSL_BOX_EVP_DigestVerifyInit_ex(vctx, NULL, mdname, NULL, NULL, pkey))
         goto err;
 
     /* Load the der data back into an object */

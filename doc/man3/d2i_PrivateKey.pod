@@ -2,8 +2,8 @@
 
 =head1 NAME
 
-d2i_PrivateKey_ex, d2i_PrivateKey, d2i_PublicKey, d2i_KeyParams,
-d2i_AutoPrivateKey_ex,  d2i_AutoPrivateKey, OPENSSL_BOX_i2d_PrivateKey,
+OPENSSL_BOX_d2i_PrivateKey_ex, OPENSSL_BOX_d2i_PrivateKey, OPENSSL_BOX_d2i_PublicKey, OPENSSL_BOX_d2i_KeyParams,
+OPENSSL_BOX_d2i_AutoPrivateKey_ex,  OPENSSL_BOX_d2i_AutoPrivateKey, OPENSSL_BOX_i2d_PrivateKey,
 OPENSSL_BOX_i2d_PKCS8PrivateKey, OPENSSL_BOX_i2d_PublicKey, OPENSSL_BOX_i2d_KeyParams, OPENSSL_BOX_i2d_KeyParams_bio,
 d2i_PrivateKey_ex_bio, d2i_PrivateKey_bio, d2i_PrivateKey_ex_fp,
 d2i_PrivateKey_fp, OPENSSL_BOX_d2i_KeyParams_bio, i2d_PrivateKey_bio, i2d_PrivateKey_fp
@@ -13,19 +13,19 @@ d2i_PrivateKey_fp, OPENSSL_BOX_d2i_KeyParams_bio, i2d_PrivateKey_bio, i2d_Privat
 
  #include <openssl/evp.h>
 
- EVP_PKEY *d2i_PrivateKey_ex(int type, EVP_PKEY **a, const unsigned char **pp,
+ EVP_PKEY *OPENSSL_BOX_d2i_PrivateKey_ex(int type, EVP_PKEY **a, const unsigned char **pp,
                              long length, OSSL_LIB_CTX *libctx,
                              const char *propq);
- EVP_PKEY *d2i_PrivateKey(int type, EVP_PKEY **a, const unsigned char **pp,
+ EVP_PKEY *OPENSSL_BOX_d2i_PrivateKey(int type, EVP_PKEY **a, const unsigned char **pp,
                           long length);
- EVP_PKEY *d2i_PublicKey(int type, EVP_PKEY **a, const unsigned char **pp,
+ EVP_PKEY *OPENSSL_BOX_d2i_PublicKey(int type, EVP_PKEY **a, const unsigned char **pp,
                          long length);
- EVP_PKEY *d2i_KeyParams(int type, EVP_PKEY **a, const unsigned char **pp,
+ EVP_PKEY *OPENSSL_BOX_d2i_KeyParams(int type, EVP_PKEY **a, const unsigned char **pp,
                          long length);
- EVP_PKEY *d2i_AutoPrivateKey_ex(EVP_PKEY **a, const unsigned char **pp,
+ EVP_PKEY *OPENSSL_BOX_d2i_AutoPrivateKey_ex(EVP_PKEY **a, const unsigned char **pp,
                                  long length, OSSL_LIB_CTX *libctx,
                                  const char *propq);
- EVP_PKEY *d2i_AutoPrivateKey(EVP_PKEY **a, const unsigned char **pp,
+ EVP_PKEY *OPENSSL_BOX_d2i_AutoPrivateKey(EVP_PKEY **a, const unsigned char **pp,
                               long length);
 
  int OPENSSL_BOX_i2d_PrivateKey(const EVP_PKEY *a, unsigned char **pp);
@@ -50,7 +50,7 @@ d2i_PrivateKey_fp, OPENSSL_BOX_d2i_KeyParams_bio, i2d_PrivateKey_bio, i2d_Privat
 
 =head1 DESCRIPTION
 
-d2i_PrivateKey_ex() decodes a private key using algorithm I<type>. It attempts
+OPENSSL_BOX_d2i_PrivateKey_ex() decodes a private key using algorithm I<type>. It attempts
 to use any key-specific format or PKCS#8 unencrypted PrivateKeyInfo format.
 The I<type> parameter should be a public key algorithm constant such as
 B<EVP_PKEY_RSA>. An error occurs if the decoded key does not match I<type>. Some
@@ -61,19 +61,19 @@ and property query string I<propq> are used.
 If successful and the I<a> parameter is not NULL the function assigns the
 returned B<EVP_PKEY> structure pointer to I<*a>, overwriting any previous value.
 
-d2i_PrivateKey() does the same as d2i_PrivateKey_ex() except that the default
+OPENSSL_BOX_d2i_PrivateKey() does the same as OPENSSL_BOX_d2i_PrivateKey_ex() except that the default
 library context and property query string are used.
-d2i_PublicKey() does the same for public keys.
-d2i_KeyParams() does the same for key parameters.
+OPENSSL_BOX_d2i_PublicKey() does the same for public keys.
+OPENSSL_BOX_d2i_KeyParams() does the same for key parameters.
 
 The d2i_PrivateKey_ex_bio() and d2i_PrivateKey_bio() functions are similar to
-d2i_PrivateKey_ex() and d2i_PrivateKey() respectively except that they decode
+OPENSSL_BOX_d2i_PrivateKey_ex() and OPENSSL_BOX_d2i_PrivateKey() respectively except that they decode
 the data read from the given BIO. The d2i_PrivateKey_ex_fp() and
 d2i_PrivateKey_fp() functions are the same except that they read the data from
 the given FILE.
 
-d2i_AutoPrivateKey_ex() and d2i_AutoPrivateKey() are similar to
-d2i_PrivateKey_ex() and d2i_PrivateKey() respectively except that they attempt
+OPENSSL_BOX_d2i_AutoPrivateKey_ex() and OPENSSL_BOX_d2i_AutoPrivateKey() are similar to
+OPENSSL_BOX_d2i_PrivateKey_ex() and OPENSSL_BOX_d2i_PrivateKey() respectively except that they attempt
 to automatically detect the private key format.
 
 OPENSSL_BOX_i2d_PrivateKey() encodes I<a>. It uses a key specific format or, if none is
@@ -97,15 +97,15 @@ All these functions use DER format and unencrypted keys. Applications wishing
 to encrypt or decrypt private keys should use other functions such as
 d2i_PKCS8PrivateKey() instead.
 
-To decode a key with type B<EVP_PKEY_EC>, d2i_PublicKey() requires I<*a> to be
+To decode a key with type B<EVP_PKEY_EC>, OPENSSL_BOX_d2i_PublicKey() requires I<*a> to be
 a non-NULL EVP_PKEY structure assigned an EC_KEY structure referencing the proper
 EC_GROUP.
 
 =head1 RETURN VALUES
 
-The d2i_PrivateKey_ex(), d2i_PrivateKey(), d2i_AutoPrivateKey_ex(),
-d2i_AutoPrivateKey(), d2i_PrivateKey_ex_bio(), d2i_PrivateKey_bio(),
-d2i_PrivateKey_ex_fp(), d2i_PrivateKey_fp(), d2i_PublicKey(), d2i_KeyParams()
+The OPENSSL_BOX_d2i_PrivateKey_ex(), OPENSSL_BOX_d2i_PrivateKey(), OPENSSL_BOX_d2i_AutoPrivateKey_ex(),
+OPENSSL_BOX_d2i_AutoPrivateKey(), d2i_PrivateKey_ex_bio(), d2i_PrivateKey_bio(),
+d2i_PrivateKey_ex_fp(), d2i_PrivateKey_fp(), OPENSSL_BOX_d2i_PublicKey(), OPENSSL_BOX_d2i_KeyParams()
 and OPENSSL_BOX_d2i_KeyParams_bio() functions return a valid B<EVP_PKEY> structure or NULL if
 an error occurs. The error code can be obtained by calling L<ERR_get_error(3)>.
 
@@ -123,8 +123,8 @@ L<d2i_PKCS8PrivateKey_bio(3)>
 
 =head1 HISTORY
 
-d2i_PrivateKey_ex(), d2i_PrivateKey_ex_bio(), d2i_PrivateKey_ex_fp(), and
-d2i_AutoPrivateKey_ex() were added in OpenSSL 3.0.
+OPENSSL_BOX_d2i_PrivateKey_ex(), d2i_PrivateKey_ex_bio(), d2i_PrivateKey_ex_fp(), and
+OPENSSL_BOX_d2i_AutoPrivateKey_ex() were added in OpenSSL 3.0.
 
 OPENSSL_BOX_i2d_PKCS8PrivateKey() was added in OpenSSL 3.6.
 

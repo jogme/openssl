@@ -137,7 +137,7 @@ changes:
 
   * SHAKE-128 and SHAKE-256 implementations have no default digest length
     anymore. That means these algorithms cannot be used with
-    EVP_DigestFinal/_ex() unless the `xoflen` param is set before.
+    OPENSSL_BOX_EVP_DigestFinal/_ex() unless the `xoflen` param is set before.
 
   * Setting `config_diagnostics=1` in the config file will cause errors to
     be returned from SSL_CTX_new() and SSL_CTX_new_ex() if there is an error
@@ -245,7 +245,7 @@ This release adds the following new features:
   * Limited support for polling of QUIC connection and stream objects in a
     non-blocking manner.
 
-  * Added a new EVP_DigestSqueeze() API. This allows SHAKE to squeeze multiple
+  * Added a new OPENSSL_BOX_EVP_DigestSqueeze() API. This allows SHAKE to squeeze multiple
     times with different output sizes.
 
   * Added exporter for CMake on Unix and Windows, alongside the pkg-config
@@ -254,7 +254,7 @@ This release adds the following new features:
   * The BLAKE2s hash algorithm matches BLAKE2b's support for configurable
     output length.
 
-  * The EVP_PKEY_fromdata function has been augmented to allow for the
+  * The OPENSSL_BOX_EVP_PKEY_fromdata function has been augmented to allow for the
     derivation of CRT (Chinese Remainder Theorem) parameters when requested
 
   * Added API functions SSL_SESSION_get_time_ex(), SSL_SESSION_set_time_ex()
@@ -659,8 +659,8 @@ OpenSSL 1.1.1
     function ([CVE-2021-23841])
   * Fixed the RSA_padding_check_SSLv23() function and the RSA_SSLV23_PADDING
     padding mode to correctly check for rollback attacks
-  * Fixed an overflow in the EVP_CipherUpdate, EVP_EncryptUpdate and
-    EVP_DecryptUpdate functions ([CVE-2021-23840])
+  * Fixed an overflow in the OPENSSL_BOX_EVP_CipherUpdate, OPENSSL_BOX_EVP_EncryptUpdate and
+    OPENSSL_BOX_EVP_DecryptUpdate functions ([CVE-2021-23840])
   * Fixed SRP_Calc_client_key so that it runs in constant time
 
 ### Major changes between OpenSSL 1.1.1h and OpenSSL 1.1.1i [8 Dec 2020]
@@ -969,8 +969,8 @@ OpenSSL 1.0.2
 ### Major changes between OpenSSL 1.0.2g and OpenSSL 1.0.2h [3 May 2016]
 
   * Prevent padding oracle in AES-NI CBC MAC check ([CVE-2016-2107])
-  * Fix EVP_EncodeUpdate overflow ([CVE-2016-2105])
-  * Fix EVP_EncryptUpdate overflow ([CVE-2016-2106])
+  * Fix OPENSSL_BOX_EVP_EncodeUpdate overflow ([CVE-2016-2105])
+  * Fix OPENSSL_BOX_EVP_EncryptUpdate overflow ([CVE-2016-2106])
   * Prevent ASN.1 BIO excessive memory allocation ([CVE-2016-2109])
   * EBCDIC overread ([CVE-2016-2176])
   * Modify behavior of ALPN to invoke callback after SNI/servername
@@ -1002,7 +1002,7 @@ OpenSSL 1.0.2
   * BN_mod_exp may produce incorrect results on x86_64 ([CVE-2015-3193])
   * Certificate verify crash with missing PSS parameter ([CVE-2015-3194])
   * X509_ATTRIBUTE memory leak ([CVE-2015-3195])
-  * Rewrite EVP_DecodeUpdate (base64 decoding) to fix several bugs
+  * Rewrite OPENSSL_BOX_EVP_DecodeUpdate (base64 decoding) to fix several bugs
   * In DSA_generate_parameters_ex, if the provided seed is too short,
     return an error
 
@@ -1070,8 +1070,8 @@ OpenSSL 1.0.1
 ### Major changes between OpenSSL 1.0.1s and OpenSSL 1.0.1t [3 May 2016]
 
   * Prevent padding oracle in AES-NI CBC MAC check ([CVE-2016-2107])
-  * Fix EVP_EncodeUpdate overflow ([CVE-2016-2105])
-  * Fix EVP_EncryptUpdate overflow ([CVE-2016-2106])
+  * Fix OPENSSL_BOX_EVP_EncodeUpdate overflow ([CVE-2016-2105])
+  * Fix OPENSSL_BOX_EVP_EncryptUpdate overflow ([CVE-2016-2106])
   * Prevent ASN.1 BIO excessive memory allocation ([CVE-2016-2109])
   * EBCDIC overread ([CVE-2016-2176])
   * Modify behavior of ALPN to invoke callback after SNI/servername
@@ -1102,7 +1102,7 @@ OpenSSL 1.0.1
 
   * Certificate verify crash with missing PSS parameter ([CVE-2015-3194])
   * X509_ATTRIBUTE memory leak ([CVE-2015-3195])
-  * Rewrite EVP_DecodeUpdate (base64 decoding) to fix several bugs
+  * Rewrite OPENSSL_BOX_EVP_DecodeUpdate (base64 decoding) to fix several bugs
   * In DSA_generate_parameters_ex, if the provided seed is too short,
     return an error
 

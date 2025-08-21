@@ -86,7 +86,7 @@ Key generation API
 ------------------
 
 Keys can be generated via the usual **OPENSSL_BOX_EVP_PKEY_generate()** and
-**EVP_PKEY_Q_keygen()** functions.
+**OPENSSL_BOX_EVP_PKEY_Q_keygen()** functions.
 
 An explicit seed can be specified by setting the key generation
 **OSSL_PKEY_PARAM_ML_KEM_SEED** parameter to a 64-byte octet-string
@@ -99,9 +99,9 @@ KEM API
 Accessed in the usual way via:
 
 - **OPENSSL_BOX_EVP_PKEY_encapsulate_init()**,
-- **EVP_PKEY_encapsulate()**,
+- **OPENSSL_BOX_EVP_PKEY_encapsulate()**,
 - **OPENSSL_BOX_EVP_PKEY_decapsulate_init()**, and
-- **EVP_PKEY_decapsulate()**.
+- **OPENSSL_BOX_EVP_PKEY_decapsulate()**.
 
 For the encapsulation operation, a test-only option exists to bypass the random
 number generator (secret random inputs are required for security) and pass in

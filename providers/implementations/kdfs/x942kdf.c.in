@@ -88,7 +88,7 @@ static int find_alg_id(OSSL_LIB_CTX *libctx, const char *algname,
     size_t i;
     EVP_CIPHER *cipher;
 
-    cipher = EVP_CIPHER_fetch(libctx, algname, propq);
+    cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, algname, propq);
     if (cipher != NULL) {
         for (i = 0; i < OSSL_NELEM(kek_algs); i++) {
             if (OPENSSL_BOX_EVP_CIPHER_is_a(cipher, kek_algs[i].name)) {
@@ -310,18 +310,18 @@ static int x942kdf_hash_kdm(const EVP_MD *kdf_md,
         ctr[3] = (unsigned char)(counter & 0xff);
 
         if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx, ctx_init)
-            || !EVP_DigestUpdate(ctx, z, z_len)
-            || !EVP_DigestUpdate(ctx, other, other_len))
+            || !OPENSSL_BOX_EVP_DigestUpdate(ctx, z, z_len)
+            || !OPENSSL_BOX_EVP_DigestUpdate(ctx, other, other_len))
             goto end;
         if (len >= out_len) {
-            if (!EVP_DigestFinal_ex(ctx, out, NULL))
+            if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, out, NULL))
                 goto end;
             out += out_len;
             len -= out_len;
             if (len == 0)
                 break;
         } else {
-            if (!EVP_DigestFinal_ex(ctx, mac, NULL))
+            if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, mac, NULL))
                 goto end;
             memcpy(out, mac, len);
             break;

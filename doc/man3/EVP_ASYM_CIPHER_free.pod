@@ -2,9 +2,9 @@
 
 =head1 NAME
 
-EVP_ASYM_CIPHER_fetch, OPENSSL_BOX_EVP_ASYM_CIPHER_free, OPENSSL_BOX_EVP_ASYM_CIPHER_up_ref,
+OPENSSL_BOX_EVP_ASYM_CIPHER_fetch, OPENSSL_BOX_EVP_ASYM_CIPHER_free, OPENSSL_BOX_EVP_ASYM_CIPHER_up_ref,
 OPENSSL_BOX_EVP_ASYM_CIPHER_is_a, OPENSSL_BOX_EVP_ASYM_CIPHER_get0_provider,
-EVP_ASYM_CIPHER_do_all_provided, EVP_ASYM_CIPHER_names_do_all,
+OPENSSL_BOX_EVP_ASYM_CIPHER_do_all_provided, OPENSSL_BOX_EVP_ASYM_CIPHER_names_do_all,
 OPENSSL_BOX_EVP_ASYM_CIPHER_get0_name, OPENSSL_BOX_EVP_ASYM_CIPHER_get0_description,
 OPENSSL_BOX_EVP_ASYM_CIPHER_gettable_ctx_params, OPENSSL_BOX_EVP_ASYM_CIPHER_settable_ctx_params
 - Functions to manage EVP_ASYM_CIPHER algorithm objects
@@ -13,18 +13,18 @@ OPENSSL_BOX_EVP_ASYM_CIPHER_gettable_ctx_params, OPENSSL_BOX_EVP_ASYM_CIPHER_set
 
  #include <openssl/evp.h>
 
- EVP_ASYM_CIPHER *EVP_ASYM_CIPHER_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
+ EVP_ASYM_CIPHER *OPENSSL_BOX_EVP_ASYM_CIPHER_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
                                         const char *properties);
  void OPENSSL_BOX_EVP_ASYM_CIPHER_free(EVP_ASYM_CIPHER *cipher);
  int OPENSSL_BOX_EVP_ASYM_CIPHER_up_ref(EVP_ASYM_CIPHER *cipher);
  const char *OPENSSL_BOX_EVP_ASYM_CIPHER_get0_name(const EVP_ASYM_CIPHER *cipher);
  int OPENSSL_BOX_EVP_ASYM_CIPHER_is_a(const EVP_ASYM_CIPHER *cipher, const char *name);
  OSSL_PROVIDER *OPENSSL_BOX_EVP_ASYM_CIPHER_get0_provider(const EVP_ASYM_CIPHER *cipher);
- void EVP_ASYM_CIPHER_do_all_provided(OSSL_LIB_CTX *libctx,
+ void OPENSSL_BOX_EVP_ASYM_CIPHER_do_all_provided(OSSL_LIB_CTX *libctx,
                                       void (*fn)(EVP_ASYM_CIPHER *cipher,
                                                  void *arg),
                                       void *arg);
- int EVP_ASYM_CIPHER_names_do_all(const EVP_ASYM_CIPHER *cipher,
+ int OPENSSL_BOX_EVP_ASYM_CIPHER_names_do_all(const EVP_ASYM_CIPHER *cipher,
                                   void (*fn)(const char *name, void *data),
                                   void *data);
  const char *OPENSSL_BOX_EVP_ASYM_CIPHER_get0_description(const EVP_ASYM_CIPHER *cipher);
@@ -33,7 +33,7 @@ OPENSSL_BOX_EVP_ASYM_CIPHER_gettable_ctx_params, OPENSSL_BOX_EVP_ASYM_CIPHER_set
 
 =head1 DESCRIPTION
 
-EVP_ASYM_CIPHER_fetch() fetches the implementation for the given
+OPENSSL_BOX_EVP_ASYM_CIPHER_fetch() fetches the implementation for the given
 B<algorithm> from any provider offering it, within the criteria given
 by the B<properties> and in the scope of the given library context B<ctx> (see
 L<OSSL_LIB_CTX(3)>). The algorithm will be one offering functions for performing
@@ -44,7 +44,7 @@ The returned value must eventually be freed with OPENSSL_BOX_EVP_ASYM_CIPHER_fre
 
 OPENSSL_BOX_EVP_ASYM_CIPHER_free() decrements the reference count for the B<EVP_ASYM_CIPHER>
 structure. Typically this structure will have been obtained from an earlier call
-to EVP_ASYM_CIPHER_fetch(). If the reference count drops to 0 then the
+to OPENSSL_BOX_EVP_ASYM_CIPHER_fetch(). If the reference count drops to 0 then the
 structure is freed. If the argument is NULL, nothing is done.
 
 OPENSSL_BOX_EVP_ASYM_CIPHER_up_ref() increments the reference count for an
@@ -56,7 +56,7 @@ algorithm that's identifiable with I<name>, otherwise 0.
 OPENSSL_BOX_EVP_ASYM_CIPHER_get0_provider() returns the provider that I<cipher> was
 fetched from.
 
-EVP_ASYM_CIPHER_do_all_provided() traverses all EVP_ASYM_CIPHERs implemented by
+OPENSSL_BOX_EVP_ASYM_CIPHER_do_all_provided() traverses all EVP_ASYM_CIPHERs implemented by
 all activated providers in the given library context I<libctx>, and for each of
 the implementations, calls the given function I<fn> with the implementation
 method and the given I<arg> as argument.
@@ -67,7 +67,7 @@ multiple synonyms associated with it. In this case the first name from the
 algorithm definition is returned. Ownership of the returned string is retained
 by the I<cipher> object and should not be freed by the caller.
 
-EVP_ASYM_CIPHER_names_do_all() traverses all names for I<cipher>, and calls
+OPENSSL_BOX_EVP_ASYM_CIPHER_names_do_all() traverses all names for I<cipher>, and calls
 I<fn> with each name and I<data>.
 
 OPENSSL_BOX_EVP_ASYM_CIPHER_get0_description() returns a description of the I<cipher>,
@@ -81,12 +81,12 @@ L<OPENSSL_BOX_EVP_PKEY_CTX_get_params(3)> and L<OPENSSL_BOX_EVP_PKEY_CTX_set_par
 
 =head1 RETURN VALUES
 
-EVP_ASYM_CIPHER_fetch() returns a pointer to an B<EVP_ASYM_CIPHER> for success
+OPENSSL_BOX_EVP_ASYM_CIPHER_fetch() returns a pointer to an B<EVP_ASYM_CIPHER> for success
 or B<NULL> for failure.
 
 OPENSSL_BOX_EVP_ASYM_CIPHER_up_ref() returns 1 for success or 0 otherwise.
 
-EVP_ASYM_CIPHER_names_do_all() returns 1 if the callback was called for all
+OPENSSL_BOX_EVP_ASYM_CIPHER_names_do_all() returns 1 if the callback was called for all
 names. A return value of 0 means that the callback was not called for any names.
 
 OPENSSL_BOX_EVP_ASYM_CIPHER_gettable_ctx_params() and OPENSSL_BOX_EVP_ASYM_CIPHER_settable_ctx_params()

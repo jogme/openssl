@@ -46,10 +46,10 @@ char *OPENSSL_BOX_EVP_get_pw_prompt(void)
  */
 int OPENSSL_BOX_EVP_read_pw_string(char *buf, int len, const char *prompt, int verify)
 {
-    return EVP_read_pw_string_min(buf, 0, len, prompt, verify);
+    return OPENSSL_BOX_EVP_read_pw_string_min(buf, 0, len, prompt, verify);
 }
 
-int EVP_read_pw_string_min(char *buf, int min, int len, const char *prompt,
+int OPENSSL_BOX_EVP_read_pw_string_min(char *buf, int min, int len, const char *prompt,
                            int verify)
 {
     int ret = -1;
@@ -75,7 +75,7 @@ int EVP_read_pw_string_min(char *buf, int min, int len, const char *prompt,
     return ret;
 }
 
-int EVP_BytesToKey(const EVP_CIPHER *type, const EVP_MD *md,
+int OPENSSL_BOX_EVP_BytesToKey(const EVP_CIPHER *type, const EVP_MD *md,
                    const unsigned char *salt, const unsigned char *data,
                    int datal, int count, unsigned char *key,
                    unsigned char *iv)
@@ -97,25 +97,25 @@ int EVP_BytesToKey(const EVP_CIPHER *type, const EVP_MD *md,
     if (c == NULL)
         goto err;
     for (;;) {
-        if (!EVP_DigestInit_ex(c, md, NULL))
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(c, md, NULL))
             goto err;
         if (addmd++)
-            if (!EVP_DigestUpdate(c, &(md_buf[0]), mds))
+            if (!OPENSSL_BOX_EVP_DigestUpdate(c, &(md_buf[0]), mds))
                 goto err;
-        if (!EVP_DigestUpdate(c, data, datal))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(c, data, datal))
             goto err;
         if (salt != NULL)
-            if (!EVP_DigestUpdate(c, salt, PKCS5_SALT_LEN))
+            if (!OPENSSL_BOX_EVP_DigestUpdate(c, salt, PKCS5_SALT_LEN))
                 goto err;
-        if (!EVP_DigestFinal_ex(c, &(md_buf[0]), &mds))
+        if (!OPENSSL_BOX_EVP_DigestFinal_ex(c, &(md_buf[0]), &mds))
             goto err;
 
         for (i = 1; i < (unsigned int)count; i++) {
-            if (!EVP_DigestInit_ex(c, md, NULL))
+            if (!OPENSSL_BOX_EVP_DigestInit_ex(c, md, NULL))
                 goto err;
-            if (!EVP_DigestUpdate(c, &(md_buf[0]), mds))
+            if (!OPENSSL_BOX_EVP_DigestUpdate(c, &(md_buf[0]), mds))
                 goto err;
-            if (!EVP_DigestFinal_ex(c, &(md_buf[0]), &mds))
+            if (!OPENSSL_BOX_EVP_DigestFinal_ex(c, &(md_buf[0]), &mds))
                 goto err;
         }
         i = 0;

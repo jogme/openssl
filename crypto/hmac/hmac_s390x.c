@@ -170,9 +170,9 @@ int s390x_HMAC_init(HMAC_CTX *ctx, const void *key, int key_len, ENGINE *impl)
             return 0;
 
         if (key_len > ctx->plat.s390x.blk_size) {
-            if (!EVP_DigestInit_ex(ctx->md_ctx, ctx->md, impl)
-                    || !EVP_DigestUpdate(ctx->md_ctx, key, key_len)
-                    || !EVP_DigestFinal_ex(ctx->md_ctx, key_param,
+            if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx->md_ctx, ctx->md, impl)
+                    || !OPENSSL_BOX_EVP_DigestUpdate(ctx->md_ctx, key, key_len)
+                    || !OPENSSL_BOX_EVP_DigestFinal_ex(ctx->md_ctx, key_param,
                                            &key_param_len))
                 return 0;
         } else {

@@ -80,7 +80,7 @@ int ossl_pkcs5_pbkdf2_hmac_ex(const char *pass, int passlen,
     return rv;
 }
 
-int PKCS5_PBKDF2_HMAC(const char *pass, int passlen, const unsigned char *salt,
+int OPENSSL_BOX_PKCS5_PBKDF2_HMAC(const char *pass, int passlen, const unsigned char *salt,
                       int saltlen, int iter, const EVP_MD *digest, int keylen,
                       unsigned char *out)
 {
@@ -89,14 +89,14 @@ int PKCS5_PBKDF2_HMAC(const char *pass, int passlen, const unsigned char *salt,
 }
 
 
-int PKCS5_PBKDF2_HMAC_SHA1(const char *pass, int passlen,
+int OPENSSL_BOX_PKCS5_PBKDF2_HMAC_SHA1(const char *pass, int passlen,
                            const unsigned char *salt, int saltlen, int iter,
                            int keylen, unsigned char *out)
 {
     EVP_MD *digest;
     int r = 0;
 
-    if ((digest = EVP_MD_fetch(NULL, SN_sha1, NULL)) != NULL)
+    if ((digest = OPENSSL_BOX_EVP_MD_fetch(NULL, SN_sha1, NULL)) != NULL)
         r = ossl_pkcs5_pbkdf2_hmac_ex(pass, passlen, salt, saltlen, iter,
                                       digest, keylen, out, NULL, NULL);
     OPENSSL_BOX_EVP_MD_free(digest);
@@ -109,7 +109,7 @@ int PKCS5_PBKDF2_HMAC_SHA1(const char *pass, int passlen,
  * them...
  */
 
-int PKCS5_v2_PBE_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
+int OPENSSL_BOX_PKCS5_v2_PBE_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
                              ASN1_TYPE *param, const EVP_CIPHER *c,
                              const EVP_MD *md, int en_de,
                              OSSL_LIB_CTX *libctx, const char *propq)
@@ -129,7 +129,7 @@ int PKCS5_v2_PBE_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
     }
 
     /* See if we recognise the key derivation function */
-    if (!EVP_PBE_find_ex(EVP_PBE_TYPE_KDF, OBJ_obj2nid(pbe2->keyfunc->algorithm),
+    if (!OPENSSL_BOX_EVP_PBE_find_ex(EVP_PBE_TYPE_KDF, OBJ_obj2nid(pbe2->keyfunc->algorithm),
                          NULL, NULL, NULL, &kdf)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_UNSUPPORTED_KEY_DERIVATION_FUNCTION);
         goto err;
@@ -144,7 +144,7 @@ int PKCS5_v2_PBE_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
     }
 
     (void)ERR_set_mark();
-    cipher = cipher_fetch = EVP_CIPHER_fetch(libctx, ciph_name, propq);
+    cipher = cipher_fetch = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, ciph_name, propq);
     /* Fallback to legacy method */
     if (cipher == NULL)
         cipher = OPENSSL_BOX_EVP_get_cipherbyname(ciph_name);
@@ -157,7 +157,7 @@ int PKCS5_v2_PBE_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
     (void)ERR_pop_to_mark();
 
     /* Fixup cipher based on AlgorithmIdentifier */
-    if (!EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, en_de))
+    if (!OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, en_de))
         goto err;
     if (OPENSSL_BOX_EVP_CIPHER_asn1_to_param(ctx, pbe2->encryption->parameter) <= 0) {
         ERR_raise(ERR_LIB_EVP, EVP_R_CIPHER_PARAMETER_ERROR);
@@ -170,11 +170,11 @@ int PKCS5_v2_PBE_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
     return rv;
 }
 
-int PKCS5_v2_PBE_keyivgen(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
+int OPENSSL_BOX_PKCS5_v2_PBE_keyivgen(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
                           ASN1_TYPE *param, const EVP_CIPHER *c,
                           const EVP_MD *md, int en_de)
 {
-    return PKCS5_v2_PBE_keyivgen_ex(ctx, pass, passlen, param, c, md, en_de, NULL, NULL);
+    return OPENSSL_BOX_PKCS5_v2_PBE_keyivgen_ex(ctx, pass, passlen, param, c, md, en_de, NULL, NULL);
 }
 
 int PKCS5_v2_PBKDF2_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass,
@@ -226,13 +226,13 @@ int PKCS5_v2_PBKDF2_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass,
     else
         prf_nid = NID_hmacWithSHA1;
 
-    if (!EVP_PBE_find(EVP_PBE_TYPE_PRF, prf_nid, NULL, &hmac_md_nid, 0)) {
+    if (!OPENSSL_BOX_EVP_PBE_find(EVP_PBE_TYPE_PRF, prf_nid, NULL, &hmac_md_nid, 0)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_UNSUPPORTED_PRF);
         goto err;
     }
 
     (void)ERR_set_mark();
-    prfmd = prfmd_fetch = EVP_MD_fetch(libctx, OBJ_nid2sn(hmac_md_nid), propq);
+    prfmd = prfmd_fetch = OPENSSL_BOX_EVP_MD_fetch(libctx, OBJ_nid2sn(hmac_md_nid), propq);
     if (prfmd == NULL)
         prfmd = EVP_get_digestbynid(hmac_md_nid);
     if (prfmd == NULL) {
@@ -254,7 +254,7 @@ int PKCS5_v2_PBKDF2_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass,
     if (!ossl_pkcs5_pbkdf2_hmac_ex(pass, passlen, salt, saltlen, iter, prfmd,
                                    keylen, key, libctx, propq))
         goto err;
-    rv = EVP_CipherInit_ex(ctx, NULL, NULL, key, NULL, en_de);
+    rv = OPENSSL_BOX_EVP_CipherInit_ex(ctx, NULL, NULL, key, NULL, en_de);
  err:
     OPENSSL_cleanse(key, keylen);
     PBKDF2PARAM_free(kdf);

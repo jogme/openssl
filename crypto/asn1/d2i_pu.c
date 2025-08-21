@@ -25,7 +25,7 @@
 
 #include "crypto/evp.h"
 
-EVP_PKEY *d2i_PublicKey(int type, EVP_PKEY **a, const unsigned char **pp,
+EVP_PKEY *OPENSSL_BOX_d2i_PublicKey(int type, EVP_PKEY **a, const unsigned char **pp,
                         long length)
 {
     EVP_PKEY *ret;

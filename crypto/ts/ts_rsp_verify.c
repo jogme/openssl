@@ -438,7 +438,7 @@ static int ts_compute_imprint(BIO *data, TS_TST_INFO *tst_info,
     OBJ_obj2txt(name, sizeof(name), md_alg_resp->algorithm, 0);
 
     (void)ERR_set_mark();
-    md = EVP_MD_fetch(NULL, name, NULL);
+    md = OPENSSL_BOX_EVP_MD_fetch(NULL, name, NULL);
 
     if (md == NULL)
         md = (EVP_MD *)OPENSSL_BOX_EVP_get_digestbyname(name);
@@ -466,10 +466,10 @@ static int ts_compute_imprint(BIO *data, TS_TST_INFO *tst_info,
     OPENSSL_BOX_EVP_MD_free(md);
     md = NULL;
     while ((length = BIO_read(data, buffer, sizeof(buffer))) > 0) {
-        if (!EVP_DigestUpdate(md_ctx, buffer, length))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md_ctx, buffer, length))
             goto err;
     }
-    if (!EVP_DigestFinal(md_ctx, *imprint, NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal(md_ctx, *imprint, NULL))
         goto err;
     OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
 

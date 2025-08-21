@@ -101,9 +101,9 @@ int main(int argc, char **argv)
     }
 
     /* Fetch the Poly1305 implementation */
-    mac = EVP_MAC_fetch(library_context, "POLY1305", propq);
+    mac = OPENSSL_BOX_EVP_MAC_fetch(library_context, "POLY1305", propq);
     if (mac == NULL) {
-        fprintf(stderr, "EVP_MAC_fetch() returned NULL\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_fetch() returned NULL\n");
         goto end;
     }
 
@@ -115,9 +115,9 @@ int main(int argc, char **argv)
     }
 
     /* Fetch the AES implementation */
-    aes = EVP_CIPHER_fetch(library_context, "AES-128-ECB", propq);
+    aes = OPENSSL_BOX_EVP_CIPHER_fetch(library_context, "AES-128-ECB", propq);
     if (aes == NULL) {
-        fprintf(stderr, "EVP_CIPHER_fetch() returned NULL\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_CIPHER_fetch() returned NULL\n");
         goto end;
     }
 
@@ -129,8 +129,8 @@ int main(int argc, char **argv)
     }
 
     /* Initialize the AES cipher with the 128-bit key k */
-    if (!EVP_EncryptInit_ex(aesctx, aes, NULL, test_k, NULL)) {
-        fprintf(stderr, "EVP_EncryptInit_ex() failed\n");
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex(aesctx, aes, NULL, test_k, NULL)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_EncryptInit_ex() failed\n");
         goto end;
     }
 
@@ -150,9 +150,9 @@ int main(int argc, char **argv)
      * Computes the value AES_k(n) which we need for our Poly1305-AES
      * computation below.
      */
-    if (!EVP_EncryptUpdate(aesctx, composite_key + 16, &aes_len,
+    if (!OPENSSL_BOX_EVP_EncryptUpdate(aesctx, composite_key + 16, &aes_len,
                            test_n, sizeof(test_n))) {
-        fprintf(stderr, "EVP_EncryptUpdate() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_EncryptUpdate() failed\n");
         goto end;
     }
 
@@ -165,8 +165,8 @@ int main(int argc, char **argv)
     memcpy(composite_key, test_r, 16);
 
     /* Initialise the Poly1305 operation */
-    if (!EVP_MAC_init(mctx, composite_key, sizeof(composite_key), NULL)) {
-        fprintf(stderr, "EVP_MAC_init() failed\n");
+    if (!OPENSSL_BOX_EVP_MAC_init(mctx, composite_key, sizeof(composite_key), NULL)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_init() failed\n");
         goto end;
     }
 
@@ -177,8 +177,8 @@ int main(int argc, char **argv)
     }
 
     /* Make one call to the final to get the MAC */
-    if (!EVP_MAC_final(mctx, out, &out_len, sizeof(out))) {
-        fprintf(stderr, "EVP_MAC_final() failed\n");
+    if (!OPENSSL_BOX_EVP_MAC_final(mctx, out, &out_len, sizeof(out))) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_final() failed\n");
         goto end;
     }
 

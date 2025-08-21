@@ -34,8 +34,8 @@ see L<openssl_user_macros(7)>:
 =head1 DESCRIPTION
 
 All of the functions described on this page are deprecated. Applications should
-instead use L<EVP_EncryptInit_ex(3)>, L<EVP_EncryptUpdate(3)> and
-L<EVP_EncryptFinal_ex(3)> or the equivalently named decrypt functions.
+instead use L<OPENSSL_BOX_EVP_EncryptInit_ex(3)>, L<OPENSSL_BOX_EVP_EncryptUpdate(3)> and
+L<OPENSSL_BOX_EVP_EncryptFinal_ex(3)> or the equivalently named decrypt functions.
 
 This library implements the Blowfish cipher, which was invented and described
 by Counterpane (see http://www.counterpane.com/blowfish.html ).
@@ -107,12 +107,12 @@ None of the functions presented here return any value.
 =head1 NOTE
 
 Applications should use the higher level functions
-L<EVP_EncryptInit(3)> etc. instead of calling these
+L<OPENSSL_BOX_EVP_EncryptInit(3)> etc. instead of calling these
 functions directly.
 
 =head1 SEE ALSO
 
-L<EVP_EncryptInit(3)>,
+L<OPENSSL_BOX_EVP_EncryptInit(3)>,
 L<des_modes(7)>
 
 =head1 HISTORY

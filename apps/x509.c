@@ -1038,14 +1038,14 @@ int x509_main(int argc, char **argv)
                 BIGNUM *n = NULL;
 
                 /* Every RSA key has an 'n' */
-                EVP_PKEY_get_bn_param(pkey, "n", &n);
+                OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, "n", &n);
                 BN_print(out, n);
                 BN_free(n);
             } else if (OPENSSL_BOX_EVP_PKEY_is_a(pkey, "DSA")) {
                 BIGNUM *dsapub = NULL;
 
                 /* Every DSA key has a 'pub' */
-                EVP_PKEY_get_bn_param(pkey, "pub", &dsapub);
+                OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, "pub", &dsapub);
                 BN_print(out, dsapub);
                 BN_free(dsapub);
             } else {
@@ -1074,7 +1074,7 @@ int x509_main(int argc, char **argv)
             if (fdigname == NULL)
                 fdigname = "SHA1";
 
-            if ((fdig = EVP_MD_fetch(app_get0_libctx(), fdigname,
+            if ((fdig = OPENSSL_BOX_EVP_MD_fetch(app_get0_libctx(), fdigname,
                                      app_get0_propq())) == NULL) {
                 BIO_printf(bio_err, "Unknown digest\n");
                 goto err;

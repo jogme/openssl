@@ -296,7 +296,7 @@ int dgst_main(int argc, char **argv)
         {
             char def_md[80];
 
-            if (EVP_PKEY_get_default_digest_name(sigkey, def_md,
+            if (OPENSSL_BOX_EVP_PKEY_get_default_digest_name(sigkey, def_md,
                                                  sizeof(def_md)) == 2
                     && strcmp(def_md, "UNDEF") == 0)
                 oneshot_sign = 1;
@@ -335,7 +335,7 @@ int dgst_main(int argc, char **argv)
             md = (EVP_MD *)OPENSSL_BOX_EVP_sha256();
             digestname = SN_sha256;
         }
-        sigkey = EVP_PKEY_new_raw_private_key(EVP_PKEY_HMAC, impl,
+        sigkey = OPENSSL_BOX_EVP_PKEY_new_raw_private_key(EVP_PKEY_HMAC, impl,
                                               (unsigned char *)hmac_key,
                                               strlen(hmac_key));
         if (sigkey == NULL)
@@ -355,18 +355,18 @@ int dgst_main(int argc, char **argv)
         }
         if (do_verify)
             if (impl == NULL)
-                res = EVP_DigestVerifyInit_ex(mctx, &pctx, digestname,
+                res = OPENSSL_BOX_EVP_DigestVerifyInit_ex(mctx, &pctx, digestname,
                                               app_get0_libctx(),
                                               app_get0_propq(), sigkey, NULL);
             else
-                res = EVP_DigestVerifyInit(mctx, &pctx, md, impl, sigkey);
+                res = OPENSSL_BOX_EVP_DigestVerifyInit(mctx, &pctx, md, impl, sigkey);
         else
             if (impl == NULL)
-                res = EVP_DigestSignInit_ex(mctx, &pctx, digestname,
+                res = OPENSSL_BOX_EVP_DigestSignInit_ex(mctx, &pctx, digestname,
                                             app_get0_libctx(),
                                             app_get0_propq(), sigkey, NULL);
             else
-                res = EVP_DigestSignInit(mctx, &pctx, md, impl, sigkey);
+                res = OPENSSL_BOX_EVP_DigestSignInit(mctx, &pctx, md, impl, sigkey);
         if (res == 0) {
             BIO_printf(bio_err, "Error setting context\n");
             goto end;
@@ -397,7 +397,7 @@ int dgst_main(int argc, char **argv)
         }
         if (md == NULL)
             md = (EVP_MD *)OPENSSL_BOX_EVP_sha256();
-        if (!EVP_DigestInit_ex(mctx, md, impl)) {
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(mctx, md, impl)) {
             BIO_printf(bio_err, "Error setting digest\n");
             goto end;
         }
@@ -438,7 +438,7 @@ int dgst_main(int argc, char **argv)
         }
         /*
          * Signing using XOF is not supported by any algorithms currently since
-         * each algorithm only calls EVP_DigestFinal_ex() in their sign_final
+         * each algorithm only calls OPENSSL_BOX_EVP_DigestFinal_ex() in their sign_final
          * and verify_final methods.
          */
         if (sigkey != NULL) {
@@ -514,7 +514,7 @@ static void show_digests(const OBJ_NAME *name, void *arg)
         return;
 
     /* Filter out message digests that we cannot use */
-    md = EVP_MD_fetch(app_get0_libctx(), name->name, app_get0_propq());
+    md = OPENSSL_BOX_EVP_MD_fetch(app_get0_libctx(), name->name, app_get0_propq());
     if (md == NULL) {
         if (OPENSSL_BOX_EVP_get_digestbyname(name->name) == NULL)
             return;
@@ -639,7 +639,7 @@ int do_fp(BIO *out, unsigned char *buf, BIO *bp, int sep, int binout, int xoflen
     if (sigin != NULL) {
         EVP_MD_CTX *ctx;
         BIO_get_md_ctx(bp, &ctx);
-        i = EVP_DigestVerifyFinal(ctx, sigin, (unsigned int)siglen);
+        i = OPENSSL_BOX_EVP_DigestVerifyFinal(ctx, sigin, (unsigned int)siglen);
         print_verify_result(out, i);
         if (i > 0)
             ret = EXIT_SUCCESS;
@@ -650,7 +650,7 @@ int do_fp(BIO *out, unsigned char *buf, BIO *bp, int sep, int binout, int xoflen
         size_t tmplen;
 
         BIO_get_md_ctx(bp, &ctx);
-        if (!EVP_DigestSignFinal(ctx, NULL, &tmplen)) {
+        if (!OPENSSL_BOX_EVP_DigestSignFinal(ctx, NULL, &tmplen)) {
             BIO_printf(bio_err, "Error getting maximum length of signed data\n");
             goto end;
         }
@@ -659,7 +659,7 @@ int do_fp(BIO *out, unsigned char *buf, BIO *bp, int sep, int binout, int xoflen
             allocated_buf = app_malloc(len, "Signature buffer");
             buf = allocated_buf;
         }
-        if (!EVP_DigestSignFinal(ctx, buf, &len)) {
+        if (!OPENSSL_BOX_EVP_DigestSignFinal(ctx, buf, &len)) {
             BIO_printf(bio_err, "Error signing data\n");
             goto end;
         }
@@ -674,7 +674,7 @@ int do_fp(BIO *out, unsigned char *buf, BIO *bp, int sep, int binout, int xoflen
 
         BIO_get_md_ctx(bp, &ctx);
 
-        if (!EVP_DigestFinalXOF(ctx, buf, len)) {
+        if (!OPENSSL_BOX_EVP_DigestFinalXOF(ctx, buf, len)) {
             BIO_printf(bio_err, "Error Digesting Data\n");
             goto end;
         }
@@ -696,7 +696,7 @@ int do_fp(BIO *out, unsigned char *buf, BIO *bp, int sep, int binout, int xoflen
  * Some new algorithms only support one shot operations.
  * For these we need to buffer all input and then do the sign on the
  * total buffered input. These algorithms set a NULL digest name which is
- * then used inside EVP_DigestVerify() and EVP_DigestSign().
+ * then used inside OPENSSL_BOX_EVP_DigestVerify() and OPENSSL_BOX_EVP_DigestSign().
  */
 static int do_fp_oneshot_sign(BIO *out, EVP_MD_CTX *ctx, BIO *in, int sep, int binout,
                               EVP_PKEY *key, unsigned char *sigin, int siglen,
@@ -714,19 +714,19 @@ static int do_fp_oneshot_sign(BIO *out, EVP_MD_CTX *ctx, BIO *in, int sep, int b
         return ret;
     }
     if (sigin != NULL) {
-        res = EVP_DigestVerify(ctx, sigin, siglen, buf, buflen);
+        res = OPENSSL_BOX_EVP_DigestVerify(ctx, sigin, siglen, buf, buflen);
         print_verify_result(out, res);
         if (res > 0)
             ret = EXIT_SUCCESS;
         goto end;
     }
     if (key != NULL) {
-        if (EVP_DigestSign(ctx, NULL, &len, buf, buflen) != 1) {
+        if (OPENSSL_BOX_EVP_DigestSign(ctx, NULL, &len, buf, buflen) != 1) {
             BIO_printf(bio_err, "Error getting maximum length of signed data\n");
             goto end;
         }
         sig = app_malloc(len, "Signature buffer");
-        if (EVP_DigestSign(ctx, sig, &len, buf, buflen) != 1) {
+        if (OPENSSL_BOX_EVP_DigestSign(ctx, sig, &len, buf, buflen) != 1) {
             BIO_printf(bio_err, "Error signing data\n");
             goto end;
         }

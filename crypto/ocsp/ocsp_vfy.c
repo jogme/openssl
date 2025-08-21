@@ -206,7 +206,7 @@ static X509 *ocsp_find_signer_sk(STACK_OF(X509) *certs, OCSP_RESPID *id)
     /* Calculate hash of each key and compare */
     for (i = 0; i < sk_X509_num(certs); i++) {
         if ((x = sk_X509_value(certs, i)) != NULL) {
-            if ((md = EVP_MD_fetch(x->libctx, SN_sha1, x->propq)) == NULL)
+            if ((md = OPENSSL_BOX_EVP_MD_fetch(x->libctx, SN_sha1, x->propq)) == NULL)
                 break;
             r = X509_pubkey_digest(x, md, tmphash, NULL);
             OPENSSL_BOX_EVP_MD_free(md);
@@ -316,7 +316,7 @@ static int ocsp_match_issuerid(X509 *cert, OCSP_CERTID *cid,
         OBJ_obj2txt(name, sizeof(name), cid->hashAlgorithm.algorithm, 0);
 
         (void)ERR_set_mark();
-        dgst = EVP_MD_fetch(NULL, name, NULL);
+        dgst = OPENSSL_BOX_EVP_MD_fetch(NULL, name, NULL);
         if (dgst == NULL)
             dgst = (EVP_MD *)OPENSSL_BOX_EVP_get_digestbyname(name);
 

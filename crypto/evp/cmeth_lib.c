@@ -90,7 +90,7 @@ int OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(EVP_CIPHER *cipher, int ctx_si
     return 1;
 }
 
-int EVP_CIPHER_meth_set_init(EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CIPHER_meth_set_init(EVP_CIPHER *cipher,
                              int (*init) (EVP_CIPHER_CTX *ctx,
                                           const unsigned char *key,
                                           const unsigned char *iv,
@@ -103,7 +103,7 @@ int EVP_CIPHER_meth_set_init(EVP_CIPHER *cipher,
     return 1;
 }
 
-int EVP_CIPHER_meth_set_do_cipher(EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(EVP_CIPHER *cipher,
                                   int (*do_cipher) (EVP_CIPHER_CTX *ctx,
                                                     unsigned char *out,
                                                     const unsigned char *in,
@@ -116,7 +116,7 @@ int EVP_CIPHER_meth_set_do_cipher(EVP_CIPHER *cipher,
     return 1;
 }
 
-int EVP_CIPHER_meth_set_cleanup(EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CIPHER_meth_set_cleanup(EVP_CIPHER *cipher,
                                 int (*cleanup) (EVP_CIPHER_CTX *))
 {
     if (cipher->cleanup != NULL)
@@ -126,7 +126,7 @@ int EVP_CIPHER_meth_set_cleanup(EVP_CIPHER *cipher,
     return 1;
 }
 
-int EVP_CIPHER_meth_set_set_asn1_params(EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CIPHER_meth_set_set_asn1_params(EVP_CIPHER *cipher,
                                         int (*set_asn1_parameters) (EVP_CIPHER_CTX *,
                                                                     ASN1_TYPE *))
 {
@@ -137,7 +137,7 @@ int EVP_CIPHER_meth_set_set_asn1_params(EVP_CIPHER *cipher,
     return 1;
 }
 
-int EVP_CIPHER_meth_set_get_asn1_params(EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CIPHER_meth_set_get_asn1_params(EVP_CIPHER *cipher,
                                         int (*get_asn1_parameters) (EVP_CIPHER_CTX *,
                                                                     ASN1_TYPE *))
 {
@@ -148,7 +148,7 @@ int EVP_CIPHER_meth_set_get_asn1_params(EVP_CIPHER *cipher,
     return 1;
 }
 
-int EVP_CIPHER_meth_set_ctrl(EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CIPHER_meth_set_ctrl(EVP_CIPHER *cipher,
                              int (*ctrl) (EVP_CIPHER_CTX *, int type,
                                           int arg, void *ptr))
 {

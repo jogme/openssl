@@ -3,26 +3,26 @@
 =head1 NAME
 
 EVP_PKEY_ASN1_METHOD,
-EVP_PKEY_asn1_new,
-EVP_PKEY_asn1_copy,
+OPENSSL_BOX_EVP_PKEY_asn1_new,
+OPENSSL_BOX_EVP_PKEY_asn1_copy,
 OPENSSL_BOX_EVP_PKEY_asn1_free,
 OPENSSL_BOX_EVP_PKEY_asn1_add0,
 OPENSSL_BOX_EVP_PKEY_asn1_add_alias,
-EVP_PKEY_asn1_set_public,
-EVP_PKEY_asn1_set_private,
-EVP_PKEY_asn1_set_param,
-EVP_PKEY_asn1_set_free,
-EVP_PKEY_asn1_set_ctrl,
-EVP_PKEY_asn1_set_item,
-EVP_PKEY_asn1_set_siginf,
-EVP_PKEY_asn1_set_check,
-EVP_PKEY_asn1_set_public_check,
-EVP_PKEY_asn1_set_param_check,
-EVP_PKEY_asn1_set_security_bits,
-EVP_PKEY_asn1_set_set_priv_key,
-EVP_PKEY_asn1_set_set_pub_key,
-EVP_PKEY_asn1_set_get_priv_key,
-EVP_PKEY_asn1_set_get_pub_key,
+OPENSSL_BOX_EVP_PKEY_asn1_set_public,
+OPENSSL_BOX_EVP_PKEY_asn1_set_private,
+OPENSSL_BOX_EVP_PKEY_asn1_set_param,
+OPENSSL_BOX_EVP_PKEY_asn1_set_free,
+OPENSSL_BOX_EVP_PKEY_asn1_set_ctrl,
+OPENSSL_BOX_EVP_PKEY_asn1_set_item,
+OPENSSL_BOX_EVP_PKEY_asn1_set_siginf,
+OPENSSL_BOX_EVP_PKEY_asn1_set_check,
+OPENSSL_BOX_EVP_PKEY_asn1_set_public_check,
+OPENSSL_BOX_EVP_PKEY_asn1_set_param_check,
+OPENSSL_BOX_EVP_PKEY_asn1_set_security_bits,
+OPENSSL_BOX_EVP_PKEY_asn1_set_set_priv_key,
+OPENSSL_BOX_EVP_PKEY_asn1_set_set_pub_key,
+OPENSSL_BOX_EVP_PKEY_asn1_set_get_priv_key,
+OPENSSL_BOX_EVP_PKEY_asn1_set_get_pub_key,
 OPENSSL_BOX_EVP_PKEY_get0_asn1
 - manipulating and registering EVP_PKEY_ASN1_METHOD structure
 
@@ -36,16 +36,16 @@ see L<openssl_user_macros(7)>; use the provider API instead.
 
  typedef struct evp_pkey_asn1_method_st EVP_PKEY_ASN1_METHOD;
 
- EVP_PKEY_ASN1_METHOD *EVP_PKEY_asn1_new(int id, int flags,
+ EVP_PKEY_ASN1_METHOD *OPENSSL_BOX_EVP_PKEY_asn1_new(int id, int flags,
                                          const char *pem_str,
                                          const char *info);
- void EVP_PKEY_asn1_copy(EVP_PKEY_ASN1_METHOD *dst,
+ void OPENSSL_BOX_EVP_PKEY_asn1_copy(EVP_PKEY_ASN1_METHOD *dst,
                          const EVP_PKEY_ASN1_METHOD *src);
  void OPENSSL_BOX_EVP_PKEY_asn1_free(EVP_PKEY_ASN1_METHOD *ameth);
  int OPENSSL_BOX_EVP_PKEY_asn1_add0(const EVP_PKEY_ASN1_METHOD *ameth);
  int OPENSSL_BOX_EVP_PKEY_asn1_add_alias(int to, int from);
 
- void EVP_PKEY_asn1_set_public(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_public(EVP_PKEY_ASN1_METHOD *ameth,
                                int (*pub_decode) (EVP_PKEY *pk,
                                                   const X509_PUBKEY *pub),
                                int (*pub_encode) (X509_PUBKEY *pub,
@@ -57,7 +57,7 @@ see L<openssl_user_macros(7)>; use the provider API instead.
                                                  int indent, ASN1_PCTX *pctx),
                                int (*pkey_size) (const EVP_PKEY *pk),
                                int (*pkey_bits) (const EVP_PKEY *pk));
- void EVP_PKEY_asn1_set_private(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_private(EVP_PKEY_ASN1_METHOD *ameth,
                                 int (*priv_decode) (EVP_PKEY *pk,
                                                     const PKCS8_PRIV_KEY_INFO
                                                     *p8inf),
@@ -67,7 +67,7 @@ see L<openssl_user_macros(7)>; use the provider API instead.
                                                    const EVP_PKEY *pkey,
                                                    int indent,
                                                    ASN1_PCTX *pctx));
- void EVP_PKEY_asn1_set_param(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_param(EVP_PKEY_ASN1_METHOD *ameth,
                               int (*param_decode) (EVP_PKEY *pkey,
                                                    const unsigned char **pder,
                                                    int derlen),
@@ -83,12 +83,12 @@ see L<openssl_user_macros(7)>; use the provider API instead.
                                                   int indent,
                                                   ASN1_PCTX *pctx));
 
- void EVP_PKEY_asn1_set_free(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_free(EVP_PKEY_ASN1_METHOD *ameth,
                              void (*pkey_free) (EVP_PKEY *pkey));
- void EVP_PKEY_asn1_set_ctrl(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_ctrl(EVP_PKEY_ASN1_METHOD *ameth,
                              int (*pkey_ctrl) (EVP_PKEY *pkey, int op,
                                                long arg1, void *arg2));
- void EVP_PKEY_asn1_set_item(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_item(EVP_PKEY_ASN1_METHOD *ameth,
                              int (*item_verify) (EVP_MD_CTX *ctx,
                                                  const ASN1_ITEM *it,
                                                  void *asn,
@@ -102,41 +102,41 @@ see L<openssl_user_macros(7)>; use the provider API instead.
                                                X509_ALGOR *alg2,
                                                ASN1_BIT_STRING *sig));
 
- void EVP_PKEY_asn1_set_siginf(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_siginf(EVP_PKEY_ASN1_METHOD *ameth,
                                int (*siginf_set) (X509_SIG_INFO *siginf,
                                                   const X509_ALGOR *alg,
                                                   const ASN1_STRING *sig));
 
- void EVP_PKEY_asn1_set_check(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_check(EVP_PKEY_ASN1_METHOD *ameth,
                               int (*pkey_check) (const EVP_PKEY *pk));
 
- void EVP_PKEY_asn1_set_public_check(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_public_check(EVP_PKEY_ASN1_METHOD *ameth,
                                      int (*pkey_pub_check) (const EVP_PKEY *pk));
 
- void EVP_PKEY_asn1_set_param_check(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_param_check(EVP_PKEY_ASN1_METHOD *ameth,
                                     int (*pkey_param_check) (const EVP_PKEY *pk));
 
- void EVP_PKEY_asn1_set_security_bits(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_security_bits(EVP_PKEY_ASN1_METHOD *ameth,
                                       int (*pkey_security_bits) (const EVP_PKEY
                                                                  *pk));
 
- void EVP_PKEY_asn1_set_set_priv_key(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_set_priv_key(EVP_PKEY_ASN1_METHOD *ameth,
                                      int (*set_priv_key) (EVP_PKEY *pk,
                                                           const unsigned char
                                                              *priv,
                                                           size_t len));
 
- void EVP_PKEY_asn1_set_set_pub_key(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_set_pub_key(EVP_PKEY_ASN1_METHOD *ameth,
                                     int (*set_pub_key) (EVP_PKEY *pk,
                                                         const unsigned char *pub,
                                                         size_t len));
 
- void EVP_PKEY_asn1_set_get_priv_key(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_get_priv_key(EVP_PKEY_ASN1_METHOD *ameth,
                                      int (*get_priv_key) (const EVP_PKEY *pk,
                                                           unsigned char *priv,
                                                           size_t *len));
 
- void EVP_PKEY_asn1_set_get_pub_key(EVP_PKEY_ASN1_METHOD *ameth,
+ void OPENSSL_BOX_EVP_PKEY_asn1_set_get_pub_key(EVP_PKEY_ASN1_METHOD *ameth,
                                     int (*get_pub_key) (const EVP_PKEY *pk,
                                                         unsigned char *pub,
                                                         size_t *len));
@@ -179,7 +179,7 @@ It's called by L<OPENSSL_BOX_EVP_PKEY_eq(3)>.
 The pub_print() method is called to print a public key in humanly
 readable text to B<out>, indented B<indent> spaces.
 It MUST return 0 on error, 1 on success.
-It's called by L<EVP_PKEY_print_public(3)>.
+It's called by L<OPENSSL_BOX_EVP_PKEY_print_public(3)>.
 
  int (*priv_decode) (EVP_PKEY *pk, const PKCS8_PRIV_KEY_INFO *p8inf);
  int (*priv_encode) (PKCS8_PRIV_KEY_INFO *p8, const EVP_PKEY *pk);
@@ -194,7 +194,7 @@ They're called by L<EVP_PKCS82PKEY(3)> and L<EVP_PKEY2PKCS8(3)>.
 The priv_print() method is called to print a private key in humanly
 readable text to B<out>, indented B<indent> spaces.
 It MUST return 0 on error, 1 on success.
-It's called by L<EVP_PKEY_print_private(3)>.
+It's called by L<OPENSSL_BOX_EVP_PKEY_print_private(3)>.
 
  int (*pkey_size) (const EVP_PKEY *pk);
  int (*pkey_bits) (const EVP_PKEY *pk);
@@ -237,7 +237,7 @@ It's called by L<OPENSSL_BOX_EVP_PKEY_parameters_eq(3)>.
 The param_print() method prints the private key parameters in humanly
 readable text to B<out>, indented B<indent> spaces.
 It MUST return 0 on error, 1 on success.
-It's called by L<EVP_PKEY_print_params(3)>.
+It's called by L<OPENSSL_BOX_EVP_PKEY_print_params(3)>.
 
  int (*sig_print) (BIO *out,
                    const X509_ALGOR *sigalg, const ASN1_STRING *sig,
@@ -276,7 +276,7 @@ PKCS#8) PEM formatted encrypted private keys.
 old_priv_decode() MUST return 0 on error, 1 on success.
 old_priv_encode() MUST the return same kind of values as
 OPENSSL_BOX_i2d_PrivateKey().
-They're called by L<d2i_PrivateKey(3)> and L<OPENSSL_BOX_i2d_PrivateKey(3)>.
+They're called by L<OPENSSL_BOX_d2i_PrivateKey(3)> and L<OPENSSL_BOX_i2d_PrivateKey(3)>.
 
  int (*item_verify) (EVP_MD_CTX *ctx, const ASN1_ITEM *it, void *asn,
                      X509_ALGOR *a, ASN1_BIT_STRING *sig, EVP_PKEY *pkey);
@@ -361,8 +361,8 @@ L<OPENSSL_BOX_EVP_PKEY_param_check(3)> respectively.
 
 The set_priv_key() and set_pub_key() methods are used to set the raw private and
 public key data for an EVP_PKEY. They MUST return 0 on error, or 1 on success.
-They are called by L<EVP_PKEY_new_raw_private_key(3)>, and
-L<EVP_PKEY_new_raw_public_key(3)> respectively.
+They are called by L<OPENSSL_BOX_EVP_PKEY_new_raw_private_key(3)>, and
+L<OPENSSL_BOX_EVP_PKEY_new_raw_public_key(3)> respectively.
 
  size_t (*dirty) (const EVP_PKEY *pk);
  void *(*export_to) (const EVP_PKEY *pk, EVP_KEYMGMT *keymgmt);
@@ -376,7 +376,7 @@ supports importing key material.
 
 =head2 Functions
 
-EVP_PKEY_asn1_new() creates and returns a new B<EVP_PKEY_ASN1_METHOD>
+OPENSSL_BOX_EVP_PKEY_asn1_new() creates and returns a new B<EVP_PKEY_ASN1_METHOD>
 object, and associates the given B<id>, B<flags>, B<pem_str> and
 B<info>.
 B<id> is a NID, B<pem_str> is the PEM type string, B<info> is a
@@ -391,7 +391,7 @@ they will be given the type B<V_ASN1_UNDEF> (i.e. the parameter is
 omitted).
 See L<X509_ALGOR_set0(3)> for more information.
 
-EVP_PKEY_asn1_copy() copies an B<EVP_PKEY_ASN1_METHOD> object from
+OPENSSL_BOX_EVP_PKEY_asn1_copy() copies an B<EVP_PKEY_ASN1_METHOD> object from
 B<src> to B<dst>.
 This function is not thread safe, it's recommended to only use this
 when initializing the application.
@@ -411,14 +411,14 @@ B<EVP_PKEY_ASN1_METHOD> with the same NID is already added.
 This function is not thread safe, it's recommended to only use this
 when initializing the application.
 
-EVP_PKEY_asn1_set_public(), EVP_PKEY_asn1_set_private(),
-EVP_PKEY_asn1_set_param(), EVP_PKEY_asn1_set_free(),
-EVP_PKEY_asn1_set_ctrl(), EVP_PKEY_asn1_set_item(),
-EVP_PKEY_asn1_set_siginf(), EVP_PKEY_asn1_set_check(),
-EVP_PKEY_asn1_set_public_check(), EVP_PKEY_asn1_set_param_check(),
-EVP_PKEY_asn1_set_security_bits(), EVP_PKEY_asn1_set_set_priv_key(),
-EVP_PKEY_asn1_set_set_pub_key(), EVP_PKEY_asn1_set_get_priv_key() and
-EVP_PKEY_asn1_set_get_pub_key() set the diverse methods of the given
+OPENSSL_BOX_EVP_PKEY_asn1_set_public(), OPENSSL_BOX_EVP_PKEY_asn1_set_private(),
+OPENSSL_BOX_EVP_PKEY_asn1_set_param(), OPENSSL_BOX_EVP_PKEY_asn1_set_free(),
+OPENSSL_BOX_EVP_PKEY_asn1_set_ctrl(), OPENSSL_BOX_EVP_PKEY_asn1_set_item(),
+OPENSSL_BOX_EVP_PKEY_asn1_set_siginf(), OPENSSL_BOX_EVP_PKEY_asn1_set_check(),
+OPENSSL_BOX_EVP_PKEY_asn1_set_public_check(), OPENSSL_BOX_EVP_PKEY_asn1_set_param_check(),
+OPENSSL_BOX_EVP_PKEY_asn1_set_security_bits(), OPENSSL_BOX_EVP_PKEY_asn1_set_set_priv_key(),
+OPENSSL_BOX_EVP_PKEY_asn1_set_set_pub_key(), OPENSSL_BOX_EVP_PKEY_asn1_set_get_priv_key() and
+OPENSSL_BOX_EVP_PKEY_asn1_set_get_pub_key() set the diverse methods of the given
 B<EVP_PKEY_ASN1_METHOD> object.
 
 OPENSSL_BOX_EVP_PKEY_get0_asn1() finds the B<EVP_PKEY_ASN1_METHOD> associated
@@ -426,7 +426,7 @@ with the key B<pkey>.
 
 =head1 RETURN VALUES
 
-EVP_PKEY_asn1_new() returns NULL on error, or a pointer to an
+OPENSSL_BOX_EVP_PKEY_asn1_new() returns NULL on error, or a pointer to an
 B<EVP_PKEY_ASN1_METHOD> object otherwise.
 
 OPENSSL_BOX_EVP_PKEY_asn1_add0() and OPENSSL_BOX_EVP_PKEY_asn1_add_alias() return 0 on error,
@@ -438,7 +438,7 @@ B<EVP_PKEY_ASN1_METHOD> object otherwise.
 =head1 HISTORY
 
 The signature of the I<pub_decode> functional argument of
-EVP_PKEY_asn1_set_public() has changed in OpenSSL 3.0 so its I<pub>
+OPENSSL_BOX_EVP_PKEY_asn1_set_public() has changed in OpenSSL 3.0 so its I<pub>
 parameter is now constified.
 
 All of these functions were deprecated in OpenSSL 3.6.

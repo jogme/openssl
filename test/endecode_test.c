@@ -95,7 +95,7 @@ static EVP_PKEY *make_template(const char *type, OSSL_PARAM *genparams)
      * No real need to check the errors other than for the cascade
      * effect.  |pkey| will simply remain NULL if something goes wrong.
      */
-    (void)((ctx = EVP_PKEY_CTX_new_from_name(keyctx, type, testpropq)) != NULL
+    (void)((ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(keyctx, type, testpropq)) != NULL
            && OPENSSL_BOX_EVP_PKEY_paramgen_init(ctx) > 0
            && (genparams == NULL
                || OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, genparams) > 0)
@@ -118,8 +118,8 @@ static EVP_PKEY *make_key(const char *type, EVP_PKEY *template,
     EVP_PKEY *pkey = NULL;
     EVP_PKEY_CTX *ctx =
         template != NULL
-        ? EVP_PKEY_CTX_new_from_pkey(keyctx, template, testpropq)
-        : EVP_PKEY_CTX_new_from_name(keyctx, type, testpropq);
+        ? OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(keyctx, template, testpropq)
+        : OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(keyctx, type, testpropq);
 
     /*
      * No real need to check the errors other than for the cascade
@@ -406,7 +406,7 @@ static int encode_EVP_PKEY_legacy_PEM(const char *file, const int line,
 
     if (pcipher != NULL && pass != NULL) {
         passlen = strlen(pass);
-        if (!TEST_FL_ptr(cipher = EVP_CIPHER_fetch(testctx, pcipher, testpropq)))
+        if (!TEST_FL_ptr(cipher = OPENSSL_BOX_EVP_CIPHER_fetch(testctx, pcipher, testpropq)))
             goto end;
     }
     if (!TEST_FL_ptr(mem_ser = BIO_new(BIO_s_mem()))
@@ -571,7 +571,7 @@ static int check_unprotected_PKCS8_DER(const char *file, const int line,
 
         if (TEST_FL_ptr(pkey)) {
             if (!(ok = TEST_FL_true(OPENSSL_BOX_EVP_PKEY_is_a(pkey, type)))) {
-                EVP_PKEY_type_names_do_all(pkey, collect_name, &namelist);
+                OPENSSL_BOX_EVP_PKEY_type_names_do_all(pkey, collect_name, &namelist);
                 if (namelist != NULL)
                     TEST_note("%s isn't any of %s", type, namelist);
                 OPENSSL_free(namelist);
@@ -647,7 +647,7 @@ static int check_params_DER(const char *file, const int line,
         itype = EVP_PKEY_EC;
 
     if (itype != NID_undef) {
-        pkey = d2i_KeyParams(itype, NULL, &datap, (long)data_len);
+        pkey = OPENSSL_BOX_d2i_KeyParams(itype, NULL, &datap, (long)data_len);
         ok = (pkey != NULL);
         OPENSSL_BOX_EVP_PKEY_free(pkey);
     }
@@ -1358,7 +1358,7 @@ static int ec_encode_to_data_multi(void)
     uint8_t *enc = NULL;
     size_t enc_len = 0;
 
-    ret = TEST_ptr(key = EVP_PKEY_Q_keygen(testctx, "", "EC", "P-256"))
+    ret = TEST_ptr(key = OPENSSL_BOX_EVP_PKEY_Q_keygen(testctx, "", "EC", "P-256"))
         && TEST_ptr(ectx = OSSL_ENCODER_CTX_new_for_pkey(key, EVP_PKEY_KEYPAIR,
                                                          "DER", NULL, NULL))
         && TEST_int_eq(OSSL_ENCODER_to_data(ectx, NULL, &enc_len), 1)

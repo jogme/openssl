@@ -407,7 +407,7 @@ int ossl_rsa_pss_params_30_fromdata(RSA_PSS_PARAMS_30 *pss_params,
 
     /*
      * We're only interested in the NIDs that correspond to the MDs, so the
-     * exact propquery is unimportant in the EVP_MD_fetch() calls below.
+     * exact propquery is unimportant in the OPENSSL_BOX_EVP_MD_fetch() calls below.
      */
 
     if (param_md != NULL) {
@@ -418,7 +418,7 @@ int ossl_rsa_pss_params_30_fromdata(RSA_PSS_PARAMS_30 *pss_params,
         else if (!OSSL_PARAM_get_utf8_ptr(param_mgf, &mdname))
             goto err;
 
-        if ((md = EVP_MD_fetch(libctx, mdname, propq)) == NULL
+        if ((md = OPENSSL_BOX_EVP_MD_fetch(libctx, mdname, propq)) == NULL
             || !ossl_rsa_pss_params_30_set_hashalg(pss_params,
                                                    ossl_rsa_oaeppss_md2nid(md)))
             goto err;
@@ -432,7 +432,7 @@ int ossl_rsa_pss_params_30_fromdata(RSA_PSS_PARAMS_30 *pss_params,
         else if (!OSSL_PARAM_get_utf8_ptr(param_mgf, &mgf1mdname))
             goto err;
 
-        if ((mgf1md = EVP_MD_fetch(libctx, mgf1mdname, propq)) == NULL
+        if ((mgf1md = OPENSSL_BOX_EVP_MD_fetch(libctx, mgf1mdname, propq)) == NULL
             || !ossl_rsa_pss_params_30_set_maskgenhashalg(
                     pss_params, ossl_rsa_oaeppss_md2nid(mgf1md)))
             goto err;

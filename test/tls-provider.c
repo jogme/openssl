@@ -1783,7 +1783,7 @@ static int key2any_set_ctx_params(void *vctx, const OSSL_PARAM params[])
         ctx->cipher_intent = ciphername != NULL;
         if (ciphername != NULL
             && ((ctx->cipher =
-                 EVP_CIPHER_fetch(libctx, ciphername, props)) == NULL)) {
+                 OPENSSL_BOX_EVP_CIPHER_fetch(libctx, ciphername, props)) == NULL)) {
             return 0;
         }
     }
@@ -2673,7 +2673,7 @@ static int xor_sig_setup_md(PROV_XORSIG_CTX *ctx,
     if (mdprops == NULL)
         mdprops = ctx->propq;
 
-    md = EVP_MD_fetch(ctx->libctx, mdname, mdprops);
+    md = OPENSSL_BOX_EVP_MD_fetch(ctx->libctx, mdname, mdprops);
 
     if ((md == NULL) || (EVP_MD_nid(md)==NID_undef)) {
         if (md == NULL)
@@ -2762,7 +2762,7 @@ static int xor_sig_sign(void *vpxor_sigctx, unsigned char *sig, size_t *siglen,
      * create HMAC using XORKEY as key and hash as data:
      * No real crypto, just for test, don't do this at home!
      */
-    if (!EVP_Q_mac(pxor_sigctx->libctx, "HMAC", NULL, "sha1", NULL,
+    if (!OPENSSL_BOX_EVP_Q_mac(pxor_sigctx->libctx, "HMAC", NULL, "sha1", NULL,
                    xorkey->privkey, XOR_KEY_SIZE, tbs, tbslen,
                    &sig[0], EVP_MAX_MD_SIZE, &xor_sig_len)) {
         ERR_raise(ERR_LIB_USER, XORPROV_R_SIGNING_FAILED);
@@ -2800,7 +2800,7 @@ static int xor_sig_verify(void *vpxor_sigctx,
         xorkey->privkey[i] = xorkey->pubkey[i] ^ private_constant[i];
 
     /* Now re-create signature */
-    if (!EVP_Q_mac(pxor_sigctx->libctx, "HMAC", NULL, "sha1", NULL,
+    if (!OPENSSL_BOX_EVP_Q_mac(pxor_sigctx->libctx, "HMAC", NULL, "sha1", NULL,
                    xorkey->privkey, XOR_KEY_SIZE, tbs, tbslen,
                    &resignature[0], EVP_MAX_MD_SIZE, &resiglen)) {
         ERR_raise(ERR_LIB_USER, XORPROV_R_VERIFY_ERROR);
@@ -2835,7 +2835,7 @@ static int xor_sig_digest_signverify_init(void *vpxor_sigctx, const char *mdname
     if (pxor_sigctx->mdctx == NULL)
         goto error;
 
-    if (!EVP_DigestInit_ex(pxor_sigctx->mdctx, pxor_sigctx->md, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(pxor_sigctx->mdctx, pxor_sigctx->md, NULL))
         goto error;
 
     return 1;
@@ -2870,7 +2870,7 @@ int xor_sig_digest_signverify_update(void *vpxor_sigctx,
     if (pxor_sigctx == NULL || pxor_sigctx->mdctx == NULL)
         return 0;
 
-    return EVP_DigestUpdate(pxor_sigctx->mdctx, data, datalen);
+    return OPENSSL_BOX_EVP_DigestUpdate(pxor_sigctx->mdctx, data, datalen);
 }
 
 int xor_sig_digest_sign_final(void *vpxor_sigctx,
@@ -2885,7 +2885,7 @@ int xor_sig_digest_sign_final(void *vpxor_sigctx,
         if (pxor_sigctx == NULL || pxor_sigctx->mdctx == NULL)
             return 0;
 
-        if (!EVP_DigestFinal_ex(pxor_sigctx->mdctx, digest, &dlen))
+        if (!OPENSSL_BOX_EVP_DigestFinal_ex(pxor_sigctx->mdctx, digest, &dlen))
             return 0;
 
         pxor_sigctx->flag_allow_md = 1;
@@ -2905,7 +2905,7 @@ int xor_sig_digest_verify_final(void *vpxor_sigctx, const unsigned char *sig,
     if (pxor_sigctx == NULL || pxor_sigctx->mdctx == NULL)
         return 0;
 
-    if (!EVP_DigestFinal_ex(pxor_sigctx->mdctx, digest, &dlen))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(pxor_sigctx->mdctx, digest, &dlen))
         return 0;
 
     pxor_sigctx->flag_allow_md = 1;

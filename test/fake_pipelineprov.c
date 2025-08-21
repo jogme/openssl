@@ -51,7 +51,7 @@ static void *fake_pipeline_newctx(void *provctx, char *ciphername,
     ctx->keylen = kbits / 8;
     ctx->ivlen = ivbits / 8;
     ctx->numpipes = 0;
-    ctx->cipher = EVP_CIPHER_fetch(provctx, ciphername, "provider=default");
+    ctx->cipher = OPENSSL_BOX_EVP_CIPHER_fetch(provctx, ciphername, "provider=default");
 
     return ctx;
 }
@@ -90,7 +90,7 @@ static int fake_pipeline_init(void *vctx,
         ctx->cipher_ctxs[i] = OPENSSL_BOX_EVP_CIPHER_CTX_new();
         if (ctx->cipher_ctxs[i] == NULL)
             return 0;
-        if (!EVP_CipherInit(ctx->cipher_ctxs[i], ctx->cipher, key, iv[i], enc))
+        if (!OPENSSL_BOX_EVP_CipherInit(ctx->cipher_ctxs[i], ctx->cipher, key, iv[i], enc))
             return 0;
     }
 
@@ -124,7 +124,7 @@ int fake_pipeline_update(void *vctx, size_t numpipes,
 
     for (i = 0; i < numpipes; i++) {
         inl_ = (int)inl[i];
-        if (!EVP_CipherUpdate(ctx->cipher_ctxs[i],
+        if (!OPENSSL_BOX_EVP_CipherUpdate(ctx->cipher_ctxs[i],
                               (out != NULL) ? out[i] : NULL,
                               &ioutl,
                               in[i], inl_))
@@ -143,7 +143,7 @@ int fake_pipeline_final(void *vctx, size_t numpipes,
     size_t i = 0;
 
     for (i = 0; i < numpipes; i++) {
-        if (!EVP_CipherFinal(ctx->cipher_ctxs[i], out[i], &ioutl))
+        if (!OPENSSL_BOX_EVP_CipherFinal(ctx->cipher_ctxs[i], out[i], &ioutl))
             return 0;
         outl[i] = (size_t)ioutl;
     }

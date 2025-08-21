@@ -8,7 +8,7 @@
  */
 
 /*-
- * Example of using EVP_MD_fetch and EVP_Digest* methods to calculate
+ * Example of using OPENSSL_BOX_EVP_MD_fetch and OPENSSL_BOX_EVP_Digest* methods to calculate
  * a digest of static buffers
  * You can find SHA3 test vectors from NIST here:
  * https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Algorithm-Validation-Program/documents/sha3/sha-3bytetestvectors.zip
@@ -66,9 +66,9 @@ int main(int argc, char *argv[])
      * The algorithm name is case insensitive.
      * See providers(7) for details about algorithm fetching
      */
-    md = EVP_MD_fetch(library_context, "SHA3-512", NULL);
+    md = OPENSSL_BOX_EVP_MD_fetch(library_context, "SHA3-512", NULL);
     if (md == NULL) {
-        fprintf(stderr, "EVP_MD_fetch did not find SHA3-512.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MD_fetch did not find SHA3-512.\n");
         goto cleanup;
     }
     digest_size = OPENSSL_BOX_EVP_MD_get_size(md);

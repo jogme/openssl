@@ -8,7 +8,7 @@
  */
 
 /*-
- * Example of using EVP_MD_fetch and EVP_Digest* methods to calculate
+ * Example of using OPENSSL_BOX_EVP_MD_fetch and OPENSSL_BOX_EVP_Digest* methods to calculate
  * a digest of static buffers
  * You can find SHA3 test vectors from NIST here:
  * https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Algorithm-Validation-Program/documents/sha3/sha-3bytetestvectors.zip
@@ -54,10 +54,10 @@ static int demonstrate_digest(BIO *input)
      * The algorithm name is case insensitive.
      * See providers(7) for details about algorithm fetching
      */
-    message_digest = EVP_MD_fetch(library_context,
+    message_digest = OPENSSL_BOX_EVP_MD_fetch(library_context,
                                   "SHA3-512", option_properties);
     if (message_digest == NULL) {
-        fprintf(stderr, "EVP_MD_fetch could not find SHA3-512.");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MD_fetch could not find SHA3-512.");
         ERR_print_errors_fp(stderr);
         OSSL_LIB_CTX_free(library_context);
         return 0;
@@ -94,13 +94,13 @@ static int demonstrate_digest(BIO *input)
         goto cleanup;
     }
     while ((ii = BIO_read(input, buffer, sizeof(buffer))) > 0) {
-        if (EVP_DigestUpdate(digest_context, buffer, ii) != 1) {
-            fprintf(stderr, "EVP_DigestUpdate() failed.\n");
+        if (OPENSSL_BOX_EVP_DigestUpdate(digest_context, buffer, ii) != 1) {
+            fprintf(stderr, "OPENSSL_BOX_EVP_DigestUpdate() failed.\n");
             goto cleanup;
         }
     }
-    if (EVP_DigestFinal(digest_context, digest_value, &digest_length) != 1) {
-        fprintf(stderr, "EVP_DigestFinal() failed.\n");
+    if (OPENSSL_BOX_EVP_DigestFinal(digest_context, digest_value, &digest_length) != 1) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestFinal() failed.\n");
         goto cleanup;
     }
     ret = 1;

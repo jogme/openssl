@@ -111,7 +111,7 @@ size_t ossl_rand_get_user_nonce(OSSL_LIB_CTX *ctx,
     if ((buf = OPENSSL_malloc(min_len)) == NULL)
         return 0;
 
-    if (!EVP_RAND_generate(rng, buf, min_len, 0, 0, salt, salt_len)) {
+    if (!OPENSSL_BOX_EVP_RAND_generate(rng, buf, min_len, 0, 0, salt, salt_len)) {
         OPENSSL_free(buf);
         return 0;
     }

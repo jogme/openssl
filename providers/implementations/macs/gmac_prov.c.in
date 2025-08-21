@@ -111,7 +111,7 @@ static int gmac_setkey(struct gmac_data_st *macctx,
         ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_KEY_LENGTH);
         return 0;
     }
-    if (!EVP_EncryptInit_ex(ctx, NULL, NULL, key, NULL))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex(ctx, NULL, NULL, key, NULL))
         return 0;
     return 1;
 }
@@ -125,7 +125,7 @@ static int gmac_init(void *vmacctx, const unsigned char *key,
         return 0;
     if (key != NULL)
         return gmac_setkey(macctx, key, keylen);
-    return EVP_EncryptInit_ex(macctx->ctx, NULL, NULL, NULL, NULL);
+    return OPENSSL_BOX_EVP_EncryptInit_ex(macctx->ctx, NULL, NULL, NULL, NULL);
 }
 
 static int gmac_update(void *vmacctx, const unsigned char *data,
@@ -139,12 +139,12 @@ static int gmac_update(void *vmacctx, const unsigned char *data,
         return 1;
 
     while (datalen > INT_MAX) {
-        if (!EVP_EncryptUpdate(ctx, NULL, &outlen, data, INT_MAX))
+        if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx, NULL, &outlen, data, INT_MAX))
             return 0;
         data += INT_MAX;
         datalen -= INT_MAX;
     }
-    return EVP_EncryptUpdate(ctx, NULL, &outlen, data, (int)datalen);
+    return OPENSSL_BOX_EVP_EncryptUpdate(ctx, NULL, &outlen, data, (int)datalen);
 }
 
 static int gmac_final(void *vmacctx, unsigned char *out, size_t *outl,
@@ -157,7 +157,7 @@ static int gmac_final(void *vmacctx, unsigned char *out, size_t *outl,
     if (!ossl_prov_is_running())
         return 0;
 
-    if (!EVP_EncryptFinal_ex(macctx->ctx, out, &hlen))
+    if (!OPENSSL_BOX_EVP_EncryptFinal_ex(macctx->ctx, out, &hlen))
         return 0;
 
     hlen = (int)gmac_size();
@@ -232,7 +232,7 @@ static int gmac_set_ctx_params(void *vmacctx, const OSSL_PARAM params[])
             ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_MODE);
             return 0;
         }
-        if (!EVP_EncryptInit_ex(ctx, ossl_prov_cipher_cipher(&macctx->cipher),
+        if (!OPENSSL_BOX_EVP_EncryptInit_ex(ctx, ossl_prov_cipher_cipher(&macctx->cipher),
                                 ossl_prov_cipher_engine(&macctx->cipher), NULL,
                                 NULL))
             return 0;
@@ -249,7 +249,7 @@ static int gmac_set_ctx_params(void *vmacctx, const OSSL_PARAM params[])
 
         if (OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN,
                                  (int)p.iv->data_size, NULL) <= 0
-            || !EVP_EncryptInit_ex(ctx, NULL, NULL, NULL, p.iv->data))
+            || !OPENSSL_BOX_EVP_EncryptInit_ex(ctx, NULL, NULL, NULL, p.iv->data))
             return 0;
     }
     return 1;

@@ -12,7 +12,7 @@ B<EVP_RAND> API.
 =head2 Identity
 
 "HMAC-DRBG" is the name for this implementation; it can be used with the
-EVP_RAND_fetch() function.
+OPENSSL_BOX_EVP_RAND_fetch() function.
 
 =head2 Supported parameters
 
@@ -87,7 +87,7 @@ implementation.
 
 A context for HMAC DRBG can be obtained by calling:
 
- EVP_RAND *rand = EVP_RAND_fetch(NULL, "HMAC-DRBG", NULL);
+ EVP_RAND *rand = OPENSSL_BOX_EVP_RAND_fetch(NULL, "HMAC-DRBG", NULL);
  EVP_RAND_CTX *rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
 
 =head1 EXAMPLES
@@ -98,16 +98,16 @@ A context for HMAC DRBG can be obtained by calling:
  OSSL_PARAM params[3], *p = params;
  unsigned int strength = 128;
 
- rand = EVP_RAND_fetch(NULL, "HMAC-DRBG", NULL);
+ rand = OPENSSL_BOX_EVP_RAND_fetch(NULL, "HMAC-DRBG", NULL);
  rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
  OPENSSL_BOX_EVP_RAND_free(rand);
 
  *p++ = OSSL_PARAM_construct_utf8_string(OSSL_DRBG_PARAM_MAC, SN_hmac, 0);
  *p++ = OSSL_PARAM_construct_utf8_string(OSSL_DRBG_PARAM_DIGEST, SN_sha256, 0);
  *p = OSSL_PARAM_construct_end();
- EVP_RAND_instantiate(rctx, strength, 0, NULL, 0, params);
+ OPENSSL_BOX_EVP_RAND_instantiate(rctx, strength, 0, NULL, 0, params);
 
- EVP_RAND_generate(rctx, bytes, sizeof(bytes), strength, 0, NULL, 0);
+ OPENSSL_BOX_EVP_RAND_generate(rctx, bytes, sizeof(bytes), strength, 0, NULL, 0);
 
  OPENSSL_BOX_EVP_RAND_CTX_free(rctx);
 

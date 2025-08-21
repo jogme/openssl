@@ -14,7 +14,7 @@ The OpenSSL providers only support LMS signature verification, as this is a
 [SP 800-208](https://csrc.nist.gov/pubs/sp/800/208/final) requirement for
 FIPS software modules.
 
-EVP_PKEY_verify_message_init() and EVP_PKEY_verify() are the only supported
+OPENSSL_BOX_EVP_PKEY_verify_message_init() and OPENSSL_BOX_EVP_PKEY_verify() are the only supported
 functions used for LMS signatures. Streaming is not currently supported,
 and since the signature data contains data related to the digest used, functions
 that specify the digest name are not necessary.
@@ -35,14 +35,14 @@ Error checking has been omitted from the following examples
 =head2 LMS signature verification
 
  /* See L<EVP_PKEY-LMS(7)/EXAMPLES for an example of loading a LMS |pub| key */
- ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pub, propq);
- sig = EVP_SIGNATURE_fetch(libctx, "LMS", propq);
- EVP_PKEY_verify_message_init(ctx, sig, NULL);
+ ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pub, propq);
+ sig = OPENSSL_BOX_EVP_SIGNATURE_fetch(libctx, "LMS", propq);
+ OPENSSL_BOX_EVP_PKEY_verify_message_init(ctx, sig, NULL);
  /*
-  * EVP_PKEY_verify_message_update() and OPENSSL_BOX_EVP_PKEY_verify_message_final()
+  * OPENSSL_BOX_EVP_PKEY_verify_message_update() and OPENSSL_BOX_EVP_PKEY_verify_message_final()
   * are not supported
   */
- ret = EVP_PKEY_verify(ctx, sigdata, sigdata_len, msg, msglen);
+ ret = OPENSSL_BOX_EVP_PKEY_verify(ctx, sigdata, sigdata_len, msg, msglen);
  /*
   * ret == 1 indicates success, 0 verify failure and < 0 for some
   * other error.

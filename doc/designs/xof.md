@@ -31,7 +31,7 @@ OpenSSL XOF Requirements
 ------------------------
 
 The current OpenSSL implementation of XOF only supports a single call to squeeze.
-The assumption exists in both the high level call to EVP_DigestFinalXOF() as
+The assumption exists in both the high level call to OPENSSL_BOX_EVP_DigestFinalXOF() as
 well as in the lower level SHA3_squeeze() operation (Of which there is a generic
 c version, as well as assembler code for different platforms).
 
@@ -47,7 +47,7 @@ API Discussion of Squeeze
 
 ### Squeeze
 
-Currently EVP_DigestFinalXOF() uses a flag to check that it is only invoked once.
+Currently OPENSSL_BOX_EVP_DigestFinalXOF() uses a flag to check that it is only invoked once.
 It returns an error if called more than once. When initially written it also did
 a reset, but that code was removed as it was deemed to be incorrect.
 
@@ -59,8 +59,8 @@ separate provider function should not be necessary).
 
 #### Proposal 1
 
-Change EVP_DigestFinalXOF(ctx, out, outlen) to handle multiple calls.
-Possibly have EVP_DigestSqueeze() just as an alias method?
+Change OPENSSL_BOX_EVP_DigestFinalXOF(ctx, out, outlen) to handle multiple calls.
+Possibly have OPENSSL_BOX_EVP_DigestSqueeze() just as an alias method?
 Changing the code at this level should be a simple matter of removing the
 flag check.
 
@@ -74,11 +74,11 @@ flag check.
 
 #### Proposal 2 (Proposed Solution)
 
-Keep EVP_DigestFinalXOF() as a one shot function and create a new API to handle
+Keep OPENSSL_BOX_EVP_DigestFinalXOF() as a one shot function and create a new API to handle
 the multi squeeze case e.g.
 
 ```text
-EVP_DigestSqueeze(ctx, out, outlen).
+OPENSSL_BOX_EVP_DigestSqueeze(ctx, out, outlen).
 ```
 
 ##### Pros
@@ -93,9 +93,9 @@ EVP_DigestSqueeze(ctx, out, outlen).
 
   - Adds an extra API.
   - The interaction between the 2 API's needs to be clearly documented.
-  - A call to EVP_DigestSqueeze() after EVP_DigestFinalXOF() would fail since
-    EVP_DigestFinalXOF() indicates no more output can be retrieved.
-  - A call to EVP_DigestFinalXOF() after the EVP_DigestSqueeze() would fail.
+  - A call to OPENSSL_BOX_EVP_DigestSqueeze() after OPENSSL_BOX_EVP_DigestFinalXOF() would fail since
+    OPENSSL_BOX_EVP_DigestFinalXOF() indicates no more output can be retrieved.
+  - A call to OPENSSL_BOX_EVP_DigestFinalXOF() after the OPENSSL_BOX_EVP_DigestSqueeze() would fail.
 
 #### Proposal 3
 
@@ -121,7 +121,7 @@ Currently OpenSSL only uses XOF's which use a sponge construction (which uses
 the terms absorb and squeeze).
 There will be other XOF's that do not use the sponge construction such as Blake2.
 
-The proposed API name to use is EVP_DigestSqueeze.
+The proposed API name to use is OPENSSL_BOX_EVP_DigestSqueeze.
 The alternate name suggested was EVP_DigestExtract.
 The terms extract and expand are used by HKDF so I think this name would be
 confusing.
@@ -134,9 +134,9 @@ API Discussion of other XOF API'S
 The digest can be initialized as normal using:
 
 ```text
-md = EVP_MD_fetch(libctx, "SHAKE256", propq);
+md = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHAKE256", propq);
 ctx = OPENSSL_BOX_EVP_MD_CTX_new();
-EVP_DigestInit_ex2(ctx, md, NULL);
+OPENSSL_BOX_EVP_DigestInit_ex2(ctx, md, NULL);
 ```
 
 ### Absorb
@@ -144,7 +144,7 @@ EVP_DigestInit_ex2(ctx, md, NULL);
 Absorb can be done by multiple calls to:
 
 ```text
-EVP_DigestUpdate(ctx, in, inlen);
+OPENSSL_BOX_EVP_DigestUpdate(ctx, in, inlen);
 ```
 
 #### Proposal:
@@ -166,7 +166,7 @@ The finalize is just done as part of the squeeze operation.
 A reset can be done by calling:
 
 ```text
-EVP_DigestInit_ex2(ctx, NULL, NULL);
+OPENSSL_BOX_EVP_DigestInit_ex2(ctx, NULL, NULL);
 ```
 
 ### State Copy

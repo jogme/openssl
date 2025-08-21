@@ -18,7 +18,7 @@ static int dsa_paramgen_check(EVP_PKEY_CTX *ctx)
 {
     if (ctx == NULL || !EVP_PKEY_CTX_IS_GEN_OP(ctx)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
     /* If key type not DSA return error */
@@ -126,7 +126,7 @@ int EVP_PKEY_CTX_set_dsa_paramgen_md_props(EVP_PKEY_CTX *ctx,
 #if !defined(FIPS_MODULE)
 int EVP_PKEY_CTX_set_dsa_paramgen_md(EVP_PKEY_CTX *ctx, const EVP_MD *md)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DSA, EVP_PKEY_OP_PARAMGEN,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DSA, EVP_PKEY_OP_PARAMGEN,
                              EVP_PKEY_CTRL_DSA_PARAMGEN_MD, 0, (void *)(md));
 }
 #endif

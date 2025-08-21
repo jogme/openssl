@@ -39,9 +39,9 @@ static EVP_PKEY *generate_rsa_key_long(OSSL_LIB_CTX *libctx, unsigned int bits)
     unsigned int primes = 2;
 
     /* Create context using RSA algorithm. "RSA-PSS" could also be used here. */
-    genctx = EVP_PKEY_CTX_new_from_name(libctx, "RSA", propq);
+    genctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "RSA", propq);
     if (genctx == NULL) {
-        fprintf(stderr, "EVP_PKEY_CTX_new_from_name() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_CTX_new_from_name() failed\n");
         goto cleanup;
     }
 
@@ -110,10 +110,10 @@ static EVP_PKEY *generate_rsa_key_short(OSSL_LIB_CTX *libctx, unsigned int bits)
     EVP_PKEY *pkey = NULL;
 
     fprintf(stdout, "Generating RSA key, this may take some time...\n");
-    pkey = EVP_PKEY_Q_keygen(libctx, propq, "RSA", (size_t)bits);
+    pkey = OPENSSL_BOX_EVP_PKEY_Q_keygen(libctx, propq, "RSA", (size_t)bits);
 
     if (pkey == NULL)
-        fprintf(stderr, "EVP_PKEY_Q_keygen() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_Q_keygen() failed\n");
 
     return pkey;
 }
@@ -131,10 +131,10 @@ static int dump_key(const EVP_PKEY *pkey)
      * Retrieve value of n. This value is not secret and forms part of the
      * public key.
      *
-     * Calling EVP_PKEY_get_bn_param with a NULL BIGNUM pointer causes
+     * Calling OPENSSL_BOX_EVP_PKEY_get_bn_param with a NULL BIGNUM pointer causes
      * a new BIGNUM to be allocated, so these must be freed subsequently.
      */
-    if (EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_RSA_N, &n) == 0) {
+    if (OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_RSA_N, &n) == 0) {
         fprintf(stderr, "Failed to retrieve n\n");
         goto cleanup;
     }
@@ -143,7 +143,7 @@ static int dump_key(const EVP_PKEY *pkey)
      * Retrieve value of e. This value is not secret and forms part of the
      * public key. It is typically 65537 and need not be changed.
      */
-    if (EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_RSA_E, &e) == 0) {
+    if (OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_RSA_E, &e) == 0) {
         fprintf(stderr, "Failed to retrieve e\n");
         goto cleanup;
     }
@@ -152,7 +152,7 @@ static int dump_key(const EVP_PKEY *pkey)
      * Retrieve value of d. This value is secret and forms part of the private
      * key. It must not be published.
      */
-    if (EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_RSA_D, &d) == 0) {
+    if (OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_RSA_D, &d) == 0) {
         fprintf(stderr, "Failed to retrieve d\n");
         goto cleanup;
     }
@@ -161,7 +161,7 @@ static int dump_key(const EVP_PKEY *pkey)
      * Retrieve value of the first prime factor, commonly known as p. This value
      * is secret and forms part of the private key. It must not be published.
      */
-    if (EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_RSA_FACTOR1, &p) == 0) {
+    if (OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_RSA_FACTOR1, &p) == 0) {
         fprintf(stderr, "Failed to retrieve p\n");
         goto cleanup;
     }
@@ -174,7 +174,7 @@ static int dump_key(const EVP_PKEY *pkey)
      * applications, you can retrieve these primes with
      * OSSL_PKEY_PARAM_RSA_FACTOR3, etc.
      */
-    if (EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_RSA_FACTOR2, &q) == 0) {
+    if (OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_RSA_FACTOR2, &q) == 0) {
         fprintf(stderr, "Failed to retrieve q\n");
         goto cleanup;
     }
@@ -182,7 +182,7 @@ static int dump_key(const EVP_PKEY *pkey)
     /*
      * We can also retrieve the key size in bits for informational purposes.
      */
-    if (EVP_PKEY_get_int_param(pkey, OSSL_PKEY_PARAM_BITS, &bits) == 0) {
+    if (OPENSSL_BOX_EVP_PKEY_get_int_param(pkey, OSSL_PKEY_PARAM_BITS, &bits) == 0) {
         fprintf(stderr, "Failed to retrieve bits\n");
         goto cleanup;
     }

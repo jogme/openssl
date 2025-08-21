@@ -103,7 +103,7 @@ int ossl_prov_cipher_load(PROV_CIPHER *pc, const OSSL_PARAM *cipher,
 
     OPENSSL_BOX_EVP_CIPHER_free(pc->alloc_cipher);
     ERR_set_mark();
-    pc->cipher = pc->alloc_cipher = EVP_CIPHER_fetch(ctx, cipher->data,
+    pc->cipher = pc->alloc_cipher = OPENSSL_BOX_EVP_CIPHER_fetch(ctx, cipher->data,
                                                      propquery);
 #ifndef FIPS_MODULE /* Inside the FIPS module, we don't support legacy ciphers */
     if (pc->cipher == NULL) {
@@ -174,7 +174,7 @@ const EVP_MD *ossl_prov_digest_fetch(PROV_DIGEST *pd, OSSL_LIB_CTX *libctx,
                                      const char *mdname, const char *propquery)
 {
     OPENSSL_BOX_EVP_MD_free(pd->alloc_md);
-    pd->md = pd->alloc_md = EVP_MD_fetch(libctx, mdname, propquery);
+    pd->md = pd->alloc_md = OPENSSL_BOX_EVP_MD_fetch(libctx, mdname, propquery);
 
     return pd->md;
 }
@@ -287,7 +287,7 @@ int ossl_prov_macctx_load(EVP_MAC_CTX **macctx,
 
     /* If we got a new mac name, we make a new EVP_MAC_CTX */
     if (macname != NULL) {
-        EVP_MAC *mac = EVP_MAC_fetch(libctx, macname, properties);
+        EVP_MAC *mac = OPENSSL_BOX_EVP_MAC_fetch(libctx, macname, properties);
 
         OPENSSL_BOX_EVP_MAC_CTX_free(*macctx);
         *macctx = mac == NULL ? NULL : OPENSSL_BOX_EVP_MAC_CTX_new(mac);

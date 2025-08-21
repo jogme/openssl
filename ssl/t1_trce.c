@@ -1346,7 +1346,7 @@ static int ssl_print_raw_public_key(BIO *bio, const SSL *ssl, int server,
     pkey = d2i_PUBKEY_ex(NULL, &msg, (long)clen, ssl->ctx->libctx, ssl->ctx->propq);
     if (pkey == NULL)
         return 0;
-    EVP_PKEY_print_public(bio, pkey, indent + 2, NULL);
+    OPENSSL_BOX_EVP_PKEY_print_public(bio, pkey, indent + 2, NULL);
     OPENSSL_BOX_EVP_PKEY_free(pkey);
     *pmsg += clen + 3;
     *pmsglen -= clen + 3;

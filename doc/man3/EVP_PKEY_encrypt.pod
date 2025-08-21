@@ -3,7 +3,7 @@
 =head1 NAME
 
 OPENSSL_BOX_EVP_PKEY_encrypt_init_ex,
-OPENSSL_BOX_EVP_PKEY_encrypt_init, EVP_PKEY_encrypt - encrypt using a public key algorithm
+OPENSSL_BOX_EVP_PKEY_encrypt_init, OPENSSL_BOX_EVP_PKEY_encrypt - encrypt using a public key algorithm
 
 =head1 SYNOPSIS
 
@@ -11,7 +11,7 @@ OPENSSL_BOX_EVP_PKEY_encrypt_init, EVP_PKEY_encrypt - encrypt using a public key
 
  int OPENSSL_BOX_EVP_PKEY_encrypt_init(EVP_PKEY_CTX *ctx);
  int OPENSSL_BOX_EVP_PKEY_encrypt_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[]);
- int EVP_PKEY_encrypt(EVP_PKEY_CTX *ctx,
+ int OPENSSL_BOX_EVP_PKEY_encrypt(EVP_PKEY_CTX *ctx,
                       unsigned char *out, size_t *outlen,
                       const unsigned char *in, size_t inlen);
 
@@ -24,7 +24,7 @@ The OPENSSL_BOX_EVP_PKEY_encrypt_init_ex() function initializes a public key alg
 context using key B<pkey> for an encryption operation and sets the
 algorithm specific B<params>.
 
-The EVP_PKEY_encrypt() function performs a public key encryption operation
+The OPENSSL_BOX_EVP_PKEY_encrypt() function performs a public key encryption operation
 using B<ctx>. The data to be encrypted is specified using the B<in> and
 B<inlen> parameters. If B<out> is B<NULL> then the maximum size of the output
 buffer is written to the B<outlen> parameter. If B<out> is not B<NULL> then
@@ -39,12 +39,12 @@ operations can be performed to set any appropriate parameters for the
 operation.  These operations can be included in the OPENSSL_BOX_EVP_PKEY_encrypt_init_ex()
 call.
 
-The function EVP_PKEY_encrypt() can be called more than once on the same
+The function OPENSSL_BOX_EVP_PKEY_encrypt() can be called more than once on the same
 context if several operations are performed using the same parameters.
 
 =head1 RETURN VALUES
 
-OPENSSL_BOX_EVP_PKEY_encrypt_init(), OPENSSL_BOX_EVP_PKEY_encrypt_init_ex() and EVP_PKEY_encrypt()
+OPENSSL_BOX_EVP_PKEY_encrypt_init(), OPENSSL_BOX_EVP_PKEY_encrypt_init_ex() and OPENSSL_BOX_EVP_PKEY_encrypt()
 return 1 for success and 0 or a negative value for failure. In particular a
 return value of -2 indicates the operation is not supported by the public key
 algorithm.
@@ -78,7 +78,7 @@ set 'eng = NULL;' to start with the default OpenSSL RSA implementation:
      /* Error */
 
  /* Determine buffer length */
- if (EVP_PKEY_encrypt(ctx, NULL, &outlen, in, inlen) <= 0)
+ if (OPENSSL_BOX_EVP_PKEY_encrypt(ctx, NULL, &outlen, in, inlen) <= 0)
      /* Error */
 
  out = OPENSSL_malloc(outlen);
@@ -86,7 +86,7 @@ set 'eng = NULL;' to start with the default OpenSSL RSA implementation:
  if (!out)
      /* malloc failure */
 
- if (EVP_PKEY_encrypt(ctx, out, &outlen, in, inlen) <= 0)
+ if (OPENSSL_BOX_EVP_PKEY_encrypt(ctx, out, &outlen, in, inlen) <= 0)
      /* Error */
 
  /* Encrypted data is outlen bytes written to buffer out */
@@ -96,10 +96,10 @@ set 'eng = NULL;' to start with the default OpenSSL RSA implementation:
 L<d2i_X509(3)>,
 L<ENGINE_by_id(3)>,
 L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
-L<EVP_PKEY_decrypt(3)>,
-L<EVP_PKEY_sign(3)>,
-L<EVP_PKEY_verify(3)>,
-L<EVP_PKEY_verify_recover(3)>,
+L<OPENSSL_BOX_EVP_PKEY_decrypt(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify_recover(3)>,
 L<OPENSSL_BOX_EVP_PKEY_derive(3)>
 
 =head1 HISTORY

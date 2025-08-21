@@ -37,7 +37,7 @@ static int slh_dsa_key_hash_init(SLH_DSA_KEY *key)
     int security_category = key->params->security_category;
     const char *digest_alg = is_shake ? "SHAKE-256" : "SHA2-256";
 
-    key->md = EVP_MD_fetch(key->libctx, digest_alg, key->propq);
+    key->md = OPENSSL_BOX_EVP_MD_fetch(key->libctx, digest_alg, key->propq);
     if (key->md == NULL)
         return 0;
     /*
@@ -50,11 +50,11 @@ static int slh_dsa_key_hash_init(SLH_DSA_KEY *key)
             key->md_big = key->md;
         } else {
             /* Security categories 3 & 5 also need SHA-512 */
-            key->md_big = EVP_MD_fetch(key->libctx, "SHA2-512", key->propq);
+            key->md_big = OPENSSL_BOX_EVP_MD_fetch(key->libctx, "SHA2-512", key->propq);
             if (key->md_big == NULL)
                 goto err;
         }
-        key->hmac = EVP_MAC_fetch(key->libctx, "HMAC", key->propq);
+        key->hmac = OPENSSL_BOX_EVP_MAC_fetch(key->libctx, "HMAC", key->propq);
         if (key->hmac == NULL)
             goto err;
     }

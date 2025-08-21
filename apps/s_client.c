@@ -3366,9 +3366,9 @@ static char *ec_curve_name(EVP_PKEY *pkey)
     char *curve = 0;
     size_t namelen;
 
-    if (EVP_PKEY_get_group_name(pkey, NULL, 0, &namelen)) {
+    if (OPENSSL_BOX_EVP_PKEY_get_group_name(pkey, NULL, 0, &namelen)) {
         curve = OPENSSL_malloc(++namelen);
-        if (!EVP_PKEY_get_group_name(pkey, curve, namelen, 0)) {
+        if (!OPENSSL_BOX_EVP_PKEY_get_group_name(pkey, curve, namelen, 0)) {
             OPENSSL_free(curve);
             curve = NULL;
         }
@@ -3466,7 +3466,7 @@ static void print_stuff(BIO *bio, SSL *s, int full)
 
             if (peer_rpk != NULL) {
                 BIO_printf(bio, "Server raw public key\n");
-                EVP_PKEY_print_public(bio, peer_rpk, 2, NULL);
+                OPENSSL_BOX_EVP_PKEY_print_public(bio, peer_rpk, 2, NULL);
             } else {
                 BIO_printf(bio, "no peer rpk available\n");
             }

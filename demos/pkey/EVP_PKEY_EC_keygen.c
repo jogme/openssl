@@ -25,13 +25,13 @@ static int get_key_values(EVP_PKEY *pkey);
  * with additional parameters. If only the curve name is required then the
  * simple helper can be used instead i.e. Either
  * pkey = EVP_EC_gen(curvename); OR
- * pkey = EVP_PKEY_Q_keygen(libctx, propq, "EC", curvename);
+ * pkey = OPENSSL_BOX_EVP_PKEY_Q_keygen(libctx, propq, "EC", curvename);
  */
 static EVP_PKEY *do_ec_keygen(void)
 {
     /*
      * The libctx and propq can be set if required, they are included here
-     * to show how they are passed to EVP_PKEY_CTX_new_from_name().
+     * to show how they are passed to OPENSSL_BOX_EVP_PKEY_CTX_new_from_name().
      */
     OSSL_LIB_CTX *libctx = NULL;
     const char *propq = NULL;
@@ -41,9 +41,9 @@ static EVP_PKEY *do_ec_keygen(void)
     const char *curvename = "P-256";
     int use_cofactordh = 1;
 
-    genctx = EVP_PKEY_CTX_new_from_name(libctx, "EC", propq);
+    genctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "EC", propq);
     if (genctx == NULL) {
-        fprintf(stderr, "EVP_PKEY_CTX_new_from_name() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_CTX_new_from_name() failed\n");
         goto cleanup;
     }
 
@@ -80,7 +80,7 @@ cleanup:
  * The following code shows how retrieve key data from the generated
  * EC key. See doc/man7/EVP_PKEY-EC.pod for more information.
  *
- * EVP_PKEY_print_private() could also be used to display the values.
+ * OPENSSL_BOX_EVP_PKEY_print_private() could also be used to display the values.
  */
 static int get_key_values(EVP_PKEY *pkey)
 {
@@ -91,21 +91,21 @@ static int get_key_values(EVP_PKEY *pkey)
     BIGNUM *out_priv = NULL;
     size_t out_pubkey_len, out_privkey_len = 0;
 
-    if (!EVP_PKEY_get_utf8_string_param(pkey, OSSL_PKEY_PARAM_GROUP_NAME,
+    if (!OPENSSL_BOX_EVP_PKEY_get_utf8_string_param(pkey, OSSL_PKEY_PARAM_GROUP_NAME,
                                         out_curvename, sizeof(out_curvename),
                                         NULL)) {
         fprintf(stderr, "Failed to get curve name\n");
         goto cleanup;
     }
 
-    if (!EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_PUB_KEY,
+    if (!OPENSSL_BOX_EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_PUB_KEY,
                                         out_pubkey, sizeof(out_pubkey),
                                         &out_pubkey_len)) {
         fprintf(stderr, "Failed to get public key\n");
         goto cleanup;
     }
 
-    if (!EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_PRIV_KEY, &out_priv)) {
+    if (!OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_PRIV_KEY, &out_priv)) {
         fprintf(stderr, "Failed to get private key\n");
         goto cleanup;
     }

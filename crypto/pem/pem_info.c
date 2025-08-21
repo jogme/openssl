@@ -137,7 +137,7 @@ STACK_OF(X509_INFO) *PEM_X509_INFO_read_bio_ex(BIO *bp, STACK_OF(X509_INFO) *sk,
             xi->enc_data = NULL;
             xi->enc_len = 0;
 
-            d2i = (D2I_OF(void)) d2i_AutoPrivateKey;
+            d2i = (D2I_OF(void)) OPENSSL_BOX_d2i_AutoPrivateKey;
             xi->x_pkey = X509_PKEY_new();
             if (xi->x_pkey == NULL)
                 goto err;
@@ -160,7 +160,7 @@ STACK_OF(X509_INFO) *PEM_X509_INFO_read_bio_ex(BIO *bp, STACK_OF(X509_INFO) *sk,
                     goto err;
                 p = data;
                 if (ptype) {
-                    if (d2i_PrivateKey_ex(ptype, pp, &p, len,
+                    if (OPENSSL_BOX_d2i_PrivateKey_ex(ptype, pp, &p, len,
                                           libctx, propq) == NULL) {
                         ERR_raise(ERR_LIB_PEM, ERR_R_ASN1_LIB);
                         goto err;

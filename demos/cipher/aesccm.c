@@ -91,7 +91,7 @@ static int aes_ccm_encrypt(void)
         goto err;
 
     /* Fetch the cipher implementation */
-    if ((cipher = EVP_CIPHER_fetch(libctx, "AES-192-CCM", propq)) == NULL)
+    if ((cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "AES-192-CCM", propq)) == NULL)
         goto err;
 
     /* Default nonce length for AES-CCM is 7 bytes (56 bits). */
@@ -105,23 +105,23 @@ static int aes_ccm_encrypt(void)
      * Initialise encrypt operation with the cipher & mode,
      * nonce length and tag length parameters.
      */
-    if (!EVP_EncryptInit_ex2(ctx, cipher, NULL, NULL, params))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx, cipher, NULL, NULL, params))
         goto err;
 
     /* Initialise key and nonce */
-    if (!EVP_EncryptInit_ex(ctx, NULL, NULL, ccm_key, ccm_nonce))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex(ctx, NULL, NULL, ccm_key, ccm_nonce))
         goto err;
 
     /* Set plaintext length: only needed if AAD is used */
-    if (!EVP_EncryptUpdate(ctx, NULL, &outlen, NULL, sizeof(ccm_pt)))
+    if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx, NULL, &outlen, NULL, sizeof(ccm_pt)))
         goto err;
 
     /* Zero or one call to specify any AAD */
-    if (!EVP_EncryptUpdate(ctx, NULL, &outlen, ccm_adata, sizeof(ccm_adata)))
+    if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx, NULL, &outlen, ccm_adata, sizeof(ccm_adata)))
         goto err;
 
     /* Encrypt plaintext: can only be called once */
-    if (!EVP_EncryptUpdate(ctx, outbuf, &outlen, ccm_pt, sizeof(ccm_pt)))
+    if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx, outbuf, &outlen, ccm_pt, sizeof(ccm_pt)))
         goto err;
 
     /* Output encrypted block */
@@ -129,7 +129,7 @@ static int aes_ccm_encrypt(void)
     BIO_dump_fp(stdout, outbuf, outlen);
 
     /* Finalise: note get no output for CCM */
-    if (!EVP_EncryptFinal_ex(ctx, NULL, &tmplen))
+    if (!OPENSSL_BOX_EVP_EncryptFinal_ex(ctx, NULL, &tmplen))
         goto err;
 
     /* Get tag */
@@ -175,7 +175,7 @@ static int aes_ccm_decrypt(void)
         goto err;
 
     /* Fetch the cipher implementation */
-    if ((cipher = EVP_CIPHER_fetch(libctx, "AES-192-CCM", propq)) == NULL)
+    if ((cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "AES-192-CCM", propq)) == NULL)
         goto err;
 
     /* Set nonce length if default 96 bits is not appropriate */
@@ -189,23 +189,23 @@ static int aes_ccm_decrypt(void)
      * Initialise decrypt operation with the cipher & mode,
      * nonce length and expected tag parameters.
      */
-    if (!EVP_DecryptInit_ex2(ctx, cipher, NULL, NULL, params))
+    if (!OPENSSL_BOX_EVP_DecryptInit_ex2(ctx, cipher, NULL, NULL, params))
         goto err;
 
     /* Specify key and IV */
-    if (!EVP_DecryptInit_ex(ctx, NULL, NULL, ccm_key, ccm_nonce))
+    if (!OPENSSL_BOX_EVP_DecryptInit_ex(ctx, NULL, NULL, ccm_key, ccm_nonce))
         goto err;
 
     /* Set ciphertext length: only needed if we have AAD */
-    if (!EVP_DecryptUpdate(ctx, NULL, &outlen, NULL, sizeof(ccm_ct)))
+    if (!OPENSSL_BOX_EVP_DecryptUpdate(ctx, NULL, &outlen, NULL, sizeof(ccm_ct)))
         goto err;
 
     /* Zero or one call to specify any AAD */
-    if (!EVP_DecryptUpdate(ctx, NULL, &outlen, ccm_adata, sizeof(ccm_adata)))
+    if (!OPENSSL_BOX_EVP_DecryptUpdate(ctx, NULL, &outlen, ccm_adata, sizeof(ccm_adata)))
         goto err;
 
     /* Decrypt plaintext, verify tag: can only be called once */
-    rv = EVP_DecryptUpdate(ctx, outbuf, &outlen, ccm_ct, sizeof(ccm_ct));
+    rv = OPENSSL_BOX_EVP_DecryptUpdate(ctx, outbuf, &outlen, ccm_ct, sizeof(ccm_ct));
 
     /* Output decrypted block: if tag verify failed we get nothing */
     if (rv > 0) {

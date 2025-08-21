@@ -403,23 +403,23 @@ static int do_evp_cipher(const EVP_CIPHER *evp_cipher, const OSSL_PARAM param[])
         return 0;
     }
 
-    if (!EVP_EncryptInit_ex2(ctx, evp_cipher, key, iv, NULL)) {
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx, evp_cipher, key, iv, NULL)) {
         /* Error */
         OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
         return 0;
     }
 
-    if (!EVP_EncryptUpdate(ctx, outbuf, &outlen, (const unsigned char *) intext,
+    if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx, outbuf, &outlen, (const unsigned char *) intext,
                            (int)strlen(intext))) {
         /* Error */
         OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
         return 0;
     }
     /*
-     * Buffer passed to EVP_EncryptFinal() must be after data just
+     * Buffer passed to OPENSSL_BOX_EVP_EncryptFinal() must be after data just
      * encrypted to avoid overwriting it.
      */
-    if (!EVP_EncryptFinal_ex(ctx, outbuf + outlen, &tmplen)) {
+    if (!OPENSSL_BOX_EVP_EncryptFinal_ex(ctx, outbuf + outlen, &tmplen)) {
         /* Error */
         OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
         return 0;
@@ -467,7 +467,7 @@ static int do_evp_mac(EVP_MAC *evp_mac, const OSSL_PARAM params[])
     size_t final_l;
 
     if ((ctx = OPENSSL_BOX_EVP_MAC_CTX_new(evp_mac)) == NULL
-        || !EVP_MAC_init(ctx, (const unsigned char *) key, strlen(key),
+        || !OPENSSL_BOX_EVP_MAC_init(ctx, (const unsigned char *) key, strlen(key),
                          params)) {
         r = 0;
         goto end;
@@ -483,7 +483,7 @@ static int do_evp_mac(EVP_MAC *evp_mac, const OSSL_PARAM params[])
         goto end;
     }
 
-    if (!EVP_MAC_final(ctx, buf, &final_l, sizeof(buf))) {
+    if (!OPENSSL_BOX_EVP_MAC_final(ctx, buf, &final_l, sizeof(buf))) {
         r = 0;
         goto end;
     }
@@ -509,12 +509,12 @@ static int do_evp_rand(EVP_RAND *evp_rand, const OSSL_PARAM params[])
         goto end;
     }
 
-    if (!EVP_RAND_generate(ctx, buf, sizeof(buf), 0, 0, NULL, 0)) {
+    if (!OPENSSL_BOX_EVP_RAND_generate(ctx, buf, sizeof(buf), 0, 0, NULL, 0)) {
         r = 0;
         goto end;
     }
 
-    if (!EVP_RAND_reseed(ctx, 0, 0, 0, NULL, 0)) {
+    if (!OPENSSL_BOX_EVP_RAND_reseed(ctx, 0, 0, 0, NULL, 0)) {
         r = 0;
         goto end;
     }
@@ -561,15 +561,15 @@ static int do_evp_md(EVP_MD *evp_md, const OSSL_PARAM params[])
         goto end;
     }
 
-    if (!EVP_DigestInit_ex2(mdctx, evp_md, NULL)) {
+    if (!OPENSSL_BOX_EVP_DigestInit_ex2(mdctx, evp_md, NULL)) {
         r = 0;
         goto end;
     }
-    if (!EVP_DigestUpdate(mdctx, "Test", strlen("Test"))) {
+    if (!OPENSSL_BOX_EVP_DigestUpdate(mdctx, "Test", strlen("Test"))) {
         r = 0;
         goto end;
     }
-    if (!EVP_DigestFinal_ex(mdctx, md_value, &md_len)) {
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(mdctx, md_value, &md_len)) {
         r = 0;
         goto end;
     }

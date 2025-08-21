@@ -3873,7 +3873,7 @@ int cmp_main(int argc, char **argv)
                 if (opt_newkeypass != NULL) {
                     pass_string = get_passwd(opt_newkeypass,
                                              "Centrally generated private key password");
-                    cipher = EVP_CIPHER_fetch(app_get0_libctx(), SN_aes_256_cbc, app_get0_propq());
+                    cipher = OPENSSL_BOX_EVP_CIPHER_fetch(app_get0_libctx(), SN_aes_256_cbc, app_get0_propq());
                 }
 
                 CMP_info1("saving centrally generated key to file '%s'", opt_newkeyout);

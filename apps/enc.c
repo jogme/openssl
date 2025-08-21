@@ -582,9 +582,9 @@ int enc_main(int argc, char **argv)
                 /* not needed if HASH_UPDATE() is fixed : */
                 int islen = (sptr != NULL ? saltlen : 0);
 
-                if (!PKCS5_PBKDF2_HMAC(str, (int)str_len, sptr, islen,
+                if (!OPENSSL_BOX_PKCS5_PBKDF2_HMAC(str, (int)str_len, sptr, islen,
                                        iter, dgst, iklen+ivlen, tmpkeyiv)) {
-                    BIO_printf(bio_err, "PKCS5_PBKDF2_HMAC failed\n");
+                    BIO_printf(bio_err, "OPENSSL_BOX_PKCS5_PBKDF2_HMAC failed\n");
                     goto end;
                 }
                 /* split and move data back to global buffer */
@@ -595,10 +595,10 @@ int enc_main(int argc, char **argv)
                 BIO_printf(bio_err, "*** WARNING : "
                                     "deprecated key derivation used.\n"
                                     "Using -iter or -pbkdf2 would be better.\n");
-                if (!EVP_BytesToKey(cipher, dgst, sptr,
+                if (!OPENSSL_BOX_EVP_BytesToKey(cipher, dgst, sptr,
                                     (unsigned char *)str, (int)str_len,
                                     1, key, iv)) {
-                    BIO_printf(bio_err, "EVP_BytesToKey failed\n");
+                    BIO_printf(bio_err, "OPENSSL_BOX_EVP_BytesToKey failed\n");
                     goto end;
                 }
                 rawkey_set = 1;
@@ -656,7 +656,7 @@ int enc_main(int argc, char **argv)
 
         /*
          * Since we may be changing parameters work on the encryption context
-         * rather than calling BIO_set_cipher().
+         * rather than calling OPENSSL_BOX_BIO_set_cipher().
          */
 
         BIO_get_cipher_ctx(benc, &ctx);
@@ -665,7 +665,7 @@ int enc_main(int argc, char **argv)
             OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPHER_CTX_FLAG_WRAP_ALLOW);
 
         if (rawkey_set) {
-            if (!EVP_CipherInit_ex(ctx, cipher, e, key,
+            if (!OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, e, key,
                                    (hiv == NULL && wrap == 1 ? NULL : iv), enc)) {
                 BIO_printf(bio_err, "Error setting cipher %s\n",
                            OPENSSL_BOX_EVP_CIPHER_get0_name(cipher));
@@ -675,7 +675,7 @@ int enc_main(int argc, char **argv)
         } else {
             OSSL_PARAM *params = NULL;
 
-            mgmt = EVP_SKEYMGMT_fetch(app_get0_libctx(),
+            mgmt = OPENSSL_BOX_EVP_SKEYMGMT_fetch(app_get0_libctx(),
                                       skeymgmt != NULL ? skeymgmt : EVP_CIPHER_name(cipher),
                                       app_get0_propq());
             if (mgmt == NULL)
@@ -686,7 +686,7 @@ int enc_main(int argc, char **argv)
             if (params == NULL)
                 goto end;
 
-            skey = EVP_SKEY_import(app_get0_libctx(), OPENSSL_BOX_EVP_SKEYMGMT_get0_name(mgmt),
+            skey = OPENSSL_BOX_EVP_SKEY_import(app_get0_libctx(), OPENSSL_BOX_EVP_SKEYMGMT_get0_name(mgmt),
                                    app_get0_propq(), OSSL_SKEYMGMT_SELECT_ALL, params);
             OSSL_PARAM_free(params);
             if (skey == NULL) {
@@ -696,7 +696,7 @@ int enc_main(int argc, char **argv)
                 goto end;
             }
 
-            if (!EVP_CipherInit_SKEY(ctx, cipher, skey,
+            if (!OPENSSL_BOX_EVP_CipherInit_SKEY(ctx, cipher, skey,
                                      (hiv == NULL && wrap == 1 ? NULL : iv),
                                      OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher), enc, NULL)) {
                 BIO_printf(bio_err, "Error setting an opaque key for cipher %s\n",

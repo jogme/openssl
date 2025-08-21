@@ -93,8 +93,8 @@ OpenSSL has built in implementations for the following output types:
 =item C<TEXT>
 
 The output is a human readable description of the key.
-L<EVP_PKEY_print_private(3)>, L<EVP_PKEY_print_public(3)> and
-L<EVP_PKEY_print_params(3)> use this for their output.
+L<OPENSSL_BOX_EVP_PKEY_print_private(3)>, L<OPENSSL_BOX_EVP_PKEY_print_public(3)> and
+L<OPENSSL_BOX_EVP_PKEY_print_params(3)> use this for their output.
 
 =item C<DER>
 
@@ -109,7 +109,7 @@ The output is the I<selection> of the I<pkey> in PEM format.
 =head2 Selections
 
 I<selection> can be any one of the values described in
-L<EVP_PKEY_fromdata(3)/Selections>.
+L<OPENSSL_BOX_EVP_PKEY_fromdata(3)/Selections>.
 
 These are only 'hints' since the encoder implementations are free to
 determine what makes sense to include in the output, and this may depend on

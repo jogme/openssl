@@ -89,7 +89,7 @@ int ASN1_sign(i2d_of_void *i2d, X509_ALGOR *algor1, X509_ALGOR *algor2,
     i2d(data, &p);
     if (!EVP_SignInit_ex(ctx, type, NULL)
         || !EVP_SignUpdate(ctx, (unsigned char *)buf_in, inl)
-        || !EVP_SignFinal(ctx, (unsigned char *)buf_out,
+        || !OPENSSL_BOX_EVP_SignFinal(ctx, (unsigned char *)buf_out,
                           (unsigned int *)&outl, pkey)) {
         outl = 0;
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
@@ -133,7 +133,7 @@ int ASN1_item_sign_ex(const ASN1_ITEM *it, X509_ALGOR *algor1,
         return 0;
     }
     /* We can use the non _ex variant here since the pkey is already setup */
-    if (!EVP_DigestSignInit(ctx, NULL, md, NULL, pkey))
+    if (!OPENSSL_BOX_EVP_DigestSignInit(ctx, NULL, md, NULL, pkey))
         goto err;
 
     rv = ASN1_item_sign_ctx(it, algor1, algor2, signature, data, ctx);
@@ -260,7 +260,7 @@ int ASN1_item_sign_ctx(const ASN1_ITEM *it, X509_ALGOR *algor1,
         goto err;
     }
     inl = buf_len;
-    if (!EVP_DigestSign(ctx, NULL, &outll, buf_in, inl)) {
+    if (!OPENSSL_BOX_EVP_DigestSign(ctx, NULL, &outll, buf_in, inl)) {
         outl = 0;
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         goto err;
@@ -272,7 +272,7 @@ int ASN1_item_sign_ctx(const ASN1_ITEM *it, X509_ALGOR *algor1,
         goto err;
     }
 
-    if (!EVP_DigestSign(ctx, buf_out, &outl, buf_in, inl)) {
+    if (!OPENSSL_BOX_EVP_DigestSign(ctx, buf_out, &outl, buf_in, inl)) {
         outl = 0;
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         goto err;

@@ -72,22 +72,22 @@ static int aes_wrap_encrypt(void)
     OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPHER_CTX_FLAG_WRAP_ALLOW);
 
     /* Fetch the cipher implementation */
-    if ((cipher = EVP_CIPHER_fetch(libctx, "AES-256-WRAP", propq)) == NULL)
+    if ((cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "AES-256-WRAP", propq)) == NULL)
         goto err;
 
     /*
      * Initialise an encrypt operation with the cipher/mode, key and IV.
      * We are not setting any custom params so let params be just NULL.
      */
-    if (!EVP_EncryptInit_ex2(ctx, cipher, wrap_key, wrap_iv, /* params */ NULL))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx, cipher, wrap_key, wrap_iv, /* params */ NULL))
         goto err;
 
     /* Encrypt plaintext */
-    if (!EVP_EncryptUpdate(ctx, outbuf, &outlen, wrap_pt, sizeof(wrap_pt)))
+    if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx, outbuf, &outlen, wrap_pt, sizeof(wrap_pt)))
         goto err;
 
     /* Finalise: there can be some additional output from padding */
-    if (!EVP_EncryptFinal_ex(ctx, outbuf + outlen, &tmplen))
+    if (!OPENSSL_BOX_EVP_EncryptFinal_ex(ctx, outbuf + outlen, &tmplen))
         goto err;
     outlen += tmplen;
 
@@ -129,22 +129,22 @@ static int aes_wrap_decrypt(void)
     OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPHER_CTX_FLAG_WRAP_ALLOW);
 
     /* Fetch the cipher implementation */
-    if ((cipher = EVP_CIPHER_fetch(libctx, "aes-256-wrap", propq)) == NULL)
+    if ((cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "aes-256-wrap", propq)) == NULL)
         goto err;
 
     /*
      * Initialise an encrypt operation with the cipher/mode, key and IV.
      * We are not setting any custom params so let params be just NULL.
      */
-    if (!EVP_DecryptInit_ex2(ctx, cipher, wrap_key, wrap_iv, /* params */ NULL))
+    if (!OPENSSL_BOX_EVP_DecryptInit_ex2(ctx, cipher, wrap_key, wrap_iv, /* params */ NULL))
         goto err;
 
     /* Decrypt plaintext */
-    if (!EVP_DecryptUpdate(ctx, outbuf, &outlen, wrap_ct, sizeof(wrap_ct)))
+    if (!OPENSSL_BOX_EVP_DecryptUpdate(ctx, outbuf, &outlen, wrap_ct, sizeof(wrap_ct)))
         goto err;
 
     /* Finalise: there can be some additional output from padding */
-    if (!EVP_DecryptFinal_ex(ctx, outbuf + outlen, &tmplen))
+    if (!OPENSSL_BOX_EVP_DecryptFinal_ex(ctx, outbuf + outlen, &tmplen))
         goto err;
     outlen += tmplen;
 

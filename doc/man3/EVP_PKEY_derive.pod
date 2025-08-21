@@ -3,7 +3,7 @@
 =head1 NAME
 
 OPENSSL_BOX_EVP_PKEY_derive_init, OPENSSL_BOX_EVP_PKEY_derive_init_ex,
-EVP_PKEY_derive_set_peer_ex, OPENSSL_BOX_EVP_PKEY_derive_set_peer, OPENSSL_BOX_EVP_PKEY_derive
+OPENSSL_BOX_EVP_PKEY_derive_set_peer_ex, OPENSSL_BOX_EVP_PKEY_derive_set_peer, OPENSSL_BOX_EVP_PKEY_derive
 - derive public key algorithm shared secret
 
 =head1 SYNOPSIS
@@ -12,7 +12,7 @@ EVP_PKEY_derive_set_peer_ex, OPENSSL_BOX_EVP_PKEY_derive_set_peer, OPENSSL_BOX_E
 
  int OPENSSL_BOX_EVP_PKEY_derive_init(EVP_PKEY_CTX *ctx);
  int OPENSSL_BOX_EVP_PKEY_derive_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[]);
- int EVP_PKEY_derive_set_peer_ex(EVP_PKEY_CTX *ctx, EVP_PKEY *peer,
+ int OPENSSL_BOX_EVP_PKEY_derive_set_peer_ex(EVP_PKEY_CTX *ctx, EVP_PKEY *peer,
                                  int validate_peer);
  int OPENSSL_BOX_EVP_PKEY_derive_set_peer(EVP_PKEY_CTX *ctx, EVP_PKEY *peer);
  int OPENSSL_BOX_EVP_PKEY_derive(EVP_PKEY_CTX *ctx, unsigned char *key, size_t *keylen);
@@ -28,11 +28,11 @@ more information about implicit fetches.
 OPENSSL_BOX_EVP_PKEY_derive_init_ex() is the same as OPENSSL_BOX_EVP_PKEY_derive_init() but additionally
 sets the passed parameters I<params> on the context before returning.
 
-EVP_PKEY_derive_set_peer_ex() sets the peer key: this will normally
+OPENSSL_BOX_EVP_PKEY_derive_set_peer_ex() sets the peer key: this will normally
 be a public key. The I<validate_peer> will validate the public key if this value
 is non zero.
 
-OPENSSL_BOX_EVP_PKEY_derive_set_peer() is similar to EVP_PKEY_derive_set_peer_ex() with
+OPENSSL_BOX_EVP_PKEY_derive_set_peer() is similar to OPENSSL_BOX_EVP_PKEY_derive_set_peer_ex() with
 I<validate_peer> set to 1.
 
 OPENSSL_BOX_EVP_PKEY_derive() derives a shared secret using I<ctx>.
@@ -97,19 +97,19 @@ Derive shared secret (for example DH or EC keys):
 =head1 SEE ALSO
 
 L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
-L<EVP_PKEY_encrypt(3)>,
-L<EVP_PKEY_decrypt(3)>,
-L<EVP_PKEY_sign(3)>,
-L<EVP_PKEY_verify(3)>,
-L<EVP_PKEY_verify_recover(3)>,
-L<EVP_KEYEXCH_fetch(3)>
+L<OPENSSL_BOX_EVP_PKEY_encrypt(3)>,
+L<OPENSSL_BOX_EVP_PKEY_decrypt(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify_recover(3)>,
+L<OPENSSL_BOX_EVP_KEYEXCH_fetch(3)>
 
 =head1 HISTORY
 
 The OPENSSL_BOX_EVP_PKEY_derive_init(), OPENSSL_BOX_EVP_PKEY_derive_set_peer() and OPENSSL_BOX_EVP_PKEY_derive()
 functions were originally added in OpenSSL 1.0.0.
 
-The OPENSSL_BOX_EVP_PKEY_derive_init_ex() and EVP_PKEY_derive_set_peer_ex() functions were
+The OPENSSL_BOX_EVP_PKEY_derive_init_ex() and OPENSSL_BOX_EVP_PKEY_derive_set_peer_ex() functions were
 added in OpenSSL 3.0.
 
 =head1 COPYRIGHT

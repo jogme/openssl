@@ -40,8 +40,8 @@ see L<openssl_user_macros(7)>:
 =head1 DESCRIPTION
 
 All of the functions described on this page are deprecated.
-Applications should instead use L<EVP_PKEY_print_params(3)> and
-L<EVP_PKEY_print_private(3)>.
+Applications should instead use L<OPENSSL_BOX_EVP_PKEY_print_params(3)> and
+L<OPENSSL_BOX_EVP_PKEY_print_private(3)>.
 
 A human-readable hexadecimal output of the components of the RSA
 key, DSA parameters or key or DH parameters is printed to B<bp> or B<fp>.
@@ -57,8 +57,8 @@ DHparams_print() and DHparams_print_fp() return 1 on success, 0 on error.
 
 =head1 SEE ALSO
 
- L<EVP_PKEY_print_params(3)>,
- L<EVP_PKEY_print_private(3)>,
+ L<OPENSSL_BOX_EVP_PKEY_print_params(3)>,
+ L<OPENSSL_BOX_EVP_PKEY_print_private(3)>,
  L<BN_bn2bin(3)>
 
 =head1 HISTORY

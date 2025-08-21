@@ -121,12 +121,12 @@ static void list_ciphers(const char *prefix)
 #ifndef OPENSSL_NO_DEPRECATED_3_0
     if (include_legacy()) {
         BIO_printf(bio_out, "%sLegacy:\n", prefix);
-        EVP_CIPHER_do_all_sorted(legacy_cipher_fn, bio_out);
+        OPENSSL_BOX_EVP_CIPHER_do_all_sorted(legacy_cipher_fn, bio_out);
     }
 #endif
 
     BIO_printf(bio_out, "%sProvided:\n", prefix);
-    EVP_CIPHER_do_all_provided(app_get0_libctx(), collect_ciphers, ciphers);
+    OPENSSL_BOX_EVP_CIPHER_do_all_provided(app_get0_libctx(), collect_ciphers, ciphers);
     sk_EVP_CIPHER_sort(ciphers);
     for (i = 0; i < sk_EVP_CIPHER_num(ciphers); i++) {
         const EVP_CIPHER *c = sk_EVP_CIPHER_value(ciphers, i);
@@ -136,7 +136,7 @@ static void list_ciphers(const char *prefix)
             continue;
 
         names = sk_OPENSSL_CSTRING_new(name_cmp);
-        if (names != NULL && EVP_CIPHER_names_do_all(c, collect_names, names)) {
+        if (names != NULL && OPENSSL_BOX_EVP_CIPHER_names_do_all(c, collect_names, names)) {
             BIO_printf(bio_out, "  ");
             print_names(bio_out, names);
 
@@ -206,12 +206,12 @@ static void list_digests(const char *prefix)
 #ifndef OPENSSL_NO_DEPRECATED_3_0
     if (include_legacy()) {
         BIO_printf(bio_out, "%sLegacy:\n", prefix);
-        EVP_MD_do_all_sorted(legacy_md_fn, bio_out);
+        OPENSSL_BOX_EVP_MD_do_all_sorted(legacy_md_fn, bio_out);
     }
 #endif
 
     BIO_printf(bio_out, "%sProvided:\n", prefix);
-    EVP_MD_do_all_provided(app_get0_libctx(), collect_digests, digests);
+    OPENSSL_BOX_EVP_MD_do_all_provided(app_get0_libctx(), collect_digests, digests);
     sk_EVP_MD_sort(digests);
     for (i = 0; i < sk_EVP_MD_num(digests); i++) {
         const EVP_MD *m = sk_EVP_MD_value(digests, i);
@@ -221,7 +221,7 @@ static void list_digests(const char *prefix)
             continue;
 
         names = sk_OPENSSL_CSTRING_new(name_cmp);
-        if (names != NULL && EVP_MD_names_do_all(m, collect_names, names)) {
+        if (names != NULL && OPENSSL_BOX_EVP_MD_names_do_all(m, collect_names, names)) {
             BIO_printf(bio_out, "  ");
             print_names(bio_out, names);
 
@@ -272,7 +272,7 @@ static void list_macs(void)
         return;
     }
     BIO_printf(bio_out, "Provided MACs:\n");
-    EVP_MAC_do_all_provided(app_get0_libctx(), collect_macs, macs);
+    OPENSSL_BOX_EVP_MAC_do_all_provided(app_get0_libctx(), collect_macs, macs);
     sk_EVP_MAC_sort(macs);
     for (i = 0; i < sk_EVP_MAC_num(macs); i++) {
         const EVP_MAC *m = sk_EVP_MAC_value(macs, i);
@@ -282,7 +282,7 @@ static void list_macs(void)
             continue;
 
         names = sk_OPENSSL_CSTRING_new(name_cmp);
-        if (names != NULL && EVP_MAC_names_do_all(m, collect_names, names)) {
+        if (names != NULL && OPENSSL_BOX_EVP_MAC_names_do_all(m, collect_names, names)) {
             BIO_printf(bio_out, "  ");
             print_names(bio_out, names);
 
@@ -408,7 +408,7 @@ static void list_random_generators(void)
         return;
     }
     BIO_printf(bio_out, "Provided RNGs and seed sources:\n");
-    EVP_RAND_do_all_provided(app_get0_libctx(), collect_rands, rands);
+    OPENSSL_BOX_EVP_RAND_do_all_provided(app_get0_libctx(), collect_rands, rands);
     sk_EVP_RAND_sort(rands);
     for (i = 0; i < sk_EVP_RAND_num(rands); i++) {
         const EVP_RAND *m = sk_EVP_RAND_value(rands, i);
@@ -659,7 +659,7 @@ static void list_keymanagers(void)
     int i;
     STACK_OF(EVP_KEYMGMT) *km_stack = sk_EVP_KEYMGMT_new(keymanager_cmp);
 
-    EVP_KEYMGMT_do_all_provided(app_get0_libctx(), collect_keymanagers,
+    OPENSSL_BOX_EVP_KEYMGMT_do_all_provided(app_get0_libctx(), collect_keymanagers,
                                 km_stack);
     sk_EVP_KEYMGMT_sort(km_stack);
 
@@ -671,7 +671,7 @@ static void list_keymanagers(void)
             continue;
 
         names = sk_OPENSSL_CSTRING_new(name_cmp);
-        if (names != NULL && EVP_KEYMGMT_names_do_all(k, collect_names, names)) {
+        if (names != NULL && OPENSSL_BOX_EVP_KEYMGMT_names_do_all(k, collect_names, names)) {
             const char *desc = OPENSSL_BOX_EVP_KEYMGMT_get0_description(k);
 
             BIO_printf(bio_out, "  Name: ");
@@ -722,7 +722,7 @@ static void list_skeymanagers(void)
     int i;
     STACK_OF(EVP_SKEYMGMT) *km_stack = sk_EVP_SKEYMGMT_new(skeymanager_cmp);
 
-    EVP_SKEYMGMT_do_all_provided(app_get0_libctx(), collect_skeymanagers,
+    OPENSSL_BOX_EVP_SKEYMGMT_do_all_provided(app_get0_libctx(), collect_skeymanagers,
                                  km_stack);
     sk_EVP_SKEYMGMT_sort(km_stack);
 
@@ -734,7 +734,7 @@ static void list_skeymanagers(void)
             continue;
 
         names = sk_OPENSSL_CSTRING_new(name_cmp);
-        if (names != NULL && EVP_SKEYMGMT_names_do_all(k, collect_names, names)) {
+        if (names != NULL && OPENSSL_BOX_EVP_SKEYMGMT_names_do_all(k, collect_names, names)) {
             const char *desc = OPENSSL_BOX_EVP_SKEYMGMT_get0_description(k);
 
             BIO_printf(bio_out, "  Name: ");
@@ -778,7 +778,7 @@ static void list_signatures(void)
     int i, count = 0;
     STACK_OF(EVP_SIGNATURE) *sig_stack = sk_EVP_SIGNATURE_new(signature_cmp);
 
-    EVP_SIGNATURE_do_all_provided(app_get0_libctx(), collect_signatures,
+    OPENSSL_BOX_EVP_SIGNATURE_do_all_provided(app_get0_libctx(), collect_signatures,
                                   sig_stack);
     sk_EVP_SIGNATURE_sort(sig_stack);
 
@@ -790,7 +790,7 @@ static void list_signatures(void)
             continue;
 
         names = sk_OPENSSL_CSTRING_new(name_cmp);
-        if (names != NULL && EVP_SIGNATURE_names_do_all(k, collect_names, names)) {
+        if (names != NULL && OPENSSL_BOX_EVP_SIGNATURE_names_do_all(k, collect_names, names)) {
             count++;
             BIO_printf(bio_out, "  ");
             print_names(bio_out, names);
@@ -923,7 +923,7 @@ static void list_kems(void)
     int i, count = 0;
     STACK_OF(EVP_KEM) *kem_stack = sk_EVP_KEM_new(kem_cmp);
 
-    EVP_KEM_do_all_provided(app_get0_libctx(), collect_kem, kem_stack);
+    OPENSSL_BOX_EVP_KEM_do_all_provided(app_get0_libctx(), collect_kem, kem_stack);
     sk_EVP_KEM_sort(kem_stack);
 
     for (i = 0; i < sk_EVP_KEM_num(kem_stack); i++) {
@@ -934,7 +934,7 @@ static void list_kems(void)
             continue;
 
         names = sk_OPENSSL_CSTRING_new(name_cmp);
-        if (names != NULL && EVP_KEM_names_do_all(k, collect_names, names)) {
+        if (names != NULL && OPENSSL_BOX_EVP_KEM_names_do_all(k, collect_names, names)) {
             count++;
             BIO_printf(bio_out, "  ");
             print_names(bio_out, names);
@@ -984,7 +984,7 @@ static void list_asymciphers(void)
     STACK_OF(EVP_ASYM_CIPHER) *asymciph_stack =
         sk_EVP_ASYM_CIPHER_new(asymcipher_cmp);
 
-    EVP_ASYM_CIPHER_do_all_provided(app_get0_libctx(), collect_asymciph,
+    OPENSSL_BOX_EVP_ASYM_CIPHER_do_all_provided(app_get0_libctx(), collect_asymciph,
                                     asymciph_stack);
     sk_EVP_ASYM_CIPHER_sort(asymciph_stack);
 
@@ -997,7 +997,7 @@ static void list_asymciphers(void)
 
         names = sk_OPENSSL_CSTRING_new(name_cmp);
         if (names != NULL
-                && EVP_ASYM_CIPHER_names_do_all(k, collect_names, names)) {
+                && OPENSSL_BOX_EVP_ASYM_CIPHER_names_do_all(k, collect_names, names)) {
             count++;
             BIO_printf(bio_out, "  ");
             print_names(bio_out, names);
@@ -1046,7 +1046,7 @@ static void list_keyexchanges(void)
     int i, count = 0;
     STACK_OF(EVP_KEYEXCH) *kex_stack = sk_EVP_KEYEXCH_new(kex_cmp);
 
-    EVP_KEYEXCH_do_all_provided(app_get0_libctx(), collect_kex, kex_stack);
+    OPENSSL_BOX_EVP_KEYEXCH_do_all_provided(app_get0_libctx(), collect_kex, kex_stack);
     sk_EVP_KEYEXCH_sort(kex_stack);
 
     for (i = 0; i < sk_EVP_KEYEXCH_num(kex_stack); i++) {
@@ -1057,7 +1057,7 @@ static void list_keyexchanges(void)
             continue;
 
         names = sk_OPENSSL_CSTRING_new(name_cmp);
-        if (names != NULL && EVP_KEYEXCH_names_do_all(k, collect_names, names)) {
+        if (names != NULL && OPENSSL_BOX_EVP_KEYEXCH_names_do_all(k, collect_names, names)) {
             count++;
             BIO_printf(bio_out, "  ");
             print_names(bio_out, names);
@@ -1174,7 +1174,7 @@ static int is_md_available(const char *name)
 
     /* Look through providers' digests */
     ERR_set_mark();
-    md = EVP_MD_fetch(app_get0_libctx(), name, propq);
+    md = OPENSSL_BOX_EVP_MD_fetch(app_get0_libctx(), name, propq);
     ERR_pop_to_mark();
     if (md != NULL) {
         OPENSSL_BOX_EVP_MD_free(md);
@@ -1191,7 +1191,7 @@ static int is_cipher_available(const char *name)
 
     /* Look through providers' ciphers */
     ERR_set_mark();
-    cipher = EVP_CIPHER_fetch(app_get0_libctx(), name, propq);
+    cipher = OPENSSL_BOX_EVP_CIPHER_fetch(app_get0_libctx(), name, propq);
     ERR_pop_to_mark();
     if (cipher != NULL) {
         OPENSSL_BOX_EVP_CIPHER_free(cipher);
@@ -1251,7 +1251,7 @@ static void list_pkey(void)
             int pkey_id, pkey_base_id, pkey_flags;
             const char *pinfo, *pem_str;
             ameth = OPENSSL_BOX_EVP_PKEY_asn1_get0(i);
-            EVP_PKEY_asn1_get0_info(&pkey_id, &pkey_base_id, &pkey_flags,
+            OPENSSL_BOX_EVP_PKEY_asn1_get0_info(&pkey_id, &pkey_base_id, &pkey_flags,
                                     &pinfo, &pem_str, ameth);
             if (pkey_flags & ASN1_PKEY_ALIAS) {
                 BIO_printf(bio_out, " Name: %s\n", OBJ_nid2ln(pkey_id));
@@ -1287,7 +1287,7 @@ static void list_pkey_meth(void)
             const EVP_PKEY_METHOD *pmeth = OPENSSL_BOX_EVP_PKEY_meth_get0(i);
             int pkey_id, pkey_flags;
 
-            EVP_PKEY_meth_get0_info(&pkey_id, &pkey_flags, pmeth);
+            OPENSSL_BOX_EVP_PKEY_meth_get0_info(&pkey_id, &pkey_flags, pmeth);
             BIO_printf(bio_out, " %s\n", OBJ_nid2ln(pkey_id));
             BIO_printf(bio_out, "\tType: %s Algorithm\n",
                        pkey_flags & ASN1_PKEY_DYNAMIC ?  "External" : "Builtin");

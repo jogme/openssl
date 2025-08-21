@@ -122,11 +122,11 @@ static int dh_cms_set_shared_info(EVP_PKEY_CTX *pctx, CMS_RecipientInfo *ri)
     if (OBJ_obj2txt(name, sizeof(name), kekalg->algorithm, 0) <= 0)
         goto err;
 
-    kekcipher = EVP_CIPHER_fetch(pctx->libctx, name, pctx->propquery);
+    kekcipher = OPENSSL_BOX_EVP_CIPHER_fetch(pctx->libctx, name, pctx->propquery);
     if (kekcipher == NULL
         || OPENSSL_BOX_EVP_CIPHER_get_mode(kekcipher) != EVP_CIPH_WRAP_MODE)
         goto err;
-    if (!EVP_EncryptInit_ex(kekctx, kekcipher, NULL, NULL, NULL))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex(kekctx, kekcipher, NULL, NULL, NULL))
         goto err;
     if (OPENSSL_BOX_EVP_CIPHER_asn1_to_param(kekctx, kekalg->parameter) <= 0)
         goto err;
@@ -221,7 +221,7 @@ static int dh_cms_encrypt(CMS_RecipientInfo *ri)
         BIGNUM *bn_pub_key = NULL;
         ASN1_INTEGER *pubk;
 
-        if (!EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_PUB_KEY, &bn_pub_key))
+        if (!OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_PUB_KEY, &bn_pub_key))
             goto err;
 
         pubk = BN_to_ASN1_INTEGER(bn_pub_key, NULL);

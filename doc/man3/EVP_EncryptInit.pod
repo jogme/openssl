@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-EVP_CIPHER_fetch,
+OPENSSL_BOX_EVP_CIPHER_fetch,
 OPENSSL_BOX_EVP_CIPHER_up_ref,
 OPENSSL_BOX_EVP_CIPHER_free,
 OPENSSL_BOX_EVP_CIPHER_CTX_new,
@@ -10,40 +10,40 @@ OPENSSL_BOX_EVP_CIPHER_CTX_reset,
 OPENSSL_BOX_EVP_CIPHER_CTX_free,
 OPENSSL_BOX_EVP_CIPHER_CTX_dup,
 OPENSSL_BOX_EVP_CIPHER_CTX_copy,
-EVP_EncryptInit_ex,
-EVP_EncryptInit_ex2,
-EVP_EncryptUpdate,
-EVP_EncryptFinal_ex,
-EVP_DecryptInit_ex,
-EVP_DecryptInit_ex2,
-EVP_DecryptUpdate,
-EVP_DecryptFinal_ex,
-EVP_CipherInit_ex,
-EVP_CipherInit_ex2,
-EVP_CipherInit_SKEY,
-EVP_CipherUpdate,
-EVP_CipherFinal_ex,
+OPENSSL_BOX_EVP_EncryptInit_ex,
+OPENSSL_BOX_EVP_EncryptInit_ex2,
+OPENSSL_BOX_EVP_EncryptUpdate,
+OPENSSL_BOX_EVP_EncryptFinal_ex,
+OPENSSL_BOX_EVP_DecryptInit_ex,
+OPENSSL_BOX_EVP_DecryptInit_ex2,
+OPENSSL_BOX_EVP_DecryptUpdate,
+OPENSSL_BOX_EVP_DecryptFinal_ex,
+OPENSSL_BOX_EVP_CipherInit_ex,
+OPENSSL_BOX_EVP_CipherInit_ex2,
+OPENSSL_BOX_EVP_CipherInit_SKEY,
+OPENSSL_BOX_EVP_CipherUpdate,
+OPENSSL_BOX_EVP_CipherFinal_ex,
 OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length,
 OPENSSL_BOX_EVP_CIPHER_CTX_ctrl,
-EVP_EncryptInit,
-EVP_EncryptFinal,
-EVP_DecryptInit,
-EVP_DecryptFinal,
-EVP_CipherInit,
-EVP_CipherFinal,
-EVP_Cipher,
+OPENSSL_BOX_EVP_EncryptInit,
+OPENSSL_BOX_EVP_EncryptFinal,
+OPENSSL_BOX_EVP_DecryptInit,
+OPENSSL_BOX_EVP_DecryptFinal,
+OPENSSL_BOX_EVP_CipherInit,
+OPENSSL_BOX_EVP_CipherFinal,
+OPENSSL_BOX_EVP_Cipher,
 OPENSSL_BOX_EVP_CIPHER_can_pipeline,
-EVP_CipherPipelineEncryptInit,
-EVP_CipherPipelineDecryptInit,
-EVP_CipherPipelineUpdate,
-EVP_CipherPipelineFinal,
+OPENSSL_BOX_EVP_CipherPipelineEncryptInit,
+OPENSSL_BOX_EVP_CipherPipelineDecryptInit,
+OPENSSL_BOX_EVP_CipherPipelineUpdate,
+OPENSSL_BOX_EVP_CipherPipelineFinal,
 OPENSSL_BOX_EVP_get_cipherbyname,
 EVP_get_cipherbynid,
 EVP_get_cipherbyobj,
 OPENSSL_BOX_EVP_CIPHER_is_a,
 OPENSSL_BOX_EVP_CIPHER_get0_name,
 OPENSSL_BOX_EVP_CIPHER_get0_description,
-EVP_CIPHER_names_do_all,
+OPENSSL_BOX_EVP_CIPHER_names_do_all,
 OPENSSL_BOX_EVP_CIPHER_get0_provider,
 OPENSSL_BOX_EVP_CIPHER_get_nid,
 OPENSSL_BOX_EVP_CIPHER_get_params,
@@ -84,7 +84,7 @@ OPENSSL_BOX_EVP_CIPHER_param_to_asn1,
 OPENSSL_BOX_EVP_CIPHER_asn1_to_param,
 OPENSSL_BOX_EVP_CIPHER_CTX_set_padding,
 OPENSSL_BOX_EVP_enc_null,
-EVP_CIPHER_do_all_provided,
+OPENSSL_BOX_EVP_CIPHER_do_all_provided,
 EVP_CIPHER_nid,
 EVP_CIPHER_name,
 EVP_CIPHER_block_size,
@@ -110,7 +110,7 @@ EVP_CIPHER_CTX_mode
 
  #include <openssl/evp.h>
 
- EVP_CIPHER *EVP_CIPHER_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
+ EVP_CIPHER *OPENSSL_BOX_EVP_CIPHER_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
                               const char *properties);
  int OPENSSL_BOX_EVP_CIPHER_up_ref(EVP_CIPHER *cipher);
  void OPENSSL_BOX_EVP_CIPHER_free(EVP_CIPHER *cipher);
@@ -120,67 +120,67 @@ EVP_CIPHER_CTX_mode
  EVP_CIPHER_CTX *OPENSSL_BOX_EVP_CIPHER_CTX_dup(const EVP_CIPHER_CTX *in);
  int OPENSSL_BOX_EVP_CIPHER_CTX_copy(EVP_CIPHER_CTX *out, const EVP_CIPHER_CTX *in);
 
- int EVP_EncryptInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
+ int OPENSSL_BOX_EVP_EncryptInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
                         ENGINE *impl, const unsigned char *key, const unsigned char *iv);
- int EVP_EncryptInit_ex2(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
+ int OPENSSL_BOX_EVP_EncryptInit_ex2(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
                          const unsigned char *key, const unsigned char *iv,
                          const OSSL_PARAM params[]);
- int EVP_EncryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out,
+ int OPENSSL_BOX_EVP_EncryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out,
                        int *outl, const unsigned char *in, int inl);
- int EVP_EncryptFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl);
+ int OPENSSL_BOX_EVP_EncryptFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl);
 
- int EVP_DecryptInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
+ int OPENSSL_BOX_EVP_DecryptInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
                         ENGINE *impl, const unsigned char *key, const unsigned char *iv);
- int EVP_DecryptInit_ex2(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
+ int OPENSSL_BOX_EVP_DecryptInit_ex2(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
                          const unsigned char *key, const unsigned char *iv,
                          const OSSL_PARAM params[]);
- int EVP_DecryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out,
+ int OPENSSL_BOX_EVP_DecryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out,
                        int *outl, const unsigned char *in, int inl);
- int EVP_DecryptFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *outm, int *outl);
+ int OPENSSL_BOX_EVP_DecryptFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *outm, int *outl);
 
- int EVP_CipherInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
+ int OPENSSL_BOX_EVP_CipherInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
                        ENGINE *impl, const unsigned char *key, const unsigned char *iv, int enc);
- int EVP_CipherInit_ex2(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
+ int OPENSSL_BOX_EVP_CipherInit_ex2(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
                         const unsigned char *key, const unsigned char *iv,
                         int enc, const OSSL_PARAM params[]);
- int EVP_CipherInit_SKEY(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+ int OPENSSL_BOX_EVP_CipherInit_SKEY(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                          EVP_SKEY *skey, const unsigned char *iv, size_t iv_len,
                          int enc, const OSSL_PARAM params[]);
- int EVP_CipherUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out,
+ int OPENSSL_BOX_EVP_CipherUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out,
                       int *outl, const unsigned char *in, int inl);
- int EVP_CipherFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *outm, int *outl);
+ int OPENSSL_BOX_EVP_CipherFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *outm, int *outl);
 
- int EVP_EncryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
+ int OPENSSL_BOX_EVP_EncryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
                      const unsigned char *key, const unsigned char *iv);
- int EVP_EncryptFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl);
+ int OPENSSL_BOX_EVP_EncryptFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl);
 
- int EVP_DecryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
+ int OPENSSL_BOX_EVP_DecryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
                      const unsigned char *key, const unsigned char *iv);
- int EVP_DecryptFinal(EVP_CIPHER_CTX *ctx, unsigned char *outm, int *outl);
+ int OPENSSL_BOX_EVP_DecryptFinal(EVP_CIPHER_CTX *ctx, unsigned char *outm, int *outl);
 
- int EVP_CipherInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
+ int OPENSSL_BOX_EVP_CipherInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
                     const unsigned char *key, const unsigned char *iv, int enc);
- int EVP_CipherFinal(EVP_CIPHER_CTX *ctx, unsigned char *outm, int *outl);
+ int OPENSSL_BOX_EVP_CipherFinal(EVP_CIPHER_CTX *ctx, unsigned char *outm, int *outl);
 
- int EVP_Cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
+ int OPENSSL_BOX_EVP_Cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                 const unsigned char *in, unsigned int inl);
 
  int OPENSSL_BOX_EVP_CIPHER_can_pipeline(const EVP_CIPHER *cipher, int enc);
- int EVP_CipherPipelineEncryptInit(EVP_CIPHER_CTX *ctx,
+ int OPENSSL_BOX_EVP_CipherPipelineEncryptInit(EVP_CIPHER_CTX *ctx,
                                    const EVP_CIPHER *cipher,
                                    const unsigned char *key, size_t keylen,
                                    size_t numpipes,
                                    const unsigned char **iv, size_t ivlen);
- int EVP_CipherPipelineDecryptInit(EVP_CIPHER_CTX *ctx,
+ int OPENSSL_BOX_EVP_CipherPipelineDecryptInit(EVP_CIPHER_CTX *ctx,
                                    const EVP_CIPHER *cipher,
                                    const unsigned char *key, size_t keylen,
                                    size_t numpipes,
                                    const unsigned char **iv, size_t ivlen);
- int EVP_CipherPipelineUpdate(EVP_CIPHER_CTX *ctx,
+ int OPENSSL_BOX_EVP_CipherPipelineUpdate(EVP_CIPHER_CTX *ctx,
                               unsigned char **out, size_t *outl,
                               const size_t *outsize,
                               const unsigned char **in, const size_t *inl);
- int EVP_CipherPipelineFinal(EVP_CIPHER_CTX *ctx,
+ int OPENSSL_BOX_EVP_CipherPipelineFinal(EVP_CIPHER_CTX *ctx,
                              unsigned char **outm, size_t *outl,
                              const size_t *outsize);
 
@@ -198,7 +198,7 @@ EVP_CIPHER_CTX_mode
 
  int OPENSSL_BOX_EVP_CIPHER_get_nid(const EVP_CIPHER *e);
  int OPENSSL_BOX_EVP_CIPHER_is_a(const EVP_CIPHER *cipher, const char *name);
- int EVP_CIPHER_names_do_all(const EVP_CIPHER *cipher,
+ int OPENSSL_BOX_EVP_CIPHER_names_do_all(const EVP_CIPHER *cipher,
                              void (*fn)(const char *name, void *data),
                              void *data);
  const char *OPENSSL_BOX_EVP_CIPHER_get0_name(const EVP_CIPHER *cipher);
@@ -239,7 +239,7 @@ EVP_CIPHER_CTX_mode
  int OPENSSL_BOX_EVP_CIPHER_param_to_asn1(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
  int OPENSSL_BOX_EVP_CIPHER_asn1_to_param(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
 
- void EVP_CIPHER_do_all_provided(OSSL_LIB_CTX *libctx,
+ void OPENSSL_BOX_EVP_CIPHER_do_all_provided(OSSL_LIB_CTX *libctx,
                                  void (*fn)(EVP_CIPHER *cipher, void *arg),
                                  void *arg);
 
@@ -282,7 +282,7 @@ The B<EVP_CIPHER> type is a structure for cipher method implementation.
 
 =over 4
 
-=item EVP_CIPHER_fetch()
+=item OPENSSL_BOX_EVP_CIPHER_fetch()
 
 Fetches the cipher implementation for the given I<algorithm> from any provider
 offering it, within the criteria given by the I<properties>.
@@ -316,7 +316,7 @@ not remain in memory. If the argument is NULL, nothing is done.
 =item OPENSSL_BOX_EVP_CIPHER_CTX_dup()
 
 Can be used to duplicate the cipher state from I<in>.  This is useful
-to avoid multiple EVP_CIPHER_fetch() calls or if large amounts of data are to be
+to avoid multiple OPENSSL_BOX_EVP_CIPHER_fetch() calls or if large amounts of data are to be
 fed which only differ in the last few bytes.
 
 =item OPENSSL_BOX_EVP_CIPHER_CTX_copy()
@@ -331,7 +331,7 @@ parameters that are used by providers.
 
 Performs cipher-specific control actions on context I<ctx>. The control command
 is indicated in I<cmd> and any additional arguments in I<p1> and I<p2>.
-OPENSSL_BOX_EVP_CIPHER_CTX_ctrl() must be called after EVP_CipherInit_ex2(). Other restrictions
+OPENSSL_BOX_EVP_CIPHER_CTX_ctrl() must be called after OPENSSL_BOX_EVP_CipherInit_ex2(). Other restrictions
 may apply depending on the control type and cipher implementation.
 
 If this function happens to be used with a fetched B<EVP_CIPHER>, it will
@@ -378,10 +378,10 @@ OPENSSL_BOX_EVP_CIPHER_settable_ctx_params() returns the parameters that can be 
 algorithm, whereas OPENSSL_BOX_EVP_CIPHER_CTX_settable_params() returns the parameters that
 can be set in the context's current state.
 
-=item EVP_EncryptInit_ex2()
+=item OPENSSL_BOX_EVP_EncryptInit_ex2()
 
 Sets up cipher context I<ctx> for encryption with cipher I<type>. I<ctx> B<MUST NOT> be NULL.
-I<type> is typically supplied by calling EVP_CIPHER_fetch(). I<type> may also be set
+I<type> is typically supplied by calling OPENSSL_BOX_EVP_CIPHER_fetch(). I<type> may also be set
 using legacy functions such as OPENSSL_BOX_EVP_aes_256_cbc(), but this is not recommended
 for new applications. I<key> is the symmetric key to use and I<iv> is the IV to
 use (if necessary), the actual number of bytes used for the key and IV depends
@@ -393,13 +393,13 @@ are not appropriate.
 For B<EVP_CIPH_GCM_MODE> the IV will be generated internally if it is not
 specified.
 
-=item EVP_EncryptInit_ex()
+=item OPENSSL_BOX_EVP_EncryptInit_ex()
 
-This legacy function is similar to EVP_EncryptInit_ex2() when I<impl> is NULL.
+This legacy function is similar to OPENSSL_BOX_EVP_EncryptInit_ex2() when I<impl> is NULL.
 The implementation of the I<type> from the I<impl> engine will be used if it
 exists.
 
-=item EVP_EncryptUpdate()
+=item OPENSSL_BOX_EVP_EncryptUpdate()
 
 Encrypts I<inl> bytes from the buffer I<in> and writes the encrypted version to
 I<out>. The pointers I<out> and I<in> may point to the same location, in which
@@ -424,38 +424,38 @@ Thus, the buffer pointed to by I<out> must contain sufficient room for the
 operation being performed.
 The actual number of bytes written is placed in I<outl>.
 
-If padding is enabled (the default) then EVP_EncryptFinal_ex() encrypts
+If padding is enabled (the default) then OPENSSL_BOX_EVP_EncryptFinal_ex() encrypts
 the "final" data, that is any data that remains in a partial block.
 It uses standard block padding (aka PKCS padding) as described in
 the NOTES section, below. The encrypted
 final data is written to I<out> which should have sufficient space for
 one cipher block. The number of bytes written is placed in I<outl>. After
 this function is called the encryption operation is finished and no further
-calls to EVP_EncryptUpdate() should be made.
+calls to OPENSSL_BOX_EVP_EncryptUpdate() should be made.
 
-If padding is disabled then EVP_EncryptFinal_ex() will not encrypt any more
+If padding is disabled then OPENSSL_BOX_EVP_EncryptFinal_ex() will not encrypt any more
 data and it will return an error if any data remains in a partial block:
 that is if the total data length is not a multiple of the block size.
 
-=item EVP_DecryptInit_ex2(), EVP_DecryptInit_ex(), EVP_DecryptUpdate()
-and EVP_DecryptFinal_ex()
+=item OPENSSL_BOX_EVP_DecryptInit_ex2(), OPENSSL_BOX_EVP_DecryptInit_ex(), OPENSSL_BOX_EVP_DecryptUpdate()
+and OPENSSL_BOX_EVP_DecryptFinal_ex()
 
 These functions are the corresponding decryption operations.
-EVP_DecryptFinal() will return an error code if padding is enabled and the
+OPENSSL_BOX_EVP_DecryptFinal() will return an error code if padding is enabled and the
 final block is not correctly formatted. The parameters and restrictions are
 identical to the encryption operations. I<ctx> B<MUST NOT> be NULL.
 
-=item EVP_CipherInit_ex2(), EVP_CipherInit_ex(), EVP_CipherUpdate() and
-EVP_CipherFinal_ex()
+=item OPENSSL_BOX_EVP_CipherInit_ex2(), OPENSSL_BOX_EVP_CipherInit_ex(), OPENSSL_BOX_EVP_CipherUpdate() and
+OPENSSL_BOX_EVP_CipherFinal_ex()
 
 These functions can be used for decryption or encryption. The operation
 performed depends on the value of the I<enc> parameter. It should be set to 1
 for encryption, 0 for decryption and -1 to leave the value unchanged
 (the actual value of 'enc' being supplied in a previous call).
 
-=item EVP_CipherInit_SKEY()
+=item OPENSSL_BOX_EVP_CipherInit_SKEY()
 
-This function is similar to EVP_CipherInit_ex2() but accepts a
+This function is similar to OPENSSL_BOX_EVP_CipherInit_ex2() but accepts a
 symmetric key object of type I<EVP_SKEY> as a key.
 
 =item OPENSSL_BOX_EVP_CIPHER_CTX_reset()
@@ -463,22 +463,22 @@ symmetric key object of type I<EVP_SKEY> as a key.
 Clears all information from a cipher context and free up any allocated memory
 associated with it, except the I<ctx> itself. This function should be called
 anytime I<ctx> is reused by another
-EVP_CipherInit() / EVP_CipherUpdate() / EVP_CipherFinal() series of calls.
+OPENSSL_BOX_EVP_CipherInit() / OPENSSL_BOX_EVP_CipherUpdate() / OPENSSL_BOX_EVP_CipherFinal() series of calls.
 
-=item EVP_EncryptInit(), EVP_DecryptInit() and EVP_CipherInit()
+=item OPENSSL_BOX_EVP_EncryptInit(), OPENSSL_BOX_EVP_DecryptInit() and OPENSSL_BOX_EVP_CipherInit()
 
-Behave in a similar way to EVP_EncryptInit_ex(), EVP_DecryptInit_ex() and
-EVP_CipherInit_ex() except if the I<type> is not a fetched cipher they use the
+Behave in a similar way to OPENSSL_BOX_EVP_EncryptInit_ex(), OPENSSL_BOX_EVP_DecryptInit_ex() and
+OPENSSL_BOX_EVP_CipherInit_ex() except if the I<type> is not a fetched cipher they use the
 default implementation of the I<type>.
 
-=item EVP_EncryptFinal(), EVP_DecryptFinal() and EVP_CipherFinal()
+=item OPENSSL_BOX_EVP_EncryptFinal(), OPENSSL_BOX_EVP_DecryptFinal() and OPENSSL_BOX_EVP_CipherFinal()
 
-Identical to EVP_EncryptFinal_ex(), EVP_DecryptFinal_ex() and
-EVP_CipherFinal_ex(). In previous releases they also cleaned up
+Identical to OPENSSL_BOX_EVP_EncryptFinal_ex(), OPENSSL_BOX_EVP_DecryptFinal_ex() and
+OPENSSL_BOX_EVP_CipherFinal_ex(). In previous releases they also cleaned up
 the I<ctx>, but this is no longer done and EVP_CIPHER_CTX_cleanup()
 must be called to free any context resources.
 
-=item EVP_Cipher()
+=item OPENSSL_BOX_EVP_Cipher()
 
 Encrypts or decrypts a maximum I<inl> amount of bytes from I<in> and leaves the
 result in I<out>.
@@ -489,33 +489,33 @@ OPENSSL_BOX_EVP_CIPHER_get_block_size().  If it isn't, the result is undefined. 
 has that flag set, then I<inl> can be any size.
 
 Due to the constraints of the API contract of this function it shouldn't be used
-in applications, please consider using EVP_CipherUpdate() and
-EVP_CipherFinal_ex() instead.
+in applications, please consider using OPENSSL_BOX_EVP_CipherUpdate() and
+OPENSSL_BOX_EVP_CipherFinal_ex() instead.
 
 =item OPENSSL_BOX_EVP_CIPHER_can_pipeline()
 
-This function checks if a B<EVP_CIPHER> fetched using EVP_CIPHER_fetch() supports
+This function checks if a B<EVP_CIPHER> fetched using OPENSSL_BOX_EVP_CIPHER_fetch() supports
 cipher pipelining. If the cipher supports pipelining, it returns 1, otherwise 0.
 This function will return 0 for non-fetched ciphers such as OPENSSL_BOX_EVP_aes_128_gcm().
 There are currently no built-in ciphers that support pipelining.
 
 Cipher pipelining support allows an application to submit multiple chunks of
-data in one set of EVP_CipherUpdate()/EVP_CipherFinal calls, thereby allowing
+data in one set of OPENSSL_BOX_EVP_CipherUpdate()/OPENSSL_BOX_EVP_CipherFinal calls, thereby allowing
 the provided implementation to take advantage of parallel computing. This is
 beneficial for hardware accelerators as pipeline amortizes the latency over
 multiple chunks.
 
-For non-fetched ciphers, EVP_CipherPipelineEncryptInit() or
-EVP_CipherPipelineDecryptInit() may be directly called, which will perform a
+For non-fetched ciphers, OPENSSL_BOX_EVP_CipherPipelineEncryptInit() or
+OPENSSL_BOX_EVP_CipherPipelineDecryptInit() may be directly called, which will perform a
 fetch and return an error if a pipeline supported implementation is not found.
 
-=item EVP_CipherPipelineEncryptInit(), EVP_CipherPipelineDecryptInit(), EVP_CipherPipelineUpdate() and EVP_CipherPipelineFinal()
+=item OPENSSL_BOX_EVP_CipherPipelineEncryptInit(), OPENSSL_BOX_EVP_CipherPipelineDecryptInit(), OPENSSL_BOX_EVP_CipherPipelineUpdate() and OPENSSL_BOX_EVP_CipherPipelineFinal()
 
 These functions can be used to perform multiple encryption or decryption
 operations in parallel. OPENSSL_BOX_EVP_CIPHER_can_pipeline() may be called to check if the
 cipher supports pipelining. These functions are analogous to
-EVP_EncryptInit_ex2(), EVP_DecryptInit_ex2(), EVP_CipherUpdate() and
-EVP_CipherFinal() but take an array of pointers for iv, input and output buffers.
+OPENSSL_BOX_EVP_EncryptInit_ex2(), OPENSSL_BOX_EVP_DecryptInit_ex2(), OPENSSL_BOX_EVP_CipherUpdate() and
+OPENSSL_BOX_EVP_CipherFinal() but take an array of pointers for iv, input and output buffers.
 
 The I<key>, of length I<keylen>, is the symmetric key to use. The I<numpipes>
 parameter specifies the number of parallel operations to perform. The
@@ -531,9 +531,9 @@ each pointing to a buffer where the output data will be written. The I<outsize>
 parameter is an array of size_t, each specifying the size of the corresponding
 output buffer. The I<outl> parameter is an array of size_t which will be updated
 with the size of the output data written to the corresponding output buffer.
-For size requirement of the output buffers, see the description of EVP_CipherUpdate().
+For size requirement of the output buffers, see the description of OPENSSL_BOX_EVP_CipherUpdate().
 
-The EVP_CipherPipelineUpdate() function can be called multiple times to encrypt
+The OPENSSL_BOX_EVP_CipherPipelineUpdate() function can be called multiple times to encrypt
 successive blocks of data. For AAD data, the I<out>, and I<outsize> parameter
 should be NULL, rather than an array of NULL pointers.
 
@@ -547,16 +547,16 @@ OPENSSL_BOX_EVP_get_cipherbyname() will return NULL for algorithms such as "AES-
 accessible via low level interfaces.
 
 The OPENSSL_BOX_EVP_get_cipherbyname() function is present for backwards compatibility with
-OpenSSL prior to version 3 and is different to the EVP_CIPHER_fetch() function
+OpenSSL prior to version 3 and is different to the OPENSSL_BOX_EVP_CIPHER_fetch() function
 since it does not attempt to "fetch" an implementation of the cipher.
 Additionally, it only knows about ciphers that are built-in to OpenSSL and have
 an associated NID. Similarly EVP_get_cipherbynid() and EVP_get_cipherbyobj()
 also return objects without an associated implementation.
 
 When the cipher objects returned by these functions are used (such as in a call
-to EVP_EncryptInit_ex()) an implementation of the cipher will be implicitly
+to OPENSSL_BOX_EVP_EncryptInit_ex()) an implementation of the cipher will be implicitly
 fetched from the loaded providers. This fetch could fail if no suitable
-implementation is available. Use EVP_CIPHER_fetch() instead to explicitly fetch
+implementation is available. Use OPENSSL_BOX_EVP_CIPHER_fetch() instead to explicitly fetch
 the algorithm and an associated implementation from a provider.
 
 See L<crypto(7)/ALGORITHM FETCHING> for more information about fetching.
@@ -570,7 +570,7 @@ Return the NID of a cipher when passed an B<EVP_CIPHER> or B<EVP_CIPHER_CTX>
 structure.  The actual NID value is an internal value which may not have a
 corresponding OBJECT IDENTIFIER.  NID_undef is returned in the event that the
 nid is unknown or if the cipher has not been properly initialized via a call to
-B<EVP_CipherInit>.
+B<OPENSSL_BOX_EVP_CipherInit>.
 
 =item OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(), OPENSSL_BOX_EVP_CIPHER_CTX_clear_flags() and OPENSSL_BOX_EVP_CIPHER_CTX_test_flags()
 
@@ -583,8 +583,8 @@ L</PARAMETERS> instead.
 =item OPENSSL_BOX_EVP_CIPHER_CTX_set_padding()
 
 Enables or disables padding. This function should be called after the context
-is set up for encryption or decryption with EVP_EncryptInit_ex2(),
-EVP_DecryptInit_ex2(), EVP_CipherInit_ex2(), or EVP_CipherInit_SKEY(). By
+is set up for encryption or decryption with OPENSSL_BOX_EVP_EncryptInit_ex2(),
+OPENSSL_BOX_EVP_DecryptInit_ex2(), OPENSSL_BOX_EVP_CipherInit_ex2(), or OPENSSL_BOX_EVP_CipherInit_SKEY(). By
 default encryption operations are padded using standard block padding and the
 padding is checked and removed when decrypting. If the I<pad> parameter is zero
 then no padding is performed, the total amount of data encrypted or decrypted
@@ -627,7 +627,7 @@ maximum block length for all ciphers.
 A value of 0 is returned if, with B<OPENSSL_BOX_EVP_CIPHER_get_block_size()>, the cipher
 I<e> is NULL, or, with B<OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size()>, the context
 I<ctx> is NULL or has not been properly initialized with a call to
-B<EVP_CipherInit>.
+B<OPENSSL_BOX_EVP_CipherInit>.
 
 =item OPENSSL_BOX_EVP_CIPHER_get_type() and EVP_CIPHER_CTX_get_type()
 
@@ -642,16 +642,16 @@ B<NID_undef>.
 Returns 1 if I<cipher> is an implementation of an algorithm that's identifiable
 with I<name>, otherwise 0. If I<cipher> is a legacy cipher (it's the return
 value from the likes of EVP_aes128() rather than the result of an
-EVP_CIPHER_fetch()), only cipher names registered with the default library
+OPENSSL_BOX_EVP_CIPHER_fetch()), only cipher names registered with the default library
 context (see L<OSSL_LIB_CTX(3)>) will be considered.
 
 =item OPENSSL_BOX_EVP_CIPHER_get0_name() and EVP_CIPHER_CTX_get0_name()
 
 Return the name of the passed cipher or context.  For fetched ciphers with
-multiple names, only one of them is returned. See also EVP_CIPHER_names_do_all().
+multiple names, only one of them is returned. See also OPENSSL_BOX_EVP_CIPHER_names_do_all().
 I<cipher> B<MUST NOT> be NULL.
 
-=item EVP_CIPHER_names_do_all()
+=item OPENSSL_BOX_EVP_CIPHER_names_do_all()
 
 Traverses all names for the I<cipher>, and calls I<fn> with each name and
 I<data>.  This is only useful with fetched B<EVP_CIPHER>s.
@@ -705,7 +705,7 @@ Do not use.
 Sets the AlgorithmIdentifier "parameter" based on the passed cipher. This will
 typically include any parameters and an IV. The cipher IV (if any) must be set
 when this call is made. This call should be made before the cipher is actually
-"used" (before any EVP_EncryptUpdate(), EVP_DecryptUpdate() calls for example).
+"used" (before any OPENSSL_BOX_EVP_EncryptUpdate(), OPENSSL_BOX_EVP_DecryptUpdate() calls for example).
 This function may fail if the cipher does not have any ASN1 support, or if an
 uninitialized cipher is passed to it.
 
@@ -715,9 +715,9 @@ Sets the cipher parameters based on an ASN1 AlgorithmIdentifier "parameter".
 The precise effect depends on the cipher. In the case of B<RC2>, for example,
 it will set the IV and effective key length.
 This function should be called after the base cipher type is set but before
-the key is set. For example EVP_CipherInit() will be called with the IV and
+the key is set. For example OPENSSL_BOX_EVP_CipherInit() will be called with the IV and
 key set to NULL, OPENSSL_BOX_EVP_CIPHER_asn1_to_param() will be called and finally
-EVP_CipherInit() again with all parameters except the key set to NULL. It is
+OPENSSL_BOX_EVP_CipherInit() again with all parameters except the key set to NULL. It is
 possible for this function to fail if the cipher does not have any ASN1 support
 or the parameters cannot be set (for example the RC2 effective key length
 is not supported.
@@ -729,7 +729,7 @@ The B<EVP_CIPHER> can provide its own random key generation routine to support
 keys of a specific form. I<key> must point to a buffer at least as big as the
 value returned by OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length().
 
-=item EVP_CIPHER_do_all_provided()
+=item OPENSSL_BOX_EVP_CIPHER_do_all_provided()
 
 Traverses all ciphers implemented by all activated providers in the given
 library context I<libctx>, and for each of the implementations, calls the given
@@ -743,7 +743,7 @@ See L<OSSL_PARAM(3)> for information about passing parameters.
 
 =head2 Gettable EVP_CIPHER parameters
 
-When EVP_CIPHER_fetch() is called it internally calls OPENSSL_BOX_EVP_CIPHER_get_params()
+When OPENSSL_BOX_EVP_CIPHER_fetch() is called it internally calls OPENSSL_BOX_EVP_CIPHER_get_params()
 and caches the results.
 
 OPENSSL_BOX_EVP_CIPHER_get_params() can be used with the following L<OSSL_PARAM(3)> keys:
@@ -795,7 +795,7 @@ cached value.
 Gets 1 if the cipher algorithm I<cipher> uses ciphertext stealing,
 otherwise it gets 0.
 This is currently used to indicate that the cipher is a one shot that only
-allows a single call to EVP_CipherUpdate().
+allows a single call to OPENSSL_BOX_EVP_CipherUpdate().
 Use (OPENSSL_BOX_EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_CTS) to retrieve the
 cached value.
 
@@ -850,14 +850,14 @@ See also OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length() and OPENSSL_BOX_EVP_CIPHER_
 =item "tag" (B<OSSL_CIPHER_PARAM_AEAD_TAG>) <octet string>
 
 Gets or sets the AEAD tag for the associated cipher context I<ctx>.
-See L<EVP_EncryptInit(3)/AEAD Interface>.
+See L<OPENSSL_BOX_EVP_EncryptInit(3)/AEAD Interface>.
 
 =item "pipeline-tag" (B<OSSL_CIPHER_PARAM_PIPELINE_AEAD_TAG>) <octet ptr>
 
 Gets or sets the AEAD tag when using cipher pipelining. The pointer must 
 point to an array of buffers, where the aead tag will be read from or written to.
 The array size must be equal to I<numpipes> used in
-EVP_CipherPipelineEncryptInit() or EVP_CipherPipelineDecryptInit().
+OPENSSL_BOX_EVP_CipherPipelineEncryptInit() or OPENSSL_BOX_EVP_CipherPipelineDecryptInit().
 
 =item "keybits" (B<OSSL_CIPHER_PARAM_RC2_KEYBITS>) <unsigned integer>
 
@@ -1003,16 +1003,16 @@ This option is used by the OpenSSL FIPS provider.
 
 A getter that returns 1 if the operation is FIPS approved, or 0 otherwise.
 This may be used after calling a cipher final operation such as
-EVP_EncryptFinal_ex(). It may return 0 if the "encrypt-check" option is set to 0.
+OPENSSL_BOX_EVP_EncryptFinal_ex(). It may return 0 if the "encrypt-check" option is set to 0.
 
 =item "iv-generated" (B<OSSL_CIPHER_PARAM_AEAD_IV_GENERATED>) <unsigned integer>
 
 An indicator that returns 1 if an IV was generated internally during encryption,
 or O otherwise.
 This may be used by GCM ciphers after calling a cipher final operation such
-as EVP_EncryptFinal_ex().
+as OPENSSL_BOX_EVP_EncryptFinal_ex().
 GCM should generate an IV internally if the IV is not specified during a
-cipher initialisation call such as EVP_CipherInit_ex().
+cipher initialisation call such as OPENSSL_BOX_EVP_CipherInit_ex().
 See FIPS 140-3 IG C.H for information related to IV requirements.
 
 =back
@@ -1036,8 +1036,8 @@ performed. This is used for performance testing.
 
 =item "use-bits" (B<OSSL_CIPHER_PARAM_USE_BITS>) <unsigned integer>
 
-Determines if the input length I<inl> passed to EVP_EncryptUpdate(),
-EVP_DecryptUpdate() and EVP_CipherUpdate() is the number of bits or number of bytes.
+Determines if the input length I<inl> passed to OPENSSL_BOX_EVP_EncryptUpdate(),
+OPENSSL_BOX_EVP_DecryptUpdate() and OPENSSL_BOX_EVP_CipherUpdate() is the number of bits or number of bytes.
 Setting "use-bits" to 1 uses bits. The default is in bytes.
 This is only used for B<CFB1> ciphers.
 
@@ -1166,7 +1166,7 @@ The default value is "GB".
 This option is used by the OpenSSL FIPS provider.
 
 If required this parameter should be set early via an cipher encrypt init
-function such as EVP_EncryptInit_ex2().
+function such as OPENSSL_BOX_EVP_EncryptInit_ex2().
 The default value of 1 causes an error when an encryption operation is triggered.
 Setting this to 0 will ignore the error and set the approved "fips-indicator" to
 0.
@@ -1372,7 +1372,7 @@ flags.
 
 =head1 RETURN VALUES
 
-EVP_CIPHER_fetch() returns a pointer to a B<EVP_CIPHER> for success
+OPENSSL_BOX_EVP_CIPHER_fetch() returns a pointer to a B<EVP_CIPHER> for success
 and NULL for failure.
 
 OPENSSL_BOX_EVP_CIPHER_up_ref() returns 1 for success or 0 otherwise.
@@ -1384,31 +1384,31 @@ OPENSSL_BOX_EVP_CIPHER_CTX_dup() returns a new EVP_CIPHER_CTX if successful or N
 
 OPENSSL_BOX_EVP_CIPHER_CTX_copy() returns 1 if successful or 0 for failure.
 
-EVP_EncryptInit_ex2(), EVP_EncryptUpdate() and EVP_EncryptFinal_ex()
+OPENSSL_BOX_EVP_EncryptInit_ex2(), OPENSSL_BOX_EVP_EncryptUpdate() and OPENSSL_BOX_EVP_EncryptFinal_ex()
 return 1 for success and 0 for failure.
 
-EVP_DecryptInit_ex2() and EVP_DecryptUpdate() return 1 for success and 0 for failure.
-EVP_DecryptFinal_ex() returns 0 if the decrypt failed or 1 for success.
+OPENSSL_BOX_EVP_DecryptInit_ex2() and OPENSSL_BOX_EVP_DecryptUpdate() return 1 for success and 0 for failure.
+OPENSSL_BOX_EVP_DecryptFinal_ex() returns 0 if the decrypt failed or 1 for success.
 
-EVP_CipherInit_ex2(), EVP_CipherInit_SKEY() and EVP_CipherUpdate() return 1 for
+OPENSSL_BOX_EVP_CipherInit_ex2(), OPENSSL_BOX_EVP_CipherInit_SKEY() and OPENSSL_BOX_EVP_CipherUpdate() return 1 for
 success and 0 for failure.
-EVP_CipherFinal_ex() returns 0 for an encryption/decryption failure or 1 for
+OPENSSL_BOX_EVP_CipherFinal_ex() returns 0 for an encryption/decryption failure or 1 for
 success.
 
-EVP_Cipher() returns 1 on success and <= 0 on failure, if the flag
+OPENSSL_BOX_EVP_Cipher() returns 1 on success and <= 0 on failure, if the flag
 B<EVP_CIPH_FLAG_CUSTOM_CIPHER> is not set for the cipher, or if the cipher has
-not been initialized via a call to B<EVP_CipherInit_ex2>.
-EVP_Cipher() returns the number of bytes written to I<out> for
+not been initialized via a call to B<OPENSSL_BOX_EVP_CipherInit_ex2>.
+OPENSSL_BOX_EVP_Cipher() returns the number of bytes written to I<out> for
 encryption/decryption, or the number of bytes authenticated in a call specifying
 AAD for an AEAD cipher, if the flag B<EVP_CIPH_FLAG_CUSTOM_CIPHER> is set for
 the cipher.
 
 OPENSSL_BOX_EVP_CIPHER_can_pipeline() returns 1 if the cipher can be used in a pipeline, 0 otherwise.
 
-EVP_CipherPipelineEncryptInit() and EVP_CipherPipelineDecryptInit()
+OPENSSL_BOX_EVP_CipherPipelineEncryptInit() and OPENSSL_BOX_EVP_CipherPipelineDecryptInit()
 return 1 for success and 0 for failure.
 
-EVP_CipherPipelineUpdate() and EVP_CipherPipelineFinal()
+OPENSSL_BOX_EVP_CipherPipelineUpdate() and OPENSSL_BOX_EVP_CipherPipelineFinal()
 return 1 for success and 0 for failure.
 
 OPENSSL_BOX_EVP_CIPHER_CTX_reset() returns 1 for success and 0 for failure.
@@ -1454,7 +1454,7 @@ than zero for success and zero or a negative number on failure.
 OPENSSL_BOX_EVP_CIPHER_CTX_rand_key() returns 1 for success and zero or a negative number
 for failure.
 
-EVP_CIPHER_names_do_all() returns 1 if the callback was called for all names.
+OPENSSL_BOX_EVP_CIPHER_names_do_all() returns 1 if the callback was called for all names.
 A return value of 0 means that the callback was not called for any names.
 
 =head1 CIPHER LISTING
@@ -1478,24 +1478,24 @@ The EVP interface for Authenticated Encryption with Associated Data (AEAD)
 modes are subtly altered and several additional I<ctrl> operations are supported
 depending on the mode specified.
 
-To specify additional authenticated data (AAD), a call to EVP_CipherUpdate(),
-EVP_EncryptUpdate() or EVP_DecryptUpdate() should be made with the output
+To specify additional authenticated data (AAD), a call to OPENSSL_BOX_EVP_CipherUpdate(),
+OPENSSL_BOX_EVP_EncryptUpdate() or OPENSSL_BOX_EVP_DecryptUpdate() should be made with the output
 parameter I<out> set to NULL. In this case, on success, the parameter
 I<outl> is set to the number of bytes authenticated.
 
-When decrypting, the return value of EVP_DecryptFinal() or EVP_CipherFinal()
+When decrypting, the return value of OPENSSL_BOX_EVP_DecryptFinal() or OPENSSL_BOX_EVP_CipherFinal()
 indicates whether the operation was successful. If it does not indicate success,
 the authentication operation has failed and any output data B<MUST NOT> be used
 as it is corrupted.
 
 Please note that the number of authenticated bytes returned by
-EVP_CipherUpdate() depends on the cipher used. Stream ciphers, such as ChaCha20
+OPENSSL_BOX_EVP_CipherUpdate() depends on the cipher used. Stream ciphers, such as ChaCha20
 or ciphers in GCM mode, can handle 1 byte at a time, resulting in an effective
 "block" size of 1. Conversely, ciphers in OCB mode must process data one block
 at a time, and the block size is returned.
 
 Regardless of the returned size, it is safe to pass unpadded data to an
-EVP_CipherUpdate() call in a single operation.
+OPENSSL_BOX_EVP_CipherUpdate() call in a single operation.
 
 =head2 GCM and OCB Modes
 
@@ -1515,7 +1515,7 @@ maximum is 15.
 
 Writes C<taglen> bytes of the tag value to the buffer indicated by C<tag>.
 This call can only be made when encrypting data and B<after> all data has been
-processed (e.g. after an EVP_EncryptFinal() call).
+processed (e.g. after an OPENSSL_BOX_EVP_EncryptFinal() call).
 
 For OCB, C<taglen> must either be 16 or the value previously set via
 B<EVP_CTRL_AEAD_SET_TAG>.
@@ -1524,8 +1524,8 @@ B<EVP_CTRL_AEAD_SET_TAG>.
 
 When decrypting, this call sets the expected tag to C<taglen> bytes from C<tag>.
 C<taglen> must be between 1 and 16 inclusive.
-The tag must be set prior to any call to EVP_DecryptFinal() or
-EVP_DecryptFinal_ex().
+The tag must be set prior to any call to OPENSSL_BOX_EVP_DecryptFinal() or
+OPENSSL_BOX_EVP_DecryptFinal_ex().
 
 For GCM, this call is only valid when decrypting data.
 
@@ -1547,7 +1547,7 @@ The EVP interface for CCM mode is similar to that of the GCM mode but with a
 few additional requirements and different I<ctrl> values.
 
 For CCM mode, the total plaintext or ciphertext length B<MUST> be passed to
-EVP_CipherUpdate(), EVP_EncryptUpdate() or EVP_DecryptUpdate() with the output
+OPENSSL_BOX_EVP_CipherUpdate(), OPENSSL_BOX_EVP_EncryptUpdate() or OPENSSL_BOX_EVP_DecryptUpdate() with the output
 and input parameters (I<in> and I<out>) set to NULL and the length passed in
 the I<inl> parameter.
 
@@ -1584,14 +1584,14 @@ For SIV mode ciphers the behaviour of the EVP interface is subtly
 altered and several additional ctrl operations are supported.
 
 To specify any additional authenticated data (AAD) and/or a Nonce, a call to
-EVP_CipherUpdate(), EVP_EncryptUpdate() or EVP_DecryptUpdate() should be made
+OPENSSL_BOX_EVP_CipherUpdate(), OPENSSL_BOX_EVP_EncryptUpdate() or OPENSSL_BOX_EVP_DecryptUpdate() should be made
 with the output parameter I<out> set to NULL.
 
 RFC5297 states that the Nonce is the last piece of AAD before the actual
 encrypt/decrypt takes place. The API does not differentiate the Nonce from
 other AAD.
 
-When decrypting the return value of EVP_DecryptFinal() or EVP_CipherFinal()
+When decrypting the return value of OPENSSL_BOX_EVP_DecryptFinal() or OPENSSL_BOX_EVP_CipherFinal()
 indicates if the operation was successful. If it does not indicate success
 the authentication operation has failed and any output data B<MUST NOT>
 be used as it is corrupted.
@@ -1614,22 +1614,22 @@ the Synthetic Initialization Vector:
 
 Writes I<taglen> bytes of the tag value (the Synthetic Initialization Vector)
 to the buffer indicated by I<tag>. This call can only be made when encrypting
-data and B<after> all data has been processed (e.g. after an EVP_EncryptFinal()
+data and B<after> all data has been processed (e.g. after an OPENSSL_BOX_EVP_EncryptFinal()
 call). For SIV mode the taglen must be 16.
 
 =item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, taglen, tag);
 
 Sets the expected tag (the Synthetic Initialization Vector) to I<taglen>
 bytes from I<tag>. This call is only legal when decrypting data and must be
-made B<before> any data is processed (e.g. before any EVP_DecryptUpdate()
+made B<before> any data is processed (e.g. before any OPENSSL_BOX_EVP_DecryptUpdate()
 calls). For SIV mode the taglen must be 16.
 
 =back
 
 SIV mode makes two passes over the input data, thus, only one call to
-EVP_CipherUpdate(), EVP_EncryptUpdate() or EVP_DecryptUpdate() should be made
-with I<out> set to a non-NULL value. A call to EVP_DecryptFinal() or
-EVP_CipherFinal() is not required, but will indicate if the update
+OPENSSL_BOX_EVP_CipherUpdate(), OPENSSL_BOX_EVP_EncryptUpdate() or OPENSSL_BOX_EVP_DecryptUpdate() should be made
+with I<out> set to a non-NULL value. A call to OPENSSL_BOX_EVP_DecryptFinal() or
+OPENSSL_BOX_EVP_CipherFinal() is not required, but will indicate if the update
 operation succeeded.
 
 =head2 ChaCha20-Poly1305
@@ -1649,7 +1649,7 @@ pad the iv with leading 0 bytes to make it 12 bytes in length.
 
 Writes C<taglen> bytes of the tag value to the buffer indicated by C<tag>.
 This call can only be made when encrypting data and B<after> all data has been
-processed (e.g. after an EVP_EncryptFinal() call).
+processed (e.g. after an OPENSSL_BOX_EVP_EncryptFinal() call).
 
 C<taglen> specified here must be 16 (B<POLY1305_BLOCK_SIZE>, i.e. 128-bits) or
 less.
@@ -1688,23 +1688,23 @@ the input data earlier on will not produce a final decrypt error.
 If padding is disabled then the decryption operation will always succeed if
 the total amount of data decrypted is a multiple of the block size.
 
-The functions EVP_EncryptInit(), EVP_EncryptInit_ex(),
-EVP_EncryptFinal(), EVP_DecryptInit(), EVP_DecryptInit_ex(),
-EVP_CipherInit(), EVP_CipherInit_ex() and EVP_CipherFinal() are obsolete
+The functions OPENSSL_BOX_EVP_EncryptInit(), OPENSSL_BOX_EVP_EncryptInit_ex(),
+OPENSSL_BOX_EVP_EncryptFinal(), OPENSSL_BOX_EVP_DecryptInit(), OPENSSL_BOX_EVP_DecryptInit_ex(),
+OPENSSL_BOX_EVP_CipherInit(), OPENSSL_BOX_EVP_CipherInit_ex() and OPENSSL_BOX_EVP_CipherFinal() are obsolete
 but are retained for compatibility with existing code. New code should
-use EVP_EncryptInit_ex2(), EVP_EncryptFinal_ex(), EVP_DecryptInit_ex2(),
-EVP_DecryptFinal_ex(), EVP_CipherInit_ex2() and EVP_CipherFinal_ex()
+use OPENSSL_BOX_EVP_EncryptInit_ex2(), OPENSSL_BOX_EVP_EncryptFinal_ex(), OPENSSL_BOX_EVP_DecryptInit_ex2(),
+OPENSSL_BOX_EVP_DecryptFinal_ex(), OPENSSL_BOX_EVP_CipherInit_ex2() and OPENSSL_BOX_EVP_CipherFinal_ex()
 because they can reuse an existing context without allocating and freeing
 it up on each call.
 
-There are some differences between functions EVP_CipherInit() and
-EVP_CipherInit_ex(), significant in some circumstances. EVP_CipherInit() fills
-the passed context object with zeros.  As a consequence, EVP_CipherInit() does
+There are some differences between functions OPENSSL_BOX_EVP_CipherInit() and
+OPENSSL_BOX_EVP_CipherInit_ex(), significant in some circumstances. OPENSSL_BOX_EVP_CipherInit() fills
+the passed context object with zeros.  As a consequence, OPENSSL_BOX_EVP_CipherInit() does
 not allow step-by-step initialization of the ctx when the I<key> and I<iv> are
 passed in separate calls. It also means that the flags set for the CTX are
 removed, and it is especially important for the
 B<EVP_CIPHER_CTX_FLAG_WRAP_ALLOW> flag treated specially in
-EVP_CipherInit_ex().
+OPENSSL_BOX_EVP_CipherInit_ex().
 
 Ignoring failure returns of the B<EVP_CIPHER_CTX> initialization functions can
 lead to subsequent undefined behavior when calling the functions that update or
@@ -1744,22 +1744,22 @@ Encrypt a string using IDEA:
      FILE *out;
 
      ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
-     if (!EVP_EncryptInit_ex2(ctx, OPENSSL_BOX_EVP_idea_cbc(), key, iv, NULL)) {
+     if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx, OPENSSL_BOX_EVP_idea_cbc(), key, iv, NULL)) {
          /* Error */
          OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
          return 0;
      }
 
-     if (!EVP_EncryptUpdate(ctx, outbuf, &outlen, intext, strlen(intext))) {
+     if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx, outbuf, &outlen, intext, strlen(intext))) {
          /* Error */
          OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
          return 0;
      }
      /*
-      * Buffer passed to EVP_EncryptFinal() must be after data just
+      * Buffer passed to OPENSSL_BOX_EVP_EncryptFinal() must be after data just
       * encrypted to avoid overwriting it.
       */
-     if (!EVP_EncryptFinal_ex(ctx, outbuf + outlen, &tmplen)) {
+     if (!OPENSSL_BOX_EVP_EncryptFinal_ex(ctx, outbuf + outlen, &tmplen)) {
          /* Error */
          OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
          return 0;
@@ -1806,7 +1806,7 @@ with a 128-bit key:
 
      /* Don't set key or IV right away; we want to check lengths */
      ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
-     if (!EVP_CipherInit_ex2(ctx, OPENSSL_BOX_EVP_aes_128_cbc(), NULL, NULL,
+     if (!OPENSSL_BOX_EVP_CipherInit_ex2(ctx, OPENSSL_BOX_EVP_aes_128_cbc(), NULL, NULL,
                              do_encrypt, NULL)) {
          /* Error */
          OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
@@ -1816,7 +1816,7 @@ with a 128-bit key:
      OPENSSL_assert(OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(ctx) == 16);
 
      /* Now we can set key and IV */
-     if (!EVP_CipherInit_ex2(ctx, NULL, key, iv, do_encrypt, NULL)) {
+     if (!OPENSSL_BOX_EVP_CipherInit_ex2(ctx, NULL, key, iv, do_encrypt, NULL)) {
          /* Error */
          OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
          return 0;
@@ -1826,14 +1826,14 @@ with a 128-bit key:
          inlen = fread(inbuf, 1, 1024, in);
          if (inlen <= 0)
              break;
-         if (!EVP_CipherUpdate(ctx, outbuf, &outlen, inbuf, inlen)) {
+         if (!OPENSSL_BOX_EVP_CipherUpdate(ctx, outbuf, &outlen, inbuf, inlen)) {
              /* Error */
              OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
              return 0;
          }
          fwrite(outbuf, 1, outlen, out);
      }
-     if (!EVP_CipherFinal_ex(ctx, outbuf, &outlen)) {
+     if (!OPENSSL_BOX_EVP_CipherFinal_ex(ctx, outbuf, &outlen)) {
          /* Error */
          OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
          return 0;
@@ -1861,7 +1861,7 @@ Encryption using AES-CBC with a 256-bit key with "CS1" ciphertext stealing.
      OSSL_PARAM params[2];
 
      ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
-     cipher = EVP_CIPHER_fetch(NULL, "AES-256-CBC-CTS", NULL);
+     cipher = OPENSSL_BOX_EVP_CIPHER_fetch(NULL, "AES-256-CBC-CTS", NULL);
      if (ctx == NULL || cipher == NULL)
          goto err;
 
@@ -1873,13 +1873,13 @@ Encryption using AES-CBC with a 256-bit key with "CS1" ciphertext stealing.
                                                   "CS1", 0);
      params[1] = OSSL_PARAM_construct_end();
 
-     if (!EVP_CipherInit_ex2(ctx, cipher, key, iv, encrypt, params))
+     if (!OPENSSL_BOX_EVP_CipherInit_ex2(ctx, cipher, key, iv, encrypt, params))
          goto err;
 
-     /* NOTE: CTS mode does not support multiple calls to EVP_CipherUpdate() */
-     if (!EVP_CipherUpdate(ctx, out, &outlen, msg, msg_len))
+     /* NOTE: CTS mode does not support multiple calls to OPENSSL_BOX_EVP_CipherUpdate() */
+     if (!OPENSSL_BOX_EVP_CipherUpdate(ctx, out, &outlen, msg, msg_len))
          goto err;
-      if (!EVP_CipherFinal_ex(ctx, out + outlen, &len))
+      if (!OPENSSL_BOX_EVP_CipherFinal_ex(ctx, out + outlen, &len))
          goto err;
      ret = 1;
  err:
@@ -1925,8 +1925,8 @@ OPENSSL_BOX_EVP_CIPHER_CTX_reset().
 The OPENSSL_BOX_EVP_CIPHER_CTX_cipher() function was deprecated in OpenSSL 3.0; use
 OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher() instead.
 
-The EVP_EncryptInit_ex2(), EVP_DecryptInit_ex2(), EVP_CipherInit_ex2(),
-EVP_CIPHER_fetch(), OPENSSL_BOX_EVP_CIPHER_free(), OPENSSL_BOX_EVP_CIPHER_up_ref(),
+The OPENSSL_BOX_EVP_EncryptInit_ex2(), OPENSSL_BOX_EVP_DecryptInit_ex2(), OPENSSL_BOX_EVP_CipherInit_ex2(),
+OPENSSL_BOX_EVP_CIPHER_fetch(), OPENSSL_BOX_EVP_CIPHER_free(), OPENSSL_BOX_EVP_CIPHER_up_ref(),
 OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(), OPENSSL_BOX_EVP_CIPHER_CTX_get1_cipher(),
 OPENSSL_BOX_EVP_CIPHER_get_params(), OPENSSL_BOX_EVP_CIPHER_CTX_set_params(),
 OPENSSL_BOX_EVP_CIPHER_CTX_get_params(), OPENSSL_BOX_EVP_CIPHER_gettable_params(),
@@ -1952,7 +1952,7 @@ The EVP_CIPHER_CTX_flags() macro was deprecated in OpenSSL 1.1.0.
 
 OPENSSL_BOX_EVP_CIPHER_CTX_dup() was added in OpenSSL 3.2.
 
-EVP_CipherInit_SKEY() was added in OpenSSL 3.5.
+OPENSSL_BOX_EVP_CipherInit_SKEY() was added in OpenSSL 3.5.
 
 Prior to OpenSSL 3.5, passing a NULL I<ctx> to
 B<OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size()> would result in a NULL pointer dereference,

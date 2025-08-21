@@ -81,9 +81,9 @@ int main(void)
     }
 
     /* Fetch the CMAC implementation */
-    mac = EVP_MAC_fetch(library_context, "CMAC", propq);
+    mac = OPENSSL_BOX_EVP_MAC_fetch(library_context, "CMAC", propq);
     if (mac == NULL) {
-        fprintf(stderr, "EVP_MAC_fetch() returned NULL\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_fetch() returned NULL\n");
         goto end;
     }
 
@@ -100,8 +100,8 @@ int main(void)
     *p = OSSL_PARAM_construct_end();
 
     /* Initialise the CMAC operation */
-    if (!EVP_MAC_init(mctx, key, sizeof(key), params)) {
-        fprintf(stderr, "EVP_MAC_init() failed\n");
+    if (!OPENSSL_BOX_EVP_MAC_init(mctx, key, sizeof(key), params)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_init() failed\n");
         goto end;
     }
 
@@ -112,8 +112,8 @@ int main(void)
     }
 
     /* Make a call to the final with a NULL buffer to get the length of the MAC */
-    if (!EVP_MAC_final(mctx, NULL, &out_len, 0)) {
-        fprintf(stderr, "EVP_MAC_final() failed\n");
+    if (!OPENSSL_BOX_EVP_MAC_final(mctx, NULL, &out_len, 0)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_final() failed\n");
         goto end;
     }
     out = OPENSSL_malloc(out_len);
@@ -122,8 +122,8 @@ int main(void)
         goto end;
     }
     /* Make one call to the final to get the MAC */
-    if (!EVP_MAC_final(mctx, out, &out_len, out_len)) {
-        fprintf(stderr, "EVP_MAC_final() failed\n");
+    if (!OPENSSL_BOX_EVP_MAC_final(mctx, out, &out_len, out_len)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_final() failed\n");
         goto end;
     }
 

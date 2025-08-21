@@ -2,24 +2,24 @@
 
 =head1 NAME
 
-PKCS5_PBKDF2_HMAC, PKCS5_PBKDF2_HMAC_SHA1 - password based derivation routines with salt and iteration count
+OPENSSL_BOX_PKCS5_PBKDF2_HMAC, OPENSSL_BOX_PKCS5_PBKDF2_HMAC_SHA1 - password based derivation routines with salt and iteration count
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- int PKCS5_PBKDF2_HMAC(const char *pass, int passlen,
+ int OPENSSL_BOX_PKCS5_PBKDF2_HMAC(const char *pass, int passlen,
                        const unsigned char *salt, int saltlen, int iter,
                        const EVP_MD *digest,
                        int keylen, unsigned char *out);
 
- int PKCS5_PBKDF2_HMAC_SHA1(const char *pass, int passlen,
+ int OPENSSL_BOX_PKCS5_PBKDF2_HMAC_SHA1(const char *pass, int passlen,
                             const unsigned char *salt, int saltlen, int iter,
                             int keylen, unsigned char *out);
 
 =head1 DESCRIPTION
 
-PKCS5_PBKDF2_HMAC() derives a key from a password using a salt and iteration count
+OPENSSL_BOX_PKCS5_PBKDF2_HMAC() derives a key from a password using a salt and iteration count
 as specified in RFC 2898.
 
 B<pass> is the password used in the derivation of length B<passlen>. B<pass>
@@ -37,7 +37,7 @@ B<iter> value less than 1 is invalid; such values will result in failure
 and raise the PROV_R_INVALID_ITERATION_COUNT error.
 
 B<digest> is the message digest function used in the derivation.
-PKCS5_PBKDF2_HMAC_SHA1() calls PKCS5_PBKDF2_HMAC() with OPENSSL_BOX_EVP_sha1().
+OPENSSL_BOX_PKCS5_PBKDF2_HMAC_SHA1() calls OPENSSL_BOX_PKCS5_PBKDF2_HMAC() with OPENSSL_BOX_EVP_sha1().
 
 The derived key will be written to B<out>. The size of the B<out> buffer
 is specified via B<keylen>.
@@ -57,12 +57,12 @@ It will simply be treated as a byte sequence.
 
 =head1 RETURN VALUES
 
-PKCS5_PBKDF2_HMAC() and PBKCS5_PBKDF2_HMAC_SHA1() return 1 on success or 0 on error.
+OPENSSL_BOX_PKCS5_PBKDF2_HMAC() and PBKCS5_PBKDF2_HMAC_SHA1() return 1 on success or 0 on error.
 
 =head1 SEE ALSO
 
 L<evp(7)>, L<RAND_bytes(3)>,
-L<EVP_BytesToKey(3)>,
+L<OPENSSL_BOX_EVP_BytesToKey(3)>,
 L<passphrase-encoding(7)>
 
 =head1 COPYRIGHT

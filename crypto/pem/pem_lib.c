@@ -59,7 +59,7 @@ int PEM_def_callback(char *buf, int num, int rwflag, void *userdata)
      */
     min_len = rwflag ? MIN_LENGTH : 0;
 
-    i = EVP_read_pw_string_min(buf, min_len, num, prompt, rwflag);
+    i = OPENSSL_BOX_EVP_read_pw_string_min(buf, min_len, num, prompt, rwflag);
     if (i != 0) {
         ERR_raise(ERR_LIB_PEM, PEM_R_PROBLEMS_GETTING_PASSWORD);
         memset(buf, 0, (unsigned int)num);
@@ -146,7 +146,7 @@ static int check_pem(const char *nm, const char *name)
              * NB: ENGINE implementations won't contain a deprecated old
              * private key decode function so don't look for them.
              */
-            ameth = EVP_PKEY_asn1_find_str(NULL, nm, slen);
+            ameth = OPENSSL_BOX_EVP_PKEY_asn1_find_str(NULL, nm, slen);
             if (ameth && ameth->old_priv_decode)
                 return 1;
         }
@@ -159,7 +159,7 @@ static int check_pem(const char *nm, const char *name)
         slen = ossl_pem_check_suffix(nm, "PARAMETERS");
         if (slen > 0) {
             ENGINE *e;
-            ameth = EVP_PKEY_asn1_find_str(&e, nm, slen);
+            ameth = OPENSSL_BOX_EVP_PKEY_asn1_find_str(&e, nm, slen);
             if (ameth) {
                 int r;
                 if (ameth->param_decode)
@@ -388,7 +388,7 @@ PEM_ASN1_write_bio_internal(
          * The 'iv' is used as the iv and as a salt.  It is NOT taken from
          * the BytesToKey function
          */
-        if (!EVP_BytesToKey(enc, OPENSSL_BOX_EVP_md5(), iv, kstr, klen, 1, key, NULL))
+        if (!OPENSSL_BOX_EVP_BytesToKey(enc, OPENSSL_BOX_EVP_md5(), iv, kstr, klen, 1, key, NULL))
             goto err;
 
         if (kstr == (unsigned char *)buf)
@@ -401,9 +401,9 @@ PEM_ASN1_write_bio_internal(
 
         ret = 1;
         if ((ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL
-            || !EVP_EncryptInit_ex(ctx, enc, NULL, key, iv)
-            || !EVP_EncryptUpdate(ctx, data, &j, data, i)
-            || !EVP_EncryptFinal_ex(ctx, &(data[j]), &i))
+            || !OPENSSL_BOX_EVP_EncryptInit_ex(ctx, enc, NULL, key, iv)
+            || !OPENSSL_BOX_EVP_EncryptUpdate(ctx, data, &j, data, i)
+            || !OPENSSL_BOX_EVP_EncryptFinal_ex(ctx, &(data[j]), &i))
             ret = 0;
         if (ret == 0)
             goto err;
@@ -448,7 +448,7 @@ int PEM_do_header(EVP_CIPHER_INFO *cipher, unsigned char *data, long *plen,
     int ok;
     int keylen;
     long len = *plen;
-    int ilen = (int) len;       /* EVP_DecryptUpdate etc. take int lengths */
+    int ilen = (int) len;       /* OPENSSL_BOX_EVP_DecryptUpdate etc. take int lengths */
     EVP_CIPHER_CTX *ctx;
     unsigned char key[EVP_MAX_KEY_LENGTH];
     char buf[PEM_BUFSIZE];
@@ -476,7 +476,7 @@ int PEM_do_header(EVP_CIPHER_INFO *cipher, unsigned char *data, long *plen,
     ebcdic2ascii(buf, buf, keylen);
 #endif
 
-    if (!EVP_BytesToKey(cipher->cipher, OPENSSL_BOX_EVP_md5(), &(cipher->iv[0]),
+    if (!OPENSSL_BOX_EVP_BytesToKey(cipher->cipher, OPENSSL_BOX_EVP_md5(), &(cipher->iv[0]),
                         (unsigned char *)buf, keylen, 1, key, NULL))
         return 0;
 
@@ -484,13 +484,13 @@ int PEM_do_header(EVP_CIPHER_INFO *cipher, unsigned char *data, long *plen,
     if (ctx == NULL)
         return 0;
 
-    ok = EVP_DecryptInit_ex(ctx, cipher->cipher, NULL, key, &(cipher->iv[0]));
+    ok = OPENSSL_BOX_EVP_DecryptInit_ex(ctx, cipher->cipher, NULL, key, &(cipher->iv[0]));
     if (ok)
-        ok = EVP_DecryptUpdate(ctx, data, &ilen, data, ilen);
+        ok = OPENSSL_BOX_EVP_DecryptUpdate(ctx, data, &ilen, data, ilen);
     if (ok) {
         /* Squirrel away the length of data decrypted so far. */
         *plen = ilen;
-        ok = EVP_DecryptFinal_ex(ctx, &(data[ilen]), &ilen);
+        ok = OPENSSL_BOX_EVP_DecryptFinal_ex(ctx, &(data[ilen]), &ilen);
     }
     if (ok)
         *plen += ilen;
@@ -672,7 +672,7 @@ int PEM_write_bio(BIO *bp, const char *name, const char *header,
     i = j = 0;
     while (len > 0) {
         n = (int)((len > (PEM_BUFSIZE * 5)) ? (PEM_BUFSIZE * 5) : len);
-        if (!EVP_EncodeUpdate(ctx, buf, &outl, &(data[j]), n)) {
+        if (!OPENSSL_BOX_EVP_EncodeUpdate(ctx, buf, &outl, &(data[j]), n)) {
             reason = ERR_R_EVP_LIB;
             goto err;
         }
@@ -997,9 +997,9 @@ int PEM_read_bio_ex(BIO *bp, char **name_out, char **header,
     }
 
     OPENSSL_BOX_EVP_DecodeInit(ctx);
-    if (EVP_DecodeUpdate(ctx, (unsigned char*)buf_mem->data, &len,
+    if (OPENSSL_BOX_EVP_DecodeUpdate(ctx, (unsigned char*)buf_mem->data, &len,
                          (unsigned char*)buf_mem->data, len) < 0
-            || EVP_DecodeFinal(ctx, (unsigned char*)&(buf_mem->data[len]),
+            || OPENSSL_BOX_EVP_DecodeFinal(ctx, (unsigned char*)&(buf_mem->data[len]),
                                &taillen) < 0) {
         ERR_raise(ERR_LIB_PEM, PEM_R_BAD_BASE64_DECODE);
         goto end;

@@ -169,13 +169,13 @@ static int port_init(QUIC_PORT *port)
 
     /* Generate random key for token encryption */
     if ((port->token_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL
-        || (cipher = EVP_CIPHER_fetch(port->engine->libctx,
+        || (cipher = OPENSSL_BOX_EVP_CIPHER_fetch(port->engine->libctx,
                                       "AES-256-GCM", NULL)) == NULL
-        || !EVP_EncryptInit_ex(port->token_ctx, cipher, NULL, NULL, NULL)
+        || !OPENSSL_BOX_EVP_EncryptInit_ex(port->token_ctx, cipher, NULL, NULL, NULL)
         || (key_len = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(port->token_ctx)) <= 0
         || (token_key = OPENSSL_malloc(key_len)) == NULL
         || !RAND_priv_bytes_ex(port->engine->libctx, token_key, key_len, 0)
-        || !EVP_EncryptInit_ex(port->token_ctx, NULL, NULL, token_key, NULL))
+        || !OPENSSL_BOX_EVP_EncryptInit_ex(port->token_ctx, NULL, NULL, token_key, NULL))
         goto err;
 
     ret = 1;
@@ -963,9 +963,9 @@ static int encrypt_validation_token(const QUIC_PORT *port,
     tag = data + pt_len;
 
     if (!RAND_bytes_ex(port->engine->libctx, ciphertext, iv_len, 0)
-        || !EVP_EncryptInit_ex(port->token_ctx, NULL, NULL, NULL, iv)
-        || !EVP_EncryptUpdate(port->token_ctx, data, &len, plaintext, (int)pt_len)
-        || !EVP_EncryptFinal_ex(port->token_ctx, data + pt_len, &len)
+        || !OPENSSL_BOX_EVP_EncryptInit_ex(port->token_ctx, NULL, NULL, NULL, iv)
+        || !OPENSSL_BOX_EVP_EncryptUpdate(port->token_ctx, data, &len, plaintext, (int)pt_len)
+        || !OPENSSL_BOX_EVP_EncryptFinal_ex(port->token_ctx, data + pt_len, &len)
         || !OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(port->token_ctx, EVP_CTRL_GCM_GET_TAG, tag_len, tag))
         goto err;
 
@@ -1016,12 +1016,12 @@ static int decrypt_validation_token(const QUIC_PORT *port,
     data = ciphertext + iv_len;
     tag = ciphertext + ct_len - tag_len;
 
-    if (!EVP_DecryptInit_ex(port->token_ctx, NULL, NULL, NULL, iv)
-        || !EVP_DecryptUpdate(port->token_ctx, plaintext, &len, data,
+    if (!OPENSSL_BOX_EVP_DecryptInit_ex(port->token_ctx, NULL, NULL, NULL, iv)
+        || !OPENSSL_BOX_EVP_DecryptUpdate(port->token_ctx, plaintext, &len, data,
                               (int)(ct_len - iv_len - tag_len))
         || !OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(port->token_ctx, EVP_CTRL_GCM_SET_TAG, tag_len,
                                 (void *)tag)
-        || !EVP_DecryptFinal_ex(port->token_ctx, plaintext + len, &len))
+        || !OPENSSL_BOX_EVP_DecryptFinal_ex(port->token_ctx, plaintext + len, &len))
         goto err;
 
     ret = 1;

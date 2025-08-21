@@ -25,17 +25,17 @@ EVP_PKEY_size
 OPENSSL_BOX_EVP_PKEY_get_size() returns the maximum suitable size for the output
 buffers for almost all operations that can be done with I<pkey>.
 This corresponds to the provider parameter B<OSSL_PKEY_PARAM_MAX_SIZE>.
-The primary documented use is with L<EVP_SignFinal(3)> and
-L<EVP_SealInit(3)>, but it isn't limited there.  The returned size is
-also large enough for the output buffer of L<EVP_PKEY_sign(3)>,
-L<EVP_PKEY_encrypt(3)>, L<EVP_PKEY_decrypt(3)>, L<OPENSSL_BOX_EVP_PKEY_derive(3)>.
+The primary documented use is with L<OPENSSL_BOX_EVP_SignFinal(3)> and
+L<OPENSSL_BOX_EVP_SealInit(3)>, but it isn't limited there.  The returned size is
+also large enough for the output buffer of L<OPENSSL_BOX_EVP_PKEY_sign(3)>,
+L<OPENSSL_BOX_EVP_PKEY_encrypt(3)>, L<OPENSSL_BOX_EVP_PKEY_decrypt(3)>, L<OPENSSL_BOX_EVP_PKEY_derive(3)>.
 
 It must be stressed that, unless the documentation for the operation
 that's being performed says otherwise, the size returned by
 OPENSSL_BOX_EVP_PKEY_get_size() is only preliminary and not exact, so the final
 contents of the target buffer may be smaller.  It is therefore crucial
 to take note of the size given back by the function that performs the
-operation, such as L<EVP_PKEY_sign(3)> (the I<siglen> argument will
+operation, such as L<OPENSSL_BOX_EVP_PKEY_sign(3)> (the I<siglen> argument will
 receive that length), to avoid bugs.
 
 OPENSSL_BOX_EVP_PKEY_get_bits() returns the cryptographic length of the cryptosystem
@@ -107,17 +107,17 @@ buffer size, but may be useful in cases where it's desirable to know
 the upper limit in advance.
 
 It should also be especially noted that OPENSSL_BOX_EVP_PKEY_get_size() shouldn't be
-used to get the output size for EVP_DigestSignFinal(), according to
-L<EVP_DigestSignFinal(3)/NOTES>.
+used to get the output size for OPENSSL_BOX_EVP_DigestSignFinal(), according to
+L<OPENSSL_BOX_EVP_DigestSignFinal(3)/NOTES>.
 
 =head1 SEE ALSO
 
 L<provider-keymgmt(7)>,
-L<EVP_SignFinal(3)>,
-L<EVP_SealInit(3)>,
-L<EVP_PKEY_sign(3)>,
-L<EVP_PKEY_encrypt(3)>,
-L<EVP_PKEY_decrypt(3)>,
+L<OPENSSL_BOX_EVP_SignFinal(3)>,
+L<OPENSSL_BOX_EVP_SealInit(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign(3)>,
+L<OPENSSL_BOX_EVP_PKEY_encrypt(3)>,
+L<OPENSSL_BOX_EVP_PKEY_decrypt(3)>,
 L<OPENSSL_BOX_EVP_PKEY_derive(3)>
 
 =head1 HISTORY

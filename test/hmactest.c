@@ -278,9 +278,9 @@ static int test_hmac_copy_uninited(void)
     int res = 0;
 
     if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_MD_CTX_new())
-            || !TEST_ptr(pkey = EVP_PKEY_new_mac_key(EVP_PKEY_HMAC, NULL,
+            || !TEST_ptr(pkey = OPENSSL_BOX_EVP_PKEY_new_mac_key(EVP_PKEY_HMAC, NULL,
                                                      key, sizeof(key)))
-            || !TEST_true(EVP_DigestSignInit(ctx, NULL, OPENSSL_BOX_EVP_sha1(), NULL, pkey))
+            || !TEST_true(OPENSSL_BOX_EVP_DigestSignInit(ctx, NULL, OPENSSL_BOX_EVP_sha1(), NULL, pkey))
             || !TEST_ptr(ctx_tmp = OPENSSL_BOX_EVP_MD_CTX_new())
             || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_copy(ctx_tmp, ctx)))
         goto err;

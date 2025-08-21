@@ -69,7 +69,7 @@ int PKCS12_PBE_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
         piv = NULL;
     }
     PBEPARAM_free(pbe);
-    ret = EVP_CipherInit_ex(ctx, cipher, NULL, key, piv, en_de);
+    ret = OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, NULL, key, piv, en_de);
     OPENSSL_cleanse(key, EVP_MAX_KEY_LENGTH);
     OPENSSL_cleanse(iv, EVP_MAX_IV_LENGTH);
     return ret;

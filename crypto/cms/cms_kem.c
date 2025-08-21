@@ -41,10 +41,10 @@ static int kem_cms_decrypt(CMS_RecipientInfo *ri)
         goto err;
 
     OBJ_obj2txt(name, sizeof(name), wrap->algorithm, 0);
-    kekcipher = EVP_CIPHER_fetch(pctx->libctx, name, pctx->propquery);
+    kekcipher = OPENSSL_BOX_EVP_CIPHER_fetch(pctx->libctx, name, pctx->propquery);
     if (kekcipher == NULL || OPENSSL_BOX_EVP_CIPHER_get_mode(kekcipher) != EVP_CIPH_WRAP_MODE)
         goto err;
-    if (!EVP_EncryptInit_ex(kekctx, kekcipher, NULL, NULL, NULL))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex(kekctx, kekcipher, NULL, NULL, NULL))
         goto err;
     if (OPENSSL_BOX_EVP_CIPHER_asn1_to_param(kekctx, wrap->parameter) <= 0)
         goto err;

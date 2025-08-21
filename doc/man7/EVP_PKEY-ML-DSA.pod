@@ -59,8 +59,8 @@ In addition to the common parameters that all keytypes should support (see
 L<provider-keymgmt(7)/Common Information Parameters>, the implementation of
 these key types support the parameters listed below.
 These are gettable using
-L<EVP_PKEY_get_octet_string_param(3)> or L<OPENSSL_BOX_EVP_PKEY_get_params(3)>.
-They can be initialised via L<EVP_PKEY_fromdata(3)>, and are returned by
+L<OPENSSL_BOX_EVP_PKEY_get_octet_string_param(3)> or L<OPENSSL_BOX_EVP_PKEY_get_params(3)>.
+They can be initialised via L<OPENSSL_BOX_EVP_PKEY_fromdata(3)>, and are returned by
 L<OPENSSL_BOX_EVP_PKEY_todata(3)> given a suitable I<selection>.
 Once a public or private key is configured, it can no longer be modified,
 nor can another key component be added.
@@ -214,11 +214,11 @@ output, by listing those first.
 An B<EVP_PKEY> context can be obtained by calling:
 
     EVP_PKEY_CTX *pctx =
-        EVP_PKEY_CTX_new_from_name(NULL, "ML-DSA-44", NULL);
+        OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "ML-DSA-44", NULL);
 
 An B<ML-DSA-44> key can be generated like this:
 
-    pkey = EVP_PKEY_Q_keygen(NULL, NULL, "ML-DSA-44");
+    pkey = OPENSSL_BOX_EVP_PKEY_Q_keygen(NULL, NULL, "ML-DSA-44");
 
 The key pair components can be extracted from a key by calling:
 
@@ -226,11 +226,11 @@ The key pair components can be extracted from a key by calling:
     uint8_t pub[2592], priv[4896], seed[32]:
     size_t priv_len, pub_len, seed_len;
 
-    EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_ML_DSA_SEED,
+    OPENSSL_BOX_EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_ML_DSA_SEED,
                                     seed, sizeof(seed), &seed_len);
-    EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_PRIV_KEY,
+    OPENSSL_BOX_EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_PRIV_KEY,
                                     priv, sizeof(priv), &priv_len);
-    EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_PUB_KEY,
+    OPENSSL_BOX_EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_PUB_KEY,
                                     pub, sizeof(pub), &pub_len));
 
 An B<ML-DSA> private key in seed format can be converted to a key in the FIPS
@@ -282,8 +282,8 @@ In the B<openssl.cnf> file, this looks like:
 L<EVP_KEYMGMT(3)>,
 L<EVP_PKEY(3)>,
 L<provider-keymgmt(7)>,
-L<EVP_PKEY_get_raw_private_key(3)>,
-L<EVP_PKEY_get_raw_public_key(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_raw_private_key(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_raw_public_key(3)>,
 L<OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(3)>,
 L<OSSL_PROVIDER_add_conf_parameter(3)>,
 L<provider-keymgmt(7)>,

@@ -446,7 +446,7 @@ static int process(const char *uri, const UI_METHOD *uimeth, PW_CB_DATA *uidata,
             break;
         case OSSL_STORE_INFO_PARAMS:
             if (text)
-                EVP_PKEY_print_params(out, OSSL_STORE_INFO_get0_PARAMS(info),
+                OPENSSL_BOX_EVP_PKEY_print_params(out, OSSL_STORE_INFO_get0_PARAMS(info),
                                       0, NULL);
             if (!noout)
                 PEM_write_bio_Parameters(out,
@@ -454,14 +454,14 @@ static int process(const char *uri, const UI_METHOD *uimeth, PW_CB_DATA *uidata,
             break;
         case OSSL_STORE_INFO_PUBKEY:
             if (text)
-                EVP_PKEY_print_public(out, OSSL_STORE_INFO_get0_PUBKEY(info),
+                OPENSSL_BOX_EVP_PKEY_print_public(out, OSSL_STORE_INFO_get0_PUBKEY(info),
                                       0, NULL);
             if (!noout)
                 PEM_write_bio_PUBKEY(out, OSSL_STORE_INFO_get0_PUBKEY(info));
             break;
         case OSSL_STORE_INFO_PKEY:
             if (text)
-                EVP_PKEY_print_private(out, OSSL_STORE_INFO_get0_PKEY(info),
+                OPENSSL_BOX_EVP_PKEY_print_private(out, OSSL_STORE_INFO_get0_PKEY(info),
                                        0, NULL);
             if (!noout)
                 PEM_write_bio_PrivateKey(out, OSSL_STORE_INFO_get0_PKEY(info),

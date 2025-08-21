@@ -79,8 +79,8 @@ static const EVP_MD *digest_md5(void)
                                              sizeof(EVP_MD *) + sizeof(MD5_CTX))
             || !OPENSSL_BOX_EVP_MD_meth_set_flags(md, 0)
             || !OPENSSL_BOX_EVP_MD_meth_set_init(md, digest_md5_init)
-            || !EVP_MD_meth_set_update(md, digest_md5_update)
-            || !EVP_MD_meth_set_final(md, digest_md5_final)) {
+            || !OPENSSL_BOX_EVP_MD_meth_set_update(md, digest_md5_update)
+            || !OPENSSL_BOX_EVP_MD_meth_set_final(md, digest_md5_final)) {
             OPENSSL_BOX_EVP_MD_meth_free(md);
             md = NULL;
         }
@@ -108,8 +108,8 @@ static const EVP_MD *digest_sha1(void)
                                              sizeof(EVP_MD *) + sizeof(SHA_CTX))
             || !OPENSSL_BOX_EVP_MD_meth_set_flags(md, EVP_MD_FLAG_DIGALGID_ABSENT)
             || !OPENSSL_BOX_EVP_MD_meth_set_init(md, digest_sha1_init)
-            || !EVP_MD_meth_set_update(md, digest_sha1_update)
-            || !EVP_MD_meth_set_final(md, digest_sha1_final)) {
+            || !OPENSSL_BOX_EVP_MD_meth_set_update(md, digest_sha1_update)
+            || !OPENSSL_BOX_EVP_MD_meth_set_final(md, digest_sha1_final)) {
             OPENSSL_BOX_EVP_MD_meth_free(md);
             md = NULL;
         }
@@ -137,8 +137,8 @@ static const EVP_MD *digest_sha256(void)
                                              sizeof(EVP_MD *) + sizeof(SHA256_CTX))
             || !OPENSSL_BOX_EVP_MD_meth_set_flags(md, EVP_MD_FLAG_DIGALGID_ABSENT)
             || !OPENSSL_BOX_EVP_MD_meth_set_init(md, digest_sha256_init)
-            || !EVP_MD_meth_set_update(md, digest_sha256_update)
-            || !EVP_MD_meth_set_final(md, digest_sha256_final)) {
+            || !OPENSSL_BOX_EVP_MD_meth_set_update(md, digest_sha256_update)
+            || !OPENSSL_BOX_EVP_MD_meth_set_final(md, digest_sha256_final)) {
             OPENSSL_BOX_EVP_MD_meth_free(md);
             md = NULL;
         }
@@ -171,8 +171,8 @@ static const EVP_MD *digest_sha384(void)
                                              sizeof(EVP_MD *) + sizeof(SHA512_CTX))
             || !OPENSSL_BOX_EVP_MD_meth_set_flags(md, EVP_MD_FLAG_DIGALGID_ABSENT)
             || !OPENSSL_BOX_EVP_MD_meth_set_init(md, digest_sha384_init)
-            || !EVP_MD_meth_set_update(md, digest_sha384_update)
-            || !EVP_MD_meth_set_final(md, digest_sha384_final)) {
+            || !OPENSSL_BOX_EVP_MD_meth_set_update(md, digest_sha384_update)
+            || !OPENSSL_BOX_EVP_MD_meth_set_final(md, digest_sha384_final)) {
             OPENSSL_BOX_EVP_MD_meth_free(md);
             md = NULL;
         }
@@ -193,8 +193,8 @@ static const EVP_MD *digest_sha512(void)
                                              sizeof(EVP_MD *) + sizeof(SHA512_CTX))
             || !OPENSSL_BOX_EVP_MD_meth_set_flags(md, EVP_MD_FLAG_DIGALGID_ABSENT)
             || !OPENSSL_BOX_EVP_MD_meth_set_init(md, digest_sha512_init)
-            || !EVP_MD_meth_set_update(md, digest_sha512_update)
-            || !EVP_MD_meth_set_final(md, digest_sha512_final)) {
+            || !OPENSSL_BOX_EVP_MD_meth_set_update(md, digest_sha512_update)
+            || !OPENSSL_BOX_EVP_MD_meth_set_final(md, digest_sha512_final)) {
             OPENSSL_BOX_EVP_MD_meth_free(md);
             md = NULL;
         }
@@ -290,9 +290,9 @@ static const EVP_CIPHER *ossltest_aes_128_cbc(void)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_flags(_hidden_aes_128_cbc,
                                           EVP_CIPH_FLAG_DEFAULT_ASN1
                                           | EVP_CIPH_CBC_MODE)
-            || !EVP_CIPHER_meth_set_init(_hidden_aes_128_cbc,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_init(_hidden_aes_128_cbc,
                                          ossltest_aes128_init_key)
-            || !EVP_CIPHER_meth_set_do_cipher(_hidden_aes_128_cbc,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(_hidden_aes_128_cbc,
                                               ossltest_aes128_cbc_cipher)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(_hidden_aes_128_cbc,
                     OPENSSL_BOX_EVP_CIPHER_impl_ctx_size(OPENSSL_BOX_EVP_aes_128_cbc())))) {
@@ -318,11 +318,11 @@ static const EVP_CIPHER *ossltest_aes_128_gcm(void)
                                                        16 /* key len */)) == NULL
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_iv_length(_hidden_aes_128_gcm,12)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_flags(_hidden_aes_128_gcm, AES_GCM_FLAGS)
-            || !EVP_CIPHER_meth_set_init(_hidden_aes_128_gcm,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_init(_hidden_aes_128_gcm,
                                          ossltest_aes128_gcm_init_key)
-            || !EVP_CIPHER_meth_set_do_cipher(_hidden_aes_128_gcm,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(_hidden_aes_128_gcm,
                                               ossltest_aes128_gcm_cipher)
-            || !EVP_CIPHER_meth_set_ctrl(_hidden_aes_128_gcm,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_ctrl(_hidden_aes_128_gcm,
                                               ossltest_aes128_gcm_ctrl)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(_hidden_aes_128_gcm,
                     OPENSSL_BOX_EVP_CIPHER_impl_ctx_size(OPENSSL_BOX_EVP_aes_128_gcm())))) {
@@ -345,15 +345,15 @@ static const EVP_CIPHER *ossltest_aes_128_cbc_hmac_sha1(void)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_flags(_hidden_aes_128_cbc_hmac_sha1,
                    EVP_CIPH_CBC_MODE | EVP_CIPH_FLAG_DEFAULT_ASN1 |
                    EVP_CIPH_FLAG_AEAD_CIPHER)
-            || !EVP_CIPHER_meth_set_init(_hidden_aes_128_cbc_hmac_sha1,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_init(_hidden_aes_128_cbc_hmac_sha1,
                    ossltest_aes128_cbc_hmac_sha1_init_key)
-            || !EVP_CIPHER_meth_set_do_cipher(_hidden_aes_128_cbc_hmac_sha1,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(_hidden_aes_128_cbc_hmac_sha1,
                    ossltest_aes128_cbc_hmac_sha1_cipher)
-            || !EVP_CIPHER_meth_set_ctrl(_hidden_aes_128_cbc_hmac_sha1,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_ctrl(_hidden_aes_128_cbc_hmac_sha1,
                                          ossltest_aes128_cbc_hmac_sha1_ctrl)
-            || !EVP_CIPHER_meth_set_set_asn1_params(_hidden_aes_128_cbc_hmac_sha1,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_set_asn1_params(_hidden_aes_128_cbc_hmac_sha1,
                    EVP_CIPH_FLAG_DEFAULT_ASN1 ? NULL : OPENSSL_BOX_EVP_CIPHER_set_asn1_iv)
-            || !EVP_CIPHER_meth_set_get_asn1_params(_hidden_aes_128_cbc_hmac_sha1,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_get_asn1_params(_hidden_aes_128_cbc_hmac_sha1,
                    EVP_CIPH_FLAG_DEFAULT_ASN1 ? NULL : OPENSSL_BOX_EVP_CIPHER_get_asn1_iv)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(_hidden_aes_128_cbc_hmac_sha1,
                    sizeof(EVP_AES_HMAC_SHA1)))) {

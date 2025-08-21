@@ -311,11 +311,11 @@ int pkey_main(int argc, char **argv)
     }
 
     if (text_pub) {
-        if (EVP_PKEY_print_public(out, pkey, 0, NULL) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_print_public(out, pkey, 0, NULL) <= 0)
             goto end;
     } else if (text) {
         assert(private);
-        if (EVP_PKEY_print_private(out, pkey, 0, NULL) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_print_private(out, pkey, 0, NULL) <= 0)
             goto end;
     }
 

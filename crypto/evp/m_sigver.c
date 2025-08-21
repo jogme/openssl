@@ -56,7 +56,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
     if (ctx->pctx == NULL) {
         reinit = 0;
         if (e == NULL)
-            ctx->pctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, props);
+            ctx->pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, props);
         else
             ctx->pctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, e);
     }
@@ -144,7 +144,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
 
         switch (iter) {
         case 1:
-            signature = EVP_SIGNATURE_fetch(locpctx->libctx, supported_sig,
+            signature = OPENSSL_BOX_EVP_SIGNATURE_fetch(locpctx->libctx, supported_sig,
                                             locpctx->propquery);
             if (signature != NULL)
                 tmp_prov = OPENSSL_BOX_EVP_SIGNATURE_get0_provider(signature);
@@ -236,7 +236,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
              * so the EVP_MD should not be used beyond the lifetime of the
              * EVP_MD_CTX.
              */
-            ctx->fetched_digest = EVP_MD_fetch(locpctx->libctx, mdname, props);
+            ctx->fetched_digest = OPENSSL_BOX_EVP_MD_fetch(locpctx->libctx, mdname, props);
             if (ctx->fetched_digest != NULL) {
                 ctx->digest = ctx->reqdigest = ctx->fetched_digest;
             } else {
@@ -349,7 +349,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
         *pctx = ctx->pctx;
     if (ctx->pctx->pmeth->flags & EVP_PKEY_FLAG_SIGCTX_CUSTOM)
         return 1;
-    if (!EVP_DigestInit_ex(ctx, type, e))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx, type, e))
         return 0;
     /*
      * This indicates the current algorithm requires
@@ -368,7 +368,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
     return ret > 0 ? 1 : 0;
 }
 
-int EVP_DigestSignInit_ex(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
+int OPENSSL_BOX_EVP_DigestSignInit_ex(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
                           const char *mdname, OSSL_LIB_CTX *libctx,
                           const char *props, EVP_PKEY *pkey,
                           const OSSL_PARAM params[])
@@ -377,14 +377,14 @@ int EVP_DigestSignInit_ex(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
                           params);
 }
 
-int EVP_DigestSignInit(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
+int OPENSSL_BOX_EVP_DigestSignInit(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
                        const EVP_MD *type, ENGINE *e, EVP_PKEY *pkey)
 {
     return do_sigver_init(ctx, pctx, type, NULL, NULL, NULL, e, pkey, 0,
                           NULL);
 }
 
-int EVP_DigestVerifyInit_ex(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
+int OPENSSL_BOX_EVP_DigestVerifyInit_ex(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
                             const char *mdname, OSSL_LIB_CTX *libctx,
                             const char *props, EVP_PKEY *pkey,
                             const OSSL_PARAM params[])
@@ -393,7 +393,7 @@ int EVP_DigestVerifyInit_ex(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
                           params);
 }
 
-int EVP_DigestVerifyInit(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
+int OPENSSL_BOX_EVP_DigestVerifyInit(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
                          const EVP_MD *type, ENGINE *e, EVP_PKEY *pkey)
 {
     return do_sigver_init(ctx, pctx, type, NULL, NULL, NULL, e, pkey, 1,
@@ -447,7 +447,7 @@ int OPENSSL_BOX_EVP_DigestSignUpdate(EVP_MD_CTX *ctx, const void *data, size_t d
         pctx->flag_call_digest_custom = 0;
     }
 
-    return EVP_DigestUpdate(ctx, data, dsize);
+    return OPENSSL_BOX_EVP_DigestUpdate(ctx, data, dsize);
 }
 
 int OPENSSL_BOX_EVP_DigestVerifyUpdate(EVP_MD_CTX *ctx, const void *data, size_t dsize)
@@ -493,10 +493,10 @@ int OPENSSL_BOX_EVP_DigestVerifyUpdate(EVP_MD_CTX *ctx, const void *data, size_t
         pctx->flag_call_digest_custom = 0;
     }
 
-    return EVP_DigestUpdate(ctx, data, dsize);
+    return OPENSSL_BOX_EVP_DigestUpdate(ctx, data, dsize);
 }
 
-int EVP_DigestSignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
+int OPENSSL_BOX_EVP_DigestSignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
                         size_t *siglen)
 {
     EVP_SIGNATURE *signature;
@@ -583,7 +583,7 @@ int EVP_DigestSignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
             if (sctx)
                 r = pctx->pmeth->signctx(pctx, sigret, siglen, ctx);
             else
-                r = EVP_DigestFinal_ex(ctx, md, &mdlen);
+                r = OPENSSL_BOX_EVP_DigestFinal_ex(ctx, md, &mdlen);
         } else {
             EVP_MD_CTX *tmp_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
 
@@ -597,12 +597,12 @@ int EVP_DigestSignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
                 r = tmp_ctx->pctx->pmeth->signctx(tmp_ctx->pctx,
                                                   sigret, siglen, tmp_ctx);
             else
-                r = EVP_DigestFinal_ex(tmp_ctx, md, &mdlen);
+                r = OPENSSL_BOX_EVP_DigestFinal_ex(tmp_ctx, md, &mdlen);
             OPENSSL_BOX_EVP_MD_CTX_free(tmp_ctx);
         }
         if (sctx || !r)
             return r;
-        if (EVP_PKEY_sign(pctx, sigret, siglen, md, mdlen) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_sign(pctx, sigret, siglen, md, mdlen) <= 0)
             return 0;
     } else {
         if (sctx) {
@@ -611,14 +611,14 @@ int EVP_DigestSignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
         } else {
             int s = OPENSSL_BOX_EVP_MD_get_size(ctx->digest);
 
-            if (s <= 0 || EVP_PKEY_sign(pctx, sigret, siglen, NULL, s) <= 0)
+            if (s <= 0 || OPENSSL_BOX_EVP_PKEY_sign(pctx, sigret, siglen, NULL, s) <= 0)
                 return 0;
         }
     }
     return 1;
 }
 
-int EVP_DigestSign(EVP_MD_CTX *ctx, unsigned char *sigret, size_t *siglen,
+int OPENSSL_BOX_EVP_DigestSign(EVP_MD_CTX *ctx, unsigned char *sigret, size_t *siglen,
                    const unsigned char *tbs, size_t tbslen)
 {
     EVP_PKEY_CTX *pctx = ctx->pctx;
@@ -661,10 +661,10 @@ int EVP_DigestSign(EVP_MD_CTX *ctx, unsigned char *sigret, size_t *siglen,
 
     if (sigret != NULL && OPENSSL_BOX_EVP_DigestSignUpdate(ctx, tbs, tbslen) <= 0)
         return 0;
-    return EVP_DigestSignFinal(ctx, sigret, siglen);
+    return OPENSSL_BOX_EVP_DigestSignFinal(ctx, sigret, siglen);
 }
 
-int EVP_DigestVerifyFinal(EVP_MD_CTX *ctx, const unsigned char *sig,
+int OPENSSL_BOX_EVP_DigestVerifyFinal(EVP_MD_CTX *ctx, const unsigned char *sig,
                           size_t siglen)
 {
     EVP_SIGNATURE *signature;
@@ -734,7 +734,7 @@ int EVP_DigestVerifyFinal(EVP_MD_CTX *ctx, const unsigned char *sig,
             r = pctx->pmeth->verifyctx(pctx, sig, (int)siglen, ctx);
             ctx->flags |= EVP_MD_CTX_FLAG_FINALISED;
         } else
-            r = EVP_DigestFinal_ex(ctx, md, &mdlen);
+            r = OPENSSL_BOX_EVP_DigestFinal_ex(ctx, md, &mdlen);
     } else {
         EVP_MD_CTX *tmp_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (tmp_ctx == NULL)
@@ -747,15 +747,15 @@ int EVP_DigestVerifyFinal(EVP_MD_CTX *ctx, const unsigned char *sig,
             r = tmp_ctx->pctx->pmeth->verifyctx(tmp_ctx->pctx,
                                                 sig, (int)siglen, tmp_ctx);
         else
-            r = EVP_DigestFinal_ex(tmp_ctx, md, &mdlen);
+            r = OPENSSL_BOX_EVP_DigestFinal_ex(tmp_ctx, md, &mdlen);
         OPENSSL_BOX_EVP_MD_CTX_free(tmp_ctx);
     }
     if (vctx || !r)
         return r;
-    return EVP_PKEY_verify(pctx, sig, siglen, md, mdlen);
+    return OPENSSL_BOX_EVP_PKEY_verify(pctx, sig, siglen, md, mdlen);
 }
 
-int EVP_DigestVerify(EVP_MD_CTX *ctx, const unsigned char *sigret,
+int OPENSSL_BOX_EVP_DigestVerify(EVP_MD_CTX *ctx, const unsigned char *sigret,
                      size_t siglen, const unsigned char *tbs, size_t tbslen)
 {
     EVP_PKEY_CTX *pctx = ctx->pctx;
@@ -794,5 +794,5 @@ int EVP_DigestVerify(EVP_MD_CTX *ctx, const unsigned char *sigret,
     }
     if (OPENSSL_BOX_EVP_DigestVerifyUpdate(ctx, tbs, tbslen) <= 0)
         return -1;
-    return EVP_DigestVerifyFinal(ctx, sigret, siglen);
+    return OPENSSL_BOX_EVP_DigestVerifyFinal(ctx, sigret, siglen);
 }

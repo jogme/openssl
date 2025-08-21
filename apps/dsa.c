@@ -196,8 +196,8 @@ int dsa_main(int argc, char **argv)
 
     if (text) {
         assert(pubin || private);
-        if ((pubin && EVP_PKEY_print_public(out, pkey, 0, NULL) <= 0)
-            || (!pubin && EVP_PKEY_print_private(out, pkey, 0, NULL) <= 0)) {
+        if ((pubin && OPENSSL_BOX_EVP_PKEY_print_public(out, pkey, 0, NULL) <= 0)
+            || (!pubin && OPENSSL_BOX_EVP_PKEY_print_private(out, pkey, 0, NULL) <= 0)) {
             perror(outfile);
             ERR_print_errors(bio_err);
             goto end;
@@ -207,7 +207,7 @@ int dsa_main(int argc, char **argv)
     if (modulus) {
         BIGNUM *pub_key = NULL;
 
-        if (!EVP_PKEY_get_bn_param(pkey, "pub", &pub_key)) {
+        if (!OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, "pub", &pub_key)) {
             ERR_print_errors(bio_err);
             goto end;
         }

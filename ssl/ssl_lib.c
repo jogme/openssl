@@ -6124,7 +6124,7 @@ int ssl_handshake_hash(SSL_CONNECTION *s,
     }
 
     if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx, hdgst)
-        || EVP_DigestFinal_ex(ctx, out, NULL) <= 0) {
+        || OPENSSL_BOX_EVP_DigestFinal_ex(ctx, out, NULL) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
@@ -7516,7 +7516,7 @@ const EVP_CIPHER *ssl_evp_cipher_fetch(OSSL_LIB_CTX *libctx,
      * and that could be ok
      */
     ERR_set_mark();
-    ciph = EVP_CIPHER_fetch(libctx, OBJ_nid2sn(nid), properties);
+    ciph = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, OBJ_nid2sn(nid), properties);
     if (ciph != NULL) {
         OSSL_PARAM params[2];
         int decrypt_only = 0;
@@ -7575,7 +7575,7 @@ const EVP_MD *ssl_evp_md_fetch(OSSL_LIB_CTX *libctx,
 
     /* Otherwise we do an explicit fetch */
     ERR_set_mark();
-    md = EVP_MD_fetch(libctx, OBJ_nid2sn(nid), properties);
+    md = OPENSSL_BOX_EVP_MD_fetch(libctx, OBJ_nid2sn(nid), properties);
     ERR_pop_to_mark();
     return md;
 }

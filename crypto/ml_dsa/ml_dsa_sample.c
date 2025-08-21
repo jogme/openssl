@@ -133,7 +133,7 @@ static int rej_ntt_poly(EVP_MD_CTX *g_ctx, const EVP_MD *md,
                     return 1;   /* finished */
             }
         }
-        if (!EVP_DigestSqueeze(g_ctx, blocks, sizeof(blocks)))
+        if (!OPENSSL_BOX_EVP_DigestSqueeze(g_ctx, blocks, sizeof(blocks)))
             return 0;
     }
 }
@@ -179,7 +179,7 @@ static int rej_bounded_poly(EVP_MD_CTX *h_ctx, const EVP_MD *md,
                     && ++j >= ML_DSA_NUM_POLY_COEFFICIENTS)
                 return 1;
         }
-        if (!EVP_DigestSqueeze(h_ctx, blocks, sizeof(blocks)))
+        if (!OPENSSL_BOX_EVP_DigestSqueeze(h_ctx, blocks, sizeof(blocks)))
             return 0;
     }
 }
@@ -335,7 +335,7 @@ int ossl_ml_dsa_poly_sample_in_ball(POLY *out_c, const uint8_t *seed, int seed_l
         for (;;) {
             if (offset == sizeof(block)) {
                 /* squeeze another block if the bytes from block have been used */
-                if (!EVP_DigestSqueeze(h_ctx, block, sizeof(block)))
+                if (!OPENSSL_BOX_EVP_DigestSqueeze(h_ctx, block, sizeof(block)))
                     return 0;
                 offset = 0;
             }

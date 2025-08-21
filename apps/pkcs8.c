@@ -154,7 +154,7 @@ int pkcs8_main(int argc, char **argv)
             break;
         case OPT_V2PRF:
             pbe_nid = OBJ_txt2nid(opt_arg());
-            if (!EVP_PBE_find(EVP_PBE_TYPE_PRF, pbe_nid, NULL, NULL, 0)) {
+            if (!OPENSSL_BOX_EVP_PBE_find(EVP_PBE_TYPE_PRF, pbe_nid, NULL, NULL, 0)) {
                 BIO_printf(bio_err,
                            "%s: Unknown PRF algorithm %s\n", prog, opt_arg());
                 goto opthelp;

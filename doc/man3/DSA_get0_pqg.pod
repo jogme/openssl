@@ -36,7 +36,7 @@ see L<openssl_user_macros(7)>:
 =head1 DESCRIPTION
 
 All of the functions described on this page are deprecated.
-Applications should instead use L<EVP_PKEY_get_bn_param(3)>.
+Applications should instead use L<OPENSSL_BOX_EVP_PKEY_get_bn_param(3)>.
 
 A DSA object contains the parameters B<p>, B<q> and B<g>. It also contains a
 public key (B<pub_key>) and (optionally) a private key (B<priv_key>).
@@ -101,7 +101,7 @@ has been set.
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_get_bn_param(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_bn_param(3)>,
 L<DSA_new(3)>, L<DSA_new(3)>, L<DSA_generate_parameters(3)>, L<DSA_generate_key(3)>,
 L<DSA_dup_DH(3)>, L<DSA_do_sign(3)>, L<DSA_set_method(3)>, L<DSA_SIG_new(3)>,
 L<DSA_sign(3)>, L<DSA_size(3)>, L<DSA_meth_new(3)>

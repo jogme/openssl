@@ -9,7 +9,7 @@
 
 /*
  * Example showing how to load DSA params from raw data
- * using EVP_PKEY_fromdata()
+ * using OPENSSL_BOX_EVP_PKEY_fromdata()
  */
 
 #include <openssl/param_build.h>
@@ -46,15 +46,15 @@ int main(int argc, char **argv)
     if (params == NULL)
         goto cleanup;
 
-    ctx = EVP_PKEY_CTX_new_from_name(libctx, "DSA", propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "DSA", propq);
     if (ctx == NULL) {
-        fprintf(stderr, "EVP_PKEY_CTX_new_from_name() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_CTX_new_from_name() failed\n");
         goto cleanup;
     }
 
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0
-            || EVP_PKEY_fromdata(ctx, &dsaparamkey, EVP_PKEY_KEY_PARAMETERS, params) <= 0) {
-        fprintf(stderr, "EVP_PKEY_fromdata() failed\n");
+            || OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &dsaparamkey, EVP_PKEY_KEY_PARAMETERS, params) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_fromdata() failed\n");
         goto cleanup;
     }
 

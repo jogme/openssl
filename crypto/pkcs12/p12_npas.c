@@ -174,7 +174,7 @@ static int newpass_bag(PKCS12_SAFEBAG *bag, const char *oldpass,
         return 0;
     }
     if (cipherid != NID_undef) {
-        cipher = EVP_CIPHER_fetch(libctx, OBJ_nid2sn(cipherid), propq);
+        cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, OBJ_nid2sn(cipherid), propq);
         if (cipher == NULL) {
             PKCS8_PRIV_KEY_INFO_free(p8);
             return 0;

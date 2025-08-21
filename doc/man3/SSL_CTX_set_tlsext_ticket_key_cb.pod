@@ -65,7 +65,7 @@ maximum IV length is B<EVP_MAX_IV_LENGTH> bytes defined in F<< <openssl/evp.h> >
 
 The initialization vector I<iv> should be a random value. The cipher context
 I<ctx> should use the initialisation vector I<iv>. The cipher context can be
-set using L<EVP_EncryptInit_ex(3)>. The hmac context and digest can be set using
+set using L<OPENSSL_BOX_EVP_EncryptInit_ex(3)>. The hmac context and digest can be set using
 L<OPENSSL_BOX_EVP_MAC_CTX_set_params(3)> with the B<OSSL_MAC_PARAM_KEY> and
 B<OSSL_MAC_PARAM_DIGEST> parameters respectively.
 
@@ -75,7 +75,7 @@ of parameters. In this case I<name> and I<iv> have already been parsed out of
 the session ticket. The OpenSSL library expects that the I<name> will be used
 to retrieve a cryptographic parameters and that the cryptographic context
 I<ctx> will be set with the retrieved parameters and the initialization vector
-I<iv>. using a function like L<EVP_DecryptInit_ex(3)>. The key material and
+I<iv>. using a function like L<OPENSSL_BOX_EVP_DecryptInit_ex(3)>. The key material and
 digest for I<hctx> need to be set using L<OPENSSL_BOX_EVP_MAC_CTX_set_params(3)> with the
 B<OSSL_MAC_PARAM_KEY> and B<OSSL_MAC_PARAM_DIGEST> parameters respectively.
 
@@ -179,7 +179,7 @@ Reference Implementation:
          }
          memcpy(key_name, key->name, 16);
 
-         if (EVP_EncryptInit_ex(&ctx, OPENSSL_BOX_EVP_aes_256_cbc(), NULL, key->aes_key,
+         if (OPENSSL_BOX_EVP_EncryptInit_ex(&ctx, OPENSSL_BOX_EVP_aes_256_cbc(), NULL, key->aes_key,
                                 iv) == 0)
             return -1; /* error in cipher initialisation */
 
@@ -208,7 +208,7 @@ Reference Implementation:
          if (OPENSSL_BOX_EVP_MAC_CTX_set_params(hctx, params) == 0)
             return -1; /* error in mac initialisation */
 
-         if (EVP_DecryptInit_ex(&ctx, OPENSSL_BOX_EVP_aes_256_cbc(), NULL, key->aes_key,
+         if (OPENSSL_BOX_EVP_DecryptInit_ex(&ctx, OPENSSL_BOX_EVP_aes_256_cbc(), NULL, key->aes_key,
                                 iv) == 0)
             return -1; /* error in cipher initialisation */
 

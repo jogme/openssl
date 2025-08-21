@@ -109,7 +109,7 @@ static int test_cache_flushes(void)
     if (!TEST_ptr(ctx = OSSL_LIB_CTX_new())
             || !TEST_ptr(prov = OSSL_PROVIDER_load(ctx, "default"))
             || !TEST_true(OSSL_PROVIDER_available(ctx, "default"))
-            || !TEST_ptr(md = EVP_MD_fetch(ctx, "SHA256", NULL)))
+            || !TEST_ptr(md = OPENSSL_BOX_EVP_MD_fetch(ctx, "SHA256", NULL)))
         goto err;
     OPENSSL_BOX_EVP_MD_free(md);
     md = NULL;
@@ -119,7 +119,7 @@ static int test_cache_flushes(void)
     if (!TEST_false(OSSL_PROVIDER_available(ctx, "default")))
         goto err;
 
-    if (!TEST_ptr_null(md = EVP_MD_fetch(ctx, "SHA256", NULL))) {
+    if (!TEST_ptr_null(md = OPENSSL_BOX_EVP_MD_fetch(ctx, "SHA256", NULL))) {
         const char *provname = OSSL_PROVIDER_get0_name(OPENSSL_BOX_EVP_MD_get0_provider(md));
 
         if (OSSL_PROVIDER_available(NULL, provname))

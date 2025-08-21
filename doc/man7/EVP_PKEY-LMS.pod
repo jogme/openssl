@@ -15,7 +15,7 @@ FIPS software modules.
 =head2 Common LMS parameters
 
 LMS public keys are encoded in XDR format (i.e. not ASN1 format).
-The following parameters are used by EVP_PKEY_fromdata() and by the
+The following parameters are used by OPENSSL_BOX_EVP_PKEY_fromdata() and by the
 LMS keymanager for import and export.
 
 =over 4
@@ -56,7 +56,7 @@ NOTE error checking has been omitted in these examples
 
 An B<EVP_PKEY> context can be obtained by calling:
 
-    EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(libctx, "LMS", propq);
+    EVP_PKEY_CTX *ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "LMS", propq);
 
 An B<LMS> public key can be loaded simply like this:
 
@@ -79,7 +79,7 @@ To load a LMS key from XDR encoded "data" of size "datalen":
                                           (unsigned char *)data, datalen);
     params[1] = OSSL_PARAM_construct_end();
     ret = OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx)
-    ret = EVP_PKEY_fromdata(ctx, &key, EVP_PKEY_PUBLIC_KEY, params);
+    ret = OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &key, EVP_PKEY_PUBLIC_KEY, params);
 
 =head1 SEE ALSO
 

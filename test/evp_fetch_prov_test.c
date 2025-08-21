@@ -62,9 +62,9 @@ static int calculate_digest(const EVP_MD *md, const char *msg, size_t len,
     int ret = 0;
 
     if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_MD_CTX_new())
-            || !TEST_true(EVP_DigestInit_ex(ctx, md, NULL))
-            || !TEST_true(EVP_DigestUpdate(ctx, msg, len))
-            || !TEST_true(EVP_DigestFinal_ex(ctx, out, NULL))
+            || !TEST_true(OPENSSL_BOX_EVP_DigestInit_ex(ctx, md, NULL))
+            || !TEST_true(OPENSSL_BOX_EVP_DigestUpdate(ctx, msg, len))
+            || !TEST_true(OPENSSL_BOX_EVP_DigestFinal_ex(ctx, out, NULL))
             || !TEST_mem_eq(out, SHA256_DIGEST_LENGTH, exptd,
                             SHA256_DIGEST_LENGTH)
             || !TEST_true(md == OPENSSL_BOX_EVP_MD_CTX_get0_md(ctx)))
@@ -156,7 +156,7 @@ static X509_ALGOR *make_algor(int nid)
 }
 
 /*
- * Test EVP_MD_fetch()
+ * Test OPENSSL_BOX_EVP_MD_fetch()
  */
 static int test_md(const EVP_MD *md)
 {
@@ -197,7 +197,7 @@ static int test_explicit_EVP_MD_fetch(const char *id)
     if (use_default_ctx == 0 && !load_providers(&ctx, prov))
         goto err;
 
-    md = EVP_MD_fetch(ctx, id, fetch_property);
+    md = OPENSSL_BOX_EVP_MD_fetch(ctx, id, fetch_property);
     if (expected_fetch_result != 0) {
         if (!test_md(md))
             goto err;
@@ -257,7 +257,7 @@ static int test_explicit_EVP_MD_fetch_by_X509_ALGOR(int idx)
 }
 
 /*
- * Test EVP_CIPHER_fetch()
+ * Test OPENSSL_BOX_EVP_CIPHER_fetch()
  */
 static int encrypt_decrypt(const EVP_CIPHER *cipher, const unsigned char *msg,
                            size_t len)
@@ -269,12 +269,12 @@ static int encrypt_decrypt(const EVP_CIPHER *cipher, const unsigned char *msg,
 
     memset(key, 0, sizeof(key));
     if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
-            || !TEST_true(EVP_CipherInit_ex(ctx, cipher, NULL, key, NULL, 1))
-            || !TEST_true(EVP_CipherUpdate(ctx, ct, &ctlen, msg, (int)len))
-            || !TEST_true(EVP_CipherFinal_ex(ctx, ct, &ctlen))
-            || !TEST_true(EVP_CipherInit_ex(ctx, cipher, NULL, key, NULL, 0))
-            || !TEST_true(EVP_CipherUpdate(ctx, pt, &ptlen, ct, ctlen))
-            || !TEST_true(EVP_CipherFinal_ex(ctx, pt, &ptlen))
+            || !TEST_true(OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, NULL, key, NULL, 1))
+            || !TEST_true(OPENSSL_BOX_EVP_CipherUpdate(ctx, ct, &ctlen, msg, (int)len))
+            || !TEST_true(OPENSSL_BOX_EVP_CipherFinal_ex(ctx, ct, &ctlen))
+            || !TEST_true(OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, NULL, key, NULL, 0))
+            || !TEST_true(OPENSSL_BOX_EVP_CipherUpdate(ctx, pt, &ptlen, ct, ctlen))
+            || !TEST_true(OPENSSL_BOX_EVP_CipherFinal_ex(ctx, pt, &ptlen))
             || !TEST_mem_eq(pt, ptlen, msg, len))
         goto err;
 
@@ -315,7 +315,7 @@ static int test_explicit_EVP_CIPHER_fetch(const char *id)
     if (use_default_ctx == 0 && !load_providers(&ctx, prov))
         goto err;
 
-    cipher = EVP_CIPHER_fetch(ctx, id, fetch_property);
+    cipher = OPENSSL_BOX_EVP_CIPHER_fetch(ctx, id, fetch_property);
     if (expected_fetch_result != 0) {
         if (!test_cipher(cipher))
             goto err;

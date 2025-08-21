@@ -236,8 +236,8 @@ static const EVP_CIPHER *test_r4_cipher(void)
         if ((cipher = OPENSSL_BOX_EVP_CIPHER_meth_new(NID_rc4, 1, TEST_RC4_KEY_SIZE)) == NULL
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_iv_length(cipher, 0)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_flags(cipher, EVP_CIPH_VARIABLE_LENGTH)
-            || !EVP_CIPHER_meth_set_init(cipher, test_rc4_init_key)
-            || !EVP_CIPHER_meth_set_do_cipher(cipher, test_rc4_cipher)
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_init(cipher, test_rc4_init_key)
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(cipher, test_rc4_cipher)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(cipher, sizeof(TEST_RC4_KEY))) {
             OPENSSL_BOX_EVP_CIPHER_meth_free(cipher);
             cipher = NULL;
@@ -261,8 +261,8 @@ static const EVP_CIPHER *test_r4_40_cipher(void)
         if ((cipher = OPENSSL_BOX_EVP_CIPHER_meth_new(NID_rc4, 1, 5 /* 40 bits */)) == NULL
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_iv_length(cipher, 0)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_flags(cipher, EVP_CIPH_VARIABLE_LENGTH)
-            || !EVP_CIPHER_meth_set_init(cipher, test_rc4_init_key)
-            || !EVP_CIPHER_meth_set_do_cipher(cipher, test_rc4_cipher)
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_init(cipher, test_rc4_init_key)
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(cipher, test_rc4_cipher)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(cipher, sizeof(TEST_RC4_KEY))) {
             OPENSSL_BOX_EVP_CIPHER_meth_free(cipher);
             cipher = NULL;
@@ -360,8 +360,8 @@ static const EVP_MD *test_sha_md(void)
                                              sizeof(EVP_MD *) + sizeof(SHA_CTX))
             || !OPENSSL_BOX_EVP_MD_meth_set_flags(md, 0)
             || !OPENSSL_BOX_EVP_MD_meth_set_init(md, test_sha1_init)
-            || !EVP_MD_meth_set_update(md, test_sha1_update)
-            || !EVP_MD_meth_set_final(md, test_sha1_final)) {
+            || !OPENSSL_BOX_EVP_MD_meth_set_update(md, test_sha1_update)
+            || !OPENSSL_BOX_EVP_MD_meth_set_final(md, test_sha1_final)) {
             OPENSSL_BOX_EVP_MD_meth_free(md);
             md = NULL;
         }
@@ -533,7 +533,7 @@ static int ossl_int_update(EVP_MD_CTX *ctx, const void *data, size_t count)
 static int ossl_hmac_signctx_init(EVP_PKEY_CTX *ctx, EVP_MD_CTX *mctx)
 {
     OPENSSL_BOX_EVP_MD_CTX_set_flags(mctx, EVP_MD_CTX_FLAG_NO_INIT);
-    EVP_MD_CTX_set_update_fn(mctx, ossl_int_update);
+    OPENSSL_BOX_EVP_MD_CTX_set_update_fn(mctx, ossl_int_update);
     return 1;
 }
 
@@ -620,16 +620,16 @@ static int ossl_register_hmac_meth(void)
     meth = OPENSSL_BOX_EVP_PKEY_meth_new(EVP_PKEY_HMAC, 0);
     if (meth == NULL)
         return 0;
-    EVP_PKEY_meth_set_init(meth, ossl_hmac_init);
-    EVP_PKEY_meth_set_copy(meth, ossl_hmac_copy);
-    EVP_PKEY_meth_set_cleanup(meth, ossl_hmac_cleanup);
+    OPENSSL_BOX_EVP_PKEY_meth_set_init(meth, ossl_hmac_init);
+    OPENSSL_BOX_EVP_PKEY_meth_set_copy(meth, ossl_hmac_copy);
+    OPENSSL_BOX_EVP_PKEY_meth_set_cleanup(meth, ossl_hmac_cleanup);
 
-    EVP_PKEY_meth_set_keygen(meth, 0, ossl_hmac_keygen);
+    OPENSSL_BOX_EVP_PKEY_meth_set_keygen(meth, 0, ossl_hmac_keygen);
 
-    EVP_PKEY_meth_set_signctx(meth, ossl_hmac_signctx_init,
+    OPENSSL_BOX_EVP_PKEY_meth_set_signctx(meth, ossl_hmac_signctx_init,
                               ossl_hmac_signctx);
 
-    EVP_PKEY_meth_set_ctrl(meth, ossl_hmac_ctrl, ossl_hmac_ctrl_str);
+    OPENSSL_BOX_EVP_PKEY_meth_set_ctrl(meth, ossl_hmac_ctrl, ossl_hmac_ctrl_str);
     ossl_hmac_meth = meth;
     return 1;
 }

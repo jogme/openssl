@@ -268,7 +268,7 @@ static int ossl_encoder_ctx_setup_for_pkey(OSSL_ENCODER_CTX *ctx,
         }
 
         keymgmt_data.error_occurred = 0;
-        EVP_KEYMGMT_names_do_all(pkey->keymgmt, collect_name, &keymgmt_data);
+        OPENSSL_BOX_EVP_KEYMGMT_names_do_all(pkey->keymgmt, collect_name, &keymgmt_data);
         if (keymgmt_data.error_occurred) {
             sk_OPENSSL_CSTRING_free(keymgmt_data.names);
             goto err;

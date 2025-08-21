@@ -187,7 +187,7 @@ static int ecdsa_setup_md(PROV_ECDSA_CTX *ctx,
     }
     if (mdprops == NULL)
         mdprops = ctx->propq;
-    md = EVP_MD_fetch(ctx->libctx, mdname, mdprops);
+    md = OPENSSL_BOX_EVP_MD_fetch(ctx->libctx, mdname, mdprops);
     if (md == NULL) {
         ERR_raise_data(ERR_LIB_PROV, PROV_R_INVALID_DIGEST,
                        "%s could not be fetched", mdname);
@@ -380,7 +380,7 @@ static int ecdsa_signverify_message_update(void *vctx,
     if (ctx == NULL)
         return 0;
 
-    return EVP_DigestUpdate(ctx->mdctx, data, datalen);
+    return OPENSSL_BOX_EVP_DigestUpdate(ctx->mdctx, data, datalen);
 }
 
 static int ecdsa_sign_message_final(void *vctx, unsigned char *sig,
@@ -399,7 +399,7 @@ static int ecdsa_sign_message_final(void *vctx, unsigned char *sig,
      * are ignored. Defer to ecdsa_sign.
      */
     if (sig != NULL
-        && !EVP_DigestFinal_ex(ctx->mdctx, digest, &dlen))
+        && !OPENSSL_BOX_EVP_DigestFinal_ex(ctx->mdctx, digest, &dlen))
         return 0;
     return ecdsa_sign_directly(vctx, sig, siglen, sigsize, digest, dlen);
 }
@@ -477,7 +477,7 @@ static int ecdsa_verify_message_final(void *vctx)
      * The digests used here are all known (see ecdsa_get_md_nid()), so they
      * should not exceed the internal buffer size of EVP_MAX_MD_SIZE.
      */
-    if (!EVP_DigestFinal_ex(ctx->mdctx, digest, &dlen))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx->mdctx, digest, &dlen))
         return 0;
 
     return ecdsa_verify_directly(vctx, ctx->sig, ctx->siglen,
@@ -536,7 +536,7 @@ static int ecdsa_digest_signverify_init(void *vctx, const char *mdname,
             goto error;
     }
 
-    if (!EVP_DigestInit_ex2(ctx->mdctx, ctx->md, params))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex2(ctx->mdctx, ctx->md, params))
         goto error;
     return 1;
 error:
@@ -939,7 +939,7 @@ static int ecdsa_sigalg_signverify_init(void *vctx, void *vec,
             goto error;
     }
 
-    if (!EVP_DigestInit_ex2(ctx->mdctx, ctx->md, params))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex2(ctx->mdctx, ctx->md, params))
         goto error;
 
     return 1;

@@ -37,7 +37,7 @@ Decoding starts with the first line that is shorter than 1024 bytes (including
 the newline) and consists of only (at least one) valid base64 characters plus
 optional whitespace.
 Decoding stops when base64 padding is encountered, a soft end-of-input
-character (B<->, see L<EVP_DecodeUpdate(3)>) occurs as the first byte after a
+character (B<->, see L<OPENSSL_BOX_EVP_DecodeUpdate(3)>) occurs as the first byte after a
 complete group of 4 valid base64 characters is decoded, or when an error occurs
 (e.g. due to input characters other than valid base64 or whitespace).
 
@@ -122,7 +122,7 @@ error paths.
 L<BIO_read(3)>,
 L<BIO_should_read(3)>,
 L<BIO_set_mem_eof_return(3)>,
-L<EVP_DecodeUpdate(3)>.
+L<OPENSSL_BOX_EVP_DecodeUpdate(3)>.
 
 =head1 COPYRIGHT
 

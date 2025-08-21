@@ -303,7 +303,7 @@ size_t tls13_final_finish_mac(SSL_CONNECTION *s, const char *str, size_t slen,
         key = finsecret;
     }
 
-    if (!EVP_Q_mac(sctx->libctx, "HMAC", sctx->propq, mdname,
+    if (!OPENSSL_BOX_EVP_Q_mac(sctx->libctx, "HMAC", sctx->propq, mdname,
                    params, key, hashlen, hash, hashlen,
                    /* outsize as per sizeof(peer_finish_md) */
                    out, EVP_MAX_MD_SIZE * 2, &len)) {
@@ -581,9 +581,9 @@ int tls13_change_cipher_state(SSL_CONNECTION *s, int which)
             }
 
             md = ssl_md(sctx, sslcipher->algorithm2);
-            if (md == NULL || !EVP_DigestInit_ex(mdctx, md, NULL)
-                    || !EVP_DigestUpdate(mdctx, hdata, handlen)
-                    || !EVP_DigestFinal_ex(mdctx, hashval, &hashlenui)) {
+            if (md == NULL || !OPENSSL_BOX_EVP_DigestInit_ex(mdctx, md, NULL)
+                    || !OPENSSL_BOX_EVP_DigestUpdate(mdctx, hdata, handlen)
+                    || !OPENSSL_BOX_EVP_DigestFinal_ex(mdctx, hashval, &hashlenui)) {
                 SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
                 OPENSSL_BOX_EVP_MD_CTX_free(mdctx);
                 goto err;
@@ -865,11 +865,11 @@ int tls13_export_keying_material(SSL_CONNECTION *s,
     if (!use_context)
         contextlen = 0;
 
-    if (EVP_DigestInit_ex(ctx, md, NULL) <= 0
-            || EVP_DigestUpdate(ctx, context, contextlen) <= 0
-            || EVP_DigestFinal_ex(ctx, hash, &hashsize) <= 0
-            || EVP_DigestInit_ex(ctx, md, NULL) <= 0
-            || EVP_DigestFinal_ex(ctx, data, &datalen) <= 0
+    if (OPENSSL_BOX_EVP_DigestInit_ex(ctx, md, NULL) <= 0
+            || OPENSSL_BOX_EVP_DigestUpdate(ctx, context, contextlen) <= 0
+            || OPENSSL_BOX_EVP_DigestFinal_ex(ctx, hash, &hashsize) <= 0
+            || OPENSSL_BOX_EVP_DigestInit_ex(ctx, md, NULL) <= 0
+            || OPENSSL_BOX_EVP_DigestFinal_ex(ctx, data, &datalen) <= 0
             || !tls13_hkdf_expand(s, md, s->exporter_master_secret,
                                   (const unsigned char *)label, llen,
                                   data, datalen, exportsecret, hashsize, 0)
@@ -927,11 +927,11 @@ int tls13_export_keying_material_early(SSL_CONNECTION *s,
      * Here Transcript-Hash is the cipher suite hash algorithm.
      */
     if (md == NULL
-            || EVP_DigestInit_ex(ctx, md, NULL) <= 0
-            || EVP_DigestUpdate(ctx, context, contextlen) <= 0
-            || EVP_DigestFinal_ex(ctx, hash, &hashsize) <= 0
-            || EVP_DigestInit_ex(ctx, md, NULL) <= 0
-            || EVP_DigestFinal_ex(ctx, data, &datalen) <= 0
+            || OPENSSL_BOX_EVP_DigestInit_ex(ctx, md, NULL) <= 0
+            || OPENSSL_BOX_EVP_DigestUpdate(ctx, context, contextlen) <= 0
+            || OPENSSL_BOX_EVP_DigestFinal_ex(ctx, hash, &hashsize) <= 0
+            || OPENSSL_BOX_EVP_DigestInit_ex(ctx, md, NULL) <= 0
+            || OPENSSL_BOX_EVP_DigestFinal_ex(ctx, data, &datalen) <= 0
             || !tls13_hkdf_expand(s, md, s->early_exporter_master_secret,
                                   (const unsigned char *)label, llen,
                                   data, datalen, exportsecret, hashsize, 0)

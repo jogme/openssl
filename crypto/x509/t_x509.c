@@ -158,7 +158,7 @@ int X509_print_ex(BIO *bp, X509 *x, unsigned long nmflags,
             BIO_printf(bp, "%12sUnable to load Public Key\n", "");
             ERR_print_errors(bp);
         } else {
-            EVP_PKEY_print_public(bp, pkey, 16, NULL);
+            OPENSSL_BOX_EVP_PKEY_print_public(bp, pkey, 16, NULL);
         }
     }
 
@@ -226,10 +226,10 @@ int X509_ocspid_print(BIO *bp, X509 *x)
         goto err;
     i2d_X509_NAME(subj, &dertmp);
 
-    md = EVP_MD_fetch(x->libctx, SN_sha1, x->propq);
+    md = OPENSSL_BOX_EVP_MD_fetch(x->libctx, SN_sha1, x->propq);
     if (md == NULL)
         goto err;
-    if (!EVP_Digest(der, derlen, SHA1md, NULL, md, NULL))
+    if (!OPENSSL_BOX_EVP_Digest(der, derlen, SHA1md, NULL, md, NULL))
         goto err;
     for (i = 0; i < SHA_DIGEST_LENGTH; i++) {
         if (BIO_printf(bp, "%02X", SHA1md[i]) <= 0)
@@ -249,7 +249,7 @@ int X509_ocspid_print(BIO *bp, X509 *x)
     if (keybstr == NULL)
         goto err;
 
-    if (!EVP_Digest(ASN1_STRING_get0_data(keybstr),
+    if (!OPENSSL_BOX_EVP_Digest(ASN1_STRING_get0_data(keybstr),
                     ASN1_STRING_length(keybstr), SHA1md, NULL, md, NULL))
         goto err;
     for (i = 0; i < SHA_DIGEST_LENGTH; i++) {

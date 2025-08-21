@@ -15,7 +15,7 @@ Public API - Add variants of `EVP_PKEY_CTX` functionality
 
 Through OTC discussions, it's been determined that the most suitable APIs to
 touch are the of `EVP_PKEY_` functions.
-Specifically, `EVP_PKEY_sign()`, `EVP_PKEY_verify()`, `EVP_PKEY_verify_recover()`
+Specifically, `OPENSSL_BOX_EVP_PKEY_sign()`, `OPENSSL_BOX_EVP_PKEY_verify()`, `OPENSSL_BOX_EVP_PKEY_verify_recover()`
 and related functions.
 They can be extended to accept an explicitly fetched algorithm of the right
 type, and to be able to incrementally process indefinite length data streams
@@ -30,7 +30,7 @@ limited to the modulus size of the RSA pkey.
 
 ### Making things less confusing with distinct function names
 
-Until now, `EVP_PKEY_sign()` and friends were only expected to act on the
+Until now, `OPENSSL_BOX_EVP_PKEY_sign()` and friends were only expected to act on the
 pre-computed digest of a message (under the condition that proper flags
 and signature md are specified using functions like
 `EVP_PKEY_CTX_set_rsa_padding()` and `OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md()`),
@@ -44,8 +44,8 @@ messages to be passed, in a streaming style through an *update* and a
 Discussions have revealed that it is potentially confusing to conflate the
 current functionality with streaming style functionality into the same name,
 so this design separates those out with specific init / update / final
-functions for that purpose.  For oneshot functionality, `EVP_PKEY_sign()`
-and `EVP_PKEY_verify()` remain supported.
+functions for that purpose.  For oneshot functionality, `OPENSSL_BOX_EVP_PKEY_sign()`
+and `OPENSSL_BOX_EVP_PKEY_verify()` remain supported.
 
 [^1]: the term "primitive" is borrowed from [PKCS#1](https://www.rfc-editor.org/rfc/rfc8017#section-5)
 
@@ -63,7 +63,7 @@ New public API - API Reference
 ### For limited input size / oneshot signing with `EVP_SIGNATURE`
 
 ``` C
-int EVP_PKEY_sign_init_ex2(EVP_PKEY_CTX *pctx,
+int OPENSSL_BOX_EVP_PKEY_sign_init_ex2(EVP_PKEY_CTX *pctx,
                            EVP_SIGNATURE *algo,
                            const OSSL_PARAM params[]);
 ```
@@ -71,23 +71,23 @@ int EVP_PKEY_sign_init_ex2(EVP_PKEY_CTX *pctx,
 ### For signing a stream with `EVP_SIGNATURE`
 
 ``` C
-int EVP_PKEY_sign_message_init(EVP_PKEY_CTX *pctx,
+int OPENSSL_BOX_EVP_PKEY_sign_message_init(EVP_PKEY_CTX *pctx,
                                EVP_SIGNATURE *algo,
                                const OSSL_PARAM params[]);
-int EVP_PKEY_sign_message_update(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_sign_message_update(EVP_PKEY_CTX *ctx,
                                  const unsigned char *in,
                                  size_t inlen);
-int EVP_PKEY_sign_message_final(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_sign_message_final(EVP_PKEY_CTX *ctx,
                                 unsigned char *sig,
                                 size_t *siglen);
 #define EVP_PKEY_sign_message(ctx,sig,siglen,tbs,tbslen) \
-    EVP_PKEY_sign(ctx,sig,siglen,tbs,tbslen)
+    OPENSSL_BOX_EVP_PKEY_sign(ctx,sig,siglen,tbs,tbslen)
 ```
 
 ### For limited input size / oneshot verification with `EVP_SIGNATURE`
 
 ``` C
-int EVP_PKEY_verify_init_ex2(EVP_PKEY_CTX *pctx,
+int OPENSSL_BOX_EVP_PKEY_verify_init_ex2(EVP_PKEY_CTX *pctx,
                              EVP_SIGNATURE *algo,
                              const OSSL_PARAM params[]);
 ```
@@ -96,21 +96,21 @@ int EVP_PKEY_verify_init_ex2(EVP_PKEY_CTX *pctx,
 
 ``` C
 /* Initializers */
-int EVP_PKEY_verify_message_init(EVP_PKEY_CTX *pctx,
+int OPENSSL_BOX_EVP_PKEY_verify_message_init(EVP_PKEY_CTX *pctx,
                                  EVP_SIGNATURE *algo,
                                  const OSSL_PARAM params[]);
 /* Signature setter */
-int EVP_PKEY_CTX_set_signature(EVP_PKEY_CTX *pctx,
+int OPENSSL_BOX_EVP_PKEY_CTX_set_signature(EVP_PKEY_CTX *pctx,
                                unsigned char *sig, size_t siglen,
                                size_t sigsize);
 /* Update and final */
-int EVP_PKEY_verify_message_update(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_verify_message_update(EVP_PKEY_CTX *ctx,
                                    const unsigned char *in,
                                    size_t inlen);
 int OPENSSL_BOX_EVP_PKEY_verify_message_final(EVP_PKEY_CTX *ctx);
 
 #define EVP_PKEY_verify_message(ctx,sig,siglen,tbs,tbslen) \
-    EVP_PKEY_verify(ctx,sig,siglen,tbs,tbslen)
+    OPENSSL_BOX_EVP_PKEY_verify(ctx,sig,siglen,tbs,tbslen)
 ```
 
 ### For verify_recover with `EVP_SIGNATURE`
@@ -120,7 +120,7 @@ verify_recover, so we only specify a new init function.
 
 ``` C
 /* Initializers */
-int EVP_PKEY_verify_recover_init_ex2(EVP_PKEY_CTX *pctx,
+int OPENSSL_BOX_EVP_PKEY_verify_recover_init_ex2(EVP_PKEY_CTX *pctx,
                                      EVP_SIGNATURE *algo,
                                      const OSSL_PARAM params[]);
 ```

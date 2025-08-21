@@ -1866,7 +1866,7 @@ static OCSP_RESPONSE *create_ocsp_resp(X509 *ssl_cert, X509 *issuer, int status,
     EVP_PKEY *signer_key = NULL;
     X509 *signer_cert = NULL;
     OCSP_RESPONSE *ocsp_resp = NULL;
-    EVP_MD *md = EVP_MD_fetch(libctx, "SHA-256", NULL);
+    EVP_MD *md = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHA-256", NULL);
     OCSP_BASICRESP *bs = OCSP_BASICRESP_new();
 
     if (signer_key_files != NULL && signer_cert_files != NULL) {
@@ -8777,10 +8777,10 @@ static int tick_key_cb(SSL *s, unsigned char key_name[16],
     if (tick_key_renew == -1)
         return 0;
 
-    aes128cbc = EVP_CIPHER_fetch(libctx, "AES-128-CBC", NULL);
+    aes128cbc = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "AES-128-CBC", NULL);
     if (!TEST_ptr(aes128cbc))
         return 0;
-    sha256 = EVP_MD_fetch(libctx, "SHA-256", NULL);
+    sha256 = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHA-256", NULL);
     if (!TEST_ptr(sha256)) {
         OPENSSL_BOX_EVP_CIPHER_free(aes128cbc);
         return 0;
@@ -8790,7 +8790,7 @@ static int tick_key_cb(SSL *s, unsigned char key_name[16],
     memset(key_name, 0, 16);
     if (aes128cbc == NULL
             || sha256 == NULL
-            || !EVP_CipherInit_ex(ctx, aes128cbc, NULL, tick_aes_key, iv, enc)
+            || !OPENSSL_BOX_EVP_CipherInit_ex(ctx, aes128cbc, NULL, tick_aes_key, iv, enc)
             || !HMAC_Init_ex(hctx, tick_hmac_key, sizeof(tick_hmac_key), sha256,
                              NULL))
         ret = -1;
@@ -8819,7 +8819,7 @@ static int tick_key_evp_cb(SSL *s, unsigned char key_name[16],
     if (tick_key_renew == -1)
         return 0;
 
-    aes128cbc = EVP_CIPHER_fetch(libctx, "AES-128-CBC", NULL);
+    aes128cbc = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "AES-128-CBC", NULL);
     if (!TEST_ptr(aes128cbc))
         return 0;
 
@@ -8829,8 +8829,8 @@ static int tick_key_evp_cb(SSL *s, unsigned char key_name[16],
                                                  "SHA256", 0);
     params[1] = OSSL_PARAM_construct_end();
     if (aes128cbc == NULL
-            || !EVP_CipherInit_ex(ctx, aes128cbc, NULL, tick_aes_key, iv, enc)
-            || !EVP_MAC_init(hctx, tick_hmac_key, sizeof(tick_hmac_key),
+            || !OPENSSL_BOX_EVP_CipherInit_ex(ctx, aes128cbc, NULL, tick_aes_key, iv, enc)
+            || !OPENSSL_BOX_EVP_MAC_init(hctx, tick_hmac_key, sizeof(tick_hmac_key),
                              params))
         ret = -1;
     else
@@ -9773,7 +9773,7 @@ static int test_multiblock_write(int test_index)
      * Check if the cipher exists before attempting to use it since it only has
      * a hardware specific implementation.
      */
-    ciph = EVP_CIPHER_fetch(libctx, fetchable_ciphers[test_index], "");
+    ciph = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, fetchable_ciphers[test_index], "");
     if (ciph == NULL) {
         TEST_skip("Multiblock cipher is not available for %s", cipherlist);
         return 1;
@@ -10568,7 +10568,7 @@ static int test_pluggable_group(int idx)
  */
 static int create_cert_key(int idx, char *certfilename, char *privkeyfilename)
 {
-    EVP_PKEY_CTX *evpctx = EVP_PKEY_CTX_new_from_name(libctx,
+    EVP_PKEY_CTX *evpctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx,
                              (idx == 0) ? "xorhmacsig" : "xorhmacsha2sig", NULL);
     EVP_PKEY *pkey = NULL;
     X509 *x509 = X509_new();
@@ -10903,7 +10903,7 @@ static EVP_PKEY *get_tmp_dh_params(void)
         if (!TEST_ptr(p))
             goto end;
 
-        pctx = EVP_PKEY_CTX_new_from_name(libctx, "DH", NULL);
+        pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "DH", NULL);
         if (!TEST_ptr(pctx)
                 || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(pctx), 1))
             goto end;
@@ -10920,7 +10920,7 @@ static EVP_PKEY *get_tmp_dh_params(void)
 
         params = OSSL_PARAM_BLD_to_param(tmpl);
         if (!TEST_ptr(params)
-                || !TEST_int_eq(EVP_PKEY_fromdata(pctx, &dhpkey,
+                || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata(pctx, &dhpkey,
                                                   EVP_PKEY_KEY_PARAMETERS,
                                                   params), 1))
             goto end;

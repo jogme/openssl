@@ -112,20 +112,20 @@ static int hash_df(PROV_DRBG *drbg, unsigned char *out,
          * (Step 4.1) out = out || Hash(tmp || in || [in2] || [in3])
          *            (where tmp = counter || num_bits_returned || [inbyte])
          */
-        if (!(EVP_DigestInit_ex(ctx, ossl_prov_digest_md(&hash->digest), NULL)
-                && EVP_DigestUpdate(ctx, tmp, tmp_sz)
-                && EVP_DigestUpdate(ctx, in, inlen)
-                && (in2 == NULL || EVP_DigestUpdate(ctx, in2, in2len))
-                && (in3 == NULL || EVP_DigestUpdate(ctx, in3, in3len))))
+        if (!(OPENSSL_BOX_EVP_DigestInit_ex(ctx, ossl_prov_digest_md(&hash->digest), NULL)
+                && OPENSSL_BOX_EVP_DigestUpdate(ctx, tmp, tmp_sz)
+                && OPENSSL_BOX_EVP_DigestUpdate(ctx, in, inlen)
+                && (in2 == NULL || OPENSSL_BOX_EVP_DigestUpdate(ctx, in2, in2len))
+                && (in3 == NULL || OPENSSL_BOX_EVP_DigestUpdate(ctx, in3, in3len))))
             return 0;
 
         if (outlen < hash->blocklen) {
-            if (!EVP_DigestFinal(ctx, vtmp, NULL))
+            if (!OPENSSL_BOX_EVP_DigestFinal(ctx, vtmp, NULL))
                 return 0;
             memcpy(out, vtmp, outlen);
             OPENSSL_cleanse(vtmp, hash->blocklen);
             break;
-        } else if (!EVP_DigestFinal(ctx, out, NULL)) {
+        } else if (!OPENSSL_BOX_EVP_DigestFinal(ctx, out, NULL)) {
             return 0;
         }
 
@@ -190,11 +190,11 @@ static int add_hash_to_v(PROV_DRBG *drbg, unsigned char inbyte,
     PROV_DRBG_HASH *hash = (PROV_DRBG_HASH *)drbg->data;
     EVP_MD_CTX *ctx = hash->ctx;
 
-    return EVP_DigestInit_ex(ctx, ossl_prov_digest_md(&hash->digest), NULL)
-           && EVP_DigestUpdate(ctx, &inbyte, 1)
-           && EVP_DigestUpdate(ctx, hash->V, drbg->seedlen)
-           && (adin == NULL || EVP_DigestUpdate(ctx, adin, adinlen))
-           && EVP_DigestFinal(ctx, hash->vtmp, NULL)
+    return OPENSSL_BOX_EVP_DigestInit_ex(ctx, ossl_prov_digest_md(&hash->digest), NULL)
+           && OPENSSL_BOX_EVP_DigestUpdate(ctx, &inbyte, 1)
+           && OPENSSL_BOX_EVP_DigestUpdate(ctx, hash->V, drbg->seedlen)
+           && (adin == NULL || OPENSSL_BOX_EVP_DigestUpdate(ctx, adin, adinlen))
+           && OPENSSL_BOX_EVP_DigestFinal(ctx, hash->vtmp, NULL)
            && add_bytes(drbg, hash->V, hash->vtmp, hash->blocklen);
 }
 
@@ -225,18 +225,18 @@ static int hash_gen(PROV_DRBG *drbg, unsigned char *out, size_t outlen)
         return 1;
     memcpy(hash->vtmp, hash->V, drbg->seedlen);
     for (;;) {
-        if (!EVP_DigestInit_ex(hash->ctx, ossl_prov_digest_md(&hash->digest),
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(hash->ctx, ossl_prov_digest_md(&hash->digest),
                                NULL)
-                || !EVP_DigestUpdate(hash->ctx, hash->vtmp, drbg->seedlen))
+                || !OPENSSL_BOX_EVP_DigestUpdate(hash->ctx, hash->vtmp, drbg->seedlen))
             return 0;
 
         if (outlen < hash->blocklen) {
-            if (!EVP_DigestFinal(hash->ctx, hash->vtmp, NULL))
+            if (!OPENSSL_BOX_EVP_DigestFinal(hash->ctx, hash->vtmp, NULL))
                 return 0;
             memcpy(out, hash->vtmp, outlen);
             return 1;
         } else {
-            if (!EVP_DigestFinal(hash->ctx, out, NULL))
+            if (!OPENSSL_BOX_EVP_DigestFinal(hash->ctx, out, NULL))
                 return 0;
             outlen -= hash->blocklen;
             if (outlen == 0)

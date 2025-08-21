@@ -110,8 +110,8 @@ size I<signaturelen>:
      /* error */
 
  /*
-  * This signature could now be passed to L<EVP_DigestVerify(3)>
-  * or L<EVP_DigestVerifyFinal(3)>
+  * This signature could now be passed to L<OPENSSL_BOX_EVP_DigestVerify(3)>
+  * or L<OPENSSL_BOX_EVP_DigestVerifyFinal(3)>
   */
 
  BN_free(rbn);
@@ -128,9 +128,9 @@ US Federal Information Processing Standard FIPS186-4
 =head1 SEE ALSO
 
 L<EC_KEY_new(3)>,
-L<EVP_DigestSignInit(3)>,
-L<EVP_DigestVerifyInit(3)>,
-L<EVP_PKEY_sign(3)>
+L<OPENSSL_BOX_EVP_DigestSignInit(3)>,
+L<OPENSSL_BOX_EVP_DigestVerifyInit(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign(3)>
 L<i2d_ECDSA_SIG(3)>,
 L<d2i_ECDSA_SIG(3)>,
 L<ECDSA_sign(3)>

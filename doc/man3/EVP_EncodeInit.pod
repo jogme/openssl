@@ -3,8 +3,8 @@
 =head1 NAME
 
 OPENSSL_BOX_EVP_ENCODE_CTX_new, OPENSSL_BOX_EVP_ENCODE_CTX_free, OPENSSL_BOX_EVP_ENCODE_CTX_copy,
-OPENSSL_BOX_EVP_ENCODE_CTX_num, OPENSSL_BOX_EVP_EncodeInit, EVP_EncodeUpdate, OPENSSL_BOX_EVP_EncodeFinal,
-OPENSSL_BOX_EVP_EncodeBlock, OPENSSL_BOX_EVP_DecodeInit, EVP_DecodeUpdate, EVP_DecodeFinal,
+OPENSSL_BOX_EVP_ENCODE_CTX_num, OPENSSL_BOX_EVP_EncodeInit, OPENSSL_BOX_EVP_EncodeUpdate, OPENSSL_BOX_EVP_EncodeFinal,
+OPENSSL_BOX_EVP_EncodeBlock, OPENSSL_BOX_EVP_DecodeInit, OPENSSL_BOX_EVP_DecodeUpdate, OPENSSL_BOX_EVP_DecodeFinal,
 OPENSSL_BOX_EVP_DecodeBlock - EVP base64 encode/decode routines
 
 =head1 SYNOPSIS
@@ -16,15 +16,15 @@ OPENSSL_BOX_EVP_DecodeBlock - EVP base64 encode/decode routines
  int OPENSSL_BOX_EVP_ENCODE_CTX_copy(EVP_ENCODE_CTX *dctx, EVP_ENCODE_CTX *sctx);
  int OPENSSL_BOX_EVP_ENCODE_CTX_num(EVP_ENCODE_CTX *ctx);
  void OPENSSL_BOX_EVP_EncodeInit(EVP_ENCODE_CTX *ctx);
- int EVP_EncodeUpdate(EVP_ENCODE_CTX *ctx, unsigned char *out, int *outl,
+ int OPENSSL_BOX_EVP_EncodeUpdate(EVP_ENCODE_CTX *ctx, unsigned char *out, int *outl,
                       const unsigned char *in, int inl);
  void OPENSSL_BOX_EVP_EncodeFinal(EVP_ENCODE_CTX *ctx, unsigned char *out, int *outl);
  int OPENSSL_BOX_EVP_EncodeBlock(unsigned char *t, const unsigned char *f, int n);
 
  void OPENSSL_BOX_EVP_DecodeInit(EVP_ENCODE_CTX *ctx);
- int EVP_DecodeUpdate(EVP_ENCODE_CTX *ctx, unsigned char *out, int *outl,
+ int OPENSSL_BOX_EVP_DecodeUpdate(EVP_ENCODE_CTX *ctx, unsigned char *out, int *outl,
                       const unsigned char *in, int inl);
- int EVP_DecodeFinal(EVP_ENCODE_CTX *ctx, unsigned char *out, int *outl);
+ int OPENSSL_BOX_EVP_DecodeFinal(EVP_ENCODE_CTX *ctx, unsigned char *out, int *outl);
  int OPENSSL_BOX_EVP_DecodeBlock(unsigned char *t, const unsigned char *f, int n);
 
 =head1 DESCRIPTION
@@ -55,20 +55,20 @@ will also be output.
 
 OPENSSL_BOX_EVP_EncodeInit() initialises B<ctx> for the start of a new encoding operation.
 
-EVP_EncodeUpdate() encode B<inl> bytes of data found in the buffer pointed to by
+OPENSSL_BOX_EVP_EncodeUpdate() encode B<inl> bytes of data found in the buffer pointed to by
 B<in>. The output is stored in the buffer B<out> and the number of bytes output
 is stored in B<*outl>. It is the caller's responsibility to ensure that the
 buffer at B<out> is sufficiently large to accommodate the output data. Only full
 blocks of data (48 bytes) will be immediately processed and output by this
 function. Any remainder is held in the B<ctx> object and will be processed by a
-subsequent call to EVP_EncodeUpdate() or OPENSSL_BOX_EVP_EncodeFinal(). To calculate the
+subsequent call to OPENSSL_BOX_EVP_EncodeUpdate() or OPENSSL_BOX_EVP_EncodeFinal(). To calculate the
 required size of the output buffer add together the value of B<inl> with the
 amount of unprocessed data held in B<ctx> and divide the result by 48 (ignore
 any remainder). This gives the number of blocks of data that will be processed.
 Ensure the output buffer contains 65 bytes of storage for each block, plus an
-additional byte for a NUL terminator. EVP_EncodeUpdate() may be called
+additional byte for a NUL terminator. OPENSSL_BOX_EVP_EncodeUpdate() may be called
 repeatedly to process large amounts of input data. In the event of an error
-EVP_EncodeUpdate() will set B<*outl> to 0 and return 0. On success 1 will be
+OPENSSL_BOX_EVP_EncodeUpdate() will set B<*outl> to 0 and return 0. On success 1 will be
 returned.
 
 OPENSSL_BOX_EVP_EncodeFinal() must be called at the end of an encoding operation. It will
@@ -95,7 +95,7 @@ the data generated I<without> the NUL terminator is returned from the function.
 
 OPENSSL_BOX_EVP_DecodeInit() initialises B<ctx> for the start of a new decoding operation.
 
-EVP_DecodeUpdate() decodes B<inl> characters of data found in the buffer
+OPENSSL_BOX_EVP_DecodeUpdate() decodes B<inl> characters of data found in the buffer
 pointed to by B<in>.
 The output is stored in the buffer B<out> and the number of bytes output is
 stored in B<*outl>.
@@ -105,7 +105,7 @@ This function will attempt to decode as much data as possible in chunks of up
 to 80 base64 characters at a time.
 Residual input shorter than the internal chunk size will be buffered in B<ctx>
 if its length is not a multiple of 4 (including any padding), to be processed
-in future calls to EVP_DecodeUpdate() or EVP_DecodeFinal().
+in future calls to OPENSSL_BOX_EVP_DecodeUpdate() or OPENSSL_BOX_EVP_DecodeFinal().
 If the final chunk length is a multiple of 4, it is decoded immediately and
 not buffered.
 
@@ -116,12 +116,12 @@ end-of-input, subsequent bytes are not buffered, and the return value will be
 The soft end-of-input, if present, MUST occur after a multiple of 4 valid base64
 input bytes.
 The soft end-of-input condition is not remembered in B<ctx>, it is up to the
-caller to avoid further calls to EVP_DecodeUpdate() after a 0 or negative
+caller to avoid further calls to OPENSSL_BOX_EVP_DecodeUpdate() after a 0 or negative
 (error) return.
 
 If any invalid base64 characters are encountered or if the base64 padding
 character (B<=>) is encountered in the middle of the data then
-EVP_DecodeUpdate() returns -1 to indicate an error.
+OPENSSL_BOX_EVP_DecodeUpdate() returns -1 to indicate an error.
 A return value of 0 or 1 indicates successful processing of the data.
 A return value of 0 additionally indicates that the last 4 bytes processed
 ended with base64 padding (B<=>), or that the next 4 byte group starts with the
@@ -132,7 +132,7 @@ For every 4 valid base64 bytes processed (ignoring whitespace, carriage returns
 and line feeds), 3 bytes of binary output data will be produced (except at the
 end of data terminated with one or two padding characters).
 
-EVP_DecodeFinal() should be called at the end of a decoding operation,
+OPENSSL_BOX_EVP_DecodeFinal() should be called at the end of a decoding operation,
 but it will never decode additional data.  If there is no residual data
 it will return 1 to indicate success.  If there is residual data, its
 length is not a multiple of 4, i.e. it was not properly padded, -1 is
@@ -160,15 +160,15 @@ object or NULL on error.
 OPENSSL_BOX_EVP_ENCODE_CTX_num() returns the number of bytes pending encoding or decoding in
 B<ctx>.
 
-EVP_EncodeUpdate() returns 0 on error or 1 on success.
+OPENSSL_BOX_EVP_EncodeUpdate() returns 0 on error or 1 on success.
 
 OPENSSL_BOX_EVP_EncodeBlock() returns the number of bytes encoded excluding the NUL
 terminator.
 
-EVP_DecodeUpdate() returns -1 on error and 0 or 1 on success. If 0 is returned
+OPENSSL_BOX_EVP_DecodeUpdate() returns -1 on error and 0 or 1 on success. If 0 is returned
 then no more non-padding base64 characters are expected.
 
-EVP_DecodeFinal() returns -1 on error or 1 on success.
+OPENSSL_BOX_EVP_DecodeFinal() returns -1 on error or 1 on success.
 
 OPENSSL_BOX_EVP_DecodeBlock() returns the length of the data decoded or -1 on error.
 
@@ -178,7 +178,7 @@ L<evp(7)>
 
 =head1 HISTORY
 
-The EVP_DecodeUpdate() function was fixed in OpenSSL 3.5,
+The OPENSSL_BOX_EVP_DecodeUpdate() function was fixed in OpenSSL 3.5,
 so now it produces the number of bytes specified in B<outl*>
 and does not decode padding bytes (B<=>) to 6 zero bits.
 

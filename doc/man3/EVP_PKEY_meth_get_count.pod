@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_PKEY_meth_get_count, OPENSSL_BOX_EVP_PKEY_meth_get0, EVP_PKEY_meth_get0_info - enumerate public key methods
+OPENSSL_BOX_EVP_PKEY_meth_get_count, OPENSSL_BOX_EVP_PKEY_meth_get0, OPENSSL_BOX_EVP_PKEY_meth_get0_info - enumerate public key methods
 
 =head1 SYNOPSIS
 
@@ -14,7 +14,7 @@ see L<openssl_user_macros(7)>:
 
  size_t OPENSSL_BOX_EVP_PKEY_meth_get_count(void);
  const EVP_PKEY_METHOD *OPENSSL_BOX_EVP_PKEY_meth_get0(size_t idx);
- void EVP_PKEY_meth_get0_info(int *ppkey_id, int *pflags,
+ void OPENSSL_BOX_EVP_PKEY_meth_get0_info(int *ppkey_id, int *pflags,
                               const EVP_PKEY_METHOD *meth);
 
 =head1 DESCRIPTION
@@ -29,7 +29,7 @@ application.
 OPENSSL_BOX_EVP_PKEY_meth_get0() returns the public key method B<idx>. The value of B<idx>
 must be between zero and OPENSSL_BOX_EVP_PKEY_meth_get_count() - 1.
 
-EVP_PKEY_meth_get0_info() returns the public key ID (a NID) and any flags
+OPENSSL_BOX_EVP_PKEY_meth_get0_info() returns the public key ID (a NID) and any flags
 associated with the public key method B<*meth>.
 
 =head1 RETURN VALUES
@@ -39,7 +39,7 @@ EVP_PKEY_meth_count() returns the number of available public key methods.
 OPENSSL_BOX_EVP_PKEY_meth_get0() return a public key method or B<NULL> if B<idx> is
 out of range.
 
-EVP_PKEY_meth_get0_info() does not return a value.
+OPENSSL_BOX_EVP_PKEY_meth_get0_info() does not return a value.
 
 =head1 SEE ALSO
 

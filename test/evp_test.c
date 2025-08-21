@@ -7,7 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
-#define OPENSSL_SUPPRESS_DEPRECATED /* EVP_PKEY_new_CMAC_key */
+#define OPENSSL_SUPPRESS_DEPRECATED /* OPENSSL_BOX_EVP_PKEY_new_CMAC_key */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -723,7 +723,7 @@ static int digest_test_init(EVP_TEST *t, const char *alg)
         return 1;
     }
 
-    if ((digest = fetched_digest = EVP_MD_fetch(libctx, alg, propquery)) == NULL
+    if ((digest = fetched_digest = OPENSSL_BOX_EVP_MD_fetch(libctx, alg, propquery)) == NULL
         && (digest = OPENSSL_BOX_EVP_get_digestbyname(alg)) == NULL)
         return 0;
     if (!TEST_ptr(mdat = OPENSSL_zalloc(sizeof(*mdat)))) {
@@ -780,7 +780,7 @@ static int digest_test_parse(EVP_TEST *t,
 
 static int digest_update_fn(void *ctx, const unsigned char *buf, size_t buflen)
 {
-    return EVP_DigestUpdate(ctx, buf, buflen);
+    return OPENSSL_BOX_EVP_DigestUpdate(ctx, buf, buflen);
 }
 
 static int test_duplicate_md_ctx(EVP_TEST *t, EVP_MD_CTX *mctx)
@@ -789,7 +789,7 @@ static int test_duplicate_md_ctx(EVP_TEST *t, EVP_MD_CTX *mctx)
 
     if (!TEST_ptr(mctx))
         return 0;
-    if (!EVP_DigestFinalXOF(mctx, (unsigned char *)dont, 0)) {
+    if (!OPENSSL_BOX_EVP_DigestFinalXOF(mctx, (unsigned char *)dont, 0)) {
         OPENSSL_BOX_EVP_MD_CTX_free(mctx);
         t->err = "DIGESTFINALXOF_ERROR";
         return 0;
@@ -837,7 +837,7 @@ static int digest_test_run(EVP_TEST *t)
                                         &expected->pad_type);
     *p++ = OSSL_PARAM_construct_end();
 
-    if (!EVP_DigestInit_ex2(mctx, expected->digest, params)) {
+    if (!OPENSSL_BOX_EVP_DigestInit_ex2(mctx, expected->digest, params)) {
         t->err = "DIGESTINIT_ERROR";
         goto err;
     }
@@ -865,12 +865,12 @@ static int digest_test_run(EVP_TEST *t)
             goto err;
 
         got_len = (unsigned int)expected->output_len;
-        if (!EVP_DigestFinalXOF(mctx, got, expected->output_len)) {
+        if (!OPENSSL_BOX_EVP_DigestFinalXOF(mctx, got, expected->output_len)) {
             t->err = "DIGESTFINALXOF_ERROR";
             goto err;
         }
     } else {
-        if (!EVP_DigestFinal(mctx, got, &got_len)) {
+        if (!OPENSSL_BOX_EVP_DigestFinal(mctx, got, &got_len)) {
             t->err = "DIGESTFINAL_ERROR";
             goto err;
         }
@@ -886,20 +886,20 @@ static int digest_test_run(EVP_TEST *t)
 
     t->err = NULL;
 
-    /* Test the EVP_Q_digest interface as well */
+    /* Test the OPENSSL_BOX_EVP_Q_digest interface as well */
     if (sk_EVP_TEST_BUFFER_num(expected->input) == 1
             && !xof
             /* This should never fail but we need the returned pointer now */
             && !TEST_ptr(inbuf = sk_EVP_TEST_BUFFER_value(expected->input, 0))
             && !inbuf->count_set) {
         OPENSSL_cleanse(got, got_len);
-        if (!TEST_true(EVP_Q_digest(libctx,
+        if (!TEST_true(OPENSSL_BOX_EVP_Q_digest(libctx,
                                     OPENSSL_BOX_EVP_MD_get0_name(expected->fetched_digest),
                                     NULL, inbuf->buf, inbuf->buflen,
                                     got, &size))
                 || !TEST_mem_eq(got, size,
                                 expected->output, expected->output_len)) {
-            t->err = "EVP_Q_digest failed";
+            t->err = "OPENSSL_BOX_EVP_Q_digest failed";
             goto err;
         }
     }
@@ -987,7 +987,7 @@ static int cipher_test_init(EVP_TEST *t, const char *alg)
     }
 
     ERR_set_mark();
-    if ((cipher = fetched_cipher = EVP_CIPHER_fetch(libctx, alg, propquery)) == NULL
+    if ((cipher = fetched_cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, alg, propquery)) == NULL
         && (cipher = OPENSSL_BOX_EVP_get_cipherbyname(alg)) == NULL) {
         /* a stitched cipher might not be available */
         if (strstr(alg, "HMAC") != NULL) {
@@ -1185,7 +1185,7 @@ static int cipher_test_enc(EVP_TEST *t, int enc, size_t out_misalign,
         in = memcpy(tmp + out_misalign + in_len + 2 * EVP_MAX_BLOCK_LENGTH +
                     inp_misalign, in, in_len);
     }
-    if (!EVP_CipherInit_ex2(ctx_base, expected->cipher, NULL, NULL, enc,
+    if (!OPENSSL_BOX_EVP_CipherInit_ex2(ctx_base, expected->cipher, NULL, NULL, enc,
                             initparams)) {
         t->err = "CIPHERINIT_ERROR";
         goto err;
@@ -1255,7 +1255,7 @@ static int cipher_test_enc(EVP_TEST *t, int enc, size_t out_misalign,
             goto err;
         }
     }
-    if (!EVP_CipherInit_ex(ctx_base, NULL, NULL, expected->key, expected->iv, -1)) {
+    if (!OPENSSL_BOX_EVP_CipherInit_ex(ctx_base, NULL, NULL, expected->key, expected->iv, -1)) {
         t->err = "KEY_SET_ERROR";
         goto err;
     }
@@ -1333,7 +1333,7 @@ static int cipher_test_enc(EVP_TEST *t, int enc, size_t out_misalign,
     }
 
     if (expected->aead == EVP_CIPH_CCM_MODE) {
-        if (!EVP_CipherUpdate(ctx, NULL, &tmplen, NULL, (int)out_len)) {
+        if (!OPENSSL_BOX_EVP_CipherUpdate(ctx, NULL, &tmplen, NULL, (int)out_len)) {
             t->err = "CCM_PLAINTEXT_LENGTH_SET_ERROR";
             goto err;
         }
@@ -1351,7 +1351,7 @@ static int cipher_test_enc(EVP_TEST *t, int enc, size_t out_misalign,
 
                     if (data_chunk_size == 0 || current_aad_len > aad_len)
                         current_aad_len = aad_len;
-                    if (!EVP_CipherUpdate(ctx, NULL, &chunklen,
+                    if (!OPENSSL_BOX_EVP_CipherUpdate(ctx, NULL, &chunklen,
                                           expected->aad[i] + donelen,
                                           (int)current_aad_len))
                         goto err;
@@ -1363,19 +1363,19 @@ static int cipher_test_enc(EVP_TEST *t, int enc, size_t out_misalign,
             /* Supply the AAD in chunks less than the block size where possible */
             for (i = 0; expected->aad[i] != NULL; i++) {
                 if (expected->aad_len[i] > 0) {
-                    if (!EVP_CipherUpdate(ctx, NULL, &chunklen, expected->aad[i], 1))
+                    if (!OPENSSL_BOX_EVP_CipherUpdate(ctx, NULL, &chunklen, expected->aad[i], 1))
                         goto err;
                     donelen++;
                 }
                 if (expected->aad_len[i] > 2) {
-                    if (!EVP_CipherUpdate(ctx, NULL, &chunklen,
+                    if (!OPENSSL_BOX_EVP_CipherUpdate(ctx, NULL, &chunklen,
                                           expected->aad[i] + donelen,
                                           (int)(expected->aad_len[i] - 2)))
                         goto err;
                     donelen += expected->aad_len[i] - 2;
                 }
                 if (expected->aad_len[i] > 1
-                    && !EVP_CipherUpdate(ctx, NULL, &chunklen,
+                    && !OPENSSL_BOX_EVP_CipherUpdate(ctx, NULL, &chunklen,
                                          expected->aad[i] + donelen, 1))
                     goto err;
             }
@@ -1436,7 +1436,7 @@ static int cipher_test_enc(EVP_TEST *t, int enc, size_t out_misalign,
 
             if (data_chunk_size == 0 || current_in_len > in_len)
                 current_in_len = in_len;
-            if (!EVP_CipherUpdate(ctx, tmp + out_misalign + tmplen, &chunklen,
+            if (!OPENSSL_BOX_EVP_CipherUpdate(ctx, tmp + out_misalign + tmplen, &chunklen,
                                   in, (int)current_in_len))
                 goto err;
             tmplen += chunklen;
@@ -1446,14 +1446,14 @@ static int cipher_test_enc(EVP_TEST *t, int enc, size_t out_misalign,
     } else {
         /* Supply the data in chunks less than the block size where possible */
         if (in_len > 0) {
-            if (!EVP_CipherUpdate(ctx, tmp + out_misalign, &chunklen, in, 1))
+            if (!OPENSSL_BOX_EVP_CipherUpdate(ctx, tmp + out_misalign, &chunklen, in, 1))
                 goto err;
             tmplen += chunklen;
             in++;
             in_len--;
         }
         if (in_len > 1) {
-            if (!EVP_CipherUpdate(ctx, tmp + out_misalign + tmplen, &chunklen,
+            if (!OPENSSL_BOX_EVP_CipherUpdate(ctx, tmp + out_misalign + tmplen, &chunklen,
                                   in, (int)(in_len - 1)))
                 goto err;
             tmplen += chunklen;
@@ -1461,13 +1461,13 @@ static int cipher_test_enc(EVP_TEST *t, int enc, size_t out_misalign,
             in_len = 1;
         }
         if (in_len > 0) {
-            if (!EVP_CipherUpdate(ctx, tmp + out_misalign + tmplen, &chunklen,
+            if (!OPENSSL_BOX_EVP_CipherUpdate(ctx, tmp + out_misalign + tmplen, &chunklen,
                                   in, 1))
                 goto err;
             tmplen += chunklen;
         }
     }
-    if (!EVP_CipherFinal_ex(ctx, tmp + out_misalign + tmplen, &tmpflen)) {
+    if (!OPENSSL_BOX_EVP_CipherFinal_ex(ctx, tmp + out_misalign + tmplen, &tmpflen)) {
         t->err = "CIPHERFINAL_ERROR";
         goto err;
     }
@@ -1727,7 +1727,7 @@ static int mac_test_init(EVP_TEST *t, const char *alg)
         t->skip = 1;
         return 1;
     }
-    if ((mac = EVP_MAC_fetch(libctx, alg, propquery)) == NULL) {
+    if ((mac = OPENSSL_BOX_EVP_MAC_fetch(libctx, alg, propquery)) == NULL) {
         /*
          * Since we didn't find an EVP_MAC, we check for known EVP_PKEY methods
          * For debugging purposes, we allow 'NNNN by EVP_PKEY' to force running
@@ -1844,7 +1844,7 @@ static int mac_test_ctrl_pkey(EVP_TEST *t, EVP_PKEY_CTX *pctx,
     p = strchr(tmpval, ':');
     if (p != NULL) {
         *p++ = '\0';
-        rv = EVP_PKEY_CTX_ctrl_str(pctx, tmpval, p);
+        rv = OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(pctx, tmpval, p);
     }
     if (rv == -2)
         t->err = "PKEY_CTRL_INVALID";
@@ -1894,17 +1894,17 @@ static int mac_test_run_pkey(EVP_TEST *t)
             t->err = NULL;
             goto err;
         }
-        if (!TEST_ptr(cipher = EVP_CIPHER_fetch(libctx, expected->alg, propquery))) {
+        if (!TEST_ptr(cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, expected->alg, propquery))) {
             t->err = "MAC_KEY_CREATE_ERROR";
             goto err;
         }
         tmpctx = OSSL_LIB_CTX_set0_default(libctx);
-        key = EVP_PKEY_new_CMAC_key(NULL, expected->key, expected->key_len,
+        key = OPENSSL_BOX_EVP_PKEY_new_CMAC_key(NULL, expected->key, expected->key_len,
                                     cipher);
         OSSL_LIB_CTX_set0_default(tmpctx);
 #endif
     } else {
-        key = EVP_PKEY_new_raw_private_key_ex(libctx,
+        key = OPENSSL_BOX_EVP_PKEY_new_raw_private_key_ex(libctx,
                                               OBJ_nid2sn(expected->type), NULL,
                                               expected->key, expected->key_len);
     }
@@ -1926,7 +1926,7 @@ static int mac_test_run_pkey(EVP_TEST *t)
         t->err = "INTERNAL_ERROR";
         goto err;
     }
-    if (!EVP_DigestSignInit_ex(mctx, &pctx, mdname, libctx, NULL, key, NULL)) {
+    if (!OPENSSL_BOX_EVP_DigestSignInit_ex(mctx, &pctx, mdname, libctx, NULL, key, NULL)) {
         t->err = "DIGESTSIGNINIT_ERROR";
         goto err;
     }
@@ -1952,7 +1952,7 @@ static int mac_test_run_pkey(EVP_TEST *t)
         input_len -= current_len;
     } while (input_len > 0);
 
-    if (!EVP_DigestSignFinal(mctx, NULL, &got_len)) {
+    if (!OPENSSL_BOX_EVP_DigestSignFinal(mctx, NULL, &got_len)) {
         t->err = "DIGESTSIGNFINAL_LENGTH_ERROR";
         goto err;
     }
@@ -1960,7 +1960,7 @@ static int mac_test_run_pkey(EVP_TEST *t)
         t->err = "TEST_FAILURE";
         goto err;
     }
-    if (!EVP_DigestSignFinal(mctx, got, &got_len)
+    if (!OPENSSL_BOX_EVP_DigestSignFinal(mctx, got, &got_len)
             || !memory_err_compare(t, "TEST_MAC_ERR",
                                    expected->output, expected->output_len,
                                    got, got_len)) {
@@ -2072,7 +2072,7 @@ static int mac_test_run_mac(EVP_TEST *t)
         size_before_init = OPENSSL_BOX_EVP_MAC_CTX_get_mac_size(ctx);
         ERR_pop_to_mark();
     }
-    if (!EVP_MAC_init(ctx, expected->key, expected->key_len, params)) {
+    if (!OPENSSL_BOX_EVP_MAC_init(ctx, expected->key, expected->key_len, params)) {
         t->err = "MAC_INIT_ERROR";
         goto err;
     }
@@ -2146,7 +2146,7 @@ static int mac_test_run_mac(EVP_TEST *t)
             goto err;
         }
     } else {
-        if (!EVP_MAC_final(ctx, NULL, &got_len, 0)) {
+        if (!OPENSSL_BOX_EVP_MAC_final(ctx, NULL, &got_len, 0)) {
             t->err = "MAC_FINAL_LENGTH_ERROR";
             goto err;
         }
@@ -2154,7 +2154,7 @@ static int mac_test_run_mac(EVP_TEST *t)
             t->err = "TEST_FAILURE";
             goto err;
         }
-        if (!EVP_MAC_final(ctx, got, &got_len, got_len)
+        if (!OPENSSL_BOX_EVP_MAC_final(ctx, got, &got_len, got_len)
             || !memory_err_compare(t, "TEST_MAC_ERR",
                                    expected->output, expected->output_len,
                                    got, got_len)) {
@@ -2178,7 +2178,7 @@ static int mac_test_run_mac(EVP_TEST *t)
             ivparams[1] = OSSL_PARAM_construct_end();
         }
         ERR_set_mark();
-        ret = EVP_MAC_init(ctx, NULL, 0, ivparams);
+        ret = OPENSSL_BOX_EVP_MAC_init(ctx, NULL, 0, ivparams);
         if (expected->no_reinit) {
             if (ret) {
                 ERR_clear_last_mark();
@@ -2200,17 +2200,17 @@ static int mac_test_run_mac(EVP_TEST *t)
     }
     t->err = NULL;
 
-    /* Test the EVP_Q_mac interface as well */
+    /* Test the OPENSSL_BOX_EVP_Q_mac interface as well */
     if (!xof) {
         OPENSSL_cleanse(got, got_len);
-        if (!TEST_true(EVP_Q_mac(libctx, expected->mac_name, NULL,
+        if (!TEST_true(OPENSSL_BOX_EVP_Q_mac(libctx, expected->mac_name, NULL,
                                  expected->alg, params,
                                  expected->key, expected->key_len,
                                  expected->input, expected->input_len,
                                  got, got_len, &size))
                 || !TEST_mem_eq(got, size,
                                 expected->output, expected->output_len)) {
-            t->err = "EVP_Q_mac failed";
+            t->err = "OPENSSL_BOX_EVP_Q_mac failed";
             goto err;
         }
     }
@@ -2369,7 +2369,7 @@ static int encapsulate(EVP_TEST *t, EVP_PKEY_CTX *ctx, const char *op,
         t->err = "TEST_SET_KEM_OP_ERROR";
         goto ok;
     }
-    if (EVP_PKEY_encapsulate(ctx, NULL, &wrappedlen, NULL, &secretlen) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_encapsulate(ctx, NULL, &wrappedlen, NULL, &secretlen) <= 0) {
         t->err = "TEST_ENCAPSULATE_LEN_ERROR";
         goto ok;
     }
@@ -2379,7 +2379,7 @@ static int encapsulate(EVP_TEST *t, EVP_PKEY_CTX *ctx, const char *op,
         ret = 0;
         goto err;
     }
-    if (EVP_PKEY_encapsulate(ctx, wrapped, &wrappedlen, secret, &secretlen) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_encapsulate(ctx, wrapped, &wrappedlen, secret, &secretlen) <= 0) {
         t->err = "TEST_ENCAPSULATE_ERROR";
         goto ok;
     }
@@ -2445,7 +2445,7 @@ static int decapsulate(EVP_TEST *t, EVP_PKEY_CTX *ctx, const char *op,
         t->err = "TEST_SET_KEM_OP_ERROR";
         goto ok;
     }
-    if (EVP_PKEY_decapsulate(ctx, NULL, &outlen, in, inlen) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_decapsulate(ctx, NULL, &outlen, in, inlen) <= 0) {
         t->err = "TEST_DECAPSULATE_LEN_ERROR";
         goto ok;
     }
@@ -2454,7 +2454,7 @@ static int decapsulate(EVP_TEST *t, EVP_PKEY_CTX *ctx, const char *op,
         goto err;
     }
 
-    if (EVP_PKEY_decapsulate(ctx, out, &outlen, in, inlen) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_decapsulate(ctx, out, &outlen, in, inlen) <= 0) {
         t->err = "TEST_DECAPSULATE_ERROR";
         goto err;
     }
@@ -2490,7 +2490,7 @@ static int kem_test_run(EVP_TEST *t)
         }
     } else if (kdata->encoded_pub_key != NULL) {
         /* Encoded public key */
-        if ((pkey = EVP_PKEY_new_raw_public_key_ex(libctx, kdata->algname,
+        if ((pkey = OPENSSL_BOX_EVP_PKEY_new_raw_public_key_ex(libctx, kdata->algname,
                                                    propquery,
                                                    kdata->encoded_pub_key,
                                                    kdata->encoded_pub_key_len)) == NULL) {
@@ -2499,7 +2499,7 @@ static int kem_test_run(EVP_TEST *t)
         }
     } else if (kdata->encoded_priv_key != NULL) {
         /* Encoded private key */
-        if ((pkey = EVP_PKEY_new_raw_private_key_ex(libctx, kdata->algname,
+        if ((pkey = OPENSSL_BOX_EVP_PKEY_new_raw_private_key_ex(libctx, kdata->algname,
                                                     propquery,
                                                     kdata->encoded_priv_key,
                                                     kdata->encoded_priv_key_len)) == NULL) {
@@ -2514,7 +2514,7 @@ static int kem_test_run(EVP_TEST *t)
     if (!pkey_check_security_category(t, pkey))
         goto err;
 
-    if (!TEST_ptr(kdata->ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propquery)))
+    if (!TEST_ptr(kdata->ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propquery)))
         goto err;
 
     if (kdata->input == NULL) {
@@ -2606,7 +2606,7 @@ static int pkey_test_init_keyctx(EVP_TEST *t, const char *keyname,
         OPENSSL_BOX_EVP_PKEY_free(pkey);
         return 0;
     }
-    if (!TEST_ptr(kdata->ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propquery))) {
+    if (!TEST_ptr(kdata->ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propquery))) {
         OPENSSL_BOX_EVP_PKEY_free(pkey);
         OPENSSL_free(kdata);
         return 0;
@@ -2673,7 +2673,7 @@ static int pkey_test_init_ex2(EVP_TEST *t, const char *name,
     kdata->keyopinit_ex2 = keyopinit;
     kdata->keyop = keyop;
     if (!TEST_ptr(kdata->sigalgo
-                  = EVP_SIGNATURE_fetch(libctx, algoname, propquery))) {
+                  = OPENSSL_BOX_EVP_SIGNATURE_fetch(libctx, algoname, propquery))) {
         TEST_info("algoname = '%s'", algoname);
         return 0;
     }
@@ -2705,7 +2705,7 @@ static int pkey_test_ctrl(EVP_TEST *t, EVP_PKEY_CTX *pctx,
     p = strchr(tmpval, ':');
     if (p != NULL) {
         *p++ = '\0';
-        rv = EVP_PKEY_CTX_ctrl_str(pctx, tmpval, p);
+        rv = OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(pctx, tmpval, p);
     }
     if (rv == -2) {
         t->err = "PKEY_CTRL_INVALID";
@@ -2883,7 +2883,7 @@ static int pkey_fromdata_test_init(EVP_TEST *t, const char *name)
 
     if (!TEST_ptr(kdata = OPENSSL_zalloc(sizeof(*kdata))))
         return 0;
-    kdata->ctx = EVP_PKEY_CTX_new_from_name(libctx, name, "");
+    kdata->ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, name, "");
     if (kdata->ctx == NULL)
         goto err;
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(kdata->ctx) <= 0)
@@ -2942,7 +2942,7 @@ static int pkey_fromdata_test_run(EVP_TEST *t)
     }
 
     ret = 1;
-    if (EVP_PKEY_fromdata(kdata->ctx, &key, EVP_PKEY_KEYPAIR, p) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_fromdata(kdata->ctx, &key, EVP_PKEY_KEYPAIR, p) <= 0) {
         t->err = "KEY_FROMDATA_ERROR";
         goto err;
     }
@@ -2964,15 +2964,15 @@ static const EVP_TEST_METHOD pkey_fromdata_test_method = {
 };
 
 /*
- * "Sign" implies EVP_PKEY_sign_init_ex2() if the argument is a colon-separated
+ * "Sign" implies OPENSSL_BOX_EVP_PKEY_sign_init_ex2() if the argument is a colon-separated
  * pair, {algorithm}:{key}.  If not, it implies OPENSSL_BOX_EVP_PKEY_sign_init_ex()
  */
 static int sign_test_init(EVP_TEST *t, const char *name)
 {
     if (strchr(name, ':') != NULL)
         return pkey_test_init_ex2(t, name, 0,
-                                  EVP_PKEY_sign_init_ex2, EVP_PKEY_sign);
-    return pkey_test_init(t, name, 0, OPENSSL_BOX_EVP_PKEY_sign_init_ex, EVP_PKEY_sign);
+                                  OPENSSL_BOX_EVP_PKEY_sign_init_ex2, OPENSSL_BOX_EVP_PKEY_sign);
+    return pkey_test_init(t, name, 0, OPENSSL_BOX_EVP_PKEY_sign_init_ex, OPENSSL_BOX_EVP_PKEY_sign);
 }
 
 static const EVP_TEST_METHOD psign_test_method = {
@@ -2984,13 +2984,13 @@ static const EVP_TEST_METHOD psign_test_method = {
 };
 
 /*
- * "Sign-Message" is like "Sign", but uses EVP_PKEY_sign_message_init()
+ * "Sign-Message" is like "Sign", but uses OPENSSL_BOX_EVP_PKEY_sign_message_init()
  * The argument must be a colon separated pair, {algorithm}:{key}
  */
 static int sign_test_message_init(EVP_TEST *t, const char *name)
 {
     return pkey_test_init_ex2(t, name, 0,
-                              EVP_PKEY_sign_message_init, EVP_PKEY_sign);
+                              OPENSSL_BOX_EVP_PKEY_sign_message_init, OPENSSL_BOX_EVP_PKEY_sign);
 }
 
 static const EVP_TEST_METHOD psign_message_test_method = {
@@ -3002,18 +3002,18 @@ static const EVP_TEST_METHOD psign_message_test_method = {
 };
 
 /*
- * "VerifyRecover" implies EVP_PKEY_verify_recover_init_ex2() if the argument is a
+ * "VerifyRecover" implies OPENSSL_BOX_EVP_PKEY_verify_recover_init_ex2() if the argument is a
  * colon-separated pair, {algorithm}:{key}.
- * If not, it implies EVP_PKEY_verify_recover_init_ex()
+ * If not, it implies OPENSSL_BOX_EVP_PKEY_verify_recover_init_ex()
  */
 static int verify_recover_test_init(EVP_TEST *t, const char *name)
 {
     if (strchr(name, ':') != NULL)
         return pkey_test_init_ex2(t, name, 1,
-                                  EVP_PKEY_verify_recover_init_ex2,
-                                  EVP_PKEY_verify_recover);
-    return pkey_test_init(t, name, 1, EVP_PKEY_verify_recover_init_ex,
-                          EVP_PKEY_verify_recover);
+                                  OPENSSL_BOX_EVP_PKEY_verify_recover_init_ex2,
+                                  OPENSSL_BOX_EVP_PKEY_verify_recover);
+    return pkey_test_init(t, name, 1, OPENSSL_BOX_EVP_PKEY_verify_recover_init_ex,
+                          OPENSSL_BOX_EVP_PKEY_verify_recover);
 }
 
 static const EVP_TEST_METHOD pverify_recover_test_method = {
@@ -3027,7 +3027,7 @@ static const EVP_TEST_METHOD pverify_recover_test_method = {
 static int decrypt_test_init(EVP_TEST *t, const char *name)
 {
     return pkey_test_init(t, name, 0, OPENSSL_BOX_EVP_PKEY_decrypt_init_ex,
-                          EVP_PKEY_decrypt);
+                          OPENSSL_BOX_EVP_PKEY_decrypt);
 }
 
 static const EVP_TEST_METHOD pdecrypt_test_method = {
@@ -3039,7 +3039,7 @@ static const EVP_TEST_METHOD pdecrypt_test_method = {
 };
 
 /*
- * "Verify" implies EVP_PKEY_verify_init_ex2() if the argument is a
+ * "Verify" implies OPENSSL_BOX_EVP_PKEY_verify_init_ex2() if the argument is a
  * colon-separated pair, {algorithm}:{key}.
  * If not, it implies OPENSSL_BOX_EVP_PKEY_verify_init_ex()
  */
@@ -3047,7 +3047,7 @@ static int verify_test_init(EVP_TEST *t, const char *name)
 {
     if (strchr(name, ':') != NULL)
         return pkey_test_init_ex2(t, name, 1,
-                                  EVP_PKEY_verify_init_ex2, NULL);
+                                  OPENSSL_BOX_EVP_PKEY_verify_init_ex2, NULL);
     return pkey_test_init(t, name, 1, OPENSSL_BOX_EVP_PKEY_verify_init_ex, NULL);
 }
 
@@ -3060,7 +3060,7 @@ static int verify_test_run(EVP_TEST *t)
         goto err;
     if (!pkey_check_security_category(t, OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(kdata->ctx)))
         goto err;
-    if (EVP_PKEY_verify(kdata->ctx, kdata->output, kdata->output_len,
+    if (OPENSSL_BOX_EVP_PKEY_verify(kdata->ctx, kdata->output, kdata->output_len,
                         kdata->input, kdata->input_len) <= 0) {
         t->err = "VERIFY_ERROR";
         goto err;
@@ -3080,13 +3080,13 @@ static const EVP_TEST_METHOD pverify_test_method = {
 };
 
 /*
- * "Verify-Message" is like "Verify", but uses EVP_PKEY_verify_message_init()
+ * "Verify-Message" is like "Verify", but uses OPENSSL_BOX_EVP_PKEY_verify_message_init()
  * The argument must be a colon separated pair, {algorithm}:{key}
  */
 static int verify_message_test_init(EVP_TEST *t, const char *name)
 {
     return pkey_test_init_ex2(t, name, 0,
-                              EVP_PKEY_verify_message_init, NULL);
+                              OPENSSL_BOX_EVP_PKEY_verify_message_init, NULL);
 }
 
 static const EVP_TEST_METHOD pverify_message_test_method = {
@@ -3105,7 +3105,7 @@ static const EVP_TEST_METHOD pverify_message_test_method = {
 static int verify_message_public_test_init(EVP_TEST *t, const char *name)
 {
     return pkey_test_init_ex2(t, name, 1,
-                              EVP_PKEY_verify_message_init, NULL);
+                              OPENSSL_BOX_EVP_PKEY_verify_message_init, NULL);
 }
 
 static const EVP_TEST_METHOD pverify_message_public_test_method = {
@@ -3162,7 +3162,7 @@ static int pderive_test_run(EVP_TEST *t)
     t->err = NULL;
     if (!pkey_check_security_category(t, OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(expected->ctx)))
         goto err;
-    if (EVP_PKEY_derive_set_peer_ex(expected->ctx, expected->peer,
+    if (OPENSSL_BOX_EVP_PKEY_derive_set_peer_ex(expected->ctx, expected->peer,
                                     expected->validate) <= 0) {
         t->err = "DERIVE_SET_PEER_ERROR";
         goto err;
@@ -3386,7 +3386,7 @@ static int pbe_test_run(EVP_TEST *t)
         goto err;
     }
     if (expected->pbe_type == PBE_TYPE_PBKDF2) {
-        if (PKCS5_PBKDF2_HMAC((char *)expected->pass, (int)expected->pass_len,
+        if (OPENSSL_BOX_PKCS5_PBKDF2_HMAC((char *)expected->pass, (int)expected->pass_len,
                               expected->salt, (int)expected->salt_len,
                               expected->iter, expected->md,
                               (int)expected->key_len, key) == 0) {
@@ -3395,7 +3395,7 @@ static int pbe_test_run(EVP_TEST *t)
         }
 #ifndef OPENSSL_NO_SCRYPT
     } else if (expected->pbe_type == PBE_TYPE_SCRYPT) {
-        if (EVP_PBE_scrypt((const char *)expected->pass, expected->pass_len,
+        if (OPENSSL_BOX_EVP_PBE_scrypt((const char *)expected->pass, expected->pass_len,
                             expected->salt, expected->salt_len,
                             expected->N, expected->r, expected->p,
                             expected->maxmem, key, expected->key_len) == 0) {
@@ -3404,7 +3404,7 @@ static int pbe_test_run(EVP_TEST *t)
         }
 #endif
     } else if (expected->pbe_type == PBE_TYPE_PKCS12) {
-        fetched_digest = EVP_MD_fetch(libctx, OPENSSL_BOX_EVP_MD_get0_name(expected->md),
+        fetched_digest = OPENSSL_BOX_EVP_MD_fetch(libctx, OPENSSL_BOX_EVP_MD_get0_name(expected->md),
                                       propquery);
         if (fetched_digest == NULL) {
             t->err = "PKCS12_ERROR";
@@ -3537,7 +3537,7 @@ static int encode_test_run(EVP_TEST *t)
 
             if (data_chunk_size == 0 || current_len > input_len)
                 current_len = input_len;
-            if (!TEST_true(EVP_EncodeUpdate(encode_ctx, encode_out, &chunk_len,
+            if (!TEST_true(OPENSSL_BOX_EVP_EncodeUpdate(encode_ctx, encode_out, &chunk_len,
                                             expected->input + donelen,
                                             (int)current_len)))
                 goto err;
@@ -3574,7 +3574,7 @@ static int encode_test_run(EVP_TEST *t)
 
         if (data_chunk_size == 0 || (size_t) data_chunk_size > input_len)
             current_len = input_len;
-        if (EVP_DecodeUpdate(decode_ctx, decode_out + output_len, &chunk_len,
+        if (OPENSSL_BOX_EVP_DecodeUpdate(decode_ctx, decode_out + output_len, &chunk_len,
                                 expected->output + donelen, (int)current_len) < 0) {
             t->err = "DECODE_ERROR";
             goto err;
@@ -3584,7 +3584,7 @@ static int encode_test_run(EVP_TEST *t)
         output_len += chunk_len;
     } while (input_len > 0);
 
-    if (EVP_DecodeFinal(decode_ctx, decode_out + output_len, &chunk_len) != 1) {
+    if (OPENSSL_BOX_EVP_DecodeFinal(decode_ctx, decode_out + output_len, &chunk_len) != 1) {
         t->err = "DECODE_ERROR";
         goto err;
     }
@@ -3671,7 +3671,7 @@ static int rand_test_init(EVP_TEST *t, const char *name)
         return 0;
 
     /* TEST-RAND is available in the FIPS provider but not with "fips=yes" */
-    rand = EVP_RAND_fetch(libctx, "TEST-RAND", "-fips");
+    rand = OPENSSL_BOX_EVP_RAND_fetch(libctx, "TEST-RAND", "-fips");
     if (rand == NULL)
         goto err;
     rdata->parent = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
@@ -3683,7 +3683,7 @@ static int rand_test_init(EVP_TEST *t, const char *name)
     if (!OPENSSL_BOX_EVP_RAND_CTX_set_params(rdata->parent, params))
         goto err;
 
-    rand = EVP_RAND_fetch(libctx, name, propquery);
+    rand = OPENSSL_BOX_EVP_RAND_fetch(libctx, name, propquery);
     if (rand == NULL)
         goto err;
     rdata->ctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, rdata->parent);
@@ -3842,12 +3842,12 @@ static int rand_test_run(EVP_TEST *t)
         *p++ = OSSL_PARAM_construct_octet_string(OSSL_RAND_PARAM_TEST_NONCE,
                                                  z, item->nonce_len);
         *p = OSSL_PARAM_construct_end();
-        if (!TEST_true(EVP_RAND_instantiate(expected->parent, strength,
+        if (!TEST_true(OPENSSL_BOX_EVP_RAND_instantiate(expected->parent, strength,
                                             0, NULL, 0, params)))
             goto err;
 
         z = item->pers != NULL ? item->pers : (unsigned char *)"";
-        if (!TEST_true(EVP_RAND_instantiate
+        if (!TEST_true(OPENSSL_BOX_EVP_RAND_instantiate
                            (expected->ctx, strength,
                             expected->prediction_resistance, z,
                             item->pers_len, NULL)))
@@ -3861,7 +3861,7 @@ static int rand_test_run(EVP_TEST *t)
             if (!TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(expected->parent, params)))
                 goto err;
 
-            if (!TEST_true(EVP_RAND_reseed
+            if (!TEST_true(OPENSSL_BOX_EVP_RAND_reseed
                                (expected->ctx, expected->prediction_resistance,
                                 NULL, 0, item->reseed_addin,
                                 item->reseed_addin_len)))
@@ -3875,7 +3875,7 @@ static int rand_test_run(EVP_TEST *t)
             if (!TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(expected->parent, params)))
                 goto err;
         }
-        if (!TEST_true(EVP_RAND_generate
+        if (!TEST_true(OPENSSL_BOX_EVP_RAND_generate
                            (expected->ctx, got, got_len,
                             strength, expected->prediction_resistance,
                             item->addinA, item->addinA_len)))
@@ -3889,7 +3889,7 @@ static int rand_test_run(EVP_TEST *t)
             if (!TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(expected->parent, params)))
                 goto err;
         }
-        if (!TEST_true(EVP_RAND_generate
+        if (!TEST_true(OPENSSL_BOX_EVP_RAND_generate
                            (expected->ctx, got, got_len,
                             strength, expected->prediction_resistance,
                             item->addinB, item->addinB_len)))
@@ -4191,7 +4191,7 @@ static int pkey_kdf_test_init(EVP_TEST *t, const char *name)
     if (!TEST_ptr(kdata = OPENSSL_zalloc(sizeof(*kdata))))
         return 0;
 
-    kdata->ctx = EVP_PKEY_CTX_new_from_name(libctx, name, propquery);
+    kdata->ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, name, propquery);
     if (kdata->ctx == NULL
         || OPENSSL_BOX_EVP_PKEY_derive_init(kdata->ctx) <= 0)
         goto err;
@@ -4481,7 +4481,7 @@ static int check_pkey_expected_values(EVP_TEST *t, const EVP_PKEY *pkey,
 
                 if (data == NULL)
                     goto err;
-                ret = EVP_PKEY_get_octet_string_param(pkey, p->key, data,
+                ret = OPENSSL_BOX_EVP_PKEY_get_octet_string_param(pkey, p->key, data,
                                                       p->data_size, &len)
                     && len == p->data_size
                     && (TEST_mem_eq(p->data, len, data, len) == 1);
@@ -4517,12 +4517,12 @@ static int keygen_test_run(EVP_TEST *t)
             t->skip = 1;
             return 1;
         }
-        if (!TEST_ptr(genctx = EVP_PKEY_CTX_new_from_pkey(libctx, keyparams,
+        if (!TEST_ptr(genctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, keyparams,
                                                           propquery)))
             goto err;
 
     } else {
-        if (!TEST_ptr(genctx = EVP_PKEY_CTX_new_from_name(libctx, keygen->alg,
+        if (!TEST_ptr(genctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, keygen->alg,
                                                           propquery)))
             goto err;
     }
@@ -4767,13 +4767,13 @@ static int signverify_init(EVP_TEST *t, DIGESTSIGN_DATA *data)
     }
 
     if (data->is_verify) {
-        if (!EVP_DigestVerifyInit_ex(data->ctx, &data->pctx, name, libctx,
+        if (!OPENSSL_BOX_EVP_DigestVerifyInit_ex(data->ctx, &data->pctx, name, libctx,
                                      NULL, data->key, p)) {
             t->err = "DIGESTVERIFYINIT_ERROR";
             goto err;
         }
     } else {
-        if (!EVP_DigestSignInit_ex(data->ctx, &data->pctx, name, libctx, NULL,
+        if (!OPENSSL_BOX_EVP_DigestSignInit_ex(data->ctx, &data->pctx, name, libctx, NULL,
                                    data->key, p)) {
             t->err = "DIGESTSIGNINIT_ERROR";
             goto err;
@@ -4825,7 +4825,7 @@ static int digestsign_test_run(EVP_TEST *t)
         goto err;
     }
 
-    if (!EVP_DigestSignFinal(expected->ctx, NULL, &got_len)) {
+    if (!OPENSSL_BOX_EVP_DigestSignFinal(expected->ctx, NULL, &got_len)) {
         t->err = "DIGESTSIGNFINAL_LENGTH_ERROR";
         goto err;
     }
@@ -4834,7 +4834,7 @@ static int digestsign_test_run(EVP_TEST *t)
         goto err;
     }
     got_len *= 2;
-    if (!EVP_DigestSignFinal(expected->ctx, got, &got_len)) {
+    if (!OPENSSL_BOX_EVP_DigestSignFinal(expected->ctx, got, &got_len)) {
         t->err = "DIGESTSIGNFINAL_ERROR";
         goto err;
     }
@@ -4880,7 +4880,7 @@ static int digestverify_test_run(EVP_TEST *t)
         return 1;
     }
 
-    if (EVP_DigestVerifyFinal(mdata->ctx, mdata->output,
+    if (OPENSSL_BOX_EVP_DigestVerifyFinal(mdata->ctx, mdata->output,
                               mdata->output_len) <= 0)
         t->err = "VERIFY_ERROR";
     return 1;
@@ -4908,7 +4908,7 @@ static int oneshot_digestsign_test_run(EVP_TEST *t)
     if (!signverify_init(t, expected))
         goto err;
 
-    if (!EVP_DigestSign(expected->ctx, NULL, &got_len,
+    if (!OPENSSL_BOX_EVP_DigestSign(expected->ctx, NULL, &got_len,
                         expected->osin, expected->osin_len)) {
         t->err = "DIGESTSIGN_LENGTH_ERROR";
         goto err;
@@ -4918,7 +4918,7 @@ static int oneshot_digestsign_test_run(EVP_TEST *t)
         goto err;
     }
     got_len *= 2;
-    if (!EVP_DigestSign(expected->ctx, got, &got_len,
+    if (!OPENSSL_BOX_EVP_DigestSign(expected->ctx, got, &got_len,
                         expected->osin, expected->osin_len)) {
         t->err = "DIGESTSIGN_ERROR";
         goto err;
@@ -4954,7 +4954,7 @@ static int oneshot_digestverify_test_run(EVP_TEST *t)
     if (!signverify_init(t, mdata))
         return 1;
 
-    if (EVP_DigestVerify(mdata->ctx, mdata->output, mdata->output_len,
+    if (OPENSSL_BOX_EVP_DigestVerify(mdata->ctx, mdata->output, mdata->output_len,
                          mdata->osin, mdata->osin_len) <= 0)
         t->err = "VERIFY_ERROR";
     return 1;
@@ -5344,10 +5344,10 @@ start:
             return 0;
         }
         if (klist == &private_keys)
-            pkey = EVP_PKEY_new_raw_private_key_ex(libctx, strnid, NULL, keybin,
+            pkey = OPENSSL_BOX_EVP_PKEY_new_raw_private_key_ex(libctx, strnid, NULL, keybin,
                                                    keylen);
         else
-            pkey = EVP_PKEY_new_raw_public_key_ex(libctx, strnid, NULL, keybin,
+            pkey = OPENSSL_BOX_EVP_PKEY_new_raw_public_key_ex(libctx, strnid, NULL, keybin,
                                                   keylen);
         if (pkey == NULL && !key_unsupported()) {
             TEST_info("Can't read %s data", pp->key);

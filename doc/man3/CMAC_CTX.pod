@@ -40,15 +40,15 @@ Specifically, utilize the following functions for MAC operations:
 
 =item L<OPENSSL_BOX_EVP_MAC_CTX_free(3)> to free the MAC context.
 
-=item L<EVP_MAC_init(3)> to initialize the MAC context.
+=item L<OPENSSL_BOX_EVP_MAC_init(3)> to initialize the MAC context.
 
 =item L<OPENSSL_BOX_EVP_MAC_update(3)> to update the MAC with data.
 
-=item L<EVP_MAC_final(3)> to finalize the MAC and retrieve the output.
+=item L<OPENSSL_BOX_EVP_MAC_final(3)> to finalize the MAC and retrieve the output.
 
 =back
 
-Alternatively, for a single-step MAC computation, use the L<EVP_Q_mac(3)>
+Alternatively, for a single-step MAC computation, use the L<OPENSSL_BOX_EVP_Q_mac(3)>
 function.
 
 The B<CMAC_CTX> type is a structure used for the provision of CMAC
@@ -99,8 +99,8 @@ return 1 for success or 0 if an error occurs.
 =head1 HISTORY
 
 All functions described here were deprecated in OpenSSL 3.0. For replacements,
-see L<OPENSSL_BOX_EVP_MAC_CTX_new(3)>, L<OPENSSL_BOX_EVP_MAC_CTX_free(3)>, L<EVP_MAC_init(3)>,
-L<OPENSSL_BOX_EVP_MAC_update(3)>, and L<EVP_MAC_final(3)>.
+see L<OPENSSL_BOX_EVP_MAC_CTX_new(3)>, L<OPENSSL_BOX_EVP_MAC_CTX_free(3)>, L<OPENSSL_BOX_EVP_MAC_init(3)>,
+L<OPENSSL_BOX_EVP_MAC_update(3)>, and L<OPENSSL_BOX_EVP_MAC_final(3)>.
 
 =head1 COPYRIGHT
 

@@ -173,14 +173,14 @@ I<Owner Assurance of Pair-wise Consistency>.
 
 An B<EVP_PKEY> context can be obtained by calling:
 
-    EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_from_name(NULL, "DH", NULL);
+    EVP_PKEY_CTX *pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "DH", NULL);
 
 A B<DH> key can be generated with a named safe prime group by calling:
 
     int priv_len = 2 * 112;
     OSSL_PARAM params[3];
     EVP_PKEY *pkey = NULL;
-    EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_from_name(NULL, "DH", NULL);
+    EVP_PKEY_CTX *pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "DH", NULL);
 
     params[0] = OSSL_PARAM_construct_utf8_string("group", "ffdhe2048", 0);
     /* "priv_len" is optional */
@@ -203,7 +203,7 @@ B<DHX> domain parameters can be generated according to B<FIPS186-4> by calling:
     EVP_PKEY *param_key = NULL;
     EVP_PKEY_CTX *pctx = NULL;
 
-    pctx = EVP_PKEY_CTX_new_from_name(NULL, "DHX", NULL);
+    pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "DHX", NULL);
     OPENSSL_BOX_EVP_PKEY_paramgen_init(pctx);
 
     params[0] = OSSL_PARAM_construct_uint("pbits", &pbits);
@@ -216,7 +216,7 @@ B<DHX> domain parameters can be generated according to B<FIPS186-4> by calling:
 
     OPENSSL_BOX_EVP_PKEY_generate(pctx, &param_key);
 
-    EVP_PKEY_print_params(bio_out, param_key, 0, NULL);
+    OPENSSL_BOX_EVP_PKEY_print_params(bio_out, param_key, 0, NULL);
     ...
     OPENSSL_BOX_EVP_PKEY_free(param_key);
     OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
@@ -224,11 +224,11 @@ B<DHX> domain parameters can be generated according to B<FIPS186-4> by calling:
 A B<DH> key can be generated using domain parameters by calling:
 
     EVP_PKEY *key = NULL;
-    EVP_PKEY_CTX *gctx = EVP_PKEY_CTX_new_from_pkey(NULL, param_key, NULL);
+    EVP_PKEY_CTX *gctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, param_key, NULL);
 
     OPENSSL_BOX_EVP_PKEY_keygen_init(gctx);
     OPENSSL_BOX_EVP_PKEY_generate(gctx, &key);
-    EVP_PKEY_print_private(bio_out, key, 0, NULL);
+    OPENSSL_BOX_EVP_PKEY_print_private(bio_out, key, 0, NULL);
     ...
     OPENSSL_BOX_EVP_PKEY_free(key);
     OPENSSL_BOX_EVP_PKEY_CTX_free(gctx);
@@ -237,7 +237,7 @@ To validate B<FIPS186-4> B<DHX> domain parameters decoded from B<PEM> or
 B<DER> data, additional values used during generation may be required to
 be set into the key.
 
-OPENSSL_BOX_EVP_PKEY_todata(), OSSL_PARAM_merge(), and EVP_PKEY_fromdata() are useful
+OPENSSL_BOX_EVP_PKEY_todata(), OSSL_PARAM_merge(), and OPENSSL_BOX_EVP_PKEY_fromdata() are useful
 to add these parameters to the original key or domain parameters before
 the actual validation. In production code the return values should be checked.
 
@@ -265,12 +265,12 @@ the actual validation. In production code the return values should be checked.
     extra_params[3] = OSSL_PARAM_construct_end();
     merged_params = OSSL_PARAM_merge(domain_params, extra_params);
 
-    ctx = EVP_PKEY_CTX_new_from_name(NULL, "DHX", NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "DHX", NULL);
     OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx);
-    EVP_PKEY_fromdata(ctx, &complete_domp, OSSL_KEYMGMT_SELECT_ALL,
+    OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &complete_domp, OSSL_KEYMGMT_SELECT_ALL,
                       merged_params);
 
-    validate_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, complete_domp, NULL);
+    validate_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, complete_domp, NULL);
     if (OPENSSL_BOX_EVP_PKEY_param_check(validate_ctx) > 0)
         /* validation_passed(); */
     else

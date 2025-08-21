@@ -65,20 +65,20 @@ static int do_hmac(PROV_DRBG_HMAC *hmac, unsigned char inbyte,
 {
     EVP_MAC_CTX *ctx = hmac->ctx;
 
-    if (!EVP_MAC_init(ctx, hmac->K, hmac->blocklen, NULL)
+    if (!OPENSSL_BOX_EVP_MAC_init(ctx, hmac->K, hmac->blocklen, NULL)
             /* K = HMAC(K, V || inbyte || [in1] || [in2] || [in3]) */
             || !OPENSSL_BOX_EVP_MAC_update(ctx, hmac->V, hmac->blocklen)
             || !OPENSSL_BOX_EVP_MAC_update(ctx, &inbyte, 1)
             || !(in1 == NULL || in1len == 0 || OPENSSL_BOX_EVP_MAC_update(ctx, in1, in1len))
             || !(in2 == NULL || in2len == 0 || OPENSSL_BOX_EVP_MAC_update(ctx, in2, in2len))
             || !(in3 == NULL || in3len == 0 || OPENSSL_BOX_EVP_MAC_update(ctx, in3, in3len))
-            || !EVP_MAC_final(ctx, hmac->K, NULL, sizeof(hmac->K)))
+            || !OPENSSL_BOX_EVP_MAC_final(ctx, hmac->K, NULL, sizeof(hmac->K)))
         return 0;
 
    /* V = HMAC(K, V) */
-    return EVP_MAC_init(ctx, hmac->K, hmac->blocklen, NULL)
+    return OPENSSL_BOX_EVP_MAC_init(ctx, hmac->K, hmac->blocklen, NULL)
            && OPENSSL_BOX_EVP_MAC_update(ctx, hmac->V, hmac->blocklen)
-           && EVP_MAC_final(ctx, hmac->V, NULL, sizeof(hmac->V));
+           && OPENSSL_BOX_EVP_MAC_final(ctx, hmac->V, NULL, sizeof(hmac->V));
 }
 
 /*
@@ -236,16 +236,16 @@ int ossl_drbg_hmac_generate(PROV_DRBG_HMAC *hmac,
      *             }
      */
     for (;;) {
-        if (!EVP_MAC_init(ctx, hmac->K, hmac->blocklen, NULL)
+        if (!OPENSSL_BOX_EVP_MAC_init(ctx, hmac->K, hmac->blocklen, NULL)
             || !OPENSSL_BOX_EVP_MAC_update(ctx, temp, hmac->blocklen))
             return 0;
 
         if (outlen > hmac->blocklen) {
-            if (!EVP_MAC_final(ctx, out, NULL, outlen))
+            if (!OPENSSL_BOX_EVP_MAC_final(ctx, out, NULL, outlen))
                 return 0;
             temp = out;
         } else {
-            if (!EVP_MAC_final(ctx, hmac->V, NULL, sizeof(hmac->V)))
+            if (!OPENSSL_BOX_EVP_MAC_final(ctx, hmac->V, NULL, sizeof(hmac->V)))
                 return 0;
             memcpy(out, hmac->V, outlen);
             break;

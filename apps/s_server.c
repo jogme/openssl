@@ -3309,7 +3309,7 @@ static void print_connection_info(SSL *con)
 
         if (client_rpk != NULL) {
             BIO_printf(bio_s_out, "Client raw public key\n");
-            EVP_PKEY_print_public(bio_s_out, client_rpk, 2, NULL);
+            OPENSSL_BOX_EVP_PKEY_print_public(bio_s_out, client_rpk, 2, NULL);
         }
     }
 

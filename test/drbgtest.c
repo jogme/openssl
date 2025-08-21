@@ -52,7 +52,7 @@ static int gen_bytes(EVP_RAND_CTX *drbg, unsigned char *buf, int num)
 #endif
 
     if (drbg != NULL)
-        return EVP_RAND_generate(drbg, buf, num, 0, 0, NULL, 0);
+        return OPENSSL_BOX_EVP_RAND_generate(drbg, buf, num, 0, 0, NULL, 0);
     return 0;
 }
 
@@ -789,7 +789,7 @@ static EVP_RAND_CTX *new_drbg(EVP_RAND_CTX *parent)
                                                  "AES-256-CTR", 0);
     params[1] = OSSL_PARAM_construct_end();
 
-    if (!TEST_ptr(rand = EVP_RAND_fetch(NULL, "CTR-DRBG", NULL))
+    if (!TEST_ptr(rand = OPENSSL_BOX_EVP_RAND_fetch(NULL, "CTR-DRBG", NULL))
             || !TEST_ptr(drbg = OPENSSL_BOX_EVP_RAND_CTX_new(rand, parent))
             || !TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(drbg, params))) {
         OPENSSL_BOX_EVP_RAND_CTX_free(drbg);
@@ -811,11 +811,11 @@ static int test_rand_prediction_resistance(void)
     /* Initialise a three long DRBG chain */
     if (!TEST_ptr(x = new_drbg(NULL))
         || !TEST_true(disable_crngt(x))
-        || !TEST_true(EVP_RAND_instantiate(x, 0, 0, NULL, 0, NULL))
+        || !TEST_true(OPENSSL_BOX_EVP_RAND_instantiate(x, 0, 0, NULL, 0, NULL))
         || !TEST_ptr(y = new_drbg(x))
-        || !TEST_true(EVP_RAND_instantiate(y, 0, 0, NULL, 0, NULL))
+        || !TEST_true(OPENSSL_BOX_EVP_RAND_instantiate(y, 0, 0, NULL, 0, NULL))
         || !TEST_ptr(z = new_drbg(y))
-        || !TEST_true(EVP_RAND_instantiate(z, 0, 0, NULL, 0, NULL)))
+        || !TEST_true(OPENSSL_BOX_EVP_RAND_instantiate(z, 0, 0, NULL, 0, NULL)))
         goto err;
 
     /*
@@ -826,7 +826,7 @@ static int test_rand_prediction_resistance(void)
     xreseed = reseed_counter(x);
     yreseed = reseed_counter(y);
     zreseed = reseed_counter(z);
-    if (!TEST_true(EVP_RAND_reseed(z, 0, NULL, 0, NULL, 0))
+    if (!TEST_true(OPENSSL_BOX_EVP_RAND_reseed(z, 0, NULL, 0, NULL, 0))
         || !TEST_int_eq(reseed_counter(x), xreseed)
         || !TEST_int_eq(reseed_counter(y), yreseed)
         || !TEST_int_gt(reseed_counter(z), zreseed))
@@ -837,7 +837,7 @@ static int test_rand_prediction_resistance(void)
      * propagated to the primary, so that the entire DRBG chain reseeds.
      */
     zreseed = reseed_counter(z);
-    if (!TEST_true(EVP_RAND_reseed(z, 1, NULL, 0, NULL, 0))
+    if (!TEST_true(OPENSSL_BOX_EVP_RAND_reseed(z, 1, NULL, 0, NULL, 0))
         || !TEST_int_gt(reseed_counter(x), xreseed)
         || !TEST_int_gt(reseed_counter(y), yreseed)
         || !TEST_int_gt(reseed_counter(z), zreseed))
@@ -849,7 +849,7 @@ static int test_rand_prediction_resistance(void)
     xreseed = reseed_counter(x);
     yreseed = reseed_counter(y);
     zreseed = reseed_counter(z);
-    if (!TEST_true(EVP_RAND_generate(z, buf1, sizeof(buf1), 0, 0, NULL, 0))
+    if (!TEST_true(OPENSSL_BOX_EVP_RAND_generate(z, buf1, sizeof(buf1), 0, 0, NULL, 0))
         || !TEST_int_eq(reseed_counter(x), xreseed)
         || !TEST_int_eq(reseed_counter(y), yreseed)
         || !TEST_int_gt(reseed_counter(z), zreseed))
@@ -860,7 +860,7 @@ static int test_rand_prediction_resistance(void)
      * should be propagated to the primary, reseeding the entire DRBG chain.
      */
     zreseed = reseed_counter(z);
-    if (!TEST_true(EVP_RAND_generate(z, buf2, sizeof(buf2), 0, 1, NULL, 0))
+    if (!TEST_true(OPENSSL_BOX_EVP_RAND_generate(z, buf2, sizeof(buf2), 0, 1, NULL, 0))
         || !TEST_int_gt(reseed_counter(x), xreseed)
         || !TEST_int_gt(reseed_counter(y), yreseed)
         || !TEST_int_gt(reseed_counter(z), zreseed)
@@ -872,7 +872,7 @@ static int test_rand_prediction_resistance(void)
     xreseed = reseed_counter(x);
     yreseed = reseed_counter(y);
     zreseed = reseed_counter(z);
-    if (!TEST_true(EVP_RAND_reseed(z, 0, NULL, 0, NULL, 0))
+    if (!TEST_true(OPENSSL_BOX_EVP_RAND_reseed(z, 0, NULL, 0, NULL, 0))
         || !TEST_int_eq(reseed_counter(x), xreseed)
         || !TEST_int_eq(reseed_counter(y), yreseed)
         || !TEST_int_gt(reseed_counter(z), zreseed))

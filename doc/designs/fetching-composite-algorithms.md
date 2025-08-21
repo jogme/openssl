@@ -27,11 +27,11 @@ As far as this design is concerned, these API sets are affected:
 The proposal is to add these initializer functions:
 
 ``` C
-int EVP_PKEY_sign_init_ex2(EVP_PKEY_CTX *pctx,
+int OPENSSL_BOX_EVP_PKEY_sign_init_ex2(EVP_PKEY_CTX *pctx,
                            EVP_SIGNATURE *algo, const OSSL_PARAM params[]);
-int EVP_PKEY_verify_init_ex2(EVP_PKEY_CTX *pctx,
+int OPENSSL_BOX_EVP_PKEY_verify_init_ex2(EVP_PKEY_CTX *pctx,
                              EVP_SIGNATURE *algo, const OSSL_PARAM params[]);
-int EVP_PKEY_verify_recover_init_ex2(EVP_PKEY_CTX *pctx,
+int OPENSSL_BOX_EVP_PKEY_verify_recover_init_ex2(EVP_PKEY_CTX *pctx,
                                      EVP_SIGNATURE *algo, const OSSL_PARAM params[]);
 
 int EVP_PKEY_encrypt_init_ex2(EVP_PKEY_CTX *ctx, EVP_ASYM_CIPHER *asymciph,

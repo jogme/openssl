@@ -9,7 +9,7 @@
 
 /*
  * This demonstration will calculate and verify an ED25519 signature of
- * a message using  EVP_DigestSign() and EVP_DigestVerify().
+ * a message using  OPENSSL_BOX_EVP_DigestSign() and OPENSSL_BOX_EVP_DigestVerify().
  */
 
 #include <string.h>
@@ -51,14 +51,14 @@ static int demo_sign(EVP_PKEY *priv,
      * For more information, refer to doc/man7/EVP_SIGNATURE-ED25519.pod
      * "ED25519 and ED448 Signature Parameters"
      */
-    if (!EVP_DigestSignInit_ex(sign_context, NULL, NULL, libctx, NULL, priv, NULL)) {
-        fprintf(stderr, "EVP_DigestSignInit_ex failed.\n");
+    if (!OPENSSL_BOX_EVP_DigestSignInit_ex(sign_context, NULL, NULL, libctx, NULL, priv, NULL)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestSignInit_ex failed.\n");
         goto cleanup;
     }
 
     /* Calculate the required size for the signature by passing a NULL buffer. */
-    if (!EVP_DigestSign(sign_context, NULL, &sig_len, tbs, tbs_len)) {
-        fprintf(stderr, "EVP_DigestSign using NULL buffer failed.\n");
+    if (!OPENSSL_BOX_EVP_DigestSign(sign_context, NULL, &sig_len, tbs, tbs_len)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestSign using NULL buffer failed.\n");
         goto cleanup;
     }
     sig_value = OPENSSL_malloc(sig_len);
@@ -67,8 +67,8 @@ static int demo_sign(EVP_PKEY *priv,
         goto cleanup;
     }
     fprintf(stdout, "Generating signature:\n");
-    if (!EVP_DigestSign(sign_context, sig_value, &sig_len, tbs, tbs_len)) {
-        fprintf(stderr, "EVP_DigestSign failed.\n");
+    if (!OPENSSL_BOX_EVP_DigestSign(sign_context, sig_value, &sig_len, tbs, tbs_len)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestSign failed.\n");
         goto cleanup;
     }
     *sig_out_len = sig_len;
@@ -102,18 +102,18 @@ static int demo_verify(EVP_PKEY *pub,
         goto cleanup;
     }
     /* Initialize the verify context with a ED25519 public key */
-    if (!EVP_DigestVerifyInit_ex(verify_context, NULL, NULL,
+    if (!OPENSSL_BOX_EVP_DigestVerifyInit_ex(verify_context, NULL, NULL,
                                  libctx, NULL, pub, NULL)) {
-        fprintf(stderr, "EVP_DigestVerifyInit_ex failed.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestVerifyInit_ex failed.\n");
         goto cleanup;
     }
     /*
-     * ED25519 only supports the one shot interface using EVP_DigestVerify()
+     * ED25519 only supports the one shot interface using OPENSSL_BOX_EVP_DigestVerify()
      * The streaming OPENSSL_BOX_EVP_DigestVerifyUpdate() API is not supported.
      */
-    if (!EVP_DigestVerify(verify_context, sig_value, sig_len,
+    if (!OPENSSL_BOX_EVP_DigestVerify(verify_context, sig_value, sig_len,
                           tbs, tbs_len)) {
-        fprintf(stderr, "EVP_DigestVerify() failed.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestVerify() failed.\n");
         goto cleanup;
     }
     fprintf(stdout, "Signature verified.\n");
@@ -134,26 +134,26 @@ static int create_key(OSSL_LIB_CTX *libctx,
 
     /*
      * In this demo we just create a keypair, and extract the
-     * public key. We could also use EVP_PKEY_new_raw_private_key_ex()
+     * public key. We could also use OPENSSL_BOX_EVP_PKEY_new_raw_private_key_ex()
      * to create a key from raw data.
      */
-    priv = EVP_PKEY_Q_keygen(libctx, NULL, "ED25519");
+    priv = OPENSSL_BOX_EVP_PKEY_Q_keygen(libctx, NULL, "ED25519");
     if (priv == NULL) {
-        fprintf(stderr, "EVP_PKEY_Q_keygen() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_Q_keygen() failed\n");
         goto end;
     }
 
-    if (!EVP_PKEY_get_octet_string_param(priv,
+    if (!OPENSSL_BOX_EVP_PKEY_get_octet_string_param(priv,
                                          OSSL_PKEY_PARAM_PUB_KEY,
                                          pubdata,
                                          sizeof(pubdata),
                                          &pubdata_len)) {
-        fprintf(stderr, "EVP_PKEY_get_octet_string_param() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_get_octet_string_param() failed\n");
         goto end;
     }
-    pub = EVP_PKEY_new_raw_public_key_ex(libctx, "ED25519", NULL, pubdata, pubdata_len);
+    pub = OPENSSL_BOX_EVP_PKEY_new_raw_public_key_ex(libctx, "ED25519", NULL, pubdata, pubdata_len);
     if (pub == NULL) {
-        fprintf(stderr, "EVP_PKEY_new_raw_public_key_ex() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_new_raw_public_key_ex() failed\n");
         goto end;
     }
     ret = 1;

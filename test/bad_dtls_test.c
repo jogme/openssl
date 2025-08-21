@@ -183,7 +183,7 @@ static int validate_client_hello(BIO *wbio)
         return 0;
 
     /* Update handshake MAC for second ClientHello (with cookie) */
-    if (cookie_found && !EVP_DigestUpdate(handshake_md, data + MAC_OFFSET,
+    if (cookie_found && !OPENSSL_BOX_EVP_DigestUpdate(handshake_md, data + MAC_OFFSET,
                                           len - MAC_OFFSET))
         return 0;
 
@@ -260,7 +260,7 @@ static int send_server_hello(BIO *rbio)
     memcpy(server_hello + SH_RANDOM_OFS, server_random, sizeof(server_random));
     memcpy(server_hello + SH_SESSID_OFS, session_id, sizeof(session_id));
 
-    if (!EVP_DigestUpdate(handshake_md, server_hello + MAC_OFFSET,
+    if (!OPENSSL_BOX_EVP_DigestUpdate(handshake_md, server_hello + MAC_OFFSET,
                           sizeof(server_hello) - MAC_OFFSET))
         return 0;
 
@@ -306,7 +306,7 @@ static int send_record(BIO *rbio, unsigned char type, uint64_t seqnr,
     memcpy(enc, msg, len);
 
     /* Append HMAC to data */
-    if (!TEST_ptr(hmac = EVP_MAC_fetch(NULL, "HMAC", NULL))
+    if (!TEST_ptr(hmac = OPENSSL_BOX_EVP_MAC_fetch(NULL, "HMAC", NULL))
             || !TEST_ptr(ctx = OPENSSL_BOX_EVP_MAC_CTX_new(hmac)))
         goto end;
     params[0] = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_DIGEST,
@@ -314,14 +314,14 @@ static int send_record(BIO *rbio, unsigned char type, uint64_t seqnr,
     params[1] = OSSL_PARAM_construct_end();
     lenbytes[0] = (unsigned char)(len >> 8);
     lenbytes[1] = (unsigned char)(len);
-    if (!EVP_MAC_init(ctx, mac_key, 20, params)
+    if (!OPENSSL_BOX_EVP_MAC_init(ctx, mac_key, 20, params)
             || !OPENSSL_BOX_EVP_MAC_update(ctx, epoch, 2)
             || !OPENSSL_BOX_EVP_MAC_update(ctx, seq, 6)
             || !OPENSSL_BOX_EVP_MAC_update(ctx, &type, 1)
             || !OPENSSL_BOX_EVP_MAC_update(ctx, ver, 2)      /* Version */
             || !OPENSSL_BOX_EVP_MAC_update(ctx, lenbytes, 2) /* Length */
             || !OPENSSL_BOX_EVP_MAC_update(ctx, enc, len)    /* Finally the data itself */
-            || !EVP_MAC_final(ctx, enc + len, NULL, SHA_DIGEST_LENGTH))
+            || !OPENSSL_BOX_EVP_MAC_final(ctx, enc + len, NULL, SHA_DIGEST_LENGTH))
         goto end;
 
     /* Append padding bytes */
@@ -333,9 +333,9 @@ static int send_record(BIO *rbio, unsigned char type, uint64_t seqnr,
     /* Generate IV, and encrypt */
     if (!TEST_int_gt(RAND_bytes(iv, sizeof(iv)), 0)
             || !TEST_ptr(enc_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
-            || !TEST_true(EVP_CipherInit_ex(enc_ctx, OPENSSL_BOX_EVP_aes_128_cbc(), NULL,
+            || !TEST_true(OPENSSL_BOX_EVP_CipherInit_ex(enc_ctx, OPENSSL_BOX_EVP_aes_128_cbc(), NULL,
                                             enc_key, iv, 1))
-            || !TEST_int_ge(EVP_Cipher(enc_ctx, enc, enc, (unsigned int)len), 0))
+            || !TEST_int_ge(OPENSSL_BOX_EVP_Cipher(enc_ctx, enc, enc, (unsigned int)len), 0))
         goto end;
 
     /* Finally write header (from fragmented variables), IV and encrypted record */
@@ -379,7 +379,7 @@ static int send_finished(SSL *s, BIO *rbio)
            key_block, sizeof(key_block));
 
     /* Generate Finished MAC */
-    if (!EVP_DigestFinal_ex(handshake_md, handshake_hash, NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(handshake_md, handshake_hash, NULL))
         return 0;
 
     md_size = EVP_MD_CTX_get_size(handshake_md);
@@ -490,7 +490,7 @@ static int test_bad_dtls(void)
 
     handshake_md = OPENSSL_BOX_EVP_MD_CTX_new();
     if (!TEST_ptr(handshake_md)
-            || !TEST_true(EVP_DigestInit_ex(handshake_md, OPENSSL_BOX_EVP_md5_sha1(),
+            || !TEST_true(OPENSSL_BOX_EVP_DigestInit_ex(handshake_md, OPENSSL_BOX_EVP_md5_sha1(),
                                             NULL)))
         goto end;
 

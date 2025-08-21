@@ -89,7 +89,7 @@ static int aes_gcm_encrypt(void)
         goto err;
 
     /* Fetch the cipher implementation */
-    if ((cipher = EVP_CIPHER_fetch(libctx, "AES-256-GCM", propq)) == NULL)
+    if ((cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "AES-256-GCM", propq)) == NULL)
         goto err;
 
     /* Set IV length if default 96 bits is not appropriate */
@@ -103,15 +103,15 @@ static int aes_gcm_encrypt(void)
      * application the IV would be generated internally so the iv passed in
      * would be NULL.
      */
-    if (!EVP_EncryptInit_ex2(ctx, cipher, gcm_key, gcm_iv, params))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx, cipher, gcm_key, gcm_iv, params))
         goto err;
 
     /* Zero or more calls to specify any AAD */
-    if (!EVP_EncryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad)))
+    if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad)))
         goto err;
 
     /* Encrypt plaintext */
-    if (!EVP_EncryptUpdate(ctx, outbuf, &outlen, gcm_pt, sizeof(gcm_pt)))
+    if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx, outbuf, &outlen, gcm_pt, sizeof(gcm_pt)))
         goto err;
 
     /* Output encrypted block */
@@ -119,7 +119,7 @@ static int aes_gcm_encrypt(void)
     BIO_dump_fp(stdout, outbuf, outlen);
 
     /* Finalise: note get no output for GCM */
-    if (!EVP_EncryptFinal_ex(ctx, outbuf, &tmplen))
+    if (!OPENSSL_BOX_EVP_EncryptFinal_ex(ctx, outbuf, &tmplen))
         goto err;
 
     /* Get tag */
@@ -164,7 +164,7 @@ static int aes_gcm_decrypt(void)
         goto err;
 
     /* Fetch the cipher implementation */
-    if ((cipher = EVP_CIPHER_fetch(libctx, "AES-256-GCM", propq)) == NULL)
+    if ((cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "AES-256-GCM", propq)) == NULL)
         goto err;
 
     /* Set IV length if default 96 bits is not appropriate */
@@ -175,15 +175,15 @@ static int aes_gcm_decrypt(void)
      * Initialise an encrypt operation with the cipher/mode, key, IV and
      * IV length parameter.
      */
-    if (!EVP_DecryptInit_ex2(ctx, cipher, gcm_key, gcm_iv, params))
+    if (!OPENSSL_BOX_EVP_DecryptInit_ex2(ctx, cipher, gcm_key, gcm_iv, params))
         goto err;
 
     /* Zero or more calls to specify any AAD */
-    if (!EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad)))
+    if (!OPENSSL_BOX_EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad)))
         goto err;
 
     /* Decrypt plaintext */
-    if (!EVP_DecryptUpdate(ctx, outbuf, &outlen, gcm_ct, sizeof(gcm_ct)))
+    if (!OPENSSL_BOX_EVP_DecryptUpdate(ctx, outbuf, &outlen, gcm_ct, sizeof(gcm_ct)))
         goto err;
 
     /* Output decrypted block */
@@ -198,7 +198,7 @@ static int aes_gcm_decrypt(void)
         goto err;
 
     /* Finalise: note get no output for GCM */
-    rv = EVP_DecryptFinal_ex(ctx, outbuf, &outlen);
+    rv = OPENSSL_BOX_EVP_DecryptFinal_ex(ctx, outbuf, &outlen);
     /*
      * Print out return value. If this is not successful authentication
      * failed and plaintext is not trustworthy.

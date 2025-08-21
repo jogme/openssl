@@ -118,13 +118,13 @@ static int fips_health_test_one(const uint8_t *buf, size_t n, size_t gen)
                                              (void *)buf, n);
     p[1] = OSSL_PARAM_construct_end();
 
-    if (!TEST_ptr(parent_alg = EVP_RAND_fetch(NULL, "TEST-RAND", "-fips"))
-            || !TEST_ptr(crngt_alg = EVP_RAND_fetch(NULL, "CRNG-TEST", "-fips"))
+    if (!TEST_ptr(parent_alg = OPENSSL_BOX_EVP_RAND_fetch(NULL, "TEST-RAND", "-fips"))
+            || !TEST_ptr(crngt_alg = OPENSSL_BOX_EVP_RAND_fetch(NULL, "CRNG-TEST", "-fips"))
             || !TEST_ptr(parent = OPENSSL_BOX_EVP_RAND_CTX_new(parent_alg, NULL))
             || !TEST_ptr(crngt = OPENSSL_BOX_EVP_RAND_CTX_new(crngt_alg, parent))
-            || !TEST_true(EVP_RAND_instantiate(parent, 0, 0,
+            || !TEST_true(OPENSSL_BOX_EVP_RAND_instantiate(parent, 0, 0,
                                                (unsigned char *)"abc", 3, p))
-            || !TEST_true(EVP_RAND_instantiate(crngt, 0, 0,
+            || !TEST_true(OPENSSL_BOX_EVP_RAND_instantiate(crngt, 0, 0,
                                                (unsigned char *)"def", 3, NULL))
             || !TEST_size_t_le(gen, sizeof(out)))
         goto err;
@@ -137,7 +137,7 @@ static int fips_health_test_one(const uint8_t *buf, size_t n, size_t gen)
         goto err;
 
     ERR_set_mark();
-    res = EVP_RAND_generate(crngt, out, gen, 0, 0, NULL, 0);
+    res = OPENSSL_BOX_EVP_RAND_generate(crngt, out, gen, 0, 0, NULL, 0);
     ERR_pop_to_mark();
  err:
     OPENSSL_BOX_EVP_RAND_CTX_free(crngt);

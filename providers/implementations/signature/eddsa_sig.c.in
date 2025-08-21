@@ -431,7 +431,7 @@ static int ed25519_sign(void *vpeddsactx,
 
     if (peddsactx->prehash_flag) {
         if (!peddsactx->prehash_by_caller_flag) {
-            if (!EVP_Q_digest(peddsactx->libctx, SN_sha512, NULL,
+            if (!OPENSSL_BOX_EVP_Q_digest(peddsactx->libctx, SN_sha512, NULL,
                               tbs, tbslen, md, &mdlen)
                 || mdlen != EDDSA_PREHASH_OUTPUT_LEN) {
                 ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_PREHASHED_DIGEST_LENGTH);
@@ -461,7 +461,7 @@ static int ed25519_sign(void *vpeddsactx,
     return 1;
 }
 
-/* EVP_Q_digest() does not allow variable output length for XOFs,
+/* OPENSSL_BOX_EVP_Q_digest() does not allow variable output length for XOFs,
    so we use this function */
 static int ed448_shake256(OSSL_LIB_CTX *libctx,
                           const char *propq,
@@ -470,14 +470,14 @@ static int ed448_shake256(OSSL_LIB_CTX *libctx,
 {
     int ret = 0;
     EVP_MD_CTX *hash_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
-    EVP_MD *shake256 = EVP_MD_fetch(libctx, SN_shake256, propq);
+    EVP_MD *shake256 = OPENSSL_BOX_EVP_MD_fetch(libctx, SN_shake256, propq);
 
     if (hash_ctx == NULL || shake256 == NULL)
         goto err;
 
-    if (!EVP_DigestInit_ex(hash_ctx, shake256, NULL)
-            || !EVP_DigestUpdate(hash_ctx, in, inlen)
-            || !EVP_DigestFinalXOF(hash_ctx, out, outlen))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(hash_ctx, shake256, NULL)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, in, inlen)
+            || !OPENSSL_BOX_EVP_DigestFinalXOF(hash_ctx, out, outlen))
         goto err;
 
     ret = 1;
@@ -596,7 +596,7 @@ static int ed25519_verify(void *vpeddsactx,
 
     if (peddsactx->prehash_flag) {
         if (!peddsactx->prehash_by_caller_flag) {
-            if (!EVP_Q_digest(peddsactx->libctx, SN_sha512, NULL,
+            if (!OPENSSL_BOX_EVP_Q_digest(peddsactx->libctx, SN_sha512, NULL,
                               tbs, tbslen, md, &mdlen)
                 || mdlen != EDDSA_PREHASH_OUTPUT_LEN) {
                 ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_PREHASHED_DIGEST_LENGTH);
@@ -927,32 +927,32 @@ static int eddsa_set_variant_ctx_params(void *vpeddsactx,
 
 /*
  * Ed25519 can be used with:
- * - EVP_PKEY_sign_init_ex2()   [ instance and prehash assumed done by caller ]
- * - EVP_PKEY_verify_init_ex2() [ instance and prehash assumed done by caller ]
- * - EVP_PKEY_sign_message_init()
- * - EVP_PKEY_verify_message_init()
- * - EVP_DigestSignInit_ex()
- * - EVP_DigestVerifyInit_ex()
+ * - OPENSSL_BOX_EVP_PKEY_sign_init_ex2()   [ instance and prehash assumed done by caller ]
+ * - OPENSSL_BOX_EVP_PKEY_verify_init_ex2() [ instance and prehash assumed done by caller ]
+ * - OPENSSL_BOX_EVP_PKEY_sign_message_init()
+ * - OPENSSL_BOX_EVP_PKEY_verify_message_init()
+ * - OPENSSL_BOX_EVP_DigestSignInit_ex()
+ * - OPENSSL_BOX_EVP_DigestVerifyInit_ex()
  * Ed25519ph can be used with:
- * - EVP_PKEY_sign_init_ex2()   [ prehash assumed done by caller ]
- * - EVP_PKEY_verify_init_ex2() [ prehash assumed done by caller ]
- * - EVP_PKEY_sign_message_init()
- * - EVP_PKEY_verify_message_init()
+ * - OPENSSL_BOX_EVP_PKEY_sign_init_ex2()   [ prehash assumed done by caller ]
+ * - OPENSSL_BOX_EVP_PKEY_verify_init_ex2() [ prehash assumed done by caller ]
+ * - OPENSSL_BOX_EVP_PKEY_sign_message_init()
+ * - OPENSSL_BOX_EVP_PKEY_verify_message_init()
  * Ed25519ctx can be used with:
- * - EVP_PKEY_sign_message_init()
- * - EVP_PKEY_verify_message_init()
+ * - OPENSSL_BOX_EVP_PKEY_sign_message_init()
+ * - OPENSSL_BOX_EVP_PKEY_verify_message_init()
  * Ed448 can be used with:
- * - EVP_PKEY_sign_init_ex2()   [ instance and prehash assumed done by caller ]
- * - EVP_PKEY_verify_init_ex2() [ instance and prehash assumed done by caller ]
- * - EVP_PKEY_sign_message_init()
- * - EVP_PKEY_verify_message_init()
- * - EVP_DigestSignInit_ex()
- * - EVP_DigestVerifyInit_ex()
+ * - OPENSSL_BOX_EVP_PKEY_sign_init_ex2()   [ instance and prehash assumed done by caller ]
+ * - OPENSSL_BOX_EVP_PKEY_verify_init_ex2() [ instance and prehash assumed done by caller ]
+ * - OPENSSL_BOX_EVP_PKEY_sign_message_init()
+ * - OPENSSL_BOX_EVP_PKEY_verify_message_init()
+ * - OPENSSL_BOX_EVP_DigestSignInit_ex()
+ * - OPENSSL_BOX_EVP_DigestVerifyInit_ex()
  * Ed448ph can be used with:
- * - EVP_PKEY_sign_init_ex2()   [ prehash assumed done by caller ]
- * - EVP_PKEY_verify_init_ex2() [ prehash assumed done by caller ]
- * - EVP_PKEY_sign_message_init()
- * - EVP_PKEY_verify_message_init()
+ * - OPENSSL_BOX_EVP_PKEY_sign_init_ex2()   [ prehash assumed done by caller ]
+ * - OPENSSL_BOX_EVP_PKEY_verify_init_ex2() [ prehash assumed done by caller ]
+ * - OPENSSL_BOX_EVP_PKEY_sign_message_init()
+ * - OPENSSL_BOX_EVP_PKEY_verify_message_init()
  */
 
 #define ed25519_DISPATCH_END                                            \

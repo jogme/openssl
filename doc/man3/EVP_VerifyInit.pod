@@ -3,7 +3,7 @@
 =head1 NAME
 
 EVP_VerifyInit_ex,
-EVP_VerifyInit, EVP_VerifyUpdate, EVP_VerifyFinal_ex, EVP_VerifyFinal
+EVP_VerifyInit, EVP_VerifyUpdate, OPENSSL_BOX_EVP_VerifyFinal_ex, OPENSSL_BOX_EVP_VerifyFinal
 - EVP signature verification functions
 
 =head1 SYNOPSIS
@@ -12,10 +12,10 @@ EVP_VerifyInit, EVP_VerifyUpdate, EVP_VerifyFinal_ex, EVP_VerifyFinal
 
  int EVP_VerifyInit_ex(EVP_MD_CTX *ctx, const EVP_MD *type, ENGINE *impl);
  int EVP_VerifyUpdate(EVP_MD_CTX *ctx, const void *d, unsigned int cnt);
- int EVP_VerifyFinal_ex(EVP_MD_CTX *ctx, const unsigned char *sigbuf,
+ int OPENSSL_BOX_EVP_VerifyFinal_ex(EVP_MD_CTX *ctx, const unsigned char *sigbuf,
                         unsigned int siglen, EVP_PKEY *pkey,
                         OSSL_LIB_CTX *libctx, const char *propq);
- int EVP_VerifyFinal(EVP_MD_CTX *ctx, unsigned char *sigbuf, unsigned int siglen,
+ int OPENSSL_BOX_EVP_VerifyFinal(EVP_MD_CTX *ctx, unsigned char *sigbuf, unsigned int siglen,
                      EVP_PKEY *pkey);
 
  int EVP_VerifyInit(EVP_MD_CTX *ctx, const EVP_MD *type);
@@ -33,12 +33,12 @@ EVP_VerifyUpdate() hashes I<cnt> bytes of data at I<d> into the
 verification context I<ctx>. This function can be called several times on the
 same I<ctx> to include additional data.
 
-EVP_VerifyFinal_ex() verifies the data in I<ctx> using the public key
+OPENSSL_BOX_EVP_VerifyFinal_ex() verifies the data in I<ctx> using the public key
 I<pkey> and I<siglen> bytes in I<sigbuf>.
 The library context I<libctx> and property query I<propq> are used when creating
 a context to use with the key I<pkey>.
 
-EVP_VerifyFinal() is similar to EVP_VerifyFinal_ex() but uses default
+OPENSSL_BOX_EVP_VerifyFinal() is similar to OPENSSL_BOX_EVP_VerifyFinal_ex() but uses default
 values of NULL for the library context I<libctx> and the property query I<propq>.
 
 EVP_VerifyInit() initializes verification context I<ctx> to use the default
@@ -49,7 +49,7 @@ implementation of digest I<type>.
 EVP_VerifyInit_ex() and EVP_VerifyUpdate() return 1 for success and 0 for
 failure.
 
-EVP_VerifyFinal_ex() and EVP_VerifyFinal() return 1 for a correct
+OPENSSL_BOX_EVP_VerifyFinal_ex() and OPENSSL_BOX_EVP_VerifyFinal() return 1 for a correct
 signature, 0 for failure and a negative value if some other error occurred.
 
 The error codes can be obtained by L<ERR_get_error(3)>.
@@ -60,8 +60,8 @@ The B<EVP> interface to digital signatures should almost always be used in
 preference to the low-level interfaces. This is because the code then becomes
 transparent to the algorithm used and much more flexible.
 
-The call to EVP_VerifyFinal() internally finalizes a copy of the digest context.
-This means that calls to EVP_VerifyUpdate() and EVP_VerifyFinal() can be called
+The call to OPENSSL_BOX_EVP_VerifyFinal() internally finalizes a copy of the digest context.
+This means that calls to EVP_VerifyUpdate() and OPENSSL_BOX_EVP_VerifyFinal() can be called
 later to digest and verify additional data. Applications may disable this
 behavior by setting the EVP_MD_CTX_FLAG_FINALISE context flag via
 L<OPENSSL_BOX_EVP_MD_CTX_set_flags(3)>.
@@ -71,23 +71,23 @@ be cleaned up after use by calling OPENSSL_BOX_EVP_MD_CTX_free() or a memory lea
 will occur.
 
 Note that not all providers support continuation, in case the selected
-provider does not allow to duplicate contexts EVP_VerifyFinal() will
+provider does not allow to duplicate contexts OPENSSL_BOX_EVP_VerifyFinal() will
 finalize the digest context and attempting to process additional data via
 EVP_VerifyUpdate() will result in an error.
 
 =head1 BUGS
 
 Older versions of this documentation wrongly stated that calls to
-EVP_VerifyUpdate() could not be made after calling EVP_VerifyFinal().
+EVP_VerifyUpdate() could not be made after calling OPENSSL_BOX_EVP_VerifyFinal().
 
-Since the public key is passed in the call to EVP_SignFinal() any error
+Since the public key is passed in the call to OPENSSL_BOX_EVP_SignFinal() any error
 relating to the private key (for example an unsuitable key and digest
 combination) will not be indicated until after potentially large amounts of
 data have been passed through EVP_SignUpdate().
 
 It is not possible to change the signing parameters using these function.
 
-The previous two bugs are fixed in the newer EVP_DigestVerify*() function.
+The previous two bugs are fixed in the newer OPENSSL_BOX_EVP_DigestVerify*() function.
 
 =head1 SEE ALSO
 
@@ -100,7 +100,7 @@ L<SHA1(3)>, L<openssl-dgst(1)>
 
 =head1 HISTORY
 
-The function EVP_VerifyFinal_ex() was added in OpenSSL 3.0.
+The function OPENSSL_BOX_EVP_VerifyFinal_ex() was added in OpenSSL 3.0.
 
 =head1 COPYRIGHT
 

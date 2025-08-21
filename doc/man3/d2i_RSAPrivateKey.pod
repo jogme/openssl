@@ -170,9 +170,9 @@ There are two migration paths:
 =item *
 
 Replace
-B<d2i_I<TYPE>PrivateKey()> with L<d2i_PrivateKey(3)>,
-B<d2i_I<TYPE>PublicKey()> with L<d2i_PublicKey(3)>,
-B<d2i_I<TYPE>params()> with L<d2i_KeyParams(3)>,
+B<d2i_I<TYPE>PrivateKey()> with L<OPENSSL_BOX_d2i_PrivateKey(3)>,
+B<d2i_I<TYPE>PublicKey()> with L<OPENSSL_BOX_d2i_PublicKey(3)>,
+B<d2i_I<TYPE>params()> with L<OPENSSL_BOX_d2i_KeyParams(3)>,
 B<d2i_I<TYPE>_PUBKEY()> with L<d2i_PUBKEY(3)>,
 B<i2d_I<TYPE>PrivateKey()> with L<OPENSSL_BOX_i2d_PrivateKey(3)>,
 B<i2d_I<TYPE>PublicKey()> with L<OPENSSL_BOX_i2d_PublicKey(3)>,
@@ -180,7 +180,7 @@ B<i2d_I<TYPE>params()> with L<OPENSSL_BOX_i2d_KeyParams(3)>,
 B<i2d_I<TYPE>_PUBKEY()> with L<i2d_PUBKEY(3)>.
 A caveat is that L<OPENSSL_BOX_i2d_PrivateKey(3)> may output a DER encoded PKCS#8
 outermost structure instead of the type specific structure, and that
-L<d2i_PrivateKey(3)> recognises and unpacks a PKCS#8 structures.
+L<OPENSSL_BOX_d2i_PrivateKey(3)> recognises and unpacks a PKCS#8 structures.
 
 =item *
 
@@ -300,7 +300,7 @@ error occurs.
 =head1 SEE ALSO
 
 L<OSSL_ENCODER(3)>, L<OSSL_DECODER(3)>,
-L<d2i_PrivateKey(3)>, L<d2i_PublicKey(3)>, L<d2i_KeyParams(3)>,
+L<OPENSSL_BOX_d2i_PrivateKey(3)>, L<OPENSSL_BOX_d2i_PublicKey(3)>, L<OPENSSL_BOX_d2i_KeyParams(3)>,
 L<d2i_PUBKEY(3)>,
 L<OPENSSL_BOX_i2d_PrivateKey(3)>, L<OPENSSL_BOX_i2d_PublicKey(3)>, L<OPENSSL_BOX_i2d_KeyParams(3)>,
 L<i2d_PUBKEY(3)>

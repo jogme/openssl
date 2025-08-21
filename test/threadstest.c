@@ -846,9 +846,9 @@ static int thread_run_test(void (*main_func)(void),
 static void thread_general_worker(void)
 {
     EVP_MD_CTX *mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
-    EVP_MD *md = EVP_MD_fetch(multi_libctx, "SHA2-256", NULL);
+    EVP_MD *md = OPENSSL_BOX_EVP_MD_fetch(multi_libctx, "SHA2-256", NULL);
     EVP_CIPHER_CTX *cipherctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
-    EVP_CIPHER *ciph = EVP_CIPHER_fetch(multi_libctx, "AES-128-CBC", NULL);
+    EVP_CIPHER *ciph = OPENSSL_BOX_EVP_CIPHER_fetch(multi_libctx, "AES-128-CBC", NULL);
     const char *message = "Hello World";
     size_t messlen = strlen(message);
     /* Should be big enough for encryption output too */
@@ -877,17 +877,17 @@ static void thread_general_worker(void)
 
     /* Do some work */
     for (i = 0; i < 5; i++) {
-        if (!TEST_true(EVP_DigestInit_ex(mdctx, md, NULL))
-                || !TEST_true(EVP_DigestUpdate(mdctx, message, messlen))
-                || !TEST_true(EVP_DigestFinal(mdctx, out, &mdoutl)))
+        if (!TEST_true(OPENSSL_BOX_EVP_DigestInit_ex(mdctx, md, NULL))
+                || !TEST_true(OPENSSL_BOX_EVP_DigestUpdate(mdctx, message, messlen))
+                || !TEST_true(OPENSSL_BOX_EVP_DigestFinal(mdctx, out, &mdoutl)))
             goto err;
     }
     for (i = 0; i < 5; i++) {
-        if (!TEST_true(EVP_EncryptInit_ex(cipherctx, ciph, NULL, key, iv))
-                || !TEST_true(EVP_EncryptUpdate(cipherctx, out, &ciphoutl,
+        if (!TEST_true(OPENSSL_BOX_EVP_EncryptInit_ex(cipherctx, ciph, NULL, key, iv))
+                || !TEST_true(OPENSSL_BOX_EVP_EncryptUpdate(cipherctx, out, &ciphoutl,
                                                 (unsigned char *)message,
                                                 (int)messlen))
-                || !TEST_true(EVP_EncryptFinal(cipherctx, out, &ciphoutl)))
+                || !TEST_true(OPENSSL_BOX_EVP_EncryptFinal(cipherctx, out, &ciphoutl)))
             goto err;
     }
 
@@ -896,7 +896,7 @@ static void thread_general_worker(void)
      * Therefore we use an insecure bit length where we can (512).
      * In the FIPS module though we must use a longer length.
      */
-    pkey = EVP_PKEY_Q_keygen(multi_libctx, NULL, "RSA", (size_t)(isfips ? 2048 : 512));
+    pkey = OPENSSL_BOX_EVP_PKEY_Q_keygen(multi_libctx, NULL, "RSA", (size_t)(isfips ? 2048 : 512));
     if (!TEST_ptr(pkey))
         goto err;
 
@@ -913,7 +913,7 @@ static void thread_general_worker(void)
 
 static void thread_multi_simple_fetch(void)
 {
-    EVP_MD *md = EVP_MD_fetch(multi_libctx, "SHA2-256", NULL);
+    EVP_MD *md = OPENSSL_BOX_EVP_MD_fetch(multi_libctx, "SHA2-256", NULL);
 
     if (md != NULL)
         OPENSSL_BOX_EVP_MD_free(md);
@@ -936,27 +936,27 @@ static void thread_shared_evp_pkey(void)
     for (i = 0; i < 1 + do_fips; i++) {
         if (i > 0)
             OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
-        ctx = EVP_PKEY_CTX_new_from_pkey(multi_libctx, shared_evp_pkey,
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(multi_libctx, shared_evp_pkey,
                                          i == 0 ? "provider=default"
                                                 : "provider=fips");
         if (!TEST_ptr(ctx))
             goto err;
 
         if (!TEST_int_ge(OPENSSL_BOX_EVP_PKEY_encrypt_init(ctx), 0)
-                || !TEST_int_ge(EVP_PKEY_encrypt(ctx, ctbuf, &ctlen,
+                || !TEST_int_ge(OPENSSL_BOX_EVP_PKEY_encrypt(ctx, ctbuf, &ctlen,
                                                 (unsigned char *)msg, strlen(msg)),
                                                 0))
             goto err;
 
         OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
-        ctx = EVP_PKEY_CTX_new_from_pkey(multi_libctx, shared_evp_pkey, NULL);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(multi_libctx, shared_evp_pkey, NULL);
 
         if (!TEST_ptr(ctx))
             goto err;
 
         ptlen = sizeof(ptbuf);
         if (!TEST_int_ge(OPENSSL_BOX_EVP_PKEY_decrypt_init(ctx), 0)
-                || !TEST_int_gt(EVP_PKEY_decrypt(ctx, ptbuf, &ptlen, ctbuf, ctlen),
+                || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_decrypt(ctx, ptbuf, &ptlen, ctbuf, ctlen),
                                                 0)
                 || !TEST_mem_eq(msg, strlen(msg), ptbuf, ptlen))
             goto err;
@@ -1095,7 +1095,7 @@ static int test_multi_load_unload_provider(void)
     multi_intialise();
     if (!thread_setup_libctx(1, NULL)
             || !TEST_ptr(prov = OSSL_PROVIDER_load(multi_libctx, "default"))
-            || !TEST_ptr(sha256 = EVP_MD_fetch(multi_libctx, "SHA2-256", NULL))
+            || !TEST_ptr(sha256 = OPENSSL_BOX_EVP_MD_fetch(multi_libctx, "SHA2-256", NULL))
             || !TEST_true(OSSL_PROVIDER_unload(prov)))
         goto err;
     prov = NULL;

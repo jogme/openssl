@@ -334,7 +334,7 @@ int ossl_bn_gen_dsa_nonce_fixed_top(BIGNUM *out, const BIGNUM *range,
         goto end;
     }
 
-    md = EVP_MD_fetch(libctx, "SHA512", NULL);
+    md = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHA512", NULL);
     if (md == NULL) {
         ERR_raise(ERR_LIB_BN, BN_R_NO_SUITABLE_DIGEST);
         goto end;
@@ -347,14 +347,14 @@ int ossl_bn_gen_dsa_nonce_fixed_top(BIGNUM *out, const BIGNUM *range,
                                    0) <= 0)
                 goto end;
 
-            if (!EVP_DigestInit_ex(mdctx, md, NULL)
-                    || !EVP_DigestUpdate(mdctx, &i, sizeof(i))
-                    || !EVP_DigestUpdate(mdctx, private_bytes,
+            if (!OPENSSL_BOX_EVP_DigestInit_ex(mdctx, md, NULL)
+                    || !OPENSSL_BOX_EVP_DigestUpdate(mdctx, &i, sizeof(i))
+                    || !OPENSSL_BOX_EVP_DigestUpdate(mdctx, private_bytes,
                                          sizeof(private_bytes))
-                    || !EVP_DigestUpdate(mdctx, message, message_len)
-                    || !EVP_DigestUpdate(mdctx, random_bytes,
+                    || !OPENSSL_BOX_EVP_DigestUpdate(mdctx, message, message_len)
+                    || !OPENSSL_BOX_EVP_DigestUpdate(mdctx, random_bytes,
                                          sizeof(random_bytes))
-                    || !EVP_DigestFinal_ex(mdctx, digest, NULL))
+                    || !OPENSSL_BOX_EVP_DigestFinal_ex(mdctx, digest, NULL))
                 goto end;
 
             todo = num_k_bytes - done;

@@ -454,7 +454,7 @@ int ssl_print_tmp_key(BIO *out, SSL *s)
             char name[80];
             size_t name_len;
 
-            if (!EVP_PKEY_get_utf8_string_param(key, OSSL_PKEY_PARAM_GROUP_NAME,
+            if (!OPENSSL_BOX_EVP_PKEY_get_utf8_string_param(key, OSSL_PKEY_PARAM_GROUP_NAME,
                                                 name, sizeof(name), &name_len))
                 strcpy(name, "?");
             BIO_printf(out, "ECDH, %s, %d bits\n", name, OPENSSL_BOX_EVP_PKEY_get_bits(key));
@@ -896,7 +896,7 @@ int generate_stateless_cookie_callback(SSL *ssl, unsigned char *cookie,
     memcpy(buffer, &port, sizeof(port));
     BIO_ADDR_rawaddress(peer, buffer + sizeof(port), NULL);
 
-    if (EVP_Q_mac(NULL, "HMAC", NULL, "SHA1", NULL,
+    if (OPENSSL_BOX_EVP_Q_mac(NULL, "HMAC", NULL, "SHA1", NULL,
                   cookie_secret, COOKIE_SECRET_LENGTH, buffer, length,
                   cookie, DTLS1_COOKIE_LENGTH, cookie_len) == NULL) {
         BIO_printf(bio_err,

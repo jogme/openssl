@@ -26,7 +26,7 @@ static int fetch_sig(OSSL_LIB_CTX *ctx, const char *alg, const char *propq,
                      OSSL_PROVIDER *expected_prov)
 {
     OSSL_PROVIDER *prov;
-    EVP_SIGNATURE *sig = EVP_SIGNATURE_fetch(ctx, "RSA", propq);
+    EVP_SIGNATURE *sig = OPENSSL_BOX_EVP_SIGNATURE_fetch(ctx, "RSA", propq);
     int ret = 0;
 
     if (!TEST_ptr(sig))
@@ -69,10 +69,10 @@ static int test_pkey_sig(void)
         goto end;
 
     /* Construct a pkey using precise propq to use our provider */
-    if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "RSA",
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "RSA",
                                                    "provider=fake-rsa"))
         || !TEST_true(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx))
-        || !TEST_true(EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_KEYPAIR, NULL))
+        || !TEST_true(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_KEYPAIR, NULL))
         || !TEST_ptr(pkey))
         goto end;
 
@@ -88,7 +88,7 @@ static int test_pkey_sig(void)
          * The sign init should pick both keymgmt and signature from
          * fake-rsa as the key is not exportable.
          */
-        if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey,
+        if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey,
                                                        "?provider=default")))
             goto end;
 
@@ -100,7 +100,7 @@ static int test_pkey_sig(void)
         if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_sign_init(ctx), 1))
             goto end;
 
-        if (!TEST_int_eq(EVP_PKEY_sign(ctx, NULL, &siglen, NULL, 0), 1)
+        if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_sign(ctx, NULL, &siglen, NULL, 0), 1)
             || !TEST_size_t_eq(siglen, 256))
             goto end;
 
@@ -131,7 +131,7 @@ static int test_alternative_keygen_init(void)
         goto end;
 
     /* first try without the fake RSA provider loaded */
-    if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "RSA", NULL)))
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "RSA", NULL)))
         goto end;
 
     if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx), 0))
@@ -153,7 +153,7 @@ static int test_alternative_keygen_init(void)
     if (!TEST_ptr(fake_rsa = fake_rsa_start(libctx)))
         return 0;
 
-    if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "RSA",
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "RSA",
                                                    "?provider=fake-rsa")))
         goto end;
 
@@ -196,10 +196,10 @@ static int test_pkey_eq(void)
 
     /* Construct a public key for fake-rsa */
     if (!TEST_ptr(params = fake_rsa_key_params(0))
-        || !TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "RSA",
+        || !TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "RSA",
                                                       "provider=fake-rsa"))
         || !TEST_true(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx))
-        || !TEST_true(EVP_PKEY_fromdata(ctx, &pkey_fake, EVP_PKEY_PUBLIC_KEY,
+        || !TEST_true(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pkey_fake, EVP_PKEY_PUBLIC_KEY,
                                         params))
         || !TEST_ptr(pkey_fake))
         goto end;
@@ -211,10 +211,10 @@ static int test_pkey_eq(void)
 
     /* Construct a public key for default */
     if (!TEST_ptr(params = fake_rsa_key_params(0))
-        || !TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "RSA",
+        || !TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "RSA",
                                                       "provider=default"))
         || !TEST_true(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx))
-        || !TEST_true(EVP_PKEY_fromdata(ctx, &pkey_dflt, EVP_PKEY_PUBLIC_KEY,
+        || !TEST_true(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pkey_dflt, EVP_PKEY_PUBLIC_KEY,
                                         params))
         || !TEST_ptr(pkey_dflt))
         goto end;

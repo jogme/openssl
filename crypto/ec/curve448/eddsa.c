@@ -31,13 +31,13 @@ static c448_error_t oneshot_hash(OSSL_LIB_CTX *ctx, uint8_t *out, size_t outlen,
     if (hashctx == NULL)
         return C448_FAILURE;
 
-    shake256 = EVP_MD_fetch(ctx, "SHAKE256", propq);
+    shake256 = OPENSSL_BOX_EVP_MD_fetch(ctx, "SHAKE256", propq);
     if (shake256 == NULL)
         goto err;
 
-    if (!EVP_DigestInit_ex(hashctx, shake256, NULL)
-            || !EVP_DigestUpdate(hashctx, in, inlen)
-            || !EVP_DigestFinalXOF(hashctx, out, outlen))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(hashctx, shake256, NULL)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hashctx, in, inlen)
+            || !OPENSSL_BOX_EVP_DigestFinalXOF(hashctx, out, outlen))
         goto err;
 
     ret = C448_SUCCESS;
@@ -73,14 +73,14 @@ static c448_error_t hash_init_with_dom(OSSL_LIB_CTX *ctx, EVP_MD_CTX *hashctx,
                        - (for_prehash == 0 ? 1 : 0));
     dom[1] = (uint8_t)context_len;
 
-    shake256 = EVP_MD_fetch(ctx, "SHAKE256", propq);
+    shake256 = OPENSSL_BOX_EVP_MD_fetch(ctx, "SHAKE256", propq);
     if (shake256 == NULL)
         return C448_FAILURE;
 
-    if (!EVP_DigestInit_ex(hashctx, shake256, NULL)
-            || !EVP_DigestUpdate(hashctx, dom_s, sizeof(dom_s)-1)
-            || !EVP_DigestUpdate(hashctx, dom, sizeof(dom))
-            || !EVP_DigestUpdate(hashctx, context, context_len)) {
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(hashctx, shake256, NULL)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hashctx, dom_s, sizeof(dom_s)-1)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hashctx, dom, sizeof(dom))
+            || !OPENSSL_BOX_EVP_DigestUpdate(hashctx, context, context_len)) {
         OPENSSL_BOX_EVP_MD_free(shake256);
         return C448_FAILURE;
     }
@@ -188,10 +188,10 @@ ossl_c448_ed448_sign(OSSL_LIB_CTX *ctx,
         /* Hash to create the nonce */
         if (!hash_init_with_dom(ctx, hashctx, prehashed, 0, context,
                                 context_len, propq)
-                || !EVP_DigestUpdate(hashctx,
+                || !OPENSSL_BOX_EVP_DigestUpdate(hashctx,
                                      expanded + EDDSA_448_PRIVATE_BYTES,
                                      EDDSA_448_PRIVATE_BYTES)
-                || !EVP_DigestUpdate(hashctx, message, message_len)) {
+                || !OPENSSL_BOX_EVP_DigestUpdate(hashctx, message, message_len)) {
             OPENSSL_cleanse(expanded, sizeof(expanded));
             goto err;
         }
@@ -202,7 +202,7 @@ ossl_c448_ed448_sign(OSSL_LIB_CTX *ctx,
     {
         uint8_t nonce[2 * EDDSA_448_PRIVATE_BYTES];
 
-        if (!EVP_DigestFinalXOF(hashctx, nonce, sizeof(nonce)))
+        if (!OPENSSL_BOX_EVP_DigestFinalXOF(hashctx, nonce, sizeof(nonce)))
             goto err;
         ossl_curve448_scalar_decode_long(nonce_scalar, nonce, sizeof(nonce));
         OPENSSL_cleanse(nonce, sizeof(nonce));
@@ -230,10 +230,10 @@ ossl_c448_ed448_sign(OSSL_LIB_CTX *ctx,
         /* Compute the challenge */
         if (!hash_init_with_dom(ctx, hashctx, prehashed, 0, context, context_len,
                                 propq)
-                || !EVP_DigestUpdate(hashctx, nonce_point, sizeof(nonce_point))
-                || !EVP_DigestUpdate(hashctx, pubkey, EDDSA_448_PUBLIC_BYTES)
-                || !EVP_DigestUpdate(hashctx, message, message_len)
-                || !EVP_DigestFinalXOF(hashctx, challenge, sizeof(challenge)))
+                || !OPENSSL_BOX_EVP_DigestUpdate(hashctx, nonce_point, sizeof(nonce_point))
+                || !OPENSSL_BOX_EVP_DigestUpdate(hashctx, pubkey, EDDSA_448_PUBLIC_BYTES)
+                || !OPENSSL_BOX_EVP_DigestUpdate(hashctx, message, message_len)
+                || !OPENSSL_BOX_EVP_DigestFinalXOF(hashctx, challenge, sizeof(challenge)))
             goto err;
 
         ossl_curve448_scalar_decode_long(challenge_scalar, challenge,
@@ -340,10 +340,10 @@ ossl_c448_ed448_verify(
         if (hashctx == NULL
                 || !hash_init_with_dom(ctx, hashctx, prehashed, 0, context,
                                        context_len, propq)
-                || !EVP_DigestUpdate(hashctx, signature, EDDSA_448_PUBLIC_BYTES)
-                || !EVP_DigestUpdate(hashctx, pubkey, EDDSA_448_PUBLIC_BYTES)
-                || !EVP_DigestUpdate(hashctx, message, message_len)
-                || !EVP_DigestFinalXOF(hashctx, challenge, sizeof(challenge))) {
+                || !OPENSSL_BOX_EVP_DigestUpdate(hashctx, signature, EDDSA_448_PUBLIC_BYTES)
+                || !OPENSSL_BOX_EVP_DigestUpdate(hashctx, pubkey, EDDSA_448_PUBLIC_BYTES)
+                || !OPENSSL_BOX_EVP_DigestUpdate(hashctx, message, message_len)
+                || !OPENSSL_BOX_EVP_DigestFinalXOF(hashctx, challenge, sizeof(challenge))) {
             OPENSSL_BOX_EVP_MD_CTX_free(hashctx);
             return C448_FAILURE;
         }

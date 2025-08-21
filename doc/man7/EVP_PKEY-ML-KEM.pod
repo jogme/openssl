@@ -59,8 +59,8 @@ In addition to the common parameters that all keytypes should support (see
 L<provider-keymgmt(7)/Common Information Parameters>), B<ML-KEM> keys
 keys support the parameters listed below.
 These are gettable using
-L<EVP_PKEY_get_octet_string_param(3)> or L<OPENSSL_BOX_EVP_PKEY_get_params(3)>.
-They can be initialised via L<EVP_PKEY_fromdata(3)>, and are returned by
+L<OPENSSL_BOX_EVP_PKEY_get_octet_string_param(3)> or L<OPENSSL_BOX_EVP_PKEY_get_params(3)>.
+They can be initialised via L<OPENSSL_BOX_EVP_PKEY_fromdata(3)>, and are returned by
 L<OPENSSL_BOX_EVP_PKEY_todata(3)> given a suitable I<selection>.
 Once a public or private key is configured, it can no longer be modified,
 nor can another key component be added.
@@ -72,7 +72,7 @@ nor can another key component be added.
 The public key value.
 
 This parameter is used when importing or exporting the public key value with
-the EVP_PKEY_fromdata() and OPENSSL_BOX_EVP_PKEY_todata() functions.
+the OPENSSL_BOX_EVP_PKEY_fromdata() and OPENSSL_BOX_EVP_PKEY_todata() functions.
 The key length and content is that of the FIPS 203 (Algorithm 16:
 B<ML-KEM.KeyGen_internal>) B<ek> public key for the given ML-KEM variant.
 Initial import aside, this parameter is otherwise only gettable.
@@ -82,7 +82,7 @@ Initial import aside, this parameter is otherwise only gettable.
 The private key value.
 
 This parameter is used when importing or exporting the private key value with
-the EVP_PKEY_fromdata() and OPENSSL_BOX_EVP_PKEY_todata() functions.
+the OPENSSL_BOX_EVP_PKEY_fromdata() and OPENSSL_BOX_EVP_PKEY_todata() functions.
 The key length and content is that of the FIPS 203 (Algorithm 16:
 B<ML-KEM.KeyGen_internal>) B<dk> private key for the given ML-KEM variant.
 Initial import aside, this parameter is otherwise only gettable.
@@ -245,11 +245,11 @@ output, by listing those first.
 An B<EVP_PKEY> context can be obtained by calling:
 
     EVP_PKEY_CTX *pctx =
-        EVP_PKEY_CTX_new_from_name(NULL, "ML-KEM-768", NULL);
+        OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "ML-KEM-768", NULL);
 
 An B<ML-KEM-768> key can be generated like this:
 
-    pkey = EVP_PKEY_Q_keygen(NULL, NULL, "ML-KEM-768");
+    pkey = OPENSSL_BOX_EVP_PKEY_Q_keygen(NULL, NULL, "ML-KEM-768");
 
 An B<ML-KEM> private key in seed format can be converted to a key in the FIPS
 203 B<dk> format by running:
@@ -302,8 +302,8 @@ L<openssl-pkey(1)>,
 L<openssl-genpkey(1)>,
 L<EVP_KEYMGMT(3)>,
 L<EVP_PKEY(3)>,
-L<EVP_PKEY_get_raw_private_key(3)>,
-L<EVP_PKEY_get_raw_public_key(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_raw_private_key(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_raw_public_key(3)>,
 L<OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(3)>,
 L<OSSL_PROVIDER_add_conf_parameter(3)>,
 L<provider-keymgmt(7)>,

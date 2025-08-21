@@ -34,7 +34,7 @@ SLH_DSA_HASH_CTX *ossl_slh_dsa_hash_ctx_new(const SLH_DSA_KEY *key)
     ret->md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ret->md_ctx == NULL)
         goto err;
-    if (EVP_DigestInit_ex2(ret->md_ctx, key->md, NULL) != 1)
+    if (OPENSSL_BOX_EVP_DigestInit_ex2(ret->md_ctx, key->md, NULL) != 1)
         goto err;
     if (key->md_big != NULL) {
         /* Gets here for SHA2 algorithms */
@@ -45,7 +45,7 @@ SLH_DSA_HASH_CTX *ossl_slh_dsa_hash_ctx_new(const SLH_DSA_KEY *key)
             ret->md_big_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
             if (ret->md_big_ctx == NULL)
                 goto err;
-            if (EVP_DigestInit_ex2(ret->md_big_ctx, key->md_big, NULL) != 1)
+            if (OPENSSL_BOX_EVP_DigestInit_ex2(ret->md_big_ctx, key->md_big, NULL) != 1)
                 goto err;
         }
         if (key->hmac != NULL) {

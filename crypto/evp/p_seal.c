@@ -16,7 +16,7 @@
 #include <openssl/objects.h>
 #include <openssl/x509.h>
 
-int EVP_SealInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
+int OPENSSL_BOX_EVP_SealInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
                  unsigned char **ek, int *ekl, unsigned char *iv,
                  EVP_PKEY **pubk, int npubk)
 {
@@ -30,7 +30,7 @@ int EVP_SealInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
 
     if (type != NULL) {
         OPENSSL_BOX_EVP_CIPHER_CTX_reset(ctx);
-        if (!EVP_EncryptInit_ex(ctx, type, NULL, NULL, NULL))
+        if (!OPENSSL_BOX_EVP_EncryptInit_ex(ctx, type, NULL, NULL, NULL))
             return 0;
     }
     if ((cipher = OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(ctx)) != NULL
@@ -50,20 +50,20 @@ int EVP_SealInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
     if (len < 0)
         goto err;
 
-    if (!EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv))
         goto err;
 
     for (i = 0; i < npubk; i++) {
         size_t keylen = len;
 
-        pctx = EVP_PKEY_CTX_new_from_pkey(libctx, pubk[i], NULL);
+        pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pubk[i], NULL);
         if (pctx == NULL) {
             ERR_raise(ERR_LIB_EVP, ERR_R_EVP_LIB);
             goto err;
         }
 
         if (OPENSSL_BOX_EVP_PKEY_encrypt_init(pctx) <= 0
-            || EVP_PKEY_encrypt(pctx, ek[i], &keylen, key, keylen) <= 0)
+            || OPENSSL_BOX_EVP_PKEY_encrypt(pctx, ek[i], &keylen, key, keylen) <= 0)
             goto err;
         ekl[i] = (int)keylen;
         OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
@@ -79,8 +79,8 @@ err:
 int OPENSSL_BOX_EVP_SealFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
 {
     int i;
-    i = EVP_EncryptFinal_ex(ctx, out, outl);
+    i = OPENSSL_BOX_EVP_EncryptFinal_ex(ctx, out, outl);
     if (i)
-        i = EVP_EncryptInit_ex(ctx, NULL, NULL, NULL, NULL);
+        i = OPENSSL_BOX_EVP_EncryptInit_ex(ctx, NULL, NULL, NULL, NULL);
     return i;
 }

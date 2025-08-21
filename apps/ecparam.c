@@ -225,10 +225,10 @@ int ecparam_main(int argc, char **argv)
         *p = OSSL_PARAM_construct_end();
 
         if (OPENSSL_strcasecmp(curve_name, "SM2") == 0)
-            gctx_params = EVP_PKEY_CTX_new_from_name(app_get0_libctx(), "sm2",
+            gctx_params = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(app_get0_libctx(), "sm2",
                                                      app_get0_propq());
         else
-            gctx_params = EVP_PKEY_CTX_new_from_name(app_get0_libctx(), "ec",
+            gctx_params = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(app_get0_libctx(), "ec",
                                                      app_get0_propq());
         if (gctx_params == NULL
             || OPENSSL_BOX_EVP_PKEY_keygen_init(gctx_params) <= 0
@@ -250,7 +250,7 @@ int ecparam_main(int argc, char **argv)
         }
 
         if (point_format
-            && !EVP_PKEY_set_utf8_string_param(
+            && !OPENSSL_BOX_EVP_PKEY_set_utf8_string_param(
                     params_key, OSSL_PKEY_PARAM_EC_POINT_CONVERSION_FORMAT,
                     point_format)) {
             BIO_printf(bio_err, "unable to set point conversion format\n");
@@ -258,7 +258,7 @@ int ecparam_main(int argc, char **argv)
         }
 
         if (asn1_encoding != NULL
-            && !EVP_PKEY_set_utf8_string_param(
+            && !OPENSSL_BOX_EVP_PKEY_set_utf8_string_param(
                     params_key, OSSL_PKEY_PARAM_EC_ENCODING, asn1_encoding)) {
             BIO_printf(bio_err, "unable to set asn1 encoding format\n");
             goto end;
@@ -266,7 +266,7 @@ int ecparam_main(int argc, char **argv)
     }
 
     if (no_seed
-        && !EVP_PKEY_set_octet_string_param(params_key, OSSL_PKEY_PARAM_EC_SEED,
+        && !OPENSSL_BOX_EVP_PKEY_set_octet_string_param(params_key, OSSL_PKEY_PARAM_EC_SEED,
                                             NULL, 0)) {
         BIO_printf(bio_err, "unable to clear seed\n");
         goto end;
@@ -277,7 +277,7 @@ int ecparam_main(int argc, char **argv)
         goto end;
 
     if (text
-        && EVP_PKEY_print_params(out, params_key, 0, NULL) <= 0) {
+        && OPENSSL_BOX_EVP_PKEY_print_params(out, params_key, 0, NULL) <= 0) {
         BIO_printf(bio_err, "unable to print params\n");
         goto end;
     }
@@ -286,13 +286,13 @@ int ecparam_main(int argc, char **argv)
         BIO_printf(bio_err, "checking elliptic curve parameters: ");
 
         if (check_named
-            && !EVP_PKEY_set_utf8_string_param(params_key,
+            && !OPENSSL_BOX_EVP_PKEY_set_utf8_string_param(params_key,
                                            OSSL_PKEY_PARAM_EC_GROUP_CHECK_TYPE,
                                            OSSL_PKEY_EC_GROUP_CHECK_NAMED)) {
                 BIO_printf(bio_err, "unable to set check_type\n");
                 goto end;
         }
-        pctx = EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), params_key,
+        pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), params_key,
                                           app_get0_propq());
         if (pctx == NULL || OPENSSL_BOX_EVP_PKEY_param_check(pctx) <= 0) {
             BIO_printf(bio_err, "failed\n");
@@ -318,12 +318,12 @@ int ecparam_main(int argc, char **argv)
         /*
          * NOTE: EC keygen does not normally need to pass in the param_key
          * for named curves. This can be achieved using:
-         *    gctx = EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
+         *    gctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
          *    OPENSSL_BOX_EVP_PKEY_keygen_init(gctx);
          *    OPENSSL_BOX_EVP_PKEY_CTX_set_group_name(gctx, curvename);
          *    OPENSSL_BOX_EVP_PKEY_keygen(gctx, &key) <= 0)
          */
-        gctx_key = EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), params_key,
+        gctx_key = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), params_key,
                                               app_get0_propq());
         if (OPENSSL_BOX_EVP_PKEY_keygen_init(gctx_key) <= 0
             || OPENSSL_BOX_EVP_PKEY_keygen(gctx_key, &key) <= 0) {

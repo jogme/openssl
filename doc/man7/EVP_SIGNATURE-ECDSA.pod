@@ -21,11 +21,11 @@ mere OID which came out in this form after a call to L<OBJ_obj2txt(3)>).
 =item "ECDSA"
 
 The base signature algorithm, supported explicitly fetched with
-L<EVP_PKEY_sign_init_ex2(3)>, and implicitly fetched (through
-L<EC keys|EVP_PKEY-EC(7)>) with L<EVP_DigestSignInit(3)> and
-L<EVP_DigestVerifyInit(3)>.
+L<OPENSSL_BOX_EVP_PKEY_sign_init_ex2(3)>, and implicitly fetched (through
+L<EC keys|EVP_PKEY-EC(7)>) with L<OPENSSL_BOX_EVP_DigestSignInit(3)> and
+L<OPENSSL_BOX_EVP_DigestVerifyInit(3)>.
 
-It can't be used with L<EVP_PKEY_sign_message_init(3)>
+It can't be used with L<OPENSSL_BOX_EVP_PKEY_sign_message_init(3)>
 
 =item "ECDSA-SHA1", "ECDSA-SHA-1", "ecdsa-with-SHA1", "1.2.840.10045.4.1"
 
@@ -46,8 +46,8 @@ It can't be used with L<EVP_PKEY_sign_message_init(3)>
 =item "ECDSA-SHA3-512", "ecdsa_with_SHA3-512", "id-ecdsa-with-sha3-512", "2.16.840.1.101.3.4.3.12"
 
 ECDSA signature schemes with diverse message digest algorithms.  They are all
-supported explicitly fetched with L<EVP_PKEY_sign_init_ex2(3)> and
-L<EVP_PKEY_sign_message_init(3)>.
+supported explicitly fetched with L<OPENSSL_BOX_EVP_PKEY_sign_init_ex2(3)> and
+L<OPENSSL_BOX_EVP_PKEY_sign_message_init(3)>.
 
 =back
 
@@ -55,7 +55,7 @@ L<EVP_PKEY_sign_message_init(3)>.
 
 The following signature parameters can be set using OPENSSL_BOX_EVP_PKEY_CTX_set_params().
 This may be called after OPENSSL_BOX_EVP_PKEY_sign_init() or OPENSSL_BOX_EVP_PKEY_verify_init(),
-and before calling EVP_PKEY_sign() or EVP_PKEY_verify().
+and before calling OPENSSL_BOX_EVP_PKEY_sign() or OPENSSL_BOX_EVP_PKEY_verify().
 
 =over 4
 
@@ -98,8 +98,8 @@ The parameters are described in L<provider-signature(7)>.
 =head1 SEE ALSO
 
 L<OPENSSL_BOX_EVP_PKEY_CTX_set_params(3)>,
-L<EVP_PKEY_sign(3)>,
-L<EVP_PKEY_verify(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify(3)>,
 L<provider-signature(7)>,
 
 =head1 COPYRIGHT

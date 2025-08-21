@@ -1008,7 +1008,7 @@ int req_main(int argc, char **argv)
         if (OPENSSL_BOX_EVP_PKEY_is_a(tpubkey, "RSA") || OPENSSL_BOX_EVP_PKEY_is_a(tpubkey, "RSA-PSS")) {
             BIGNUM *n = NULL;
 
-            if (!EVP_PKEY_get_bn_param(tpubkey, "n", &n))
+            if (!OPENSSL_BOX_EVP_PKEY_get_bn_param(tpubkey, "n", &n))
                 goto end;
             BN_print(out, n);
             BN_free(n);
@@ -1604,7 +1604,7 @@ static EVP_PKEY_CTX *set_keygen_ctx(const char *gstr,
         if (keygen_engine != NULL)
             gctx = OPENSSL_BOX_EVP_PKEY_CTX_new(param, keygen_engine);
         else
-            gctx = EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(),
+            gctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(),
                                               param, app_get0_propq());
         *pkeylen = OPENSSL_BOX_EVP_PKEY_get_bits(param);
         OPENSSL_BOX_EVP_PKEY_free(param);
@@ -1618,7 +1618,7 @@ static EVP_PKEY_CTX *set_keygen_ctx(const char *gstr,
                 gctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(pkey_id, keygen_engine);
         } else {
 #endif
-            gctx = EVP_PKEY_CTX_new_from_name(app_get0_libctx(),
+            gctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(app_get0_libctx(),
                                               *pkeytype, app_get0_propq());
 #ifndef OPENSSL_NO_DEPRECATED_3_6
         }

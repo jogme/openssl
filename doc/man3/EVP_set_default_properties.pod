@@ -65,7 +65,7 @@ L<OPENSSL_free(3)> on success and NULL on failure.
 
 =head1 SEE ALSO
 
-L<EVP_MD_fetch(3)>
+L<OPENSSL_BOX_EVP_MD_fetch(3)>
 
 =head1 HISTORY
 

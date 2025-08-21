@@ -43,7 +43,7 @@ OPENSSL_BOX_EVP_CIPHER_CTX_ctrl()
 Single-call cipher invoked to perform encryption/decryption.
 
 ```c
-EVP_Cipher()
+OPENSSL_BOX_EVP_Cipher()
 ```
 
 Proposal for EVP pipeline APIs
@@ -59,7 +59,7 @@ API to check for pipeline support in provided cipher.
 /**
  * @brief checks if the provider has exported required pipeline functions
  * This function works only with explicitly fetched EVP_CIPHER instances. i.e.
- * fetched using `EVP_CIPHER_fetch()`. For non-fetched ciphers, it returns 0.
+ * fetched using `OPENSSL_BOX_EVP_CIPHER_fetch()`. For non-fetched ciphers, it returns 0.
  *
  * @param enc   1 for encryption, 0 for decryption
  * @return 0 (pipeline not supported) or 1 (pipeline supported)
@@ -68,18 +68,18 @@ int OPENSSL_BOX_EVP_CIPHER_can_pipeline(const EVP_CIPHER *cipher, int enc);
 ```
 
 Multi-call APIs for init, update and final. Associated data for AEAD ciphers
-are set in `EVP_CipherPipelineUpdate`.
+are set in `OPENSSL_BOX_EVP_CipherPipelineUpdate`.
 
 ```c
 /**
  * @param iv    array of pointers (array length must be numpipes)
  */
-int EVP_CipherPipelineEncryptInit(EVP_CIPHER_CTX *ctx,
+int OPENSSL_BOX_EVP_CipherPipelineEncryptInit(EVP_CIPHER_CTX *ctx,
                                   const EVP_CIPHER *cipher,
                                   const unsigned char *key, size_t keylen,
                                   size_t numpipes,
                                   const unsigned char **iv, size_t ivlen);
-int EVP_CipherPipelineDecryptInit(EVP_CIPHER_CTX *ctx,
+int OPENSSL_BOX_EVP_CipherPipelineDecryptInit(EVP_CIPHER_CTX *ctx,
                                   const EVP_CIPHER *cipher,
                                   const unsigned char *key, size_t keylen,
                                   size_t numpipes,
@@ -97,7 +97,7 @@ int EVP_CipherPipelineDecryptInit(EVP_CIPHER_CTX *ctx,
  *                 numpipes)
  * @param inl      pointer to array of input length (array length must be numpipes)
  */
-int EVP_CipherPipelineUpdate(EVP_CIPHER_CTX *ctx,
+int OPENSSL_BOX_EVP_CipherPipelineUpdate(EVP_CIPHER_CTX *ctx,
                              unsigned char **out, size_t *outl,
                              const size_t *outsize,
                              const unsigned char **in, const size_t *inl);
@@ -110,7 +110,7 @@ int EVP_CipherPipelineUpdate(EVP_CIPHER_CTX *ctx,
  * @param outsize  pointer to array of output buffer size (array length must be
  *                 numpipes)
  */
-int EVP_CipherPipelineFinal(EVP_CIPHER_CTX *ctx,
+int OPENSSL_BOX_EVP_CipherPipelineFinal(EVP_CIPHER_CTX *ctx,
                             unsigned char **outm, size_t *outl,
                             const size_t *outsize);
 ```
@@ -146,7 +146,7 @@ typedef struct {
  *                  length must be numpipes)
  * @param stride    The stride argument must be set to sizeof(EVP_CIPHER_buf)
  */
-EVP_CipherPipelineUpdate(EVP_CIPHER_CTX *ctx, EVP_CIPHER_buf *out,
+OPENSSL_BOX_EVP_CipherPipelineUpdate(EVP_CIPHER_CTX *ctx, EVP_CIPHER_buf *out,
                           EVP_CIPHER_buf *in, size_t stride);
 
 /**
@@ -154,7 +154,7 @@ EVP_CipherPipelineUpdate(EVP_CIPHER_CTX *ctx, EVP_CIPHER_buf *out,
  *                  length must be numpipes)
  * @param stride    The stride argument must be set to sizeof(EVP_CIPHER_buf)
  */
-EVP_CipherPipelineFinal(EVP_CIPHER_CTX *ctx,
+OPENSSL_BOX_EVP_CipherPipelineFinal(EVP_CIPHER_CTX *ctx,
                           EVP_CIPHER_buf *out, size_t stride);
 
 /**
@@ -187,11 +187,11 @@ pipelining available until the legacy code is phased out:
       utilize the new API for pipelining.
 
 2. `numpipes` argument
-    - [x] a. `numpipes` received only in `EVP_CipherPipelineEncryptInit()` and
+    - [x] a. `numpipes` received only in `OPENSSL_BOX_EVP_CipherPipelineEncryptInit()` and
       saved in EVP_CIPHER_CTX for further use.
     - [ ] b. `numpipes` value is repeatedly received in each
-      `EVP_CipherPipelineEncryptInit()`, `EVP_CipherPipelineUpdate()` and
-      `EVP_CipherPipelineFinal()` call.
+      `OPENSSL_BOX_EVP_CipherPipelineEncryptInit()`, `OPENSSL_BOX_EVP_CipherPipelineUpdate()` and
+      `OPENSSL_BOX_EVP_CipherPipelineFinal()` call.
     > **Justification:** It is expected for numpipes to be same across init,
     > update and final operation.
 

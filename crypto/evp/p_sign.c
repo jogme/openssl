@@ -14,7 +14,7 @@
 #include <openssl/x509.h>
 #include "crypto/evp.h"
 
-int EVP_SignFinal_ex(EVP_MD_CTX *ctx, unsigned char *sigret,
+int OPENSSL_BOX_EVP_SignFinal_ex(EVP_MD_CTX *ctx, unsigned char *sigret,
                      unsigned int *siglen, EVP_PKEY *pkey, OSSL_LIB_CTX *libctx,
                      const char *propq)
 {
@@ -26,7 +26,7 @@ int EVP_SignFinal_ex(EVP_MD_CTX *ctx, unsigned char *sigret,
 
     *siglen = 0;
     if (OPENSSL_BOX_EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_FINALISE)) {
-        if (!EVP_DigestFinal_ex(ctx, m, &m_len))
+        if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, m, &m_len))
             goto err;
     } else {
         int rv = 0;
@@ -38,9 +38,9 @@ int EVP_SignFinal_ex(EVP_MD_CTX *ctx, unsigned char *sigret,
         }
         rv = OPENSSL_BOX_EVP_MD_CTX_copy_ex(tmp_ctx, ctx);
         if (rv)
-            rv = EVP_DigestFinal_ex(tmp_ctx, m, &m_len);
+            rv = OPENSSL_BOX_EVP_DigestFinal_ex(tmp_ctx, m, &m_len);
         else
-            rv = EVP_DigestFinal_ex(ctx, m, &m_len);
+            rv = OPENSSL_BOX_EVP_DigestFinal_ex(ctx, m, &m_len);
         OPENSSL_BOX_EVP_MD_CTX_free(tmp_ctx);
         if (!rv)
             return 0;
@@ -48,14 +48,14 @@ int EVP_SignFinal_ex(EVP_MD_CTX *ctx, unsigned char *sigret,
 
     sltmp = (size_t)OPENSSL_BOX_EVP_PKEY_get_size(pkey);
     i = 0;
-    pkctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
+    pkctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
     if (pkctx == NULL)
         goto err;
     if (OPENSSL_BOX_EVP_PKEY_sign_init(pkctx) <= 0)
         goto err;
     if (OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md(pkctx, OPENSSL_BOX_EVP_MD_CTX_get0_md(ctx)) <= 0)
         goto err;
-    if (EVP_PKEY_sign(pkctx, sigret, &sltmp, m, m_len) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_sign(pkctx, sigret, &sltmp, m, m_len) <= 0)
         goto err;
     *siglen = (unsigned int)sltmp;
     i = 1;
@@ -64,8 +64,8 @@ int EVP_SignFinal_ex(EVP_MD_CTX *ctx, unsigned char *sigret,
     return i;
 }
 
-int EVP_SignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
+int OPENSSL_BOX_EVP_SignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
                   unsigned int *siglen, EVP_PKEY *pkey)
 {
-    return EVP_SignFinal_ex(ctx, sigret, siglen, pkey, NULL, NULL);
+    return OPENSSL_BOX_EVP_SignFinal_ex(ctx, sigret, siglen, pkey, NULL, NULL);
 }

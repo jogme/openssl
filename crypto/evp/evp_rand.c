@@ -282,7 +282,7 @@ static void *evp_rand_from_algorithm(int name_id,
     return rand;
 }
 
-EVP_RAND *EVP_RAND_fetch(OSSL_LIB_CTX *libctx, const char *algorithm,
+EVP_RAND *OPENSSL_BOX_EVP_RAND_fetch(OSSL_LIB_CTX *libctx, const char *algorithm,
                          const char *properties)
 {
     return evp_generic_fetch(libctx, OSSL_OP_RAND, algorithm, properties,
@@ -490,7 +490,7 @@ const OSSL_PARAM *OPENSSL_BOX_EVP_RAND_CTX_settable_params(EVP_RAND_CTX *ctx)
     return ctx->meth->settable_ctx_params(ctx->algctx, provctx);
 }
 
-void EVP_RAND_do_all_provided(OSSL_LIB_CTX *libctx,
+void OPENSSL_BOX_EVP_RAND_do_all_provided(OSSL_LIB_CTX *libctx,
                               void (*fn)(EVP_RAND *rand, void *arg),
                               void *arg)
 {
@@ -500,7 +500,7 @@ void EVP_RAND_do_all_provided(OSSL_LIB_CTX *libctx,
                        evp_rand_free);
 }
 
-int EVP_RAND_names_do_all(const EVP_RAND *rand,
+int OPENSSL_BOX_EVP_RAND_names_do_all(const EVP_RAND *rand,
                           void (*fn)(const char *name, void *data),
                           void *data)
 {
@@ -518,7 +518,7 @@ static int evp_rand_instantiate_locked
                                   pstr, pstr_len, params);
 }
 
-int EVP_RAND_instantiate(EVP_RAND_CTX *ctx, unsigned int strength,
+int OPENSSL_BOX_EVP_RAND_instantiate(EVP_RAND_CTX *ctx, unsigned int strength,
                          int prediction_resistance,
                          const unsigned char *pstr, size_t pstr_len,
                          const OSSL_PARAM params[])
@@ -581,7 +581,7 @@ static int evp_rand_generate_locked(EVP_RAND_CTX *ctx, unsigned char *out,
     return 1;
 }
 
-int EVP_RAND_generate(EVP_RAND_CTX *ctx, unsigned char *out, size_t outlen,
+int OPENSSL_BOX_EVP_RAND_generate(EVP_RAND_CTX *ctx, unsigned char *out, size_t outlen,
                       unsigned int strength, int prediction_resistance,
                       const unsigned char *addin, size_t addin_len)
 {
@@ -605,7 +605,7 @@ static int evp_rand_reseed_locked(EVP_RAND_CTX *ctx, int prediction_resistance,
     return 1;
 }
 
-int EVP_RAND_reseed(EVP_RAND_CTX *ctx, int prediction_resistance,
+int OPENSSL_BOX_EVP_RAND_reseed(EVP_RAND_CTX *ctx, int prediction_resistance,
                     const unsigned char *ent, size_t ent_len,
                     const unsigned char *addin, size_t addin_len)
 {

@@ -83,7 +83,7 @@ value.
 =head1 STRING CTRLS
 
 HKDF also supports string based control operations via
-L<EVP_PKEY_CTX_ctrl_str(3)>.
+L<OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(3)>.
 The B<type> parameter "md" uses the supplied B<value> as the name of the digest
 algorithm to use.
 The B<type> parameter "mode" uses the values "EXTRACT_AND_EXPAND",
@@ -149,7 +149,7 @@ RFC 5869
 =head1 SEE ALSO
 
 L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
-L<EVP_PKEY_CTX_ctrl_str(3)>,
+L<OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(3)>,
 L<OPENSSL_BOX_EVP_PKEY_derive(3)>
 
 =head1 HISTORY

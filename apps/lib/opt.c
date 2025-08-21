@@ -394,7 +394,7 @@ int opt_cipher_silent(const char *name, EVP_CIPHER **cipherp)
     EVP_CIPHER *c;
 
     ERR_set_mark();
-    if ((c = EVP_CIPHER_fetch(app_get0_libctx(), name,
+    if ((c = OPENSSL_BOX_EVP_CIPHER_fetch(app_get0_libctx(), name,
                               app_get0_propq())) != NULL
         || (opt_legacy_okay()
             && (c = (EVP_CIPHER *)OPENSSL_BOX_EVP_get_cipherbyname(name)) != NULL)) {
@@ -456,7 +456,7 @@ int opt_md_silent(const char *name, EVP_MD **mdp)
     EVP_MD *md;
 
     ERR_set_mark();
-    if ((md = EVP_MD_fetch(app_get0_libctx(), name, app_get0_propq())) != NULL
+    if ((md = OPENSSL_BOX_EVP_MD_fetch(app_get0_libctx(), name, app_get0_propq())) != NULL
         || (opt_legacy_okay()
             && (md = (EVP_MD *)OPENSSL_BOX_EVP_get_digestbyname(name)) != NULL)) {
         ERR_pop_to_mark();

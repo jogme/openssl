@@ -75,20 +75,20 @@ static EVP_PKEY_CTX *create_merged_key(EVP_PKEY *dsaparams, const OSSL_PARAM *ne
         goto cleanup;
     }
 
-    ctx = EVP_PKEY_CTX_new_from_name(libctx, "DSA", propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "DSA", propq);
     if (ctx == NULL) {
-        fprintf(stderr, "EVP_PKEY_CTX_new_from_name() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_CTX_new_from_name() failed\n");
         goto cleanup;
     }
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0
-            || EVP_PKEY_fromdata(ctx, &pkey,
+            || OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pkey,
                                  EVP_PKEY_KEY_PARAMETERS, mergedparams) <= 0) {
-        fprintf(stderr, "EVP_PKEY_fromdata() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_fromdata() failed\n");
         goto cleanup;
     }
-    out = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
+    out = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
     if (out == NULL) {
-        fprintf(stderr, "EVP_PKEY_CTX_new_from_pkey() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey() failed\n");
         goto cleanup;
     }
 
@@ -133,9 +133,9 @@ int main(int argc, char **argv)
         goto cleanup;
     }
 
-    ctx = EVP_PKEY_CTX_new_from_pkey(libctx, dsaparamskey, propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, dsaparamskey, propq);
     if (ctx == NULL) {
-        fprintf(stderr, "EVP_PKEY_CTX_new_from_pkey() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey() failed\n");
         goto cleanup;
     }
     /*

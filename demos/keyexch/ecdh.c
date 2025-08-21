@@ -47,13 +47,13 @@ static int get_peer_public_key(PEER_DATA *peer, OSSL_LIB_CTX *libctx)
     size_t pubkeylen;
 
     /* Get the EC encoded public key data from the peers private key */
-    if (!EVP_PKEY_get_octet_string_param(peer->priv, OSSL_PKEY_PARAM_PUB_KEY,
+    if (!OPENSSL_BOX_EVP_PKEY_get_octet_string_param(peer->priv, OSSL_PKEY_PARAM_PUB_KEY,
                                          pubkeydata, sizeof(pubkeydata),
                                          &pubkeylen))
         return 0;
 
     /* Create a EC public key from the public key data */
-    ctx = EVP_PKEY_CTX_new_from_name(libctx, "EC", NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "EC", NULL);
     if (ctx == NULL)
         return 0;
     params[0] = OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME,
@@ -62,7 +62,7 @@ static int get_peer_public_key(PEER_DATA *peer, OSSL_LIB_CTX *libctx)
                                                   pubkeydata, pubkeylen);
     params[2] = OSSL_PARAM_construct_end();
     ret = OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) > 0
-          && (EVP_PKEY_fromdata(ctx, &peer->pub, EVP_PKEY_PUBLIC_KEY,
+          && (OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &peer->pub, EVP_PKEY_PUBLIC_KEY,
                                 params) > 0);
     OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
@@ -78,7 +78,7 @@ static int create_peer(PEER_DATA *peer, OSSL_LIB_CTX *libctx)
                                                  (char *)peer->curvename, 0);
     params[1] = OSSL_PARAM_construct_end();
 
-    ctx = EVP_PKEY_CTX_new_from_name(libctx, "EC", NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "EC", NULL);
     if (ctx == NULL)
         return 0;
 
@@ -110,7 +110,7 @@ static int generate_secret(PEER_DATA *peerA, EVP_PKEY *peerBpub,
     EVP_PKEY_CTX *derivectx;
 
     /* Create an EVP_PKEY_CTX that contains peerA's private key */
-    derivectx = EVP_PKEY_CTX_new_from_pkey(libctx, peerA->priv, NULL);
+    derivectx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, peerA->priv, NULL);
     if (derivectx == NULL)
         return 0;
 

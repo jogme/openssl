@@ -487,13 +487,13 @@ static void prepare_cipher_methods(void)
                                           | EVP_CIPH_CUSTOM_COPY
                                           | EVP_CIPH_CTRL_INIT
                                           | EVP_CIPH_FLAG_DEFAULT_ASN1)
-            || !EVP_CIPHER_meth_set_init(known_cipher_methods[i], cipher_init)
-            || !EVP_CIPHER_meth_set_do_cipher(known_cipher_methods[i],
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_init(known_cipher_methods[i], cipher_init)
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(known_cipher_methods[i],
                                      cipher_mode == EVP_CIPH_CTR_MODE ?
                                               ctr_do_cipher :
                                               cipher_do_cipher)
-            || !EVP_CIPHER_meth_set_ctrl(known_cipher_methods[i], cipher_ctrl)
-            || !EVP_CIPHER_meth_set_cleanup(known_cipher_methods[i],
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_ctrl(known_cipher_methods[i], cipher_ctrl)
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_cleanup(known_cipher_methods[i],
                                             cipher_cleanup)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(known_cipher_methods[i],
                                                   sizeof(struct cipher_ctx))) {
@@ -953,9 +953,9 @@ static void prepare_digest_methods(void)
             || !OPENSSL_BOX_EVP_MD_meth_set_result_size(known_digest_methods[i],
                                             digest_data[i].digestlen)
             || !OPENSSL_BOX_EVP_MD_meth_set_init(known_digest_methods[i], digest_init)
-            || !EVP_MD_meth_set_update(known_digest_methods[i], digest_update)
-            || !EVP_MD_meth_set_final(known_digest_methods[i], digest_final)
-            || !EVP_MD_meth_set_copy(known_digest_methods[i], digest_copy)
+            || !OPENSSL_BOX_EVP_MD_meth_set_update(known_digest_methods[i], digest_update)
+            || !OPENSSL_BOX_EVP_MD_meth_set_final(known_digest_methods[i], digest_final)
+            || !OPENSSL_BOX_EVP_MD_meth_set_copy(known_digest_methods[i], digest_copy)
             || !OPENSSL_BOX_EVP_MD_meth_set_cleanup(known_digest_methods[i], digest_cleanup)
             || !OPENSSL_BOX_EVP_MD_meth_set_app_datasize(known_digest_methods[i],
                                              sizeof(struct digest_ctx))) {

@@ -2,13 +2,13 @@
 
 =head1 NAME
 
-EVP_SealInit, EVP_SealUpdate, OPENSSL_BOX_EVP_SealFinal - EVP envelope encryption
+OPENSSL_BOX_EVP_SealInit, EVP_SealUpdate, OPENSSL_BOX_EVP_SealFinal - EVP envelope encryption
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- int EVP_SealInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
+ int OPENSSL_BOX_EVP_SealInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
                   unsigned char **ek, int *ekl, unsigned char *iv,
                   EVP_PKEY **pubk, int npubk);
  int EVP_SealUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out,
@@ -22,7 +22,7 @@ encryption. They generate a random key and IV (if required) then
 "envelope" it by using public key encryption. Data can then be
 encrypted using this key.
 
-EVP_SealInit() initializes a cipher context B<ctx> for encryption
+OPENSSL_BOX_EVP_SealInit() initializes a cipher context B<ctx> for encryption
 with cipher B<type> using a random secret key and IV. B<type> is normally
 supplied by a function such as OPENSSL_BOX_EVP_aes_256_cbc(). The secret key is encrypted
 using one or more public keys, this allows the same encrypted data to be
@@ -41,13 +41,13 @@ If the cipher does not require an IV then the B<iv> parameter is ignored
 and can be B<NULL>.
 
 EVP_SealUpdate() and OPENSSL_BOX_EVP_SealFinal() have exactly the same properties
-as the EVP_EncryptUpdate() and EVP_EncryptFinal() routines, as
-documented on the L<EVP_EncryptInit(3)> manual
+as the OPENSSL_BOX_EVP_EncryptUpdate() and OPENSSL_BOX_EVP_EncryptFinal() routines, as
+documented on the L<OPENSSL_BOX_EVP_EncryptInit(3)> manual
 page.
 
 =head1 RETURN VALUES
 
-EVP_SealInit() returns 0 on error or B<npubk> if successful.
+OPENSSL_BOX_EVP_SealInit() returns 0 on error or B<npubk> if successful.
 
 EVP_SealUpdate() and OPENSSL_BOX_EVP_SealFinal() return 1 for success and 0 for
 failure.
@@ -55,7 +55,7 @@ failure.
 =head1 NOTES
 
 Because a random secret key is generated the random number generator
-must be seeded when EVP_SealInit() is called.
+must be seeded when OPENSSL_BOX_EVP_SealInit() is called.
 If the automatic seeding or reseeding of the OpenSSL CSPRNG fails due to
 external circumstances (see L<RAND(7)>), the operation will fail.
 
@@ -68,16 +68,16 @@ but symmetric encryption is fast. So symmetric encryption is used for
 bulk encryption and the small random symmetric key used is transferred
 using public key encryption.
 
-It is possible to call EVP_SealInit() twice in the same way as
-EVP_EncryptInit(). The first call should have B<npubk> set to 0
+It is possible to call OPENSSL_BOX_EVP_SealInit() twice in the same way as
+OPENSSL_BOX_EVP_EncryptInit(). The first call should have B<npubk> set to 0
 and (after setting any cipher parameters) it should be called again
 with B<type> set to NULL.
 
 =head1 SEE ALSO
 
 L<evp(7)>, L<RAND_bytes(3)>,
-L<EVP_EncryptInit(3)>,
-L<EVP_OpenInit(3)>,
+L<OPENSSL_BOX_EVP_EncryptInit(3)>,
+L<OPENSSL_BOX_EVP_OpenInit(3)>,
 L<RAND(7)>
 
 =head1 COPYRIGHT

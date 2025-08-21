@@ -28,7 +28,7 @@ terminated with a L<OSSL_PARAM_END(3)> struct.
 See L<OSSL_PARAM(3)> for information about passing parameters.
 These functions must only be called after the EVP_PKEY_CTX has been initialised
 for use in an operation.
-These methods replace the EVP_PKEY_CTX_ctrl() mechanism. (EVP_PKEY_CTX_ctrl now
+These methods replace the OPENSSL_BOX_EVP_PKEY_CTX_ctrl() mechanism. (OPENSSL_BOX_EVP_PKEY_CTX_ctrl now
 calls these methods internally to interact with providers).
 
 OPENSSL_BOX_EVP_PKEY_CTX_gettable_params() and OPENSSL_BOX_EVP_PKEY_CTX_settable_params() get a
@@ -80,11 +80,11 @@ To enable, specify the B<enable-lms> build configuration option.
 =head1 SEE ALSO
 
 L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
-L<EVP_PKEY_encrypt(3)>,
-L<EVP_PKEY_decrypt(3)>,
-L<EVP_PKEY_sign(3)>,
-L<EVP_PKEY_verify(3)>,
-L<EVP_PKEY_verify_recover(3)>,
+L<OPENSSL_BOX_EVP_PKEY_encrypt(3)>,
+L<OPENSSL_BOX_EVP_PKEY_decrypt(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify_recover(3)>,
 L<OPENSSL_BOX_EVP_PKEY_derive(3)>,
 L<OPENSSL_BOX_EVP_PKEY_keygen(3)>
 

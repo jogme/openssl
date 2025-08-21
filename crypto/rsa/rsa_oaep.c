@@ -111,7 +111,7 @@ int ossl_rsa_padding_add_PKCS1_OAEP_mgf1_ex(OSSL_LIB_CTX *libctx,
     db = to + mdlen + 1;
 
     /* step 3a: hash the additional input */
-    if (!EVP_Digest((void *)param, plen, db, NULL, md, NULL))
+    if (!OPENSSL_BOX_EVP_Digest((void *)param, plen, db, NULL, md, NULL))
         goto err;
     /* step 3b: zero bytes array of length nLen - KLen - 2 HLen -2 */
     memset(db + mdlen, 0, emlen - flen - 2 * mdlen - 1);
@@ -265,7 +265,7 @@ int RSA_padding_check_PKCS1_OAEP_mgf1(unsigned char *to, int tlen,
     for (i = 0; i < dblen; i++)
         db[i] ^= maskeddb[i];
 
-    if (!EVP_Digest((void *)param, plen, phash, NULL, md, NULL))
+    if (!OPENSSL_BOX_EVP_Digest((void *)param, plen, phash, NULL, md, NULL))
         goto cleanup;
 
     good &= constant_time_is_zero(CRYPTO_memcmp(db, phash, mdlen));
@@ -370,16 +370,16 @@ int PKCS1_MGF1(unsigned char *mask, long len,
         cnt[2] = (unsigned char)((i >> 8)) & 255;
         cnt[3] = (unsigned char)(i & 255);
         /* step 4b: T =T || hash(mgfSeed || D) */
-        if (!EVP_DigestInit_ex(c, dgst, NULL)
-            || !EVP_DigestUpdate(c, seed, seedlen)
-            || !EVP_DigestUpdate(c, cnt, 4))
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(c, dgst, NULL)
+            || !OPENSSL_BOX_EVP_DigestUpdate(c, seed, seedlen)
+            || !OPENSSL_BOX_EVP_DigestUpdate(c, cnt, 4))
             goto err;
         if (outlen + mdlen <= len) {
-            if (!EVP_DigestFinal_ex(c, mask + outlen, NULL))
+            if (!OPENSSL_BOX_EVP_DigestFinal_ex(c, mask + outlen, NULL))
                 goto err;
             outlen += mdlen;
         } else {
-            if (!EVP_DigestFinal_ex(c, md, NULL))
+            if (!OPENSSL_BOX_EVP_DigestFinal_ex(c, md, NULL))
                 goto err;
             memcpy(mask + outlen, md, len - outlen);
             outlen = len;

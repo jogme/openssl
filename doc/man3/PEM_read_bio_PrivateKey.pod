@@ -428,17 +428,17 @@ used by OPENSSL_BOX_EVP_get_cipherbyname() and an initialization vector used by 
 cipher encoded as a set of hexadecimal digits. After those two lines is
 the base64-encoded encrypted data.
 
-The encryption key is derived using EVP_BytesToKey(). The cipher's
-initialization vector is passed to EVP_BytesToKey() as the I<salt>
+The encryption key is derived using OPENSSL_BOX_EVP_BytesToKey(). The cipher's
+initialization vector is passed to OPENSSL_BOX_EVP_BytesToKey() as the I<salt>
 parameter. Internally, B<PKCS5_SALT_LEN> bytes of the salt are used
 (regardless of the size of the initialization vector). The user's
-password is passed to EVP_BytesToKey() using the I<data> and I<datal>
+password is passed to OPENSSL_BOX_EVP_BytesToKey() using the I<data> and I<datal>
 parameters. Finally, the library uses an iteration count of 1 for
-EVP_BytesToKey().
+OPENSSL_BOX_EVP_BytesToKey().
 
-The I<key> derived by EVP_BytesToKey() along with the original initialization
+The I<key> derived by OPENSSL_BOX_EVP_BytesToKey() along with the original initialization
 vector is then used to decrypt the encrypted data. The I<iv> produced by
-EVP_BytesToKey() is not utilized or needed, and NULL should be passed to
+OPENSSL_BOX_EVP_BytesToKey() is not utilized or needed, and NULL should be passed to
 the function.
 
 The pseudo code to derive the key would look similar to:
@@ -452,7 +452,7 @@ The pseudo code to derive the key would look similar to:
  unsigned char iv[niv];
 
  memcpy(iv, HexToBin("3F17F5316E2BAC89"), niv);
- rc = EVP_BytesToKey(cipher, md, iv /*salt*/, pword, plen, 1, key, NULL /*iv*/);
+ rc = OPENSSL_BOX_EVP_BytesToKey(cipher, md, iv /*salt*/, pword, plen, 1, key, NULL /*iv*/);
  if (rc != nkey)
      /* Error */
 
@@ -557,7 +557,7 @@ Skeleton pass phrase callback:
 
 =head1 SEE ALSO
 
-L<EVP_EncryptInit(3)>, L<EVP_BytesToKey(3)>,
+L<OPENSSL_BOX_EVP_EncryptInit(3)>, L<OPENSSL_BOX_EVP_BytesToKey(3)>,
 L<passphrase-encoding(7)>
 
 =head1 HISTORY

@@ -42,7 +42,7 @@ static int test_is_fips_enabled(void)
      * Fetching an algorithm shouldn't change the state and should come from
      * expected provider.
      */
-    sha256 = EVP_MD_fetch(NULL, "SHA2-256", NULL);
+    sha256 = OPENSSL_BOX_EVP_MD_fetch(NULL, "SHA2-256", NULL);
     if (bad_fips) {
         if (!TEST_ptr_null(sha256)) {
             OPENSSL_BOX_EVP_MD_free(sha256);

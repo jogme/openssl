@@ -176,9 +176,9 @@ static void create_mlkem_raw_key(uint8_t **buf, size_t *len,
      * which is what we want the fuzzer to do
      */
     if (pub == 1)
-        pubkey = EVP_PKEY_new_raw_public_key_ex(NULL, keytype, NULL, key, keylen);
+        pubkey = OPENSSL_BOX_EVP_PKEY_new_raw_public_key_ex(NULL, keytype, NULL, key, keylen);
     else
-        pubkey = EVP_PKEY_new_raw_private_key_ex(NULL, keytype, NULL, key, keylen);
+        pubkey = OPENSSL_BOX_EVP_PKEY_new_raw_private_key_ex(NULL, keytype, NULL, key, keylen);
 
     *key1 = pubkey;
     return;
@@ -221,7 +221,7 @@ again:
     if (!select_keytype_and_size(buf, len, &keytype, &keylen, 1))
         return;
 
-    ctx = EVP_PKEY_CTX_new_from_name(NULL, keytype, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, keytype, NULL);
     if (!ctx) {
         fprintf(stderr, "Failed to generate ctx\n");
         return;
@@ -278,7 +278,7 @@ static void mlkem_encap_decap(uint8_t **buf, size_t *len, void *key1, void *in2,
     unsigned char wrapkey[1568];
     size_t wrapkey_len = 1568;
 
-    ctx = EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL);
     if (ctx == NULL) {
         fprintf(stderr, "Failed to allocate ctx\n");
         goto err;
@@ -292,13 +292,13 @@ static void mlkem_encap_decap(uint8_t **buf, size_t *len, void *key1, void *in2,
     if (!RAND_bytes(genkey, (int)genkey_len))
         goto err;
 
-    if (EVP_PKEY_encapsulate(ctx, wrapkey, &wrapkey_len, genkey, &genkey_len) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_encapsulate(ctx, wrapkey, &wrapkey_len, genkey, &genkey_len) <= 0) {
         fprintf(stderr, "Failed to encapsulate key\n");
         goto err;
     }
 
     OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
-    ctx = EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL);
     if (ctx == NULL) {
         fprintf(stderr, "Failed to create context\n");
         goto err;
@@ -309,7 +309,7 @@ static void mlkem_encap_decap(uint8_t **buf, size_t *len, void *key1, void *in2,
         goto err;
     }
 
-    if (EVP_PKEY_decapsulate(ctx, unwrappedkey, &unwrappedkey_len,
+    if (OPENSSL_BOX_EVP_PKEY_decapsulate(ctx, unwrappedkey, &unwrappedkey_len,
                              wrapkey, wrapkey_len) <= 0) {
         fprintf(stderr, "Failed to decap key\n");
         goto err;
@@ -344,7 +344,7 @@ static void do_derive(EVP_PKEY *key, EVP_PKEY *peer, uint8_t **shared, size_t *s
     *shared = NULL;
     *shared_len = 0;
 
-    ctx = EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL);
     if (ctx == NULL) {
         fprintf(stderr, "failed to create keygen context\n");
         goto err;
@@ -427,7 +427,7 @@ static void mlkem_kex(uint8_t **buf, size_t *len, void *key1, void *key2,
  * This function extracts key material from the given key (`key1`),
  * exports it as parameters, and then attempts to reconstruct a new
  * key from those parameters. It uses OpenSSL's `OPENSSL_BOX_EVP_PKEY_todata()`
- * and `EVP_PKEY_fromdata()` functions for this process.
+ * and `OPENSSL_BOX_EVP_PKEY_fromdata()` functions for this process.
  *
  * @param[out] buf Unused output buffer (reserved for future use).
  * @param[out] len Unused output length (reserved for future use).
@@ -452,13 +452,13 @@ static void mlkem_export_import(uint8_t **buf, size_t *len, void *key1,
         goto err;
     }
 
-    ctx = EVP_PKEY_CTX_new_from_pkey(NULL, alice, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, alice, NULL);
     if (ctx == NULL) {
         fprintf(stderr, "Failed new ctx\n");
         goto err;
     }
 
-    if (!EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params)) {
+    if (!OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params)) {
         fprintf(stderr, "Failed fromdata\n");
         goto err;
     }

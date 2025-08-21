@@ -123,7 +123,7 @@ static int test_ml_kem(void)
     size_t wrpkeylen, agenkeylen, bgenkeylen, i;
 
     /* Generate Alice's key */
-    akey = EVP_PKEY_Q_keygen(testctx, NULL, "ML-KEM-768");
+    akey = OPENSSL_BOX_EVP_PKEY_Q_keygen(testctx, NULL, "ML-KEM-768");
     if (!TEST_ptr(akey))
         goto err;
 
@@ -144,14 +144,14 @@ static int test_ml_kem(void)
         goto err;
 
     /* Encapsulate Bob's key */
-    ctx = EVP_PKEY_CTX_new_from_pkey(testctx, bkey, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(testctx, bkey, NULL);
     if (!TEST_ptr(ctx))
         goto err;
 
     if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encapsulate_init(ctx, NULL), 0))
         goto err;
 
-    if (!TEST_int_gt(EVP_PKEY_encapsulate(ctx, NULL, &wrpkeylen, NULL,
+    if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encapsulate(ctx, NULL, &wrpkeylen, NULL,
                                           &bgenkeylen), 0))
         goto err;
 
@@ -163,21 +163,21 @@ static int test_ml_kem(void)
     if (!TEST_ptr(wrpkey) || !TEST_ptr(bgenkey))
         goto err;
 
-    if (!TEST_int_gt(EVP_PKEY_encapsulate(ctx, wrpkey, &wrpkeylen, bgenkey,
+    if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encapsulate(ctx, wrpkey, &wrpkeylen, bgenkey,
                                           &bgenkeylen), 0))
         goto err;
 
     OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
 
     /* Alice now decapsulates Bob's key */
-    ctx = EVP_PKEY_CTX_new_from_pkey(testctx, akey, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(testctx, akey, NULL);
     if (!TEST_ptr(ctx))
         goto err;
 
     if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_decapsulate_init(ctx, NULL), 0))
         goto err;
 
-    if (!TEST_int_gt(EVP_PKEY_decapsulate(ctx, NULL, &agenkeylen, wrpkey,
+    if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_decapsulate(ctx, NULL, &agenkeylen, wrpkey,
                                           wrpkeylen), 0))
         goto err;
 
@@ -188,7 +188,7 @@ static int test_ml_kem(void)
     if (!TEST_ptr(agenkey))
         goto err;
 
-    if (!TEST_int_gt(EVP_PKEY_decapsulate(ctx, agenkey, &agenkeylen, wrpkey,
+    if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_decapsulate(ctx, agenkey, &agenkeylen, wrpkey,
                                           wrpkeylen), 0))
         goto err;
 
@@ -231,7 +231,7 @@ static int test_non_derandomised_ml_kem(void)
         || !TEST_ptr(pubctx = RAND_get0_public(NULL)))
         return 0;
 
-    if (!TEST_ptr(sha256 = EVP_MD_fetch(NULL, "sha256", NULL)))
+    if (!TEST_ptr(sha256 = OPENSSL_BOX_EVP_MD_fetch(NULL, "sha256", NULL)))
         return 0;
 
     for (i = 0; i < (int) OSSL_NELEM(alg); ++i) {
@@ -262,7 +262,7 @@ static int test_non_derandomised_ml_kem(void)
 
         res = -2;
         /* Generate Alice's key */
-        akey = EVP_PKEY_Q_keygen(testctx, NULL, v->algorithm_name);
+        akey = OPENSSL_BOX_EVP_PKEY_Q_keygen(testctx, NULL, v->algorithm_name);
         if (!TEST_ptr(akey))
             goto done;
 
@@ -300,12 +300,12 @@ static int test_non_derandomised_ml_kem(void)
 
         /* Encapsulate Bob's key */
         res = -5;
-        ctx = EVP_PKEY_CTX_new_from_pkey(testctx, bkey, NULL);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(testctx, bkey, NULL);
         if (!TEST_ptr(ctx))
             goto done;
         if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encapsulate_init(ctx, NULL), 0))
             goto done;
-        if (!TEST_int_gt(EVP_PKEY_encapsulate(ctx, NULL, &wrpkeylen, NULL,
+        if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encapsulate(ctx, NULL, &wrpkeylen, NULL,
                                               &bgenkeylen), 0))
             goto done;
         if (!TEST_size_t_eq(wrpkeylen, v->ctext_bytes)
@@ -315,7 +315,7 @@ static int test_non_derandomised_ml_kem(void)
         bgenkey = OPENSSL_zalloc(bgenkeylen);
         if (!TEST_ptr(wrpkey) || !TEST_ptr(bgenkey))
             goto done;
-        if (!TEST_true(EVP_PKEY_encapsulate(ctx, wrpkey, &wrpkeylen, bgenkey,
+        if (!TEST_true(OPENSSL_BOX_EVP_PKEY_encapsulate(ctx, wrpkey, &wrpkeylen, bgenkey,
                                             &bgenkeylen)))
             goto done;
         OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
@@ -326,7 +326,7 @@ static int test_non_derandomised_ml_kem(void)
 
         res = -6;
         /* Check the ciphertext hash */
-        if (!TEST_true(EVP_Digest(wrpkey, v->ctext_bytes,
+        if (!TEST_true(OPENSSL_BOX_EVP_Digest(wrpkey, v->ctext_bytes,
                                   hash, NULL, sha256, NULL))
             || !TEST_mem_eq(hash, sizeof(hash),
                             expected_ctext_sha256[i],
@@ -342,12 +342,12 @@ static int test_non_derandomised_ml_kem(void)
          * the ciphertext length is good.
          */
         res = -7;
-        ctx = EVP_PKEY_CTX_new_from_pkey(testctx, akey, NULL);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(testctx, akey, NULL);
         if (!TEST_ptr(ctx))
             goto done;
         if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_decapsulate_init(ctx, NULL), 0))
             goto done;
-        if (!TEST_true(EVP_PKEY_decapsulate(ctx, NULL, &agenkeylen, wrpkey,
+        if (!TEST_true(OPENSSL_BOX_EVP_PKEY_decapsulate(ctx, NULL, &agenkeylen, wrpkey,
                                             wrpkeylen)))
             goto done;
         if (!TEST_size_t_eq(agenkeylen, ML_KEM_SHARED_SECRET_BYTES))
@@ -355,7 +355,7 @@ static int test_non_derandomised_ml_kem(void)
         agenkey = OPENSSL_zalloc(agenkeylen);
         if (!TEST_ptr(agenkey))
             goto done;
-        if (!TEST_true(EVP_PKEY_decapsulate(ctx, agenkey, &agenkeylen, wrpkey,
+        if (!TEST_true(OPENSSL_BOX_EVP_PKEY_decapsulate(ctx, agenkey, &agenkeylen, wrpkey,
                                             wrpkeylen)))
             goto done;
         /* Hopefully we ended up with a shared key */
@@ -365,7 +365,7 @@ static int test_non_derandomised_ml_kem(void)
         res = -8;
         /* Now a quick negative test by zeroing the ciphertext */
         memset(wrpkey, 0, v->ctext_bytes);
-        if (!TEST_true(EVP_PKEY_decapsulate(ctx, agenkey, &agenkeylen, wrpkey,
+        if (!TEST_true(OPENSSL_BOX_EVP_PKEY_decapsulate(ctx, agenkey, &agenkeylen, wrpkey,
                                             wrpkeylen)))
             goto done;
         if (!TEST_mem_ne(agenkey, agenkeylen, bgenkey, bgenkeylen))
@@ -380,7 +380,7 @@ static int test_non_derandomised_ml_kem(void)
             goto done;
 
         /* This time decap should fail, and return the decap entropy */
-        if (!TEST_false(EVP_PKEY_decapsulate(ctx, agenkey, &agenkeylen, wrpkey,
+        if (!TEST_false(OPENSSL_BOX_EVP_PKEY_decapsulate(ctx, agenkey, &agenkeylen, wrpkey,
                                              wrpkeylen - 1)))
             goto done;
         if (!TEST_mem_eq(agenkey, agenkeylen, dec_seed, sizeof(dec_seed)))

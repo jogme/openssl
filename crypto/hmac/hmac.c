@@ -64,9 +64,9 @@ int HMAC_Init_ex(HMAC_CTX *ctx, const void *key, int len,
         if (j < 0)
             return 0;
         if (j < len) {
-            if (!EVP_DigestInit_ex(ctx->md_ctx, md, impl)
-                    || !EVP_DigestUpdate(ctx->md_ctx, key, len)
-                    || !EVP_DigestFinal_ex(ctx->md_ctx, keytmp,
+            if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx->md_ctx, md, impl)
+                    || !OPENSSL_BOX_EVP_DigestUpdate(ctx->md_ctx, key, len)
+                    || !OPENSSL_BOX_EVP_DigestFinal_ex(ctx->md_ctx, keytmp,
                                            &keytmp_length))
                 return 0;
         } else {
@@ -81,15 +81,15 @@ int HMAC_Init_ex(HMAC_CTX *ctx, const void *key, int len,
 
         for (i = 0; i < HMAC_MAX_MD_CBLOCK_SIZE; i++)
             pad[i] = 0x36 ^ keytmp[i];
-        if (!EVP_DigestInit_ex(ctx->i_ctx, md, impl)
-                || !EVP_DigestUpdate(ctx->i_ctx, pad,
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx->i_ctx, md, impl)
+                || !OPENSSL_BOX_EVP_DigestUpdate(ctx->i_ctx, pad,
                                      OPENSSL_BOX_EVP_MD_get_block_size(md)))
             goto err;
 
         for (i = 0; i < HMAC_MAX_MD_CBLOCK_SIZE; i++)
             pad[i] = 0x5c ^ keytmp[i];
-        if (!EVP_DigestInit_ex(ctx->o_ctx, md, impl)
-                || !EVP_DigestUpdate(ctx->o_ctx, pad,
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx->o_ctx, md, impl)
+                || !OPENSSL_BOX_EVP_DigestUpdate(ctx->o_ctx, pad,
                                      OPENSSL_BOX_EVP_MD_get_block_size(md)))
             goto err;
     }
@@ -123,7 +123,7 @@ int HMAC_Update(HMAC_CTX *ctx, const unsigned char *data, size_t len)
         return s390x_HMAC_update(ctx, data, len);
 #endif
 
-    return EVP_DigestUpdate(ctx->md_ctx, data, len);
+    return OPENSSL_BOX_EVP_DigestUpdate(ctx->md_ctx, data, len);
 }
 
 int HMAC_Final(HMAC_CTX *ctx, unsigned char *md, unsigned int *len)
@@ -139,13 +139,13 @@ int HMAC_Final(HMAC_CTX *ctx, unsigned char *md, unsigned int *len)
         return s390x_HMAC_final(ctx, md, len);
 #endif
 
-    if (!EVP_DigestFinal_ex(ctx->md_ctx, buf, &i))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx->md_ctx, buf, &i))
         goto err;
     if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx->md_ctx, ctx->o_ctx))
         goto err;
-    if (!EVP_DigestUpdate(ctx->md_ctx, buf, i))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(ctx->md_ctx, buf, i))
         goto err;
-    if (!EVP_DigestFinal_ex(ctx->md_ctx, md, len))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx->md_ctx, md, len))
         goto err;
     return 1;
  err:
@@ -255,7 +255,7 @@ unsigned char *HMAC(const EVP_MD *evp_md, const void *key, int key_len,
     unsigned char *ret = NULL;
 
     if (size > 0) {
-        ret = EVP_Q_mac(NULL, "HMAC", NULL, OPENSSL_BOX_EVP_MD_get0_name(evp_md), NULL,
+        ret = OPENSSL_BOX_EVP_Q_mac(NULL, "HMAC", NULL, OPENSSL_BOX_EVP_MD_get0_name(evp_md), NULL,
                         key, key_len, data, data_len,
                         md == NULL ? static_md : md, size, &temp_md_len);
         if (md_len != NULL)

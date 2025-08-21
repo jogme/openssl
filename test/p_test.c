@@ -149,7 +149,7 @@ static int p_get_params(void *provctx, OSSL_PARAM params[])
              * just fallen back to default.
              */
 #ifdef PROVIDER_INIT_FUNCTION_NAME
-            EVP_MD *md4 = EVP_MD_fetch(ctx->libctx, "MD4", NULL);
+            EVP_MD *md4 = OPENSSL_BOX_EVP_MD_fetch(ctx->libctx, "MD4", NULL);
             EVP_MD_CTX *mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
             const char *msg = "Hello world";
             unsigned char out[16];
@@ -181,10 +181,10 @@ static int p_get_params(void *provctx, OSSL_PARAM params[])
                     && OSSL_PROVIDER_available(ctx->libctx, "p_test")
                     && md4 != NULL
                     && mdctx != NULL) {
-                if (EVP_DigestInit_ex(mdctx, md4, NULL)
-                        && EVP_DigestUpdate(mdctx, (const unsigned char *)msg,
+                if (OPENSSL_BOX_EVP_DigestInit_ex(mdctx, md4, NULL)
+                        && OPENSSL_BOX_EVP_DigestUpdate(mdctx, (const unsigned char *)msg,
                                             strlen(msg))
-                        && EVP_DigestFinal(mdctx, out, NULL))
+                        && OPENSSL_BOX_EVP_DigestFinal(mdctx, out, NULL))
                     digestsuccess = 1;
             }
             OPENSSL_BOX_EVP_MD_CTX_free(mdctx);
@@ -313,7 +313,7 @@ int OSSL_provider_init(const OSSL_CORE_HANDLE *handle,
      * allow its use.
      */
     {
-        EVP_MD *sha256 = EVP_MD_fetch(ctx->libctx, "SHA2-256", NULL);
+        EVP_MD *sha256 = OPENSSL_BOX_EVP_MD_fetch(ctx->libctx, "SHA2-256", NULL);
         if (sha256 != NULL) {
             OPENSSL_BOX_EVP_MD_free(sha256);
             p_teardown(ctx);

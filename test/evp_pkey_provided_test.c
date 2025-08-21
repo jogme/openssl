@@ -180,7 +180,7 @@ static int test_print_key_using_pem(const char *alg, const EVP_PKEY *pk)
             pass_cb_error, NULL))
 #endif
         /* Private key in text form */
-        || !TEST_int_gt(EVP_PKEY_print_private(membio, pk, 0, NULL), 0)
+        || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_print_private(membio, pk, 0, NULL), 0)
         || !TEST_true(compare_with_file(alg, PRIV_TEXT, membio))
         /* Public key in PEM form */
         || !TEST_true(PEM_write_bio_PUBKEY(membio, pk))
@@ -381,11 +381,11 @@ static int test_fromdata_rsa(void)
     BIGNUM *bn = BN_new();
     BIGNUM *bn_from = BN_new();
 
-    if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL)))
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL)))
         goto err;
 
     if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
-        || !TEST_int_eq(EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
+        || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
                                           fromdata_params), 1))
         goto err;
 
@@ -399,7 +399,7 @@ static int test_fromdata_rsa(void)
             goto err;
 
         OPENSSL_BOX_EVP_PKEY_CTX_free(key_ctx);
-        if (!TEST_ptr(key_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pk, "")))
+        if (!TEST_ptr(key_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, pk, "")))
             goto err;
 
         if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_check(key_ctx), 0)
@@ -433,7 +433,7 @@ static int test_fromdata_rsa(void)
     /* for better diagnostics always compare key params */
     for (i = 0; fromdata_params[i].key != NULL; ++i) {
         if (!TEST_true(BN_set_word(bn_from, key_numbers[i]))
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, fromdata_params[i].key,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, fromdata_params[i].key,
                                                 &bn))
             || !TEST_BN_eq(bn, bn_from))
             ret = 0;
@@ -466,9 +466,9 @@ static int do_fromdata_rsa_derive(OSSL_PARAM *fromdata_params,
     int i;
     int ret = 0;
 
-    if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL))
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL))
         || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
-        || !TEST_int_eq(EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
+        || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
                                           fromdata_params), 1))
         goto err;
 
@@ -502,7 +502,7 @@ static int do_fromdata_rsa_derive(OSSL_PARAM *fromdata_params,
             goto err;
 
         OPENSSL_BOX_EVP_PKEY_CTX_free(key_ctx);
-        if (!TEST_ptr(key_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pk, "")))
+        if (!TEST_ptr(key_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, pk, "")))
             goto err;
 
         if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_check(key_ctx), 0)
@@ -552,7 +552,7 @@ static int test_fromdata_rsa_derive_from_pq_sp800(void)
     /*
      * 512-bit RSA key, extracted from this command,
      * openssl genrsa 512 | openssl rsa -text
-     * Note: When generating a key with EVP_PKEY_fromdata, and using
+     * Note: When generating a key with OPENSSL_BOX_EVP_PKEY_fromdata, and using
      * crt derivation, openssl requires a minimum of 512 bits of n data,
      * and 2048 bits in the FIPS case
      */
@@ -650,7 +650,7 @@ static int test_fromdata_rsa_derive_from_pq_multiprime(void)
     /*
      * multiprime RSA key,  extracted from this command,
      * openssl genrsa -primes 3 | openssl rsa -text
-     * Note: When generating a key with EVP_PKEY_fromdata,  and using
+     * Note: When generating a key with OPENSSL_BOX_EVP_PKEY_fromdata,  and using
      * crt derivation,  openssl requires a minimum of 512 bits of n data,
      * and 2048 bits in the FIPS case
      */
@@ -853,7 +853,7 @@ static int test_evp_pkey_get_bn_param_large(void)
     BIGNUM *n = NULL, *e = NULL, *d = NULL, *n_out = NULL;
     /*
      * The buffer size chosen here for n_data larger than the buffer used
-     * internally in EVP_PKEY_get_bn_param.
+     * internally in OPENSSL_BOX_EVP_PKEY_get_bn_param.
      */
     static unsigned char n_data[2050];
     static const unsigned char e_data[] = {
@@ -874,12 +874,12 @@ static int test_evp_pkey_get_bn_param_large(void)
         || !TEST_true(OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_E, e))
         || !TEST_true(OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_D, d))
         || !TEST_ptr(fromdata_params = OSSL_PARAM_BLD_to_param(bld))
-        || !TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL))
+        || !TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL))
         || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
-        || !TEST_int_eq(EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
+        || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
                                           fromdata_params), 1)
-        || !TEST_ptr(key_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pk, ""))
-        || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_RSA_N, &n_out))
+        || !TEST_ptr(key_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, pk, ""))
+        || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_RSA_N, &n_out))
         || !TEST_BN_eq(n, n_out))
         goto err;
     ret = 1;
@@ -963,39 +963,39 @@ static int test_fromdata_dh_named_group(void)
         || !TEST_ptr(fromdata_params = OSSL_PARAM_BLD_to_param(bld)))
         goto err;
 
-    if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(NULL, "DH", NULL)))
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "DH", NULL)))
         goto err;
 
     if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
-        || !TEST_int_eq(EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
+        || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
                                           fromdata_params), 1))
         goto err;
 
     /*
-     * A few extra checks of EVP_PKEY_get_utf8_string_param() to see that
+     * A few extra checks of OPENSSL_BOX_EVP_PKEY_get_utf8_string_param() to see that
      * it behaves as expected with regards to string length and terminating
      * NUL byte.
      */
-    if (!TEST_true(EVP_PKEY_get_utf8_string_param(pk,
+    if (!TEST_true(OPENSSL_BOX_EVP_PKEY_get_utf8_string_param(pk,
                                                   OSSL_PKEY_PARAM_GROUP_NAME,
                                                   NULL, sizeof(name_out),
                                                   &len))
         || !TEST_size_t_eq(len, sizeof(group_name) - 1)
         /* Just enough space to hold the group name and a terminating NUL */
-        || !TEST_true(EVP_PKEY_get_utf8_string_param(pk,
+        || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_utf8_string_param(pk,
                                                      OSSL_PKEY_PARAM_GROUP_NAME,
                                                      name_out,
                                                      sizeof(group_name),
                                                      &len))
         || !TEST_size_t_eq(len, sizeof(group_name) - 1)
         /* Too small buffer to hold the terminating NUL byte */
-        || !TEST_false(EVP_PKEY_get_utf8_string_param(pk,
+        || !TEST_false(OPENSSL_BOX_EVP_PKEY_get_utf8_string_param(pk,
                                                       OSSL_PKEY_PARAM_GROUP_NAME,
                                                       name_out,
                                                       sizeof(group_name) - 1,
                                                       &len))
         /* Too small buffer to hold the whole group name, even! */
-        || !TEST_false(EVP_PKEY_get_utf8_string_param(pk,
+        || !TEST_false(OPENSSL_BOX_EVP_PKEY_get_utf8_string_param(pk,
                                                       OSSL_PKEY_PARAM_GROUP_NAME,
                                                       name_out,
                                                       sizeof(group_name) - 2,
@@ -1011,41 +1011,41 @@ static int test_fromdata_dh_named_group(void)
             || !TEST_false(OPENSSL_BOX_EVP_PKEY_missing_parameters(pk)))
             goto err;
 
-        if (!TEST_true(EVP_PKEY_get_utf8_string_param(pk,
+        if (!TEST_true(OPENSSL_BOX_EVP_PKEY_get_utf8_string_param(pk,
                                                       OSSL_PKEY_PARAM_GROUP_NAME,
                                                       name_out,
                                                       sizeof(name_out),
                                                       &len))
             || !TEST_str_eq(name_out, group_name)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PUB_KEY,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PUB_KEY,
                                                 &pub_out))
 
             || !TEST_BN_eq(pub, pub_out)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PRIV_KEY,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PRIV_KEY,
                                                 &priv_out))
             || !TEST_BN_eq(priv, priv_out)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_P, &p))
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_P, &p))
             || !TEST_BN_eq(&ossl_bignum_ffdhe2048_p, p)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_Q, &q))
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_Q, &q))
             || !TEST_ptr(q)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_G, &g))
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_G, &g))
             || !TEST_BN_eq(&ossl_bignum_const_2, g)
-            || !TEST_false(EVP_PKEY_get_bn_param(pk,
+            || !TEST_false(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk,
                                                  OSSL_PKEY_PARAM_FFC_COFACTOR,
                                                  &j))
             || !TEST_ptr_null(j)
-            || !TEST_false(EVP_PKEY_get_octet_string_param(pk,
+            || !TEST_false(OPENSSL_BOX_EVP_PKEY_get_octet_string_param(pk,
                                                            OSSL_PKEY_PARAM_FFC_SEED,
                                                            seed_out,
                                                            sizeof(seed_out),
                                                            &len))
-            || !TEST_true(EVP_PKEY_get_int_param(pk, OSSL_PKEY_PARAM_FFC_GINDEX,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_int_param(pk, OSSL_PKEY_PARAM_FFC_GINDEX,
                                                  &gindex))
             || !TEST_int_eq(gindex, -1)
-            || !TEST_true(EVP_PKEY_get_int_param(pk, OSSL_PKEY_PARAM_FFC_H,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_int_param(pk, OSSL_PKEY_PARAM_FFC_H,
                                                  &hindex))
             || !TEST_int_eq(hindex, 0)
-            || !TEST_true(EVP_PKEY_get_int_param(pk,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_int_param(pk,
                                                  OSSL_PKEY_PARAM_FFC_PCOUNTER,
                                                  &pcounter))
             || !TEST_int_eq(pcounter, -1))
@@ -1063,7 +1063,7 @@ static int test_fromdata_dh_named_group(void)
         BN_free(priv_out);
         priv_out = NULL;
 
-        if (!TEST_ptr(key_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pk, "")))
+        if (!TEST_ptr(key_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, pk, "")))
             goto err;
 
         if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_check(key_ctx), 0)
@@ -1179,11 +1179,11 @@ static int test_fromdata_dh_fips186_4(void)
         || !TEST_ptr(fromdata_params = OSSL_PARAM_BLD_to_param(bld)))
         goto err;
 
-    if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(NULL, "DH", NULL)))
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "DH", NULL)))
         goto err;
 
     if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
-        || !TEST_int_eq(EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
+        || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
                                           fromdata_params), 1))
         goto err;
 
@@ -1196,41 +1196,41 @@ static int test_fromdata_dh_fips186_4(void)
             || !TEST_false(OPENSSL_BOX_EVP_PKEY_missing_parameters(pk)))
             goto err;
 
-        if (!TEST_true(EVP_PKEY_get_utf8_string_param(pk,
+        if (!TEST_true(OPENSSL_BOX_EVP_PKEY_get_utf8_string_param(pk,
                                                       OSSL_PKEY_PARAM_GROUP_NAME,
                                                       name_out,
                                                       sizeof(name_out),
                                                       &len))
             || !TEST_str_eq(name_out, group_name)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PUB_KEY,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PUB_KEY,
                                                 &pub_out))
             || !TEST_BN_eq(pub, pub_out)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PRIV_KEY,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PRIV_KEY,
                                                 &priv_out))
             || !TEST_BN_eq(priv, priv_out)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_P, &p))
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_P, &p))
             || !TEST_BN_eq(&ossl_bignum_ffdhe2048_p, p)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_Q, &q))
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_Q, &q))
             || !TEST_ptr(q)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_G, &g))
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_G, &g))
             || !TEST_BN_eq(&ossl_bignum_const_2, g)
-            || !TEST_false(EVP_PKEY_get_bn_param(pk,
+            || !TEST_false(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk,
                                                  OSSL_PKEY_PARAM_FFC_COFACTOR,
                                                  &j))
             || !TEST_ptr_null(j)
-            || !TEST_false(EVP_PKEY_get_octet_string_param(pk,
+            || !TEST_false(OPENSSL_BOX_EVP_PKEY_get_octet_string_param(pk,
                                                            OSSL_PKEY_PARAM_FFC_SEED,
                                                            seed_out,
                                                            sizeof(seed_out),
                                                            &len))
-            || !TEST_true(EVP_PKEY_get_int_param(pk,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_int_param(pk,
                                                  OSSL_PKEY_PARAM_FFC_GINDEX,
                                                  &gindex))
             || !TEST_int_eq(gindex, -1)
-            || !TEST_true(EVP_PKEY_get_int_param(pk, OSSL_PKEY_PARAM_FFC_H,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_int_param(pk, OSSL_PKEY_PARAM_FFC_H,
                                                  &hindex))
             || !TEST_int_eq(hindex, 0)
-            || !TEST_true(EVP_PKEY_get_int_param(pk,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_int_param(pk,
                                                  OSSL_PKEY_PARAM_FFC_PCOUNTER,
                                                  &pcounter))
             || !TEST_int_eq(pcounter, -1))
@@ -1248,7 +1248,7 @@ static int test_fromdata_dh_fips186_4(void)
         BN_free(priv_out);
         priv_out = NULL;
 
-        if (!TEST_ptr(key_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pk, "")))
+        if (!TEST_ptr(key_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, pk, "")))
             goto err;
 
         if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_check(key_ctx), 0)
@@ -1479,7 +1479,7 @@ static int test_fromdata_ecx(int tst)
         goto err;
     }
 
-    ctx = EVP_PKEY_CTX_new_from_name(NULL, alg, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, alg, NULL);
     if (!TEST_ptr(ctx))
         goto err;
 
@@ -1495,7 +1495,7 @@ static int test_fromdata_ecx(int tst)
     }
 
     if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
-        || !TEST_int_eq(EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
+        || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
                                           fromdata_params), 1))
         goto err;
 
@@ -1508,18 +1508,18 @@ static int test_fromdata_ecx(int tst)
             || !TEST_false(OPENSSL_BOX_EVP_PKEY_missing_parameters(pk)))
             goto err;
 
-        if (!TEST_ptr(ctx2 = EVP_PKEY_CTX_new_from_pkey(NULL, pk, NULL)))
+        if (!TEST_ptr(ctx2 = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, pk, NULL)))
             goto err;
         if (tst <= 7) {
             if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_check(ctx2), 0))
                 goto err;
-            if (!TEST_true(EVP_PKEY_get_octet_string_param(
+            if (!TEST_true(OPENSSL_BOX_EVP_PKEY_get_octet_string_param(
                                pk, orig_fromdata_params[PRIV_KEY].key,
                                out_priv, sizeof(out_priv), &len))
                 || !TEST_mem_eq(out_priv, len,
                                 orig_fromdata_params[PRIV_KEY].data,
                                 orig_fromdata_params[PRIV_KEY].data_size)
-                || !TEST_true(EVP_PKEY_get_octet_string_param(
+                || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_octet_string_param(
                                   pk, orig_fromdata_params[PUB_KEY].key,
                                   out_pub, sizeof(out_pub), &len))
                 || !TEST_mem_eq(out_pub, len,
@@ -1540,7 +1540,7 @@ static int test_fromdata_ecx(int tst)
                /* This should succeed because there are no parameters to copy */
             || !TEST_true(OPENSSL_BOX_EVP_PKEY_copy_parameters(copy_pk, pk)))
             goto err;
-        if (!TEST_ptr(ctx2 = EVP_PKEY_CTX_new_from_pkey(NULL, copy_pk, NULL))
+        if (!TEST_ptr(ctx2 = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, copy_pk, NULL))
                /* This should fail because copy_pk has no pubkey */
             || !TEST_int_le(OPENSSL_BOX_EVP_PKEY_public_check(ctx2), 0))
             goto err;
@@ -1657,7 +1657,7 @@ static int test_fromdata_ec(void)
         goto err;
     if (!TEST_ptr(fromdata_params = OSSL_PARAM_BLD_to_param(bld)))
         goto err;
-    ctx = EVP_PKEY_CTX_new_from_name(NULL, alg, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, alg, NULL);
     if (!TEST_ptr(ctx))
         goto err;
 
@@ -1666,13 +1666,13 @@ static int test_fromdata_ec(void)
         OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME,
                                          (char *)bad_curve, sizeof(bad_curve));
     if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
-        || !TEST_int_eq(EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEY_PARAMETERS,
+        || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEY_PARAMETERS,
                                           nokey_params), 0)
         || !TEST_ptr_null(pk))
         goto err;
 
     if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
-        || !TEST_int_eq(EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
+        || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
                                           fromdata_params), 1))
         goto err;
 
@@ -1707,9 +1707,9 @@ static int test_fromdata_ec(void)
             || !TEST_true(EC_GROUP_get_curve(group, group_p, group_a, group_b, NULL)))
             goto err;
 
-        if (!TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_EC_A, &a))
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_EC_B, &b))
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_EC_P, &p)))
+        if (!TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_EC_A, &a))
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_EC_B, &b))
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_EC_P, &p)))
             goto err;
 
         if (!TEST_BN_eq(group_p, p) || !TEST_BN_eq(group_a, a)
@@ -1725,12 +1725,12 @@ static int test_fromdata_ec(void)
         BN_free(group_b);
         group_b = NULL;
 
-        if (!EVP_PKEY_get_utf8_string_param(pk, OSSL_PKEY_PARAM_GROUP_NAME,
+        if (!OPENSSL_BOX_EVP_PKEY_get_utf8_string_param(pk, OSSL_PKEY_PARAM_GROUP_NAME,
                                             out_curve_name,
                                             sizeof(out_curve_name),
                                             &len)
             || !TEST_str_eq(out_curve_name, curve)
-            || !EVP_PKEY_get_octet_string_param(pk, OSSL_PKEY_PARAM_PUB_KEY,
+            || !OPENSSL_BOX_EVP_PKEY_get_octet_string_param(pk, OSSL_PKEY_PARAM_PUB_KEY,
                                             out_pub, sizeof(out_pub), &len)
 
             /*
@@ -1743,7 +1743,7 @@ static int test_fromdata_ec(void)
             || !TEST_mem_eq(out_pub + 1, len - 1,
                             ec_pub_keydata + 1, sizeof(ec_pub_keydata) - 1)
 
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PRIV_KEY,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PRIV_KEY,
                                                 &bn_priv))
             || !TEST_BN_eq(ec_priv_bn, bn_priv))
             goto err;
@@ -1800,7 +1800,7 @@ static int test_ec_dup_no_operation(void)
     OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     pctx = NULL;
 
-    if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(NULL, param, NULL))
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, param, NULL))
         || !TEST_ptr(kctx = OPENSSL_BOX_EVP_PKEY_CTX_dup(ctx))
         || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_keygen_init(kctx), 0)
         || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_keygen(kctx, &pkey), 0))
@@ -1833,7 +1833,7 @@ static int test_ec_dup_keygen_operation(void)
     OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     pctx = NULL;
 
-    if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(NULL, param, NULL))
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, param, NULL))
         || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx), 0)
         || !TEST_ptr_null(kctx = OPENSSL_BOX_EVP_PKEY_CTX_dup(ctx)))
         goto err;
@@ -1994,11 +1994,11 @@ static int test_fromdata_dsa_fips186_4(void)
         || !TEST_ptr(fromdata_params = OSSL_PARAM_BLD_to_param(bld)))
         goto err;
 
-    if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(NULL, "DSA", NULL)))
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "DSA", NULL)))
         goto err;
 
     if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
-        || !TEST_int_eq(EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
+        || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pk, EVP_PKEY_KEYPAIR,
                                           fromdata_params), 1))
         goto err;
 
@@ -2011,43 +2011,43 @@ static int test_fromdata_dsa_fips186_4(void)
             || !TEST_false(OPENSSL_BOX_EVP_PKEY_missing_parameters(pk)))
             goto err;
 
-        if (!TEST_false(EVP_PKEY_get_utf8_string_param(pk,
+        if (!TEST_false(OPENSSL_BOX_EVP_PKEY_get_utf8_string_param(pk,
                                                        OSSL_PKEY_PARAM_GROUP_NAME,
                                                        name_out,
                                                        sizeof(name_out),
                                                        &len))
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PUB_KEY,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PUB_KEY,
                                                 &pub_out))
             || !TEST_BN_eq(pub, pub_out)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PRIV_KEY,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_PRIV_KEY,
                                                 &priv_out))
             || !TEST_BN_eq(priv, priv_out)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_P,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_P,
                                                 &p_out))
             || !TEST_BN_eq(p, p_out)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_Q,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_Q,
                                                 &q_out))
             || !TEST_BN_eq(q, q_out)
-            || !TEST_true(EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_G,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk, OSSL_PKEY_PARAM_FFC_G,
                                                 &g_out))
             || !TEST_BN_eq(g, g_out)
-            || !TEST_false(EVP_PKEY_get_bn_param(pk,
+            || !TEST_false(OPENSSL_BOX_EVP_PKEY_get_bn_param(pk,
                                                  OSSL_PKEY_PARAM_FFC_COFACTOR,
                                                  &j_out))
             || !TEST_ptr_null(j_out)
-            || !TEST_true(EVP_PKEY_get_octet_string_param(pk,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_octet_string_param(pk,
                                                           OSSL_PKEY_PARAM_FFC_SEED,
                                                           seed_out,
                                                           sizeof(seed_out),
                                                           &len))
-            || !TEST_true(EVP_PKEY_get_int_param(pk,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_int_param(pk,
                                                  OSSL_PKEY_PARAM_FFC_GINDEX,
                                                  &gindex_out))
             || !TEST_int_eq(gindex, gindex_out)
-            || !TEST_true(EVP_PKEY_get_int_param(pk, OSSL_PKEY_PARAM_FFC_H,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_int_param(pk, OSSL_PKEY_PARAM_FFC_H,
                                                  &hindex_out))
             || !TEST_int_eq(hindex_out, 0)
-            || !TEST_true(EVP_PKEY_get_int_param(pk,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_get_int_param(pk,
                                                  OSSL_PKEY_PARAM_FFC_PCOUNTER,
                                                  &pcounter_out))
             || !TEST_int_eq(pcounter, pcounter_out))
@@ -2065,7 +2065,7 @@ static int test_fromdata_dsa_fips186_4(void)
         BN_free(priv_out);
         priv_out = NULL;
 
-        if (!TEST_ptr(key_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pk, "")))
+        if (!TEST_ptr(key_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, pk, "")))
             goto err;
 
         if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_check(key_ctx), 0)
@@ -2124,7 +2124,7 @@ static int test_check_dsa(void)
     int ret = 0;
     EVP_PKEY_CTX *ctx = NULL;
 
-    if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(NULL, "DSA", NULL))
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "DSA", NULL))
         || !TEST_int_le(OPENSSL_BOX_EVP_PKEY_check(ctx), 0)
         || !TEST_int_le(OPENSSL_BOX_EVP_PKEY_public_check(ctx), 0)
         || !TEST_int_le(OPENSSL_BOX_EVP_PKEY_private_check(ctx), 0)
@@ -2168,7 +2168,7 @@ static int test_evp_pkey_ctx_dup_kdf(void)
     if (!TEST_ptr(params = do_construct_hkdf_params("sha256", "secret", 6,
                                                     "salt")))
         goto err;
-    if (!TEST_ptr(pctx = EVP_PKEY_CTX_new_from_name(NULL, "HKDF", NULL)))
+    if (!TEST_ptr(pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "HKDF", NULL)))
         goto err;
     if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_derive_init_ex(pctx, params), 1))
         goto err;
@@ -2208,7 +2208,7 @@ static int test_name_dup(int idx)
     int i, ret = 0;
 
     if (alg == NULL
-        || (factory = EVP_PKEY_CTX_new_from_name(NULL, alg, NULL)) == NULL)
+        || (factory = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, alg, NULL)) == NULL)
         return 1;
     TEST_info("Testing fresh context dup for: %s", alg);
 

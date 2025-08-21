@@ -95,15 +95,15 @@ static int pkcs12kdf_derive(const unsigned char *pass, size_t passlen,
     for (i = 0; i < Plen; i++)
         *p++ = pass[i % passlen];
     for (;;) {
-        if (!EVP_DigestInit_ex(ctx, md_type, NULL)
-            || !EVP_DigestUpdate(ctx, D, v)
-            || !EVP_DigestUpdate(ctx, I, Ilen)
-            || !EVP_DigestFinal_ex(ctx, Ai, NULL))
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx, md_type, NULL)
+            || !OPENSSL_BOX_EVP_DigestUpdate(ctx, D, v)
+            || !OPENSSL_BOX_EVP_DigestUpdate(ctx, I, Ilen)
+            || !OPENSSL_BOX_EVP_DigestFinal_ex(ctx, Ai, NULL))
             goto end;
         for (iter_cnt = 1; iter_cnt < iter; iter_cnt++) {
-            if (!EVP_DigestInit_ex(ctx, md_type, NULL)
-                || !EVP_DigestUpdate(ctx, Ai, u)
-                || !EVP_DigestFinal_ex(ctx, Ai, NULL))
+            if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx, md_type, NULL)
+                || !OPENSSL_BOX_EVP_DigestUpdate(ctx, Ai, u)
+                || !OPENSSL_BOX_EVP_DigestFinal_ex(ctx, Ai, NULL))
                 goto end;
         }
         memcpy(out, Ai, n < u ? n : u);

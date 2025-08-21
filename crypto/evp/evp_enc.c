@@ -190,7 +190,7 @@ nonlegacy:
         return 0;
 #else
         EVP_CIPHER *provciph =
-            EVP_CIPHER_fetch(NULL,
+            OPENSSL_BOX_EVP_CIPHER_fetch(NULL,
                              cipher->nid == NID_undef ? "NULL"
                                                       : OBJ_nid2sn(cipher->nid),
                              "");
@@ -586,7 +586,7 @@ static int evp_cipher_init_skey_internal(EVP_CIPHER_CTX *ctx,
             const unsigned char *keydata = NULL;
             size_t keylen = 0;
 
-            if (skey != NULL && !EVP_SKEY_get0_raw_key(skey, &keydata, &keylen)) {
+            if (skey != NULL && !OPENSSL_BOX_EVP_SKEY_get0_raw_key(skey, &keydata, &keylen)) {
                 ERR_raise(ERR_LIB_EVP, EVP_R_INITIALIZATION_ERROR);
                 return 0;
             }
@@ -607,7 +607,7 @@ static int evp_cipher_init_skey_internal(EVP_CIPHER_CTX *ctx,
             const unsigned char *keydata = NULL;
             size_t keylen = 0;
 
-            if (skey != NULL && !EVP_SKEY_get0_raw_key(skey, &keydata, &keylen)) {
+            if (skey != NULL && !OPENSSL_BOX_EVP_SKEY_get0_raw_key(skey, &keydata, &keylen)) {
                 ERR_raise(ERR_LIB_EVP, EVP_R_INITIALIZATION_ERROR);
                 return 0;
             }
@@ -624,21 +624,21 @@ static int evp_cipher_init_skey_internal(EVP_CIPHER_CTX *ctx,
     return ret;
 }
 
-int EVP_CipherInit_SKEY(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CipherInit_SKEY(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                         EVP_SKEY *skey, const unsigned char *iv, size_t iv_len,
                         int enc, const OSSL_PARAM params[])
 {
     return evp_cipher_init_skey_internal(ctx, cipher, skey, iv, iv_len, enc, params);
 }
 
-int EVP_CipherInit_ex2(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CipherInit_ex2(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                        const unsigned char *key, const unsigned char *iv,
                        int enc, const OSSL_PARAM params[])
 {
     return evp_cipher_init_internal(ctx, cipher, NULL, key, iv, enc, 0, params);
 }
 
-int EVP_CipherInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CipherInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                    const unsigned char *key, const unsigned char *iv, int enc)
 {
     if (cipher != NULL)
@@ -646,14 +646,14 @@ int EVP_CipherInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
     return evp_cipher_init_internal(ctx, cipher, NULL, key, iv, enc, 0, NULL);
 }
 
-int EVP_CipherInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CipherInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                       ENGINE *impl, const unsigned char *key,
                       const unsigned char *iv, int enc)
 {
     return evp_cipher_init_internal(ctx, cipher, impl, key, iv, enc, 0, NULL);
 }
 
-int EVP_CipherPipelineEncryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CipherPipelineEncryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                                   const unsigned char *key, size_t keylen,
                                   size_t numpipes,
                                   const unsigned char **iv, size_t ivlen)
@@ -683,7 +683,7 @@ int EVP_CipherPipelineEncryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                                 NULL);
 }
 
-int EVP_CipherPipelineDecryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CipherPipelineDecryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                                   const unsigned char *key, size_t keylen,
                                   size_t numpipes,
                                   const unsigned char **iv, size_t ivlen)
@@ -713,16 +713,16 @@ int EVP_CipherPipelineDecryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                                 NULL);
 }
 
-int EVP_CipherUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl,
+int OPENSSL_BOX_EVP_CipherUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl,
                      const unsigned char *in, int inl)
 {
     if (ctx->encrypt)
-        return EVP_EncryptUpdate(ctx, out, outl, in, inl);
+        return OPENSSL_BOX_EVP_EncryptUpdate(ctx, out, outl, in, inl);
     else
-        return EVP_DecryptUpdate(ctx, out, outl, in, inl);
+        return OPENSSL_BOX_EVP_DecryptUpdate(ctx, out, outl, in, inl);
 }
 
-int EVP_CipherPipelineUpdate(EVP_CIPHER_CTX *ctx,
+int OPENSSL_BOX_EVP_CipherPipelineUpdate(EVP_CIPHER_CTX *ctx,
                              unsigned char **out, size_t *outl,
                              const size_t *outsize,
                              const unsigned char **in, const size_t *inl)
@@ -757,23 +757,23 @@ int EVP_CipherPipelineUpdate(EVP_CIPHER_CTX *ctx,
                                   in, inl);
 }
 
-int EVP_CipherFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
+int OPENSSL_BOX_EVP_CipherFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
 {
     if (ctx->encrypt)
-        return EVP_EncryptFinal_ex(ctx, out, outl);
+        return OPENSSL_BOX_EVP_EncryptFinal_ex(ctx, out, outl);
     else
-        return EVP_DecryptFinal_ex(ctx, out, outl);
+        return OPENSSL_BOX_EVP_DecryptFinal_ex(ctx, out, outl);
 }
 
-int EVP_CipherFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
+int OPENSSL_BOX_EVP_CipherFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
 {
     if (ctx->encrypt)
-        return EVP_EncryptFinal(ctx, out, outl);
+        return OPENSSL_BOX_EVP_EncryptFinal(ctx, out, outl);
     else
-        return EVP_DecryptFinal(ctx, out, outl);
+        return OPENSSL_BOX_EVP_DecryptFinal(ctx, out, outl);
 }
 
-int EVP_CipherPipelineFinal(EVP_CIPHER_CTX *ctx,
+int OPENSSL_BOX_EVP_CipherPipelineFinal(EVP_CIPHER_CTX *ctx,
                             unsigned char **out, size_t *outl,
                             const size_t *outsize)
 {
@@ -806,44 +806,44 @@ int EVP_CipherPipelineFinal(EVP_CIPHER_CTX *ctx,
                                  out, outl, outsize);
 }
 
-int EVP_EncryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_EncryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                     const unsigned char *key, const unsigned char *iv)
 {
-    return EVP_CipherInit(ctx, cipher, key, iv, 1);
+    return OPENSSL_BOX_EVP_CipherInit(ctx, cipher, key, iv, 1);
 }
 
-int EVP_EncryptInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_EncryptInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                        ENGINE *impl, const unsigned char *key,
                        const unsigned char *iv)
 {
-    return EVP_CipherInit_ex(ctx, cipher, impl, key, iv, 1);
+    return OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, impl, key, iv, 1);
 }
 
-int EVP_EncryptInit_ex2(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_EncryptInit_ex2(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                         const unsigned char *key, const unsigned char *iv,
                         const OSSL_PARAM params[])
 {
-    return EVP_CipherInit_ex2(ctx, cipher, key, iv, 1, params);
+    return OPENSSL_BOX_EVP_CipherInit_ex2(ctx, cipher, key, iv, 1, params);
 }
 
-int EVP_DecryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_DecryptInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                     const unsigned char *key, const unsigned char *iv)
 {
-    return EVP_CipherInit(ctx, cipher, key, iv, 0);
+    return OPENSSL_BOX_EVP_CipherInit(ctx, cipher, key, iv, 0);
 }
 
-int EVP_DecryptInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_DecryptInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                        ENGINE *impl, const unsigned char *key,
                        const unsigned char *iv)
 {
-    return EVP_CipherInit_ex(ctx, cipher, impl, key, iv, 0);
+    return OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, impl, key, iv, 0);
 }
 
-int EVP_DecryptInit_ex2(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_DecryptInit_ex2(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                         const unsigned char *key, const unsigned char *iv,
                         const OSSL_PARAM params[])
 {
-    return EVP_CipherInit_ex2(ctx, cipher, key, iv, 0, params);
+    return OPENSSL_BOX_EVP_CipherInit_ex2(ctx, cipher, key, iv, 0, params);
 }
 
 /*
@@ -974,7 +974,7 @@ static int evp_EncryptDecryptUpdate(EVP_CIPHER_CTX *ctx,
 }
 
 
-int EVP_EncryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl,
+int OPENSSL_BOX_EVP_EncryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl,
                       const unsigned char *in, int inl)
 {
     int ret;
@@ -1029,14 +1029,14 @@ int EVP_EncryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl,
     return evp_EncryptDecryptUpdate(ctx, out, outl, in, inl);
 }
 
-int EVP_EncryptFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
+int OPENSSL_BOX_EVP_EncryptFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
 {
     int ret;
-    ret = EVP_EncryptFinal_ex(ctx, out, outl);
+    ret = OPENSSL_BOX_EVP_EncryptFinal_ex(ctx, out, outl);
     return ret;
 }
 
-int EVP_EncryptFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
+int OPENSSL_BOX_EVP_EncryptFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
 {
     int n, ret;
     unsigned int i, b, bl;
@@ -1122,7 +1122,7 @@ int EVP_EncryptFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
     return ret;
 }
 
-int EVP_DecryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl,
+int OPENSSL_BOX_EVP_DecryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl,
                       const unsigned char *in, int inl)
 {
     int fix_len, cmpl = inl, ret;
@@ -1249,14 +1249,14 @@ int EVP_DecryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl,
     return 1;
 }
 
-int EVP_DecryptFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
+int OPENSSL_BOX_EVP_DecryptFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
 {
     int ret;
-    ret = EVP_DecryptFinal_ex(ctx, out, outl);
+    ret = OPENSSL_BOX_EVP_DecryptFinal_ex(ctx, out, outl);
     return ret;
 }
 
-int EVP_DecryptFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
+int OPENSSL_BOX_EVP_DecryptFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
 {
     int i, n;
     unsigned int b;
@@ -2070,7 +2070,7 @@ static void evp_cipher_free(void *cipher)
     OPENSSL_BOX_EVP_CIPHER_free(cipher);
 }
 
-EVP_CIPHER *EVP_CIPHER_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
+EVP_CIPHER *OPENSSL_BOX_EVP_CIPHER_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
                              const char *properties)
 {
     EVP_CIPHER *cipher =
@@ -2131,7 +2131,7 @@ void OPENSSL_BOX_EVP_CIPHER_free(EVP_CIPHER *cipher)
     evp_cipher_free_int(cipher);
 }
 
-void EVP_CIPHER_do_all_provided(OSSL_LIB_CTX *libctx,
+void OPENSSL_BOX_EVP_CIPHER_do_all_provided(OSSL_LIB_CTX *libctx,
                                 void (*fn)(EVP_CIPHER *mac, void *arg),
                                 void *arg)
 {

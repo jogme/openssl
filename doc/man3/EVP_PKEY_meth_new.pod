@@ -2,26 +2,26 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_PKEY_meth_new, OPENSSL_BOX_EVP_PKEY_meth_free, EVP_PKEY_meth_copy, OPENSSL_BOX_EVP_PKEY_meth_find,
+OPENSSL_BOX_EVP_PKEY_meth_new, OPENSSL_BOX_EVP_PKEY_meth_free, OPENSSL_BOX_EVP_PKEY_meth_copy, OPENSSL_BOX_EVP_PKEY_meth_find,
 OPENSSL_BOX_EVP_PKEY_meth_add0, EVP_PKEY_METHOD,
-EVP_PKEY_meth_set_init, EVP_PKEY_meth_set_copy, EVP_PKEY_meth_set_cleanup,
-EVP_PKEY_meth_set_paramgen, EVP_PKEY_meth_set_keygen, EVP_PKEY_meth_set_sign,
-EVP_PKEY_meth_set_verify, EVP_PKEY_meth_set_verify_recover, EVP_PKEY_meth_set_signctx,
-EVP_PKEY_meth_set_verifyctx, EVP_PKEY_meth_set_encrypt, EVP_PKEY_meth_set_decrypt,
-EVP_PKEY_meth_set_derive, EVP_PKEY_meth_set_ctrl,
-EVP_PKEY_meth_set_digestsign, EVP_PKEY_meth_set_digestverify,
-EVP_PKEY_meth_set_check,
-EVP_PKEY_meth_set_public_check, EVP_PKEY_meth_set_param_check,
-EVP_PKEY_meth_set_digest_custom,
-EVP_PKEY_meth_get_init, EVP_PKEY_meth_get_copy, EVP_PKEY_meth_get_cleanup,
-EVP_PKEY_meth_get_paramgen, EVP_PKEY_meth_get_keygen, EVP_PKEY_meth_get_sign,
-EVP_PKEY_meth_get_verify, EVP_PKEY_meth_get_verify_recover, EVP_PKEY_meth_get_signctx,
-EVP_PKEY_meth_get_verifyctx, EVP_PKEY_meth_get_encrypt, EVP_PKEY_meth_get_decrypt,
-EVP_PKEY_meth_get_derive, EVP_PKEY_meth_get_ctrl,
-EVP_PKEY_meth_get_digestsign, EVP_PKEY_meth_get_digestverify,
-EVP_PKEY_meth_get_check,
-EVP_PKEY_meth_get_public_check, EVP_PKEY_meth_get_param_check,
-EVP_PKEY_meth_get_digest_custom,
+OPENSSL_BOX_EVP_PKEY_meth_set_init, OPENSSL_BOX_EVP_PKEY_meth_set_copy, OPENSSL_BOX_EVP_PKEY_meth_set_cleanup,
+OPENSSL_BOX_EVP_PKEY_meth_set_paramgen, OPENSSL_BOX_EVP_PKEY_meth_set_keygen, OPENSSL_BOX_EVP_PKEY_meth_set_sign,
+OPENSSL_BOX_EVP_PKEY_meth_set_verify, OPENSSL_BOX_EVP_PKEY_meth_set_verify_recover, OPENSSL_BOX_EVP_PKEY_meth_set_signctx,
+OPENSSL_BOX_EVP_PKEY_meth_set_verifyctx, OPENSSL_BOX_EVP_PKEY_meth_set_encrypt, OPENSSL_BOX_EVP_PKEY_meth_set_decrypt,
+OPENSSL_BOX_EVP_PKEY_meth_set_derive, OPENSSL_BOX_EVP_PKEY_meth_set_ctrl,
+OPENSSL_BOX_EVP_PKEY_meth_set_digestsign, OPENSSL_BOX_EVP_PKEY_meth_set_digestverify,
+OPENSSL_BOX_EVP_PKEY_meth_set_check,
+OPENSSL_BOX_EVP_PKEY_meth_set_public_check, OPENSSL_BOX_EVP_PKEY_meth_set_param_check,
+OPENSSL_BOX_EVP_PKEY_meth_set_digest_custom,
+OPENSSL_BOX_EVP_PKEY_meth_get_init, OPENSSL_BOX_EVP_PKEY_meth_get_copy, OPENSSL_BOX_EVP_PKEY_meth_get_cleanup,
+OPENSSL_BOX_EVP_PKEY_meth_get_paramgen, OPENSSL_BOX_EVP_PKEY_meth_get_keygen, OPENSSL_BOX_EVP_PKEY_meth_get_sign,
+OPENSSL_BOX_EVP_PKEY_meth_get_verify, OPENSSL_BOX_EVP_PKEY_meth_get_verify_recover, OPENSSL_BOX_EVP_PKEY_meth_get_signctx,
+OPENSSL_BOX_EVP_PKEY_meth_get_verifyctx, OPENSSL_BOX_EVP_PKEY_meth_get_encrypt, OPENSSL_BOX_EVP_PKEY_meth_get_decrypt,
+OPENSSL_BOX_EVP_PKEY_meth_get_derive, OPENSSL_BOX_EVP_PKEY_meth_get_ctrl,
+OPENSSL_BOX_EVP_PKEY_meth_get_digestsign, OPENSSL_BOX_EVP_PKEY_meth_get_digestverify,
+OPENSSL_BOX_EVP_PKEY_meth_get_check,
+OPENSSL_BOX_EVP_PKEY_meth_get_public_check, OPENSSL_BOX_EVP_PKEY_meth_get_param_check,
+OPENSSL_BOX_EVP_PKEY_meth_get_digest_custom,
 OPENSSL_BOX_EVP_PKEY_meth_remove
 - manipulating EVP_PKEY_METHOD structure
 
@@ -37,40 +37,40 @@ see L<openssl_user_macros(7)>:
 
  EVP_PKEY_METHOD *OPENSSL_BOX_EVP_PKEY_meth_new(int id, int flags);
  void OPENSSL_BOX_EVP_PKEY_meth_free(EVP_PKEY_METHOD *pmeth);
- void EVP_PKEY_meth_copy(EVP_PKEY_METHOD *dst, const EVP_PKEY_METHOD *src);
+ void OPENSSL_BOX_EVP_PKEY_meth_copy(EVP_PKEY_METHOD *dst, const EVP_PKEY_METHOD *src);
  const EVP_PKEY_METHOD *OPENSSL_BOX_EVP_PKEY_meth_find(int type);
  int OPENSSL_BOX_EVP_PKEY_meth_add0(const EVP_PKEY_METHOD *pmeth);
  int OPENSSL_BOX_EVP_PKEY_meth_remove(const EVP_PKEY_METHOD *pmeth);
 
- void EVP_PKEY_meth_set_init(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_init(EVP_PKEY_METHOD *pmeth,
                              int (*init) (EVP_PKEY_CTX *ctx));
- void EVP_PKEY_meth_set_copy(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_copy(EVP_PKEY_METHOD *pmeth,
                              int (*copy) (EVP_PKEY_CTX *dst,
                                           const EVP_PKEY_CTX *src));
- void EVP_PKEY_meth_set_cleanup(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_cleanup(EVP_PKEY_METHOD *pmeth,
                                 void (*cleanup) (EVP_PKEY_CTX *ctx));
- void EVP_PKEY_meth_set_paramgen(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_paramgen(EVP_PKEY_METHOD *pmeth,
                                  int (*paramgen_init) (EVP_PKEY_CTX *ctx),
                                  int (*paramgen) (EVP_PKEY_CTX *ctx,
                                                   EVP_PKEY *pkey));
- void EVP_PKEY_meth_set_keygen(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_keygen(EVP_PKEY_METHOD *pmeth,
                                int (*keygen_init) (EVP_PKEY_CTX *ctx),
                                int (*keygen) (EVP_PKEY_CTX *ctx,
                                               EVP_PKEY *pkey));
- void EVP_PKEY_meth_set_sign(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_sign(EVP_PKEY_METHOD *pmeth,
                              int (*sign_init) (EVP_PKEY_CTX *ctx),
                              int (*sign) (EVP_PKEY_CTX *ctx,
                                           unsigned char *sig, size_t *siglen,
                                           const unsigned char *tbs,
                                           size_t tbslen));
- void EVP_PKEY_meth_set_verify(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_verify(EVP_PKEY_METHOD *pmeth,
                                int (*verify_init) (EVP_PKEY_CTX *ctx),
                                int (*verify) (EVP_PKEY_CTX *ctx,
                                               const unsigned char *sig,
                                               size_t siglen,
                                               const unsigned char *tbs,
                                               size_t tbslen));
- void EVP_PKEY_meth_set_verify_recover(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_verify_recover(EVP_PKEY_METHOD *pmeth,
                                        int (*verify_recover_init) (EVP_PKEY_CTX
                                                                    *ctx),
                                        int (*verify_recover) (EVP_PKEY_CTX
@@ -81,96 +81,96 @@ see L<openssl_user_macros(7)>:
                                                               const unsigned
                                                               char *tbs,
                                                               size_t tbslen));
- void EVP_PKEY_meth_set_signctx(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_signctx(EVP_PKEY_METHOD *pmeth,
                                 int (*signctx_init) (EVP_PKEY_CTX *ctx,
                                                      EVP_MD_CTX *mctx),
                                 int (*signctx) (EVP_PKEY_CTX *ctx,
                                                 unsigned char *sig,
                                                 size_t *siglen,
                                                 EVP_MD_CTX *mctx));
- void EVP_PKEY_meth_set_verifyctx(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_verifyctx(EVP_PKEY_METHOD *pmeth,
                                   int (*verifyctx_init) (EVP_PKEY_CTX *ctx,
                                                          EVP_MD_CTX *mctx),
                                   int (*verifyctx) (EVP_PKEY_CTX *ctx,
                                                     const unsigned char *sig,
                                                     int siglen,
                                                     EVP_MD_CTX *mctx));
- void EVP_PKEY_meth_set_encrypt(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_encrypt(EVP_PKEY_METHOD *pmeth,
                                 int (*encrypt_init) (EVP_PKEY_CTX *ctx),
                                 int (*encryptfn) (EVP_PKEY_CTX *ctx,
                                                   unsigned char *out,
                                                   size_t *outlen,
                                                   const unsigned char *in,
                                                   size_t inlen));
- void EVP_PKEY_meth_set_decrypt(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_decrypt(EVP_PKEY_METHOD *pmeth,
                                 int (*decrypt_init) (EVP_PKEY_CTX *ctx),
                                 int (*decrypt) (EVP_PKEY_CTX *ctx,
                                                 unsigned char *out,
                                                 size_t *outlen,
                                                 const unsigned char *in,
                                                 size_t inlen));
- void EVP_PKEY_meth_set_derive(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_derive(EVP_PKEY_METHOD *pmeth,
                                int (*derive_init) (EVP_PKEY_CTX *ctx),
                                int (*derive) (EVP_PKEY_CTX *ctx,
                                               unsigned char *key,
                                               size_t *keylen));
- void EVP_PKEY_meth_set_ctrl(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_ctrl(EVP_PKEY_METHOD *pmeth,
                              int (*ctrl) (EVP_PKEY_CTX *ctx, int type, int p1,
                                           void *p2),
                              int (*ctrl_str) (EVP_PKEY_CTX *ctx,
                                               const char *type,
                                               const char *value));
- void EVP_PKEY_meth_set_digestsign(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_digestsign(EVP_PKEY_METHOD *pmeth,
                                    int (*digestsign) (EVP_MD_CTX *ctx,
                                                       unsigned char *sig,
                                                       size_t *siglen,
                                                       const unsigned char *tbs,
                                                       size_t tbslen));
- void EVP_PKEY_meth_set_digestverify(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_digestverify(EVP_PKEY_METHOD *pmeth,
                                      int (*digestverify) (EVP_MD_CTX *ctx,
                                                           const unsigned char *sig,
                                                           size_t siglen,
                                                           const unsigned char *tbs,
                                                           size_t tbslen));
- void EVP_PKEY_meth_set_check(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_check(EVP_PKEY_METHOD *pmeth,
                               int (*check) (EVP_PKEY *pkey));
- void EVP_PKEY_meth_set_public_check(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_public_check(EVP_PKEY_METHOD *pmeth,
                                      int (*check) (EVP_PKEY *pkey));
- void EVP_PKEY_meth_set_param_check(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_param_check(EVP_PKEY_METHOD *pmeth,
                                     int (*check) (EVP_PKEY *pkey));
- void EVP_PKEY_meth_set_digest_custom(EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_set_digest_custom(EVP_PKEY_METHOD *pmeth,
                                      int (*digest_custom) (EVP_PKEY_CTX *ctx,
                                                            EVP_MD_CTX *mctx));
 
- void EVP_PKEY_meth_get_init(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_init(const EVP_PKEY_METHOD *pmeth,
                              int (**pinit) (EVP_PKEY_CTX *ctx));
- void EVP_PKEY_meth_get_copy(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_copy(const EVP_PKEY_METHOD *pmeth,
                              int (**pcopy) (EVP_PKEY_CTX *dst,
                                             EVP_PKEY_CTX *src));
- void EVP_PKEY_meth_get_cleanup(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_cleanup(const EVP_PKEY_METHOD *pmeth,
                                 void (**pcleanup) (EVP_PKEY_CTX *ctx));
- void EVP_PKEY_meth_get_paramgen(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_paramgen(const EVP_PKEY_METHOD *pmeth,
                                  int (**pparamgen_init) (EVP_PKEY_CTX *ctx),
                                  int (**pparamgen) (EVP_PKEY_CTX *ctx,
                                                     EVP_PKEY *pkey));
- void EVP_PKEY_meth_get_keygen(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_keygen(const EVP_PKEY_METHOD *pmeth,
                                int (**pkeygen_init) (EVP_PKEY_CTX *ctx),
                                int (**pkeygen) (EVP_PKEY_CTX *ctx,
                                                 EVP_PKEY *pkey));
- void EVP_PKEY_meth_get_sign(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_sign(const EVP_PKEY_METHOD *pmeth,
                              int (**psign_init) (EVP_PKEY_CTX *ctx),
                              int (**psign) (EVP_PKEY_CTX *ctx,
                                             unsigned char *sig, size_t *siglen,
                                             const unsigned char *tbs,
                                             size_t tbslen));
- void EVP_PKEY_meth_get_verify(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_verify(const EVP_PKEY_METHOD *pmeth,
                                int (**pverify_init) (EVP_PKEY_CTX *ctx),
                                int (**pverify) (EVP_PKEY_CTX *ctx,
                                                 const unsigned char *sig,
                                                 size_t siglen,
                                                 const unsigned char *tbs,
                                                 size_t tbslen));
- void EVP_PKEY_meth_get_verify_recover(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_verify_recover(const EVP_PKEY_METHOD *pmeth,
                                        int (**pverify_recover_init) (EVP_PKEY_CTX
                                                                      *ctx),
                                        int (**pverify_recover) (EVP_PKEY_CTX
@@ -181,64 +181,64 @@ see L<openssl_user_macros(7)>:
                                                                 const unsigned
                                                                 char *tbs,
                                                                 size_t tbslen));
- void EVP_PKEY_meth_get_signctx(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_signctx(const EVP_PKEY_METHOD *pmeth,
                                 int (**psignctx_init) (EVP_PKEY_CTX *ctx,
                                                        EVP_MD_CTX *mctx),
                                 int (**psignctx) (EVP_PKEY_CTX *ctx,
                                                   unsigned char *sig,
                                                   size_t *siglen,
                                                   EVP_MD_CTX *mctx));
- void EVP_PKEY_meth_get_verifyctx(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_verifyctx(const EVP_PKEY_METHOD *pmeth,
                                   int (**pverifyctx_init) (EVP_PKEY_CTX *ctx,
                                                            EVP_MD_CTX *mctx),
                                   int (**pverifyctx) (EVP_PKEY_CTX *ctx,
                                                       const unsigned char *sig,
                                                       int siglen,
                                                       EVP_MD_CTX *mctx));
- void EVP_PKEY_meth_get_encrypt(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_encrypt(const EVP_PKEY_METHOD *pmeth,
                                 int (**pencrypt_init) (EVP_PKEY_CTX *ctx),
                                 int (**pencryptfn) (EVP_PKEY_CTX *ctx,
                                                     unsigned char *out,
                                                     size_t *outlen,
                                                     const unsigned char *in,
                                                     size_t inlen));
- void EVP_PKEY_meth_get_decrypt(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_decrypt(const EVP_PKEY_METHOD *pmeth,
                                 int (**pdecrypt_init) (EVP_PKEY_CTX *ctx),
                                 int (**pdecrypt) (EVP_PKEY_CTX *ctx,
                                                   unsigned char *out,
                                                   size_t *outlen,
                                                   const unsigned char *in,
                                                   size_t inlen));
- void EVP_PKEY_meth_get_derive(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_derive(const EVP_PKEY_METHOD *pmeth,
                                int (**pderive_init) (EVP_PKEY_CTX *ctx),
                                int (**pderive) (EVP_PKEY_CTX *ctx,
                                                 unsigned char *key,
                                                 size_t *keylen));
- void EVP_PKEY_meth_get_ctrl(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_ctrl(const EVP_PKEY_METHOD *pmeth,
                              int (**pctrl) (EVP_PKEY_CTX *ctx, int type, int p1,
                                             void *p2),
                              int (**pctrl_str) (EVP_PKEY_CTX *ctx,
                                                 const char *type,
                                                 const char *value));
- void EVP_PKEY_meth_get_digestsign(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_digestsign(const EVP_PKEY_METHOD *pmeth,
                                    int (**digestsign) (EVP_MD_CTX *ctx,
                                                        unsigned char *sig,
                                                        size_t *siglen,
                                                        const unsigned char *tbs,
                                                        size_t tbslen));
- void EVP_PKEY_meth_get_digestverify(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_digestverify(const EVP_PKEY_METHOD *pmeth,
                                      int (**digestverify) (EVP_MD_CTX *ctx,
                                                            const unsigned char *sig,
                                                            size_t siglen,
                                                            const unsigned char *tbs,
                                                            size_t tbslen));
- void EVP_PKEY_meth_get_check(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_check(const EVP_PKEY_METHOD *pmeth,
                               int (**pcheck) (EVP_PKEY *pkey));
- void EVP_PKEY_meth_get_public_check(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_public_check(const EVP_PKEY_METHOD *pmeth,
                                      int (**pcheck) (EVP_PKEY *pkey));
- void EVP_PKEY_meth_get_param_check(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_param_check(const EVP_PKEY_METHOD *pmeth,
                                     int (**pcheck) (EVP_PKEY *pkey));
- void EVP_PKEY_meth_get_digest_custom(const EVP_PKEY_METHOD *pmeth,
+ void OPENSSL_BOX_EVP_PKEY_meth_get_digest_custom(const EVP_PKEY_METHOD *pmeth,
                                      int (**pdigest_custom) (EVP_PKEY_CTX *ctx,
                                                              EVP_MD_CTX *mctx));
 
@@ -295,7 +295,7 @@ L<OPENSSL_BOX_EVP_PKEY_keygen(3)>.
 
 The sign_init() and sign() methods are used to generate the signature of a
 piece of data using a private key. They are called by L<OPENSSL_BOX_EVP_PKEY_sign_init(3)>
-and L<EVP_PKEY_sign(3)>.
+and L<OPENSSL_BOX_EVP_PKEY_sign(3)>.
 
  int (*verify_init) (EVP_PKEY_CTX *ctx);
  int (*verify) (EVP_PKEY_CTX *ctx,
@@ -303,7 +303,7 @@ and L<EVP_PKEY_sign(3)>.
                 const unsigned char *tbs, size_t tbslen);
 
 The verify_init() and verify() methods are used to verify whether a signature is
-valid. They are called by L<OPENSSL_BOX_EVP_PKEY_verify_init(3)> and L<EVP_PKEY_verify(3)>.
+valid. They are called by L<OPENSSL_BOX_EVP_PKEY_verify_init(3)> and L<OPENSSL_BOX_EVP_PKEY_verify(3)>.
 
  int (*verify_recover_init) (EVP_PKEY_CTX *ctx);
  int (*verify_recover) (EVP_PKEY_CTX *ctx,
@@ -313,15 +313,15 @@ valid. They are called by L<OPENSSL_BOX_EVP_PKEY_verify_init(3)> and L<EVP_PKEY_
 The verify_recover_init() and verify_recover() methods are used to verify a
 signature and then recover the digest from the signature (for instance, a
 signature that was generated by RSA signing algorithm). They are called by
-L<OPENSSL_BOX_EVP_PKEY_verify_recover_init(3)> and L<EVP_PKEY_verify_recover(3)>.
+L<OPENSSL_BOX_EVP_PKEY_verify_recover_init(3)> and L<OPENSSL_BOX_EVP_PKEY_verify_recover(3)>.
 
  int (*signctx_init) (EVP_PKEY_CTX *ctx, EVP_MD_CTX *mctx);
  int (*signctx) (EVP_PKEY_CTX *ctx, unsigned char *sig, size_t *siglen,
                  EVP_MD_CTX *mctx);
 
 The signctx_init() and signctx() methods are used to sign a digest present by
-a B<EVP_MD_CTX> object. They are called by the EVP_DigestSign functions. See
-L<EVP_DigestSignInit(3)> for details.
+a B<EVP_MD_CTX> object. They are called by the OPENSSL_BOX_EVP_DigestSign functions. See
+L<OPENSSL_BOX_EVP_DigestSignInit(3)> for details.
 
  int (*verifyctx_init) (EVP_PKEY_CTX *ctx, EVP_MD_CTX *mctx);
  int (*verifyctx) (EVP_PKEY_CTX *ctx, const unsigned char *sig, int siglen,
@@ -329,21 +329,21 @@ L<EVP_DigestSignInit(3)> for details.
 
 The verifyctx_init() and verifyctx() methods are used to verify a signature
 against the data in a B<EVP_MD_CTX> object. They are called by the various
-EVP_DigestVerify functions. See L<EVP_DigestVerifyInit(3)> for details.
+OPENSSL_BOX_EVP_DigestVerify functions. See L<OPENSSL_BOX_EVP_DigestVerifyInit(3)> for details.
 
  int (*encrypt_init) (EVP_PKEY_CTX *ctx);
  int (*encrypt) (EVP_PKEY_CTX *ctx, unsigned char *out, size_t *outlen,
                  const unsigned char *in, size_t inlen);
 
 The encrypt_init() and encrypt() methods are used to encrypt a piece of data.
-They are called by L<OPENSSL_BOX_EVP_PKEY_encrypt_init(3)> and L<EVP_PKEY_encrypt(3)>.
+They are called by L<OPENSSL_BOX_EVP_PKEY_encrypt_init(3)> and L<OPENSSL_BOX_EVP_PKEY_encrypt(3)>.
 
  int (*decrypt_init) (EVP_PKEY_CTX *ctx);
  int (*decrypt) (EVP_PKEY_CTX *ctx, unsigned char *out, size_t *outlen,
                  const unsigned char *in, size_t inlen);
 
 The decrypt_init() and decrypt() methods are used to decrypt a piece of data.
-They are called by L<OPENSSL_BOX_EVP_PKEY_decrypt_init(3)> and L<EVP_PKEY_decrypt(3)>.
+They are called by L<OPENSSL_BOX_EVP_PKEY_decrypt_init(3)> and L<OPENSSL_BOX_EVP_PKEY_decrypt(3)>.
 
  int (*derive_init) (EVP_PKEY_CTX *ctx);
  int (*derive) (EVP_PKEY_CTX *ctx, unsigned char *key, size_t *keylen);
@@ -356,7 +356,7 @@ L<OPENSSL_BOX_EVP_PKEY_derive_init(3)> and L<OPENSSL_BOX_EVP_PKEY_derive(3)>.
  int (*ctrl_str) (EVP_PKEY_CTX *ctx, const char *type, const char *value);
 
 The ctrl() and ctrl_str() methods are used to adjust algorithm-specific
-settings. See L<EVP_PKEY_CTX_ctrl(3)> and related functions for details.
+settings. See L<OPENSSL_BOX_EVP_PKEY_CTX_ctrl(3)> and related functions for details.
 
  int (*digestsign) (EVP_MD_CTX *ctx, unsigned char *sig, size_t *siglen,
                     const unsigned char *tbs, size_t tbslen);
@@ -365,8 +365,8 @@ settings. See L<EVP_PKEY_CTX_ctrl(3)> and related functions for details.
                       size_t tbslen);
 
 The digestsign() and digestverify() methods are used to generate or verify
-a signature in a one-shot mode. They could be called by L<EVP_DigestSign(3)>
-and L<EVP_DigestVerify(3)>.
+a signature in a one-shot mode. They could be called by L<OPENSSL_BOX_EVP_DigestSign(3)>
+and L<OPENSSL_BOX_EVP_DigestVerify(3)>.
 
  int (*check) (EVP_PKEY *pkey);
  int (*public_check) (EVP_PKEY *pkey);
@@ -381,10 +381,10 @@ L<OPENSSL_BOX_EVP_PKEY_param_check(3)> respectively.
 
 The digest_custom() method is used to generate customized digest content before
 the real message is passed to functions like L<OPENSSL_BOX_EVP_DigestSignUpdate(3)> or
-L<EVP_DigestVerifyInit(3)>. This is usually required by some public key
+L<OPENSSL_BOX_EVP_DigestVerifyInit(3)>. This is usually required by some public key
 signature algorithms like SM2 which requires a hashed prefix to the message to
-be signed. The digest_custom() function will be called by L<EVP_DigestSignInit(3)>
-and L<EVP_DigestVerifyInit(3)>.
+be signed. The digest_custom() function will be called by L<OPENSSL_BOX_EVP_DigestSignInit(3)>
+and L<OPENSSL_BOX_EVP_DigestVerifyInit(3)>.
 
 =head2 Functions
 
@@ -400,16 +400,16 @@ maximum size of the output buffer will be automatically calculated or checked
 in corresponding EVP methods by the EVP framework. Thus the implementations of
 these methods don't need to care about handling the case of returning output
 buffer size by themselves. For details on the output buffer size, refer to
-L<EVP_PKEY_sign(3)>.
+L<OPENSSL_BOX_EVP_PKEY_sign(3)>.
 
 The B<EVP_PKEY_FLAG_SIGCTX_CUSTOM> is used to indicate the signctx() method
 of an B<EVP_PKEY_METHOD> is always called by the EVP framework while doing a
-digest signing operation by calling L<EVP_DigestSignFinal(3)>.
+digest signing operation by calling L<OPENSSL_BOX_EVP_DigestSignFinal(3)>.
 
 OPENSSL_BOX_EVP_PKEY_meth_free() frees an existing B<EVP_PKEY_METHOD> pointed by
 B<pmeth>. If the argument is NULL, nothing is done.
 
-EVP_PKEY_meth_copy() copies an B<EVP_PKEY_METHOD> object from B<src>
+OPENSSL_BOX_EVP_PKEY_meth_copy() copies an B<EVP_PKEY_METHOD> object from B<src>
 to B<dst>.
 
 OPENSSL_BOX_EVP_PKEY_meth_find() finds an B<EVP_PKEY_METHOD> object with the B<id>.
@@ -432,7 +432,7 @@ B<EVP_PKEY_METHOD> structure to the arguments provided.
 OPENSSL_BOX_EVP_PKEY_meth_new() returns a pointer to a new B<EVP_PKEY_METHOD>
 object or returns NULL on error.
 
-OPENSSL_BOX_EVP_PKEY_meth_free() and EVP_PKEY_meth_copy() do not return values.
+OPENSSL_BOX_EVP_PKEY_meth_free() and OPENSSL_BOX_EVP_PKEY_meth_copy() do not return values.
 
 OPENSSL_BOX_EVP_PKEY_meth_find() returns a pointer to the found B<EVP_PKEY_METHOD>
 object or returns NULL if not found.
@@ -451,7 +451,7 @@ arguments.
 
 All of these functions were deprecated in OpenSSL 3.0.
 
-The signature of the I<copy> functional argument of EVP_PKEY_meth_set_copy()
+The signature of the I<copy> functional argument of OPENSSL_BOX_EVP_PKEY_meth_set_copy()
 has changed in OpenSSL 3.0 so its I<src> parameter is now constified.
 
 =head1 COPYRIGHT

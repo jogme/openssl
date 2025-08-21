@@ -23,13 +23,13 @@ algorithm/mode pair are;
 
     (i) directly;
          const EVP_CIPHER *cipher = OPENSSL_BOX_EVP_des_cbc();
-         EVP_EncryptInit(&ctx, cipher, key, iv);
-         [ ... use EVP_EncryptUpdate() and EVP_EncryptFinal() ...]
+         OPENSSL_BOX_EVP_EncryptInit(&ctx, cipher, key, iv);
+         [ ... use OPENSSL_BOX_EVP_EncryptUpdate() and OPENSSL_BOX_EVP_EncryptFinal() ...]
 
     (ii) indirectly;
          OpenSSL_add_all_ciphers();
          cipher = OPENSSL_BOX_EVP_get_cipherbyname("des_cbc");
-         EVP_EncryptInit(&ctx, cipher, key, iv);
+         OPENSSL_BOX_EVP_EncryptInit(&ctx, cipher, key, iv);
          [ ... etc ... ]
 
 The latter is more generally used because it also allows ciphers/digests to be

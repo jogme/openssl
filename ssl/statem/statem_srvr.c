@@ -2623,11 +2623,11 @@ CON_FUNC_RETURN tls_construct_server_key_exchange(SSL_CONNECTION *s,
 
         /* These BIGNUMs need to be freed when we're finished */
         freer = 1;
-        if (!EVP_PKEY_get_bn_param(s->s3.tmp.pkey, OSSL_PKEY_PARAM_FFC_P,
+        if (!OPENSSL_BOX_EVP_PKEY_get_bn_param(s->s3.tmp.pkey, OSSL_PKEY_PARAM_FFC_P,
                                    &r[0])
-                || !EVP_PKEY_get_bn_param(s->s3.tmp.pkey, OSSL_PKEY_PARAM_FFC_G,
+                || !OPENSSL_BOX_EVP_PKEY_get_bn_param(s->s3.tmp.pkey, OSSL_PKEY_PARAM_FFC_G,
                                           &r[1])
-                || !EVP_PKEY_get_bn_param(s->s3.tmp.pkey,
+                || !OPENSSL_BOX_EVP_PKEY_get_bn_param(s->s3.tmp.pkey,
                                           OSSL_PKEY_PARAM_PUB_KEY, &r[2])) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
             goto err;
@@ -2800,7 +2800,7 @@ CON_FUNC_RETURN tls_construct_server_key_exchange(SSL_CONNECTION *s,
             goto err;
         }
 
-        if (EVP_DigestSignInit_ex(md_ctx, &pctx,
+        if (OPENSSL_BOX_EVP_DigestSignInit_ex(md_ctx, &pctx,
                                   md == NULL ? NULL : OPENSSL_BOX_EVP_MD_get0_name(md),
                                   sctx->libctx, sctx->propq, pkey,
                                   NULL) <= 0) {
@@ -2822,9 +2822,9 @@ CON_FUNC_RETURN tls_construct_server_key_exchange(SSL_CONNECTION *s,
             goto err;
         }
 
-        if (EVP_DigestSign(md_ctx, NULL, &siglen, tbs, tbslen) <=0
+        if (OPENSSL_BOX_EVP_DigestSign(md_ctx, NULL, &siglen, tbs, tbslen) <=0
                 || !WPACKET_sub_reserve_bytes_u16(pkt, siglen, &sigbytes1)
-                || EVP_DigestSign(md_ctx, sigbytes1, &siglen, tbs, tbslen) <= 0
+                || OPENSSL_BOX_EVP_DigestSign(md_ctx, sigbytes1, &siglen, tbs, tbslen) <= 0
                 || !WPACKET_sub_allocate_bytes_u16(pkt, siglen, &sigbytes2)
                 || sigbytes1 != sigbytes2) {
             OPENSSL_free(tbs);
@@ -3015,7 +3015,7 @@ static int tls_process_cke_rsa(SSL_CONNECTION *s, PACKET *pkt)
         return 0;
     }
 
-    ctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx, rsa, sctx->propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(sctx->libctx, rsa, sctx->propq);
     if (ctx == NULL) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
@@ -3047,7 +3047,7 @@ static int tls_process_cke_rsa(SSL_CONNECTION *s, PACKET *pkt)
     *p++ = OSSL_PARAM_construct_end();
 
     if (!OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, params)
-            || EVP_PKEY_decrypt(ctx, rsa_decrypt, &outlen,
+            || OPENSSL_BOX_EVP_PKEY_decrypt(ctx, rsa_decrypt, &outlen,
                                 PACKET_data(&enc_premaster),
                                 PACKET_remaining(&enc_premaster)) <= 0) {
         SSLfatal(s, SSL_AD_DECRYPT_ERROR, SSL_R_DECRYPTION_FAILED);
@@ -3257,7 +3257,7 @@ static int tls_process_cke_gost(SSL_CONNECTION *s, PACKET *pkt)
         pk = s->cert->pkeys[SSL_PKEY_GOST01].privatekey;
     }
 
-    pkey_ctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx, pk, sctx->propq);
+    pkey_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(sctx->libctx, pk, sctx->propq);
     if (pkey_ctx == NULL) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         return 0;
@@ -3302,7 +3302,7 @@ static int tls_process_cke_gost(SSL_CONNECTION *s, PACKET *pkt)
     inlen = pKX->kxBlob->value.sequence->length;
     start = pKX->kxBlob->value.sequence->data;
 
-    if (EVP_PKEY_decrypt(pkey_ctx, premaster_secret, &outlen, start,
+    if (OPENSSL_BOX_EVP_PKEY_decrypt(pkey_ctx, premaster_secret, &outlen, start,
                          inlen) <= 0) {
         SSLfatal(s, SSL_AD_DECODE_ERROR, SSL_R_DECRYPTION_FAILED);
         goto err;
@@ -3313,7 +3313,7 @@ static int tls_process_cke_gost(SSL_CONNECTION *s, PACKET *pkt)
         goto err;
     }
     /* Check if pubkey from client certificate was used */
-    if (EVP_PKEY_CTX_ctrl(pkey_ctx, -1, -1, EVP_PKEY_CTRL_PEER_KEY, 2,
+    if (OPENSSL_BOX_EVP_PKEY_CTX_ctrl(pkey_ctx, -1, -1, EVP_PKEY_CTRL_PEER_KEY, 2,
                           NULL) > 0)
         s->statem.no_cert_verify = 1;
 
@@ -3361,7 +3361,7 @@ static int tls_process_cke_gost18(SSL_CONNECTION *s, PACKET *pkt)
         goto err;
     }
 
-    pkey_ctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx, pk, sctx->propq);
+    pkey_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(sctx->libctx, pk, sctx->propq);
     if (pkey_ctx == NULL) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
@@ -3372,13 +3372,13 @@ static int tls_process_cke_gost18(SSL_CONNECTION *s, PACKET *pkt)
     }
 
     /* Reuse EVP_PKEY_CTRL_SET_IV, make choice in engine code depending on size */
-    if (EVP_PKEY_CTX_ctrl(pkey_ctx, -1, EVP_PKEY_OP_DECRYPT,
+    if (OPENSSL_BOX_EVP_PKEY_CTX_ctrl(pkey_ctx, -1, EVP_PKEY_OP_DECRYPT,
                           EVP_PKEY_CTRL_SET_IV, 32, rnd_dgst) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_LIBRARY_BUG);
         goto err;
     }
 
-    if (EVP_PKEY_CTX_ctrl(pkey_ctx, -1, EVP_PKEY_OP_DECRYPT,
+    if (OPENSSL_BOX_EVP_PKEY_CTX_ctrl(pkey_ctx, -1, EVP_PKEY_OP_DECRYPT,
                           EVP_PKEY_CTRL_CIPHER, cipher_nid, NULL) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_LIBRARY_BUG);
         goto err;
@@ -3386,7 +3386,7 @@ static int tls_process_cke_gost18(SSL_CONNECTION *s, PACKET *pkt)
     inlen = PACKET_remaining(pkt);
     start = PACKET_data(pkt);
 
-    if (EVP_PKEY_decrypt(pkey_ctx, premaster_secret, &outlen, start, inlen) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_decrypt(pkey_ctx, premaster_secret, &outlen, start, inlen) <= 0) {
         SSLfatal(s, SSL_AD_DECODE_ERROR, SSL_R_DECRYPTION_FAILED);
         goto err;
     }
@@ -4082,7 +4082,7 @@ static CON_FUNC_RETURN construct_stateless_ticket(SSL_CONNECTION *s,
             goto err;
         }
     } else {
-        EVP_CIPHER *cipher = EVP_CIPHER_fetch(sctx->libctx, "AES-256-CBC",
+        EVP_CIPHER *cipher = OPENSSL_BOX_EVP_CIPHER_fetch(sctx->libctx, "AES-256-CBC",
                                               sctx->propq);
 
         if (cipher == NULL) {
@@ -4094,7 +4094,7 @@ static CON_FUNC_RETURN construct_stateless_ticket(SSL_CONNECTION *s,
         iv_len = OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher);
         if (iv_len < 0
                 || RAND_bytes_ex(sctx->libctx, iv, iv_len, 0) <= 0
-                || !EVP_EncryptInit_ex(ctx, cipher, NULL,
+                || !OPENSSL_BOX_EVP_EncryptInit_ex(ctx, cipher, NULL,
                                        tctx->ext.secure->tick_aes_key, iv)
                 || !ssl_hmac_init(hctx, tctx->ext.secure->tick_hmac_key,
                                   sizeof(tctx->ext.secure->tick_hmac_key),
@@ -4121,10 +4121,10 @@ static CON_FUNC_RETURN construct_stateless_ticket(SSL_CONNECTION *s,
             || !WPACKET_reserve_bytes(pkt, slen + EVP_MAX_BLOCK_LENGTH,
                                       &encdata1)
                /* Encrypt session data */
-            || !EVP_EncryptUpdate(ctx, encdata1, &len, senc, slen)
+            || !OPENSSL_BOX_EVP_EncryptUpdate(ctx, encdata1, &len, senc, slen)
             || !WPACKET_allocate_bytes(pkt, len, &encdata2)
             || encdata1 != encdata2
-            || !EVP_EncryptFinal(ctx, encdata1 + len, &lenfinal)
+            || !OPENSSL_BOX_EVP_EncryptFinal(ctx, encdata1 + len, &lenfinal)
             || !WPACKET_allocate_bytes(pkt, lenfinal, &encdata2)
             || encdata1 + len != encdata2
             || len + lenfinal > slen + EVP_MAX_BLOCK_LENGTH

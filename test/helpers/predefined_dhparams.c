@@ -18,7 +18,7 @@
 static EVP_PKEY *get_dh_from_pg_bn(OSSL_LIB_CTX *libctx, const char *type,
                                    BIGNUM *p, BIGNUM *g, BIGNUM *q)
 {
-    EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_from_name(libctx, type, NULL);
+    EVP_PKEY_CTX *pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, type, NULL);
     OSSL_PARAM_BLD *tmpl = NULL;
     OSSL_PARAM *params = NULL;
     EVP_PKEY *dhpkey = NULL;
@@ -35,7 +35,7 @@ static EVP_PKEY *get_dh_from_pg_bn(OSSL_LIB_CTX *libctx, const char *type,
 
     params = OSSL_PARAM_BLD_to_param(tmpl);
     if (params == NULL
-        || EVP_PKEY_fromdata(pctx, &dhpkey, EVP_PKEY_KEY_PARAMETERS, params) <= 0)
+        || OPENSSL_BOX_EVP_PKEY_fromdata(pctx, &dhpkey, EVP_PKEY_KEY_PARAMETERS, params) <= 0)
         goto err;
 
  err:

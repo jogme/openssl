@@ -925,7 +925,7 @@ static int dh_load_pkcs3_namedgroup_privlen_test(void)
 
     ret = TEST_ptr(pkey = d2i_PUBKEY_ex(NULL, &p, sizeof(dh_pub_der),
                                         NULL, NULL))
-          && TEST_true(EVP_PKEY_get_int_param(pkey, OSSL_PKEY_PARAM_DH_PRIV_LEN,
+          && TEST_true(OPENSSL_BOX_EVP_PKEY_get_int_param(pkey, OSSL_PKEY_PARAM_DH_PRIV_LEN,
                                               &privlen))
           && TEST_int_eq(privlen, 1024);
 

@@ -54,7 +54,7 @@ static int get_legacy_alg_type_from_keymgmt(const EVP_KEYMGMT *keymgmt)
 {
     int type = NID_undef;
 
-    EVP_KEYMGMT_names_do_all(keymgmt, help_get_legacy_alg_type_from_keymgmt,
+    OPENSSL_BOX_EVP_KEYMGMT_names_do_all(keymgmt, help_get_legacy_alg_type_from_keymgmt,
                              &type);
     return type;
 }
@@ -282,7 +282,7 @@ EVP_KEYMGMT *evp_keymgmt_fetch_from_prov(OSSL_PROVIDER *prov,
                                        evp_keymgmt_free);
 }
 
-EVP_KEYMGMT *EVP_KEYMGMT_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
+EVP_KEYMGMT *OPENSSL_BOX_EVP_KEYMGMT_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
                                const char *properties)
 {
     return evp_generic_fetch(ctx, OSSL_OP_KEYMGMT, algorithm, properties,
@@ -346,7 +346,7 @@ int OPENSSL_BOX_EVP_KEYMGMT_is_a(const EVP_KEYMGMT *keymgmt, const char *name)
            && evp_is_a(keymgmt->prov, keymgmt->name_id, NULL, name);
 }
 
-void EVP_KEYMGMT_do_all_provided(OSSL_LIB_CTX *libctx,
+void OPENSSL_BOX_EVP_KEYMGMT_do_all_provided(OSSL_LIB_CTX *libctx,
                                  void (*fn)(EVP_KEYMGMT *keymgmt, void *arg),
                                  void *arg)
 {
@@ -357,7 +357,7 @@ void EVP_KEYMGMT_do_all_provided(OSSL_LIB_CTX *libctx,
                        evp_keymgmt_free);
 }
 
-int EVP_KEYMGMT_names_do_all(const EVP_KEYMGMT *keymgmt,
+int OPENSSL_BOX_EVP_KEYMGMT_names_do_all(const EVP_KEYMGMT *keymgmt,
                              void (*fn)(const char *name, void *data),
                              void *data)
 {

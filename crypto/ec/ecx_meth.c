@@ -553,7 +553,7 @@ static int ecd_item_verify(EVP_MD_CTX *ctx, const ASN1_ITEM *it,
         return 0;
     }
 
-    if (!EVP_DigestVerifyInit(ctx, NULL, NULL, NULL, pkey))
+    if (!OPENSSL_BOX_EVP_DigestVerifyInit(ctx, NULL, NULL, NULL, pkey))
         return 0;
 
     return 2;
@@ -1055,11 +1055,11 @@ static int s390x_pkey_ecd_keygen25519(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
     if (RAND_priv_bytes_ex(ctx->libctx, privkey, ED25519_KEYLEN, 0) <= 0)
         goto err;
 
-    md = EVP_MD_fetch(ctx->libctx, "SHA512", ctx->propquery);
+    md = OPENSSL_BOX_EVP_MD_fetch(ctx->libctx, "SHA512", ctx->propquery);
     if (md == NULL)
         goto err;
 
-    rv = EVP_Digest(privkey, 32, buff, &sz, md, NULL);
+    rv = OPENSSL_BOX_EVP_Digest(privkey, 32, buff, &sz, md, NULL);
     OPENSSL_BOX_EVP_MD_free(md);
     if (!rv)
         goto err;
@@ -1125,18 +1125,18 @@ static int s390x_pkey_ecd_keygen448(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
     if (hashctx == NULL)
         goto err;
 
-    md = EVP_MD_fetch(ctx->libctx, "SHAKE256", ctx->propquery);
+    md = OPENSSL_BOX_EVP_MD_fetch(ctx->libctx, "SHAKE256", ctx->propquery);
     if (md == NULL)
         goto err;
 
-    rv = EVP_DigestInit_ex(hashctx, md, NULL);
+    rv = OPENSSL_BOX_EVP_DigestInit_ex(hashctx, md, NULL);
     OPENSSL_BOX_EVP_MD_free(md);
     if (rv != 1)
         goto err;
 
-    if (EVP_DigestUpdate(hashctx, privkey, 57) != 1)
+    if (OPENSSL_BOX_EVP_DigestUpdate(hashctx, privkey, 57) != 1)
         goto err;
-    if (EVP_DigestFinalXOF(hashctx, buff, sizeof(buff)) != 1)
+    if (OPENSSL_BOX_EVP_DigestFinalXOF(hashctx, buff, sizeof(buff)) != 1)
         goto err;
 
     buff[0] &= -4;

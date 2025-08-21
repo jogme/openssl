@@ -373,64 +373,64 @@ static char *md5crypt(const char *passwd, const char *magic, const char *salt)
 
     md = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md == NULL
-        || !EVP_DigestInit_ex(md, OPENSSL_BOX_EVP_md5(), NULL)
-        || !EVP_DigestUpdate(md, passwd, passwd_len))
+        || !OPENSSL_BOX_EVP_DigestInit_ex(md, OPENSSL_BOX_EVP_md5(), NULL)
+        || !OPENSSL_BOX_EVP_DigestUpdate(md, passwd, passwd_len))
         goto err;
 
     if (magic_len > 0)
-        if (!EVP_DigestUpdate(md, ascii_dollar, 1)
-            || !EVP_DigestUpdate(md, ascii_magic, magic_len)
-            || !EVP_DigestUpdate(md, ascii_dollar, 1))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md, ascii_dollar, 1)
+            || !OPENSSL_BOX_EVP_DigestUpdate(md, ascii_magic, magic_len)
+            || !OPENSSL_BOX_EVP_DigestUpdate(md, ascii_dollar, 1))
           goto err;
 
-    if (!EVP_DigestUpdate(md, ascii_salt, salt_len))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(md, ascii_salt, salt_len))
         goto err;
 
     md2 = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md2 == NULL
-        || !EVP_DigestInit_ex(md2, OPENSSL_BOX_EVP_md5(), NULL)
-        || !EVP_DigestUpdate(md2, passwd, passwd_len)
-        || !EVP_DigestUpdate(md2, ascii_salt, salt_len)
-        || !EVP_DigestUpdate(md2, passwd, passwd_len)
-        || !EVP_DigestFinal_ex(md2, buf, NULL))
+        || !OPENSSL_BOX_EVP_DigestInit_ex(md2, OPENSSL_BOX_EVP_md5(), NULL)
+        || !OPENSSL_BOX_EVP_DigestUpdate(md2, passwd, passwd_len)
+        || !OPENSSL_BOX_EVP_DigestUpdate(md2, ascii_salt, salt_len)
+        || !OPENSSL_BOX_EVP_DigestUpdate(md2, passwd, passwd_len)
+        || !OPENSSL_BOX_EVP_DigestFinal_ex(md2, buf, NULL))
         goto err;
 
     for (i = (unsigned int)passwd_len; i > sizeof(buf); i -= sizeof(buf)) {
-        if (!EVP_DigestUpdate(md, buf, sizeof(buf)))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md, buf, sizeof(buf)))
             goto err;
     }
-    if (!EVP_DigestUpdate(md, buf, i))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(md, buf, i))
         goto err;
 
     n = (int)passwd_len;
     while (n) {
-        if (!EVP_DigestUpdate(md, (n & 1) ? "\0" : passwd, 1))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md, (n & 1) ? "\0" : passwd, 1))
             goto err;
         n >>= 1;
     }
-    if (!EVP_DigestFinal_ex(md, buf, NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(md, buf, NULL))
         goto err;
 
     for (i = 0; i < 1000; i++) {
-        if (!EVP_DigestInit_ex(md2, OPENSSL_BOX_EVP_md5(), NULL))
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(md2, OPENSSL_BOX_EVP_md5(), NULL))
             goto err;
-        if (!EVP_DigestUpdate(md2,
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md2,
                               (i & 1) ? (const unsigned char *)passwd : buf,
                               (i & 1) ? passwd_len : sizeof(buf)))
             goto err;
         if (i % 3) {
-            if (!EVP_DigestUpdate(md2, ascii_salt, salt_len))
+            if (!OPENSSL_BOX_EVP_DigestUpdate(md2, ascii_salt, salt_len))
                 goto err;
         }
         if (i % 7) {
-            if (!EVP_DigestUpdate(md2, passwd, passwd_len))
+            if (!OPENSSL_BOX_EVP_DigestUpdate(md2, passwd, passwd_len))
                 goto err;
         }
-        if (!EVP_DigestUpdate(md2,
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md2,
                               (i & 1) ? buf : (const unsigned char *)passwd,
                               (i & 1) ? sizeof(buf) : passwd_len))
                 goto err;
-        if (!EVP_DigestFinal_ex(md2, buf, NULL))
+        if (!OPENSSL_BOX_EVP_DigestFinal_ex(md2, buf, NULL))
                 goto err;
     }
     OPENSSL_BOX_EVP_MD_CTX_free(md2);
@@ -606,47 +606,47 @@ static char *shacrypt(const char *passwd, const char *magic, const char *salt)
 
     md = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md == NULL
-        || !EVP_DigestInit_ex(md, sha, NULL)
-        || !EVP_DigestUpdate(md, passwd, passwd_len)
-        || !EVP_DigestUpdate(md, ascii_salt, salt_len))
+        || !OPENSSL_BOX_EVP_DigestInit_ex(md, sha, NULL)
+        || !OPENSSL_BOX_EVP_DigestUpdate(md, passwd, passwd_len)
+        || !OPENSSL_BOX_EVP_DigestUpdate(md, ascii_salt, salt_len))
         goto err;
 
     md2 = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md2 == NULL
-        || !EVP_DigestInit_ex(md2, sha, NULL)
-        || !EVP_DigestUpdate(md2, passwd, passwd_len)
-        || !EVP_DigestUpdate(md2, ascii_salt, salt_len)
-        || !EVP_DigestUpdate(md2, passwd, passwd_len)
-        || !EVP_DigestFinal_ex(md2, buf, NULL))
+        || !OPENSSL_BOX_EVP_DigestInit_ex(md2, sha, NULL)
+        || !OPENSSL_BOX_EVP_DigestUpdate(md2, passwd, passwd_len)
+        || !OPENSSL_BOX_EVP_DigestUpdate(md2, ascii_salt, salt_len)
+        || !OPENSSL_BOX_EVP_DigestUpdate(md2, passwd, passwd_len)
+        || !OPENSSL_BOX_EVP_DigestFinal_ex(md2, buf, NULL))
         goto err;
 
     for (n = passwd_len; n > buf_size; n -= buf_size) {
-        if (!EVP_DigestUpdate(md, buf, buf_size))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md, buf, buf_size))
             goto err;
     }
-    if (!EVP_DigestUpdate(md, buf, n))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(md, buf, n))
         goto err;
 
     n = passwd_len;
     while (n) {
-        if (!EVP_DigestUpdate(md,
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md,
                               (n & 1) ? buf : (const unsigned char *)passwd,
                               (n & 1) ? buf_size : passwd_len))
             goto err;
         n >>= 1;
     }
-    if (!EVP_DigestFinal_ex(md, buf, NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(md, buf, NULL))
         goto err;
 
     /* P sequence */
-    if (!EVP_DigestInit_ex(md2, sha, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(md2, sha, NULL))
         goto err;
 
     for (n = passwd_len; n > 0; n--)
-        if (!EVP_DigestUpdate(md2, passwd, passwd_len))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md2, passwd, passwd_len))
             goto err;
 
-    if (!EVP_DigestFinal_ex(md2, temp_buf, NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(md2, temp_buf, NULL))
         goto err;
 
     if ((p_bytes = OPENSSL_zalloc(passwd_len)) == NULL)
@@ -656,14 +656,14 @@ static char *shacrypt(const char *passwd, const char *magic, const char *salt)
     memcpy(cp, temp_buf, n);
 
     /* S sequence */
-    if (!EVP_DigestInit_ex(md2, sha, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(md2, sha, NULL))
         goto err;
 
     for (n = 16 + buf[0]; n > 0; n--)
-        if (!EVP_DigestUpdate(md2, ascii_salt, salt_len))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md2, ascii_salt, salt_len))
             goto err;
 
-    if (!EVP_DigestFinal_ex(md2, temp_buf, NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(md2, temp_buf, NULL))
         goto err;
 
     if ((s_bytes = OPENSSL_zalloc(salt_len)) == NULL)
@@ -673,25 +673,25 @@ static char *shacrypt(const char *passwd, const char *magic, const char *salt)
     memcpy(cp, temp_buf, n);
 
     for (n = 0; n < rounds; n++) {
-        if (!EVP_DigestInit_ex(md2, sha, NULL))
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(md2, sha, NULL))
             goto err;
-        if (!EVP_DigestUpdate(md2,
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md2,
                               (n & 1) ? (const unsigned char *)p_bytes : buf,
                               (n & 1) ? passwd_len : buf_size))
             goto err;
         if (n % 3) {
-            if (!EVP_DigestUpdate(md2, s_bytes, salt_len))
+            if (!OPENSSL_BOX_EVP_DigestUpdate(md2, s_bytes, salt_len))
                 goto err;
         }
         if (n % 7) {
-            if (!EVP_DigestUpdate(md2, p_bytes, passwd_len))
+            if (!OPENSSL_BOX_EVP_DigestUpdate(md2, p_bytes, passwd_len))
                 goto err;
         }
-        if (!EVP_DigestUpdate(md2,
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md2,
                               (n & 1) ? buf : (const unsigned char *)p_bytes,
                               (n & 1) ? buf_size : passwd_len))
                 goto err;
-        if (!EVP_DigestFinal_ex(md2, buf, NULL))
+        if (!OPENSSL_BOX_EVP_DigestFinal_ex(md2, buf, NULL))
                 goto err;
     }
     OPENSSL_BOX_EVP_MD_CTX_free(md2);

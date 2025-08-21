@@ -494,7 +494,7 @@ int X509_pubkey_digest(const X509 *data, const EVP_MD *type,
 
     if (key == NULL)
         return 0;
-    return EVP_Digest(key->data, key->length, md, len, type, NULL);
+    return OPENSSL_BOX_EVP_Digest(key->data, key->length, md, len, type, NULL);
 }
 
 int X509_digest(const X509 *cert, const EVP_MD *md, unsigned char *data,
@@ -555,7 +555,7 @@ ASN1_OCTET_STRING *X509_digest_sig(const X509 *cert,
             }
             RSA_PSS_PARAMS_free(pss);
             /* Fetch explicitly and do not fallback */
-            if ((md = EVP_MD_fetch(cert->libctx, OPENSSL_BOX_EVP_MD_get0_name(mmd),
+            if ((md = OPENSSL_BOX_EVP_MD_fetch(cert->libctx, OPENSSL_BOX_EVP_MD_get0_name(mmd),
                                    cert->propq)) == NULL)
                 /* Error code from fetch is sufficient */
                 return NULL;
@@ -572,7 +572,7 @@ ASN1_OCTET_STRING *X509_digest_sig(const X509 *cert,
                 md_name = "SHA256";
                 break;
             }
-            if ((md = EVP_MD_fetch(cert->libctx, md_name,
+            if ((md = OPENSSL_BOX_EVP_MD_fetch(cert->libctx, md_name,
                                    cert->propq)) == NULL)
                 return NULL;
             if (md_is_fallback != NULL)
@@ -582,7 +582,7 @@ ASN1_OCTET_STRING *X509_digest_sig(const X509 *cert,
             ERR_raise(ERR_LIB_X509, X509_R_UNSUPPORTED_ALGORITHM);
             return NULL;
         }
-    } else if ((md = EVP_MD_fetch(cert->libctx, OBJ_nid2sn(mdnid),
+    } else if ((md = OPENSSL_BOX_EVP_MD_fetch(cert->libctx, OBJ_nid2sn(mdnid),
                                   cert->propq)) == NULL
                && (md = (EVP_MD *)EVP_get_digestbynid(mdnid)) == NULL) {
         ERR_raise(ERR_LIB_X509, X509_R_UNSUPPORTED_ALGORITHM);
@@ -728,7 +728,7 @@ int i2d_PrivateKey_fp(FILE *fp, const EVP_PKEY *pkey)
 
 EVP_PKEY *d2i_PrivateKey_fp(FILE *fp, EVP_PKEY **a)
 {
-    return ASN1_d2i_fp_of(EVP_PKEY, OPENSSL_BOX_EVP_PKEY_new, d2i_AutoPrivateKey, fp, a);
+    return ASN1_d2i_fp_of(EVP_PKEY, OPENSSL_BOX_EVP_PKEY_new, OPENSSL_BOX_d2i_AutoPrivateKey, fp, a);
 }
 
 EVP_PKEY *d2i_PrivateKey_ex_fp(FILE *fp, EVP_PKEY **a, OSSL_LIB_CTX *libctx,
@@ -808,7 +808,7 @@ int i2d_PrivateKey_bio(BIO *bp, const EVP_PKEY *pkey)
 
 EVP_PKEY *d2i_PrivateKey_bio(BIO *bp, EVP_PKEY **a)
 {
-    return ASN1_d2i_bio_of(EVP_PKEY, OPENSSL_BOX_EVP_PKEY_new, d2i_AutoPrivateKey, bp, a);
+    return ASN1_d2i_bio_of(EVP_PKEY, OPENSSL_BOX_EVP_PKEY_new, OPENSSL_BOX_d2i_AutoPrivateKey, bp, a);
 }
 
 EVP_PKEY *d2i_PrivateKey_ex_bio(BIO *bp, EVP_PKEY **a, OSSL_LIB_CTX *libctx,
@@ -824,7 +824,7 @@ EVP_PKEY *d2i_PrivateKey_ex_bio(BIO *bp, EVP_PKEY **a, OSSL_LIB_CTX *libctx,
         goto err;
 
     p = (unsigned char *)b->data;
-    ret = d2i_AutoPrivateKey_ex(a, &p, len, libctx, propq);
+    ret = OPENSSL_BOX_d2i_AutoPrivateKey_ex(a, &p, len, libctx, propq);
  err:
     BUF_MEM_free(b);
     return ret;

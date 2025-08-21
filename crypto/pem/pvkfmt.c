@@ -902,23 +902,23 @@ static void *do_PVK_body_key(const unsigned char **in,
         }
         inlen = keylen - 8;
         q = enctmp + 8;
-        if ((rc4 = EVP_CIPHER_fetch(libctx, "RC4", propq)) == NULL)
+        if ((rc4 = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "RC4", propq)) == NULL)
             goto err;
-        if (!EVP_DecryptInit_ex(cctx, rc4, NULL, keybuf, NULL))
+        if (!OPENSSL_BOX_EVP_DecryptInit_ex(cctx, rc4, NULL, keybuf, NULL))
             goto err;
-        if (!EVP_DecryptUpdate(cctx, q, &enctmplen, p, inlen))
+        if (!OPENSSL_BOX_EVP_DecryptUpdate(cctx, q, &enctmplen, p, inlen))
             goto err;
-        if (!EVP_DecryptFinal_ex(cctx, q + enctmplen, &enctmplen))
+        if (!OPENSSL_BOX_EVP_DecryptFinal_ex(cctx, q + enctmplen, &enctmplen))
             goto err;
         magic = read_ledword((const unsigned char **)&q);
         if (magic != MS_RSA2MAGIC && magic != MS_DSS2MAGIC) {
             q = enctmp + 8;
             memset(keybuf + 5, 0, 11);
-            if (!EVP_DecryptInit_ex(cctx, rc4, NULL, keybuf, NULL))
+            if (!OPENSSL_BOX_EVP_DecryptInit_ex(cctx, rc4, NULL, keybuf, NULL))
                 goto err;
-            if (!EVP_DecryptUpdate(cctx, q, &enctmplen, p, inlen))
+            if (!OPENSSL_BOX_EVP_DecryptUpdate(cctx, q, &enctmplen, p, inlen))
                 goto err;
-            if (!EVP_DecryptFinal_ex(cctx, q + enctmplen, &enctmplen))
+            if (!OPENSSL_BOX_EVP_DecryptFinal_ex(cctx, q + enctmplen, &enctmplen))
                 goto err;
             magic = read_ledword((const unsigned char **)&q);
             if (magic != MS_RSA2MAGIC && magic != MS_DSS2MAGIC) {
@@ -1094,17 +1094,17 @@ static int i2b_PVK(unsigned char **out, const EVP_PKEY *pk, int enclevel,
         if (!derive_pvk_key(keybuf, sizeof(keybuf), salt, PVK_SALTLEN,
                             (unsigned char *)psbuf, inlen, libctx, propq))
             goto error;
-        if ((rc4 = EVP_CIPHER_fetch(libctx, "RC4", propq)) == NULL)
+        if ((rc4 = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "RC4", propq)) == NULL)
             goto error;
         if (enclevel == 1)
             memset(keybuf + 5, 0, 11);
         p = salt + PVK_SALTLEN + 8;
-        if (!EVP_EncryptInit_ex(cctx, rc4, NULL, keybuf, NULL))
+        if (!OPENSSL_BOX_EVP_EncryptInit_ex(cctx, rc4, NULL, keybuf, NULL))
             goto error;
         OPENSSL_cleanse(keybuf, 20);
-        if (!EVP_EncryptUpdate(cctx, p, &enctmplen, p, pklen - 8))
+        if (!OPENSSL_BOX_EVP_EncryptUpdate(cctx, p, &enctmplen, p, pklen - 8))
             goto error;
-        if (!EVP_EncryptFinal_ex(cctx, p + enctmplen, &enctmplen))
+        if (!OPENSSL_BOX_EVP_EncryptFinal_ex(cctx, p + enctmplen, &enctmplen))
             goto error;
 #else
         ERR_raise(ERR_LIB_PEM, PEM_R_UNSUPPORTED_CIPHER);

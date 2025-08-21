@@ -69,22 +69,22 @@ static int aria_cbc_encrypt(void)
         goto err;
 
     /* Fetch the cipher implementation */
-    if ((cipher = EVP_CIPHER_fetch(libctx, "ARIA-256-CBC", propq)) == NULL)
+    if ((cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "ARIA-256-CBC", propq)) == NULL)
         goto err;
 
     /*
      * Initialise an encrypt operation with the cipher/mode, key and IV.
      * We are not setting any custom params so let params be just NULL.
      */
-    if (!EVP_EncryptInit_ex2(ctx, cipher, cbc_key, cbc_iv, /* params */ NULL))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx, cipher, cbc_key, cbc_iv, /* params */ NULL))
         goto err;
 
     /* Encrypt plaintext */
-    if (!EVP_EncryptUpdate(ctx, outbuf, &outlen, cbc_pt, sizeof(cbc_pt)))
+    if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx, outbuf, &outlen, cbc_pt, sizeof(cbc_pt)))
         goto err;
 
     /* Finalise: there can be some additional output from padding */
-    if (!EVP_EncryptFinal_ex(ctx, outbuf + outlen, &tmplen))
+    if (!OPENSSL_BOX_EVP_EncryptFinal_ex(ctx, outbuf + outlen, &tmplen))
         goto err;
     outlen += tmplen;
 
@@ -124,22 +124,22 @@ static int aria_cbc_decrypt(void)
         goto err;
 
     /* Fetch the cipher implementation */
-    if ((cipher = EVP_CIPHER_fetch(libctx, "ARIA-256-CBC", propq)) == NULL)
+    if ((cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "ARIA-256-CBC", propq)) == NULL)
         goto err;
 
     /*
      * Initialise an encrypt operation with the cipher/mode, key and IV.
      * We are not setting any custom params so let params be just NULL.
      */
-    if (!EVP_DecryptInit_ex2(ctx, cipher, cbc_key, cbc_iv, /* params */ NULL))
+    if (!OPENSSL_BOX_EVP_DecryptInit_ex2(ctx, cipher, cbc_key, cbc_iv, /* params */ NULL))
         goto err;
 
     /* Decrypt plaintext */
-    if (!EVP_DecryptUpdate(ctx, outbuf, &outlen, cbc_ct, sizeof(cbc_ct)))
+    if (!OPENSSL_BOX_EVP_DecryptUpdate(ctx, outbuf, &outlen, cbc_ct, sizeof(cbc_ct)))
         goto err;
 
     /* Finalise: there can be some additional output from padding */
-    if (!EVP_DecryptFinal_ex(ctx, outbuf + outlen, &tmplen))
+    if (!OPENSSL_BOX_EVP_DecryptFinal_ex(ctx, outbuf + outlen, &tmplen))
         goto err;
     outlen += tmplen;
 

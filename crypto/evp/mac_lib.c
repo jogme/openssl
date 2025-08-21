@@ -112,7 +112,7 @@ size_t OPENSSL_BOX_EVP_MAC_CTX_get_block_size(EVP_MAC_CTX *ctx)
     return get_size_t_ctx_param(ctx, OSSL_MAC_PARAM_BLOCK_SIZE);
 }
 
-int EVP_MAC_init(EVP_MAC_CTX *ctx, const unsigned char *key, size_t keylen,
+int OPENSSL_BOX_EVP_MAC_init(EVP_MAC_CTX *ctx, const unsigned char *key, size_t keylen,
                  const OSSL_PARAM params[])
 {
     if (ctx->meth->init == NULL) {
@@ -183,7 +183,7 @@ static int evp_mac_final(EVP_MAC_CTX *ctx, int xof,
     return res;
 }
 
-int EVP_MAC_final(EVP_MAC_CTX *ctx,
+int OPENSSL_BOX_EVP_MAC_final(EVP_MAC_CTX *ctx,
                   unsigned char *out, size_t *outl, size_t outsize)
 {
     return evp_mac_final(ctx, 0, out, outl, outsize);
@@ -241,7 +241,7 @@ int OPENSSL_BOX_EVP_MAC_is_a(const EVP_MAC *mac, const char *name)
     return mac != NULL && evp_is_a(mac->prov, mac->name_id, NULL, name);
 }
 
-int EVP_MAC_names_do_all(const EVP_MAC *mac,
+int OPENSSL_BOX_EVP_MAC_names_do_all(const EVP_MAC *mac,
                          void (*fn)(const char *name, void *data),
                          void *data)
 {
@@ -251,14 +251,14 @@ int EVP_MAC_names_do_all(const EVP_MAC *mac,
     return 1;
 }
 
-unsigned char *EVP_Q_mac(OSSL_LIB_CTX *libctx,
+unsigned char *OPENSSL_BOX_EVP_Q_mac(OSSL_LIB_CTX *libctx,
                          const char *name, const char *propq,
                          const char *subalg, const OSSL_PARAM *params,
                          const void *key, size_t keylen,
                          const unsigned char *data, size_t datalen,
                          unsigned char *out, size_t outsize, size_t *outlen)
 {
-    EVP_MAC *mac = EVP_MAC_fetch(libctx, name, propq);
+    EVP_MAC *mac = OPENSSL_BOX_EVP_MAC_fetch(libctx, name, propq);
     OSSL_PARAM subalg_param[] = { OSSL_PARAM_END, OSSL_PARAM_END };
     EVP_MAC_CTX *ctx  = NULL;
     size_t len = 0;
@@ -293,12 +293,12 @@ unsigned char *EVP_Q_mac(OSSL_LIB_CTX *libctx,
     if ((ctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac)) != NULL
             && OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, subalg_param)
             && OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, params)
-            && EVP_MAC_init(ctx, key, keylen, params)
+            && OPENSSL_BOX_EVP_MAC_init(ctx, key, keylen, params)
             && OPENSSL_BOX_EVP_MAC_update(ctx, data, datalen)
-            && EVP_MAC_final(ctx, out, &len, outsize)) {
+            && OPENSSL_BOX_EVP_MAC_final(ctx, out, &len, outsize)) {
         if (out == NULL) {
             out = OPENSSL_malloc(len);
-            if (out != NULL && !EVP_MAC_final(ctx, out, NULL, len)) {
+            if (out != NULL && !OPENSSL_BOX_EVP_MAC_final(ctx, out, NULL, len)) {
                 OPENSSL_free(out);
                 out = NULL;
             }

@@ -38,13 +38,13 @@ static int aes_gcm_siv_initkey(void *vctx)
 
     switch (ctx->key_len) {
     case 16:
-        ecb = EVP_CIPHER_fetch(ctx->libctx, "AES-128-ECB", NULL);
+        ecb = OPENSSL_BOX_EVP_CIPHER_fetch(ctx->libctx, "AES-128-ECB", NULL);
         break;
     case 24:
-        ecb = EVP_CIPHER_fetch(ctx->libctx, "AES-192-ECB", NULL);
+        ecb = OPENSSL_BOX_EVP_CIPHER_fetch(ctx->libctx, "AES-192-ECB", NULL);
         break;
     case 32:
-        ecb = EVP_CIPHER_fetch(ctx->libctx, "AES-256-ECB", NULL);
+        ecb = OPENSSL_BOX_EVP_CIPHER_fetch(ctx->libctx, "AES-256-ECB", NULL);
         break;
     default:
         goto err;
@@ -52,7 +52,7 @@ static int aes_gcm_siv_initkey(void *vctx)
 
     if (ctx->ecb_ctx == NULL && (ctx->ecb_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto err;
-    if (!EVP_EncryptInit_ex2(ctx->ecb_ctx, ecb, ctx->key_gen_key, NULL, NULL))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx->ecb_ctx, ecb, ctx->key_gen_key, NULL, NULL))
         goto err;
 
     memset(&data, 0, sizeof(data));
@@ -68,7 +68,7 @@ static int aes_gcm_siv_initkey(void *vctx)
         }
         /* Block size is 16 (128 bits), but only 8 bytes are used */
         out_len = BLOCK_SIZE;
-        if (!EVP_EncryptUpdate(ctx->ecb_ctx, output, &out_len, data.block, BLOCK_SIZE))
+        if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx->ecb_ctx, output, &out_len, data.block, BLOCK_SIZE))
             goto err;
         memcpy(&ctx->msg_auth_key[i], output, 8);
         counter++;
@@ -83,13 +83,13 @@ static int aes_gcm_siv_initkey(void *vctx)
         }
         /* Block size is 16 bytes (128 bits), but only 8 bytes are used */
         out_len = BLOCK_SIZE;
-        if (!EVP_EncryptUpdate(ctx->ecb_ctx, output, &out_len, data.block, BLOCK_SIZE))
+        if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx->ecb_ctx, output, &out_len, data.block, BLOCK_SIZE))
             goto err;
         memcpy(&ctx->msg_enc_key[i], output, 8);
         counter++;
     }
 
-    if (!EVP_EncryptInit_ex2(ctx->ecb_ctx, ecb, ctx->msg_enc_key, NULL, NULL))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx->ecb_ctx, ecb, ctx->msg_enc_key, NULL, NULL))
         goto err;
 
     /* Freshen up the state */
@@ -194,7 +194,7 @@ static int aes_gcm_siv_encrypt(PROV_AES_GCM_SIV_CTX *ctx, const unsigned char *i
 
     S_s[TAG_SIZE - 1] &= 0x7f;
     out_len = sizeof(ctx->tag);
-    error |= !EVP_EncryptUpdate(ctx->ecb_ctx, ctx->tag, &out_len, S_s, sizeof(S_s));
+    error |= !OPENSSL_BOX_EVP_EncryptUpdate(ctx->ecb_ctx, ctx->tag, &out_len, S_s, sizeof(S_s));
     memcpy(counter_block, ctx->tag, TAG_SIZE);
     counter_block[TAG_SIZE - 1] |= 0x80;
 
@@ -264,7 +264,7 @@ static int aes_gcm_siv_decrypt(PROV_AES_GCM_SIV_CTX *ctx, const unsigned char *i
      * and tag is generated from the input
      */
     out_len = sizeof(ctx->tag);
-    error |= !EVP_EncryptUpdate(ctx->ecb_ctx, ctx->tag, &out_len, S_s, sizeof(S_s));
+    error |= !OPENSSL_BOX_EVP_EncryptUpdate(ctx->ecb_ctx, ctx->tag, &out_len, S_s, sizeof(S_s));
     ctx->generated_tag = !error;
     /* Regardless of error */
     ctx->used_dec = 1;
@@ -354,7 +354,7 @@ static int aes_gcm_siv_ctr32(PROV_AES_GCM_SIV_CTX *ctx, const unsigned char *ini
 
     for (i = 0; i < len; i += sizeof(block)) {
         out_len = BLOCK_SIZE;
-        error |= !EVP_EncryptUpdate(ctx->ecb_ctx, keystream, &out_len, (uint8_t*)&block, sizeof(block));
+        error |= !OPENSSL_BOX_EVP_EncryptUpdate(ctx->ecb_ctx, keystream, &out_len, (uint8_t*)&block, sizeof(block));
         if (IS_LITTLE_ENDIAN) {
             block.x32[0]++;
         } else {

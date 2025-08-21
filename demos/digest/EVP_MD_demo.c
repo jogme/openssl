@@ -8,7 +8,7 @@
  */
 
 /*
- * Example of using EVP_MD_fetch and EVP_Digest* methods to calculate
+ * Example of using OPENSSL_BOX_EVP_MD_fetch and OPENSSL_BOX_EVP_Digest* methods to calculate
  * a digest of static buffers
  */
 
@@ -20,7 +20,7 @@
 /*-
  * This demonstration will show how to digest data using
  * the soliloqy from Hamlet scene 1 act 3
- * The soliloqy is split into two parts to demonstrate using EVP_DigestUpdate
+ * The soliloqy is split into two parts to demonstrate using OPENSSL_BOX_EVP_DigestUpdate
  * more than once.
  */
 
@@ -98,10 +98,10 @@ static int demonstrate_digest(void)
      * The algorithm name is case insensitive.
      * See providers(7) for details about algorithm fetching
      */
-    message_digest = EVP_MD_fetch(library_context,
+    message_digest = OPENSSL_BOX_EVP_MD_fetch(library_context,
                                   "SHA3-512", option_properties);
     if (message_digest == NULL) {
-        fprintf(stderr, "EVP_MD_fetch could not find SHA3-512.");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MD_fetch could not find SHA3-512.");
         goto cleanup;
     }
     /* Determine the length of the fetched digest type */
@@ -134,16 +134,16 @@ static int demonstrate_digest(void)
         goto cleanup;
     }
     /* Digest parts one and two of the soliloqy */
-    if (EVP_DigestUpdate(digest_context, hamlet_1, strlen(hamlet_1)) != 1) {
-        fprintf(stderr, "EVP_DigestUpdate(hamlet_1) failed.\n");
+    if (OPENSSL_BOX_EVP_DigestUpdate(digest_context, hamlet_1, strlen(hamlet_1)) != 1) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestUpdate(hamlet_1) failed.\n");
         goto cleanup;
     }
-    if (EVP_DigestUpdate(digest_context, hamlet_2, strlen(hamlet_2)) != 1) {
-        fprintf(stderr, "EVP_DigestUpdate(hamlet_2) failed.\n");
+    if (OPENSSL_BOX_EVP_DigestUpdate(digest_context, hamlet_2, strlen(hamlet_2)) != 1) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestUpdate(hamlet_2) failed.\n");
         goto cleanup;
     }
-    if (EVP_DigestFinal(digest_context, digest_value, &digest_length) != 1) {
-        fprintf(stderr, "EVP_DigestFinal() failed.\n");
+    if (OPENSSL_BOX_EVP_DigestFinal(digest_context, digest_value, &digest_length) != 1) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestFinal() failed.\n");
         goto cleanup;
     }
     for (j=0; j<digest_length; j++)  {

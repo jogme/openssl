@@ -113,7 +113,7 @@ encoding the private key. The default value of 1 will include the public key.
 The public key value in encoded EC point format conforming to Sec. 2.3.3 and
 2.3.4 of the SECG SEC 1 ("Elliptic Curve Cryptography") standard.
 This parameter is used when importing or exporting the public key value with the
-EVP_PKEY_fromdata() and OPENSSL_BOX_EVP_PKEY_todata() functions.
+OPENSSL_BOX_EVP_PKEY_fromdata() and OPENSSL_BOX_EVP_PKEY_todata() functions.
 
 Note, in particular, that the choice of point compression format used for
 encoding the exported value via OPENSSL_BOX_EVP_PKEY_todata() depends on the underlying
@@ -234,7 +234,7 @@ I<Owner Assurance of Pair-wise Consistency> respectively.
 An B<EVP_PKEY> context can be obtained by calling:
 
     EVP_PKEY_CTX *pctx =
-        EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
+        OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
 
 An B<EVP_PKEY> ECDSA or ECDH key can be generated with a "P-256" named group by
 calling:
@@ -246,7 +246,7 @@ or like this:
     EVP_PKEY *key = NULL;
     OSSL_PARAM params[2];
     EVP_PKEY_CTX *gctx =
-        EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
+        OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
 
     OPENSSL_BOX_EVP_PKEY_keygen_init(gctx);
 
@@ -257,7 +257,7 @@ or like this:
 
     OPENSSL_BOX_EVP_PKEY_generate(gctx, &key);
 
-    EVP_PKEY_print_private(bio_out, key, 0, NULL);
+    OPENSSL_BOX_EVP_PKEY_print_private(bio_out, key, 0, NULL);
     ...
     OPENSSL_BOX_EVP_PKEY_free(key);
     OPENSSL_BOX_EVP_PKEY_CTX_free(gctx);
@@ -269,7 +269,7 @@ An B<EVP_PKEY> EC CDH (Cofactor Diffie-Hellman) key can be generated with a
     EVP_PKEY *key = NULL;
     OSSL_PARAM params[3];
     EVP_PKEY_CTX *gctx =
-        EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
+        OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
 
     OPENSSL_BOX_EVP_PKEY_keygen_init(gctx);
 
@@ -286,7 +286,7 @@ An B<EVP_PKEY> EC CDH (Cofactor Diffie-Hellman) key can be generated with a
     OPENSSL_BOX_EVP_PKEY_CTX_set_params(gctx, params);
 
     OPENSSL_BOX_EVP_PKEY_generate(gctx, &key);
-    EVP_PKEY_print_private(bio_out, key, 0, NULL);
+    OPENSSL_BOX_EVP_PKEY_print_private(bio_out, key, 0, NULL);
     ...
     OPENSSL_BOX_EVP_PKEY_free(key);
     OPENSSL_BOX_EVP_PKEY_CTX_free(gctx);

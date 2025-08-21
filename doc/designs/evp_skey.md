@@ -40,7 +40,7 @@ as separate arguments in the new API even though they could have been provided a
 an element of a OSSL_PARAM array argument.
 
 There are other parameters that some but not all ciphers take. You'll find a
-substantial list in the manual for EVP_CipherInit(), and they are suitable for
+substantial list in the manual for OPENSSL_BOX_EVP_CipherInit(), and they are suitable for
 passing via OSSL_PARAM. The difference here is that *those* params are not
 provider-specific but algorithm-specific or operation-specific.
 
@@ -97,9 +97,9 @@ EVP_SKEY object doesn't reuse the pattern 'allocate - assign', these operations
 are combined.
 
 ```C
-EVP_SKEY *EVP_SKEY_generate(OSSL_LIB_CTX *libctx, const char *skeymgmtname,
+EVP_SKEY *OPENSSL_BOX_EVP_SKEY_generate(OSSL_LIB_CTX *libctx, const char *skeymgmtname,
                             const char *propquery, const OSSL_PARAM *params);
-EVP_SKEY *EVP_SKEY_import(OSSL_LIB_CTX *libctx, const char *skeymgmtname,
+EVP_SKEY *OPENSSL_BOX_EVP_SKEY_import(OSSL_LIB_CTX *libctx, const char *skeymgmtname,
                           const char *propquery,
                           int selection, const OSSL_PARAM *params);
 EVP_SKEY *EVP_SKEY_import_raw(OSSL_LIB_CTX *libctx, const char *skeymgmtname,
@@ -113,7 +113,7 @@ Exporting the key object
 ------------------------
 
 ```C
-int EVP_SKEY_export(const EVP_SKEY *skey, int selection,
+int OPENSSL_BOX_EVP_SKEY_export(const EVP_SKEY *skey, int selection,
                     OSSL_CALLBACK *export_cb, void *export_cbarg);
 ```
 
@@ -123,13 +123,13 @@ Using EVP_SKEY in cipher operations
 We provide a function
 
 ```C
-int EVP_CipherInit_SKEY(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CipherInit_SKEY(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
                         EVP_SKEY *skey, const unsigned char *iv, size_t iv_len,
                         int enc, const OSSL_PARAM params[]);
 ```
 
-similar to `EVP_CipherInit_ex2`. After call to this function, the normal
-EVP_CipherUpdate/EVP_CipherFinal API can be used.
+similar to `OPENSSL_BOX_EVP_CipherInit_ex2`. After call to this function, the normal
+OPENSSL_BOX_EVP_CipherUpdate/OPENSSL_BOX_EVP_CipherFinal API can be used.
 
 Using EVP_SKEY with EVP_MAC
 ---------------------------
@@ -139,7 +139,7 @@ int OPENSSL_BOX_EVP_MAC_init_SKEY(EVP_MAC_CTX *ctx, const EVP_SKEY *skey,
                       const OSSL_PARAM params[]);
 ```
 
-similar to `EVP_MAC_init`
+similar to `OPENSSL_BOX_EVP_MAC_init`
 
 API to derive an EVP_SKEY object
 --------------------------------

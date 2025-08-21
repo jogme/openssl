@@ -11,7 +11,7 @@ Support for computing Siphash MACs through the B<EVP_MAC> API.
 =head2 Identity
 
 This implementation is identified with this name and properties, to be
-used with EVP_MAC_fetch():
+used with OPENSSL_BOX_EVP_MAC_fetch():
 
 =over 4
 
@@ -35,7 +35,7 @@ The length of the "size" parameter should not exceed that of a B<size_t>.
 =item "key" (B<OSSL_MAC_PARAM_KEY>) <octet string>
 
 Sets the MAC key.
-Setting this parameter is identical to passing a I<key> to L<EVP_MAC_init(3)>.
+Setting this parameter is identical to passing a I<key> to L<OPENSSL_BOX_EVP_MAC_init(3)>.
 
 =item "size" (B<OSSL_MAC_PARAM_SIZE>) <unsigned integer>
 

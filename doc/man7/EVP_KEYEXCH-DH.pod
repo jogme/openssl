@@ -89,7 +89,7 @@ key:
         OSSL_PARAM params[2];
         unsigned char *secret = NULL;
         size_t secret_len = 0;
-        EVP_PKEY_CTX *dctx = EVP_PKEY_CTX_new_from_pkey(NULL, host_key, NULL);
+        EVP_PKEY_CTX *dctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, host_key, NULL);
 
         OPENSSL_BOX_EVP_PKEY_derive_init(dctx);
 

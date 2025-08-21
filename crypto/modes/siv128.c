@@ -114,7 +114,7 @@ __owur static ossl_inline int siv128_do_s2v_p(SIV128_CONTEXT *ctx, SIV_BLOCK *ou
         if (!OPENSSL_BOX_EVP_MAC_update(mac_ctx, t.byte, SIV_LEN))
             goto err;
     }
-    if (!EVP_MAC_final(mac_ctx, out->byte, &out_len, sizeof(out->byte))
+    if (!OPENSSL_BOX_EVP_MAC_final(mac_ctx, out->byte, &out_len, sizeof(out->byte))
         || out_len != SIV_LEN)
         goto err;
 
@@ -132,9 +132,9 @@ __owur static ossl_inline int siv128_do_encrypt(EVP_CIPHER_CTX *ctx, unsigned ch
 {
     int out_len = (int)len;
 
-    if (!EVP_CipherInit_ex(ctx, NULL, NULL, NULL, icv->byte, 1))
+    if (!OPENSSL_BOX_EVP_CipherInit_ex(ctx, NULL, NULL, NULL, icv->byte, 1))
         return 0;
-    return EVP_EncryptUpdate(ctx, out, &out_len, in, out_len);
+    return OPENSSL_BOX_EVP_EncryptUpdate(ctx, out, &out_len, in, out_len);
 }
 
 /*
@@ -193,13 +193,13 @@ int ossl_siv128_init(SIV128_CONTEXT *ctx, const unsigned char *key, int klen,
 
     if ((ctx->cipher_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL
             || (ctx->mac =
-                EVP_MAC_fetch(libctx, OSSL_MAC_NAME_CMAC, propq)) == NULL
+                OPENSSL_BOX_EVP_MAC_fetch(libctx, OSSL_MAC_NAME_CMAC, propq)) == NULL
             || (ctx->mac_ctx_init = OPENSSL_BOX_EVP_MAC_CTX_new(ctx->mac)) == NULL
             || !OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx->mac_ctx_init, params)
-            || !EVP_EncryptInit_ex(ctx->cipher_ctx, ctr, NULL, key + klen, NULL)
+            || !OPENSSL_BOX_EVP_EncryptInit_ex(ctx->cipher_ctx, ctr, NULL, key + klen, NULL)
             || (mac_ctx = OPENSSL_BOX_EVP_MAC_CTX_dup(ctx->mac_ctx_init)) == NULL
             || !OPENSSL_BOX_EVP_MAC_update(mac_ctx, zero, sizeof(zero))
-            || !EVP_MAC_final(mac_ctx, ctx->d.byte, &out_len,
+            || !OPENSSL_BOX_EVP_MAC_final(mac_ctx, ctx->d.byte, &out_len,
                               sizeof(ctx->d.byte))) {
         OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx->cipher_ctx);
         OPENSSL_BOX_EVP_MAC_CTX_free(ctx->mac_ctx_init);
@@ -254,7 +254,7 @@ int ossl_siv128_aad(SIV128_CONTEXT *ctx, const unsigned char *aad,
 
     if ((mac_ctx = OPENSSL_BOX_EVP_MAC_CTX_dup(ctx->mac_ctx_init)) == NULL
         || !OPENSSL_BOX_EVP_MAC_update(mac_ctx, aad, len)
-        || !EVP_MAC_final(mac_ctx, mac_out.byte, &out_len,
+        || !OPENSSL_BOX_EVP_MAC_final(mac_ctx, mac_out.byte, &out_len,
                           sizeof(mac_out.byte))
         || out_len != SIV_LEN) {
         OPENSSL_BOX_EVP_MAC_CTX_free(mac_ctx);

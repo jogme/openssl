@@ -388,7 +388,7 @@ static int cms_RecipientInfo_ktri_init(CMS_RecipientInfo *ri, X509 *recip,
     ktri->recip = recip;
 
     if (flags & CMS_KEY_PARAM) {
-        ktri->pctx = EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(ctx),
+        ktri->pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(ctx),
                                                 ktri->pkey,
                                                 ossl_cms_ctx_get0_propq(ctx));
         if (ktri->pctx == NULL)
@@ -557,7 +557,7 @@ static int cms_RecipientInfo_ktri_encrypt(const CMS_ContentInfo *cms,
         if (!ossl_cms_env_asn1_ctrl(ri, 0))
             goto err;
     } else {
-        pctx = EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(ctx),
+        pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(ctx),
                                           ktri->pkey,
                                           ossl_cms_ctx_get0_propq(ctx));
         if (pctx == NULL)
@@ -567,14 +567,14 @@ static int cms_RecipientInfo_ktri_encrypt(const CMS_ContentInfo *cms,
             goto err;
     }
 
-    if (EVP_PKEY_encrypt(pctx, NULL, &eklen, ec->key, ec->keylen) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_encrypt(pctx, NULL, &eklen, ec->key, ec->keylen) <= 0)
         goto err;
 
     ek = OPENSSL_malloc(eklen);
     if (ek == NULL)
         goto err;
 
-    if (EVP_PKEY_encrypt(pctx, ek, &eklen, ec->key, ec->keylen) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_encrypt(pctx, ek, &eklen, ec->key, ec->keylen) <= 0)
         goto err;
 
     ASN1_STRING_set0(ktri->encryptedKey, ek, (int)eklen);
@@ -622,7 +622,7 @@ static int cms_RecipientInfo_ktri_decrypt(CMS_ContentInfo *cms,
         OBJ_obj2txt(name, sizeof(name), calg->algorithm, 0);
 
         (void)ERR_set_mark();
-        fetched_cipher = EVP_CIPHER_fetch(libctx, name, propq);
+        fetched_cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, name, propq);
 
         if (fetched_cipher != NULL)
             cipher = fetched_cipher;
@@ -639,7 +639,7 @@ static int cms_RecipientInfo_ktri_decrypt(CMS_ContentInfo *cms,
         OPENSSL_BOX_EVP_CIPHER_free(fetched_cipher);
     }
 
-    ktri->pctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
+    ktri->pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
     if (ktri->pctx == NULL)
         goto err;
 
@@ -654,7 +654,7 @@ static int cms_RecipientInfo_ktri_decrypt(CMS_ContentInfo *cms,
          * decryption means that the key matches ciphertext (which never
          * was the case, implicit rejection or not), so to make it work
          * disable implicit rejection for RSA keys */
-        EVP_PKEY_CTX_ctrl_str(ktri->pctx, "rsa_pkcs1_implicit_rejection", "0");
+        OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(ktri->pctx, "rsa_pkcs1_implicit_rejection", "0");
 
     if (evp_pkey_decrypt_alloc(ktri->pctx, &ek, &eklen, fixlen,
                                ktri->encryptedKey->data,
@@ -884,7 +884,7 @@ static EVP_CIPHER *cms_get_key_wrap_cipher(size_t keylen, const CMS_CTX *ctx)
     default:
         return NULL;
     }
-    return EVP_CIPHER_fetch(ossl_cms_ctx_get0_libctx(ctx), alg,
+    return OPENSSL_BOX_EVP_CIPHER_fetch(ossl_cms_ctx_get0_libctx(ctx), alg,
                             ossl_cms_ctx_get0_propq(ctx));
 }
 
@@ -933,9 +933,9 @@ static int cms_RecipientInfo_kekri_encrypt(const CMS_ContentInfo *cms,
     }
 
     OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPHER_CTX_FLAG_WRAP_ALLOW);
-    if (!EVP_EncryptInit_ex(ctx, cipher, NULL, kekri->key, NULL)
-            || !EVP_EncryptUpdate(ctx, wkey, &wkeylen, ec->key, (int)ec->keylen)
-            || !EVP_EncryptFinal_ex(ctx, wkey + wkeylen, &outlen)) {
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex(ctx, cipher, NULL, kekri->key, NULL)
+            || !OPENSSL_BOX_EVP_EncryptUpdate(ctx, wkey, &wkeylen, ec->key, (int)ec->keylen)
+            || !OPENSSL_BOX_EVP_EncryptFinal_ex(ctx, wkey + wkeylen, &outlen)) {
         ERR_raise(ERR_LIB_CMS, CMS_R_WRAP_ERROR);
         goto err;
     }
@@ -1013,11 +1013,11 @@ static int cms_RecipientInfo_kekri_decrypt(CMS_ContentInfo *cms,
         goto err;
     }
 
-    if (!EVP_DecryptInit_ex(ctx, cipher, NULL, kekri->key, NULL)
-            || !EVP_DecryptUpdate(ctx, ukey, &ukeylen,
+    if (!OPENSSL_BOX_EVP_DecryptInit_ex(ctx, cipher, NULL, kekri->key, NULL)
+            || !OPENSSL_BOX_EVP_DecryptUpdate(ctx, ukey, &ukeylen,
                                   kekri->encryptedKey->data,
                                   kekri->encryptedKey->length)
-            || !EVP_DecryptFinal_ex(ctx, ukey + ukeylen, &outlen)) {
+            || !OPENSSL_BOX_EVP_DecryptFinal_ex(ctx, ukey + ukeylen, &outlen)) {
         ERR_raise(ERR_LIB_CMS, CMS_R_UNWRAP_ERROR);
         goto err;
     }
@@ -1378,7 +1378,7 @@ int ossl_cms_pkey_get_ri_type(EVP_PKEY *pk)
      * and/or RSA-KEM.
      */
     if (evp_pkey_is_provided(pk)
-        && EVP_PKEY_get_int_param(pk, OSSL_PKEY_PARAM_CMS_RI_TYPE, &ri_type))
+        && OPENSSL_BOX_EVP_PKEY_get_int_param(pk, OSSL_PKEY_PARAM_CMS_RI_TYPE, &ri_type))
         return ri_type;
 
     /* Check types that we know about */
@@ -1510,12 +1510,12 @@ int ossl_cms_RecipientInfo_wrap_init(CMS_RecipientInfo *ri,
     else
         kekcipher_name = SN_id_aes256_wrap;
 enc:
-    fetched_kekcipher = EVP_CIPHER_fetch(ossl_cms_ctx_get0_libctx(cms_ctx),
+    fetched_kekcipher = OPENSSL_BOX_EVP_CIPHER_fetch(ossl_cms_ctx_get0_libctx(cms_ctx),
                                          kekcipher_name,
                                          ossl_cms_ctx_get0_propq(cms_ctx));
     if (fetched_kekcipher == NULL)
         return 0;
-    ret = EVP_EncryptInit_ex(ctx, fetched_kekcipher, NULL, NULL, NULL);
+    ret = OPENSSL_BOX_EVP_EncryptInit_ex(ctx, fetched_kekcipher, NULL, NULL, NULL);
     OPENSSL_BOX_EVP_CIPHER_free(fetched_kekcipher);
     return ret;
 }

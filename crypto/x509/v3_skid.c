@@ -69,7 +69,7 @@ ASN1_OCTET_STRING *ossl_x509_pubkey_hash(X509_PUBKEY *pubkey)
     }
     if (!ossl_x509_PUBKEY_get0_libctx(&libctx, &propq, pubkey))
         return NULL;
-    if ((md = EVP_MD_fetch(libctx, SN_sha1, propq)) == NULL)
+    if ((md = OPENSSL_BOX_EVP_MD_fetch(libctx, SN_sha1, propq)) == NULL)
         return NULL;
     if ((oct = ASN1_OCTET_STRING_new()) == NULL) {
         OPENSSL_BOX_EVP_MD_free(md);
@@ -77,7 +77,7 @@ ASN1_OCTET_STRING *ossl_x509_pubkey_hash(X509_PUBKEY *pubkey)
     }
 
     X509_PUBKEY_get0_param(NULL, &pk, &pklen, NULL, pubkey);
-    if (EVP_Digest(pk, pklen, pkey_dig, &diglen, md, NULL)
+    if (OPENSSL_BOX_EVP_Digest(pk, pklen, pkey_dig, &diglen, md, NULL)
             && ASN1_OCTET_STRING_set(oct, pkey_dig, diglen)) {
         OPENSSL_BOX_EVP_MD_free(md);
         return oct;

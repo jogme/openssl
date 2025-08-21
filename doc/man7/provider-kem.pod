@@ -52,8 +52,8 @@ for further information.
 
 The asymmetric kem (OSSL_OP_KEM) operation enables providers to
 implement asymmetric kem algorithms and make them available to applications
-via the API functions L<EVP_PKEY_encapsulate(3)>,
-L<EVP_PKEY_decapsulate(3)> and other related functions.
+via the API functions L<OPENSSL_BOX_EVP_PKEY_encapsulate(3)>,
+L<OPENSSL_BOX_EVP_PKEY_decapsulate(3)> and other related functions.
 
 All "functions" mentioned here are passed as function pointers between
 F<libcrypto> and the provider in L<OSSL_DISPATCH(3)> arrays via

@@ -79,7 +79,7 @@ OPENSSL_BOX_EVP_PKEY_type(EVP_PKEY_RSA2) will return B<EVP_PKEY_RSA>.
 OPENSSL_BOX_EVP_PKEY_set1_RSA(), OPENSSL_BOX_EVP_PKEY_set1_DSA(), OPENSSL_BOX_EVP_PKEY_set1_DH() and
 OPENSSL_BOX_EVP_PKEY_set1_EC_KEY() set the key referenced by I<pkey> to I<key>. These
 functions are deprecated. Applications should instead use
-L<EVP_PKEY_fromdata(3)>.
+L<OPENSSL_BOX_EVP_PKEY_fromdata(3)>.
 
 EVP_PKEY_assign_RSA(), EVP_PKEY_assign_DSA(), EVP_PKEY_assign_DH(),
 EVP_PKEY_assign_EC_KEY(), EVP_PKEY_assign_POLY1305() and
@@ -88,7 +88,7 @@ the supplied I<key> internally and so I<key> will be freed when the parent
 I<pkey> is freed. These macros are deprecated. Applications should instead read
 an EVP_PKEY directly using the OSSL_DECODER APIs (see
 L<OSSL_DECODER_CTX_new_for_pkey(3)>), or construct an EVP_PKEY from data using
-L<EVP_PKEY_fromdata(3)>.
+L<OPENSSL_BOX_EVP_PKEY_fromdata(3)>.
 
 OPENSSL_BOX_EVP_PKEY_get1_RSA(), OPENSSL_BOX_EVP_PKEY_get1_DSA(), OPENSSL_BOX_EVP_PKEY_get1_DH() and
 OPENSSL_BOX_EVP_PKEY_get1_EC_KEY() return the referenced key in I<pkey> or NULL if the

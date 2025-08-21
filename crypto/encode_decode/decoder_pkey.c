@@ -130,7 +130,7 @@ static int decoder_construct_pkey(OSSL_DECODER_INSTANCE *decoder_inst,
         /* To allow it to be freed further down */
         if (!OPENSSL_BOX_EVP_KEYMGMT_up_ref(keymgmt))
             return 0;
-    } else if ((keymgmt = EVP_KEYMGMT_fetch(data->libctx,
+    } else if ((keymgmt = OPENSSL_BOX_EVP_KEYMGMT_fetch(data->libctx,
                                             data->object_type,
                                             data->propq)) != NULL) {
         keymgmt_prov = OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt);
@@ -491,7 +491,7 @@ static int ossl_decoder_ctx_setup_for_pkey(OSSL_DECODER_CTX *ctx,
     /*
      * Enumerate all keymgmts into a stack.
      *
-     * We could nest EVP_KEYMGMT_do_all_provided inside
+     * We could nest OPENSSL_BOX_EVP_KEYMGMT_do_all_provided inside
      * OSSL_DECODER_do_all_provided or vice versa but these functions become
      * bottlenecks if called repeatedly, which is why we collect the
      * EVP_KEYMGMTs into a stack here and call both functions only once.
@@ -499,7 +499,7 @@ static int ossl_decoder_ctx_setup_for_pkey(OSSL_DECODER_CTX *ctx,
      * We resolve the keytype string to a name ID so we don't have to resolve it
      * multiple times, avoiding repeated calls to OPENSSL_BOX_EVP_KEYMGMT_is_a, which is a
      * performance bottleneck. However, we do this lazily on the first call to
-     * collect_keymgmt made by EVP_KEYMGMT_do_all_provided, rather than do it
+     * collect_keymgmt made by OPENSSL_BOX_EVP_KEYMGMT_do_all_provided, rather than do it
      * upfront, as this ensures that the names for all loaded providers have
      * been registered by the time we try to resolve the keytype string.
      */
@@ -508,7 +508,7 @@ static int ossl_decoder_ctx_setup_for_pkey(OSSL_DECODER_CTX *ctx,
     collect_data.keymgmts       = keymgmts;
     collect_data.keytype        = keytype;
     collect_data.pq             = pq;
-    EVP_KEYMGMT_do_all_provided(libctx, collect_keymgmt, &collect_data);
+    OPENSSL_BOX_EVP_KEYMGMT_do_all_provided(libctx, collect_keymgmt, &collect_data);
 
     if (collect_data.error_occurred)
         goto err;

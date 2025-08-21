@@ -355,22 +355,22 @@ static int SSHKDF(const EVP_MD *evp_md,
     if (md == NULL)
         return 0;
 
-    if (!EVP_DigestInit_ex(md, evp_md, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(md, evp_md, NULL))
         goto out;
 
-    if (!EVP_DigestUpdate(md, key, key_len))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(md, key, key_len))
         goto out;
 
-    if (!EVP_DigestUpdate(md, xcghash, xcghash_len))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(md, xcghash, xcghash_len))
         goto out;
 
-    if (!EVP_DigestUpdate(md, &type, 1))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(md, &type, 1))
         goto out;
 
-    if (!EVP_DigestUpdate(md, session_id, session_id_len))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(md, session_id, session_id_len))
         goto out;
 
-    if (!EVP_DigestFinal_ex(md, digest, &dsize))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(md, digest, &dsize))
         goto out;
 
     if (okey_len < dsize) {
@@ -383,19 +383,19 @@ static int SSHKDF(const EVP_MD *evp_md,
 
     for (cursize = dsize; cursize < okey_len; cursize += dsize) {
 
-        if (!EVP_DigestInit_ex(md, evp_md, NULL))
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(md, evp_md, NULL))
             goto out;
 
-        if (!EVP_DigestUpdate(md, key, key_len))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md, key, key_len))
             goto out;
 
-        if (!EVP_DigestUpdate(md, xcghash, xcghash_len))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md, xcghash, xcghash_len))
             goto out;
 
-        if (!EVP_DigestUpdate(md, okey, cursize))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md, okey, cursize))
             goto out;
 
-        if (!EVP_DigestFinal_ex(md, digest, &dsize))
+        if (!OPENSSL_BOX_EVP_DigestFinal_ex(md, digest, &dsize))
             goto out;
 
         if (okey_len < cursize + dsize) {

@@ -60,7 +60,7 @@ int CMS_RecipientInfo_kemri_set0_pkey(CMS_RecipientInfo *ri, EVP_PKEY *pk)
     kemri->pctx = NULL;
 
     if (pk != NULL) {
-        pctx = EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(kemri->cms_ctx), pk,
+        pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(kemri->cms_ctx), pk,
                                           ossl_cms_ctx_get0_propq(kemri->cms_ctx));
         if (pctx == NULL || OPENSSL_BOX_EVP_PKEY_decapsulate_init(pctx, NULL) <= 0)
             goto err;
@@ -121,7 +121,7 @@ int ossl_cms_RecipientInfo_kemri_init(CMS_RecipientInfo *ri, X509 *recip,
     if (!X509_ALGOR_copy(kemri->kem, x_alg))
         return 0;
 
-    kemri->pctx = EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(ctx),
+    kemri->pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(ctx),
                                              recipPubKey,
                                              ossl_cms_ctx_get0_propq(ctx));
     if (kemri->pctx == NULL)
@@ -272,15 +272,15 @@ static int cms_kek_cipher(unsigned char **pout, size_t *poutlen,
         goto err;
 
     /* Set KEK in context */
-    if (!EVP_CipherInit_ex(kemri->ctx, NULL, NULL, kek, NULL, enc))
+    if (!OPENSSL_BOX_EVP_CipherInit_ex(kemri->ctx, NULL, NULL, kek, NULL, enc))
         goto err;
     /* obtain output length of ciphered key */
-    if (!EVP_CipherUpdate(kemri->ctx, NULL, &outlen, in, (int)inlen))
+    if (!OPENSSL_BOX_EVP_CipherUpdate(kemri->ctx, NULL, &outlen, in, (int)inlen))
         goto err;
     out = OPENSSL_malloc(outlen);
     if (out == NULL)
         goto err;
-    if (!EVP_CipherUpdate(kemri->ctx, out, &outlen, in, (int)inlen))
+    if (!OPENSSL_BOX_EVP_CipherUpdate(kemri->ctx, out, &outlen, in, (int)inlen))
         goto err;
     *pout = out;
     out = NULL;
@@ -327,14 +327,14 @@ int ossl_cms_RecipientInfo_kemri_encrypt(const CMS_ContentInfo *cms,
     if (!ossl_cms_env_asn1_ctrl(ri, 0))
         return 0;
 
-    if (EVP_PKEY_encapsulate(kemri->pctx, NULL, &kem_ct_len, NULL, &kem_secret_len) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_encapsulate(kemri->pctx, NULL, &kem_ct_len, NULL, &kem_secret_len) <= 0)
         return 0;
     kem_ct = OPENSSL_malloc(kem_ct_len);
     kem_secret = OPENSSL_malloc(kem_secret_len);
     if (kem_ct == NULL || kem_secret == NULL)
         goto err;
 
-    if (EVP_PKEY_encapsulate(kemri->pctx, kem_ct, &kem_ct_len, kem_secret, &kem_secret_len) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_encapsulate(kemri->pctx, kem_ct, &kem_ct_len, kem_secret, &kem_secret_len) <= 0)
         goto err;
 
     ASN1_STRING_set0(kemri->kemct, kem_ct, (int)kem_ct_len);
@@ -388,13 +388,13 @@ int ossl_cms_RecipientInfo_kemri_decrypt(const CMS_ContentInfo *cms,
     kem_ct = ASN1_STRING_get0_data(kemri->kemct);
     kem_ct_len = ASN1_STRING_length(kemri->kemct);
 
-    if (EVP_PKEY_decapsulate(kemri->pctx, NULL, &kem_secret_len, kem_ct, kem_ct_len) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_decapsulate(kemri->pctx, NULL, &kem_secret_len, kem_ct, kem_ct_len) <= 0)
         return 0;
     kem_secret = OPENSSL_malloc(kem_secret_len);
     if (kem_secret == NULL)
         goto err;
 
-    if (EVP_PKEY_decapsulate(kemri->pctx, kem_secret, &kem_secret_len, kem_ct, kem_ct_len) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_decapsulate(kemri->pctx, kem_secret, &kem_secret_len, kem_ct, kem_ct_len) <= 0)
         goto err;
 
     /* Attempt to decrypt CEK */

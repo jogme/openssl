@@ -70,7 +70,7 @@ static int pkcs12_gen_gost_mac_key(const char *pass, int passlen,
         return 0;
     }
 
-    if (!PKCS5_PBKDF2_HMAC(pass, passlen, salt, saltlen, iter,
+    if (!OPENSSL_BOX_PKCS5_PBKDF2_HMAC(pass, passlen, salt, saltlen, iter,
                            digest, sizeof(out), out)) {
         return 0;
     }
@@ -132,13 +132,13 @@ static int PBMAC1_PBKDF2_HMAC(OSSL_LIB_CTX *ctx, const char *propq,
         kdf_hmac_nid = OBJ_obj2nid(kdf_hmac_oid);
     }
 
-    kdf_md = EVP_MD_fetch(ctx, OBJ_nid2sn(ossl_hmac2mdnid(kdf_hmac_nid)), propq);
+    kdf_md = OPENSSL_BOX_EVP_MD_fetch(ctx, OBJ_nid2sn(ossl_hmac2mdnid(kdf_hmac_nid)), propq);
     if (kdf_md == NULL) {
         ERR_raise(ERR_LIB_PKCS12, ERR_R_FETCH_FAILED);
         goto err;
     }
 
-    if (PKCS5_PBKDF2_HMAC(pass, passlen, pbkdf2_salt->data, pbkdf2_salt->length,
+    if (OPENSSL_BOX_PKCS5_PBKDF2_HMAC(pass, passlen, pbkdf2_salt->data, pbkdf2_salt->length,
                           ASN1_INTEGER_get(pbkdf2_param->iter), kdf_md, keylen, key) <= 0) {
         ERR_raise(ERR_LIB_PKCS12, ERR_R_INTERNAL_ERROR);
         goto err;
@@ -200,7 +200,7 @@ static int pkcs12_gen_mac(PKCS12 *p12, const char *pass, int passlen,
             return 0;
     }
     (void)ERR_set_mark();
-    md = md_fetch = EVP_MD_fetch(p12->authsafes->ctx.libctx, md_name,
+    md = md_fetch = OPENSSL_BOX_EVP_MD_fetch(p12->authsafes->ctx.libctx, md_name,
                                  p12->authsafes->ctx.propq);
     if (md == NULL)
         md = EVP_get_digestbynid(OBJ_obj2nid(macoid));
@@ -242,7 +242,7 @@ static int pkcs12_gen_mac(PKCS12 *p12, const char *pass, int passlen,
 
             if (OBJ_obj2txt(hmac_md_name, sizeof(hmac_md_name), OBJ_nid2obj(pbmac1_kdf_nid), 0) < 0)
                 goto err;
-            hmac_md = EVP_MD_fetch(NULL, hmac_md_name, NULL);
+            hmac_md = OPENSSL_BOX_EVP_MD_fetch(NULL, hmac_md_name, NULL);
             if (hmac_md == NULL)
                 goto err;
             fetched = 1;
@@ -379,7 +379,7 @@ static int pkcs12_pbmac1_pbkdf2_key_gen(const char *pass, int passlen,
                                         unsigned char *out,
                                         const EVP_MD *md_type)
 {
-    return PKCS5_PBKDF2_HMAC(pass, passlen, salt, saltlen, iter,
+    return OPENSSL_BOX_PKCS5_PBKDF2_HMAC(pass, passlen, salt, saltlen, iter,
                              md_type, keylen, out);
 }
 

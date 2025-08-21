@@ -13,7 +13,7 @@
 /*
  * X509_ctrl_str() is sorely lacking in libcrypto, but is still needed to
  * allow the application to process verification options in a manner similar
- * to signature or other options that pass through EVP_PKEY_CTX_ctrl_str(),
+ * to signature or other options that pass through OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(),
  * for uniformity.
  *
  * As soon as more stuff is added, the code will need serious rework.  For

@@ -107,7 +107,7 @@ ASN1_BIT_STRING *ossl_cmp_calc_protection(const OSSL_CMP_CTX *ctx,
                       CMP_R_MISSING_KEY_INPUT_FOR_CREATING_PROTECTION);
             return NULL;
         }
-        if (EVP_PKEY_get_default_digest_name(ctx->pkey, name, sizeof(name)) > 0
+        if (OPENSSL_BOX_EVP_PKEY_get_default_digest_name(ctx->pkey, name, sizeof(name)) > 0
             && strcmp(name, "UNDEF") == 0) /* at least for Ed25519, Ed448 */
             md = NULL;
 

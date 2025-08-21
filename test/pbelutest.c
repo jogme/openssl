@@ -21,7 +21,7 @@ static int test_pbelu(void)
     int pbe_type, pbe_nid, last_type = -1, last_nid = -1;
 
     for (i = 0; OPENSSL_BOX_EVP_PBE_get(&pbe_type, &pbe_nid, i) != 0; i++) {
-        if (!TEST_true(EVP_PBE_find(pbe_type, pbe_nid, NULL, NULL, 0))) {
+        if (!TEST_true(OPENSSL_BOX_EVP_PBE_find(pbe_type, pbe_nid, NULL, NULL, 0))) {
             TEST_note("i=%d, pbe_type=%d, pbe_nid=%d", i, pbe_type, pbe_nid);
             failed = 1;
             break;

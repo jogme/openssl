@@ -78,7 +78,7 @@ static int setdigest(PROV_LMS_CTX *ctx, const char *digestname)
             goto end;
         OPENSSL_BOX_EVP_MD_free(ctx->md);
     }
-    ctx->md = EVP_MD_fetch(ctx->libctx, pub_digestname, ctx->propq);
+    ctx->md = OPENSSL_BOX_EVP_MD_fetch(ctx->libctx, pub_digestname, ctx->propq);
     if (ctx->md == NULL)
         return 0;
 end:

@@ -27,9 +27,9 @@ static EVP_PKEY *dsa_genparams(OSSL_LIB_CTX *libctx, const char *propq)
     EVP_PKEY_CTX *ctx = NULL;
 
     /* Use the dsa params in a EVP_PKEY ctx */
-    ctx = EVP_PKEY_CTX_new_from_name(libctx, "DSA", propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "DSA", propq);
     if (ctx == NULL) {
-        fprintf(stderr, "EVP_PKEY_CTX_new_from_name() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_CTX_new_from_name() failed\n");
         return NULL;
     }
 
@@ -58,9 +58,9 @@ int main(int argc, char **argv)
         goto cleanup;
 
     /* Use the dsa params in a EVP_PKEY ctx */
-    ctx = EVP_PKEY_CTX_new_from_pkey(libctx, dsaparamskey, propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, dsaparamskey, propq);
     if (ctx == NULL) {
-        fprintf(stderr, "EVP_PKEY_CTX_new_from_pkey() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey() failed\n");
         goto cleanup;
     }
 

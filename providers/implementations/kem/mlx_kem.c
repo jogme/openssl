@@ -167,10 +167,10 @@ static int mlx_kem_encapsulate(void *vctx, unsigned char *ctext, size_t *clen,
     encap_slen = ML_KEM_SHARED_SECRET_BYTES;
     cbuf = ctext + ml_kem_slot * key->xinfo->pubkey_bytes;
     sbuf = shsec + ml_kem_slot * key->xinfo->shsec_bytes;
-    ctx = EVP_PKEY_CTX_new_from_pkey(key->libctx, key->mkey, key->propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(key->libctx, key->mkey, key->propq);
     if (ctx == NULL
         || OPENSSL_BOX_EVP_PKEY_encapsulate_init(ctx, NULL) <= 0
-        || EVP_PKEY_encapsulate(ctx, cbuf, &encap_clen, sbuf, &encap_slen) <= 0)
+        || OPENSSL_BOX_EVP_PKEY_encapsulate(ctx, cbuf, &encap_clen, sbuf, &encap_slen) <= 0)
         goto end;
     if (encap_clen != key->minfo->ctext_bytes) {
         ERR_raise_data(ERR_LIB_PROV, ERR_R_INTERNAL_ERROR,
@@ -202,11 +202,11 @@ static int mlx_kem_encapsulate(void *vctx, unsigned char *ctext, size_t *clen,
      */
     cbuf = ctext + (1 - ml_kem_slot) * key->minfo->ctext_bytes;
     encap_clen = key->xinfo->pubkey_bytes;
-    ctx = EVP_PKEY_CTX_new_from_pkey(key->libctx, key->xkey, key->propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(key->libctx, key->xkey, key->propq);
     if (ctx == NULL
         || OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) <= 0
         || OPENSSL_BOX_EVP_PKEY_keygen(ctx, &xkey) <= 0
-        || EVP_PKEY_get_octet_string_param(xkey, OSSL_PKEY_PARAM_ENCODED_PUBLIC_KEY,
+        || OPENSSL_BOX_EVP_PKEY_get_octet_string_param(xkey, OSSL_PKEY_PARAM_ENCODED_PUBLIC_KEY,
                                            cbuf, encap_clen, &encap_clen) <= 0)
         goto end;
     if (encap_clen != key->xinfo->pubkey_bytes) {
@@ -220,7 +220,7 @@ static int mlx_kem_encapsulate(void *vctx, unsigned char *ctext, size_t *clen,
     /* Derive the ECDH shared secret */
     encap_slen = key->xinfo->shsec_bytes;
     sbuf = shsec + (1 - ml_kem_slot) * ML_KEM_SHARED_SECRET_BYTES;
-    ctx = EVP_PKEY_CTX_new_from_pkey(key->libctx, xkey, key->propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(key->libctx, xkey, key->propq);
     if (ctx == NULL
         || OPENSSL_BOX_EVP_PKEY_derive_init(ctx) <= 0
         || OPENSSL_BOX_EVP_PKEY_derive_set_peer(ctx, key->xkey) <= 0
@@ -287,10 +287,10 @@ static int mlx_kem_decapsulate(void *vctx, uint8_t *shsec, size_t *slen,
     decap_slen = ML_KEM_SHARED_SECRET_BYTES;
     cbuf = ctext + ml_kem_slot * key->xinfo->pubkey_bytes;
     sbuf = shsec + ml_kem_slot * key->xinfo->shsec_bytes;
-    ctx = EVP_PKEY_CTX_new_from_pkey(key->libctx, key->mkey, key->propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(key->libctx, key->mkey, key->propq);
     if (ctx == NULL
         || OPENSSL_BOX_EVP_PKEY_decapsulate_init(ctx, NULL) <= 0
-        || EVP_PKEY_decapsulate(ctx, sbuf, &decap_slen, cbuf, decap_clen) <= 0)
+        || OPENSSL_BOX_EVP_PKEY_decapsulate(ctx, sbuf, &decap_slen, cbuf, decap_clen) <= 0)
         goto end;
     if (decap_slen != ML_KEM_SHARED_SECRET_BYTES) {
         ERR_raise_data(ERR_LIB_PROV, ERR_R_INTERNAL_ERROR,
@@ -305,7 +305,7 @@ static int mlx_kem_decapsulate(void *vctx, uint8_t *shsec, size_t *slen,
     decap_slen = key->xinfo->shsec_bytes;
     cbuf = ctext + (1 - ml_kem_slot) * key->minfo->ctext_bytes;
     sbuf = shsec + (1 - ml_kem_slot) * ML_KEM_SHARED_SECRET_BYTES;
-    ctx = EVP_PKEY_CTX_new_from_pkey(key->libctx, key->xkey, key->propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(key->libctx, key->xkey, key->propq);
     if (ctx == NULL
         || (xkey = OPENSSL_BOX_EVP_PKEY_new()) == NULL
         || OPENSSL_BOX_EVP_PKEY_copy_parameters(xkey, key->xkey) <= 0

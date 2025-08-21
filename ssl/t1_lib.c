@@ -335,7 +335,7 @@ static int add_provider_groups(const OSSL_PARAM params[], void *data)
      */
     ret = 1;
     ERR_set_mark();
-    keymgmt = EVP_KEYMGMT_fetch(ctx->libctx, ginf->algorithm, ctx->propq);
+    keymgmt = OPENSSL_BOX_EVP_KEYMGMT_fetch(ctx->libctx, ginf->algorithm, ctx->propq);
     if (keymgmt != NULL) {
         /* We have successfully fetched the algorithm, we can use the group. */
         ctx->group_list_len++;
@@ -592,7 +592,7 @@ static int add_provider_sigalgs(const OSSL_PARAM params[], void *data)
                : (sinf->sig_name != NULL
                   ? sinf->sig_name
                   : sinf->sigalg_name));
-    keymgmt = EVP_KEYMGMT_fetch(ctx->libctx, keytype, ctx->propq);
+    keymgmt = OPENSSL_BOX_EVP_KEYMGMT_fetch(ctx->libctx, keytype, ctx->propq);
     if (keymgmt != NULL) {
         /*
          * We have successfully fetched the algorithm - however if the provider
@@ -2231,7 +2231,7 @@ int ssl_setup_sigalgs(SSL_CTX *ctx)
             cache[i].available = 0;
             continue;
         }
-        pctx = EVP_PKEY_CTX_new_from_pkey(ctx->libctx, tmpkey, ctx->propq);
+        pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(ctx->libctx, tmpkey, ctx->propq);
         /* If unable to create pctx we assume the sig algorithm is unavailable */
         if (pctx == NULL)
             cache[i].available = 0;
@@ -2326,7 +2326,7 @@ char *SSL_get1_builtin_sigalgs(OSSL_LIB_CTX *libctx)
         ERR_set_mark();
         /* Check hash is available in some provider. */
         if (lu->hash != NID_undef) {
-            EVP_MD *hash = EVP_MD_fetch(libctx, OBJ_nid2ln(lu->hash), NULL);
+            EVP_MD *hash = OPENSSL_BOX_EVP_MD_fetch(libctx, OBJ_nid2ln(lu->hash), NULL);
 
             /* If unable to create we assume the hash algorithm is unavailable */
             if (hash == NULL) {
@@ -2342,7 +2342,7 @@ char *SSL_get1_builtin_sigalgs(OSSL_LIB_CTX *libctx)
             ERR_pop_to_mark();
             continue;
         }
-        pctx = EVP_PKEY_CTX_new_from_pkey(libctx, tmpkey, NULL);
+        pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, tmpkey, NULL);
         /* If unable to create pctx we assume the sig algorithm is unavailable */
         if (pctx == NULL)
             enabled = 0;
@@ -3158,13 +3158,13 @@ SSL_TICKET_STATUS tls_decrypt_ticket(SSL_CONNECTION *s,
             goto end;
         }
 
-        aes256cbc = EVP_CIPHER_fetch(sctx->libctx, "AES-256-CBC",
+        aes256cbc = OPENSSL_BOX_EVP_CIPHER_fetch(sctx->libctx, "AES-256-CBC",
                                      sctx->propq);
         if (aes256cbc == NULL
             || ssl_hmac_init(hctx, tctx->ext.secure->tick_hmac_key,
                              sizeof(tctx->ext.secure->tick_hmac_key),
                              "SHA256") <= 0
-            || EVP_DecryptInit_ex(ctx, aes256cbc, NULL,
+            || OPENSSL_BOX_EVP_DecryptInit_ex(ctx, aes256cbc, NULL,
                                   tctx->ext.secure->tick_aes_key,
                                   etick + TLSEXT_KEYNAME_LENGTH) <= 0) {
             OPENSSL_BOX_EVP_CIPHER_free(aes256cbc);
@@ -3213,13 +3213,13 @@ SSL_TICKET_STATUS tls_decrypt_ticket(SSL_CONNECTION *s,
     p = etick + TLSEXT_KEYNAME_LENGTH + ivlen;
     eticklen -= TLSEXT_KEYNAME_LENGTH + ivlen;
     sdec = OPENSSL_malloc(eticklen);
-    if (sdec == NULL || EVP_DecryptUpdate(ctx, sdec, &slen, p,
+    if (sdec == NULL || OPENSSL_BOX_EVP_DecryptUpdate(ctx, sdec, &slen, p,
                                           (int)eticklen) <= 0) {
         OPENSSL_free(sdec);
         ret = SSL_TICKET_FATAL_ERR_OTHER;
         goto end;
     }
-    if (EVP_DecryptFinal(ctx, sdec + slen, &declen) <= 0) {
+    if (OPENSSL_BOX_EVP_DecryptFinal(ctx, sdec + slen, &declen) <= 0) {
         OPENSSL_free(sdec);
         ret = SSL_TICKET_NO_DECRYPT;
         goto end;
@@ -4338,7 +4338,7 @@ EVP_PKEY *ssl_get_auto_dh(SSL_CONNECTION *s)
     if (p == NULL)
         goto err;
 
-    pctx = EVP_PKEY_CTX_new_from_name(sctx->libctx, "DH", sctx->propq);
+    pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(sctx->libctx, "DH", sctx->propq);
     if (pctx == NULL
             || OPENSSL_BOX_EVP_PKEY_fromdata_init(pctx) != 1)
         goto err;
@@ -4351,7 +4351,7 @@ EVP_PKEY *ssl_get_auto_dh(SSL_CONNECTION *s)
 
     params = OSSL_PARAM_BLD_to_param(tmpl);
     if (params == NULL
-            || EVP_PKEY_fromdata(pctx, &dhp, EVP_PKEY_KEY_PARAMETERS, params) != 1)
+            || OPENSSL_BOX_EVP_PKEY_fromdata(pctx, &dhp, EVP_PKEY_KEY_PARAMETERS, params) != 1)
         goto err;
 
 err:
@@ -4499,7 +4499,7 @@ static int check_cert_usable(SSL_CONNECTION *s, const SIGALG_LOOKUP *sig,
      */
     if (sig->hash != NID_undef)
         mdname = OBJ_nid2sn(sig->hash);
-    supported = EVP_PKEY_digestsign_supports_digest(pkey, sctx->libctx,
+    supported = OPENSSL_BOX_EVP_PKEY_digestsign_supports_digest(pkey, sctx->libctx,
                                                     mdname,
                                                     sctx->propq);
     if (supported <= 0)
@@ -4838,7 +4838,7 @@ SSL_HMAC *ssl_hmac_new(const SSL_CTX *ctx)
         return ret;
     }
 #endif
-    mac = EVP_MAC_fetch(ctx->libctx, "HMAC", ctx->propq);
+    mac = OPENSSL_BOX_EVP_MAC_fetch(ctx->libctx, "HMAC", ctx->propq);
     if (mac == NULL || (ret->ctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac)) == NULL)
         goto err;
     OPENSSL_BOX_EVP_MAC_free(mac);
@@ -4873,7 +4873,7 @@ int ssl_hmac_init(SSL_HMAC *ctx, void *key, size_t len, char *md)
     if (ctx->ctx != NULL) {
         *p++ = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_DIGEST, md, 0);
         *p = OSSL_PARAM_construct_end();
-        if (EVP_MAC_init(ctx->ctx, key, len, params))
+        if (OPENSSL_BOX_EVP_MAC_init(ctx->ctx, key, len, params))
             return 1;
     }
 #ifndef OPENSSL_NO_DEPRECATED_3_0
@@ -4898,7 +4898,7 @@ int ssl_hmac_final(SSL_HMAC *ctx, unsigned char *md, size_t *len,
                    size_t max_size)
 {
     if (ctx->ctx != NULL)
-        return EVP_MAC_final(ctx->ctx, md, len, max_size);
+        return OPENSSL_BOX_EVP_MAC_final(ctx->ctx, md, len, max_size);
 #ifndef OPENSSL_NO_DEPRECATED_3_0
     if (ctx->old_ctx != NULL)
         return ssl_hmac_old_final(ctx, md, len);
@@ -4921,7 +4921,7 @@ int ssl_get_EC_curve_nid(const EVP_PKEY *pkey)
 {
     char gname[OSSL_MAX_NAME_SIZE];
 
-    if (EVP_PKEY_get_group_name(pkey, gname, sizeof(gname), NULL) > 0)
+    if (OPENSSL_BOX_EVP_PKEY_get_group_name(pkey, gname, sizeof(gname), NULL) > 0)
         return OBJ_txt2nid(gname);
 
     return NID_undef;

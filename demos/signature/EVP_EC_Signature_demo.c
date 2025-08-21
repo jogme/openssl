@@ -8,7 +8,7 @@
  */
 
 /*
- * An example that uses the EVP_MD*, EVP_DigestSign* and EVP_DigestVerify*
+ * An example that uses the EVP_MD*, OPENSSL_BOX_EVP_DigestSign* and OPENSSL_BOX_EVP_DigestVerify*
  * methods to calculate and verify a signature of two static buffers.
  */
 
@@ -96,9 +96,9 @@ static int demo_sign(OSSL_LIB_CTX *libctx,  const char *sig_name,
      * Initialize the sign context to use the fetched
      * sign provider.
      */
-    if (!EVP_DigestSignInit_ex(sign_context, NULL, sig_name,
+    if (!OPENSSL_BOX_EVP_DigestSignInit_ex(sign_context, NULL, sig_name,
                               libctx, NULL, priv_key, NULL)) {
-        fprintf(stderr, "EVP_DigestSignInit_ex failed.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestSignInit_ex failed.\n");
         goto cleanup;
     }
     /*
@@ -113,13 +113,13 @@ static int demo_sign(OSSL_LIB_CTX *libctx,  const char *sig_name,
         fprintf(stderr, "OPENSSL_BOX_EVP_DigestSignUpdate(hamlet_2) failed.\n");
         goto cleanup;
     }
-    /* Call EVP_DigestSignFinal to get signature length sig_len */
-    if (!EVP_DigestSignFinal(sign_context, NULL, &sig_len)) {
-        fprintf(stderr, "EVP_DigestSignFinal failed.\n");
+    /* Call OPENSSL_BOX_EVP_DigestSignFinal to get signature length sig_len */
+    if (!OPENSSL_BOX_EVP_DigestSignFinal(sign_context, NULL, &sig_len)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestSignFinal failed.\n");
         goto cleanup;
     }
     if (sig_len <= 0) {
-        fprintf(stderr, "EVP_DigestSignFinal returned invalid signature length.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestSignFinal returned invalid signature length.\n");
         goto cleanup;
     }
     sig_value = OPENSSL_malloc(sig_len);
@@ -127,8 +127,8 @@ static int demo_sign(OSSL_LIB_CTX *libctx,  const char *sig_name,
         fprintf(stderr, "No memory.\n");
         goto cleanup;
     }
-    if (!EVP_DigestSignFinal(sign_context, sig_value, &sig_len)) {
-        fprintf(stderr, "EVP_DigestSignFinal failed.\n");
+    if (!OPENSSL_BOX_EVP_DigestSignFinal(sign_context, sig_value, &sig_len)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestSignFinal failed.\n");
         goto cleanup;
     }
     *sig_out_len = sig_len;
@@ -171,9 +171,9 @@ static int demo_verify(OSSL_LIB_CTX *libctx, const char *sig_name,
         goto cleanup;
     }
     /* Verify */
-    if (!EVP_DigestVerifyInit_ex(verify_context, NULL, sig_name,
+    if (!OPENSSL_BOX_EVP_DigestVerifyInit_ex(verify_context, NULL, sig_name,
                                 libctx, NULL, pub_key, NULL)) {
-        fprintf(stderr, "EVP_DigestVerifyInit failed.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestVerifyInit failed.\n");
         goto cleanup;
     }
     /*
@@ -188,8 +188,8 @@ static int demo_verify(OSSL_LIB_CTX *libctx, const char *sig_name,
         fprintf(stderr, "OPENSSL_BOX_EVP_DigestVerifyUpdate(hamlet_2) failed.\n");
         goto cleanup;
     }
-    if (EVP_DigestVerifyFinal(verify_context, sig_value, sig_len) <= 0) {
-        fprintf(stderr, "EVP_DigestVerifyFinal failed.\n");
+    if (OPENSSL_BOX_EVP_DigestVerifyFinal(verify_context, sig_value, sig_len) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestVerifyFinal failed.\n");
         goto cleanup;
     }
     fprintf(stdout, "Signature verified.\n");

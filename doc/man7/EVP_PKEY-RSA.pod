@@ -28,7 +28,7 @@ The RSA modulus "n" value.
 =item "e" (B<OSSL_PKEY_PARAM_RSA_E>) <unsigned integer>
 
 The RSA public exponent "e" value.
-This value must always be set when creating a raw key using L<EVP_PKEY_fromdata(3)>.
+This value must always be set when creating a raw key using L<OPENSSL_BOX_EVP_PKEY_fromdata(3)>.
 Note that when a decryption operation is performed, that this value is used for
 blinding purposes to prevent timing attacks.
 
@@ -232,7 +232,7 @@ and will be described in separate pages for those RSA keytypes.
 An B<EVP_PKEY> context can be obtained by calling:
 
     EVP_PKEY_CTX *pctx =
-        EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL);
+        OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL);
 
 An B<RSA> key can be generated simply like this:
 
@@ -242,7 +242,7 @@ or like this:
 
     EVP_PKEY *pkey = NULL;
     EVP_PKEY_CTX *pctx =
-        EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL);
+        OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL);
 
     OPENSSL_BOX_EVP_PKEY_keygen_init(pctx);
     OPENSSL_BOX_EVP_PKEY_generate(pctx, &pkey);
@@ -254,7 +254,7 @@ An B<RSA> key can be generated with key generation parameters:
     unsigned int bits = 4096;
     OSSL_PARAM params[3];
     EVP_PKEY *pkey = NULL;
-    EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL);
+    EVP_PKEY_CTX *pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL);
 
     OPENSSL_BOX_EVP_PKEY_keygen_init(pctx);
 
@@ -264,7 +264,7 @@ An B<RSA> key can be generated with key generation parameters:
     OPENSSL_BOX_EVP_PKEY_CTX_set_params(pctx, params);
 
     OPENSSL_BOX_EVP_PKEY_generate(pctx, &pkey);
-    EVP_PKEY_print_private(bio_out, pkey, 0, NULL);
+    OPENSSL_BOX_EVP_PKEY_print_private(bio_out, pkey, 0, NULL);
     OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
 
 =head1 SEE ALSO

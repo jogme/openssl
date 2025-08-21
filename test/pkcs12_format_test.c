@@ -860,7 +860,7 @@ static int pkcs12_create_test(void)
     };
 
     p = rsa_key;
-    if (!TEST_ptr(pkey = d2i_PrivateKey_ex(EVP_PKEY_RSA, NULL, &p,
+    if (!TEST_ptr(pkey = OPENSSL_BOX_d2i_PrivateKey_ex(EVP_PKEY_RSA, NULL, &p,
                                            sizeof(rsa_key), NULL, NULL)))
         goto err;
     if (!TEST_int_eq(ERR_peek_error(), 0))
@@ -898,7 +898,7 @@ static int pkcs12_recreate_test(void)
     cert = d2i_X509(NULL, &cert_bytes, sizeof(CERT1));
     if (!TEST_ptr(cert))
         goto err;
-    pkey = d2i_AutoPrivateKey(NULL, &key_bytes, sizeof(KEY1));
+    pkey = OPENSSL_BOX_d2i_AutoPrivateKey(NULL, &key_bytes, sizeof(KEY1));
     if (!TEST_ptr(pkey))
         goto err;
     p12 = PKCS12_create("pass", NULL, pkey, cert, NULL, NID_aes_256_cbc,

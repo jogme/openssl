@@ -747,7 +747,7 @@ int RSA_pkey_ctx_ctrl(EVP_PKEY_CTX *ctx, int optype, int cmd, int p1, void *p2)
         && ctx->pmeth->pkey_id != EVP_PKEY_RSA
         && ctx->pmeth->pkey_id != EVP_PKEY_RSA_PSS)
         return -1;
-     return EVP_PKEY_CTX_ctrl(ctx, -1, optype, cmd, p1, p2);
+     return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, -1, optype, cmd, p1, p2);
 }
 #endif
 
@@ -973,7 +973,7 @@ static int int_set_rsa_md_name(EVP_PKEY_CTX *ctx,
 
     if (ctx == NULL || mdname == NULL || (ctx->operation & optype) == 0) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
 
@@ -1013,7 +1013,7 @@ static int int_get_rsa_md_name(EVP_PKEY_CTX *ctx,
 
     if (ctx == NULL || mdname == NULL || (ctx->operation & optype) == 0) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
 
@@ -1038,7 +1038,7 @@ static int int_get_rsa_md_name(EVP_PKEY_CTX *ctx,
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_rsa_padding(EVP_PKEY_CTX *ctx, int pad_mode)
@@ -1048,7 +1048,7 @@ int EVP_PKEY_CTX_set_rsa_padding(EVP_PKEY_CTX *ctx, int pad_mode)
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_get_rsa_padding(EVP_PKEY_CTX *ctx, int *pad_mode)
@@ -1058,12 +1058,12 @@ int EVP_PKEY_CTX_get_rsa_padding(EVP_PKEY_CTX *ctx, int *pad_mode)
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_rsa_pss_keygen_md(EVP_PKEY_CTX *ctx, const EVP_MD *md)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA_PSS, EVP_PKEY_OP_KEYGEN,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA_PSS, EVP_PKEY_OP_KEYGEN,
                              EVP_PKEY_CTRL_MD, 0, (void *)(md));
 }
 
@@ -1077,7 +1077,7 @@ int EVP_PKEY_CTX_set_rsa_pss_keygen_md_name(EVP_PKEY_CTX *ctx,
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_rsa_oaep_md(EVP_PKEY_CTX *ctx, const EVP_MD *md)
@@ -1086,7 +1086,7 @@ int EVP_PKEY_CTX_set_rsa_oaep_md(EVP_PKEY_CTX *ctx, const EVP_MD *md)
     if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA"))
         return -1;
 
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA, EVP_PKEY_OP_TYPE_CRYPT,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA, EVP_PKEY_OP_TYPE_CRYPT,
                              EVP_PKEY_CTRL_RSA_OAEP_MD, 0, (void *)(md));
 }
 
@@ -1108,7 +1108,7 @@ int EVP_PKEY_CTX_get_rsa_oaep_md_name(EVP_PKEY_CTX *ctx, char *name,
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_get_rsa_oaep_md(EVP_PKEY_CTX *ctx, const EVP_MD **md)
@@ -1117,12 +1117,12 @@ int EVP_PKEY_CTX_get_rsa_oaep_md(EVP_PKEY_CTX *ctx, const EVP_MD **md)
     if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA"))
         return -1;
 
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA, EVP_PKEY_OP_TYPE_CRYPT,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA, EVP_PKEY_OP_TYPE_CRYPT,
                              EVP_PKEY_CTRL_GET_RSA_OAEP_MD, 0, (void *)md);
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_rsa_mgf1_md(EVP_PKEY_CTX *ctx, const EVP_MD *md)
@@ -1149,12 +1149,12 @@ int EVP_PKEY_CTX_get_rsa_mgf1_md_name(EVP_PKEY_CTX *ctx, char *name,
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_rsa_pss_keygen_mgf1_md(EVP_PKEY_CTX *ctx, const EVP_MD *md)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA_PSS, EVP_PKEY_OP_KEYGEN,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA_PSS, EVP_PKEY_OP_KEYGEN,
                              EVP_PKEY_CTRL_RSA_MGF1_MD, 0, (void *)(md));
 }
 
@@ -1167,7 +1167,7 @@ int EVP_PKEY_CTX_set_rsa_pss_keygen_mgf1_md_name(EVP_PKEY_CTX *ctx,
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_get_rsa_mgf1_md(EVP_PKEY_CTX *ctx, const EVP_MD **md)
@@ -1189,7 +1189,7 @@ int EVP_PKEY_CTX_set0_rsa_oaep_label(EVP_PKEY_CTX *ctx, void *label, int llen)
 
     if (ctx == NULL || !EVP_PKEY_CTX_IS_ASYM_CIPHER_OP(ctx)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
 
@@ -1222,7 +1222,7 @@ int EVP_PKEY_CTX_get0_rsa_oaep_label(EVP_PKEY_CTX *ctx, unsigned char **label)
 
     if (ctx == NULL || !EVP_PKEY_CTX_IS_ASYM_CIPHER_OP(ctx)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
 
@@ -1245,7 +1245,7 @@ int EVP_PKEY_CTX_get0_rsa_oaep_label(EVP_PKEY_CTX *ctx, unsigned char **label)
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_rsa_pss_saltlen(EVP_PKEY_CTX *ctx, int saltlen)
@@ -1265,7 +1265,7 @@ int EVP_PKEY_CTX_set_rsa_pss_saltlen(EVP_PKEY_CTX *ctx, int saltlen)
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_get_rsa_pss_saltlen(EVP_PKEY_CTX *ctx, int *saltlen)
@@ -1289,7 +1289,7 @@ int EVP_PKEY_CTX_set_rsa_pss_keygen_saltlen(EVP_PKEY_CTX *ctx, int saltlen)
 
     if (ctx == NULL || !EVP_PKEY_CTX_IS_GEN_OP(ctx)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
 
@@ -1310,7 +1310,7 @@ int EVP_PKEY_CTX_set_rsa_keygen_bits(EVP_PKEY_CTX *ctx, int bits)
 
     if (ctx == NULL || !EVP_PKEY_CTX_IS_GEN_OP(ctx)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
 
@@ -1356,7 +1356,7 @@ int EVP_PKEY_CTX_set1_rsa_keygen_pubexp(EVP_PKEY_CTX *ctx, BIGNUM *pubexp)
         if (pubexp == NULL)
             return 0;
     }
-    ret = EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA, EVP_PKEY_OP_KEYGEN,
+    ret = OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA, EVP_PKEY_OP_KEYGEN,
                             EVP_PKEY_CTRL_RSA_KEYGEN_PUBEXP, 0, pubexp);
     if (evp_pkey_ctx_is_legacy(ctx) && ret <= 0)
         BN_free(pubexp);
@@ -1370,7 +1370,7 @@ int EVP_PKEY_CTX_set_rsa_keygen_primes(EVP_PKEY_CTX *ctx, int primes)
 
     if (ctx == NULL || !EVP_PKEY_CTX_IS_GEN_OP(ctx)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
 

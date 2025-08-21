@@ -83,13 +83,13 @@ static int ct_v1_log_id_from_pkey(CTLOG *log, EVP_PKEY *pkey)
         ERR_raise(ERR_LIB_CT, CT_R_LOG_KEY_INVALID);
         goto err;
     }
-    sha256 = EVP_MD_fetch(log->libctx, "SHA2-256", log->propq);
+    sha256 = OPENSSL_BOX_EVP_MD_fetch(log->libctx, "SHA2-256", log->propq);
     if (sha256 == NULL) {
         ERR_raise(ERR_LIB_CT, ERR_R_EVP_LIB);
         goto err;
     }
 
-    ret = EVP_Digest(pkey_der, pkey_der_len, log->log_id, &len, sha256,
+    ret = OPENSSL_BOX_EVP_Digest(pkey_der, pkey_der_len, log->log_id, &len, sha256,
                      NULL);
 err:
     OPENSSL_BOX_EVP_MD_free(sha256);

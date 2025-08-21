@@ -535,12 +535,12 @@ static OSSL_STORE_INFO *try_decode_PrivateKey(const char *pem_name,
             int pkey_id;
 
             if ((slen = check_suffix(pem_name, "PRIVATE KEY")) > 0
-                && (ameth = EVP_PKEY_asn1_find_str(NULL, pem_name,
+                && (ameth = OPENSSL_BOX_EVP_PKEY_asn1_find_str(NULL, pem_name,
                                                    slen)) != NULL
-                && EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, NULL, NULL,
+                && OPENSSL_BOX_EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, NULL, NULL,
                                            ameth)) {
                 *matchcount = 1;
-                pkey = d2i_PrivateKey_ex(pkey_id, NULL, &blob, (long)len,
+                pkey = OPENSSL_BOX_d2i_PrivateKey_ex(pkey_id, NULL, &blob, (long)len,
                                          libctx, propq);
             }
         }
@@ -564,14 +564,14 @@ static OSSL_STORE_INFO *try_decode_PrivateKey(const char *pem_name,
                     int pkey_id, pkey_flags;
 
                     if (!asn1meths(curengine, &ameth2, NULL, nids[i])
-                        || !EVP_PKEY_asn1_get0_info(&pkey_id, NULL,
+                        || !OPENSSL_BOX_EVP_PKEY_asn1_get0_info(&pkey_id, NULL,
                                                     &pkey_flags, NULL, NULL,
                                                     ameth2)
                         || (pkey_flags & ASN1_PKEY_ALIAS) != 0)
                         continue;
 
                     ERR_set_mark(); /* prevent flooding error queue */
-                    tmp_pkey = d2i_PrivateKey_ex(pkey_id, NULL,
+                    tmp_pkey = OPENSSL_BOX_d2i_PrivateKey_ex(pkey_id, NULL,
                                                  &tmp_blob, (long)len,
                                                  libctx, propq);
                     if (tmp_pkey != NULL) {
@@ -594,13 +594,13 @@ static OSSL_STORE_INFO *try_decode_PrivateKey(const char *pem_name,
             int pkey_id, pkey_flags;
 
             ameth = OPENSSL_BOX_EVP_PKEY_asn1_get0(i);
-            if (!EVP_PKEY_asn1_get0_info(&pkey_id, NULL, &pkey_flags, NULL,
+            if (!OPENSSL_BOX_EVP_PKEY_asn1_get0_info(&pkey_id, NULL, &pkey_flags, NULL,
                                          NULL, ameth)
                 || (pkey_flags & ASN1_PKEY_ALIAS) != 0)
                 continue;
 
             ERR_set_mark(); /* prevent flooding error queue */
-            tmp_pkey = d2i_PrivateKey_ex(pkey_id, NULL, &tmp_blob, (long)len,
+            tmp_pkey = OPENSSL_BOX_d2i_PrivateKey_ex(pkey_id, NULL, &tmp_blob, (long)len,
                                          libctx, propq);
             if (tmp_pkey != NULL) {
                 if (pkey != NULL)
@@ -693,11 +693,11 @@ static OSSL_STORE_INFO *try_decode_params(const char *pem_name,
         int pkey_id;
 
         if ((slen = check_suffix(pem_name, "PARAMETERS")) > 0
-            && (ameth = EVP_PKEY_asn1_find_str(NULL, pem_name, slen)) != NULL
-            && EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, NULL, NULL,
+            && (ameth = OPENSSL_BOX_EVP_PKEY_asn1_find_str(NULL, pem_name, slen)) != NULL
+            && OPENSSL_BOX_EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, NULL, NULL,
                                        ameth)) {
             *matchcount = 1;
-            pkey = d2i_KeyParams(pkey_id, NULL, &blob, (long)len);
+            pkey = OPENSSL_BOX_d2i_KeyParams(pkey_id, NULL, &blob, (long)len);
         }
     } else {
         int i;
@@ -708,14 +708,14 @@ static OSSL_STORE_INFO *try_decode_params(const char *pem_name,
             int pkey_id, pkey_flags;
 
             ameth = OPENSSL_BOX_EVP_PKEY_asn1_get0(i);
-            if (!EVP_PKEY_asn1_get0_info(&pkey_id, NULL, &pkey_flags, NULL,
+            if (!OPENSSL_BOX_EVP_PKEY_asn1_get0_info(&pkey_id, NULL, &pkey_flags, NULL,
                                          NULL, ameth)
                 || (pkey_flags & ASN1_PKEY_ALIAS) != 0)
                 continue;
 
             ERR_set_mark(); /* prevent flooding error queue */
 
-            tmp_pkey = d2i_KeyParams(pkey_id, NULL, &tmp_blob, (long)len);
+            tmp_pkey = OPENSSL_BOX_d2i_KeyParams(pkey_id, NULL, &tmp_blob, (long)len);
 
             if (tmp_pkey != NULL) {
                 if (pkey != NULL)

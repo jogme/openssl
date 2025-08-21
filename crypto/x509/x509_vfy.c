@@ -3203,7 +3203,7 @@ static int dane_match_cert(X509_STORE_CTX *ctx, X509 *cert, int depth)
 
             if (md != NULL) {
                 cmpbuf = mdbuf;
-                if (!EVP_Digest(i2dbuf, i2dlen, cmpbuf, &cmplen, md, 0)) {
+                if (!OPENSSL_BOX_EVP_Digest(i2dbuf, i2dlen, cmpbuf, &cmplen, md, 0)) {
                     matched = -1;
                     break;
                 }
@@ -3341,7 +3341,7 @@ static int dane_match_rpk(X509_STORE_CTX *ctx, EVP_PKEY *rpk)
 
             if (md != NULL) {
                 cmpbuf = mdbuf;
-                if (!EVP_Digest(i2dbuf, i2dlen, cmpbuf, &cmplen, md, 0)) {
+                if (!OPENSSL_BOX_EVP_Digest(i2dbuf, i2dlen, cmpbuf, &cmplen, md, 0)) {
                     matched = -1;
                     break;
                 }
@@ -3940,7 +3940,7 @@ static int check_curve(X509 *cert)
         return 1;
 
     ret =
-        EVP_PKEY_get_int_param(pkey,
+        OPENSSL_BOX_EVP_PKEY_get_int_param(pkey,
                                OSSL_PKEY_PARAM_EC_DECODED_FROM_EXPLICIT_PARAMS,
                                &val);
     return ret == 1 ? !val : -1;

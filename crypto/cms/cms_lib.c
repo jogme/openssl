@@ -414,7 +414,7 @@ BIO *ossl_cms_DigestAlgorithm_init_bio(X509_ALGOR *digestAlgorithm,
     OBJ_obj2txt(alg, sizeof(alg), digestoid, 0);
 
     (void)ERR_set_mark();
-    fetched_digest = EVP_MD_fetch(ossl_cms_ctx_get0_libctx(ctx), alg,
+    fetched_digest = OPENSSL_BOX_EVP_MD_fetch(ossl_cms_ctx_get0_libctx(ctx), alg,
                                   ossl_cms_ctx_get0_propq(ctx));
 
     if (fetched_digest != NULL)

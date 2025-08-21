@@ -8,7 +8,7 @@
  */
 
 /*
- * An example that uses the EVP_PKEY*, EVP_DigestSign* and EVP_DigestVerify*
+ * An example that uses the EVP_PKEY*, OPENSSL_BOX_EVP_DigestSign* and OPENSSL_BOX_EVP_DigestVerify*
  * methods to calculate public/private DSA keypair and to sign and verify
  * two static buffers.
  */
@@ -51,7 +51,7 @@ static int generate_dsa_params(OSSL_LIB_CTX *libctx,
     EVP_PKEY_CTX *pkey_ctx = NULL;
     EVP_PKEY *params = NULL;
 
-    pkey_ctx = EVP_PKEY_CTX_new_from_name(libctx, ALG, PROPQUERY);
+    pkey_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, ALG, PROPQUERY);
     if (pkey_ctx == NULL)
         goto end;
 
@@ -74,7 +74,7 @@ end:
     OPENSSL_BOX_EVP_PKEY_CTX_free(pkey_ctx);
     *p_params = params;
     fprintf(stdout, "Params:\n");
-    EVP_PKEY_print_params_fp(stdout, params, 4, NULL);
+    OPENSSL_BOX_EVP_PKEY_print_params_fp(stdout, params, 4, NULL);
     fprintf(stdout, "\n");
 
     return ret;
@@ -89,7 +89,7 @@ static int generate_dsa_key(OSSL_LIB_CTX *libctx,
     EVP_PKEY_CTX *ctx = NULL;
     EVP_PKEY *pkey = NULL;
 
-    ctx = EVP_PKEY_CTX_new_from_pkey(libctx, params,
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, params,
                                      NULL);
     if (ctx == NULL)
         goto end;
@@ -110,11 +110,11 @@ end:
     OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     *p_pkey = pkey;
     fprintf(stdout, "Generating public/private key pair:\n");
-    EVP_PKEY_print_public_fp(stdout, pkey, 4, NULL);
+    OPENSSL_BOX_EVP_PKEY_print_public_fp(stdout, pkey, 4, NULL);
     fprintf(stdout, "\n");
-    EVP_PKEY_print_private_fp(stdout, pkey, 4, NULL);
+    OPENSSL_BOX_EVP_PKEY_print_private_fp(stdout, pkey, 4, NULL);
     fprintf(stdout, "\n");
-    EVP_PKEY_print_params_fp(stdout, pkey, 4, NULL);
+    OPENSSL_BOX_EVP_PKEY_print_params_fp(stdout, pkey, 4, NULL);
     fprintf(stdout, "\n");
 
     return ret;
@@ -171,19 +171,19 @@ static int demo_sign(OSSL_LIB_CTX *libctx,
     EVP_PKEY_CTX *pkey_ctx = NULL;
     EVP_PKEY *pkey = NULL;
 
-    pkey_ctx = EVP_PKEY_CTX_new_from_name(libctx, ALG, PROPQUERY);
+    pkey_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, ALG, PROPQUERY);
     if (pkey_ctx == NULL)
         goto end;
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(pkey_ctx) != 1)
         goto end;
-    if (EVP_PKEY_fromdata(pkey_ctx, &pkey, EVP_PKEY_KEYPAIR, keypair) != 1)
+    if (OPENSSL_BOX_EVP_PKEY_fromdata(pkey_ctx, &pkey, EVP_PKEY_KEYPAIR, keypair) != 1)
         goto end;
 
     ctx = EVP_MD_CTX_create();
     if (ctx == NULL)
         goto end;
 
-    if (EVP_DigestSignInit_ex(ctx, NULL, DIGEST, libctx, NULL, pkey, NULL) != 1)
+    if (OPENSSL_BOX_EVP_DigestSignInit_ex(ctx, NULL, DIGEST, libctx, NULL, pkey, NULL) != 1)
         goto end;
 
     if (OPENSSL_BOX_EVP_DigestSignUpdate(ctx, hamlet_1, sizeof(hamlet_1)) != 1)
@@ -193,7 +193,7 @@ static int demo_sign(OSSL_LIB_CTX *libctx,
         goto end;
 
     /* Calculate the signature size */
-    if (EVP_DigestSignFinal(ctx, NULL, &sig_len) != 1)
+    if (OPENSSL_BOX_EVP_DigestSignFinal(ctx, NULL, &sig_len) != 1)
         goto end;
     if (sig_len == 0)
         goto end;
@@ -203,7 +203,7 @@ static int demo_sign(OSSL_LIB_CTX *libctx,
         goto end;
 
     /* Calculate the signature */
-    if (EVP_DigestSignFinal(ctx, sig_value, &sig_len) != 1)
+    if (OPENSSL_BOX_EVP_DigestSignFinal(ctx, sig_value, &sig_len) != 1)
         goto end;
 
     ret = 1;
@@ -234,19 +234,19 @@ static int demo_verify(OSSL_LIB_CTX *libctx,
     EVP_PKEY_CTX *pkey_ctx = NULL;
     EVP_PKEY *pkey = NULL;
 
-    pkey_ctx = EVP_PKEY_CTX_new_from_name(libctx, ALG, PROPQUERY);
+    pkey_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, ALG, PROPQUERY);
     if (pkey_ctx == NULL)
         goto end;
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(pkey_ctx) != 1)
         goto end;
-    if (EVP_PKEY_fromdata(pkey_ctx, &pkey, EVP_PKEY_PUBLIC_KEY, public_key) != 1)
+    if (OPENSSL_BOX_EVP_PKEY_fromdata(pkey_ctx, &pkey, EVP_PKEY_PUBLIC_KEY, public_key) != 1)
         goto end;
 
     ctx = EVP_MD_CTX_create();
     if(ctx == NULL)
         goto end;
 
-    if (EVP_DigestVerifyInit_ex(ctx, NULL, DIGEST, libctx, NULL, pkey, NULL) != 1)
+    if (OPENSSL_BOX_EVP_DigestVerifyInit_ex(ctx, NULL, DIGEST, libctx, NULL, pkey, NULL) != 1)
         goto end;
 
     if (OPENSSL_BOX_EVP_DigestVerifyUpdate(ctx, hamlet_1, sizeof(hamlet_1)) != 1)
@@ -255,7 +255,7 @@ static int demo_verify(OSSL_LIB_CTX *libctx,
     if (OPENSSL_BOX_EVP_DigestVerifyUpdate(ctx, hamlet_2, sizeof(hamlet_2)) != 1)
         goto end;
 
-    if (EVP_DigestVerifyFinal(ctx, sig_value, sig_len) != 1)
+    if (OPENSSL_BOX_EVP_DigestVerifyFinal(ctx, sig_value, sig_len) != 1)
         goto end;
 
     ret = 1;

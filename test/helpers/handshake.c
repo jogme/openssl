@@ -1374,7 +1374,7 @@ static int pkey_type(EVP_PKEY *pkey)
         char name[80];
         size_t name_len;
 
-        if (!EVP_PKEY_get_group_name(pkey, name, sizeof(name), &name_len))
+        if (!OPENSSL_BOX_EVP_PKEY_get_group_name(pkey, name, sizeof(name), &name_len))
             return NID_undef;
         return OBJ_txt2nid(name);
     }

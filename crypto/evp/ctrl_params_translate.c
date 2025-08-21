@@ -65,7 +65,7 @@ struct translation_st;           /* Forwarding */
  *                              |action_type|.
  *
  * PRE_CTRL_TO_PARAMS           The fixup_args function has been called
- * POST_CTRL_TO_PARAMS          from EVP_PKEY_CTX_ctrl(), to help with
+ * POST_CTRL_TO_PARAMS          from OPENSSL_BOX_EVP_PKEY_CTX_ctrl(), to help with
  *                              translating the ctrl data to an OSSL_PARAM
  *                              element or back.  The calling sequence is
  *                              as follows:
@@ -86,15 +86,15 @@ struct translation_st;           /* Forwarding */
  *
  *                              The return value from the fixup_args call
  *                              with the POST_CTRL_TO_PARAMS state becomes
- *                              the return value back to EVP_PKEY_CTX_ctrl().
+ *                              the return value back to OPENSSL_BOX_EVP_PKEY_CTX_ctrl().
  *
  * CLEANUP_CTRL_TO_PARAMS       The cleanup_args functions has been called
- *                              from EVP_PKEY_CTX_ctrl(), to clean up what
+ *                              from OPENSSL_BOX_EVP_PKEY_CTX_ctrl(), to clean up what
  *                              the fixup_args function has done, if needed.
  *
  *
  * PRE_CTRL_STR_TO_PARAMS       The fixup_args function has been called
- * POST_CTRL_STR_TO_PARAMS      from EVP_PKEY_CTX_ctrl_str(), to help with
+ * POST_CTRL_STR_TO_PARAMS      from OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(), to help with
  *                              translating the ctrl_str data to an
  *                              OSSL_PARAM element or back.  The calling
  *                              sequence is as follows:
@@ -113,7 +113,7 @@ struct translation_st;           /* Forwarding */
  *                              to return a value.
  *
  * CLEANUP_CTRL_STR_TO_PARAMS   The cleanup_args functions has been called
- *                              from EVP_PKEY_CTX_ctrl_str(), to clean up
+ *                              from OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(), to clean up
  *                              what the fixup_args function has done, if
  *                              needed.
  *
@@ -121,12 +121,12 @@ struct translation_st;           /* Forwarding */
  * POST_PARAMS_TO_CTRL          from OPENSSL_BOX_EVP_PKEY_CTX_get_params() or
  *                              OPENSSL_BOX_EVP_PKEY_CTX_set_params(), to help with
  *                              translating the OSSL_PARAM data to the
- *                              corresponding EVP_PKEY_CTX_ctrl() arguments
+ *                              corresponding OPENSSL_BOX_EVP_PKEY_CTX_ctrl() arguments
  *                              or the other way around.  The calling
  *                              sequence is as follows:
  *
  *                              1. fixup_args(PRE_PARAMS_TO_CTRL, ...)
- *                              2. EVP_PKEY_CTX_ctrl()
+ *                              2. OPENSSL_BOX_EVP_PKEY_CTX_ctrl()
  *                              3. fixup_args(POST_PARAMS_TO_CTRL, ...)
  *
  *                              With the PRE_PARAMS_TO_CTRL state, the
@@ -436,7 +436,7 @@ static int default_fixup_args(enum state state,
                 || (EVP_PKEY_CTX_IS_FROMDATA_OP(ctx->pctx)
                     && ctx->pctx->op.keymgmt.genctx == NULL)) {
                 ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-                /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+                /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
                 return -2;
             }
         }
@@ -516,7 +516,7 @@ static int default_fixup_args(enum state state,
         break;
     case POST_CTRL_TO_PARAMS:
         /*
-         * Because EVP_PKEY_CTX_ctrl() returns the length of certain objects
+         * Because OPENSSL_BOX_EVP_PKEY_CTX_ctrl() returns the length of certain objects
          * as its return value, we need to ensure that we do it here as well,
          * for the OSSL_PARAM data types where this makes sense.
          */
@@ -599,7 +599,7 @@ static int default_fixup_args(enum state state,
      * PRE_PARAMS_TO_CTRL and POST_PARAMS_TO_CTRL handle params to ctrl
      * translations.  PRE_PARAMS_TO_CTRL is responsible for preparing
      * |p1| and |p2|, and POST_PARAMS_TO_CTRL is responsible for bringing
-     * the EVP_PKEY_CTX_ctrl() return value (passed as |p1|) and |p2| back
+     * the OPENSSL_BOX_EVP_PKEY_CTX_ctrl() return value (passed as |p1|) and |p2| back
      * to |*params|.
      *
      * PKEY is treated just like POST_PARAMS_TO_CTRL, making it easy
@@ -1284,7 +1284,7 @@ static int fix_rsa_padding_mode(enum state state,
     } else if (state == PRE_CTRL_TO_PARAMS && ctx->action_type == OSSL_ACTION_SET) {
         /*
          * Ideally, we should use utf8 strings for the diverse padding modes.
-         * We only came here because someone called EVP_PKEY_CTX_ctrl(),
+         * We only came here because someone called OPENSSL_BOX_EVP_PKEY_CTX_ctrl(),
          * though, and since that can reasonably be seen as legacy code
          * that uses the diverse RSA macros for the padding mode, and we
          * know that at least our providers can handle the numeric modes,
@@ -2870,14 +2870,14 @@ static int evp_pkey_ctx_setget_params_to_ctrl(EVP_PKEY_CTX *pctx,
         ret = fixup(PRE_PARAMS_TO_CTRL, translation, &ctx);
 
         if (ret > 0 && ctx.action_type != OSSL_ACTION_NONE)
-            ret = EVP_PKEY_CTX_ctrl(pctx, keytype, optype,
+            ret = OPENSSL_BOX_EVP_PKEY_CTX_ctrl(pctx, keytype, optype,
                                     ctx.ctrl_cmd, ctx.p1, ctx.p2);
 
         /*
          * In POST, we pass the return value as p1, allowing the fixup_args
          * function to put it to good use, or maybe affect it.
          *
-         * NOTE: even though EVP_PKEY_CTX_ctrl return value is documented
+         * NOTE: even though OPENSSL_BOX_EVP_PKEY_CTX_ctrl return value is documented
          * as return positive on Success and 0 or negative on falure. There
          * maybe parameters (e.g. ecdh_cofactor), which actually return 0
          * as success value. That is why we do POST_PARAMS_TO_CTRL for 0

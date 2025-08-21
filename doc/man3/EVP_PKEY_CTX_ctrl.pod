@@ -2,9 +2,9 @@
 
 =head1 NAME
 
-EVP_PKEY_CTX_ctrl,
-EVP_PKEY_CTX_ctrl_str,
-EVP_PKEY_CTX_ctrl_uint64,
+OPENSSL_BOX_EVP_PKEY_CTX_ctrl,
+OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str,
+OPENSSL_BOX_EVP_PKEY_CTX_ctrl_uint64,
 OPENSSL_BOX_EVP_PKEY_CTX_md,
 OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md,
 OPENSSL_BOX_EVP_PKEY_CTX_get_signature_md,
@@ -76,11 +76,11 @@ OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op
 
  #include <openssl/evp.h>
 
- int EVP_PKEY_CTX_ctrl(EVP_PKEY_CTX *ctx, int keytype, int optype,
+ int OPENSSL_BOX_EVP_PKEY_CTX_ctrl(EVP_PKEY_CTX *ctx, int keytype, int optype,
                        int cmd, int p1, void *p2);
- int EVP_PKEY_CTX_ctrl_uint64(EVP_PKEY_CTX *ctx, int keytype, int optype,
+ int OPENSSL_BOX_EVP_PKEY_CTX_ctrl_uint64(EVP_PKEY_CTX *ctx, int keytype, int optype,
                               int cmd, uint64_t value);
- int EVP_PKEY_CTX_ctrl_str(EVP_PKEY_CTX *ctx, const char *type,
+ int OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(EVP_PKEY_CTX *ctx, const char *type,
                            const char *value);
 
  int OPENSSL_BOX_EVP_PKEY_CTX_md(EVP_PKEY_CTX *ctx, int optype, int cmd, const char *md);
@@ -194,7 +194,7 @@ see L<openssl_user_macros(7)>:
 
 =head1 DESCRIPTION
 
-EVP_PKEY_CTX_ctrl() sends a control operation to the context I<ctx>. The key
+OPENSSL_BOX_EVP_PKEY_CTX_ctrl() sends a control operation to the context I<ctx>. The key
 type used must match I<keytype> if it is not -1. The parameter I<optype> is a
 mask indicating which operations the control can be applied to.
 The control command is indicated in I<cmd> and any additional arguments in
@@ -203,13 +203,13 @@ I<p1> and I<p2>.
 For I<cmd> = B<EVP_PKEY_CTRL_SET_MAC_KEY>, I<p1> is the length of the MAC key,
 and I<p2> is the MAC key. This is used by Poly1305, SipHash, HMAC and CMAC.
 
-Applications will not normally call EVP_PKEY_CTX_ctrl() directly but will
+Applications will not normally call OPENSSL_BOX_EVP_PKEY_CTX_ctrl() directly but will
 instead call one of the algorithm specific functions below.
 
-EVP_PKEY_CTX_ctrl_uint64() is a wrapper that directly passes a
-uint64 value as I<p2> to EVP_PKEY_CTX_ctrl().
+OPENSSL_BOX_EVP_PKEY_CTX_ctrl_uint64() is a wrapper that directly passes a
+uint64 value as I<p2> to OPENSSL_BOX_EVP_PKEY_CTX_ctrl().
 
-EVP_PKEY_CTX_ctrl_str() allows an application to send an algorithm
+OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str() allows an application to send an algorithm
 specific control operation to a context I<ctx> in string form. This is
 intended to be used for options specified on the command line or in text
 files. The commands supported are documented in the openssl utility
@@ -230,11 +230,11 @@ generating the private and public key data. Some algorithm implementations
 allow private key data to be set explicitly using EVP_PKEY_CTX_set_mac_key().
 In this case key generation is simply the process of setting up the
 parameters for the key and then setting the raw key data to the value explicitly.
-Normally applications would call L<EVP_PKEY_new_raw_private_key(3)> or similar
+Normally applications would call L<OPENSSL_BOX_EVP_PKEY_new_raw_private_key(3)> or similar
 functions instead.
 
 EVP_PKEY_CTX_set_mac_key() can be used with any of the algorithms supported by
-the L<EVP_PKEY_new_raw_private_key(3)> function.
+the L<OPENSSL_BOX_EVP_PKEY_new_raw_private_key(3)> function.
 
 OPENSSL_BOX_EVP_PKEY_CTX_set_group_name() sets the group name to I<name> for parameter and
 key generation. For example for EC keys this will set the curve name and for
@@ -654,7 +654,7 @@ OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op() sets the KEM operation to run. This can be
 OPENSSL_BOX_EVP_PKEY_encapsulate_init() or OPENSSL_BOX_EVP_PKEY_decapsulate_init() to select the kem
 operation. For the key types that support encapsulation and don't have the
 default operation, e.g. RSA, this function must be called before
-EVP_PKEY_encapsulate() or EVP_PKEY_decapsulate().
+OPENSSL_BOX_EVP_PKEY_encapsulate() or OPENSSL_BOX_EVP_PKEY_decapsulate().
 
 The supported parameters for the built-in algorithms are documented in
 L<EVP_KEM-RSA(7)>, L<EVP_KEM-EC(7)>, L<EVP_KEM-X25519(7)>,
@@ -670,15 +670,15 @@ indicates the operation is not supported by the public key algorithm.
 
 L<OPENSSL_BOX_EVP_PKEY_CTX_set_params(3)>,
 L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
-L<EVP_PKEY_encrypt(3)>,
-L<EVP_PKEY_decrypt(3)>,
-L<EVP_PKEY_sign(3)>,
-L<EVP_PKEY_verify(3)>,
-L<EVP_PKEY_verify_recover(3)>,
+L<OPENSSL_BOX_EVP_PKEY_encrypt(3)>,
+L<OPENSSL_BOX_EVP_PKEY_decrypt(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify_recover(3)>,
 L<OPENSSL_BOX_EVP_PKEY_derive(3)>,
 L<OPENSSL_BOX_EVP_PKEY_keygen(3)>
-L<EVP_PKEY_encapsulate(3)>
-L<EVP_PKEY_decapsulate(3)>
+L<OPENSSL_BOX_EVP_PKEY_encapsulate(3)>
+L<OPENSSL_BOX_EVP_PKEY_decapsulate(3)>
 
 =head1 HISTORY
 

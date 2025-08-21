@@ -63,7 +63,7 @@ static void *mac_newctx(void *provctx, const char *propq, const char *macname)
     if (propq != NULL && (pmacctx->propq = OPENSSL_strdup(propq)) == NULL)
         goto err;
 
-    mac = EVP_MAC_fetch(pmacctx->libctx, macname, propq);
+    mac = OPENSSL_BOX_EVP_MAC_fetch(pmacctx->libctx, macname, propq);
     if (mac == NULL)
         goto err;
 
@@ -129,7 +129,7 @@ static int mac_digest_sign_init(void *vpmacctx, const char *mdname, void *vkey,
                               pmacctx->key->properties))
         return 0;
 
-    if (!EVP_MAC_init(pmacctx->macctx, pmacctx->key->priv_key,
+    if (!OPENSSL_BOX_EVP_MAC_init(pmacctx->macctx, pmacctx->key->priv_key,
                       pmacctx->key->priv_key_len, params))
         return 0;
 
@@ -155,7 +155,7 @@ int mac_digest_sign_final(void *vpmacctx, unsigned char *mac, size_t *maclen,
     if (!ossl_prov_is_running() || pmacctx == NULL || pmacctx->macctx == NULL)
         return 0;
 
-    return EVP_MAC_final(pmacctx->macctx, mac, maclen, macsize);
+    return OPENSSL_BOX_EVP_MAC_final(pmacctx->macctx, mac, maclen, macsize);
 }
 
 static void mac_freectx(void *vpmacctx)
@@ -215,7 +215,7 @@ static const OSSL_PARAM *mac_settable_ctx_params(ossl_unused void *ctx,
                                                  void *provctx,
                                                  const char *macname)
 {
-    EVP_MAC *mac = EVP_MAC_fetch(PROV_LIBCTX_OF(provctx), macname,
+    EVP_MAC *mac = OPENSSL_BOX_EVP_MAC_fetch(PROV_LIBCTX_OF(provctx), macname,
                                  NULL);
     const OSSL_PARAM *params;
 

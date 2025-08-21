@@ -43,12 +43,12 @@ See L<i2d_ECDSA_SIG(3)> and L<d2i_ECDSA_SIG(3)> for information about encoding
 and decoding ECDSA signatures to/from DER.
 
 All of the functions described below are deprecated. Applications should
-use the higher level B<EVP> interface such as L<EVP_DigestSignInit(3)>
-or L<EVP_DigestVerifyInit(3)> instead.
+use the higher level B<EVP> interface such as L<OPENSSL_BOX_EVP_DigestSignInit(3)>
+or L<OPENSSL_BOX_EVP_DigestVerifyInit(3)> instead.
 
 ECDSA_size() returns the maximum length of a DER encoded ECDSA signature
 created with the private EC key I<eckey>. To obtain the actual signature
-size use L<EVP_PKEY_sign(3)> with a NULL I<sig> parameter.
+size use L<OPENSSL_BOX_EVP_PKEY_sign(3)> with a NULL I<sig> parameter.
 
 ECDSA_sign() computes a digital signature of the I<dgstlen> bytes hash value
 I<dgst> using the private EC key I<eckey>. The DER encoded signatures is
@@ -164,9 +164,9 @@ ANSI X9.62, US Federal Information Processing Standard FIPS186-2
 =head1 SEE ALSO
 
 L<EC_KEY_new(3)>,
-L<EVP_DigestSignInit(3)>,
-L<EVP_DigestVerifyInit(3)>,
-L<EVP_PKEY_sign(3)>
+L<OPENSSL_BOX_EVP_DigestSignInit(3)>,
+L<OPENSSL_BOX_EVP_DigestVerifyInit(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign(3)>
 L<i2d_ECDSA_SIG(3)>,
 L<d2i_ECDSA_SIG(3)>
 

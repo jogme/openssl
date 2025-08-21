@@ -72,7 +72,7 @@ and possibly the I<object data type>.
 For example, when the OpenSSL library receives an object abstraction with the
 I<object type> B<OSSL_OBJECT_PKEY>, it will fetch a L<provider-keymgmt(7)>
 using the I<object data type> as its key type (the second argument in
-L<EVP_KEYMGMT_fetch(3)>).
+L<OPENSSL_BOX_EVP_KEYMGMT_fetch(3)>).
 
 =item 2.
 

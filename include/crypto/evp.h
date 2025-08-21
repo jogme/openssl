@@ -99,7 +99,7 @@ struct evp_pkey_ctx_st {
      */
     struct {
         /* Distinguishing Identifier, ISO/IEC 15946-3, FIPS 196 */
-        char *dist_id_name; /* The name used with EVP_PKEY_CTX_ctrl_str() */
+        char *dist_id_name; /* The name used with OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str() */
         void *dist_id;      /* The distinguishing ID itself */
         size_t dist_id_len; /* The length of the distinguishing ID */
 

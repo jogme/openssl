@@ -95,7 +95,7 @@ int ossl_quic_provide_initial_secret(OSSL_LIB_CTX *libctx,
         return 1;
 
     /* Initial encryption always uses SHA-256. */
-    if ((sha256 = EVP_MD_fetch(libctx, "SHA256", propq)) == NULL)
+    if ((sha256 = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHA256", propq)) == NULL)
         return 0;
 
     if (is_server) {

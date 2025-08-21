@@ -83,8 +83,8 @@ static struct test_stanza_st {
     PEM_write_bio_of_void_unprotected *pem_write_bio_params;
     PEM_write_bio_of_void_unprotected *pem_write_bio_PUBKEY;
 
-    d2i_of_void *d2i_PrivateKey;
-    d2i_of_void *d2i_PublicKey;
+    d2i_of_void *OPENSSL_BOX_d2i_PrivateKey;
+    d2i_of_void *OPENSSL_BOX_d2i_PublicKey;
     d2i_of_void *d2i_params;
     d2i_of_void *d2i_PUBKEY;
     PEM_read_bio_of_void *pem_read_bio_PrivateKey;
@@ -245,7 +245,7 @@ static EVP_PKEY *make_key(const char *type,
         (OSSL_PARAM *)gen_template_params;
 
     if (gen_template_params != NULL
-        && ((ctx = EVP_PKEY_CTX_new_from_name(NULL, type, NULL)) == NULL
+        && ((ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, type, NULL)) == NULL
             || OPENSSL_BOX_EVP_PKEY_paramgen_init(ctx) <= 0
             || (gen_template_params[0].key != NULL
                 && OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, gen_template_params_noconst) <= 0)
@@ -260,7 +260,7 @@ static EVP_PKEY *make_key(const char *type,
     ctx =
         template != NULL
         ? OPENSSL_BOX_EVP_PKEY_CTX_new(template, NULL)
-        : EVP_PKEY_CTX_new_from_name(NULL, type, NULL);
+        : OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, type, NULL);
 
     (void)(ctx != NULL
            && OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) > 0
@@ -537,7 +537,7 @@ static int test_key(int idx)
             if (!test_protected_PEM(key->keytype, key->evp_type, legacy_obj,
                                     test_stanza->pem_write_bio_PrivateKey,
                                     test_stanza->pem_read_bio_PrivateKey,
-                                    OPENSSL_BOX_EVP_PKEY_eq, EVP_PKEY_print_private,
+                                    OPENSSL_BOX_EVP_PKEY_eq, OPENSSL_BOX_EVP_PKEY_print_private,
                                     pkey, selection, structure))
                 ok = 0;
         }
@@ -557,7 +557,7 @@ static int test_key(int idx)
             if (!test_unprotected_PEM(key->keytype, key->evp_type, legacy_obj,
                                       test_stanza->pem_write_bio_PublicKey,
                                       test_stanza->pem_read_bio_PublicKey,
-                                      OPENSSL_BOX_EVP_PKEY_eq, EVP_PKEY_print_public,
+                                      OPENSSL_BOX_EVP_PKEY_eq, OPENSSL_BOX_EVP_PKEY_print_public,
                                       pkey, selection, structure))
                 ok = 0;
         }
@@ -576,7 +576,7 @@ static int test_key(int idx)
                                       test_stanza->pem_write_bio_params,
                                       test_stanza->pem_read_bio_params,
                                       OPENSSL_BOX_EVP_PKEY_parameters_eq,
-                                      EVP_PKEY_print_params,
+                                      OPENSSL_BOX_EVP_PKEY_print_params,
                                       pkey, selection, structure))
                 ok = 0;
         }
@@ -594,7 +594,7 @@ static int test_key(int idx)
         if (!test_unprotected_PEM(key->keytype, key->evp_type, legacy_obj,
                                   test_stanza->pem_write_bio_PUBKEY,
                                   test_stanza->pem_read_bio_PUBKEY,
-                                  OPENSSL_BOX_EVP_PKEY_eq, EVP_PKEY_print_public,
+                                  OPENSSL_BOX_EVP_PKEY_eq, OPENSSL_BOX_EVP_PKEY_print_public,
                                   pkey, selection, structure))
             ok = 0;
     }
@@ -611,8 +611,8 @@ static int test_key(int idx)
                       test_stanza->keytype, structure);
             if (!test_DER(key->keytype, key->evp_type, legacy_obj,
                           test_stanza->OPENSSL_BOX_i2d_PrivateKey,
-                          test_stanza->d2i_PrivateKey,
-                          OPENSSL_BOX_EVP_PKEY_eq, EVP_PKEY_print_private,
+                          test_stanza->OPENSSL_BOX_d2i_PrivateKey,
+                          OPENSSL_BOX_EVP_PKEY_eq, OPENSSL_BOX_EVP_PKEY_print_private,
                           pkey, selection, structure))
                 ok = 0;
         }
@@ -631,8 +631,8 @@ static int test_key(int idx)
                       test_stanza->keytype, structure);
             if (!test_DER(key->keytype, key->evp_type, legacy_obj,
                           test_stanza->OPENSSL_BOX_i2d_PublicKey,
-                          test_stanza->d2i_PublicKey,
-                          OPENSSL_BOX_EVP_PKEY_eq, EVP_PKEY_print_public,
+                          test_stanza->OPENSSL_BOX_d2i_PublicKey,
+                          OPENSSL_BOX_EVP_PKEY_eq, OPENSSL_BOX_EVP_PKEY_print_public,
                           pkey, selection, structure))
                 ok = 0;
         }
@@ -649,7 +649,7 @@ static int test_key(int idx)
                       test_stanza->keytype, structure);
             if (!test_DER(key->keytype, key->evp_type, legacy_obj,
                           test_stanza->i2d_params, test_stanza->d2i_params,
-                          OPENSSL_BOX_EVP_PKEY_parameters_eq, EVP_PKEY_print_params,
+                          OPENSSL_BOX_EVP_PKEY_parameters_eq, OPENSSL_BOX_EVP_PKEY_print_params,
                           pkey, selection, structure))
                 ok = 0;
         }
@@ -666,7 +666,7 @@ static int test_key(int idx)
                   test_stanza->keytype, structure);
         if (!test_DER(key->keytype, key->evp_type, legacy_obj,
                       test_stanza->i2d_PUBKEY, test_stanza->d2i_PUBKEY,
-                      OPENSSL_BOX_EVP_PKEY_eq, EVP_PKEY_print_public,
+                      OPENSSL_BOX_EVP_PKEY_eq, OPENSSL_BOX_EVP_PKEY_print_public,
                       pkey, selection, structure))
             ok = 0;
     }

@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     unsigned int qbits = 256;
     int gindex = 42;
 
-    ctx = EVP_PKEY_CTX_new_from_name(libctx, "DSA", propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "DSA", propq);
     if (ctx == NULL)
         goto cleanup;
 

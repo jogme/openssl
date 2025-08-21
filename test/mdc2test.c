@@ -67,16 +67,16 @@ static int test_mdc2(void)
 
     c = OPENSSL_BOX_EVP_MD_CTX_new();
     if (!TEST_ptr(c)
-        || !TEST_true(EVP_DigestInit_ex(c, OPENSSL_BOX_EVP_mdc2(), NULL))
-        || !TEST_true(EVP_DigestUpdate(c, (unsigned char *)text, tlen))
-        || !TEST_true(EVP_DigestFinal_ex(c, &(md[0]), NULL))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestInit_ex(c, OPENSSL_BOX_EVP_mdc2(), NULL))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestUpdate(c, (unsigned char *)text, tlen))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestFinal_ex(c, &(md[0]), NULL))
         || !TEST_mem_eq(md, MDC2_DIGEST_LENGTH, pad1, MDC2_DIGEST_LENGTH)
-        || !TEST_true(EVP_DigestInit_ex(c, OPENSSL_BOX_EVP_mdc2(), NULL)))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestInit_ex(c, OPENSSL_BOX_EVP_mdc2(), NULL)))
         goto end;
 
     if (!TEST_int_gt(OPENSSL_BOX_EVP_MD_CTX_set_params(c, params), 0)
-        || !TEST_true(EVP_DigestUpdate(c, (unsigned char *)text, tlen))
-        || !TEST_true(EVP_DigestFinal_ex(c, &(md[0]), NULL))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestUpdate(c, (unsigned char *)text, tlen))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestFinal_ex(c, &(md[0]), NULL))
         || !TEST_mem_eq(md, MDC2_DIGEST_LENGTH, pad2, MDC2_DIGEST_LENGTH))
         goto end;
 

@@ -8,7 +8,7 @@ EVP_KEM-EC
 =head1 DESCRIPTION
 
 The B<EC> keytype and its parameters are described in L<EVP_PKEY-EC(7)>.
-See L<EVP_PKEY_encapsulate(3)> and L<EVP_PKEY_decapsulate(3)> for more info.
+See L<OPENSSL_BOX_EVP_PKEY_encapsulate(3)> and L<OPENSSL_BOX_EVP_PKEY_decapsulate(3)> for more info.
 
 =head2 EC KEM parameters
 
@@ -60,8 +60,8 @@ If this value is not set, then a random ikm is used.
 =head1 SEE ALSO
 
 L<OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op(3)>,
-L<EVP_PKEY_encapsulate(3)>,
-L<EVP_PKEY_decapsulate(3)>
+L<OPENSSL_BOX_EVP_PKEY_encapsulate(3)>,
+L<OPENSSL_BOX_EVP_PKEY_decapsulate(3)>
 L<EVP_KEYMGMT(3)>,
 L<EVP_PKEY(3)>,
 L<provider-keymgmt(7)>

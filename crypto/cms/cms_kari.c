@@ -164,7 +164,7 @@ int CMS_RecipientInfo_kari_set0_pkey_and_peer(CMS_RecipientInfo *ri,
     if (pk == NULL)
         return 1;
 
-    pctx = EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(kari->cms_ctx),
+    pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(kari->cms_ctx),
                                       pk,
                                       ossl_cms_ctx_get0_propq(kari->cms_ctx));
     if (pctx == NULL || OPENSSL_BOX_EVP_PKEY_derive_init(pctx) <= 0)
@@ -219,15 +219,15 @@ static int cms_kek_cipher(unsigned char **pout, size_t *poutlen,
     if (OPENSSL_BOX_EVP_PKEY_derive(kari->pctx, kek, &keklen) <= 0)
         goto err;
     /* Set KEK in context */
-    if (!EVP_CipherInit_ex(kari->ctx, NULL, NULL, kek, NULL, enc))
+    if (!OPENSSL_BOX_EVP_CipherInit_ex(kari->ctx, NULL, NULL, kek, NULL, enc))
         goto err;
     /* obtain output length of ciphered key */
-    if (!EVP_CipherUpdate(kari->ctx, NULL, &outlen, in, (int)inlen))
+    if (!OPENSSL_BOX_EVP_CipherUpdate(kari->ctx, NULL, &outlen, in, (int)inlen))
         goto err;
     out = OPENSSL_malloc(outlen);
     if (out == NULL)
         goto err;
-    if (!EVP_CipherUpdate(kari->ctx, out, &outlen, in, (int)inlen))
+    if (!OPENSSL_BOX_EVP_CipherUpdate(kari->ctx, out, &outlen, in, (int)inlen))
         goto err;
     *pout = out;
     *poutlen = (size_t)outlen;
@@ -284,7 +284,7 @@ static int cms_kari_create_ephemeral_key(CMS_KeyAgreeRecipientInfo *kari,
     OSSL_LIB_CTX *libctx = ossl_cms_ctx_get0_libctx(ctx);
     const char *propq = ossl_cms_ctx_get0_propq(ctx);
 
-    pctx = EVP_PKEY_CTX_new_from_pkey(libctx, pk, propq);
+    pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pk, propq);
     if (pctx == NULL)
         goto err;
     if (OPENSSL_BOX_EVP_PKEY_keygen_init(pctx) <= 0)
@@ -292,7 +292,7 @@ static int cms_kari_create_ephemeral_key(CMS_KeyAgreeRecipientInfo *kari,
     if (OPENSSL_BOX_EVP_PKEY_keygen(pctx, &ekey) <= 0)
         goto err;
     OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
-    pctx = EVP_PKEY_CTX_new_from_pkey(libctx, ekey, propq);
+    pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, ekey, propq);
     if (pctx == NULL)
         goto err;
     if (OPENSSL_BOX_EVP_PKEY_derive_init(pctx) <= 0)
@@ -314,7 +314,7 @@ static int cms_kari_set_originator_private_key(CMS_KeyAgreeRecipientInfo *kari,
     int rv = 0;
     const CMS_CTX *ctx = kari->cms_ctx;
 
-    pctx = EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(ctx),
+    pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(ctx),
                                       originatorPrivKey,
                                       ossl_cms_ctx_get0_propq(ctx));
     if (pctx == NULL)

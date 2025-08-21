@@ -16,13 +16,13 @@
 
 int PEM_SignInit(EVP_MD_CTX *ctx, EVP_MD *type)
 {
-    return EVP_DigestInit_ex(ctx, type, NULL);
+    return OPENSSL_BOX_EVP_DigestInit_ex(ctx, type, NULL);
 }
 
 int PEM_SignUpdate(EVP_MD_CTX *ctx,
                    const unsigned char *data, unsigned int count)
 {
-    return EVP_DigestUpdate(ctx, data, count);
+    return OPENSSL_BOX_EVP_DigestUpdate(ctx, data, count);
 }
 
 int PEM_SignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
@@ -36,14 +36,14 @@ int PEM_SignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
     if (m == NULL)
         goto err;
 
-    if (EVP_SignFinal(ctx, m, &m_len, pkey) <= 0)
+    if (OPENSSL_BOX_EVP_SignFinal(ctx, m, &m_len, pkey) <= 0)
         goto err;
 
     i = OPENSSL_BOX_EVP_EncodeBlock(sigret, m, m_len);
     *siglen = i;
     ret = 1;
  err:
-    /* ctx has been zeroed by EVP_SignFinal() */
+    /* ctx has been zeroed by OPENSSL_BOX_EVP_SignFinal() */
     OPENSSL_free(m);
     return ret;
 }

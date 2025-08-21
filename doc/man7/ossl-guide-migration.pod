@@ -91,8 +91,8 @@ OpenSSL installation.
 
 Not all algorithms may be available for the application at a particular moment.
 If the application code uses any digest or cipher algorithm via the EVP interface,
-the application should verify the result of the L<EVP_EncryptInit(3)>,
-L<EVP_EncryptInit_ex(3)>, and L<OPENSSL_BOX_EVP_DigestInit(3)> functions. In case when
+the application should verify the result of the L<OPENSSL_BOX_EVP_EncryptInit(3)>,
+L<OPENSSL_BOX_EVP_EncryptInit_ex(3)>, and L<OPENSSL_BOX_EVP_DigestInit(3)> functions. In case when
 the requested algorithm is not available, these functions will fail.
 
 See also L</Legacy Algorithms> for information on the legacy provider.
@@ -106,8 +106,8 @@ OpenSSL has historically provided two sets of APIs for invoking cryptographic
 algorithms: the "high level" APIs (such as the C<EVP> APIs) and the "low level"
 APIs. The high level APIs are typically designed to work across all algorithm
 types. The "low level" APIs are targeted at a specific algorithm implementation.
-For example, the EVP APIs provide the functions L<EVP_EncryptInit_ex(3)>,
-L<EVP_EncryptUpdate(3)> and L<EVP_EncryptFinal(3)> to perform symmetric
+For example, the EVP APIs provide the functions L<OPENSSL_BOX_EVP_EncryptInit_ex(3)>,
+L<OPENSSL_BOX_EVP_EncryptUpdate(3)> and L<OPENSSL_BOX_EVP_EncryptFinal(3)> to perform symmetric
 encryption. Those functions can be used with the algorithms AES, CHACHA, 3DES etc.
 On the other hand, to do AES encryption using the low level APIs you would have
 to call AES specific functions such as L<AES_set_encrypt_key(3)>,
@@ -220,7 +220,7 @@ This simplifies the process of adding MAC implementations.
 
 This includes a generic EVP_PKEY to EVP_MAC bridge, to facilitate the continued
 use of MACs through raw private keys in functionality such as
-L<EVP_DigestSign(3)> and L<EVP_DigestVerify(3)>.
+L<OPENSSL_BOX_EVP_DigestSign(3)> and L<OPENSSL_BOX_EVP_DigestVerify(3)>.
 
 All new applications should use the new L<EVP_MAC(3)> interface.
 See also L<OSSL_PROVIDER-default(7)/Message Authentication Code (MAC)>
@@ -267,7 +267,7 @@ See L<EVP_KEM-RSA(7)>.
 
 Cipher Algorithm "AES-SIV"
 
-See L<EVP_EncryptInit(3)/SIV Mode>.
+See L<OPENSSL_BOX_EVP_EncryptInit(3)/SIV Mode>.
 
 =item *
 
@@ -335,13 +335,13 @@ L<PKCS12_key_gen_asc_ex(3)>, L<PKCS12_key_gen_uni_ex(3)>, L<PKCS12_key_gen_utf8_
 L<PKCS12_pack_p7encdata_ex(3)>, L<PKCS12_pbe_crypt_ex(3)>, L<PKCS12_PBE_keyivgen_ex(3)>,
 L<PKCS12_SAFEBAG_create_pkcs8_encrypt_ex(3)>, L<PKCS5_pbe2_set_iv_ex(3)>,
 L<PKCS5_pbe_set0_algor_ex(3)>, L<PKCS5_pbe_set_ex(3)>, L<PKCS5_pbkdf2_set_ex(3)>,
-L<PKCS5_v2_PBE_keyivgen_ex(3)>, L<PKCS5_v2_scrypt_keyivgen_ex(3)>,
+L<OPENSSL_BOX_PKCS5_v2_PBE_keyivgen_ex(3)>, L<OPENSSL_BOX_PKCS5_v2_scrypt_keyivgen_ex(3)>,
 L<PKCS8_decrypt_ex(3)>, L<PKCS8_encrypt_ex(3)>, L<PKCS8_set0_pbe_ex(3)>.
 
 As part of this change the EVP_PBE_xxx APIs can also accept a library
 context and property query and will call an extended version of the key/IV
 derivation function which supports these parameters. This includes
-L<EVP_PBE_CipherInit_ex(3)>, L<EVP_PBE_find_ex(3)> and L<EVP_PBE_scrypt_ex(3)>.
+L<OPENSSL_BOX_EVP_PBE_CipherInit_ex(3)>, L<OPENSSL_BOX_EVP_PBE_find_ex(3)> and L<OPENSSL_BOX_EVP_PBE_scrypt_ex(3)>.
 
 =head4 PKCS#12 KDF versus FIPS
 
@@ -479,7 +479,7 @@ enable them to be "freed". However they should also be treated as read-only.
 
 This may mean result in an error in L<OPENSSL_BOX_EVP_PKEY_derive_set_peer(3)> rather than
 during L<OPENSSL_BOX_EVP_PKEY_derive(3)>.
-To disable this check use EVP_PKEY_derive_set_peer_ex(dh, peer, 0).
+To disable this check use OPENSSL_BOX_EVP_PKEY_derive_set_peer_ex(dh, peer, 0).
 
 =head4 The print format has cosmetic changes for some functions
 
@@ -508,7 +508,7 @@ behaviour of L<openssl-genpkey(1)> for DH parameter generation.
 
 If using a cipher from a provider the B<EVP_CIPH_FLAG_LENGTH_BITS> flag can only
 be set B<after> the cipher has been assigned to the cipher context.
-See L<EVP_EncryptInit(3)/FLAGS> for more information.
+See L<OPENSSL_BOX_EVP_EncryptInit(3)/FLAGS> for more information.
 
 =head4 Validation of operation context parameters
 
@@ -674,11 +674,11 @@ library context.
 
 If a library context is needed then all EVP_* digest functions that return a
 B<const EVP_MD *> such as OPENSSL_BOX_EVP_sha256() should be replaced with a call to
-L<EVP_MD_fetch(3)>. See L<crypto(7)/ALGORITHM FETCHING>.
+L<OPENSSL_BOX_EVP_MD_fetch(3)>. See L<crypto(7)/ALGORITHM FETCHING>.
 
 If a library context is needed then all EVP_* cipher functions that return a
 B<const EVP_CIPHER *> such as OPENSSL_BOX_EVP_aes_128_cbc() should be replaced vith a call to
-L<EVP_CIPHER_fetch(3)>. See L<crypto(7)/ALGORITHM FETCHING>.
+L<OPENSSL_BOX_EVP_CIPHER_fetch(3)>. See L<crypto(7)/ALGORITHM FETCHING>.
 
 Some functions can be passed an object that has already been set up with a library
 context such as L<d2i_X509(3)>, L<d2i_X509_CRL(3)>, L<d2i_X509_REQ(3)> and
@@ -730,7 +730,7 @@ L<CT_POLICY_EVAL_CTX_new(3)>
 
 =item *
 
-L<d2i_AutoPrivateKey(3)>, L<d2i_PrivateKey(3)> and L<d2i_PUBKEY(3)>
+L<OPENSSL_BOX_d2i_AutoPrivateKey(3)>, L<OPENSSL_BOX_d2i_PrivateKey(3)> and L<d2i_PUBKEY(3)>
 
 =item *
 
@@ -746,15 +746,15 @@ Use L<EC_GROUP_new_by_curve_name_ex(3)> or L<EC_GROUP_new_from_params(3)>.
 
 =item *
 
-L<EVP_DigestSignInit(3)> and L<EVP_DigestVerifyInit(3)>
+L<OPENSSL_BOX_EVP_DigestSignInit(3)> and L<OPENSSL_BOX_EVP_DigestVerifyInit(3)>
 
 =item *
 
-L<EVP_PBE_CipherInit(3)>, L<EVP_PBE_find(3)> and L<EVP_PBE_scrypt(3)>
+L<OPENSSL_BOX_EVP_PBE_CipherInit(3)>, L<OPENSSL_BOX_EVP_PBE_find(3)> and L<OPENSSL_BOX_EVP_PBE_scrypt(3)>
 
 =item *
 
-L<PKCS5_PBE_keyivgen(3)>
+L<OPENSSL_BOX_PKCS5_PBE_keyivgen(3)>
 
 =item *
 
@@ -764,16 +764,16 @@ L<EVP_PKCS82PKEY(3)>
 
 L<OPENSSL_BOX_EVP_PKEY_CTX_new_id(3)>
 
-Use L<EVP_PKEY_CTX_new_from_name(3)>
+Use L<OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(3)>
 
 =item *
 
-L<OPENSSL_BOX_EVP_PKEY_derive_set_peer(3)>, L<EVP_PKEY_new_raw_private_key(3)>
-and L<EVP_PKEY_new_raw_public_key(3)>
+L<OPENSSL_BOX_EVP_PKEY_derive_set_peer(3)>, L<OPENSSL_BOX_EVP_PKEY_new_raw_private_key(3)>
+and L<OPENSSL_BOX_EVP_PKEY_new_raw_public_key(3)>
 
 =item *
 
-L<EVP_SignFinal(3)> and L<EVP_VerifyFinal(3)>
+L<OPENSSL_BOX_EVP_SignFinal(3)> and L<OPENSSL_BOX_EVP_VerifyFinal(3)>
 
 =item *
 
@@ -816,7 +816,7 @@ L<PKCS12_PBE_keyivgen(3)>, L<PKCS12_SAFEBAG_create_pkcs8_encrypt(3)>
 =item *
 
 L<PKCS5_pbe_set0_algor(3)>, L<PKCS5_pbe_set(3)>, L<PKCS5_pbe2_set_iv(3)>,
-L<PKCS5_pbkdf2_set(3)> and L<PKCS5_v2_scrypt_keyivgen(3)>
+L<PKCS5_pbkdf2_set(3)> and L<OPENSSL_BOX_PKCS5_v2_scrypt_keyivgen(3)>
 
 =item *
 
@@ -890,11 +890,11 @@ L<BIO_new_from_core_bio(3)>
 
 =item *
 
-L<EVP_ASYM_CIPHER_fetch(3)> and L<EVP_ASYM_CIPHER_do_all_provided(3)>
+L<OPENSSL_BOX_EVP_ASYM_CIPHER_fetch(3)> and L<OPENSSL_BOX_EVP_ASYM_CIPHER_do_all_provided(3)>
 
 =item *
 
-L<EVP_CIPHER_fetch(3)> and L<EVP_CIPHER_do_all_provided(3)>
+L<OPENSSL_BOX_EVP_CIPHER_fetch(3)> and L<OPENSSL_BOX_EVP_CIPHER_do_all_provided(3)>
 
 =item *
 
@@ -907,39 +907,39 @@ L<EVP_KDF_fetch(3)> and L<EVP_KDF_do_all_provided(3)>
 
 =item *
 
-L<EVP_KEM_fetch(3)> and L<EVP_KEM_do_all_provided(3)>
+L<OPENSSL_BOX_EVP_KEM_fetch(3)> and L<OPENSSL_BOX_EVP_KEM_do_all_provided(3)>
 
 =item *
 
-L<EVP_KEYEXCH_fetch(3)> and L<EVP_KEYEXCH_do_all_provided(3)>
+L<OPENSSL_BOX_EVP_KEYEXCH_fetch(3)> and L<OPENSSL_BOX_EVP_KEYEXCH_do_all_provided(3)>
 
 =item *
 
-L<EVP_KEYMGMT_fetch(3)> and L<EVP_KEYMGMT_do_all_provided(3)>
+L<OPENSSL_BOX_EVP_KEYMGMT_fetch(3)> and L<OPENSSL_BOX_EVP_KEYMGMT_do_all_provided(3)>
 
 =item *
 
-L<EVP_MAC_fetch(3)> and L<EVP_MAC_do_all_provided(3)>
+L<OPENSSL_BOX_EVP_MAC_fetch(3)> and L<OPENSSL_BOX_EVP_MAC_do_all_provided(3)>
 
 =item *
 
-L<EVP_MD_fetch(3)> and L<EVP_MD_do_all_provided(3)>
+L<OPENSSL_BOX_EVP_MD_fetch(3)> and L<OPENSSL_BOX_EVP_MD_do_all_provided(3)>
 
 =item *
 
-L<EVP_PKEY_CTX_new_from_pkey(3)>
+L<OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(3)>
 
 =item *
 
-L<EVP_PKEY_Q_keygen(3)>
+L<OPENSSL_BOX_EVP_PKEY_Q_keygen(3)>
 
 =item *
 
-L<EVP_Q_mac(3)> and L<EVP_Q_digest(3)>
+L<OPENSSL_BOX_EVP_Q_mac(3)> and L<OPENSSL_BOX_EVP_Q_digest(3)>
 
 =item *
 
-L<EVP_RAND(3)> and L<EVP_RAND_do_all_provided(3)>
+L<EVP_RAND(3)> and L<OPENSSL_BOX_EVP_RAND_do_all_provided(3)>
 
 =item *
 
@@ -947,7 +947,7 @@ L<OPENSSL_BOX_EVP_set_default_properties(3)>
 
 =item *
 
-L<EVP_SIGNATURE_fetch(3)> and L<EVP_SIGNATURE_do_all_provided(3)>
+L<OPENSSL_BOX_EVP_SIGNATURE_fetch(3)> and L<OPENSSL_BOX_EVP_SIGNATURE_do_all_provided(3)>
 
 =item *
 
@@ -1027,8 +1027,8 @@ manipulating flags (such as L<OPENSSL_BOX_EVP_MD_CTX_set_flags(3)>)internally us
 B<OSSL_PARAMS> to pass information to/from provider objects.
 See L<OSSL_PARAM(3)> for additional information related to parameters.
 
-For ciphers see L<EVP_EncryptInit(3)/CONTROLS>, L<EVP_EncryptInit(3)/FLAGS> and
-L<EVP_EncryptInit(3)/PARAMETERS>.
+For ciphers see L<OPENSSL_BOX_EVP_EncryptInit(3)/CONTROLS>, L<OPENSSL_BOX_EVP_EncryptInit(3)/FLAGS> and
+L<OPENSSL_BOX_EVP_EncryptInit(3)/PARAMETERS>.
 
 For digests see L<OPENSSL_BOX_EVP_DigestInit(3)/CONTROLS>, L<OPENSSL_BOX_EVP_DigestInit(3)/FLAGS> and
 L<OPENSSL_BOX_EVP_DigestInit(3)/PARAMETERS>.
@@ -1061,17 +1061,17 @@ See L<d2i_RSAPrivateKey(3)/Migration> for further details.
 Applications that set or get low-level key objects (such as OPENSSL_BOX_EVP_PKEY_set1_DH()
 or OPENSSL_BOX_EVP_PKEY_get0()) should instead use the OSSL_ENCODER
 (See L<OSSL_ENCODER_to_bio(3)>) or OSSL_DECODER (See L<OSSL_DECODER_from_bio(3)>)
-APIs, or alternatively use L<EVP_PKEY_fromdata(3)> or L<OPENSSL_BOX_EVP_PKEY_todata(3)>.
+APIs, or alternatively use L<OPENSSL_BOX_EVP_PKEY_fromdata(3)> or L<OPENSSL_BOX_EVP_PKEY_todata(3)>.
 
 =head4 Deprecated low-level key parameter getters
 
 Functions that access low-level objects directly such as L<RSA_get0_n(3)> are now
 deprecated. Applications should use one of:
-L<EVP_PKEY_get_bn_param(3)>,
-L<EVP_PKEY_get_int_param(3)>,
-L<EVP_PKEY_get_size_t_param(3)>,
-L<EVP_PKEY_get_utf8_string_param(3)>,
-L<EVP_PKEY_get_octet_string_param(3)>, or
+L<OPENSSL_BOX_EVP_PKEY_get_bn_param(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_int_param(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_size_t_param(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_utf8_string_param(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_octet_string_param(3)>, or
 L<OPENSSL_BOX_EVP_PKEY_get_params(3)>,
 to access fields from an EVP_PKEY.
 Gettable parameters are listed in:
@@ -1089,10 +1089,10 @@ Applications may also use L<OPENSSL_BOX_EVP_PKEY_todata(3)> to return all fields
 =head4 Deprecated low-level key parameter setters
 
 Functions that access low-level objects directly such as L<RSA_set0_crt_params(3)>
-are now deprecated. Applications should use L<EVP_PKEY_fromdata(3)> to create
+are now deprecated. Applications should use L<OPENSSL_BOX_EVP_PKEY_fromdata(3)> to create
 new keys from user provided key data. Keys should be immutable once they are
 created, so if required the user may use L<OPENSSL_BOX_EVP_PKEY_todata(3)>, L<OSSL_PARAM_merge(3)>,
-and L<EVP_PKEY_fromdata(3)> to create a modified key.
+and L<OPENSSL_BOX_EVP_PKEY_fromdata(3)> to create a modified key.
 See L<EVP_PKEY-DH(7)/Examples> for more information.
 See L</Deprecated low-level key generation functions> for information on
 generating a key using parameters.
@@ -1103,7 +1103,7 @@ Low-level objects were created using methods such as L<RSA_new(3)>,
 L<RSA_up_ref(3)> and L<RSA_free(3)>. Applications should instead use the
 high-level EVP_PKEY APIs, e.g. L<OPENSSL_BOX_EVP_PKEY_new(3)>, L<OPENSSL_BOX_EVP_PKEY_up_ref(3)> and
 L<OPENSSL_BOX_EVP_PKEY_free(3)>.
-See also L<EVP_PKEY_CTX_new_from_name(3)> and L<EVP_PKEY_CTX_new_from_pkey(3)>.
+See also L<OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(3)> and L<OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(3)>.
 
 EVP_PKEYs may be created in a variety of ways:
 See also L</Deprecated low-level key generation functions>,
@@ -1114,25 +1114,25 @@ L</Deprecated low-level key parameter setters>.
 
 Low-level encryption functions such as L<AES_encrypt(3)> and L<AES_decrypt(3)>
 have been informally discouraged from use for a long time. Applications should
-instead use the high level EVP APIs L<EVP_EncryptInit_ex(3)>,
-L<EVP_EncryptUpdate(3)>, and L<EVP_EncryptFinal_ex(3)> or
-L<EVP_DecryptInit_ex(3)>, L<EVP_DecryptUpdate(3)> and L<EVP_DecryptFinal_ex(3)>.
+instead use the high level EVP APIs L<OPENSSL_BOX_EVP_EncryptInit_ex(3)>,
+L<OPENSSL_BOX_EVP_EncryptUpdate(3)>, and L<OPENSSL_BOX_EVP_EncryptFinal_ex(3)> or
+L<OPENSSL_BOX_EVP_DecryptInit_ex(3)>, L<OPENSSL_BOX_EVP_DecryptUpdate(3)> and L<OPENSSL_BOX_EVP_DecryptFinal_ex(3)>.
 
 =head4 Deprecated low-level digest functions
 
 Use of low-level digest functions such as L<SHA1_Init(3)> have been
 informally discouraged from use for a long time.  Applications should instead
-use the high level EVP APIs L<EVP_DigestInit_ex(3)>, L<EVP_DigestUpdate(3)>
-and L<EVP_DigestFinal_ex(3)>, or the quick one-shot L<EVP_Q_digest(3)>.
+use the high level EVP APIs L<OPENSSL_BOX_EVP_DigestInit_ex(3)>, L<OPENSSL_BOX_EVP_DigestUpdate(3)>
+and L<OPENSSL_BOX_EVP_DigestFinal_ex(3)>, or the quick one-shot L<OPENSSL_BOX_EVP_Q_digest(3)>.
 
 Note that the functions L<SHA1(3)>, L<SHA224(3)>, L<SHA256(3)>, L<SHA384(3)>
-and L<SHA512(3)> have changed to macros that use L<EVP_Q_digest(3)>.
+and L<SHA512(3)> have changed to macros that use L<OPENSSL_BOX_EVP_Q_digest(3)>.
 
 =head4 Deprecated low-level signing functions
 
 Use of low-level signing functions such as L<DSA_sign(3)> have been
 informally discouraged for a long time. Instead applications should use
-L<EVP_DigestSign(3)> and L<EVP_DigestVerify(3)>.
+L<OPENSSL_BOX_EVP_DigestSign(3)> and L<OPENSSL_BOX_EVP_DigestVerify(3)>.
 See also L<EVP_SIGNATURE-RSA(7)>, L<EVP_SIGNATURE-DSA(7)>,
 L<EVP_SIGNATURE-ECDSA(7)> and L<EVP_SIGNATURE-ED25519(7)>.
 
@@ -1140,9 +1140,9 @@ L<EVP_SIGNATURE-ECDSA(7)> and L<EVP_SIGNATURE-ED25519(7)>.
 
 Low-level mac functions such as L<CMAC_Init(3)> are deprecated.
 Applications should instead use the new L<EVP_MAC(3)> interface, using
-L<OPENSSL_BOX_EVP_MAC_CTX_new(3)>, L<OPENSSL_BOX_EVP_MAC_CTX_free(3)>, L<EVP_MAC_init(3)>,
-L<OPENSSL_BOX_EVP_MAC_update(3)> and L<EVP_MAC_final(3)> or the single-shot MAC function
-L<EVP_Q_mac(3)>.
+L<OPENSSL_BOX_EVP_MAC_CTX_new(3)>, L<OPENSSL_BOX_EVP_MAC_CTX_free(3)>, L<OPENSSL_BOX_EVP_MAC_init(3)>,
+L<OPENSSL_BOX_EVP_MAC_update(3)> and L<OPENSSL_BOX_EVP_MAC_final(3)> or the single-shot MAC function
+L<OPENSSL_BOX_EVP_Q_mac(3)>.
 See L<EVP_MAC(3)>, L<EVP_MAC-HMAC(7)>, L<EVP_MAC-CMAC(7)>, L<EVP_MAC-GMAC(7)>,
 L<EVP_MAC-KMAC(7)>, L<EVP_MAC-BLAKE2(7)>, L<EVP_MAC-Poly1305(7)> and
 L<EVP_MAC-Siphash(7)> for additional information.
@@ -1171,7 +1171,7 @@ Many low-level functions have been informally discouraged from use for a long
 time. Applications should instead use L<OPENSSL_BOX_EVP_PKEY_keygen_init(3)> and
 L<OPENSSL_BOX_EVP_PKEY_generate(3)> as described in L<EVP_PKEY-DSA(7)>, L<EVP_PKEY-DH(7)>,
 L<EVP_PKEY-RSA(7)>, L<EVP_PKEY-EC(7)> and L<EVP_PKEY-X25519(7)>.
-The 'quick' one-shot function L<EVP_PKEY_Q_keygen(3)> and macros for the most
+The 'quick' one-shot function L<OPENSSL_BOX_EVP_PKEY_Q_keygen(3)> and macros for the most
 common cases: <EVP_RSA_gen(3)> and L<EVP_EC_gen(3)> may also be used.
 
 =head4 Deprecated low-level key reading and writing functions
@@ -1186,10 +1186,10 @@ L<OSSL_ENCODER_to_bio(3)> and L<OSSL_DECODER_from_bio(3)>.
 Use of low-level objects (such as DSA) has been informally discouraged from use
 for a long time. Functions to print these low-level objects such as
 DSA_print() should be replaced with the equivalent EVP_PKEY functions.
-Application should use one of L<EVP_PKEY_print_public(3)>,
-L<EVP_PKEY_print_private(3)>, L<EVP_PKEY_print_params(3)>,
-L<EVP_PKEY_print_public_fp(3)>, L<EVP_PKEY_print_private_fp(3)> or
-L<EVP_PKEY_print_params_fp(3)>. Note that internally these use
+Application should use one of L<OPENSSL_BOX_EVP_PKEY_print_public(3)>,
+L<OPENSSL_BOX_EVP_PKEY_print_private(3)>, L<OPENSSL_BOX_EVP_PKEY_print_params(3)>,
+L<OPENSSL_BOX_EVP_PKEY_print_public_fp(3)>, L<OPENSSL_BOX_EVP_PKEY_print_private_fp(3)> or
+L<OPENSSL_BOX_EVP_PKEY_print_params_fp(3)>. Note that internally these use
 L<OSSL_ENCODER_to_bio(3)> and L<OSSL_DECODER_from_bio(3)>.
 
 =head3 Deprecated function mappings
@@ -1332,11 +1332,11 @@ CRYPTO_cts128_decrypt_block(), CRYPTO_cts128_decrypt(),
 CRYPTO_nistcts128_encrypt_block(), CRYPTO_nistcts128_encrypt(),
 CRYPTO_nistcts128_decrypt_block(), CRYPTO_nistcts128_decrypt()
 
-Use the higher level functions EVP_CipherInit_ex2(), EVP_CipherUpdate() and
-EVP_CipherFinal_ex() instead.
+Use the higher level functions OPENSSL_BOX_EVP_CipherInit_ex2(), OPENSSL_BOX_EVP_CipherUpdate() and
+OPENSSL_BOX_EVP_CipherFinal_ex() instead.
 See the "cts_mode" parameter in
-L<EVP_EncryptInit(3)/Gettable and Settable EVP_CIPHER_CTX parameters>.
-See L<EVP_EncryptInit(3)/EXAMPLES> for a AES-256-CBC-CTS example.
+L<OPENSSL_BOX_EVP_EncryptInit(3)/Gettable and Settable EVP_CIPHER_CTX parameters>.
+See L<OPENSSL_BOX_EVP_EncryptInit(3)/EXAMPLES> for a AES-256-CBC-CTS example.
 
 =item *
 
@@ -1778,7 +1778,7 @@ See L<OPENSSL_BOX_EVP_CIPHER_CTX_get_original_iv(3)> for further information.
 
 =item *
 
-B<EVP_CIPHER_meth_*()>, EVP_MD_CTX_set_update_fn(), EVP_MD_CTX_update_fn(),
+B<EVP_CIPHER_meth_*()>, OPENSSL_BOX_EVP_MD_CTX_set_update_fn(), EVP_MD_CTX_update_fn(),
 B<EVP_MD_meth_*()>
 
 See L</Providers are a replacement for engines and low-level method overrides>.
@@ -1816,10 +1816,10 @@ See L<OPENSSL_BOX_EVP_PKEY_copy_parameters(3)> for further details.
 
 =item *
 
-EVP_PKEY_encrypt_old(), EVP_PKEY_decrypt_old(),
+OPENSSL_BOX_EVP_PKEY_encrypt_old(), OPENSSL_BOX_EVP_PKEY_decrypt_old(),
 
-Applications should use L<OPENSSL_BOX_EVP_PKEY_encrypt_init(3)> and L<EVP_PKEY_encrypt(3)> or
-L<OPENSSL_BOX_EVP_PKEY_decrypt_init(3)> and L<EVP_PKEY_decrypt(3)> instead.
+Applications should use L<OPENSSL_BOX_EVP_PKEY_encrypt_init(3)> and L<OPENSSL_BOX_EVP_PKEY_encrypt(3)> or
+L<OPENSSL_BOX_EVP_PKEY_decrypt_init(3)> and L<OPENSSL_BOX_EVP_PKEY_decrypt(3)> instead.
 
 =item *
 
@@ -1843,7 +1843,7 @@ See L</Providers are a replacement for engines and low-level method overrides>.
 
 =item *
 
-EVP_PKEY_new_CMAC_key()
+OPENSSL_BOX_EVP_PKEY_new_CMAC_key()
 
 See L</Deprecated low-level MAC functions>.
 

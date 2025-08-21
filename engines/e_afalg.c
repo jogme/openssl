@@ -752,11 +752,11 @@ static const EVP_CIPHER *afalg_aes_cbc(int nid)
         || !OPENSSL_BOX_EVP_CIPHER_meth_set_flags(cipher_handle->_hidden,
                                       EVP_CIPH_CBC_MODE |
                                       EVP_CIPH_FLAG_DEFAULT_ASN1)
-        || !EVP_CIPHER_meth_set_init(cipher_handle->_hidden,
+        || !OPENSSL_BOX_EVP_CIPHER_meth_set_init(cipher_handle->_hidden,
                                      afalg_cipher_init)
-        || !EVP_CIPHER_meth_set_do_cipher(cipher_handle->_hidden,
+        || !OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(cipher_handle->_hidden,
                                           afalg_do_cipher)
-        || !EVP_CIPHER_meth_set_cleanup(cipher_handle->_hidden,
+        || !OPENSSL_BOX_EVP_CIPHER_meth_set_cleanup(cipher_handle->_hidden,
                                         afalg_cipher_cleanup)
         || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(cipher_handle->_hidden,
                                               sizeof(afalg_ctx)))) {

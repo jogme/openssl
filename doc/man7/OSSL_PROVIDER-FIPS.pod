@@ -25,9 +25,9 @@ defined for approved algorithms:
 =back
 
 It may be used in a property query string with fetching functions such as
-L<EVP_MD_fetch(3)> or L<EVP_CIPHER_fetch(3)>, as well as with other
+L<OPENSSL_BOX_EVP_MD_fetch(3)> or L<OPENSSL_BOX_EVP_CIPHER_fetch(3)>, as well as with other
 functions that take a property query string, such as
-L<EVP_PKEY_CTX_new_from_name(3)>.
+L<OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(3)>.
 
 To be FIPS compliant, it is mandatory to include C<fips=yes> as
 part of all property queries.  This ensures that only FIPS approved

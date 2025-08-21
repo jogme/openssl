@@ -80,10 +80,10 @@ EVP_MD_CTX *ossl_ml_dsa_mu_init(const ML_DSA_KEY *key, int encode,
         return NULL;
 
     /* H(.. */
-    if (!EVP_DigestInit_ex2(md_ctx, key->shake256_md, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex2(md_ctx, key->shake256_md, NULL))
         goto err;
     /* ..pk (= key->tr) */
-    if (!EVP_DigestUpdate(md_ctx, key->tr, sizeof(key->tr)))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(md_ctx, key->tr, sizeof(key->tr)))
         goto err;
     /* M' = .. */
     if (encode) {
@@ -93,10 +93,10 @@ EVP_MD_CTX *ossl_ml_dsa_mu_init(const ML_DSA_KEY *key, int encode,
         itb[0] = 0;
         /* || IntegerToBytes(|ctx|, 1) || .. */
         itb[1] = (uint8_t)ctx_len;
-        if (!EVP_DigestUpdate(md_ctx, itb, 2))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md_ctx, itb, 2))
             goto err;
         /* ctx || .. */
-        if (!EVP_DigestUpdate(md_ctx, ctx, ctx_len))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(md_ctx, ctx, ctx_len))
             goto err;
         /* .. msg) will follow in update and final functions */
     }
@@ -118,7 +118,7 @@ err:
  */
 int ossl_ml_dsa_mu_update(EVP_MD_CTX *md_ctx, const uint8_t *msg, size_t msg_len)
 {
-    return EVP_DigestUpdate(md_ctx, msg, msg_len);
+    return OPENSSL_BOX_EVP_DigestUpdate(md_ctx, msg, msg_len);
 }
 
 /*
@@ -135,7 +135,7 @@ int ossl_ml_dsa_mu_finalize(EVP_MD_CTX *md_ctx, uint8_t *mu, size_t mu_len)
         ERR_raise(ERR_LIB_PROV, PROV_R_BAD_LENGTH);
         return 0;
     }
-    return EVP_DigestSqueeze(md_ctx, mu, mu_len);
+    return OPENSSL_BOX_EVP_DigestSqueeze(md_ctx, mu, mu_len);
 }
 
 /*

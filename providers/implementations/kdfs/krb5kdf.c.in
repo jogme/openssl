@@ -359,7 +359,7 @@ static int cipher_init(EVP_CIPHER_CTX *ctx,
 {
     int klen, ret;
 
-    ret = EVP_EncryptInit_ex(ctx, cipher, engine, key, NULL);
+    ret = OPENSSL_BOX_EVP_EncryptInit_ex(ctx, cipher, engine, key, NULL);
     if (!ret)
         goto out;
     /* set the key len for the odd variable key len cipher */
@@ -444,12 +444,12 @@ static int KRB5KDF(const EVP_CIPHER *cipher, ENGINE *engine,
     for (osize = 0; osize < okey_len; osize += cipherlen) {
         int olen;
 
-        ret = EVP_EncryptUpdate(ctx, cipherblock, &olen,
+        ret = OPENSSL_BOX_EVP_EncryptUpdate(ctx, cipherblock, &olen,
                                 plainblock, (int)blocksize);
         if (!ret)
             goto out;
         cipherlen = olen;
-        ret = EVP_EncryptFinal_ex(ctx, cipherblock, &olen);
+        ret = OPENSSL_BOX_EVP_EncryptFinal_ex(ctx, cipherblock, &olen);
         if (!ret)
             goto out;
         if (olen != 0) {

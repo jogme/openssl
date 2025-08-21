@@ -211,7 +211,7 @@ opthelp:
         BIGNUM *e = NULL;
 
         /* Every RSA key has an 'e' */
-        EVP_PKEY_get_bn_param(pkey, "e", &e);
+        OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, "e", &e);
         if (e == NULL) {
             BIO_printf(bio_err, "Error cannot access RSA e\n");
             goto end;

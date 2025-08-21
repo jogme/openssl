@@ -23,7 +23,7 @@ void OPENSSL_BOX_PKCS5_PBE_add(void)
 {
 }
 
-int PKCS5_PBE_keyivgen_ex(EVP_CIPHER_CTX *cctx, const char *pass, int passlen,
+int OPENSSL_BOX_PKCS5_PBE_keyivgen_ex(EVP_CIPHER_CTX *cctx, const char *pass, int passlen,
                           ASN1_TYPE *param, const EVP_CIPHER *cipher,
                           const EVP_MD *md, int en_de, OSSL_LIB_CTX *libctx,
                           const char *propq)
@@ -98,7 +98,7 @@ int PKCS5_PBE_keyivgen_ex(EVP_CIPHER_CTX *cctx, const char *pass, int passlen,
         goto err;
     memcpy(key, md_tmp, kl);
     memcpy(iv, md_tmp + (16 - ivl), ivl);
-    if (!EVP_CipherInit_ex(cctx, cipher, NULL, key, iv, en_de))
+    if (!OPENSSL_BOX_EVP_CipherInit_ex(cctx, cipher, NULL, key, iv, en_de))
         goto err;
     OPENSSL_cleanse(md_tmp, EVP_MAX_MD_SIZE);
     OPENSSL_cleanse(key, EVP_MAX_KEY_LENGTH);
@@ -110,11 +110,11 @@ int PKCS5_PBE_keyivgen_ex(EVP_CIPHER_CTX *cctx, const char *pass, int passlen,
     return rv;
 }
 
-int PKCS5_PBE_keyivgen(EVP_CIPHER_CTX *cctx, const char *pass, int passlen,
+int OPENSSL_BOX_PKCS5_PBE_keyivgen(EVP_CIPHER_CTX *cctx, const char *pass, int passlen,
                        ASN1_TYPE *param, const EVP_CIPHER *cipher,
                        const EVP_MD *md, int en_de)
 {
-    return PKCS5_PBE_keyivgen_ex(cctx, pass, passlen, param, cipher, md, en_de,
+    return OPENSSL_BOX_PKCS5_PBE_keyivgen_ex(cctx, pass, passlen, param, cipher, md, en_de,
                                  NULL, NULL);
 }
 

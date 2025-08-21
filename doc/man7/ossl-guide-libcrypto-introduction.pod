@@ -39,7 +39,7 @@ are algorithms for encryption, and different algorithms for digesting data.
 These different groups are known as "operations" in OpenSSL. Each operation
 has a different set of functions associated with it. For example to perform an
 encryption operation using AES (or any other encryption algorithm) you would use
-the encryption functions detailed on the L<EVP_EncryptInit(3)> page. Or to
+the encryption functions detailed on the L<OPENSSL_BOX_EVP_EncryptInit(3)> page. Or to
 perform a digest operation using SHA256 then you would use the digesting
 functions on the L<OPENSSL_BOX_EVP_DigestInit(3)> page.
 
@@ -58,7 +58,7 @@ L</Implicit fetching>.
 Explicit fetching involves directly calling a specific API to fetch an algorithm
 implementation from a provider. This fetched object can then be passed to other
 APIs. These explicit fetching functions usually have the name C<APINAME_fetch>,
-where C<APINAME> is the name of the operation. For example L<EVP_MD_fetch(3)>
+where C<APINAME> is the name of the operation. For example L<OPENSSL_BOX_EVP_MD_fetch(3)>
 can be used to explicitly fetch a digest algorithm implementation. The user is
 responsible for freeing the object returned from the C<APINAME_fetch> function
 using C<APINAME_free> when it is no longer needed.
@@ -101,9 +101,9 @@ L<ossl-guide-libraries-introduction(7)/PROPERTY QUERY STRINGS>.
 =back
 
 The algorithm implementation that is fetched can then be used with other diverse
-functions that use them. For example the L<EVP_DigestInit_ex(3)> function takes
+functions that use them. For example the L<OPENSSL_BOX_EVP_DigestInit_ex(3)> function takes
 as a parameter an B<EVP_MD> object which may have been returned from an earlier
-call to L<EVP_MD_fetch(3)>.
+call to L<OPENSSL_BOX_EVP_MD_fetch(3)>.
 
 =head2 Implicit fetching
 
@@ -113,8 +113,8 @@ L<OPENSSL_BOX_EVP_get_cipherbyname(3)> or L<OPENSSL_BOX_EVP_get_digestbyname(3)>
 compatibility with OpenSSL before version 3.0 where explicit fetching was not
 available.
 
-When they are used with functions like L<EVP_DigestInit_ex(3)> or
-L<EVP_CipherInit_ex(3)>, the actual implementation to be used is
+When they are used with functions like L<OPENSSL_BOX_EVP_DigestInit_ex(3)> or
+L<OPENSSL_BOX_EVP_CipherInit_ex(3)>, the actual implementation to be used is
 fetched implicitly using default search criteria (which uses NULL for the
 library context and property query string).
 
@@ -124,7 +124,7 @@ using default search criteria and an algorithm name that is consistent with
 the context in which it is being used.
 
 Functions that use an B<EVP_PKEY_CTX> or an L<EVP_PKEY(3)>, such as
-L<EVP_DigestSignInit(3)>, all fetch the implementations implicitly. Usually the
+L<OPENSSL_BOX_EVP_DigestSignInit(3)>, all fetch the implementations implicitly. Usually the
 algorithm to fetch is determined based on the type of key that is being used and
 the function that has been called.
 
@@ -151,11 +151,11 @@ The following functions can be used for explicit fetching:
 
 =over 4
 
-=item L<EVP_MD_fetch(3)>
+=item L<OPENSSL_BOX_EVP_MD_fetch(3)>
 
 Fetch a message digest/hashing algorithm implementation.
 
-=item L<EVP_CIPHER_fetch(3)>
+=item L<OPENSSL_BOX_EVP_CIPHER_fetch(3)>
 
 Fetch a symmetric cipher algorithm implementation.
 
@@ -163,11 +163,11 @@ Fetch a symmetric cipher algorithm implementation.
 
 Fetch a Key Derivation Function (KDF) algorithm implementation.
 
-=item L<EVP_MAC_fetch(3)>
+=item L<OPENSSL_BOX_EVP_MAC_fetch(3)>
 
 Fetch a Message Authentication Code (MAC) algorithm implementation.
 
-=item L<EVP_KEM_fetch(3)>
+=item L<OPENSSL_BOX_EVP_KEM_fetch(3)>
 
 Fetch a Key Encapsulation Mechanism (KEM) algorithm implementation
 
@@ -181,7 +181,7 @@ format).
 Fetch a decoder algorithm implementation (e.g. to decode keys from a specified
 format).
 
-=item L<EVP_RAND_fetch(3)>
+=item L<OPENSSL_BOX_EVP_RAND_fetch(3)>
 
 Fetch a Pseudo Random Number Generator (PRNG) algorithm implementation.
 
@@ -201,41 +201,41 @@ implementations.
 Fetch any available implementation of SHA2-256 in the default context. Note
 that some algorithms have aliases. So "SHA256" and "SHA2-256" are synonymous:
 
- EVP_MD *md = EVP_MD_fetch(NULL, "SHA2-256", NULL);
+ EVP_MD *md = OPENSSL_BOX_EVP_MD_fetch(NULL, "SHA2-256", NULL);
  ...
  OPENSSL_BOX_EVP_MD_free(md);
 
 Fetch any available implementation of AES-128-CBC in the default context:
 
- EVP_CIPHER *cipher = EVP_CIPHER_fetch(NULL, "AES-128-CBC", NULL);
+ EVP_CIPHER *cipher = OPENSSL_BOX_EVP_CIPHER_fetch(NULL, "AES-128-CBC", NULL);
  ...
  OPENSSL_BOX_EVP_CIPHER_free(cipher);
 
 Fetch an implementation of SHA2-256 from the default provider in the default
 context:
 
- EVP_MD *md = EVP_MD_fetch(NULL, "SHA2-256", "provider=default");
+ EVP_MD *md = OPENSSL_BOX_EVP_MD_fetch(NULL, "SHA2-256", "provider=default");
  ...
  OPENSSL_BOX_EVP_MD_free(md);
 
 Fetch an implementation of SHA2-256 that is not from the default provider in the
 default context:
 
- EVP_MD *md = EVP_MD_fetch(NULL, "SHA2-256", "provider!=default");
+ EVP_MD *md = OPENSSL_BOX_EVP_MD_fetch(NULL, "SHA2-256", "provider!=default");
  ...
  OPENSSL_BOX_EVP_MD_free(md);
 
 Fetch an implementation of SHA2-256 that is preferably from the FIPS provider in
 the default context:
 
- EVP_MD *md = EVP_MD_fetch(NULL, "SHA2-256", "provider=?fips");
+ EVP_MD *md = OPENSSL_BOX_EVP_MD_fetch(NULL, "SHA2-256", "provider=?fips");
  ...
  OPENSSL_BOX_EVP_MD_free(md);
 
 Fetch an implementation of SHA2-256 from the default provider in the specified
 library context:
 
- EVP_MD *md = EVP_MD_fetch(libctx, "SHA2-256", "provider=default");
+ EVP_MD *md = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHA2-256", "provider=default");
  ...
  OPENSSL_BOX_EVP_MD_free(md);
 
@@ -245,7 +245,7 @@ implementation of WHIRLPOOL from it:
  /* This only needs to be done once - usually at application start up */
  OSSL_PROVIDER *legacy = OSSL_PROVIDER_load(NULL, "legacy");
 
- EVP_MD *md = EVP_MD_fetch(NULL, "WHIRLPOOL", "provider=legacy");
+ EVP_MD *md = OPENSSL_BOX_EVP_MD_fetch(NULL, "WHIRLPOOL", "provider=legacy");
  ...
  OPENSSL_BOX_EVP_MD_free(md);
 
@@ -259,8 +259,8 @@ other providers:
  OSSL_PROVIDER *legacy = OSSL_PROVIDER_load(NULL, "legacy");
  OSSL_PROVIDER *default = OSSL_PROVIDER_load(NULL, "default");
 
- EVP_MD *md_whirlpool = EVP_MD_fetch(NULL, "whirlpool", NULL);
- EVP_MD *md_sha256 = EVP_MD_fetch(NULL, "SHA2-256", NULL);
+ EVP_MD *md_whirlpool = OPENSSL_BOX_EVP_MD_fetch(NULL, "whirlpool", NULL);
+ EVP_MD *md_sha256 = OPENSSL_BOX_EVP_MD_fetch(NULL, "SHA2-256", NULL);
  ...
  OPENSSL_BOX_EVP_MD_free(md_whirlpool);
  OPENSSL_BOX_EVP_MD_free(md_sha256);
@@ -317,21 +317,21 @@ L<ossl-guide-libraries-introduction(7)/DEMO APPLICATIONS>).
       * implementation (second NULL parameter). Any SHA256 implementation will
       * do.
       * In a larger application this fetch would just be done once, and could
-      * be used for multiple calls to other operations such as EVP_DigestInit_ex().
+      * be used for multiple calls to other operations such as OPENSSL_BOX_EVP_DigestInit_ex().
       */
-     sha256 = EVP_MD_fetch(NULL, "SHA256", NULL);
+     sha256 = OPENSSL_BOX_EVP_MD_fetch(NULL, "SHA256", NULL);
      if (sha256 == NULL)
          goto err;
 
     /* Initialise the digest operation */
-    if (!EVP_DigestInit_ex(ctx, sha256, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx, sha256, NULL))
         goto err;
 
      /*
       * Pass the message to be digested. This can be passed in over multiple
-      * EVP_DigestUpdate calls if necessary
+      * OPENSSL_BOX_EVP_DigestUpdate calls if necessary
       */
-     if (!EVP_DigestUpdate(ctx, msg, sizeof(msg)))
+     if (!OPENSSL_BOX_EVP_DigestUpdate(ctx, msg, sizeof(msg)))
          goto err;
 
      /* Allocate the output buffer */
@@ -340,7 +340,7 @@ L<ossl-guide-libraries-introduction(7)/DEMO APPLICATIONS>).
          goto err;
 
      /* Now calculate the digest itself */
-     if (!EVP_DigestFinal_ex(ctx, outdigest, &len))
+     if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, outdigest, &len))
          goto err;
 
      /* Print out the digest result */
@@ -361,7 +361,7 @@ L<ossl-guide-libraries-introduction(7)/DEMO APPLICATIONS>).
 =head1 ENCODING AND DECODING KEYS
 
 Many algorithms require the use of a key. Keys can be generated dynamically
-using the EVP APIs (for example see L<EVP_PKEY_Q_keygen(3)>). However it is often
+using the EVP APIs (for example see L<OPENSSL_BOX_EVP_PKEY_Q_keygen(3)>). However it is often
 necessary to save or load keys (or their associated parameters) to or from some
 external format such as PEM or DER (see L<openssl-glossary(7)>). OpenSSL uses
 encoders and decoders to perform this task.

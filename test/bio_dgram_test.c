@@ -467,16 +467,16 @@ static int random_data(const uint32_t *key, uint8_t *data, size_t data_len, size
     if (ctx == NULL)
         goto err;
 
-    cipher = EVP_CIPHER_fetch(NULL, "ChaCha20", NULL);
+    cipher = OPENSSL_BOX_EVP_CIPHER_fetch(NULL, "ChaCha20", NULL);
     if (cipher == NULL)
         goto err;
 
-    if (EVP_EncryptInit_ex2(ctx, cipher, (uint8_t *)key, (uint8_t *)counter, NULL) == 0)
+    if (OPENSSL_BOX_EVP_EncryptInit_ex2(ctx, cipher, (uint8_t *)key, (uint8_t *)counter, NULL) == 0)
         goto err;
 
     while (data_len > 0) {
         outl = data_len > sizeof(zeroes) ? (int)sizeof(zeroes) : (int)data_len;
-        if (EVP_EncryptUpdate(ctx, data, &outl, zeroes, outl) != 1)
+        if (OPENSSL_BOX_EVP_EncryptUpdate(ctx, data, &outl, zeroes, outl) != 1)
             goto err;
 
         data     += outl;

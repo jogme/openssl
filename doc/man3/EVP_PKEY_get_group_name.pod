@@ -2,18 +2,18 @@
 
 =head1 NAME
 
-EVP_PKEY_get_group_name - get group name of a key
+OPENSSL_BOX_EVP_PKEY_get_group_name - get group name of a key
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- int EVP_PKEY_get_group_name(EVP_PKEY *pkey, char *gname, size_t gname_sz,
+ int OPENSSL_BOX_EVP_PKEY_get_group_name(EVP_PKEY *pkey, char *gname, size_t gname_sz,
                              size_t *gname_len);
 
 =head1 DESCRIPTION
 
-EVP_PKEY_get_group_name() fills in the group name of the I<pkey> into
+OPENSSL_BOX_EVP_PKEY_get_group_name() fills in the group name of the I<pkey> into
 I<gname>, up to at most I<gname_sz> bytes including the ending NUL byte
 and assigns I<*gname_len> the actual length of the name not including
 the NUL byte, if I<pkey>'s key type supports it.
@@ -27,7 +27,7 @@ SM2 keys.  Other providers may support this for additional key types.
 
 =head1 RETURN VALUES
 
-EVP_PKEY_get_group_name() returns 1 if the group name could be filled in,
+OPENSSL_BOX_EVP_PKEY_get_group_name() returns 1 if the group name could be filled in,
 otherwise 0.
 
 =head1 HISTORY

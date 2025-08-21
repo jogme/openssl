@@ -49,7 +49,7 @@ static int only_nomd(EVP_PKEY *pkey)
     char defname[MADE_UP_MAX_MD_NAME_LEN];
     int deftype;
 
-    deftype = EVP_PKEY_get_default_digest_name(pkey, defname, sizeof(defname));
+    deftype = OPENSSL_BOX_EVP_PKEY_get_default_digest_name(pkey, defname, sizeof(defname));
     return deftype == 2 /* Mandatory */
         && strcmp(defname, "UNDEF") == 0;
 }
@@ -423,7 +423,7 @@ int pkeyutl_main(int argc, char **argv)
                 }
             }
 
-            if (EVP_PKEY_CTX_ctrl_str(ctx, opt, passwd) <= 0) {
+            if (OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(ctx, opt, passwd) <= 0) {
                 BIO_printf(bio_err, "%s: Can't set parameter \"%s\":\n",
                            prog, opt);
                 OPENSSL_free(passwd);
@@ -536,7 +536,7 @@ int pkeyutl_main(int argc, char **argv)
             rv = do_raw_keyop(pkey_op, mctx, pkey, in, filesize, sig, siglen,
                               NULL, 0);
         } else {
-            rv = EVP_PKEY_verify(ctx, sig, (size_t)siglen,
+            rv = OPENSSL_BOX_EVP_PKEY_verify(ctx, sig, (size_t)siglen,
                                  buf_in, (size_t)buf_inlen);
         }
         if (rv == 1) {
@@ -688,7 +688,7 @@ static EVP_PKEY_CTX *init_ctx(const char *kdfalg, int *pkeysize,
         if (impl != NULL)
             ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(kdfnid, impl);
         else
-            ctx = EVP_PKEY_CTX_new_from_name(libctx, kdfalg, propq);
+            ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, kdfalg, propq);
     } else {
         if (pkey == NULL)
             return NULL;
@@ -697,7 +697,7 @@ static EVP_PKEY_CTX *init_ctx(const char *kdfalg, int *pkeysize,
         if (impl != NULL)
             ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, impl);
         else
-            ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
+            ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
     }
 
     if (ctx == NULL)
@@ -708,12 +708,12 @@ static EVP_PKEY_CTX *init_ctx(const char *kdfalg, int *pkeysize,
 
         switch (pkey_op) {
         case EVP_PKEY_OP_SIGN:
-            rv = EVP_DigestSignInit_ex(mctx, NULL, digestname, libctx, propq,
+            rv = OPENSSL_BOX_EVP_DigestSignInit_ex(mctx, NULL, digestname, libctx, propq,
                                        pkey, NULL);
             break;
 
         case EVP_PKEY_OP_VERIFY:
-            rv = EVP_DigestVerifyInit_ex(mctx, NULL, digestname, libctx, propq,
+            rv = OPENSSL_BOX_EVP_DigestVerifyInit_ex(mctx, NULL, digestname, libctx, propq,
                                          pkey, NULL);
             break;
         }
@@ -803,19 +803,19 @@ static int do_keyop(EVP_PKEY_CTX *ctx, int pkey_op,
 
     switch (pkey_op) {
     case EVP_PKEY_OP_VERIFYRECOVER:
-        rv = EVP_PKEY_verify_recover(ctx, out, poutlen, in, inlen);
+        rv = OPENSSL_BOX_EVP_PKEY_verify_recover(ctx, out, poutlen, in, inlen);
         break;
 
     case EVP_PKEY_OP_SIGN:
-        rv = EVP_PKEY_sign(ctx, out, poutlen, in, inlen);
+        rv = OPENSSL_BOX_EVP_PKEY_sign(ctx, out, poutlen, in, inlen);
         break;
 
     case EVP_PKEY_OP_ENCRYPT:
-        rv = EVP_PKEY_encrypt(ctx, out, poutlen, in, inlen);
+        rv = OPENSSL_BOX_EVP_PKEY_encrypt(ctx, out, poutlen, in, inlen);
         break;
 
     case EVP_PKEY_OP_DECRYPT:
-        rv = EVP_PKEY_decrypt(ctx, out, poutlen, in, inlen);
+        rv = OPENSSL_BOX_EVP_PKEY_decrypt(ctx, out, poutlen, in, inlen);
         break;
 
     case EVP_PKEY_OP_DERIVE:
@@ -823,11 +823,11 @@ static int do_keyop(EVP_PKEY_CTX *ctx, int pkey_op,
         break;
 
     case EVP_PKEY_OP_ENCAPSULATE:
-        rv = EVP_PKEY_encapsulate(ctx, out, poutlen, secret, pseclen);
+        rv = OPENSSL_BOX_EVP_PKEY_encapsulate(ctx, out, poutlen, secret, pseclen);
         break;
 
     case EVP_PKEY_OP_DECAPSULATE:
-        rv = EVP_PKEY_decapsulate(ctx, secret, pseclen, in, inlen);
+        rv = OPENSSL_BOX_EVP_PKEY_decapsulate(ctx, secret, pseclen, in, inlen);
         break;
 
     }
@@ -861,7 +861,7 @@ static int do_raw_keyop(int pkey_op, EVP_MD_CTX *mctx,
                 BIO_printf(bio_err, "Error reading raw input data\n");
                 goto end;
             }
-            rv = EVP_DigestVerify(mctx, sig, (size_t)siglen, mbuf, buf_len);
+            rv = OPENSSL_BOX_EVP_DigestVerify(mctx, sig, (size_t)siglen, mbuf, buf_len);
             break;
         case EVP_PKEY_OP_SIGN:
             buf_len = BIO_read(in, mbuf, filesize);
@@ -869,10 +869,10 @@ static int do_raw_keyop(int pkey_op, EVP_MD_CTX *mctx,
                 BIO_printf(bio_err, "Error reading raw input data\n");
                 goto end;
             }
-            rv = EVP_DigestSign(mctx, NULL, poutlen, mbuf, buf_len);
+            rv = OPENSSL_BOX_EVP_DigestSign(mctx, NULL, poutlen, mbuf, buf_len);
             if (rv == 1 && out != NULL) {
                 *out = app_malloc(*poutlen, "buffer output");
-                rv = EVP_DigestSign(mctx, *out, poutlen, mbuf, buf_len);
+                rv = OPENSSL_BOX_EVP_DigestSign(mctx, *out, poutlen, mbuf, buf_len);
             }
             break;
         }
@@ -895,7 +895,7 @@ static int do_raw_keyop(int pkey_op, EVP_MD_CTX *mctx,
                 goto end;
             }
         }
-        rv = EVP_DigestVerifyFinal(mctx, sig, (size_t)siglen);
+        rv = OPENSSL_BOX_EVP_DigestVerifyFinal(mctx, sig, (size_t)siglen);
         break;
     case EVP_PKEY_OP_SIGN:
         for (;;) {
@@ -912,10 +912,10 @@ static int do_raw_keyop(int pkey_op, EVP_MD_CTX *mctx,
                 goto end;
             }
         }
-        rv = EVP_DigestSignFinal(mctx, NULL, poutlen);
+        rv = OPENSSL_BOX_EVP_DigestSignFinal(mctx, NULL, poutlen);
         if (rv == 1 && out != NULL) {
             *out = app_malloc(*poutlen, "buffer output");
-            rv = EVP_DigestSignFinal(mctx, *out, poutlen);
+            rv = OPENSSL_BOX_EVP_DigestSignFinal(mctx, *out, poutlen);
         }
         break;
     }

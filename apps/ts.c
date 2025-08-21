@@ -527,10 +527,10 @@ static int create_digest(BIO *input, const char *digest, const EVP_MD *md,
         if (!OPENSSL_BOX_EVP_DigestInit(md_ctx, md))
             goto err;
         while ((length = BIO_read(input, buffer, sizeof(buffer))) > 0) {
-            if (!EVP_DigestUpdate(md_ctx, buffer, length))
+            if (!OPENSSL_BOX_EVP_DigestUpdate(md_ctx, buffer, length))
                 goto err;
         }
-        if (!EVP_DigestFinal(md_ctx, *md_value, NULL))
+        if (!OPENSSL_BOX_EVP_DigestFinal(md_ctx, *md_value, NULL))
             goto err;
         md_value_len = OPENSSL_BOX_EVP_MD_get_size(md);
     } else {

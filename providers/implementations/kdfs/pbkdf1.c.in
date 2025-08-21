@@ -68,10 +68,10 @@ static int kdf_pbkdf1_do_derive(const unsigned char *pass, size_t passlen,
         goto err;
     }
 
-    if (!EVP_DigestInit_ex(ctx, md_type, NULL)
-        || !EVP_DigestUpdate(ctx, pass, passlen)
-        || !EVP_DigestUpdate(ctx, salt, saltlen)
-        || !EVP_DigestFinal_ex(ctx, md_tmp, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx, md_type, NULL)
+        || !OPENSSL_BOX_EVP_DigestUpdate(ctx, pass, passlen)
+        || !OPENSSL_BOX_EVP_DigestUpdate(ctx, salt, saltlen)
+        || !OPENSSL_BOX_EVP_DigestFinal_ex(ctx, md_tmp, NULL))
         goto err;
     mdsize = EVP_MD_size(md_type);
     if (mdsize <= 0)
@@ -82,11 +82,11 @@ static int kdf_pbkdf1_do_derive(const unsigned char *pass, size_t passlen,
     }
 
     for (i = 1; i < iter; i++) {
-        if (!EVP_DigestInit_ex(ctx, md_type, NULL))
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx, md_type, NULL))
             goto err;
-        if (!EVP_DigestUpdate(ctx, md_tmp, mdsize))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(ctx, md_tmp, mdsize))
             goto err;
-        if (!EVP_DigestFinal_ex(ctx, md_tmp, NULL))
+        if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, md_tmp, NULL))
             goto err;
     }
 

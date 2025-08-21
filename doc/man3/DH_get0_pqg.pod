@@ -39,7 +39,7 @@ see L<openssl_user_macros(7)>:
 =head1 DESCRIPTION
 
 All of the functions described on this page are deprecated.
-Applications should instead use L<EVP_PKEY_get_bn_param(3)> for any methods that
+Applications should instead use L<OPENSSL_BOX_EVP_PKEY_get_bn_param(3)> for any methods that
 return a B<BIGNUM>. Refer to L<EVP_PKEY-DH(7)> for more information.
 
 A DH object contains the parameters I<p>, I<q> and I<g>. Note that the I<q>
@@ -103,7 +103,7 @@ length of the secret exponent (private key) in bits. For safe prime groups the o
 set to a value greater or equal to 2 * maximum_target_security_strength(BN_num_bits(I<p>))
 as listed in SP800-56Ar3 Table(s) 25 & 26.
 These functions are deprecated and should be replaced with
-OPENSSL_BOX_EVP_PKEY_CTX_set_params() and EVP_PKEY_get_int_param() using the parameter key
+OPENSSL_BOX_EVP_PKEY_CTX_set_params() and OPENSSL_BOX_EVP_PKEY_get_int_param() using the parameter key
 B<OSSL_PKEY_PARAM_DH_PRIV_LEN> as described in L<EVP_PKEY-DH(7)>.
 
 =head1 NOTES

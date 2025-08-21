@@ -729,7 +729,7 @@ static int test_des_key_wrap(int idx)
 
     /* Some sanity checks and cipher loading */
     if (!TEST_size_t_le(in_bytes, sizeof(in))
-            || !TEST_ptr(cipher = EVP_CIPHER_fetch(NULL, "DES3-WRAP", NULL))
+            || !TEST_ptr(cipher = OPENSSL_BOX_EVP_CIPHER_fetch(NULL, "DES3-WRAP", NULL))
             || !TEST_int_eq(bs = OPENSSL_BOX_EVP_CIPHER_get_block_size(cipher), 8)
             || !TEST_size_t_eq(bs * 3u, sizeof(key))
             || !TEST_true(in_bytes % bs == 0)
@@ -747,8 +747,8 @@ static int test_des_key_wrap(int idx)
 
     /* Wrap / encrypt the key */
     clen_upd = sizeof(c_txt);
-    if (!TEST_true(EVP_EncryptInit(ctx, cipher, key, NULL))
-            || !TEST_true(EVP_EncryptUpdate(ctx, c_txt, &clen_upd,
+    if (!TEST_true(OPENSSL_BOX_EVP_EncryptInit(ctx, cipher, key, NULL))
+            || !TEST_true(OPENSSL_BOX_EVP_EncryptUpdate(ctx, c_txt, &clen_upd,
                                             in, in_bytes)))
         goto err;
 
@@ -757,19 +757,19 @@ static int test_des_key_wrap(int idx)
         goto err;
 
     clen_fin = sizeof(c_txt) - clen_upd;
-    if (!TEST_true(EVP_EncryptFinal(ctx, c_txt + clen_upd, &clen_fin))
+    if (!TEST_true(OPENSSL_BOX_EVP_EncryptFinal(ctx, c_txt + clen_upd, &clen_fin))
             || !TEST_int_eq(clen_fin, 0))
         goto err;
     clen = clen_upd + clen_fin;
 
     /* Decrypt the wrapped key */
     plen_upd = sizeof(p_txt);
-    if (!TEST_true(EVP_DecryptInit(ctx, cipher, key, NULL))
-            || !TEST_true(EVP_DecryptUpdate(ctx, p_txt, &plen_upd,
+    if (!TEST_true(OPENSSL_BOX_EVP_DecryptInit(ctx, cipher, key, NULL))
+            || !TEST_true(OPENSSL_BOX_EVP_DecryptUpdate(ctx, p_txt, &plen_upd,
                                             c_txt, clen)))
         goto err;
     plen_fin = sizeof(p_txt) - plen_upd;
-    if (!TEST_true(EVP_DecryptFinal(ctx, p_txt + plen_upd, &plen_fin)))
+    if (!TEST_true(OPENSSL_BOX_EVP_DecryptFinal(ctx, p_txt + plen_upd, &plen_fin)))
         goto err;
     plen = plen_upd + plen_fin;
 
@@ -857,9 +857,9 @@ static int test_des_two_key(void)
     EVP_CIPHER_CTX *ctx = NULL;
     unsigned char key[16];
 
-    if (!TEST_ptr(cipher = EVP_CIPHER_fetch(NULL, "DES-EDE-ECB", NULL))
+    if (!TEST_ptr(cipher = OPENSSL_BOX_EVP_CIPHER_fetch(NULL, "DES-EDE-ECB", NULL))
             || !TEST_ptr(ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
-            || !EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, 1)
+            || !OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, 1)
             || !OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length(ctx, sizeof(key))
             || !OPENSSL_BOX_EVP_CIPHER_CTX_rand_key(ctx, key))
         goto err;

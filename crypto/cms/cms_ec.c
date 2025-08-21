@@ -46,7 +46,7 @@ static EVP_PKEY *pkey_type2param(int ptype, const void *pval,
         char groupname[OSSL_MAX_NAME_SIZE];
 
         /* type == V_ASN1_OBJECT => the parameters are given by an asn1 OID */
-        pctx = EVP_PKEY_CTX_new_from_name(libctx, "EC", propq);
+        pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "EC", propq);
         if (pctx == NULL || OPENSSL_BOX_EVP_PKEY_paramgen_init(pctx) <= 0)
             goto err;
         if (OBJ_obj2txt(groupname, sizeof(groupname), poid, 0) <= 0
@@ -188,10 +188,10 @@ static int ecdh_cms_set_shared_info(EVP_PKEY_CTX *pctx, CMS_RecipientInfo *ri)
     if (kekctx == NULL)
         goto err;
     OBJ_obj2txt(name, sizeof(name), kekalg->algorithm, 0);
-    kekcipher = EVP_CIPHER_fetch(pctx->libctx, name, pctx->propquery);
+    kekcipher = OPENSSL_BOX_EVP_CIPHER_fetch(pctx->libctx, name, pctx->propquery);
     if (kekcipher == NULL || OPENSSL_BOX_EVP_CIPHER_get_mode(kekcipher) != EVP_CIPH_WRAP_MODE)
         goto err;
-    if (!EVP_EncryptInit_ex(kekctx, kekcipher, NULL, NULL, NULL))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex(kekctx, kekcipher, NULL, NULL, NULL))
         goto err;
     if (OPENSSL_BOX_EVP_CIPHER_asn1_to_param(kekctx, kekalg->parameter) <= 0)
         goto err;

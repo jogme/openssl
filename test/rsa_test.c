@@ -498,8 +498,8 @@ static int test_EVP_rsa_legacy_key(void)
            && TEST_true(RSA_set0_factors(rsa, p, q))
            && TEST_true(RSA_set0_key(rsa, n, e, d))
            && TEST_true(EVP_PKEY_assign_RSA(pkey, rsa))
-           && TEST_true(EVP_DigestSignInit(ctx, NULL, md, NULL, pkey))
-           && TEST_true(EVP_DigestSign(ctx, sigbuf, &buflen, msgbuf, msglen)));
+           && TEST_true(OPENSSL_BOX_EVP_DigestSignInit(ctx, NULL, md, NULL, pkey))
+           && TEST_true(OPENSSL_BOX_EVP_DigestSign(ctx, sigbuf, &buflen, msgbuf, msglen)));
 
     OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     OPENSSL_BOX_EVP_PKEY_free(pkey);

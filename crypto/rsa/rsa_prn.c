@@ -44,7 +44,7 @@ int RSA_print(BIO *bp, const RSA *x, int off)
         return 0;
     ret = OPENSSL_BOX_EVP_PKEY_set1_RSA(pk, (RSA *)x);
     if (ret)
-        ret = EVP_PKEY_print_private(bp, pk, off, NULL);
+        ret = OPENSSL_BOX_EVP_PKEY_print_private(bp, pk, off, NULL);
     OPENSSL_BOX_EVP_PKEY_free(pk);
     return ret;
 }

@@ -18,7 +18,7 @@
 #include "crypto/evp.h"
 #include "evp_local.h"
 
-int EVP_SKEY_export(const EVP_SKEY *skey, int selection,
+int OPENSSL_BOX_EVP_SKEY_export(const EVP_SKEY *skey, int selection,
                     OSSL_CALLBACK *export_cb, void *export_cbarg)
 {
     if (skey == NULL) {
@@ -64,13 +64,13 @@ static EVP_SKEY *evp_skey_alloc_fetch(OSSL_LIB_CTX *libctx,
     EVP_SKEYMGMT *skeymgmt;
     EVP_SKEY *skey;
 
-    skeymgmt = EVP_SKEYMGMT_fetch(libctx, skeymgmtname, propquery);
+    skeymgmt = OPENSSL_BOX_EVP_SKEYMGMT_fetch(libctx, skeymgmtname, propquery);
     if (skeymgmt == NULL) {
         /*
          * if the specific key_type is unknown, attempt to use the generic
          * key management
          */
-        skeymgmt = EVP_SKEYMGMT_fetch(libctx, OSSL_SKEY_TYPE_GENERIC, propquery);
+        skeymgmt = OPENSSL_BOX_EVP_SKEYMGMT_fetch(libctx, OSSL_SKEY_TYPE_GENERIC, propquery);
         if (skeymgmt == NULL) {
             ERR_raise(ERR_LIB_EVP, ERR_R_FETCH_FAILED);
             return NULL;
@@ -84,7 +84,7 @@ static EVP_SKEY *evp_skey_alloc_fetch(OSSL_LIB_CTX *libctx,
     return skey;
 }
 
-EVP_SKEY *EVP_SKEY_import(OSSL_LIB_CTX *libctx, const char *skeymgmtname, const char *propquery,
+EVP_SKEY *OPENSSL_BOX_EVP_SKEY_import(OSSL_LIB_CTX *libctx, const char *skeymgmtname, const char *propquery,
                           int selection, const OSSL_PARAM *params)
 {
     EVP_SKEY *skey = evp_skey_alloc_fetch(libctx, skeymgmtname, propquery);
@@ -103,7 +103,7 @@ EVP_SKEY *EVP_SKEY_import(OSSL_LIB_CTX *libctx, const char *skeymgmtname, const 
     return NULL;
 }
 
-EVP_SKEY *EVP_SKEY_generate(OSSL_LIB_CTX *libctx, const char *skeymgmtname,
+EVP_SKEY *OPENSSL_BOX_EVP_SKEY_generate(OSSL_LIB_CTX *libctx, const char *skeymgmtname,
                             const char *propquery, const OSSL_PARAM *params)
 {
     EVP_SKEY *skey = evp_skey_alloc_fetch(libctx, skeymgmtname, propquery);
@@ -138,7 +138,7 @@ static int get_secret_key(const OSSL_PARAM params[], void *arg)
     return 0;
 }
 
-int EVP_SKEY_get0_raw_key(const EVP_SKEY *skey, const unsigned char **key,
+int OPENSSL_BOX_EVP_SKEY_get0_raw_key(const EVP_SKEY *skey, const unsigned char **key,
                           size_t *len)
 {
     struct raw_key_details_st raw_key;
@@ -156,7 +156,7 @@ int EVP_SKEY_get0_raw_key(const EVP_SKEY *skey, const unsigned char **key,
                                get_secret_key, &raw_key);
 }
 
-EVP_SKEY *EVP_SKEY_import_raw_key(OSSL_LIB_CTX *libctx, const char *skeymgmtname,
+EVP_SKEY *OPENSSL_BOX_EVP_SKEY_import_raw_key(OSSL_LIB_CTX *libctx, const char *skeymgmtname,
                                   unsigned char *key, size_t keylen,
                                   const char *propquery)
 {
@@ -166,7 +166,7 @@ EVP_SKEY *EVP_SKEY_import_raw_key(OSSL_LIB_CTX *libctx, const char *skeymgmtname
                                                   (void *)key, keylen);
     params[1] = OSSL_PARAM_construct_end();
 
-    return EVP_SKEY_import(libctx, skeymgmtname, propquery,
+    return OPENSSL_BOX_EVP_SKEY_import(libctx, skeymgmtname, propquery,
                            OSSL_SKEYMGMT_SELECT_SECRET_KEY, params);
 }
 
@@ -253,7 +253,7 @@ static int transfer_cb(const OSSL_PARAM params[], void *arg)
     return 1;
 }
 
-EVP_SKEY *EVP_SKEY_to_provider(EVP_SKEY *skey, OSSL_LIB_CTX *libctx,
+EVP_SKEY *OPENSSL_BOX_EVP_SKEY_to_provider(EVP_SKEY *skey, OSSL_LIB_CTX *libctx,
                                OSSL_PROVIDER *prov, const char *propquery)
 {
     struct transfer_cb_ctx ctx = { 0 };
@@ -273,7 +273,7 @@ EVP_SKEY *EVP_SKEY_to_provider(EVP_SKEY *skey, OSSL_LIB_CTX *libctx,
                                                     propquery);
     } else {
         /* If no provider, get the default skeymgmt */
-        skeymgmt = EVP_SKEYMGMT_fetch(libctx, skey->skeymgmt->type_name,
+        skeymgmt = OPENSSL_BOX_EVP_SKEYMGMT_fetch(libctx, skey->skeymgmt->type_name,
                                       propquery);
     }
     if (skeymgmt == NULL) {
@@ -293,7 +293,7 @@ EVP_SKEY *EVP_SKEY_to_provider(EVP_SKEY *skey, OSSL_LIB_CTX *libctx,
     ctx.selection = OSSL_SKEYMGMT_SELECT_ALL;
     ctx.skeymgmt = skeymgmt;
 
-    if (!EVP_SKEY_export(skey, ctx.selection, transfer_cb, &ctx))
+    if (!OPENSSL_BOX_EVP_SKEY_export(skey, ctx.selection, transfer_cb, &ctx))
         goto err;
 
     if (ctx.keydata == NULL)

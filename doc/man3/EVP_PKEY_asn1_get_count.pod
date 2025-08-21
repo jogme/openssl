@@ -3,10 +3,10 @@
 =head1 NAME
 
 OPENSSL_BOX_EVP_PKEY_asn1_find,
-EVP_PKEY_asn1_find_str,
+OPENSSL_BOX_EVP_PKEY_asn1_find_str,
 OPENSSL_BOX_EVP_PKEY_asn1_get_count,
 OPENSSL_BOX_EVP_PKEY_asn1_get0,
-EVP_PKEY_asn1_get0_info
+OPENSSL_BOX_EVP_PKEY_asn1_get0_info
 - enumerate public key ASN.1 methods
 
 =head1 SYNOPSIS
@@ -20,9 +20,9 @@ see L<openssl_user_macros(7)>; use the provider API instead.
  int OPENSSL_BOX_EVP_PKEY_asn1_get_count(void);
  const EVP_PKEY_ASN1_METHOD *OPENSSL_BOX_EVP_PKEY_asn1_get0(int idx);
  const EVP_PKEY_ASN1_METHOD *OPENSSL_BOX_EVP_PKEY_asn1_find(ENGINE **pe, int type);
- const EVP_PKEY_ASN1_METHOD *EVP_PKEY_asn1_find_str(ENGINE **pe,
+ const EVP_PKEY_ASN1_METHOD *OPENSSL_BOX_EVP_PKEY_asn1_find_str(ENGINE **pe,
                                                     const char *str, int len);
- int EVP_PKEY_asn1_get0_info(int *ppkey_id, int *pkey_base_id,
+ int OPENSSL_BOX_EVP_PKEY_asn1_get0_info(int *ppkey_id, int *pkey_base_id,
                              int *ppkey_flags, const char **pinfo,
                              const char **ppem_str,
                              const EVP_PKEY_ASN1_METHOD *ameth);
@@ -43,19 +43,19 @@ If B<pe> isn't B<NULL>, then it will look up an engine implementing a
 B<EVP_PKEY_ASN1_METHOD> for the NID B<type> and return that instead,
 and also set B<*pe> to point at the engine that implements it.
 
-EVP_PKEY_asn1_find_str() looks up the B<EVP_PKEY_ASN1_METHOD> with PEM
+OPENSSL_BOX_EVP_PKEY_asn1_find_str() looks up the B<EVP_PKEY_ASN1_METHOD> with PEM
 type string B<str>.
 Just like OPENSSL_BOX_EVP_PKEY_asn1_find(), if B<pe> isn't B<NULL>, then it will
 look up an engine implementing a B<EVP_PKEY_ASN1_METHOD> for the NID
 B<type> and return that instead, and also set B<*pe> to point at the
 engine that implements it.
 
-EVP_PKEY_asn1_get0_info() returns the public key ID, base public key
+OPENSSL_BOX_EVP_PKEY_asn1_get0_info() returns the public key ID, base public key
 ID (both NIDs), any flags, the method description and PEM type string
 associated with the public key ASN.1 method B<*ameth>.
 
 EVP_PKEY_asn1_count(), OPENSSL_BOX_EVP_PKEY_asn1_get0(), OPENSSL_BOX_EVP_PKEY_asn1_find() and
-EVP_PKEY_asn1_find_str() are not thread safe, but as long as all
+OPENSSL_BOX_EVP_PKEY_asn1_find_str() are not thread safe, but as long as all
 B<EVP_PKEY_ASN1_METHOD> objects are added before the application gets
 threaded, using them is safe.  See L<OPENSSL_BOX_EVP_PKEY_asn1_add0(3)>.
 
@@ -66,11 +66,11 @@ EVP_PKEY_asn1_count() returns the number of available public key methods.
 OPENSSL_BOX_EVP_PKEY_asn1_get0() return a public key method or B<NULL> if B<idx> is
 out of range.
 
-EVP_PKEY_asn1_get0_info() returns 0 on failure, 1 on success.
+OPENSSL_BOX_EVP_PKEY_asn1_get0_info() returns 0 on failure, 1 on success.
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_asn1_new(3)>, L<OPENSSL_BOX_EVP_PKEY_asn1_add0(3)>
+L<OPENSSL_BOX_EVP_PKEY_asn1_new(3)>, L<OPENSSL_BOX_EVP_PKEY_asn1_add0(3)>
 
 =head1 HISTORY
 

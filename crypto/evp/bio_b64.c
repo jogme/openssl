@@ -183,7 +183,7 @@ static int b64_read(BIO *b, char *out, int outl)
             if (!BIO_should_retry(next)) {
                 /* Incomplete final Base64 chunk in the decoder is an error */
                 if (ctx->tmp_len == 0) {
-                    if (EVP_DecodeFinal(ctx->base64, NULL, &num) < 0)
+                    if (OPENSSL_BOX_EVP_DecodeFinal(ctx->base64, NULL, &num) < 0)
                         ret_code = -1;
                     OPENSSL_BOX_EVP_DecodeInit(ctx->base64);
                 }
@@ -224,7 +224,7 @@ static int b64_read(BIO *b, char *out, int outl)
                     continue;
                 }
 
-                k = EVP_DecodeUpdate(ctx->base64, ctx->buf, &num, p, (int)(q - p));
+                k = OPENSSL_BOX_EVP_DecodeUpdate(ctx->base64, ctx->buf, &num, p, (int)(q - p));
                 OPENSSL_BOX_EVP_DecodeInit(ctx->base64);
                 if (k <= 0 && num == 0) {
                     p = q;
@@ -282,7 +282,7 @@ static int b64_read(BIO *b, char *out, int outl)
             continue;
         }
 
-        i = EVP_DecodeUpdate(ctx->base64, ctx->buf, &ctx->buf_len,
+        i = OPENSSL_BOX_EVP_DecodeUpdate(ctx->base64, ctx->buf, &ctx->buf_len,
                              ctx->tmp, i);
         ctx->tmp_len = 0;
         /*
@@ -435,7 +435,7 @@ static int b64_write(BIO *b, const char *in, int inl)
                 ret += n;
             }
         } else {
-            if (!EVP_EncodeUpdate(ctx->base64, ctx->buf, &ctx->buf_len,
+            if (!OPENSSL_BOX_EVP_EncodeUpdate(ctx->base64, ctx->buf, &ctx->buf_len,
                                   (unsigned char *)in, n))
                 return ret == 0 ? -1 : ret;
             if (!ossl_assert(ctx->buf_len <= (int)sizeof(ctx->buf))) {

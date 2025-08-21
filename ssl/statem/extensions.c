@@ -1583,8 +1583,8 @@ int tls_psk_do_binder(SSL_CONNECTION *s, const EVP_MD *md,
      */
     mctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (mctx == NULL
-            || EVP_DigestInit_ex(mctx, md, NULL) <= 0
-            || EVP_DigestFinal_ex(mctx, hash, NULL) <= 0) {
+            || OPENSSL_BOX_EVP_DigestInit_ex(mctx, md, NULL) <= 0
+            || OPENSSL_BOX_EVP_DigestFinal_ex(mctx, hash, NULL) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
@@ -1602,7 +1602,7 @@ int tls_psk_do_binder(SSL_CONNECTION *s, const EVP_MD *md,
         goto err;
     }
 
-    if (EVP_DigestInit_ex(mctx, md, NULL) <= 0) {
+    if (OPENSSL_BOX_EVP_DigestInit_ex(mctx, md, NULL) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
@@ -1643,19 +1643,19 @@ int tls_psk_do_binder(SSL_CONNECTION *s, const EVP_MD *md,
             hdatalen -= PACKET_remaining(&hashprefix);
         }
 
-        if (EVP_DigestUpdate(mctx, hdata, hdatalen) <= 0) {
+        if (OPENSSL_BOX_EVP_DigestUpdate(mctx, hdata, hdatalen) <= 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
             goto err;
         }
     }
 
-    if (EVP_DigestUpdate(mctx, msgstart, binderoffset) <= 0
-            || EVP_DigestFinal_ex(mctx, hash, NULL) <= 0) {
+    if (OPENSSL_BOX_EVP_DigestUpdate(mctx, msgstart, binderoffset) <= 0
+            || OPENSSL_BOX_EVP_DigestFinal_ex(mctx, hash, NULL) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
 
-    mackey = EVP_PKEY_new_raw_private_key_ex(sctx->libctx, "HMAC",
+    mackey = OPENSSL_BOX_EVP_PKEY_new_raw_private_key_ex(sctx->libctx, "HMAC",
                                              sctx->propq, finishedkey,
                                              hashsize);
     if (mackey == NULL) {
@@ -1667,10 +1667,10 @@ int tls_psk_do_binder(SSL_CONNECTION *s, const EVP_MD *md,
         binderout = tmpbinder;
 
     bindersize = hashsize;
-    if (EVP_DigestSignInit_ex(mctx, NULL, OPENSSL_BOX_EVP_MD_get0_name(md), sctx->libctx,
+    if (OPENSSL_BOX_EVP_DigestSignInit_ex(mctx, NULL, OPENSSL_BOX_EVP_MD_get0_name(md), sctx->libctx,
                               sctx->propq, mackey, NULL) <= 0
             || OPENSSL_BOX_EVP_DigestSignUpdate(mctx, hash, hashsize) <= 0
-            || EVP_DigestSignFinal(mctx, binderout, &bindersize) <= 0
+            || OPENSSL_BOX_EVP_DigestSignFinal(mctx, binderout, &bindersize) <= 0
             || bindersize != hashsize) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
@@ -1679,7 +1679,7 @@ int tls_psk_do_binder(SSL_CONNECTION *s, const EVP_MD *md,
     if (sign) {
         ret = 1;
     } else {
-        /* HMAC keys can't do EVP_DigestVerify* - use CRYPTO_memcmp instead */
+        /* HMAC keys can't do OPENSSL_BOX_EVP_DigestVerify* - use CRYPTO_memcmp instead */
         ret = (CRYPTO_memcmp(binderin, binderout, hashsize) == 0);
         if (!ret)
             SSLfatal(s, SSL_AD_DECRYPT_ERROR, SSL_R_BINDER_DOES_NOT_VERIFY);

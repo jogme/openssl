@@ -38,11 +38,11 @@ static ossl_inline int xof_digest_3(EVP_MD_CTX *ctx,
                                     const uint8_t *in3, size_t in3_len,
                                     uint8_t *out, size_t out_len)
 {
-    return (EVP_DigestInit_ex2(ctx, NULL, NULL) == 1
-            && EVP_DigestUpdate(ctx, in1, in1_len) == 1
-            && EVP_DigestUpdate(ctx, in2, in2_len) == 1
-            && EVP_DigestUpdate(ctx, in3, in3_len) == 1
-            && EVP_DigestFinalXOF(ctx, out, out_len) == 1);
+    return (OPENSSL_BOX_EVP_DigestInit_ex2(ctx, NULL, NULL) == 1
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, in1, in1_len) == 1
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, in2, in2_len) == 1
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, in3, in3_len) == 1
+            && OPENSSL_BOX_EVP_DigestFinalXOF(ctx, out, out_len) == 1);
 }
 
 static ossl_inline int xof_digest_4(EVP_MD_CTX *ctx,
@@ -52,12 +52,12 @@ static ossl_inline int xof_digest_4(EVP_MD_CTX *ctx,
                                     const uint8_t *in4, size_t in4_len,
                                     uint8_t *out, size_t out_len)
 {
-    return (EVP_DigestInit_ex2(ctx, NULL, NULL) == 1
-            && EVP_DigestUpdate(ctx, in1, in1_len) == 1
-            && EVP_DigestUpdate(ctx, in2, in2_len) == 1
-            && EVP_DigestUpdate(ctx, in3, in3_len) == 1
-            && EVP_DigestUpdate(ctx, in4, in4_len) == 1
-            && EVP_DigestFinalXOF(ctx, out, out_len) == 1);
+    return (OPENSSL_BOX_EVP_DigestInit_ex2(ctx, NULL, NULL) == 1
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, in1, in1_len) == 1
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, in2, in2_len) == 1
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, in3, in3_len) == 1
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, in4, in4_len) == 1
+            && OPENSSL_BOX_EVP_DigestFinalXOF(ctx, out, out_len) == 1);
 }
 
 /* See FIPS 205 Section 11.1 */
@@ -136,12 +136,12 @@ digest_4(EVP_MD_CTX *ctx,
          const uint8_t *in3, size_t in3_len, const uint8_t *in4, size_t in4_len,
          uint8_t *out)
 {
-    return (EVP_DigestInit_ex2(ctx, NULL, NULL) == 1
-            && EVP_DigestUpdate(ctx, in1, in1_len) == 1
-            && EVP_DigestUpdate(ctx, in2, in2_len) == 1
-            && EVP_DigestUpdate(ctx, in3, in3_len) == 1
-            && EVP_DigestUpdate(ctx, in4, in4_len) == 1
-            && EVP_DigestFinal_ex(ctx, out, NULL) == 1);
+    return (OPENSSL_BOX_EVP_DigestInit_ex2(ctx, NULL, NULL) == 1
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, in1, in1_len) == 1
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, in2, in2_len) == 1
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, in3, in3_len) == 1
+            && OPENSSL_BOX_EVP_DigestUpdate(ctx, in4, in4_len) == 1
+            && OPENSSL_BOX_EVP_DigestFinal_ex(ctx, out, NULL) == 1);
 }
 
 /* FIPS 205 Section 11.2.1 and 11.2.2 */
@@ -200,10 +200,10 @@ slh_prf_msg_sha2(SLH_DSA_HASH_CTX *hctx,
         hctx->hmac_digest_used = 1;
     }
 
-    ret = EVP_MAC_init(mctx, sk_prf, n, p) == 1
+    ret = OPENSSL_BOX_EVP_MAC_init(mctx, sk_prf, n, p) == 1
         && OPENSSL_BOX_EVP_MAC_update(mctx, opt_rand, n) == 1
         && OPENSSL_BOX_EVP_MAC_update(mctx, msg, msg_len) == 1
-        && EVP_MAC_final(mctx, mac, NULL, sizeof(mac)) == 1
+        && OPENSSL_BOX_EVP_MAC_final(mctx, mac, NULL, sizeof(mac)) == 1
         && WPACKET_memcpy(pkt, mac, n); /* Truncate output to n bytes */
     return ret;
 }

@@ -1211,10 +1211,10 @@ static void *s390x_ecd_keygen25519(struct ecx_gen_ctx *gctx)
     if (RAND_priv_bytes_ex(gctx->libctx, privkey, ED25519_KEYLEN, 0) <= 0)
         goto err;
 
-    sha = EVP_MD_fetch(gctx->libctx, "SHA512", gctx->propq);
+    sha = OPENSSL_BOX_EVP_MD_fetch(gctx->libctx, "SHA512", gctx->propq);
     if (sha == NULL)
         goto err;
-    j = EVP_Digest(privkey, 32, buff, &sz, sha, NULL);
+    j = OPENSSL_BOX_EVP_Digest(privkey, 32, buff, &sz, sha, NULL);
     OPENSSL_BOX_EVP_MD_free(sha);
     if (!j)
         goto err;
@@ -1275,7 +1275,7 @@ static void *s390x_ecd_keygen448(struct ecx_gen_ctx *gctx)
         goto err;
     }
 
-    shake = EVP_MD_fetch(gctx->libctx, "SHAKE256", gctx->propq);
+    shake = OPENSSL_BOX_EVP_MD_fetch(gctx->libctx, "SHAKE256", gctx->propq);
     if (shake == NULL)
         goto err;
     if (RAND_priv_bytes_ex(gctx->libctx, privkey, ED448_KEYLEN, 0) <= 0)
@@ -1284,11 +1284,11 @@ static void *s390x_ecd_keygen448(struct ecx_gen_ctx *gctx)
     hashctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (hashctx == NULL)
         goto err;
-    if (EVP_DigestInit_ex(hashctx, shake, NULL) != 1)
+    if (OPENSSL_BOX_EVP_DigestInit_ex(hashctx, shake, NULL) != 1)
         goto err;
-    if (EVP_DigestUpdate(hashctx, privkey, 57) != 1)
+    if (OPENSSL_BOX_EVP_DigestUpdate(hashctx, privkey, 57) != 1)
         goto err;
-    if (EVP_DigestFinalXOF(hashctx, buff, sizeof(buff)) != 1)
+    if (OPENSSL_BOX_EVP_DigestFinalXOF(hashctx, buff, sizeof(buff)) != 1)
         goto err;
 
     buff[0] &= -4;

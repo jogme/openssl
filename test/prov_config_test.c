@@ -35,7 +35,7 @@ static int test_double_config(void)
         goto err;
 
     /* Check we can actually fetch something */
-    sha256 = EVP_MD_fetch(ctx, "SHA2-256", NULL);
+    sha256 = OPENSSL_BOX_EVP_MD_fetch(ctx, "SHA2-256", NULL);
     if (!TEST_ptr(sha256))
         goto err;
 

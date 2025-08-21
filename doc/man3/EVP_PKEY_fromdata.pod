@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_PKEY_fromdata_init, EVP_PKEY_fromdata, OPENSSL_BOX_EVP_PKEY_fromdata_settable
+OPENSSL_BOX_EVP_PKEY_fromdata_init, OPENSSL_BOX_EVP_PKEY_fromdata, OPENSSL_BOX_EVP_PKEY_fromdata_settable
 - functions to create keys and key parameters from user data
 
 =head1 SYNOPSIS
@@ -10,7 +10,7 @@ OPENSSL_BOX_EVP_PKEY_fromdata_init, EVP_PKEY_fromdata, OPENSSL_BOX_EVP_PKEY_from
  #include <openssl/evp.h>
 
  int OPENSSL_BOX_EVP_PKEY_fromdata_init(EVP_PKEY_CTX *ctx);
- int EVP_PKEY_fromdata(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey, int selection,
+ int OPENSSL_BOX_EVP_PKEY_fromdata(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey, int selection,
                        OSSL_PARAM params[]);
  const OSSL_PARAM *OPENSSL_BOX_EVP_PKEY_fromdata_settable(EVP_PKEY_CTX *ctx, int selection);
 
@@ -21,7 +21,7 @@ provided key data, such as I<n>, I<e> and I<d> for a minimal RSA
 keypair.
 
 These functions use an B<EVP_PKEY_CTX> context, which should primarily
-be created with L<EVP_PKEY_CTX_new_from_name(3)> or
+be created with L<OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(3)> or
 L<OPENSSL_BOX_EVP_PKEY_CTX_new_id(3)>.
 
 The exact key data that the user can pass depends on the key type.
@@ -30,7 +30,7 @@ These are passed as an L<OSSL_PARAM(3)> array.
 OPENSSL_BOX_EVP_PKEY_fromdata_init() initializes a public key algorithm context
 for creating a key or key parameters from user data.
 
-EVP_PKEY_fromdata() creates the structure to store a key or key parameters,
+OPENSSL_BOX_EVP_PKEY_fromdata() creates the structure to store a key or key parameters,
 given data from I<params>, I<selection> and a context that's been initialized
 with OPENSSL_BOX_EVP_PKEY_fromdata_init().  The result is written to I<*ppkey>.
 I<selection> is described in L</Selections>.
@@ -53,7 +53,7 @@ pages.
 rendering as a man-page while still getting proper links in HTML
 
 OPENSSL_BOX_EVP_PKEY_fromdata_settable() gets a constant L<OSSL_PARAM(3)> array that describes
-the settable parameters that can be used with EVP_PKEY_fromdata().
+the settable parameters that can be used with OPENSSL_BOX_EVP_PKEY_fromdata().
 I<selection> is described in L</Selections>.
 
 Parameters in the I<params> array that are not among the settable parameters
@@ -93,14 +93,14 @@ To enable, specify the B<enable-lms> build configuration option.
 
 =head1 RETURN VALUES
 
-OPENSSL_BOX_EVP_PKEY_fromdata_init() and EVP_PKEY_fromdata() return 1 for success and 0 or
+OPENSSL_BOX_EVP_PKEY_fromdata_init() and OPENSSL_BOX_EVP_PKEY_fromdata() return 1 for success and 0 or
 a negative value for failure.  In particular a return value of -2 indicates the
 operation is not supported by the public key algorithm.
 
 =head1 EXAMPLES
 
 These examples are very terse for the sake of staying on topic, which
-is the EVP_PKEY_fromdata() set of functions.  In real applications,
+is the OPENSSL_BOX_EVP_PKEY_fromdata() set of functions.  In real applications,
 BIGNUMs would be handled and converted to byte arrays with
 BN_bn2nativepad(), but that's off topic here.
 
@@ -132,12 +132,12 @@ TODO Write a set of cookbook documents and link to them.
 
  int main()
  {
-     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL);
+     EVP_PKEY_CTX *ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL);
      EVP_PKEY *pkey = NULL;
 
      if (ctx == NULL
          || OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0
-         || EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_KEYPAIR, params) <= 0)
+         || OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_KEYPAIR, params) <= 0)
          exit(1);
 
      /* Do what you want with |pkey| */
@@ -191,11 +191,11 @@ TODO Write a set of cookbook documents and link to them.
                                              pub_data, sizeof(pub_data)))
          params = OSSL_PARAM_BLD_to_param(param_bld);
 
-     ctx = EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
+     ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
      if (ctx == NULL
          || params == NULL
          || OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0
-         || EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_KEYPAIR, params) <= 0) {
+         || OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_KEYPAIR, params) <= 0) {
          exitcode = 1;
      } else {
          /* Do what you want with |pkey| */
@@ -218,7 +218,7 @@ TODO Write a set of cookbook documents and link to them.
  /* Program expects a key type as first argument */
  int main(int argc, char *argv[])
  {
-     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL, argv[1], NULL);
+     EVP_PKEY_CTX *ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, argv[1], NULL);
      const OSSL_PARAM *settable_params = NULL;
 
      if (ctx == NULL)

@@ -141,7 +141,7 @@ opthelp:
         goto opthelp;
     argv = opt_rest();
 
-    mac = EVP_MAC_fetch(app_get0_libctx(), argv[0], app_get0_propq());
+    mac = OPENSSL_BOX_EVP_MAC_fetch(app_get0_libctx(), argv[0], app_get0_propq());
     if (mac == NULL) {
         BIO_printf(bio_err, "Invalid MAC name %s\n", argv[0]);
         goto opthelp;
@@ -177,7 +177,7 @@ opthelp:
     if (out == NULL)
         goto err;
 
-    if (!EVP_MAC_init(ctx, NULL, 0, NULL)) {
+    if (!OPENSSL_BOX_EVP_MAC_init(ctx, NULL, 0, NULL)) {
         BIO_printf(bio_err, "EVP_MAC_Init failed\n");
         goto err;
     }
@@ -197,8 +197,8 @@ opthelp:
         }
     }
 
-    if (!EVP_MAC_final(ctx, NULL, &len, 0)) {
-        BIO_printf(bio_err, "EVP_MAC_final failed\n");
+    if (!OPENSSL_BOX_EVP_MAC_final(ctx, NULL, &len, 0)) {
+        BIO_printf(bio_err, "OPENSSL_BOX_EVP_MAC_final failed\n");
         goto err;
     }
     if (len > BUFSIZE) {
@@ -206,8 +206,8 @@ opthelp:
         goto err;
     }
 
-    if (!EVP_MAC_final(ctx, buf, &len, BUFSIZE)) {
-        BIO_printf(bio_err, "EVP_MAC_final failed\n");
+    if (!OPENSSL_BOX_EVP_MAC_final(ctx, buf, &len, BUFSIZE)) {
+        BIO_printf(bio_err, "OPENSSL_BOX_EVP_MAC_final failed\n");
         goto err;
     }
 

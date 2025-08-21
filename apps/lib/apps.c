@@ -2115,7 +2115,7 @@ int pkey_ctrl_string(EVP_PKEY_CTX *ctx, const char *value)
 
     *vtmp = 0;
     vtmp++;
-    rv = EVP_PKEY_CTX_ctrl_str(ctx, stmp, vtmp);
+    rv = OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(ctx, stmp, vtmp);
 
  err:
     OPENSSL_free(stmp);
@@ -2319,16 +2319,16 @@ static int do_sign_init(EVP_MD_CTX *ctx, EVP_PKEY *pkey,
     if (ctx == NULL)
         return 0;
     /*
-     * EVP_PKEY_get_default_digest_name() returns 2 if the digest is mandatory
+     * OPENSSL_BOX_EVP_PKEY_get_default_digest_name() returns 2 if the digest is mandatory
      * for this algorithm.
      */
-    if (EVP_PKEY_get_default_digest_name(pkey, def_md, sizeof(def_md)) == 2
+    if (OPENSSL_BOX_EVP_PKEY_get_default_digest_name(pkey, def_md, sizeof(def_md)) == 2
             && strcmp(def_md, "UNDEF") == 0) {
         /* The signing algorithm requires there to be no digest */
         md = NULL;
     }
 
-    return EVP_DigestSignInit_ex(ctx, &pkctx, md, app_get0_libctx(),
+    return OPENSSL_BOX_EVP_DigestSignInit_ex(ctx, &pkctx, md, app_get0_libctx(),
                                  app_get0_propq(), pkey, NULL)
         && do_pkey_ctx_init(pkctx, sigopts);
 }

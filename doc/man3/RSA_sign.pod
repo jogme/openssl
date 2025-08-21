@@ -21,8 +21,8 @@ see L<openssl_user_macros(7)>:
 =head1 DESCRIPTION
 
 All of the functions described on this page are deprecated.
-Applications should instead use L<OPENSSL_BOX_EVP_PKEY_sign_init(3)>, L<EVP_PKEY_sign(3)>,
-L<OPENSSL_BOX_EVP_PKEY_verify_init(3)> and L<EVP_PKEY_verify(3)>.
+Applications should instead use L<OPENSSL_BOX_EVP_PKEY_sign_init(3)>, L<OPENSSL_BOX_EVP_PKEY_sign(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify_init(3)> and L<OPENSSL_BOX_EVP_PKEY_verify(3)>.
 
 RSA_sign() signs the message digest B<m> of size B<m_len> using the
 private key B<rsa> using RSASSA-PKCS1-v1_5 as specified in RFC 3447. It

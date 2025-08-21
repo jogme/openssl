@@ -30,7 +30,7 @@ static BIGNUM *srp_Calc_xy(const BIGNUM *x, const BIGNUM *y, const BIGNUM *N,
     unsigned char *tmp = NULL;
     int numN = BN_num_bytes(N);
     BIGNUM *res = NULL;
-    EVP_MD *sha1 = EVP_MD_fetch(libctx, "SHA1", propq);
+    EVP_MD *sha1 = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHA1", propq);
 
     if (sha1 == NULL)
         return NULL;
@@ -43,7 +43,7 @@ static BIGNUM *srp_Calc_xy(const BIGNUM *x, const BIGNUM *y, const BIGNUM *N,
         goto err;
     if (BN_bn2binpad(x, tmp, numN) < 0
         || BN_bn2binpad(y, tmp + numN, numN) < 0
-        || !EVP_Digest(tmp, numN * 2, digest, NULL, sha1, NULL))
+        || !OPENSSL_BOX_EVP_Digest(tmp, numN * 2, digest, NULL, sha1, NULL))
         goto err;
     res = BN_bin2bn(digest, sizeof(digest), NULL);
  err:
@@ -159,24 +159,24 @@ BIGNUM *SRP_Calc_x_ex(const BIGNUM *s, const char *user, const char *pass,
     if ((cs = OPENSSL_malloc(BN_num_bytes(s))) == NULL)
         goto err;
 
-    sha1 = EVP_MD_fetch(libctx, "SHA1", propq);
+    sha1 = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHA1", propq);
     if (sha1 == NULL)
         goto err;
 
-    if (!EVP_DigestInit_ex(ctxt, sha1, NULL)
-        || !EVP_DigestUpdate(ctxt, user, strlen(user))
-        || !EVP_DigestUpdate(ctxt, ":", 1)
-        || !EVP_DigestUpdate(ctxt, pass, strlen(pass))
-        || !EVP_DigestFinal_ex(ctxt, dig, NULL)
-        || !EVP_DigestInit_ex(ctxt, sha1, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(ctxt, sha1, NULL)
+        || !OPENSSL_BOX_EVP_DigestUpdate(ctxt, user, strlen(user))
+        || !OPENSSL_BOX_EVP_DigestUpdate(ctxt, ":", 1)
+        || !OPENSSL_BOX_EVP_DigestUpdate(ctxt, pass, strlen(pass))
+        || !OPENSSL_BOX_EVP_DigestFinal_ex(ctxt, dig, NULL)
+        || !OPENSSL_BOX_EVP_DigestInit_ex(ctxt, sha1, NULL))
         goto err;
     if (BN_bn2bin(s, cs) < 0)
         goto err;
-    if (!EVP_DigestUpdate(ctxt, cs, BN_num_bytes(s)))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(ctxt, cs, BN_num_bytes(s)))
         goto err;
 
-    if (!EVP_DigestUpdate(ctxt, dig, sizeof(dig))
-        || !EVP_DigestFinal_ex(ctxt, dig, NULL))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(ctxt, dig, sizeof(dig))
+        || !OPENSSL_BOX_EVP_DigestFinal_ex(ctxt, dig, NULL))
         goto err;
 
     res = BN_bin2bn(dig, sizeof(dig), NULL);

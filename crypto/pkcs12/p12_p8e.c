@@ -31,7 +31,7 @@ X509_SIG *PKCS8_encrypt_ex(int pbe_nid, const EVP_CIPHER *cipher,
                                    libctx);
     } else {
         ERR_set_mark();
-        if (EVP_PBE_find(EVP_PBE_TYPE_PRF, pbe_nid, NULL, NULL, 0)) {
+        if (OPENSSL_BOX_EVP_PBE_find(EVP_PBE_TYPE_PRF, pbe_nid, NULL, NULL, 0)) {
             ERR_clear_last_mark();
             if (cipher == NULL) {
                 ERR_raise(ERR_LIB_PKCS12, ERR_R_PASSED_NULL_PARAMETER);

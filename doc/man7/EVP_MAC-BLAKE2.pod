@@ -12,7 +12,7 @@ Support for computing BLAKE2 MACs through the B<EVP_MAC> API.
 =head2 Identity
 
 These implementations are identified with one of these names and
-properties, to be used with EVP_MAC_fetch():
+properties, to be used with OPENSSL_BOX_EVP_MAC_fetch():
 
 =over 4
 
@@ -42,7 +42,7 @@ OPENSSL_BOX_EVP_MAC_CTX_get_params(), or with OPENSSL_BOX_EVP_MAC_CTX_get_block_
 Sets the MAC key.
 It may be at most 64 bytes for BLAKE2BMAC or 32 for BLAKE2SMAC and at
 least 1 byte in both cases.
-Setting this parameter is identical to passing a I<key> to L<EVP_MAC_init(3)>.
+Setting this parameter is identical to passing a I<key> to L<OPENSSL_BOX_EVP_MAC_init(3)>.
 
 =item "custom" (B<OSSL_MAC_PARAM_CUSTOM>) <octet string>
 

@@ -92,7 +92,7 @@ CMS_RecipientInfo *CMS_add0_recipient_password(CMS_ContentInfo *cms,
         goto err;
     }
 
-    if (EVP_EncryptInit_ex(ctx, kekciph, NULL, NULL, NULL) <= 0) {
+    if (OPENSSL_BOX_EVP_EncryptInit_ex(ctx, kekciph, NULL, NULL, NULL) <= 0) {
         ERR_raise(ERR_LIB_CMS, ERR_R_EVP_LIB);
         goto err;
     }
@@ -106,7 +106,7 @@ CMS_RecipientInfo *CMS_add0_recipient_password(CMS_ContentInfo *cms,
     if (ivlen > 0) {
         if (RAND_bytes_ex(ossl_cms_ctx_get0_libctx(cms_ctx), iv, ivlen, 0) <= 0)
             goto err;
-        if (EVP_EncryptInit_ex(ctx, NULL, NULL, NULL, iv) <= 0) {
+        if (OPENSSL_BOX_EVP_EncryptInit_ex(ctx, NULL, NULL, NULL, iv) <= 0) {
             ERR_raise(ERR_LIB_CMS, ERR_R_EVP_LIB);
             goto err;
         }
@@ -221,22 +221,22 @@ static int kek_unwrap_key(unsigned char *out, size_t *outlen,
     if ((tmp = OPENSSL_malloc(inlen)) == NULL)
         return 0;
     /* setup IV by decrypting last two blocks */
-    if (!EVP_DecryptUpdate(ctx, tmp + inlen - 2 * blocklen, &outl,
+    if (!OPENSSL_BOX_EVP_DecryptUpdate(ctx, tmp + inlen - 2 * blocklen, &outl,
                            in + inlen - 2 * blocklen, blocklen * 2)
         /*
          * Do a decrypt of last decrypted block to set IV to correct value
          * output it to start of buffer so we don't corrupt decrypted block
          * this works because buffer is at least two block lengths long.
          */
-        || !EVP_DecryptUpdate(ctx, tmp, &outl,
+        || !OPENSSL_BOX_EVP_DecryptUpdate(ctx, tmp, &outl,
                               tmp + inlen - blocklen, blocklen)
         /* Can now decrypt first n - 1 blocks */
-        || !EVP_DecryptUpdate(ctx, tmp, &outl, in, (int)(inlen - blocklen))
+        || !OPENSSL_BOX_EVP_DecryptUpdate(ctx, tmp, &outl, in, (int)(inlen - blocklen))
 
         /* Reset IV to original value */
-        || !EVP_DecryptInit_ex(ctx, NULL, NULL, NULL, NULL)
+        || !OPENSSL_BOX_EVP_DecryptInit_ex(ctx, NULL, NULL, NULL, NULL)
         /* Decrypt again */
-        || !EVP_DecryptUpdate(ctx, tmp, &outl, tmp, (int)inlen))
+        || !OPENSSL_BOX_EVP_DecryptUpdate(ctx, tmp, &outl, tmp, (int)inlen))
         goto err;
     /* Check check bytes */
     if (((tmp[1] ^ tmp[4]) & (tmp[2] ^ tmp[5]) & (tmp[3] ^ tmp[6])) != 0xff) {
@@ -294,8 +294,8 @@ static int kek_wrap_key(unsigned char *out, size_t *outlen,
                              olen - 4 - inlen, 0) <= 0)
             return 0;
         /* Encrypt twice */
-        if (!EVP_EncryptUpdate(ctx, out, &dummy, out, (int)olen)
-            || !EVP_EncryptUpdate(ctx, out, &dummy, out, (int)olen))
+        if (!OPENSSL_BOX_EVP_EncryptUpdate(ctx, out, &dummy, out, (int)olen)
+            || !OPENSSL_BOX_EVP_EncryptUpdate(ctx, out, &dummy, out, (int)olen))
             return 0;
     }
 
@@ -344,7 +344,7 @@ int ossl_cms_RecipientInfo_pwri_crypt(const CMS_ContentInfo *cms,
     }
 
     OBJ_obj2txt(name, sizeof(name), kekalg->algorithm, 0);
-    kekcipher = EVP_CIPHER_fetch(ossl_cms_ctx_get0_libctx(cms_ctx), name,
+    kekcipher = OPENSSL_BOX_EVP_CIPHER_fetch(ossl_cms_ctx_get0_libctx(cms_ctx), name,
                                  ossl_cms_ctx_get0_propq(cms_ctx));
 
     if (kekcipher == NULL) {
@@ -358,7 +358,7 @@ int ossl_cms_RecipientInfo_pwri_crypt(const CMS_ContentInfo *cms,
         goto err;
     }
     /* Fixup cipher based on AlgorithmIdentifier to set IV etc */
-    if (!EVP_CipherInit_ex(kekctx, kekcipher, NULL, NULL, NULL, en_de))
+    if (!OPENSSL_BOX_EVP_CipherInit_ex(kekctx, kekcipher, NULL, NULL, NULL, en_de))
         goto err;
     OPENSSL_BOX_EVP_CIPHER_CTX_set_padding(kekctx, 0);
     if (OPENSSL_BOX_EVP_CIPHER_asn1_to_param(kekctx, kekalg->parameter) <= 0) {
@@ -370,7 +370,7 @@ int ossl_cms_RecipientInfo_pwri_crypt(const CMS_ContentInfo *cms,
 
     /* Finish password based key derivation to setup key in "ctx" */
 
-    if (EVP_PBE_CipherInit_ex(algtmp->algorithm,
+    if (OPENSSL_BOX_EVP_PBE_CipherInit_ex(algtmp->algorithm,
                               (char *)pwri->pass, (int)pwri->passlen,
                               algtmp->parameter, kekctx, en_de,
                               cms_ctx->libctx, cms_ctx->propq) < 0) {

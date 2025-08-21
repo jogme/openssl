@@ -2,8 +2,8 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_PKEY_CTX_new, OPENSSL_BOX_EVP_PKEY_CTX_new_id, EVP_PKEY_CTX_new_from_name,
-EVP_PKEY_CTX_new_from_pkey, OPENSSL_BOX_EVP_PKEY_CTX_dup, OPENSSL_BOX_EVP_PKEY_CTX_free,
+OPENSSL_BOX_EVP_PKEY_CTX_new, OPENSSL_BOX_EVP_PKEY_CTX_new_id, OPENSSL_BOX_EVP_PKEY_CTX_new_from_name,
+OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey, OPENSSL_BOX_EVP_PKEY_CTX_dup, OPENSSL_BOX_EVP_PKEY_CTX_free,
 OPENSSL_BOX_EVP_PKEY_CTX_is_a
 - public key algorithm context functions
 
@@ -13,10 +13,10 @@ OPENSSL_BOX_EVP_PKEY_CTX_is_a
 
  EVP_PKEY_CTX *OPENSSL_BOX_EVP_PKEY_CTX_new(EVP_PKEY *pkey, ENGINE *e);
  EVP_PKEY_CTX *OPENSSL_BOX_EVP_PKEY_CTX_new_id(int id, ENGINE *e);
- EVP_PKEY_CTX *EVP_PKEY_CTX_new_from_name(OSSL_LIB_CTX *libctx,
+ EVP_PKEY_CTX *OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(OSSL_LIB_CTX *libctx,
                                           const char *name,
                                           const char *propquery);
- EVP_PKEY_CTX *EVP_PKEY_CTX_new_from_pkey(OSSL_LIB_CTX *libctx,
+ EVP_PKEY_CTX *OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(OSSL_LIB_CTX *libctx,
                                           EVP_PKEY *pkey,
                                           const char *propquery);
  EVP_PKEY_CTX *OPENSSL_BOX_EVP_PKEY_CTX_dup(const EVP_PKEY_CTX *ctx);
@@ -31,20 +31,20 @@ the I<pkey> key type and ENGINE I<e>.
 The OPENSSL_BOX_EVP_PKEY_CTX_new_id() function allocates public key algorithm context
 using the key type specified by I<id> and ENGINE I<e>.
 
-The EVP_PKEY_CTX_new_from_name() function allocates a public key algorithm
+The OPENSSL_BOX_EVP_PKEY_CTX_new_from_name() function allocates a public key algorithm
 context using the library context I<libctx> (see L<OSSL_LIB_CTX(3)>), the
 key type specified by I<name> and the property query I<propquery>.  None
 of the arguments are duplicated, so they  must remain unchanged for the
 lifetime of the returned B<EVP_PKEY_CTX> or of any of its duplicates.  Read
 further about the possible names in L</NOTES> below.
 
-The EVP_PKEY_CTX_new_from_pkey() function allocates a public key algorithm
+The OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey() function allocates a public key algorithm
 context using the library context I<libctx> (see L<OSSL_LIB_CTX(3)>) and the
 algorithm specified by I<pkey> and the property query I<propquery>. None of the
 arguments are duplicated, so they must remain unchanged for the lifetime of the
 returned B<EVP_PKEY_CTX> or any of its duplicates.
 
-OPENSSL_BOX_EVP_PKEY_CTX_new_id() and EVP_PKEY_CTX_new_from_name() are normally
+OPENSSL_BOX_EVP_PKEY_CTX_new_id() and OPENSSL_BOX_EVP_PKEY_CTX_new_from_name() are normally
 used when no B<EVP_PKEY> structure is associated with the operations,
 for example during parameter generation or key generation for some
 algorithms.
@@ -91,7 +91,7 @@ B<EVP_PKEY_X448>, and are used by legacy methods.
 
 =item Name strings
 
-This is the I<name> used with EVP_PKEY_CTX_new_from_name().
+This is the I<name> used with OPENSSL_BOX_EVP_PKEY_CTX_new_from_name().
 
 These are names like "RSA", "DSA", and what's available depends on what
 providers are currently accessible.
@@ -120,7 +120,7 @@ L<OPENSSL_BOX_EVP_PKEY_new(3)>
 The OPENSSL_BOX_EVP_PKEY_CTX_new(), OPENSSL_BOX_EVP_PKEY_CTX_new_id(), OPENSSL_BOX_EVP_PKEY_CTX_dup() and
 OPENSSL_BOX_EVP_PKEY_CTX_free() functions were added in OpenSSL 1.0.0.
 
-The EVP_PKEY_CTX_new_from_name() and EVP_PKEY_CTX_new_from_pkey() functions were
+The OPENSSL_BOX_EVP_PKEY_CTX_new_from_name() and OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey() functions were
 added in OpenSSL 3.0.
 
 =head1 COPYRIGHT

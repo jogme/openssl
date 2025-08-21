@@ -35,7 +35,7 @@ typedef struct enc_struct {
     EVP_CIPHER_CTX *cipher;
     unsigned char *read_start, *read_end;
     /*
-     * buf is larger than ENC_BLOCK_SIZE because EVP_DecryptUpdate can return
+     * buf is larger than ENC_BLOCK_SIZE because OPENSSL_BOX_EVP_DecryptUpdate can return
      * up to a block more data than is presented to it
      */
     unsigned char buf[BUF_OFFSET + ENC_BLOCK_SIZE];
@@ -162,7 +162,7 @@ static int enc_read(BIO *b, char *out, int outl)
             if (!BIO_should_retry(next)) {
                 ctx->cont = i;
                 ctx->finished = 1;
-                i = EVP_CipherFinal_ex(ctx->cipher,
+                i = OPENSSL_BOX_EVP_CipherFinal_ex(ctx->cipher,
                                        ctx->buf, &(ctx->buf_len));
                 ctx->ok = i;
                 ctx->buf_off = 0;
@@ -179,7 +179,7 @@ static int enc_read(BIO *b, char *out, int outl)
                  */
                 int j = outl - blocksize, buf_len;
 
-                if (!EVP_CipherUpdate(ctx->cipher,
+                if (!OPENSSL_BOX_EVP_CipherUpdate(ctx->cipher,
                                       (unsigned char *)out, &buf_len,
                                       ctx->read_start, i > j ? j : i)) {
                     BIO_clear_retry_flags(b);
@@ -197,7 +197,7 @@ static int enc_read(BIO *b, char *out, int outl)
             }
             if (i > ENC_MIN_CHUNK)
                 i = ENC_MIN_CHUNK;
-            if (!EVP_CipherUpdate(ctx->cipher,
+            if (!OPENSSL_BOX_EVP_CipherUpdate(ctx->cipher,
                                   ctx->buf, &ctx->buf_len,
                                   ctx->read_start, i)) {
                 BIO_clear_retry_flags(b);
@@ -207,7 +207,7 @@ static int enc_read(BIO *b, char *out, int outl)
             ctx->read_start += i;
             ctx->cont = 1;
             /*
-             * Note: it is possible for EVP_CipherUpdate to decrypt zero
+             * Note: it is possible for OPENSSL_BOX_EVP_CipherUpdate to decrypt zero
              * bytes because this is or looks like the final block: if this
              * happens we should retry and either read more data or decrypt
              * the final block
@@ -266,7 +266,7 @@ static int enc_write(BIO *b, const char *in, int inl)
     ctx->buf_off = 0;
     while (inl > 0) {
         n = (inl > ENC_BLOCK_SIZE) ? ENC_BLOCK_SIZE : inl;
-        if (!EVP_CipherUpdate(ctx->cipher,
+        if (!OPENSSL_BOX_EVP_CipherUpdate(ctx->cipher,
                               ctx->buf, &ctx->buf_len,
                               (const unsigned char *)in, n)) {
             BIO_clear_retry_flags(b);
@@ -313,7 +313,7 @@ static long enc_ctrl(BIO *b, int cmd, long num, void *ptr)
     case BIO_CTRL_RESET:
         ctx->ok = 1;
         ctx->finished = 0;
-        if (!EVP_CipherInit_ex(ctx->cipher, NULL, NULL, NULL, NULL,
+        if (!OPENSSL_BOX_EVP_CipherInit_ex(ctx->cipher, NULL, NULL, NULL, NULL,
                                OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx->cipher)))
             return 0;
         ret = BIO_ctrl(next, cmd, num, ptr);
@@ -352,7 +352,7 @@ static long enc_ctrl(BIO *b, int cmd, long num, void *ptr)
         if (!ctx->finished) {
             ctx->finished = 1;
             ctx->buf_off = 0;
-            ret = EVP_CipherFinal_ex(ctx->cipher,
+            ret = OPENSSL_BOX_EVP_CipherFinal_ex(ctx->cipher,
                                      (unsigned char *)ctx->buf,
                                      &(ctx->buf_len));
             ctx->ok = (int)ret;
@@ -407,7 +407,7 @@ static long enc_callback_ctrl(BIO *b, int cmd, BIO_info_cb *fp)
     return BIO_callback_ctrl(next, cmd, fp);
 }
 
-int BIO_set_cipher(BIO *b, const EVP_CIPHER *c, const unsigned char *k,
+int OPENSSL_BOX_BIO_set_cipher(BIO *b, const EVP_CIPHER *c, const unsigned char *k,
                    const unsigned char *i, int e)
 {
     BIO_ENC_CTX *ctx;
@@ -438,7 +438,7 @@ int BIO_set_cipher(BIO *b, const EVP_CIPHER *c, const unsigned char *k,
 
     BIO_set_init(b, 1);
 
-    if (!EVP_CipherInit_ex(ctx->cipher, c, NULL, k, i, e))
+    if (!OPENSSL_BOX_EVP_CipherInit_ex(ctx->cipher, c, NULL, k, i, e))
         return 0;
 
     if (callback_ex != NULL)

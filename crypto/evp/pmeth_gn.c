@@ -313,7 +313,7 @@ int OPENSSL_BOX_EVP_PKEY_CTX_get_keygen_info(EVP_PKEY_CTX *ctx, int idx)
 
 #ifndef FIPS_MODULE
 
-EVP_PKEY *EVP_PKEY_new_mac_key(int type, ENGINE *e,
+EVP_PKEY *OPENSSL_BOX_EVP_PKEY_new_mac_key(int type, ENGINE *e,
                                const unsigned char *key, int keylen)
 {
     EVP_PKEY_CTX *mac_ctx = NULL;
@@ -360,7 +360,7 @@ int OPENSSL_BOX_EVP_PKEY_fromdata_init(EVP_PKEY_CTX *ctx)
     return fromdata_init(ctx, EVP_PKEY_OP_FROMDATA);
 }
 
-int EVP_PKEY_fromdata(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey, int selection,
+int OPENSSL_BOX_EVP_PKEY_fromdata(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey, int selection,
                       OSSL_PARAM params[])
 {
     void *keydata = NULL;
@@ -416,7 +416,7 @@ int OPENSSL_BOX_EVP_PKEY_todata(const EVP_PKEY *pkey, int selection, OSSL_PARAM 
 {
     if (params == NULL)
         return 0;
-    return EVP_PKEY_export(pkey, selection, ossl_pkey_todata_cb, params);
+    return OPENSSL_BOX_EVP_PKEY_export(pkey, selection, ossl_pkey_todata_cb, params);
 }
 
 #ifndef FIPS_MODULE
@@ -435,7 +435,7 @@ static int pkey_fake_import(void *fake_keydata, int ignored_selection,
 }
 #endif
 
-int EVP_PKEY_export(const EVP_PKEY *pkey, int selection,
+int OPENSSL_BOX_EVP_PKEY_export(const EVP_PKEY *pkey, int selection,
                     OSSL_CALLBACK *export_cb, void *export_cbarg)
 {
     if (pkey == NULL) {

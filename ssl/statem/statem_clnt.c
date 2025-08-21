@@ -2321,19 +2321,19 @@ static int tls_process_ske_dhe(SSL_CONNECTION *s, PACKET *pkt, EVP_PKEY **pkey)
         goto err;
     }
 
-    pctx = EVP_PKEY_CTX_new_from_name(sctx->libctx, "DH", sctx->propq);
+    pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(sctx->libctx, "DH", sctx->propq);
     if (pctx == NULL) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(pctx) <= 0
-            || EVP_PKEY_fromdata(pctx, &peer_tmp, EVP_PKEY_KEYPAIR, params) <= 0) {
+            || OPENSSL_BOX_EVP_PKEY_fromdata(pctx, &peer_tmp, EVP_PKEY_KEYPAIR, params) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_BAD_DH_VALUE);
         goto err;
     }
 
     OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
-    pctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx, peer_tmp, sctx->propq);
+    pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(sctx->libctx, peer_tmp, sctx->propq);
     if (pctx == NULL
             /*
              * OPENSSL_BOX_EVP_PKEY_param_check() will verify that the DH params are using
@@ -2539,7 +2539,7 @@ MSG_PROCESS_RETURN tls_process_key_exchange(SSL_CONNECTION *s, PACKET *pkt)
             goto err;
         }
 
-        if (EVP_DigestVerifyInit_ex(md_ctx, &pctx,
+        if (OPENSSL_BOX_EVP_DigestVerifyInit_ex(md_ctx, &pctx,
                                     md == NULL ? NULL : OPENSSL_BOX_EVP_MD_get0_name(md),
                                     sctx->libctx, sctx->propq, pkey,
                                     NULL) <= 0) {
@@ -2561,7 +2561,7 @@ MSG_PROCESS_RETURN tls_process_key_exchange(SSL_CONNECTION *s, PACKET *pkt)
             goto err;
         }
 
-        rv = EVP_DigestVerify(md_ctx, PACKET_data(&signature),
+        rv = OPENSSL_BOX_EVP_DigestVerify(md_ctx, PACKET_data(&signature),
                               PACKET_remaining(&signature), tbs, tbslen);
         OPENSSL_free(tbs);
         if (rv <= 0) {
@@ -2838,17 +2838,17 @@ MSG_PROCESS_RETURN tls_process_new_session_ticket(SSL_CONNECTION *s,
      * elsewhere in OpenSSL. The session ID is set to the SHA256 hash of the
      * ticket.
      */
-    sha256 = EVP_MD_fetch(sctx->libctx, "SHA2-256", sctx->propq);
+    sha256 = OPENSSL_BOX_EVP_MD_fetch(sctx->libctx, "SHA2-256", sctx->propq);
     if (sha256 == NULL) {
         /* Error is already recorded */
         SSLfatal_alert(s, SSL_AD_INTERNAL_ERROR);
         goto err;
     }
     /*
-     * We use sess_len here because EVP_Digest expects an int
+     * We use sess_len here because OPENSSL_BOX_EVP_Digest expects an int
      * but s->session->session_id_length is a size_t
      */
-    if (!EVP_Digest(s->session->ext.tick, ticklen,
+    if (!OPENSSL_BOX_EVP_Digest(s->session->ext.tick, ticklen,
                     s->session->session_id, &sess_len,
                     sha256, NULL)) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
@@ -3182,14 +3182,14 @@ static int tls_construct_cke_rsa(SSL_CONNECTION *s, WPACKET *pkt)
         goto err;
     }
 
-    pctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx, pkey, sctx->propq);
+    pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(sctx->libctx, pkey, sctx->propq);
     if (pctx == NULL || OPENSSL_BOX_EVP_PKEY_encrypt_init(pctx) <= 0
-        || EVP_PKEY_encrypt(pctx, NULL, &enclen, pms, pmslen) <= 0) {
+        || OPENSSL_BOX_EVP_PKEY_encrypt(pctx, NULL, &enclen, pms, pmslen) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
     }
     if (!WPACKET_allocate_bytes(pkt, enclen, &encdata)
-            || EVP_PKEY_encrypt(pctx, encdata, &enclen, pms, pmslen) <= 0) {
+            || OPENSSL_BOX_EVP_PKEY_encrypt(pctx, encdata, &enclen, pms, pmslen) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_BAD_RSA_ENCRYPT);
         goto err;
     }
@@ -3353,7 +3353,7 @@ static int tls_construct_cke_gost(SSL_CONNECTION *s, WPACKET *pkt)
         return 0;
     }
 
-    pkey_ctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx,
+    pkey_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(sctx->libctx,
                                           pkey,
                                           sctx->propq);
     if (pkey_ctx == NULL) {
@@ -3388,17 +3388,17 @@ static int tls_construct_cke_gost(SSL_CONNECTION *s, WPACKET *pkt)
     ukm_hash = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ukm_hash == NULL
         || OPENSSL_BOX_EVP_DigestInit(ukm_hash, EVP_get_digestbynid(dgst_nid)) <= 0
-        || EVP_DigestUpdate(ukm_hash, s->s3.client_random,
+        || OPENSSL_BOX_EVP_DigestUpdate(ukm_hash, s->s3.client_random,
                             SSL3_RANDOM_SIZE) <= 0
-        || EVP_DigestUpdate(ukm_hash, s->s3.server_random,
+        || OPENSSL_BOX_EVP_DigestUpdate(ukm_hash, s->s3.server_random,
                             SSL3_RANDOM_SIZE) <= 0
-        || EVP_DigestFinal_ex(ukm_hash, shared_ukm, &md_len) <= 0) {
+        || OPENSSL_BOX_EVP_DigestFinal_ex(ukm_hash, shared_ukm, &md_len) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
     OPENSSL_BOX_EVP_MD_CTX_free(ukm_hash);
     ukm_hash = NULL;
-    if (EVP_PKEY_CTX_ctrl(pkey_ctx, -1, EVP_PKEY_OP_ENCRYPT,
+    if (OPENSSL_BOX_EVP_PKEY_CTX_ctrl(pkey_ctx, -1, EVP_PKEY_OP_ENCRYPT,
                           EVP_PKEY_CTRL_SET_IV, 8, shared_ukm) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_LIBRARY_BUG);
         goto err;
@@ -3408,7 +3408,7 @@ static int tls_construct_cke_gost(SSL_CONNECTION *s, WPACKET *pkt)
      * Encapsulate it into sequence
      */
     msglen = 255;
-    if (EVP_PKEY_encrypt(pkey_ctx, tmp, &msglen, pms, pmslen) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_encrypt(pkey_ctx, tmp, &msglen, pms, pmslen) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_LIBRARY_BUG);
         goto err;
     }
@@ -3460,9 +3460,9 @@ int ossl_gost_ukm(const SSL_CONNECTION *s, unsigned char *dgst_buf)
 
     if ((hash = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL
         || OPENSSL_BOX_EVP_DigestInit(hash, md) <= 0
-        || EVP_DigestUpdate(hash, s->s3.client_random, SSL3_RANDOM_SIZE) <= 0
-        || EVP_DigestUpdate(hash, s->s3.server_random, SSL3_RANDOM_SIZE) <= 0
-        || EVP_DigestFinal_ex(hash, dgst_buf, &md_len) <= 0) {
+        || OPENSSL_BOX_EVP_DigestUpdate(hash, s->s3.client_random, SSL3_RANDOM_SIZE) <= 0
+        || OPENSSL_BOX_EVP_DigestUpdate(hash, s->s3.server_random, SSL3_RANDOM_SIZE) <= 0
+        || OPENSSL_BOX_EVP_DigestFinal_ex(hash, dgst_buf, &md_len) <= 0) {
         OPENSSL_BOX_EVP_MD_CTX_free(hash);
         ssl_evp_md_free(md);
         return 0;
@@ -3518,7 +3518,7 @@ static int tls_construct_cke_gost18(SSL_CONNECTION *s, WPACKET *pkt)
         goto err;
     }
 
-    pkey_ctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx,
+    pkey_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(sctx->libctx,
                                           pkey,
                                           sctx->propq);
     if (pkey_ctx == NULL) {
@@ -3532,25 +3532,25 @@ static int tls_construct_cke_gost18(SSL_CONNECTION *s, WPACKET *pkt)
     };
 
     /* Reuse EVP_PKEY_CTRL_SET_IV, make choice in engine code */
-    if (EVP_PKEY_CTX_ctrl(pkey_ctx, -1, EVP_PKEY_OP_ENCRYPT,
+    if (OPENSSL_BOX_EVP_PKEY_CTX_ctrl(pkey_ctx, -1, EVP_PKEY_OP_ENCRYPT,
                           EVP_PKEY_CTRL_SET_IV, 32, rnd_dgst) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_LIBRARY_BUG);
         goto err;
     }
 
-    if (EVP_PKEY_CTX_ctrl(pkey_ctx, -1, EVP_PKEY_OP_ENCRYPT,
+    if (OPENSSL_BOX_EVP_PKEY_CTX_ctrl(pkey_ctx, -1, EVP_PKEY_OP_ENCRYPT,
                           EVP_PKEY_CTRL_CIPHER, cipher_nid, NULL) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_LIBRARY_BUG);
         goto err;
     }
 
-    if (EVP_PKEY_encrypt(pkey_ctx, NULL, &msglen, pms, pmslen) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_encrypt(pkey_ctx, NULL, &msglen, pms, pmslen) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
     }
 
     if (!WPACKET_allocate_bytes(pkt, msglen, &encdata)
-            || EVP_PKEY_encrypt(pkey_ctx, encdata, &msglen, pms, pmslen) <= 0) {
+            || OPENSSL_BOX_EVP_PKEY_encrypt(pkey_ctx, encdata, &msglen, pms, pmslen) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
     }

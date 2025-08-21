@@ -503,7 +503,7 @@ static int tls1_prf_P_hash(EVP_MAC_CTX *ctx_init,
     size_t Ai_len;
     int ret = 0;
 
-    if (!EVP_MAC_init(ctx_init, sec, sec_len, NULL))
+    if (!OPENSSL_BOX_EVP_MAC_init(ctx_init, sec, sec_len, NULL))
         goto err;
     chunk = OPENSSL_BOX_EVP_MAC_CTX_get_mac_size(ctx_init);
     if (chunk == 0)
@@ -517,7 +517,7 @@ static int tls1_prf_P_hash(EVP_MAC_CTX *ctx_init,
 
     for (;;) {
         /* calc: A(i) = HMAC_<hash>(secret, A(i-1)) */
-        if (!EVP_MAC_final(ctx_Ai, Ai, &Ai_len, sizeof(Ai)))
+        if (!OPENSSL_BOX_EVP_MAC_final(ctx_Ai, Ai, &Ai_len, sizeof(Ai)))
             goto err;
         OPENSSL_BOX_EVP_MAC_CTX_free(ctx_Ai);
         ctx_Ai = NULL;
@@ -538,12 +538,12 @@ static int tls1_prf_P_hash(EVP_MAC_CTX *ctx_init,
             goto err;
         if (olen <= chunk) {
             /* last chunk - use Ai as temp bounce buffer */
-            if (!EVP_MAC_final(ctx, Ai, &Ai_len, sizeof(Ai)))
+            if (!OPENSSL_BOX_EVP_MAC_final(ctx, Ai, &Ai_len, sizeof(Ai)))
                 goto err;
             memcpy(out, Ai, olen);
             break;
         }
-        if (!EVP_MAC_final(ctx, out, NULL, olen))
+        if (!OPENSSL_BOX_EVP_MAC_final(ctx, out, NULL, olen))
             goto err;
         OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
         ctx = NULL;

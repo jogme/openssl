@@ -2,16 +2,16 @@
 
 =head1 NAME
 
-EVP_RAND, EVP_RAND_fetch, OPENSSL_BOX_EVP_RAND_free, OPENSSL_BOX_EVP_RAND_up_ref, EVP_RAND_CTX,
-OPENSSL_BOX_EVP_RAND_CTX_new, OPENSSL_BOX_EVP_RAND_CTX_free, OPENSSL_BOX_EVP_RAND_CTX_up_ref, EVP_RAND_instantiate,
-OPENSSL_BOX_EVP_RAND_uninstantiate, EVP_RAND_generate, EVP_RAND_reseed, OPENSSL_BOX_EVP_RAND_nonce,
+EVP_RAND, OPENSSL_BOX_EVP_RAND_fetch, OPENSSL_BOX_EVP_RAND_free, OPENSSL_BOX_EVP_RAND_up_ref, EVP_RAND_CTX,
+OPENSSL_BOX_EVP_RAND_CTX_new, OPENSSL_BOX_EVP_RAND_CTX_free, OPENSSL_BOX_EVP_RAND_CTX_up_ref, OPENSSL_BOX_EVP_RAND_instantiate,
+OPENSSL_BOX_EVP_RAND_uninstantiate, OPENSSL_BOX_EVP_RAND_generate, OPENSSL_BOX_EVP_RAND_reseed, OPENSSL_BOX_EVP_RAND_nonce,
 OPENSSL_BOX_EVP_RAND_enable_locking, OPENSSL_BOX_EVP_RAND_verify_zeroization, OPENSSL_BOX_EVP_RAND_get_strength,
 OPENSSL_BOX_EVP_RAND_get_state,
 OPENSSL_BOX_EVP_RAND_get0_provider, OPENSSL_BOX_EVP_RAND_CTX_get0_rand, OPENSSL_BOX_EVP_RAND_is_a,
-OPENSSL_BOX_EVP_RAND_get0_name, EVP_RAND_names_do_all,
+OPENSSL_BOX_EVP_RAND_get0_name, OPENSSL_BOX_EVP_RAND_names_do_all,
 OPENSSL_BOX_EVP_RAND_get0_description,
 OPENSSL_BOX_EVP_RAND_CTX_get_params,
-OPENSSL_BOX_EVP_RAND_CTX_set_params, EVP_RAND_do_all_provided, OPENSSL_BOX_EVP_RAND_get_params,
+OPENSSL_BOX_EVP_RAND_CTX_set_params, OPENSSL_BOX_EVP_RAND_do_all_provided, OPENSSL_BOX_EVP_RAND_get_params,
 OPENSSL_BOX_EVP_RAND_gettable_ctx_params, OPENSSL_BOX_EVP_RAND_settable_ctx_params,
 OPENSSL_BOX_EVP_RAND_CTX_gettable_params, OPENSSL_BOX_EVP_RAND_CTX_settable_params,
 OPENSSL_BOX_EVP_RAND_gettable_params, EVP_RAND_STATE_UNINITIALISED, EVP_RAND_STATE_READY,
@@ -24,7 +24,7 @@ EVP_RAND_STATE_ERROR - EVP RAND routines
  typedef struct evp_rand_st EVP_RAND;
  typedef struct evp_rand_ctx_st EVP_RAND_CTX;
 
- EVP_RAND *EVP_RAND_fetch(OSSL_LIB_CTX *libctx, const char *algorithm,
+ EVP_RAND *OPENSSL_BOX_EVP_RAND_fetch(OSSL_LIB_CTX *libctx, const char *algorithm,
                         const char *properties);
  int OPENSSL_BOX_EVP_RAND_up_ref(EVP_RAND *rand);
  void OPENSSL_BOX_EVP_RAND_free(EVP_RAND *rand);
@@ -44,22 +44,22 @@ EVP_RAND_STATE_ERROR - EVP RAND routines
  const char *OPENSSL_BOX_EVP_RAND_get0_description(const EVP_RAND *rand);
  int OPENSSL_BOX_EVP_RAND_is_a(const EVP_RAND *rand, const char *name);
  const OSSL_PROVIDER *OPENSSL_BOX_EVP_RAND_get0_provider(const EVP_RAND *rand);
- void EVP_RAND_do_all_provided(OSSL_LIB_CTX *libctx,
+ void OPENSSL_BOX_EVP_RAND_do_all_provided(OSSL_LIB_CTX *libctx,
                                void (*fn)(EVP_RAND *rand, void *arg),
                                void *arg);
- int EVP_RAND_names_do_all(const EVP_RAND *rand,
+ int OPENSSL_BOX_EVP_RAND_names_do_all(const EVP_RAND *rand,
                            void (*fn)(const char *name, void *data),
                            void *data);
 
- int EVP_RAND_instantiate(EVP_RAND_CTX *ctx, unsigned int strength,
+ int OPENSSL_BOX_EVP_RAND_instantiate(EVP_RAND_CTX *ctx, unsigned int strength,
                           int prediction_resistance,
                           const unsigned char *pstr, size_t pstr_len,
                           const OSSL_PARAM params[]);
  int OPENSSL_BOX_EVP_RAND_uninstantiate(EVP_RAND_CTX *ctx);
- int EVP_RAND_generate(EVP_RAND_CTX *ctx, unsigned char *out, size_t outlen,
+ int OPENSSL_BOX_EVP_RAND_generate(EVP_RAND_CTX *ctx, unsigned char *out, size_t outlen,
                        unsigned int strength, int prediction_resistance,
                        const unsigned char *addin, size_t addin_len);
- int EVP_RAND_reseed(EVP_RAND_CTX *ctx, int prediction_resistance,
+ int OPENSSL_BOX_EVP_RAND_reseed(EVP_RAND_CTX *ctx, int prediction_resistance,
                      const unsigned char *ent, size_t ent_len,
                      const unsigned char *addin, size_t addin_len);
  int OPENSSL_BOX_EVP_RAND_nonce(EVP_RAND_CTX *ctx, unsigned char *out, size_t outlen);
@@ -83,9 +83,9 @@ RAND and RAND_DRBG functions.
 
 After creating a B<EVP_RAND_CTX> for the required algorithm using
 OPENSSL_BOX_EVP_RAND_CTX_new(), inputs to the algorithm are supplied either by
-passing them as part of the EVP_RAND_instantiate() call or using calls to
-OPENSSL_BOX_EVP_RAND_CTX_set_params() before calling EVP_RAND_instantiate().  Finally,
-call EVP_RAND_generate() to produce cryptographically secure random bytes.
+passing them as part of the OPENSSL_BOX_EVP_RAND_instantiate() call or using calls to
+OPENSSL_BOX_EVP_RAND_CTX_set_params() before calling OPENSSL_BOX_EVP_RAND_instantiate().  Finally,
+call OPENSSL_BOX_EVP_RAND_generate() to produce cryptographically secure random bytes.
 
 =head2 Types
 
@@ -96,7 +96,7 @@ B<EVP_RAND_CTX> structures are reference counted.
 
 =head2 Algorithm implementation fetching
 
-EVP_RAND_fetch() fetches an implementation of a RAND I<algorithm>, given
+OPENSSL_BOX_EVP_RAND_fetch() fetches an implementation of a RAND I<algorithm>, given
 a library context I<libctx> and a set of I<properties>.
 See L<crypto(7)/ALGORITHM FETCHING> for further information.
 
@@ -127,7 +127,7 @@ I<ctx>.
 
 =head2 Random Number Generator Functions
 
-EVP_RAND_instantiate() processes any parameters in I<params> and
+OPENSSL_BOX_EVP_RAND_instantiate() processes any parameters in I<params> and
 then instantiates the RAND I<ctx> with a minimum security strength
 of <strength> and personalisation string I<pstr> of length <pstr_len>.
 If I<prediction_resistance> is specified, fresh entropy from a live source
@@ -137,13 +137,13 @@ OPENSSL_BOX_EVP_RAND_uninstantiate() uninstantiates the RAND I<ctx> as per
 NIST SP 800-90A and SP 800-90C.  Subsequent to this call, the RAND cannot
 be used to generate bytes.  It can only be freed or instantiated again.
 
-EVP_RAND_generate() produces random bytes from the RAND I<ctx> with the
+OPENSSL_BOX_EVP_RAND_generate() produces random bytes from the RAND I<ctx> with the
 additional input I<addin> of length I<addin_len>.  The bytes
 produced will meet the security I<strength>.
 If I<prediction_resistance> is specified, fresh entropy from a live source
 will be sought.  This call operates as per NIST SP 800-90A and SP 800-90C.
 
-EVP_RAND_reseed() reseeds the RAND with new entropy.
+OPENSSL_BOX_EVP_RAND_reseed() reseeds the RAND with new entropy.
 Entropy I<ent> of length I<ent_len> bytes can be supplied as can additional
 input I<addin> of length I<addin_len> bytes.  In the FIPS provider, both are
 treated as additional input as per NIST SP-800-90Ar1, Sections 9.1 and 9.2.
@@ -232,14 +232,14 @@ algorithm that's identifiable with I<name>, otherwise 0.
 OPENSSL_BOX_EVP_RAND_get0_provider() returns the provider that holds the implementation
 of the given I<rand>.
 
-EVP_RAND_do_all_provided() traverses all RAND implemented by all activated
+OPENSSL_BOX_EVP_RAND_do_all_provided() traverses all RAND implemented by all activated
 providers in the given library context I<libctx>, and for each of the
 implementations, calls the given function I<fn> with the implementation method
 and the given I<arg> as argument.
 
 OPENSSL_BOX_EVP_RAND_get0_name() returns the canonical name of I<rand>.
 
-EVP_RAND_names_do_all() traverses all names for I<rand>, and calls
+OPENSSL_BOX_EVP_RAND_names_do_all() traverses all names for I<rand>, and calls
 I<fn> with each name and I<data>.
 
 OPENSSL_BOX_EVP_RAND_get0_description() returns a description of the rand, meant for
@@ -337,7 +337,7 @@ or the properties in the case of B<OSSL_RAND_PARAM_PROPERTIES>.
 =head1 NOTES
 
 The use of a nonzero value for the I<prediction_resistance> argument to
-EVP_RAND_instantiate(), EVP_RAND_generate() or EVP_RAND_reseed() should
+OPENSSL_BOX_EVP_RAND_instantiate(), OPENSSL_BOX_EVP_RAND_generate() or OPENSSL_BOX_EVP_RAND_reseed() should
 be used sparingly.  In the default setup, this will cause all public and
 private DRBGs to be reseeded on next use.  Since, by default, public and
 private DRBGs are allocated on a per thread basis, this can result in
@@ -358,7 +358,7 @@ not be considered a breaking change to the API.
 
 =head1 RETURN VALUES
 
-EVP_RAND_fetch() returns a pointer to a newly fetched B<EVP_RAND>, or
+OPENSSL_BOX_EVP_RAND_fetch() returns a pointer to a newly fetched B<EVP_RAND>, or
 NULL if allocation failed.
 
 OPENSSL_BOX_EVP_RAND_get0_provider() returns a pointer to the provider for the RAND, or
@@ -372,7 +372,7 @@ algorithm.
 
 OPENSSL_BOX_EVP_RAND_up_ref() returns 1 on success, 0 on error.
 
-EVP_RAND_names_do_all() returns 1 if the callback was called for all names. A
+OPENSSL_BOX_EVP_RAND_names_do_all() returns 1 if the callback was called for all names. A
 return value of 0 means that the callback was not called for any names.
 
 OPENSSL_BOX_EVP_RAND_CTX_new() returns either the newly allocated

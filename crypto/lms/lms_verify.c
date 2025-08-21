@@ -69,24 +69,24 @@ int lms_sig_compute_tc_from_path(const unsigned char *paths, uint32_t n,
          *   Tc(parent) = H(I || node_q || 0x8383 || Tc(left) || paths[i][n])
          */
         if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx, ctxI)
-                || !EVP_DigestUpdate(ctx, qbuf, sizeof(qbuf))
-                || !EVP_DigestUpdate(ctx, d_intr, sizeof(d_intr)))
+                || !OPENSSL_BOX_EVP_DigestUpdate(ctx, qbuf, sizeof(qbuf))
+                || !OPENSSL_BOX_EVP_DigestUpdate(ctx, d_intr, sizeof(d_intr)))
             goto err;
 
         if (odd) {
-            if (!EVP_DigestUpdate(ctx, path, n)
-                || !EVP_DigestUpdate(ctx, Tc, n))
+            if (!OPENSSL_BOX_EVP_DigestUpdate(ctx, path, n)
+                || !OPENSSL_BOX_EVP_DigestUpdate(ctx, Tc, n))
                 goto err;
         } else {
-            if (!EVP_DigestUpdate(ctx, Tc, n)
-                || !EVP_DigestUpdate(ctx, path, n))
+            if (!OPENSSL_BOX_EVP_DigestUpdate(ctx, Tc, n)
+                || !OPENSSL_BOX_EVP_DigestUpdate(ctx, path, n))
                 goto err;
         }
         /*
          * Tc = parent Hash, which is either the left or right child for the next
          * level up (node_num determines if it is left or right).
          */
-        if (!EVP_DigestFinal_ex(ctx, Tc, NULL))
+        if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, Tc, NULL))
             goto err;
         path += n;
     }
@@ -155,13 +155,13 @@ int ossl_lms_sig_verify(const LMS_SIG *lms_sig, const LMS_KEY *pub,
      * ctx is left initialised with the md from ossl_lm_ots_compute_pubkey,
      * so there is no need to reinitialise it here.
      */
-    if (!EVP_DigestInit_ex2(ctx, NULL, NULL)
-            || !EVP_DigestUpdate(ctx, pub->Id, LMS_SIZE_I)
+    if (!OPENSSL_BOX_EVP_DigestInit_ex2(ctx, NULL, NULL)
+            || !OPENSSL_BOX_EVP_DigestUpdate(ctx, pub->Id, LMS_SIZE_I)
             || !OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctxI, ctx)
-            || !EVP_DigestUpdate(ctx, qbuf, sizeof(qbuf))
-            || !EVP_DigestUpdate(ctx, d_leaf, sizeof(d_leaf))
-            || !EVP_DigestUpdate(ctx, Kc, n)
-            || !EVP_DigestFinal_ex(ctx, Tc, NULL)
+            || !OPENSSL_BOX_EVP_DigestUpdate(ctx, qbuf, sizeof(qbuf))
+            || !OPENSSL_BOX_EVP_DigestUpdate(ctx, d_leaf, sizeof(d_leaf))
+            || !OPENSSL_BOX_EVP_DigestUpdate(ctx, Kc, n)
+            || !OPENSSL_BOX_EVP_DigestFinal_ex(ctx, Tc, NULL)
             || !lms_sig_compute_tc_from_path(lms_sig->paths, n, node_num,
                                              ctx, ctxI, Tc))
         goto err;

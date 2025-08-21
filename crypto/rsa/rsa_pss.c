@@ -129,15 +129,15 @@ int ossl_rsa_verify_PKCS1_PSS_mgf1(RSA *rsa, const unsigned char *mHash,
     } else {
         sLen = maskedDBLen - i;
     }
-    if (!EVP_DigestInit_ex(ctx, Hash, NULL)
-        || !EVP_DigestUpdate(ctx, zeroes, sizeof(zeroes))
-        || !EVP_DigestUpdate(ctx, mHash, hLen))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx, Hash, NULL)
+        || !OPENSSL_BOX_EVP_DigestUpdate(ctx, zeroes, sizeof(zeroes))
+        || !OPENSSL_BOX_EVP_DigestUpdate(ctx, mHash, hLen))
         goto err;
     if (sLen != 0) {
-        if (!EVP_DigestUpdate(ctx, DB + i, sLen))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(ctx, DB + i, sLen))
             goto err;
     }
-    if (!EVP_DigestFinal_ex(ctx, H_, NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, H_, NULL))
         goto err;
     if (memcmp(H_, H, hLen)) {
         ERR_raise(ERR_LIB_RSA, RSA_R_BAD_SIGNATURE);
@@ -247,13 +247,13 @@ int ossl_rsa_padding_add_PKCS1_PSS_mgf1(RSA *rsa, unsigned char *EM,
     ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx == NULL)
         goto err;
-    if (!EVP_DigestInit_ex(ctx, Hash, NULL)
-        || !EVP_DigestUpdate(ctx, zeroes, sizeof(zeroes))
-        || !EVP_DigestUpdate(ctx, mHash, hLen))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx, Hash, NULL)
+        || !OPENSSL_BOX_EVP_DigestUpdate(ctx, zeroes, sizeof(zeroes))
+        || !OPENSSL_BOX_EVP_DigestUpdate(ctx, mHash, hLen))
         goto err;
-    if (sLen && !EVP_DigestUpdate(ctx, salt, sLen))
+    if (sLen && !OPENSSL_BOX_EVP_DigestUpdate(ctx, salt, sLen))
         goto err;
-    if (!EVP_DigestFinal_ex(ctx, H, NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, H, NULL))
         goto err;
 
     /* Generate dbMask in place then perform XOR on it */

@@ -59,7 +59,7 @@ int DSA_print(BIO *bp, const DSA *x, int off)
         return 0;
     ret = OPENSSL_BOX_EVP_PKEY_set1_DSA(pk, (DSA *)x);
     if (ret)
-        ret = EVP_PKEY_print_private(bp, pk, off, NULL);
+        ret = OPENSSL_BOX_EVP_PKEY_print_private(bp, pk, off, NULL);
     OPENSSL_BOX_EVP_PKEY_free(pk);
     return ret;
 }
@@ -73,7 +73,7 @@ int DSAparams_print(BIO *bp, const DSA *x)
         return 0;
     ret = OPENSSL_BOX_EVP_PKEY_set1_DSA(pk, (DSA *)x);
     if (ret)
-        ret = EVP_PKEY_print_params(bp, pk, 4, NULL);
+        ret = OPENSSL_BOX_EVP_PKEY_print_params(bp, pk, 4, NULL);
     OPENSSL_BOX_EVP_PKEY_free(pk);
     return ret;
 }

@@ -166,7 +166,7 @@ static int scrypt_set_membuf(unsigned char **buffer, size_t *buflen,
 static int set_digest(KDF_SCRYPT *ctx)
 {
     OPENSSL_BOX_EVP_MD_free(ctx->sha256);
-    ctx->sha256 = EVP_MD_fetch(ctx->libctx, "sha256", ctx->propq);
+    ctx->sha256 = OPENSSL_BOX_EVP_MD_fetch(ctx->libctx, "sha256", ctx->propq);
     if (ctx->sha256 == NULL) {
         ERR_raise(ERR_LIB_PROV, PROV_R_UNABLE_TO_LOAD_SHA256);
         return 0;
@@ -484,8 +484,8 @@ static int scrypt_alg(const char *pass, size_t passlen,
      */
     Blen = p * 128 * r;
     /*
-     * Yet we pass it as integer to PKCS5_PBKDF2_HMAC... [This would
-     * have to be revised when/if PKCS5_PBKDF2_HMAC accepts size_t.]
+     * Yet we pass it as integer to OPENSSL_BOX_PKCS5_PBKDF2_HMAC... [This would
+     * have to be revised when/if OPENSSL_BOX_PKCS5_PBKDF2_HMAC accepts size_t.]
      */
     if (Blen > INT_MAX) {
         ERR_raise(ERR_LIB_EVP, EVP_R_MEMORY_LIMIT_EXCEEDED);

@@ -560,9 +560,9 @@ static EVP_PKEY *new_raw_private_key(const char *curvename,
     int ecx = (curvename[0] == 'X');
 
     if (ecx)
-        ctx = EVP_PKEY_CTX_new_from_name(libctx, curvename, NULL);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, curvename, NULL);
     else
-        ctx = EVP_PKEY_CTX_new_from_name(libctx, "EC", NULL);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "EC", NULL);
     if (ctx == NULL)
         return 0;
 
@@ -596,7 +596,7 @@ static EVP_PKEY *new_raw_private_key(const char *curvename,
 
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0)
           goto err;
-    if (EVP_PKEY_fromdata(ctx, &key, EVP_PKEY_KEYPAIR, params) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &key, EVP_PKEY_KEYPAIR, params) <= 0)
           goto err;
     ok = 1;
 err:
@@ -621,9 +621,9 @@ static EVP_PKEY *new_raw_public_key(const char *curvename,
     int ecx = (curvename[0] == 'X');
 
     if (ecx)
-        ctx = EVP_PKEY_CTX_new_from_name(libctx, curvename, NULL);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, curvename, NULL);
     else
-        ctx = EVP_PKEY_CTX_new_from_name(libctx, "EC", NULL);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "EC", NULL);
     if (ctx == NULL)
         return 0;
 
@@ -635,7 +635,7 @@ static EVP_PKEY *new_raw_public_key(const char *curvename,
     *p = OSSL_PARAM_construct_end();
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0)
           goto err;
-    if (EVP_PKEY_fromdata(ctx, &key, EVP_PKEY_PUBLIC_KEY, params) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &key, EVP_PKEY_PUBLIC_KEY, params) <= 0)
           goto err;
     ok = 1;
 err:
@@ -664,18 +664,18 @@ static int do_encap(const TEST_ENCAPDATA *t, EVP_PKEY *rpub, EVP_PKEY *spriv)
                                              (char *)t->ikmE, t->ikmElen);
     *p = OSSL_PARAM_construct_end();
 
-    if (!TEST_ptr(sctx = EVP_PKEY_CTX_new_from_pkey(libctx, rpub, NULL)))
+    if (!TEST_ptr(sctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, rpub, NULL)))
         goto err;
     if (t->spriv == NULL) {
         if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_encapsulate_init(sctx, params), 1))
             goto err;
     } else {
-        if (!TEST_int_eq(EVP_PKEY_auth_encapsulate_init(sctx, spriv, params), 1))
+        if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_auth_encapsulate_init(sctx, spriv, params), 1))
         goto err;
     }
-    ret = TEST_int_eq(EVP_PKEY_encapsulate(sctx, NULL, &enclen, NULL,
+    ret = TEST_int_eq(OPENSSL_BOX_EVP_PKEY_encapsulate(sctx, NULL, &enclen, NULL,
                                               &secretlen), 1)
-          && TEST_int_eq(EVP_PKEY_encapsulate(sctx, enc, &enclen, secret,
+          && TEST_int_eq(OPENSSL_BOX_EVP_PKEY_encapsulate(sctx, enc, &enclen, secret,
                                               &secretlen), 1)
           && TEST_mem_eq(enc, enclen, t->expected_enc, t->expected_enclen)
           && TEST_mem_eq(secret, secretlen,
@@ -693,20 +693,20 @@ static int do_decap(const TEST_ENCAPDATA *t, EVP_PKEY *rpriv, EVP_PKEY *spub)
     unsigned char secret[256] = { 0, };
     size_t secretlen = 0;
 
-    if (!TEST_ptr(recipctx = EVP_PKEY_CTX_new_from_pkey(libctx, rpriv, NULL)))
+    if (!TEST_ptr(recipctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, rpriv, NULL)))
         goto err;
     if (t->spub == NULL) {
         if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_decapsulate_init(recipctx, opparam), 1))
             goto err;
     } else {
-        if (!TEST_int_eq(EVP_PKEY_auth_decapsulate_init(recipctx, spub,
+        if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_auth_decapsulate_init(recipctx, spub,
                                                         opparam), 1))
             goto err;
     }
-    ret = TEST_int_eq(EVP_PKEY_decapsulate(recipctx, NULL, &secretlen,
+    ret = TEST_int_eq(OPENSSL_BOX_EVP_PKEY_decapsulate(recipctx, NULL, &secretlen,
                                               t->expected_enc,
                                               t->expected_enclen), 1)
-          && TEST_int_eq(EVP_PKEY_decapsulate(recipctx, secret, &secretlen,
+          && TEST_int_eq(OPENSSL_BOX_EVP_PKEY_decapsulate(recipctx, secret, &secretlen,
                                               t->expected_enc,
                                               t->expected_enclen), 1)
           && TEST_mem_eq(secret, secretlen,

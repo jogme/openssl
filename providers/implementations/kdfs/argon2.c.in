@@ -671,17 +671,17 @@ static void initial_hash(uint8_t *blockhash, KDF_ARGON2 *ctx)
     args[6] = ctx->pwdlen;
 
     mdctx = EVP_MD_CTX_create();
-    if (mdctx == NULL || EVP_DigestInit_ex(mdctx, ctx->md, NULL) != 1)
+    if (mdctx == NULL || OPENSSL_BOX_EVP_DigestInit_ex(mdctx, ctx->md, NULL) != 1)
         goto fail;
 
     for (tmp = 0; tmp < sizeof(args) / sizeof(uint32_t); ++tmp) {
         store32((uint8_t *) &value, args[tmp]);
-        if (EVP_DigestUpdate(mdctx, &value, sizeof(value)) != 1)
+        if (OPENSSL_BOX_EVP_DigestUpdate(mdctx, &value, sizeof(value)) != 1)
             goto fail;
     }
 
     if (ctx->pwd != NULL) {
-        if (EVP_DigestUpdate(mdctx, ctx->pwd, ctx->pwdlen) != 1)
+        if (OPENSSL_BOX_EVP_DigestUpdate(mdctx, ctx->pwd, ctx->pwdlen) != 1)
             goto fail;
         if (ctx->early_clean) {
             OPENSSL_cleanse(ctx->pwd, ctx->pwdlen);
@@ -691,19 +691,19 @@ static void initial_hash(uint8_t *blockhash, KDF_ARGON2 *ctx)
 
     store32((uint8_t *) &value, ctx->saltlen);
 
-    if (EVP_DigestUpdate(mdctx, &value, sizeof(value)) != 1)
+    if (OPENSSL_BOX_EVP_DigestUpdate(mdctx, &value, sizeof(value)) != 1)
         goto fail;
 
     if (ctx->salt != NULL)
-        if (EVP_DigestUpdate(mdctx, ctx->salt, ctx->saltlen) != 1)
+        if (OPENSSL_BOX_EVP_DigestUpdate(mdctx, ctx->salt, ctx->saltlen) != 1)
             goto fail;
 
     store32((uint8_t *) &value, ctx->secretlen);
-    if (EVP_DigestUpdate(mdctx, &value, sizeof(value)) != 1)
+    if (OPENSSL_BOX_EVP_DigestUpdate(mdctx, &value, sizeof(value)) != 1)
         goto fail;
 
     if (ctx->secret != NULL) {
-        if (EVP_DigestUpdate(mdctx, ctx->secret, ctx->secretlen) != 1)
+        if (OPENSSL_BOX_EVP_DigestUpdate(mdctx, ctx->secret, ctx->secretlen) != 1)
             goto fail;
         if (ctx->early_clean) {
             OPENSSL_cleanse(ctx->secret, ctx->secretlen);
@@ -712,15 +712,15 @@ static void initial_hash(uint8_t *blockhash, KDF_ARGON2 *ctx)
     }
 
     store32((uint8_t *) &value, ctx->adlen);
-    if (EVP_DigestUpdate(mdctx, &value, sizeof(value)) != 1)
+    if (OPENSSL_BOX_EVP_DigestUpdate(mdctx, &value, sizeof(value)) != 1)
         goto fail;
 
     if (ctx->ad != NULL)
-        if (EVP_DigestUpdate(mdctx, ctx->ad, ctx->adlen) != 1)
+        if (OPENSSL_BOX_EVP_DigestUpdate(mdctx, ctx->ad, ctx->adlen) != 1)
             goto fail;
 
     tmp = ARGON2_PREHASH_DIGEST_LENGTH;
-    if (EVP_DigestFinal_ex(mdctx, blockhash, &tmp) != 1)
+    if (OPENSSL_BOX_EVP_DigestFinal_ex(mdctx, blockhash, &tmp) != 1)
         goto fail;
 
 fail:
@@ -807,9 +807,9 @@ static int blake2b_mac(EVP_MAC *mac, void *out, size_t outlen, const void *in,
     par[par_n++] = OSSL_PARAM_construct_end();
 
     ret = OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, par) == 1
-        && EVP_MAC_init(ctx, NULL, 0, NULL) == 1
+        && OPENSSL_BOX_EVP_MAC_init(ctx, NULL, 0, NULL) == 1
         && OPENSSL_BOX_EVP_MAC_update(ctx, in, inlen) == 1
-        && EVP_MAC_final(ctx, out, (size_t *) &out_written, outlen) == 1;
+        && OPENSSL_BOX_EVP_MAC_final(ctx, out, (size_t *) &out_written, outlen) == 1;
 
 fail:
     OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
@@ -829,9 +829,9 @@ static int blake2b_md(EVP_MD *md, void *out, size_t outlen, const void *in,
     par[0] = OSSL_PARAM_construct_size_t(OSSL_DIGEST_PARAM_SIZE, &outlen);
     par[1] = OSSL_PARAM_construct_end();
 
-    ret = EVP_DigestInit_ex2(ctx, md, par) == 1
-        && EVP_DigestUpdate(ctx, in, inlen) == 1
-        && EVP_DigestFinal_ex(ctx, out, NULL) == 1;
+    ret = OPENSSL_BOX_EVP_DigestInit_ex2(ctx, md, par) == 1
+        && OPENSSL_BOX_EVP_DigestUpdate(ctx, in, inlen) == 1
+        && OPENSSL_BOX_EVP_DigestFinal_ex(ctx, out, NULL) == 1;
 
     OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
@@ -874,10 +874,10 @@ static int blake2b_long(EVP_MD *md, EVP_MAC *mac, unsigned char *out,
     par[0] = OSSL_PARAM_construct_size_t(OSSL_DIGEST_PARAM_SIZE, &outlen_md);
     par[1] = OSSL_PARAM_construct_end();
 
-    ret = EVP_DigestInit_ex2(ctx, md, par) == 1
-        && EVP_DigestUpdate(ctx, outlen_bytes, sizeof(outlen_bytes)) == 1
-        && EVP_DigestUpdate(ctx, in, inlen) == 1
-        && EVP_DigestFinal_ex(ctx, (outlen > BLAKE2B_OUTBYTES) ? outbuf : out,
+    ret = OPENSSL_BOX_EVP_DigestInit_ex2(ctx, md, par) == 1
+        && OPENSSL_BOX_EVP_DigestUpdate(ctx, outlen_bytes, sizeof(outlen_bytes)) == 1
+        && OPENSSL_BOX_EVP_DigestUpdate(ctx, in, inlen) == 1
+        && OPENSSL_BOX_EVP_DigestFinal_ex(ctx, (outlen > BLAKE2B_OUTBYTES) ? outbuf : out,
                               NULL) == 1;
 
     if (ret == 0)
@@ -1028,7 +1028,7 @@ static int kdf_argon2_derive(void *vctx, unsigned char *out, size_t outlen,
         return 0;
 
     if (ctx->mac == NULL)
-        ctx->mac = EVP_MAC_fetch(ctx->libctx, "blake2bmac", ctx->propq);
+        ctx->mac = OPENSSL_BOX_EVP_MAC_fetch(ctx->libctx, "blake2bmac", ctx->propq);
     if (ctx->mac == NULL) {
         ERR_raise_data(ERR_LIB_PROV, PROV_R_MISSING_MAC,
                        "cannot fetch blake2bmac");
@@ -1036,7 +1036,7 @@ static int kdf_argon2_derive(void *vctx, unsigned char *out, size_t outlen,
     }
 
     if (ctx->md == NULL)
-        ctx->md = EVP_MD_fetch(ctx->libctx, "blake2b512", ctx->propq);
+        ctx->md = OPENSSL_BOX_EVP_MD_fetch(ctx->libctx, "blake2b512", ctx->propq);
     if (ctx->md == NULL) {
         ERR_raise_data(ERR_LIB_PROV, PROV_R_MISSING_MESSAGE_DIGEST,
                        "cannot fetch blake2b512");

@@ -81,8 +81,8 @@ This documentation is primarily aimed at provider authors. See L<provider(7)>
 for further information.
 
 The CIPHER operation enables providers to implement cipher algorithms and make
-them available to applications via the API functions L<EVP_EncryptInit_ex(3)>,
-L<EVP_EncryptUpdate(3)> and L<EVP_EncryptFinal(3)> (as well as the decrypt
+them available to applications via the API functions L<OPENSSL_BOX_EVP_EncryptInit_ex(3)>,
+L<OPENSSL_BOX_EVP_EncryptUpdate(3)> and L<OPENSSL_BOX_EVP_EncryptFinal(3)> (as well as the decrypt
 equivalents and other related functions).
 
 All "functions" mentioned here are passed as function pointers between
@@ -186,9 +186,9 @@ In such cases a cipher implementation will typically cache partial blocks of
 input data until a complete block is obtained.
 The pointers I<out> and I<in> may point to the same location, in which
 case the encryption must be done in-place. If I<out> and I<in> point to different
-locations, the requirements of L<EVP_EncryptUpdate(3)> and L<EVP_DecryptUpdate(3)>
+locations, the requirements of L<OPENSSL_BOX_EVP_EncryptUpdate(3)> and L<OPENSSL_BOX_EVP_DecryptUpdate(3)>
 guarantee that the two buffers are disjoint.
-Similarly, the requirements of L<EVP_EncryptUpdate(3)> and L<EVP_DecryptUpdate(3)>
+Similarly, the requirements of L<OPENSSL_BOX_EVP_EncryptUpdate(3)> and L<OPENSSL_BOX_EVP_DecryptUpdate(3)>
 ensure that the buffer pointed to by I<out> contains sufficient room for the
 operation being performed.
 
@@ -199,14 +199,14 @@ The I<cctx> parameter contains a pointer to the provider side context.
 Any final encryption/decryption output should be written to I<out> and the
 amount of data written to I<*outl> which should not exceed I<outsize> bytes.
 The same expectations apply to I<outsize> as documented for
-L<EVP_EncryptFinal(3)> and L<EVP_DecryptFinal(3)>.
+L<OPENSSL_BOX_EVP_EncryptFinal(3)> and L<OPENSSL_BOX_EVP_DecryptFinal(3)>.
 
 OSSL_FUNC_cipher_cipher() performs encryption/decryption using the provider side cipher
 context in the I<cctx> parameter that should have been previously initialised via
 a call to OSSL_FUNC_cipher_encrypt_init() or OSSL_FUNC_cipher_decrypt_init().
 This should call the raw underlying cipher function without any padding.
 This will be invoked in the provider as a result of the application calling
-L<EVP_Cipher(3)>.
+L<OPENSSL_BOX_EVP_Cipher(3)>.
 The application is responsible for ensuring that the input is a multiple of the
 block length.
 The data to be encrypted/decrypted will be in I<in>, and it will be I<inl> bytes
@@ -222,7 +222,7 @@ The I<numpipes> parameter is the number of pipes in the pipeline. The I<iv> para
 is an array of buffers with IVs, each I<ivlen> bytes long. The I<in> and I<out> are
 arrays of buffer pointers. The I<inl> and I<outl>, I<outsize> are arrays of size_t
 representing corresponding buffer length as similar to the non-pipeline variants.
-All arrays are of length I<numpipes>. See L<EVP_CipherPipelineEncryptInit(3)> for more
+All arrays are of length I<numpipes>. See L<OPENSSL_BOX_EVP_CipherPipelineEncryptInit(3)> for more
 information.
 
 =head2 Cipher Parameters
@@ -253,7 +253,7 @@ not NULL.  Otherwise, they return the parameters associated with the
 provider side algorithm I<provctx>.
 
 Parameters currently recognised by built-in ciphers are listed in
-L<EVP_EncryptInit(3)/PARAMETERS>.
+L<OPENSSL_BOX_EVP_EncryptInit(3)/PARAMETERS>.
 Not all parameters are relevant to, or are understood by all ciphers.
 
 =head1 RETURN VALUES
@@ -283,7 +283,7 @@ L<EVP_CIPHER-CAMELLIA(7)>, L<EVP_CIPHER-CAST(7)>, L<EVP_CIPHER-CHACHA(7)>,
 L<EVP_CIPHER-DES(7)>, L<EVP_CIPHER-IDEA(7)>, L<EVP_CIPHER-RC2(7)>,
 L<EVP_CIPHER-RC4(7)>, L<EVP_CIPHER-RC5(7)>, L<EVP_CIPHER-SEED(7)>,
 L<EVP_CIPHER-SM4(7)>, L<EVP_CIPHER-NULL(7)>,
-L<life_cycle-cipher(7)>, L<EVP_EncryptInit(3)>
+L<life_cycle-cipher(7)>, L<OPENSSL_BOX_EVP_EncryptInit(3)>
 
 =head1 HISTORY
 

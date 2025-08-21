@@ -8,7 +8,7 @@
  */
 
 /*
- * Needed for OPENSSL_BOX_EVP_PKEY_get0_asn1 and EVP_PKEY_asn1_get0_info
+ * Needed for OPENSSL_BOX_EVP_PKEY_get0_asn1 and OPENSSL_BOX_EVP_PKEY_asn1_get0_info
  */
 #define OPENSSL_SUPPRESS_DEPRECATED
 
@@ -261,7 +261,7 @@ const char *OPENSSL_BOX_EVP_PKEY_get0_type_name(const EVP_PKEY *key)
     /* Otherwise fallback to legacy */
     ameth = OPENSSL_BOX_EVP_PKEY_get0_asn1(key);
     if (ameth != NULL)
-        EVP_PKEY_asn1_get0_info(NULL, NULL,
+        OPENSSL_BOX_EVP_PKEY_asn1_get0_info(NULL, NULL,
                                 NULL, NULL, &name, ameth);
 #endif
 

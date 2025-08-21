@@ -89,7 +89,7 @@ static EVP_PKEY *load_pkey_asn1(const unsigned char *bytes, int len)
 {
     EVP_PKEY *pkey = NULL;
 
-    pkey = d2i_AutoPrivateKey(NULL, &bytes, len);
+    pkey = OPENSSL_BOX_d2i_AutoPrivateKey(NULL, &bytes, len);
     if (!TEST_ptr(pkey))
         goto err;
 err:
@@ -170,7 +170,7 @@ static void generate_p12(PKCS12_BUILDER *pb, const PKCS12_ENC *mac)
         if (legacy)
             md = (EVP_MD *)EVP_get_digestbynid(mac->nid);
         else
-            md = EVP_MD_fetch(test_ctx, OBJ_nid2sn(mac->nid), test_propq);
+            md = OPENSSL_BOX_EVP_MD_fetch(test_ctx, OBJ_nid2sn(mac->nid), test_propq);
 
         if (!TEST_true(PKCS12_set_mac(p12, mac->pass, (int)strlen(mac->pass),
                                       NULL, 0, mac->iter, md))) {

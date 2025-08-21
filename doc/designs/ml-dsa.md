@@ -97,14 +97,14 @@ Signing API
 As only the one-shot implementation is required and the message is not digested
 the API's used should be
 
-`EVP_PKEY_sign_message_init()`, `EVP_PKEY_sign()`,
-`EVP_PKEY_verify_message_init()`, `EVP_PKEY_verify()`.
+`OPENSSL_BOX_EVP_PKEY_sign_message_init()`, `OPENSSL_BOX_EVP_PKEY_sign()`,
+`OPENSSL_BOX_EVP_PKEY_verify_message_init()`, `OPENSSL_BOX_EVP_PKEY_verify()`.
 
 OpenSSL command line support
 ----------------------------
 
-For backwards compatability reasons `EVP_DigestSignInit_ex()`,
-`EVP_DigestSign()`, `EVP_DigestVerifyInit_ex()` and `EVP_DigestVerify()` may
+For backwards compatability reasons `OPENSSL_BOX_EVP_DigestSignInit_ex()`,
+`OPENSSL_BOX_EVP_DigestSign()`, `OPENSSL_BOX_EVP_DigestVerifyInit_ex()` and `OPENSSL_BOX_EVP_DigestVerify()` may
 also be used, but the digest passed in `mdname` must be NULL (i.e. it
 effectively behaves the same as above).
 Passing a non NULL digest results in an error.

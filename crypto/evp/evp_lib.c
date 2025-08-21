@@ -57,7 +57,7 @@ int OPENSSL_BOX_EVP_CIPHER_get_asn1_iv(EVP_CIPHER_CTX *ctx, ASN1_TYPE *type)
         if (i != (int)l)
             return -1;
 
-        if (!EVP_CipherInit_ex(ctx, NULL, NULL, NULL, iv, -1))
+        if (!OPENSSL_BOX_EVP_CipherInit_ex(ctx, NULL, NULL, NULL, iv, -1))
             return -1;
     }
     return i;
@@ -384,7 +384,7 @@ int OPENSSL_BOX_EVP_CIPHER_impl_ctx_size(const EVP_CIPHER *e)
     return e->ctx_size;
 }
 
-int EVP_Cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
+int OPENSSL_BOX_EVP_Cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                const unsigned char *in, unsigned int inl)
 {
     if (ctx == NULL || ctx->cipher == NULL)
@@ -718,7 +718,7 @@ const char *OPENSSL_BOX_EVP_CIPHER_get0_description(const EVP_CIPHER *cipher)
 #endif
 }
 
-int EVP_CIPHER_names_do_all(const EVP_CIPHER *cipher,
+int OPENSSL_BOX_EVP_CIPHER_names_do_all(const EVP_CIPHER *cipher,
                             void (*fn)(const char *name, void *data),
                             void *data)
 {
@@ -776,7 +776,7 @@ const char *OPENSSL_BOX_EVP_MD_get0_name(const EVP_MD *md)
 #endif
 }
 
-int EVP_MD_names_do_all(const EVP_MD *md,
+int OPENSSL_BOX_EVP_MD_names_do_all(const EVP_MD *md,
                         void (*fn)(const char *name, void *data),
                         void *data)
 {
@@ -918,7 +918,7 @@ int OPENSSL_BOX_EVP_MD_meth_set_init(EVP_MD *md, int (*init)(EVP_MD_CTX *ctx))
     md->init = init;
     return 1;
 }
-int EVP_MD_meth_set_update(EVP_MD *md, int (*update)(EVP_MD_CTX *ctx,
+int OPENSSL_BOX_EVP_MD_meth_set_update(EVP_MD *md, int (*update)(EVP_MD_CTX *ctx,
                                                      const void *data,
                                                      size_t count))
 {
@@ -928,7 +928,7 @@ int EVP_MD_meth_set_update(EVP_MD *md, int (*update)(EVP_MD_CTX *ctx,
     md->update = update;
     return 1;
 }
-int EVP_MD_meth_set_final(EVP_MD *md, int (*final)(EVP_MD_CTX *ctx,
+int OPENSSL_BOX_EVP_MD_meth_set_final(EVP_MD *md, int (*final)(EVP_MD_CTX *ctx,
                                                    unsigned char *md))
 {
     if (md->final != NULL)
@@ -937,7 +937,7 @@ int EVP_MD_meth_set_final(EVP_MD *md, int (*final)(EVP_MD_CTX *ctx,
     md->final = final;
     return 1;
 }
-int EVP_MD_meth_set_copy(EVP_MD *md, int (*copy)(EVP_MD_CTX *to,
+int OPENSSL_BOX_EVP_MD_meth_set_copy(EVP_MD *md, int (*copy)(EVP_MD_CTX *to,
                                                  const EVP_MD_CTX *from))
 {
     if (md->copy != NULL)
@@ -954,7 +954,7 @@ int OPENSSL_BOX_EVP_MD_meth_set_cleanup(EVP_MD *md, int (*cleanup)(EVP_MD_CTX *c
     md->cleanup = cleanup;
     return 1;
 }
-int EVP_MD_meth_set_ctrl(EVP_MD *md, int (*ctrl)(EVP_MD_CTX *ctx, int cmd,
+int OPENSSL_BOX_EVP_MD_meth_set_ctrl(EVP_MD *md, int (*ctrl)(EVP_MD_CTX *ctx, int cmd,
                                                  int p1, void *p2))
 {
     if (md->md_ctrl != NULL)
@@ -1103,7 +1103,7 @@ int (*EVP_MD_CTX_update_fn(EVP_MD_CTX *ctx))(EVP_MD_CTX *ctx,
     return ctx->update;
 }
 
-void EVP_MD_CTX_set_update_fn(EVP_MD_CTX *ctx,
+void OPENSSL_BOX_EVP_MD_CTX_set_update_fn(EVP_MD_CTX *ctx,
                               int (*update) (EVP_MD_CTX *ctx,
                                              const void *data, size_t count))
 {
@@ -1165,7 +1165,7 @@ int OPENSSL_BOX_EVP_PKEY_CTX_set_group_name(EVP_PKEY_CTX *ctx, const char *name)
 
     if (ctx == NULL || !EVP_PKEY_CTX_IS_GEN_OP(ctx)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
 
@@ -1185,7 +1185,7 @@ int OPENSSL_BOX_EVP_PKEY_CTX_get_group_name(EVP_PKEY_CTX *ctx, char *name, size_
     if (ctx == NULL || !EVP_PKEY_CTX_IS_GEN_OP(ctx)) {
         /* There is no legacy support for this */
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
 
@@ -1213,7 +1213,7 @@ static EVP_PKEY *evp_pkey_keygen(OSSL_LIB_CTX *libctx, const char *name,
                                  const char *propq, const OSSL_PARAM *params)
 {
     EVP_PKEY *pkey = NULL;
-    EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(libctx, name, propq);
+    EVP_PKEY_CTX *ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, name, propq);
 
     if (ctx != NULL
             && OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) > 0
@@ -1224,7 +1224,7 @@ static EVP_PKEY *evp_pkey_keygen(OSSL_LIB_CTX *libctx, const char *name,
     return pkey;
 }
 
-EVP_PKEY *EVP_PKEY_Q_keygen(OSSL_LIB_CTX *libctx, const char *propq,
+EVP_PKEY *OPENSSL_BOX_EVP_PKEY_Q_keygen(OSSL_LIB_CTX *libctx, const char *propq,
                             const char *type, ...)
 {
     va_list args;

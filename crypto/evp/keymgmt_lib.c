@@ -529,7 +529,7 @@ void *evp_keymgmt_util_gen(EVP_PKEY *target, EVP_KEYMGMT *keymgmt,
 }
 
 /*
- * Returns the same numbers as EVP_PKEY_get_default_digest_name()
+ * Returns the same numbers as OPENSSL_BOX_EVP_PKEY_get_default_digest_name()
  * When the string from the EVP_KEYMGMT implementation is "", we use
  * SN_undef, since that corresponds to what EVP_PKEY_get_default_nid()
  * returns for no digest.

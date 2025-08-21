@@ -4,10 +4,10 @@
 
 OPENSSL_BOX_EVP_CIPHER_meth_new, OPENSSL_BOX_EVP_CIPHER_meth_dup, OPENSSL_BOX_EVP_CIPHER_meth_free,
 OPENSSL_BOX_EVP_CIPHER_meth_set_iv_length, OPENSSL_BOX_EVP_CIPHER_meth_set_flags,
-OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size, EVP_CIPHER_meth_set_init,
-EVP_CIPHER_meth_set_do_cipher, EVP_CIPHER_meth_set_cleanup,
-EVP_CIPHER_meth_set_set_asn1_params, EVP_CIPHER_meth_set_get_asn1_params,
-EVP_CIPHER_meth_set_ctrl, EVP_CIPHER_meth_get_init,
+OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size, OPENSSL_BOX_EVP_CIPHER_meth_set_init,
+OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher, OPENSSL_BOX_EVP_CIPHER_meth_set_cleanup,
+OPENSSL_BOX_EVP_CIPHER_meth_set_set_asn1_params, OPENSSL_BOX_EVP_CIPHER_meth_set_get_asn1_params,
+OPENSSL_BOX_EVP_CIPHER_meth_set_ctrl, EVP_CIPHER_meth_get_init,
 EVP_CIPHER_meth_get_do_cipher, EVP_CIPHER_meth_get_cleanup,
 EVP_CIPHER_meth_get_set_asn1_params, EVP_CIPHER_meth_get_get_asn1_params,
 EVP_CIPHER_meth_get_ctrl
@@ -28,25 +28,25 @@ see L<openssl_user_macros(7)>:
  int OPENSSL_BOX_EVP_CIPHER_meth_set_iv_length(EVP_CIPHER *cipher, int iv_len);
  int OPENSSL_BOX_EVP_CIPHER_meth_set_flags(EVP_CIPHER *cipher, unsigned long flags);
  int OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(EVP_CIPHER *cipher, int ctx_size);
- int EVP_CIPHER_meth_set_init(EVP_CIPHER *cipher,
+ int OPENSSL_BOX_EVP_CIPHER_meth_set_init(EVP_CIPHER *cipher,
                               int (*init)(EVP_CIPHER_CTX *ctx,
                                           const unsigned char *key,
                                           const unsigned char *iv,
                                           int enc));
- int EVP_CIPHER_meth_set_do_cipher(EVP_CIPHER *cipher,
+ int OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(EVP_CIPHER *cipher,
                                    int (*do_cipher)(EVP_CIPHER_CTX *ctx,
                                                     unsigned char *out,
                                                     const unsigned char *in,
                                                     size_t inl));
- int EVP_CIPHER_meth_set_cleanup(EVP_CIPHER *cipher,
+ int OPENSSL_BOX_EVP_CIPHER_meth_set_cleanup(EVP_CIPHER *cipher,
                                  int (*cleanup)(EVP_CIPHER_CTX *));
- int EVP_CIPHER_meth_set_set_asn1_params(EVP_CIPHER *cipher,
+ int OPENSSL_BOX_EVP_CIPHER_meth_set_set_asn1_params(EVP_CIPHER *cipher,
                                          int (*set_asn1_parameters)(EVP_CIPHER_CTX *,
                                                                     ASN1_TYPE *));
- int EVP_CIPHER_meth_set_get_asn1_params(EVP_CIPHER *cipher,
+ int OPENSSL_BOX_EVP_CIPHER_meth_set_get_asn1_params(EVP_CIPHER *cipher,
                                          int (*get_asn1_parameters)(EVP_CIPHER_CTX *,
                                                                     ASN1_TYPE *));
- int EVP_CIPHER_meth_set_ctrl(EVP_CIPHER *cipher,
+ int OPENSSL_BOX_EVP_CIPHER_meth_set_ctrl(EVP_CIPHER *cipher,
                               int (*ctrl)(EVP_CIPHER_CTX *, int type,
                                           int arg, void *ptr));
 
@@ -165,7 +165,7 @@ This is only useful for CFB1 ciphers.
 
 Indicates that the cipher uses ciphertext stealing. This is currently
 used to indicate that the cipher is a one shot that only allows a single call to
-EVP_CipherUpdate().
+OPENSSL_BOX_EVP_CipherUpdate().
 
 =item EVP_CIPH_FLAG_CUSTOM_CIPHER
 
@@ -187,20 +187,20 @@ to certain TLS ciphers.
 OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size() sets the size of the EVP_CIPHER's
 implementation context so that it can be automatically allocated.
 
-EVP_CIPHER_meth_set_init() sets the cipher init function for
+OPENSSL_BOX_EVP_CIPHER_meth_set_init() sets the cipher init function for
 B<cipher>.
-The cipher init function is called by EVP_CipherInit(),
-EVP_CipherInit_ex(), EVP_EncryptInit(), EVP_EncryptInit_ex(),
-EVP_DecryptInit(), EVP_DecryptInit_ex().
+The cipher init function is called by OPENSSL_BOX_EVP_CipherInit(),
+OPENSSL_BOX_EVP_CipherInit_ex(), OPENSSL_BOX_EVP_EncryptInit(), OPENSSL_BOX_EVP_EncryptInit_ex(),
+OPENSSL_BOX_EVP_DecryptInit(), OPENSSL_BOX_EVP_DecryptInit_ex().
 
-EVP_CIPHER_meth_set_do_cipher() sets the cipher function for
+OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher() sets the cipher function for
 B<cipher>.
-The cipher function is called by EVP_CipherUpdate(),
-EVP_EncryptUpdate(), EVP_DecryptUpdate(), EVP_CipherFinal(),
-EVP_EncryptFinal(), EVP_EncryptFinal_ex(), EVP_DecryptFinal() and
-EVP_DecryptFinal_ex().
+The cipher function is called by OPENSSL_BOX_EVP_CipherUpdate(),
+OPENSSL_BOX_EVP_EncryptUpdate(), OPENSSL_BOX_EVP_DecryptUpdate(), OPENSSL_BOX_EVP_CipherFinal(),
+OPENSSL_BOX_EVP_EncryptFinal(), OPENSSL_BOX_EVP_EncryptFinal_ex(), OPENSSL_BOX_EVP_DecryptFinal() and
+OPENSSL_BOX_EVP_DecryptFinal_ex().
 
-EVP_CIPHER_meth_set_cleanup() sets the function for B<cipher> to do
+OPENSSL_BOX_EVP_CIPHER_meth_set_cleanup() sets the function for B<cipher> to do
 extra cleanup before the method's private data structure is cleaned
 out and freed.
 Note that the cleanup function is passed a B<EVP_CIPHER_CTX *>, the
@@ -209,10 +209,10 @@ OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data().
 This cleanup function is called by OPENSSL_BOX_EVP_CIPHER_CTX_reset() and
 OPENSSL_BOX_EVP_CIPHER_CTX_free().
 
-EVP_CIPHER_meth_set_set_asn1_params() sets the function for B<cipher>
+OPENSSL_BOX_EVP_CIPHER_meth_set_set_asn1_params() sets the function for B<cipher>
 to set the AlgorithmIdentifier "parameter" based on the passed cipher.
 This function is called by OPENSSL_BOX_EVP_CIPHER_param_to_asn1().
-EVP_CIPHER_meth_set_get_asn1_params() sets the function for B<cipher>
+OPENSSL_BOX_EVP_CIPHER_meth_set_get_asn1_params() sets the function for B<cipher>
 that sets the cipher parameters based on an ASN.1 AlgorithmIdentifier
 "parameter".
 Both these functions are needed when there is a need for custom data
@@ -220,7 +220,7 @@ Both these functions are needed when there is a need for custom data
 They are called by OPENSSL_BOX_EVP_CIPHER_param_to_asn1() and
 OPENSSL_BOX_EVP_CIPHER_asn1_to_param() respectively if defined.
 
-EVP_CIPHER_meth_set_ctrl() sets the control function for B<cipher>.
+OPENSSL_BOX_EVP_CIPHER_meth_set_ctrl() sets the control function for B<cipher>.
 
 EVP_CIPHER_meth_get_init(), EVP_CIPHER_meth_get_do_cipher(),
 EVP_CIPHER_meth_get_cleanup(), EVP_CIPHER_meth_get_set_asn1_params(),
@@ -238,7 +238,7 @@ respective B<cipher> function.
 
 =head1 SEE ALSO
 
-L<EVP_EncryptInit(3)>
+L<OPENSSL_BOX_EVP_EncryptInit(3)>
 
 =head1 HISTORY
 

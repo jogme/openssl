@@ -292,7 +292,7 @@ static int find(const ESS_CERT_ID *cid, const ESS_CERT_ID_V2 *cid_v2,
         OBJ_obj2txt(name, sizeof(name), cid_v2->hash_alg->algorithm, 0);
 
     (void)ERR_set_mark();
-    md = EVP_MD_fetch(NULL, name, NULL);
+    md = OPENSSL_BOX_EVP_MD_fetch(NULL, name, NULL);
 
     if (md == NULL)
         md = (EVP_MD *)OPENSSL_BOX_EVP_get_digestbyname(name);

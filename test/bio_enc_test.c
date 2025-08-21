@@ -53,7 +53,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
     b = BIO_new(OPENSSL_BOX_BIO_f_cipher());
     if (!TEST_ptr(b))
         return 0;
-    if (!TEST_true(BIO_set_cipher(b, cipher, key, iv, ENCRYPT)))
+    if (!TEST_true(OPENSSL_BOX_BIO_set_cipher(b, cipher, key, iv, ENCRYPT)))
         goto err;
     mem = BIO_new_mem_buf(inp, DATA_SIZE);
     if (!TEST_ptr(mem))
@@ -67,7 +67,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
         b = BIO_new(OPENSSL_BOX_BIO_f_cipher());
         if (!TEST_ptr(b))
             return 0;
-        if (!TEST_true(BIO_set_cipher(b, cipher, key, iv, ENCRYPT))) {
+        if (!TEST_true(OPENSSL_BOX_BIO_set_cipher(b, cipher, key, iv, ENCRYPT))) {
             TEST_info("Split encrypt failed @ operation %d", i);
             goto err;
         }
@@ -106,7 +106,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
         b = BIO_new(OPENSSL_BOX_BIO_f_cipher());
         if (!TEST_ptr(b))
             return 0;
-        if (!TEST_true(BIO_set_cipher(b, cipher, key, iv, ENCRYPT))) {
+        if (!TEST_true(OPENSSL_BOX_BIO_set_cipher(b, cipher, key, iv, ENCRYPT))) {
             TEST_info("Small chunk encrypt failed @ operation %d", i);
             goto err;
         }
@@ -132,7 +132,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
     b = BIO_new(OPENSSL_BOX_BIO_f_cipher());
     if (!TEST_ptr(b))
         return 0;
-    if (!TEST_true(BIO_set_cipher(b, cipher, key, iv, DECRYPT)))
+    if (!TEST_true(OPENSSL_BOX_BIO_set_cipher(b, cipher, key, iv, DECRYPT)))
         goto err;
     /* Use original reference output as input */
     mem = BIO_new_mem_buf(ref, lref);
@@ -142,7 +142,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
 #if 0
     /*
      * This is wrong to do, it always fails, and incorrectly ends up
-     * calling `EVP_CipherFinal()` and setting ctx->finished = 1, ...
+     * calling `OPENSSL_BOX_EVP_CipherFinal()` and setting ctx->finished = 1, ...
      * all of which are unwanted.  But just deleting this is less
      * instructive to future readers of the code.  Don't call BIO_flush
      * until you're done either reading or writing and want to finalise
@@ -162,7 +162,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
         b = BIO_new(OPENSSL_BOX_BIO_f_cipher());
         if (!TEST_ptr(b))
             return 0;
-        if (!TEST_true(BIO_set_cipher(b, cipher, key, iv, DECRYPT))) {
+        if (!TEST_true(OPENSSL_BOX_BIO_set_cipher(b, cipher, key, iv, DECRYPT))) {
             TEST_info("Split decrypt failed @ operation %d", i);
             goto err;
         }
@@ -194,7 +194,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
         b = BIO_new(OPENSSL_BOX_BIO_f_cipher());
         if (!TEST_ptr(b))
             return 0;
-        if (!TEST_true(BIO_set_cipher(b, cipher, key, iv, DECRYPT))) {
+        if (!TEST_true(OPENSSL_BOX_BIO_set_cipher(b, cipher, key, iv, DECRYPT))) {
             TEST_info("Small chunk decrypt failed @ operation %d", i);
             goto err;
         }
@@ -288,7 +288,7 @@ static int test_bio_enc_eof_read_flush(void)
         || !TEST_ptr(BIO_push(b64, mem))
         || !TEST_ptr(BIO_push(cbio, b64))
         || !TEST_int_gt(BIO_get_cipher_ctx(cbio, &ctx), 0)
-        || !TEST_true(EVP_CipherInit_ex(ctx, cipher, NULL, KEY, IV, ENCRYPT))
+        || !TEST_true(OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, NULL, KEY, IV, ENCRYPT))
         || !TEST_int_gt(BIO_write(cbio, pbuf, sizeof(pbuf) - 1), 0)
         || !TEST_int_gt(BIO_flush(cbio), 0)
         || !TEST_int_gt(OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG,
@@ -306,7 +306,7 @@ static int test_bio_enc_eof_read_flush(void)
         || !TEST_ptr(BIO_push(b64, mem))
         || !TEST_ptr(BIO_push(cbio, b64))
         || !TEST_int_gt(BIO_get_cipher_ctx(cbio, &ctx), 0)
-        || !TEST_true(EVP_CipherInit_ex(ctx, cipher, NULL, KEY, IV, DECRYPT))
+        || !TEST_true(OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, NULL, KEY, IV, DECRYPT))
         || !TEST_int_gt(OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG,
                                             sizeof(tag), tag), 0)
         || !TEST_int_gt((n = BIO_read(cbio, cbuf, sizeof(cbuf))), 0)

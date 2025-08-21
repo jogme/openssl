@@ -105,7 +105,7 @@ const EVP_CIPHER *evp_get_cipherbyname_ex(OSSL_LIB_CTX *libctx,
             return NULL;
         do_retry = 0;
         ERR_set_mark();
-        fetched_cipher = EVP_CIPHER_fetch(libctx, name, NULL);
+        fetched_cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, name, NULL);
         OPENSSL_BOX_EVP_CIPHER_free(fetched_cipher);
         ERR_pop_to_mark();
         goto retry;
@@ -164,7 +164,7 @@ const EVP_MD *evp_get_digestbyname_ex(OSSL_LIB_CTX *libctx, const char *name)
             return NULL;
         do_retry = 0;
         ERR_set_mark();
-        fetched_md = EVP_MD_fetch(libctx, name, NULL);
+        fetched_md = OPENSSL_BOX_EVP_MD_fetch(libctx, name, NULL);
         OPENSSL_BOX_EVP_MD_free(fetched_md);
         ERR_pop_to_mark();
         goto retry;
@@ -209,7 +209,7 @@ static void do_all_cipher_fn(const OBJ_NAME *nm, void *arg)
         dc->fn((const EVP_CIPHER *)nm->data, nm->name, NULL, dc->arg);
 }
 
-void EVP_CIPHER_do_all(void (*fn) (const EVP_CIPHER *ciph,
+void OPENSSL_BOX_EVP_CIPHER_do_all(void (*fn) (const EVP_CIPHER *ciph,
                                    const char *from, const char *to, void *x),
                        void *arg)
 {
@@ -223,7 +223,7 @@ void EVP_CIPHER_do_all(void (*fn) (const EVP_CIPHER *ciph,
     OBJ_NAME_do_all(OBJ_NAME_TYPE_CIPHER_METH, do_all_cipher_fn, &dc);
 }
 
-void EVP_CIPHER_do_all_sorted(void (*fn) (const EVP_CIPHER *ciph,
+void OPENSSL_BOX_EVP_CIPHER_do_all_sorted(void (*fn) (const EVP_CIPHER *ciph,
                                           const char *from, const char *to,
                                           void *x), void *arg)
 {
@@ -252,7 +252,7 @@ static void do_all_md_fn(const OBJ_NAME *nm, void *arg)
         dc->fn((const EVP_MD *)nm->data, nm->name, NULL, dc->arg);
 }
 
-void EVP_MD_do_all(void (*fn) (const EVP_MD *md,
+void OPENSSL_BOX_EVP_MD_do_all(void (*fn) (const EVP_MD *md,
                                const char *from, const char *to, void *x),
                    void *arg)
 {
@@ -266,7 +266,7 @@ void EVP_MD_do_all(void (*fn) (const EVP_MD *md,
     OBJ_NAME_do_all(OBJ_NAME_TYPE_MD_METH, do_all_md_fn, &dc);
 }
 
-void EVP_MD_do_all_sorted(void (*fn) (const EVP_MD *md,
+void OPENSSL_BOX_EVP_MD_do_all_sorted(void (*fn) (const EVP_MD *md,
                                       const char *from, const char *to,
                                       void *x), void *arg)
 {

@@ -752,7 +752,7 @@ static void print_key_details(BIO *out, EVP_PKEY *key)
         char group[80];
         size_t size;
 
-        if (!EVP_PKEY_get_group_name(key, group, sizeof(group), &size))
+        if (!OPENSSL_BOX_EVP_PKEY_get_group_name(key, group, sizeof(group), &size))
             strcpy(group, "unknown group");
         BIO_printf(out, "%d bits EC (%s)", OPENSSL_BOX_EVP_PKEY_get_bits(key), group);
     } else

@@ -45,8 +45,8 @@ This documentation is primarily aimed at provider authors. See L<provider(7)>
 for further information.
 
 The MAC operation enables providers to implement mac algorithms and make
-them available to applications via the API functions L<EVP_MAC_init(3)>,
-L<OPENSSL_BOX_EVP_MAC_update(3)> and L<EVP_MAC_final(3)>.
+them available to applications via the API functions L<OPENSSL_BOX_EVP_MAC_init(3)>,
+L<OPENSSL_BOX_EVP_MAC_update(3)> and L<OPENSSL_BOX_EVP_MAC_final(3)>.
 
 All "functions" mentioned here are passed as function pointers between
 F<libcrypto> and the provider in L<OSSL_DISPATCH(3)> arrays via
@@ -130,7 +130,7 @@ The I<mctx> parameter contains a pointer to the provider side context.
 The resulting MAC should be written to I<out> and the amount of data written
 to I<*outl>, which should not exceed I<outsize> bytes.
 The same expectations apply to I<outsize> as documented for
-L<EVP_MAC_final(3)>.
+L<OPENSSL_BOX_EVP_MAC_final(3)>.
 
 =head2 Mac Parameters
 

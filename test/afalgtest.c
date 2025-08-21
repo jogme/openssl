@@ -82,9 +82,9 @@ static int test_afalg_aes_cbc(int keysize_idx)
     if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()))
             return 0;
 
-    if (!TEST_true(EVP_CipherInit_ex(ctx, cipher, e, key, iv, 1))
-            || !TEST_true(EVP_CipherUpdate(ctx, ebuf, &encl, in, BUFFER_SIZE))
-            || !TEST_true(EVP_CipherFinal_ex(ctx, ebuf + encl, &encf)))
+    if (!TEST_true(OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, e, key, iv, 1))
+            || !TEST_true(OPENSSL_BOX_EVP_CipherUpdate(ctx, ebuf, &encl, in, BUFFER_SIZE))
+            || !TEST_true(OPENSSL_BOX_EVP_CipherFinal_ex(ctx, ebuf + encl, &encf)))
         goto end;
     encl += encf;
 
@@ -92,9 +92,9 @@ static int test_afalg_aes_cbc(int keysize_idx)
         goto end;
 
     if (!TEST_true(OPENSSL_BOX_EVP_CIPHER_CTX_reset(ctx))
-            || !TEST_true(EVP_CipherInit_ex(ctx, cipher, e, key, iv, 0))
-            || !TEST_true(EVP_CipherUpdate(ctx, dbuf, &decl, ebuf, encl))
-            || !TEST_true(EVP_CipherFinal_ex(ctx, dbuf + decl, &decf)))
+            || !TEST_true(OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, e, key, iv, 0))
+            || !TEST_true(OPENSSL_BOX_EVP_CipherUpdate(ctx, dbuf, &decl, ebuf, encl))
+            || !TEST_true(OPENSSL_BOX_EVP_CipherFinal_ex(ctx, dbuf + decl, &decf)))
         goto end;
     decl += decf;
 
@@ -120,7 +120,7 @@ static int test_pr16743(void)
     cipher = ENGINE_get_cipher(e, NID_aes_128_cbc);
     ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (cipher != NULL && ctx != NULL)
-        ret = EVP_EncryptInit_ex(ctx, cipher, e, NULL, NULL);
+        ret = OPENSSL_BOX_EVP_EncryptInit_ex(ctx, cipher, e, NULL, NULL);
     TEST_true(ret);
     OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     ENGINE_finish(e);

@@ -208,9 +208,9 @@ static void create_ml_dsa_raw_key(uint8_t **buf, size_t *len,
      * which is what we want the fuzzer to do
      */
     if (pub == 1)
-        pubkey = EVP_PKEY_new_raw_public_key_ex(NULL, keytype, NULL, key, keylen);
+        pubkey = OPENSSL_BOX_EVP_PKEY_new_raw_public_key_ex(NULL, keytype, NULL, key, keylen);
     else
-        pubkey = EVP_PKEY_new_raw_private_key_ex(NULL, keytype, NULL, key, keylen);
+        pubkey = OPENSSL_BOX_EVP_PKEY_new_raw_private_key_ex(NULL, keytype, NULL, key, keylen);
 
     *key1 = pubkey;
     return;
@@ -232,7 +232,7 @@ static int keygen_ml_dsa_real_key_helper(uint8_t **buf, size_t *len,
     if (!select_keytype_and_size(buf, len, &keytype, &keylen, 1))
         goto err;
 
-    ctx = EVP_PKEY_CTX_new_from_name(NULL, keytype, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, keytype, NULL);
     if (!ctx) {
         fprintf(stderr, "Failed to generate ctx\n");
         goto err;
@@ -299,7 +299,7 @@ static void ml_dsa_sign_verify(uint8_t **buf, size_t *len, void *key1,
                                void *in2, void **out1, void **out2)
 {
     EVP_PKEY *key = (EVP_PKEY *)key1;
-    EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL);
+    EVP_PKEY_CTX *ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL);
     EVP_SIGNATURE *sig_alg = NULL;
     unsigned char *sig = NULL;
     size_t sig_len = 0, tbslen;
@@ -332,11 +332,11 @@ static void ml_dsa_sign_verify(uint8_t **buf, size_t *len, void *key1,
      * sign/verify functions. Therefore, we only test the one-shot functions.
      */
 
-    if ((sig_alg = EVP_SIGNATURE_fetch(NULL, alg, NULL)) == NULL
-        || EVP_PKEY_sign_message_init(ctx, sig_alg, params) <= 0
-        || EVP_PKEY_sign(ctx, NULL, &sig_len, tbs, tbslen) <= 0
+    if ((sig_alg = OPENSSL_BOX_EVP_SIGNATURE_fetch(NULL, alg, NULL)) == NULL
+        || OPENSSL_BOX_EVP_PKEY_sign_message_init(ctx, sig_alg, params) <= 0
+        || OPENSSL_BOX_EVP_PKEY_sign(ctx, NULL, &sig_len, tbs, tbslen) <= 0
         || (sig = OPENSSL_zalloc(sig_len)) == NULL
-        || EVP_PKEY_sign(ctx, sig, &sig_len, tbs, tbslen) <= 0) {
+        || OPENSSL_BOX_EVP_PKEY_sign(ctx, sig, &sig_len, tbs, tbslen) <= 0) {
         fprintf(stderr, "Failed to sign message\n");
         goto err;
     }
@@ -345,9 +345,9 @@ static void ml_dsa_sign_verify(uint8_t **buf, size_t *len, void *key1,
     OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     ctx = NULL;
 
-    if ((ctx = EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL)) == NULL
-        || EVP_PKEY_verify_message_init(ctx, sig_alg, params) <= 0
-        || EVP_PKEY_verify(ctx, sig, sig_len, tbs, tbslen) <= 0) {
+    if ((ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL)) == NULL
+        || OPENSSL_BOX_EVP_PKEY_verify_message_init(ctx, sig_alg, params) <= 0
+        || OPENSSL_BOX_EVP_PKEY_verify(ctx, sig, sig_len, tbs, tbslen) <= 0) {
         fprintf(stderr, "Failed to verify message\n");
         goto err;
     }
@@ -409,11 +409,11 @@ static void ml_dsa_digest_sign_verify(uint8_t **buf, size_t *len, void *key1,
      * sign/verify functions. Therefore, we only test the one-shot functions.
      */
 
-    if (!EVP_DigestSignInit_ex(ctx, NULL, NULL, NULL, "?fips=true", key, params)
-        || EVP_DigestSign(ctx, NULL, &sig_len, tbs, tbslen) <= 0
+    if (!OPENSSL_BOX_EVP_DigestSignInit_ex(ctx, NULL, NULL, NULL, "?fips=true", key, params)
+        || OPENSSL_BOX_EVP_DigestSign(ctx, NULL, &sig_len, tbs, tbslen) <= 0
         || (sig = OPENSSL_malloc(sig_len)) == NULL
-        || EVP_DigestSign(ctx, sig, &sig_len, tbs, tbslen) <= 0) {
-        fprintf(stderr, "Failed to sign digest with EVP_DigestSign\n");
+        || OPENSSL_BOX_EVP_DigestSign(ctx, sig, &sig_len, tbs, tbslen) <= 0) {
+        fprintf(stderr, "Failed to sign digest with OPENSSL_BOX_EVP_DigestSign\n");
         goto err;
     }
 
@@ -422,10 +422,10 @@ static void ml_dsa_digest_sign_verify(uint8_t **buf, size_t *len, void *key1,
     ctx = NULL;
 
     if ((ctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL
-        || EVP_DigestVerifyInit_ex(ctx, NULL, NULL, NULL, "?fips=true", key,
+        || OPENSSL_BOX_EVP_DigestVerifyInit_ex(ctx, NULL, NULL, NULL, "?fips=true", key,
                                    params) <= 0
-        || EVP_DigestVerify(ctx, sig, sig_len, tbs, tbslen) <= 0) {
-        fprintf(stderr, "Failed to verify digest with EVP_DigestVerify\n");
+        || OPENSSL_BOX_EVP_DigestVerify(ctx, sig, sig_len, tbs, tbslen) <= 0) {
+        fprintf(stderr, "Failed to verify digest with OPENSSL_BOX_EVP_DigestVerify\n");
         goto err;
     }
 
@@ -442,7 +442,7 @@ err:
  *
  * This function extracts key material from the given key (`key1`), exports it
  * as parameters, and then attempts to reconstruct a new key from those
- * parameters. It uses OpenSSL's `OPENSSL_BOX_EVP_PKEY_todata()` and `EVP_PKEY_fromdata()`
+ * parameters. It uses OpenSSL's `OPENSSL_BOX_EVP_PKEY_todata()` and `OPENSSL_BOX_EVP_PKEY_fromdata()`
  * functions for this process.
  *
  * @param[out] buf Unused output buffer (reserved for future use).
@@ -468,13 +468,13 @@ static void ml_dsa_export_import(uint8_t **buf, size_t *len, void *key1,
         goto err;
     }
 
-    ctx = EVP_PKEY_CTX_new_from_pkey(NULL, alice, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, alice, NULL);
     if (ctx == NULL) {
         fprintf(stderr, "Failed new ctx\n");
         goto err;
     }
 
-    if (!EVP_PKEY_fromdata(ctx, &new_key, EVP_PKEY_KEYPAIR, params)) {
+    if (!OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &new_key, EVP_PKEY_KEYPAIR, params)) {
         fprintf(stderr, "Failed fromdata\n");
         goto err;
     }

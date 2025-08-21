@@ -60,7 +60,7 @@
         reader can now read the seed from stream, hash the same string
         and then compare the digest output.
 
-        Bad things: OPENSSL_BOX_BIO_f_reliable knows what's going on in EVP_Digest. I
+        Bad things: OPENSSL_BOX_BIO_f_reliable knows what's going on in OPENSSL_BOX_EVP_Digest. I
         initially wrote and tested this code on x86 machine and wrote the
         digests out in machine-dependent order :( There are people using
         this code and I cannot change this easily without making existing
@@ -384,7 +384,7 @@ static long ok_ctrl(BIO *b, int cmd, long num, void *ptr)
         break;
     case BIO_C_SET_MD:
         md = ptr;
-        if (!EVP_DigestInit_ex(ctx->md, md, NULL))
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx->md, md, NULL))
             return 0;
         BIO_set_init(b, 1);
         break;
@@ -448,7 +448,7 @@ static int sig_out(BIO *b)
     if (ctx->buf_len + 2 * md_size > OK_BLOCK_SIZE)
         return 1;
 
-    if (!EVP_DigestInit_ex(md, digest, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(md, digest, NULL))
         goto berr;
     /*
      * FIXME: there's absolutely no guarantee this makes any sense at all,
@@ -460,9 +460,9 @@ static int sig_out(BIO *b)
     longswap(&(ctx->buf[ctx->buf_len]), md_size);
     ctx->buf_len += md_size;
 
-    if (!EVP_DigestUpdate(md, WELLKNOWN, strlen(WELLKNOWN)))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(md, WELLKNOWN, strlen(WELLKNOWN)))
         goto berr;
-    if (!EVP_DigestFinal_ex(md, &(ctx->buf[ctx->buf_len]), NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(md, &(ctx->buf[ctx->buf_len]), NULL))
         goto berr;
     ctx->buf_len += md_size;
     ctx->blockout = 1;
@@ -494,15 +494,15 @@ static int sig_in(BIO *b)
     if ((int)(ctx->buf_len - ctx->buf_off) < 2 * md_size)
         return 1;
 
-    if (!EVP_DigestInit_ex(md, digest, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(md, digest, NULL))
         goto berr;
     memcpy(md_data, &(ctx->buf[ctx->buf_off]), md_size);
     longswap(md_data, md_size);
     ctx->buf_off += md_size;
 
-    if (!EVP_DigestUpdate(md, WELLKNOWN, strlen(WELLKNOWN)))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(md, WELLKNOWN, strlen(WELLKNOWN)))
         goto berr;
-    if (!EVP_DigestFinal_ex(md, tmp, NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(md, tmp, NULL))
         goto berr;
     ret = memcmp(&(ctx->buf[ctx->buf_off]), tmp, md_size) == 0;
     ctx->buf_off += md_size;
@@ -543,10 +543,10 @@ static int block_out(BIO *b)
     ctx->buf[1] = (unsigned char)(tl >> 16);
     ctx->buf[2] = (unsigned char)(tl >> 8);
     ctx->buf[3] = (unsigned char)(tl);
-    if (!EVP_DigestUpdate(md,
+    if (!OPENSSL_BOX_EVP_DigestUpdate(md,
                           (unsigned char *)&(ctx->buf[OK_BLOCK_BLOCK]), tl))
         goto berr;
-    if (!EVP_DigestFinal_ex(md, &(ctx->buf[ctx->buf_len]), NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(md, &(ctx->buf[ctx->buf_len]), NULL))
         goto berr;
     ctx->buf_len += md_size;
     ctx->blockout = 1;
@@ -582,10 +582,10 @@ static int block_in(BIO *b)
     if (ctx->buf_len < tl + OK_BLOCK_BLOCK + md_size)
         return 1;
 
-    if (!EVP_DigestUpdate(md,
+    if (!OPENSSL_BOX_EVP_DigestUpdate(md,
                           (unsigned char *)&(ctx->buf[OK_BLOCK_BLOCK]), tl))
         goto berr;
-    if (!EVP_DigestFinal_ex(md, tmp, NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(md, tmp, NULL))
         goto berr;
     if (memcmp(&(ctx->buf[tl + OK_BLOCK_BLOCK]), tmp, md_size) == 0) {
         /* there might be parts from next block lurking around ! */

@@ -143,7 +143,7 @@ int OSSL_CRMF_pbm_new(OSSL_LIB_CTX *libctx, const char *propq,
      * support SHA-1.
      */
     OBJ_obj2txt(mdname, sizeof(mdname), pbmp->owf->algorithm, 0);
-    if ((owf = EVP_MD_fetch(libctx, mdname, propq)) == NULL) {
+    if ((owf = OPENSSL_BOX_EVP_MD_fetch(libctx, mdname, propq)) == NULL) {
         ERR_raise(ERR_LIB_CRMF, CRMF_R_UNSUPPORTED_ALGORITHM);
         goto err;
     }
@@ -152,15 +152,15 @@ int OSSL_CRMF_pbm_new(OSSL_LIB_CTX *libctx, const char *propq,
         goto err;
 
     /* compute the basekey of the salted secret */
-    if (!EVP_DigestInit_ex(ctx, owf, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx, owf, NULL))
         goto err;
     /* first the secret */
-    if (!EVP_DigestUpdate(ctx, sec, seclen))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(ctx, sec, seclen))
         goto err;
     /* then the salt */
-    if (!EVP_DigestUpdate(ctx, pbmp->salt->data, pbmp->salt->length))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(ctx, pbmp->salt->data, pbmp->salt->length))
         goto err;
-    if (!EVP_DigestFinal_ex(ctx, basekey, &bklen))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, basekey, &bklen))
         goto err;
     if (!ASN1_INTEGER_get_int64(&iterations, pbmp->iterationCount)
             || iterations < 100 /* min from RFC */
@@ -171,11 +171,11 @@ int OSSL_CRMF_pbm_new(OSSL_LIB_CTX *libctx, const char *propq,
 
     /* the first iteration was already done above */
     while (--iterations > 0) {
-        if (!EVP_DigestInit_ex(ctx, owf, NULL))
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx, owf, NULL))
             goto err;
-        if (!EVP_DigestUpdate(ctx, basekey, bklen))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(ctx, basekey, bklen))
             goto err;
-        if (!EVP_DigestFinal_ex(ctx, basekey, &bklen))
+        if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, basekey, &bklen))
             goto err;
     }
 
@@ -186,14 +186,14 @@ int OSSL_CRMF_pbm_new(OSSL_LIB_CTX *libctx, const char *propq,
      */
     mac_nid = OBJ_obj2nid(pbmp->mac->algorithm);
 
-    if (!EVP_PBE_find(EVP_PBE_TYPE_PRF, mac_nid, NULL, &hmac_md_nid, NULL)
+    if (!OPENSSL_BOX_EVP_PBE_find(EVP_PBE_TYPE_PRF, mac_nid, NULL, &hmac_md_nid, NULL)
         || OBJ_obj2txt(hmac_mdname, sizeof(hmac_mdname),
                        OBJ_nid2obj(hmac_md_nid), 0) <= 0) {
         ERR_raise(ERR_LIB_CRMF, CRMF_R_UNSUPPORTED_ALGORITHM);
         goto err;
     }
     /* could be generalized to allow non-HMAC: */
-    if (EVP_Q_mac(libctx, "HMAC", propq, hmac_mdname, NULL, basekey, bklen,
+    if (OPENSSL_BOX_EVP_Q_mac(libctx, "HMAC", propq, hmac_mdname, NULL, basekey, bklen,
                   msg, msglen, mac_res, EVP_MAX_MD_SIZE, outlen) == NULL)
         goto err;
 

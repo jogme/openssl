@@ -106,14 +106,14 @@ static int test_default_props_and_providers(int propsorder)
             && !TEST_true(OPENSSL_BOX_EVP_set_default_properties(libctx, MYPROPERTIES)))
         goto err;
 
-    if (!TEST_ptr(testprovmd = EVP_MD_fetch(libctx, "testprovmd", NULL)))
+    if (!TEST_ptr(testprovmd = OPENSSL_BOX_EVP_MD_fetch(libctx, "testprovmd", NULL)))
         goto err;
 
     if (propsorder == DEFAULT_PROPS_AFTER_FETCH) {
         if (!TEST_true(OPENSSL_BOX_EVP_set_default_properties(libctx, MYPROPERTIES)))
             goto err;
         OPENSSL_BOX_EVP_MD_free(testprovmd);
-        if (!TEST_ptr(testprovmd = EVP_MD_fetch(libctx, "testprovmd", NULL)))
+        if (!TEST_ptr(testprovmd = OPENSSL_BOX_EVP_MD_fetch(libctx, "testprovmd", NULL)))
             goto err;
     }
 

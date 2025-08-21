@@ -47,19 +47,19 @@ unsigned long X509_issuer_and_serial_hash(X509 *a)
     f = X509_NAME_oneline(a->cert_info.issuer, NULL, 0);
     if (f == NULL)
         goto err;
-    digest = EVP_MD_fetch(a->libctx, SN_md5, a->propq);
+    digest = OPENSSL_BOX_EVP_MD_fetch(a->libctx, SN_md5, a->propq);
     if (digest == NULL)
         goto err;
 
-    if (!EVP_DigestInit_ex(ctx, digest, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(ctx, digest, NULL))
         goto err;
-    if (!EVP_DigestUpdate(ctx, (unsigned char *)f, strlen(f)))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(ctx, (unsigned char *)f, strlen(f)))
         goto err;
-    if (!EVP_DigestUpdate
+    if (!OPENSSL_BOX_EVP_DigestUpdate
         (ctx, (unsigned char *)a->cert_info.serialNumber.data,
          (unsigned long)a->cert_info.serialNumber.length))
         goto err;
-    if (!EVP_DigestFinal_ex(ctx, &(md[0]), NULL))
+    if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, &(md[0]), NULL))
         goto err;
     ret = (((unsigned long)md[0]) | ((unsigned long)md[1] << 8L) |
            ((unsigned long)md[2] << 16L) | ((unsigned long)md[3] << 24L)
@@ -295,7 +295,7 @@ unsigned long X509_NAME_hash_ex(const X509_NAME *x, OSSL_LIB_CTX *libctx,
 {
     unsigned long ret = 0;
     unsigned char md[SHA_DIGEST_LENGTH];
-    EVP_MD *sha1 = EVP_MD_fetch(libctx, "SHA1", propq);
+    EVP_MD *sha1 = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHA1", propq);
     int i2d_ret;
 
     /* Make sure X509_NAME structure contains valid cached encoding */
@@ -303,7 +303,7 @@ unsigned long X509_NAME_hash_ex(const X509_NAME *x, OSSL_LIB_CTX *libctx,
     if (ok != NULL)
         *ok = 0;
     if (i2d_ret >= 0 && sha1 != NULL
-        && EVP_Digest(x->canon_enc, x->canon_enclen, md, NULL, sha1, NULL)) {
+        && OPENSSL_BOX_EVP_Digest(x->canon_enc, x->canon_enclen, md, NULL, sha1, NULL)) {
         ret = (((unsigned long)md[0]) | ((unsigned long)md[1] << 8L) |
                ((unsigned long)md[2] << 16L) | ((unsigned long)md[3] << 24L)
                ) & 0xffffffffL;
@@ -321,7 +321,7 @@ unsigned long X509_NAME_hash_ex(const X509_NAME *x, OSSL_LIB_CTX *libctx,
  */
 unsigned long X509_NAME_hash_old(const X509_NAME *x)
 {
-    EVP_MD *md5 = EVP_MD_fetch(NULL, OSSL_DIGEST_NAME_MD5, "-fips");
+    EVP_MD *md5 = OPENSSL_BOX_EVP_MD_fetch(NULL, OSSL_DIGEST_NAME_MD5, "-fips");
     EVP_MD_CTX *md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     unsigned long ret = 0;
     unsigned char md[16];
@@ -333,9 +333,9 @@ unsigned long X509_NAME_hash_old(const X509_NAME *x)
     if (i2d_X509_NAME(x, NULL) < 0)
         goto end;
 
-    if (EVP_DigestInit_ex(md_ctx, md5, NULL)
-        && EVP_DigestUpdate(md_ctx, x->bytes->data, x->bytes->length)
-        && EVP_DigestFinal_ex(md_ctx, md, NULL))
+    if (OPENSSL_BOX_EVP_DigestInit_ex(md_ctx, md5, NULL)
+        && OPENSSL_BOX_EVP_DigestUpdate(md_ctx, x->bytes->data, x->bytes->length)
+        && OPENSSL_BOX_EVP_DigestFinal_ex(md_ctx, md, NULL))
         ret = (((unsigned long)md[0]) | ((unsigned long)md[1] << 8L) |
                ((unsigned long)md[2] << 16L) | ((unsigned long)md[3] << 24L)
             ) & 0xffffffffL;
@@ -447,7 +447,7 @@ static int check_suite_b(EVP_PKEY *pkey, int sign_nid, unsigned long *pflags)
     if (pkey == NULL || !OPENSSL_BOX_EVP_PKEY_is_a(pkey, "EC"))
         return X509_V_ERR_SUITE_B_INVALID_ALGORITHM;
 
-    if (!EVP_PKEY_get_group_name(pkey, curve_name, sizeof(curve_name),
+    if (!OPENSSL_BOX_EVP_PKEY_get_group_name(pkey, curve_name, sizeof(curve_name),
                                  &curve_name_len))
         return X509_V_ERR_SUITE_B_INVALID_CURVE;
 

@@ -71,7 +71,7 @@ see L<openssl_user_macros(7)>:
 EVP_EC_gen() generates a new EC key pair on the given I<curve>.
 
 All of the functions described below are deprecated.
-Applications should instead use EVP_EC_gen(), L<EVP_PKEY_Q_keygen(3)>, or
+Applications should instead use EVP_EC_gen(), L<OPENSSL_BOX_EVP_PKEY_Q_keygen(3)>, or
 L<OPENSSL_BOX_EVP_PKEY_keygen_init(3)> and L<OPENSSL_BOX_EVP_PKEY_keygen(3)>.
 
 An EC_KEY represents a public key and, optionally, the associated private
@@ -219,7 +219,7 @@ of the buffer or 0 on error.
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_Q_keygen(3)>
+L<OPENSSL_BOX_EVP_PKEY_Q_keygen(3)>
 L<crypto(7)>, L<EC_GROUP_new(3)>,
 L<EC_GROUP_copy(3)>, L<EC_POINT_new(3)>,
 L<EC_POINT_add(3)>,

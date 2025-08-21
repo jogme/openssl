@@ -688,7 +688,7 @@ static int HKDF_Extract(OSSL_LIB_CTX *libctx, const EVP_MD *evp_md,
     }
     /* calc: PRK = HMAC-Hash(salt, IKM) */
     return
-        EVP_Q_mac(libctx, "HMAC", NULL, OPENSSL_BOX_EVP_MD_get0_name(evp_md), NULL, salt,
+        OPENSSL_BOX_EVP_Q_mac(libctx, "HMAC", NULL, OPENSSL_BOX_EVP_MD_get0_name(evp_md), NULL, salt,
                   salt_len, ikm, ikm_len, prk, OPENSSL_BOX_EVP_MD_get_size(evp_md), NULL)
         != NULL;
 }
@@ -883,8 +883,8 @@ static int prov_tls13_hkdf_generate_secret(OSSL_LIB_CTX *libctx,
 
         /* The pre-extract derive step uses a hash of no messages */
         if (mctx == NULL
-                || EVP_DigestInit_ex(mctx, md, NULL) <= 0
-                || EVP_DigestFinal_ex(mctx, hash, NULL) <= 0) {
+                || OPENSSL_BOX_EVP_DigestInit_ex(mctx, md, NULL) <= 0
+                || OPENSSL_BOX_EVP_DigestFinal_ex(mctx, hash, NULL) <= 0) {
             OPENSSL_BOX_EVP_MD_CTX_free(mctx);
             return 0;
         }

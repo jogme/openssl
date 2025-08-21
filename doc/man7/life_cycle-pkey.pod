@@ -82,7 +82,7 @@ The usual life-cycle of a PKEY object is illustrated:
                    OPENSSL_BOX_EVP_PKEY_derive                 +-------------+
  +-------------+   OPENSSL_BOX_EVP_PKEY_derive_set_peer               |                                          +-------------+
  |             |----------------------------+             |             +----------------------------|             |
- |   derive    |                            |             |             |  EVP_PKEY_verify           |   verify    |
+ |   derive    |                            |             |             |  OPENSSL_BOX_EVP_PKEY_verify           |   verify    |
  |             |<---------------------------+             |             +--------------------------->|             |
  +-------------+                                          |                                          +-------------+
              ^                                            |                                            ^
@@ -91,7 +91,7 @@ The usual life-cycle of a PKEY object is illustrated:
                                                      |    |    |
  +-------------+                                     |    |    |                                     +-------------+
  |             |----------------------------+        |    |    |        +----------------------------|             |
- | digest sign |   EVP_PKEY_sign            |        |    |    |        |  EVP_PKEY_verify_recover   |   verify    |
+ | digest sign |   OPENSSL_BOX_EVP_PKEY_sign            |        |    |    |        |  OPENSSL_BOX_EVP_PKEY_verify_recover   |   verify    |
  |             |<---------------------------+        |    |    |        +--------------------------->|   recover   |
  +-------------+                                     |    |    |                                     +-------------+
              ^                                       |    |    |                                       ^
@@ -100,7 +100,7 @@ The usual life-cycle of a PKEY object is illustrated:
                                                |     |    |    |     |
  +-------------+                               |     |    |    |     |                               +-------------+
  |             |----------------------------+  |     |    |    |     |  +----------------------------|             |
- | decapsulate |   EVP_PKEY_decapsulate     |  |     |    |    |     |  |  EVP_PKEY_decrypt          |   decrypt   |
+ | decapsulate |   OPENSSL_BOX_EVP_PKEY_decapsulate     |  |     |    |    |     |  |  OPENSSL_BOX_EVP_PKEY_decrypt          |   decrypt   |
  |             |<---------------------------+  |     |    v    |     |  +--------------------------->|             |
  +-------------+                               |   +-------------+   |                               +-------------+
              ^                                 +---|             |---+                                 ^
@@ -110,7 +110,7 @@ The usual life-cycle of a PKEY object is illustrated:
                                                +---|             |---+
  +-------------+                               |   +-------------+   |                               +-------------+
  |             |----------------------------+  |     |         |     |  +----------------------------|             |
- | encapsulate |   EVP_PKEY_encapsulate     |  |     |         |     |  |  EVP_PKEY_encrypt          |   encrypt   |
+ | encapsulate |   OPENSSL_BOX_EVP_PKEY_encapsulate     |  |     |         |     |  |  OPENSSL_BOX_EVP_PKEY_encrypt          |   encrypt   |
  |             |<---------------------------+  |     |         |     |  +--------------------------->|             |
  +-------------+                               |     |         |     |                               +-------------+
              ^                                 |     |         |     |                                 ^
@@ -150,29 +150,29 @@ This is the canonical list.
                                                      sign                     recover                                                                      generation   generation
  OPENSSL_BOX_EVP_PKEY_CTX_new              newed
  OPENSSL_BOX_EVP_PKEY_CTX_new_id           newed
- EVP_PKEY_CTX_new_from_name    newed
- EVP_PKEY_CTX_new_from_pkey    newed
+ OPENSSL_BOX_EVP_PKEY_CTX_new_from_name    newed
+ OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey    newed
  OPENSSL_BOX_EVP_PKEY_sign_init                    digest       digest       digest       digest       digest       digest       digest       digest       digest       digest       digest
                                         sign         sign         sign         sign         sign         sign         sign         sign         sign         sign         sign
- EVP_PKEY_sign                                      digest
+ OPENSSL_BOX_EVP_PKEY_sign                                      digest
                                                      sign
  OPENSSL_BOX_EVP_PKEY_verify_init                  verify       verify       verify       verify       verify       verify       verify       verify       verify       verify       verify
- EVP_PKEY_verify                                                 verify
+ OPENSSL_BOX_EVP_PKEY_verify                                                 verify
  OPENSSL_BOX_EVP_PKEY_verify_recover_init          verify       verify       verify       verify       verify       verify       verify       verify       verify       verify       verify
                                        recover      recover      recover      recover      recover      recover      recover      recover      recover      recover      recover
- EVP_PKEY_verify_recover                                                      verify
+ OPENSSL_BOX_EVP_PKEY_verify_recover                                                      verify
                                                                               recover
  OPENSSL_BOX_EVP_PKEY_encrypt_init                 encrypt      encrypt      encrypt      encrypt      encrypt      encrypt      encrypt      encrypt      encrypt      encrypt      encrypt
- EVP_PKEY_encrypt                                                                          encrypt
+ OPENSSL_BOX_EVP_PKEY_encrypt                                                                          encrypt
  OPENSSL_BOX_EVP_PKEY_decrypt_init                 decrypt      decrypt      decrypt      decrypt      decrypt      decrypt      decrypt      decrypt      decrypt      decrypt      decrypt
- EVP_PKEY_decrypt                                                                                       decrypt
+ OPENSSL_BOX_EVP_PKEY_decrypt                                                                                       decrypt
  OPENSSL_BOX_EVP_PKEY_derive_init                  derive       derive       derive       derive       derive       derive       derive       derive       derive       derive       derive
  OPENSSL_BOX_EVP_PKEY_derive_set_peer                                                                                            derive
  OPENSSL_BOX_EVP_PKEY_derive                                                                                                     derive
  OPENSSL_BOX_EVP_PKEY_encapsulate_init            encapsulate  encapsulate  encapsulate  encapsulate  encapsulate  encapsulate  encapsulate  encapsulate  encapsulate  encapsulate  encapsulate
- EVP_PKEY_encapsulate                                                                                                            encapsulate
+ OPENSSL_BOX_EVP_PKEY_encapsulate                                                                                                            encapsulate
  OPENSSL_BOX_EVP_PKEY_decapsulate_init            decapsulate  decapsulate  decapsulate  decapsulate  decapsulate  decapsulate  decapsulate  decapsulate  decapsulate  decapsulate  decapsulate
- EVP_PKEY_decapsulate                                                                                                                         decapsulate
+ OPENSSL_BOX_EVP_PKEY_decapsulate                                                                                                                         decapsulate
  OPENSSL_BOX_EVP_PKEY_paramgen_init               parameter    parameter    parameter    parameter    parameter    parameter    parameter    parameter    parameter    parameter    parameter
                                       generation   generation   generation   generation   generation   generation   generation   generation   generation   generation   generation
  OPENSSL_BOX_EVP_PKEY_paramgen                                                                                                                                         parameter
@@ -246,7 +246,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
 </tr>
-<tr><th style="border:1px solid" align="left">EVP_PKEY_CTX_new_from_name</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_PKEY_CTX_new_from_name</th>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -261,7 +261,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
 </tr>
-<tr><th style="border:1px solid" align="left">EVP_PKEY_CTX_new_from_pkey</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey</th>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -291,7 +291,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">digest<br>sign</td>
     <td style="border:1px solid" align="center"></td>
 </tr>
-<tr><th style="border:1px solid" align="left">EVP_PKEY_sign</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_PKEY_sign</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">digest<br>sign</td>
@@ -321,7 +321,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">verify</td>
     <td style="border:1px solid" align="center"></td>
 </tr>
-<tr><th style="border:1px solid" align="left">EVP_PKEY_verify</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_PKEY_verify</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -351,7 +351,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">verify<br>recover</td>
     <td style="border:1px solid" align="center"></td>
 </tr>
-<tr><th style="border:1px solid" align="left">EVP_PKEY_verify_recover</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_PKEY_verify_recover</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -381,7 +381,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">encrypt</td>
     <td style="border:1px solid" align="center"></td>
 </tr>
-<tr><th style="border:1px solid" align="left">EVP_PKEY_encrypt</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_PKEY_encrypt</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -411,7 +411,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">decrypt</td>
     <td style="border:1px solid" align="center"></td>
 </tr>
-<tr><th style="border:1px solid" align="left">EVP_PKEY_decrypt</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_PKEY_decrypt</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -486,7 +486,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">encapsulate</td>
     <td style="border:1px solid" align="center"></td>
 </tr>
-<tr><th style="border:1px solid" align="left">EVP_PKEY_encapsulate</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_PKEY_encapsulate</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -516,7 +516,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">decapsulate</td>
     <td style="border:1px solid" align="center"></td>
 </tr>
-<tr><th style="border:1px solid" align="left">EVP_PKEY_decapsulate</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_PKEY_decapsulate</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -693,9 +693,9 @@ herein.
 =head1 SEE ALSO
 
 L<OPENSSL_BOX_EVP_PKEY_new(3)>,
-L<EVP_PKEY_decapsulate(3)>, L<EVP_PKEY_decrypt(3)>, L<EVP_PKEY_encapsulate(3)>,
-L<EVP_PKEY_encrypt(3)>, L<OPENSSL_BOX_EVP_PKEY_derive(3)>, L<OPENSSL_BOX_EVP_PKEY_keygen(3)>,
-L<EVP_PKEY_sign(3)>, L<EVP_PKEY_verify(3)>, L<EVP_PKEY_verify_recover(3)>
+L<OPENSSL_BOX_EVP_PKEY_decapsulate(3)>, L<OPENSSL_BOX_EVP_PKEY_decrypt(3)>, L<OPENSSL_BOX_EVP_PKEY_encapsulate(3)>,
+L<OPENSSL_BOX_EVP_PKEY_encrypt(3)>, L<OPENSSL_BOX_EVP_PKEY_derive(3)>, L<OPENSSL_BOX_EVP_PKEY_keygen(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign(3)>, L<OPENSSL_BOX_EVP_PKEY_verify(3)>, L<OPENSSL_BOX_EVP_PKEY_verify_recover(3)>
 
 =head1 HISTORY
 

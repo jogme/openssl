@@ -20,8 +20,8 @@ OPENSSL_BOX_BIO_f_md, OPENSSL_BOX_BIO_set_md, BIO_get_md, BIO_get_md_ctx - messa
 
 OPENSSL_BOX_BIO_f_md() returns the message digest BIO method. This is a filter
 BIO that digests any data passed through it.  It is a BIO wrapper
-for the digest routines OPENSSL_BOX_EVP_DigestInit(), EVP_DigestUpdate()
-and EVP_DigestFinal().
+for the digest routines OPENSSL_BOX_EVP_DigestInit(), OPENSSL_BOX_EVP_DigestUpdate()
+and OPENSSL_BOX_EVP_DigestFinal().
 
 Any data written or read through a digest BIO using BIO_read_ex() and
 BIO_write_ex() is digested.
@@ -44,8 +44,8 @@ BIO_get_md_ctx() returns the digest BIOs context into B<mdcp>.
 =head1 NOTES
 
 The context returned by BIO_get_md_ctx() can be used in calls
-to EVP_DigestFinal() and also the signature routines EVP_SignFinal()
-and EVP_VerifyFinal().
+to OPENSSL_BOX_EVP_DigestFinal() and also the signature routines OPENSSL_BOX_EVP_SignFinal()
+and OPENSSL_BOX_EVP_VerifyFinal().
 
 The context returned by BIO_get_md_ctx() is an internal context
 structure. Changes made to this context will affect the digest

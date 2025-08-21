@@ -218,9 +218,9 @@ static int test_pass_rsa(FIXTURE *fixture)
         goto err;
     rsa = NULL;
 
-    if (!TEST_ptr(km1 = EVP_KEYMGMT_fetch(fixture->ctx1, "RSA", NULL))
-        || !TEST_ptr(km2 = EVP_KEYMGMT_fetch(fixture->ctx2, "RSA", NULL))
-        || !TEST_ptr(km3 = EVP_KEYMGMT_fetch(fixture->ctx1, "RSA-PSS", NULL))
+    if (!TEST_ptr(km1 = OPENSSL_BOX_EVP_KEYMGMT_fetch(fixture->ctx1, "RSA", NULL))
+        || !TEST_ptr(km2 = OPENSSL_BOX_EVP_KEYMGMT_fetch(fixture->ctx2, "RSA", NULL))
+        || !TEST_ptr(km3 = OPENSSL_BOX_EVP_KEYMGMT_fetch(fixture->ctx1, "RSA-PSS", NULL))
         || !TEST_ptr_ne(km1, km2))
         goto err;
 
@@ -334,7 +334,7 @@ static int test_evp_pkey_export_to_provider(int n)
                                                             &keymgmt, NULL)))
             goto end;
     } else {
-        keymgmt = EVP_KEYMGMT_fetch(libctx, "RSA", NULL);
+        keymgmt = OPENSSL_BOX_EVP_KEYMGMT_fetch(libctx, "RSA", NULL);
 
         if (!TEST_ptr(keydata = evp_pkey_export_to_provider(pkey, NULL,
                                                             &keymgmt, NULL)))

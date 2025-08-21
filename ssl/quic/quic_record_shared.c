@@ -156,7 +156,7 @@ static int el_setup_keyslot(OSSL_QRL_ENC_LEVEL_SET *els,
         goto err;
 
     /* Create and initialise cipher context. */
-    if ((cipher = EVP_CIPHER_fetch(el->libctx, cipher_name, el->propq)) == NULL) {
+    if ((cipher = OPENSSL_BOX_EVP_CIPHER_fetch(el->libctx, cipher_name, el->propq)) == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         goto err;
     }
@@ -173,7 +173,7 @@ static int el_setup_keyslot(OSSL_QRL_ENC_LEVEL_SET *els,
     }
 
     /* IV will be changed on RX/TX so we don't need to use a real value here. */
-    if (!EVP_CipherInit_ex(cctx, cipher, NULL, key, el->iv[keyslot], 0)) {
+    if (!OPENSSL_BOX_EVP_CipherInit_ex(cctx, cipher, NULL, key, el->iv[keyslot], 0)) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         goto err;
     }
@@ -243,7 +243,7 @@ int ossl_qrl_enc_level_set_provide_secret(OSSL_QRL_ENC_LEVEL_SET *els,
     }
 
     if (md == NULL) {
-        md = EVP_MD_fetch(libctx, md_name, propq);
+        md = OPENSSL_BOX_EVP_MD_fetch(libctx, md_name, propq);
         if (md == NULL) {
             ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
             return 0;

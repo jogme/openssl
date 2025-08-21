@@ -173,10 +173,10 @@ static int kdf_pvk_derive(void *vctx, unsigned char *key, size_t keylen,
 
     mctx = OPENSSL_BOX_EVP_MD_CTX_new();
     res = mctx != NULL
-          && EVP_DigestInit_ex(mctx, md, NULL)
-          && EVP_DigestUpdate(mctx, ctx->salt, ctx->salt_len)
-          && EVP_DigestUpdate(mctx, ctx->pass, ctx->pass_len)
-          && EVP_DigestFinal_ex(mctx, key, NULL);
+          && OPENSSL_BOX_EVP_DigestInit_ex(mctx, md, NULL)
+          && OPENSSL_BOX_EVP_DigestUpdate(mctx, ctx->salt, ctx->salt_len)
+          && OPENSSL_BOX_EVP_DigestUpdate(mctx, ctx->pass, ctx->pass_len)
+          && OPENSSL_BOX_EVP_DigestFinal_ex(mctx, key, NULL);
     OPENSSL_BOX_EVP_MD_CTX_free(mctx);
     return res;
 }

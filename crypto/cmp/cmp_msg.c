@@ -462,7 +462,7 @@ static OSSL_CRMF_ENCRYPTEDKEY *enc_privkey(OSSL_CMP_CTX *ctx, const EVP_PKEY *pk
     if (privbio == NULL || i2d_PrivateKey_bio(privbio, pkey) <= 0)
         goto err;
     ossl_cmp_set_own_chain(ctx);
-    cipher = EVP_CIPHER_fetch(ctx->libctx, SN_aes_256_cbc, ctx->propq);
+    cipher = OPENSSL_BOX_EVP_CIPHER_fetch(ctx->libctx, SN_aes_256_cbc, ctx->propq);
     envData = ossl_cms_sign_encrypt(privbio, ctx->cert, ctx->chain, ctx->pkey, CMS_BINARY,
                                     encryption_recips, cipher, CMS_BINARY,
                                     ctx->libctx, ctx->propq);

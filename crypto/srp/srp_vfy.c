@@ -84,16 +84,16 @@ static int t_fromb64(unsigned char *a, size_t alen, const char *src)
 
     /* Add any encoded padding that is required */
     if (padsize != 0
-            && EVP_DecodeUpdate(ctx, a, &outl, pad, (int)padsize) < 0) {
+            && OPENSSL_BOX_EVP_DecodeUpdate(ctx, a, &outl, pad, (int)padsize) < 0) {
         outl = -1;
         goto err;
     }
-    if (EVP_DecodeUpdate(ctx, a, &outl2, (const unsigned char *)src, (int)size) < 0) {
+    if (OPENSSL_BOX_EVP_DecodeUpdate(ctx, a, &outl2, (const unsigned char *)src, (int)size) < 0) {
         outl = -1;
         goto err;
     }
     outl += outl2;
-    EVP_DecodeFinal(ctx, a + outl, &outl2);
+    OPENSSL_BOX_EVP_DecodeFinal(ctx, a + outl, &outl2);
     outl += outl2;
 
     /* Strip off the leading padding */
@@ -146,18 +146,18 @@ static int t_tob64(char *dst, const unsigned char *src, int size)
 
     /*
      * We pad at the front with zero bytes until the length is a multiple of 3
-     * so that EVP_EncodeUpdate/OPENSSL_BOX_EVP_EncodeFinal does not add any of its own "="
+     * so that OPENSSL_BOX_EVP_EncodeUpdate/OPENSSL_BOX_EVP_EncodeFinal does not add any of its own "="
      * padding
      */
     leadz = 3 - (size % 3);
     if (leadz != 3
-            && !EVP_EncodeUpdate(ctx, (unsigned char *)dst, &outl, pad,
+            && !OPENSSL_BOX_EVP_EncodeUpdate(ctx, (unsigned char *)dst, &outl, pad,
                                  leadz)) {
         OPENSSL_BOX_EVP_ENCODE_CTX_free(ctx);
         return 0;
     }
 
-    if (!EVP_EncodeUpdate(ctx, (unsigned char *)dst + outl, &outl2, src,
+    if (!OPENSSL_BOX_EVP_EncodeUpdate(ctx, (unsigned char *)dst + outl, &outl2, src,
                           size)) {
         OPENSSL_BOX_EVP_ENCODE_CTX_free(ctx);
         return 0;
@@ -584,15 +584,15 @@ SRP_user_pwd *SRP_VBASE_get1_by_user(SRP_VBASE *vb, char *username)
 
     if (RAND_priv_bytes(digv, SHA_DIGEST_LENGTH) <= 0)
         goto err;
-    md = EVP_MD_fetch(NULL, SN_sha1, NULL);
+    md = OPENSSL_BOX_EVP_MD_fetch(NULL, SN_sha1, NULL);
     if (md == NULL)
         goto err;
     ctxt = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctxt == NULL
-        || !EVP_DigestInit_ex(ctxt, md, NULL)
-        || !EVP_DigestUpdate(ctxt, vb->seed_key, strlen(vb->seed_key))
-        || !EVP_DigestUpdate(ctxt, username, strlen(username))
-        || !EVP_DigestFinal_ex(ctxt, digs, NULL))
+        || !OPENSSL_BOX_EVP_DigestInit_ex(ctxt, md, NULL)
+        || !OPENSSL_BOX_EVP_DigestUpdate(ctxt, vb->seed_key, strlen(vb->seed_key))
+        || !OPENSSL_BOX_EVP_DigestUpdate(ctxt, username, strlen(username))
+        || !OPENSSL_BOX_EVP_DigestFinal_ex(ctxt, digs, NULL))
         goto err;
     OPENSSL_BOX_EVP_MD_CTX_free(ctxt);
     ctxt = NULL;

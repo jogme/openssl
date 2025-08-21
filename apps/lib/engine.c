@@ -143,7 +143,7 @@ int get_legacy_pkey_id(OSSL_LIB_CTX *libctx, const char *algname, ENGINE *e)
     int pkey_id = NID_undef;
 
     ERR_set_mark();
-    ameth = EVP_PKEY_asn1_find_str(&tmpeng, algname, -1);
+    ameth = OPENSSL_BOX_EVP_PKEY_asn1_find_str(&tmpeng, algname, -1);
 
 #if !defined(OPENSSL_NO_ENGINE)
     ENGINE_finish(tmpeng);
@@ -160,7 +160,7 @@ int get_legacy_pkey_id(OSSL_LIB_CTX *libctx, const char *algname, ENGINE *e)
     if (ameth == NULL)
         return NID_undef;
 
-    EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, NULL, NULL, ameth);
+    OPENSSL_BOX_EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, NULL, NULL, ameth);
 
     return pkey_id;
 }

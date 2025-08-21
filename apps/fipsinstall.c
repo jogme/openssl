@@ -268,7 +268,7 @@ static int do_mac(EVP_MAC_CTX *ctx, unsigned char *tmp, BIO *in,
     int i;
     size_t outsz = *out_len;
 
-    if (!EVP_MAC_init(ctx, NULL, 0, NULL))
+    if (!OPENSSL_BOX_EVP_MAC_init(ctx, NULL, 0, NULL))
         goto err;
     if (OPENSSL_BOX_EVP_MAC_CTX_get_mac_size(ctx) > outsz)
         goto end;
@@ -277,7 +277,7 @@ static int do_mac(EVP_MAC_CTX *ctx, unsigned char *tmp, BIO *in,
             goto err;
     }
 end:
-    if (!EVP_MAC_final(ctx, out, out_len, outsz))
+    if (!OPENSSL_BOX_EVP_MAC_final(ctx, out, out_len, outsz))
         goto err;
     ret = 1;
 err:
@@ -812,7 +812,7 @@ int fipsinstall_main(int argc, char **argv)
     if (read_buffer == NULL)
         goto end;
 
-    mac = EVP_MAC_fetch(app_get0_libctx(), mac_name, app_get0_propq());
+    mac = OPENSSL_BOX_EVP_MAC_fetch(app_get0_libctx(), mac_name, app_get0_propq());
     if (mac == NULL) {
         BIO_printf(bio_err, "Unable to get MAC of type %s\n", mac_name);
         goto end;

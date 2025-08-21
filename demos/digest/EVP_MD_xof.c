@@ -66,7 +66,7 @@ int main(int argc, char **argv)
      * Retrieve desired algorithm. This must be a hash algorithm which supports
      * XOF.
      */
-    md = EVP_MD_fetch(libctx, "SHAKE256", propq);
+    md = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHAKE256", propq);
     if (md == NULL) {
         fprintf(stderr, "Failed to retrieve SHAKE256 algorithm\n");
         goto end;
@@ -89,7 +89,7 @@ int main(int argc, char **argv)
      * Feed our message into the digest function.
      * This may be called multiple times.
      */
-    if (EVP_DigestUpdate(ctx, message, sizeof(message)) == 0) {
+    if (OPENSSL_BOX_EVP_DigestUpdate(ctx, message, sizeof(message)) == 0) {
         fprintf(stderr, "Failed to hash input message\n");
         goto end;
     }
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
     }
 
     /* Get computed digest. The digest will be of whatever length we specify. */
-    if (EVP_DigestFinalXOF(ctx, digest, digest_len) == 0) {
+    if (OPENSSL_BOX_EVP_DigestFinalXOF(ctx, digest, digest_len) == 0) {
         fprintf(stderr, "Failed to finalize hash\n");
         goto end;
     }

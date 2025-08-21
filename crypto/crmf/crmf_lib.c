@@ -375,7 +375,7 @@ static int create_popo_signature(OSSL_CRMF_POPOSIGNINGKEY *ps,
         return 0;
     }
 
-    if (EVP_PKEY_get_default_digest_name(pkey, name, sizeof(name)) > 0
+    if (OPENSSL_BOX_EVP_PKEY_get_default_digest_name(pkey, name, sizeof(name)) > 0
             && strcmp(name, "UNDEF") == 0) /* at least for Ed25519, Ed448 */
         digest = NULL;
 
@@ -688,7 +688,7 @@ EVP_PKEY *OSSL_CRMF_ENCRYPTEDKEY_get1_pkey(const OSSL_CRMF_ENCRYPTEDKEY *encrypt
         p = OSSL_CRMF_ENCRYPTEDVALUE_decrypt(encryptedKey->value.encryptedValue,
                                              libctx, propq, pkey, &len);
         if ((p_copy = p) != NULL)
-            ret = d2i_AutoPrivateKey_ex(NULL, &p_copy, len, libctx, propq);
+            ret = OPENSSL_BOX_d2i_AutoPrivateKey_ex(NULL, &p_copy, len, libctx, propq);
         OPENSSL_free(p);
         return ret;
     }
@@ -784,7 +784,7 @@ unsigned char
     /* select symmetric cipher based on algorithm given in message */
     OBJ_obj2txt(name, sizeof(name), enc->symmAlg->algorithm, 0);
     (void)ERR_set_mark();
-    cipher = EVP_CIPHER_fetch(libctx, name, propq);
+    cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, name, propq);
     if (cipher == NULL)
         cipher = (EVP_CIPHER *)EVP_get_cipherbyobj(enc->symmAlg->algorithm);
     if (cipher == NULL) {
@@ -796,17 +796,17 @@ unsigned char
 
     cikeysize = OPENSSL_BOX_EVP_CIPHER_get_key_length(cipher);
     /* first the symmetric key needs to be decrypted */
-    pkctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
+    pkctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
     if (pkctx != NULL && OPENSSL_BOX_EVP_PKEY_decrypt_init(pkctx) > 0) {
         ASN1_BIT_STRING *encKey = enc->encSymmKey;
         size_t failure;
         int retval;
 
-        if (EVP_PKEY_decrypt(pkctx, NULL, &eksize,
+        if (OPENSSL_BOX_EVP_PKEY_decrypt(pkctx, NULL, &eksize,
                              encKey->data, encKey->length) <= 0
                 || (ek = OPENSSL_malloc(eksize)) == NULL)
             goto end;
-        retval = EVP_PKEY_decrypt(pkctx, ek, &eksize, encKey->data, encKey->length);
+        retval = OPENSSL_BOX_EVP_PKEY_decrypt(pkctx, ek, &eksize, encKey->data, encKey->length);
         failure = ~constant_time_is_zero_s(constant_time_msb(retval)
                                            | constant_time_is_zero(retval));
         failure |= ~constant_time_eq_s(eksize, (size_t)cikeysize);
@@ -833,11 +833,11 @@ unsigned char
         goto end;
     OPENSSL_BOX_EVP_CIPHER_CTX_set_padding(evp_ctx, 0);
 
-    if (!EVP_DecryptInit(evp_ctx, cipher, ek, iv)
-            || !EVP_DecryptUpdate(evp_ctx, out, outlen,
+    if (!OPENSSL_BOX_EVP_DecryptInit(evp_ctx, cipher, ek, iv)
+            || !OPENSSL_BOX_EVP_DecryptUpdate(evp_ctx, out, outlen,
                                   enc->encValue->data,
                                   enc->encValue->length)
-            || !EVP_DecryptFinal(evp_ctx, out + *outlen, &n)) {
+            || !OPENSSL_BOX_EVP_DecryptFinal(evp_ctx, out + *outlen, &n)) {
         ERR_raise(ERR_LIB_CRMF, CRMF_R_ERROR_DECRYPTING_ENCRYPTEDVALUE);
         goto end;
     }

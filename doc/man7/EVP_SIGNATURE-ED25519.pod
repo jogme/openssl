@@ -37,19 +37,19 @@ Ed25519ctx, the context-string must be nonempty).  For the Ed25519
 instance, a nonempty context-string is not permitted.
 
 These instances can be specified as signature parameters when using
-L<EVP_DigestSignInit(3)> and L<EVP_DigestVerifyInit(3)>, see
+L<OPENSSL_BOX_EVP_DigestSignInit(3)> and L<OPENSSL_BOX_EVP_DigestVerifyInit(3)>, see
 L</ED25519 and ED448 Signature Parameters> below.
 
 These instances are also explicitly fetchable as algorithms using
-L<EVP_SIGNATURE_fetch(3)>, which can be used with
-L<EVP_PKEY_sign_init_ex2(3)>, L<EVP_PKEY_verify_init_ex2(3)>,
-L<EVP_PKEY_sign_message_init(3)> and L<EVP_PKEY_verify_message_init(3)>.
+L<OPENSSL_BOX_EVP_SIGNATURE_fetch(3)>, which can be used with
+L<OPENSSL_BOX_EVP_PKEY_sign_init_ex2(3)>, L<OPENSSL_BOX_EVP_PKEY_verify_init_ex2(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign_message_init(3)> and L<OPENSSL_BOX_EVP_PKEY_verify_message_init(3)>.
 
 =head2 ED25519 and ED448 Signature Parameters
 
 Two parameters can be set during signing or verification: the EdDSA
 B<instance name> and the B<context-string value>.  They can be set by
-passing an OSSL_PARAM array to EVP_DigestSignInit_ex().
+passing an OSSL_PARAM array to OPENSSL_BOX_EVP_DigestSignInit_ex().
 
 =over 4
 
@@ -69,7 +69,7 @@ A string of octets with length at most 255.
 
 Both of these parameters are optional.
 
-When using L<EVP_DigestSignInit(3)> or L<EVP_DigestVerifyInit(3)>, the
+When using L<OPENSSL_BOX_EVP_DigestSignInit(3)> or L<OPENSSL_BOX_EVP_DigestVerifyInit(3)>, the
 signature algorithm is derived from the key type name.  The key type name
 ("Ed25519" or "Ed448") is also the default for the instance, but this can be
 changed with the "instance" parameter.
@@ -77,8 +77,8 @@ changed with the "instance" parameter.
 Note that a message digest name must B<NOT> be specified when signing
 or verifying.
 
-When using L<EVP_PKEY_sign_init_ex2(3)>, L<EVP_PKEY_verify_init_ex2(3)>,
-L<EVP_PKEY_sign_message_init(3)> or L<EVP_PKEY_verify_message_init(3)>, the
+When using L<OPENSSL_BOX_EVP_PKEY_sign_init_ex2(3)>, L<OPENSSL_BOX_EVP_PKEY_verify_init_ex2(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign_message_init(3)> or L<OPENSSL_BOX_EVP_PKEY_verify_message_init(3)>, the
 instance is the explicit signature algorithm name, and may not be changed
 (trying to give one with the "instance" parameter is therefore an error).
 
@@ -105,14 +105,14 @@ The parameters are described in L<provider-signature(7)>.
 =head1 NOTES
 
 The PureEdDSA instances do not support the streaming mechanism of
-other signature algorithms using, for example, EVP_DigestUpdate().
+other signature algorithms using, for example, OPENSSL_BOX_EVP_DigestUpdate().
 The message to sign or verify must be passed using the one-shot
-EVP_DigestSign() and EVP_DigestVerify() functions.
+OPENSSL_BOX_EVP_DigestSign() and OPENSSL_BOX_EVP_DigestVerify() functions.
 
 The HashEdDSA instances do not yet support the streaming mechanisms
 (so the one-shot functions must be used with HashEdDSA as well).
 
-When calling EVP_DigestSignInit() or EVP_DigestVerifyInit(), the
+When calling OPENSSL_BOX_EVP_DigestSignInit() or OPENSSL_BOX_EVP_DigestVerifyInit(), the
 digest I<type> parameter B<MUST> be set to NULL.
 
 Applications wishing to sign certificates (or other structures such as
@@ -120,13 +120,13 @@ CRLs or certificate requests) using Ed25519 or Ed448 can either use X509_sign()
 or X509_sign_ctx() in the usual way.
 
 Ed25519 or Ed448 private keys can be set directly using
-L<EVP_PKEY_new_raw_private_key(3)> or loaded from a PKCS#8 private key file
+L<OPENSSL_BOX_EVP_PKEY_new_raw_private_key(3)> or loaded from a PKCS#8 private key file
 using L<PEM_read_bio_PrivateKey(3)> (or similar function). Completely new keys
 can also be generated (see the example below). Setting a private key also sets
 the associated public key.
 
 Ed25519 or Ed448 public keys can be set directly using
-L<EVP_PKEY_new_raw_public_key(3)> or loaded from a SubjectPublicKeyInfo
+L<OPENSSL_BOX_EVP_PKEY_new_raw_public_key(3)> or loaded from a SubjectPublicKeyInfo
 structure in a PEM file using L<PEM_read_bio_PUBKEY(3)> (or similar function).
 
 Ed25519 and Ed448 can be tested with the L<openssl-speed(1)> application
@@ -152,12 +152,12 @@ To sign a message using an ED25519 EVP_PKEY structure:
 
         /* The input "params" is not needed if default options are acceptable.
            Use NULL in place of "params" in that case. */
-        EVP_DigestSignInit_ex(md_ctx, NULL, NULL, NULL, NULL, ed_key, params);
+        OPENSSL_BOX_EVP_DigestSignInit_ex(md_ctx, NULL, NULL, NULL, NULL, ed_key, params);
         /* Calculate the required size for the signature by passing a NULL buffer. */
-        EVP_DigestSign(md_ctx, NULL, &sig_len, msg, msg_len);
+        OPENSSL_BOX_EVP_DigestSign(md_ctx, NULL, &sig_len, msg, msg_len);
         sig = OPENSSL_zalloc(sig_len);
 
-        EVP_DigestSign(md_ctx, sig, &sig_len, msg, msg_len);
+        OPENSSL_BOX_EVP_DigestSign(md_ctx, sig, &sig_len, msg, msg_len);
         ...
         OPENSSL_free(sig);
         OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
@@ -167,8 +167,8 @@ To sign a message using an ED25519 EVP_PKEY structure:
 
 L<EVP_PKEY-X25519(7)>
 L<provider-signature(7)>,
-L<EVP_DigestSignInit(3)>,
-L<EVP_DigestVerifyInit(3)>,
+L<OPENSSL_BOX_EVP_DigestSignInit(3)>,
+L<OPENSSL_BOX_EVP_DigestVerifyInit(3)>,
 
 =head1 COPYRIGHT
 

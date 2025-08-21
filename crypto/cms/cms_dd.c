@@ -75,7 +75,7 @@ int ossl_cms_DigestedData_do_final(const CMS_ContentInfo *cms, BIO *chain,
     if (!ossl_cms_DigestAlgorithm_find_ctx(mctx, chain, dd->digestAlgorithm))
         goto err;
 
-    if (EVP_DigestFinal_ex(mctx, md, &mdlen) <= 0)
+    if (OPENSSL_BOX_EVP_DigestFinal_ex(mctx, md, &mdlen) <= 0)
         goto err;
 
     if (verify) {

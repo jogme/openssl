@@ -3,8 +3,8 @@
 =head1 NAME
 
 OPENSSL_BOX_EVP_PKEY_settable_params, OPENSSL_BOX_EVP_PKEY_set_params,
-OPENSSL_BOX_EVP_PKEY_set_int_param, OPENSSL_BOX_EVP_PKEY_set_size_t_param, EVP_PKEY_set_bn_param,
-EVP_PKEY_set_utf8_string_param, EVP_PKEY_set_octet_string_param
+OPENSSL_BOX_EVP_PKEY_set_int_param, OPENSSL_BOX_EVP_PKEY_set_size_t_param, OPENSSL_BOX_EVP_PKEY_set_bn_param,
+OPENSSL_BOX_EVP_PKEY_set_utf8_string_param, OPENSSL_BOX_EVP_PKEY_set_octet_string_param
 - set key parameters into a key
 
 =head1 SYNOPSIS
@@ -15,11 +15,11 @@ EVP_PKEY_set_utf8_string_param, EVP_PKEY_set_octet_string_param
  int OPENSSL_BOX_EVP_PKEY_set_params(EVP_PKEY *pkey, OSSL_PARAM params[]);
  int OPENSSL_BOX_EVP_PKEY_set_int_param(EVP_PKEY *pkey, const char *key_name, int in);
  int OPENSSL_BOX_EVP_PKEY_set_size_t_param(EVP_PKEY *pkey, const char *key_name, size_t in);
- int EVP_PKEY_set_bn_param(EVP_PKEY *pkey, const char *key_name,
+ int OPENSSL_BOX_EVP_PKEY_set_bn_param(EVP_PKEY *pkey, const char *key_name,
                            const BIGNUM *bn);
- int EVP_PKEY_set_utf8_string_param(EVP_PKEY *pkey, const char *key_name,
+ int OPENSSL_BOX_EVP_PKEY_set_utf8_string_param(EVP_PKEY *pkey, const char *key_name,
                                     const char *str);
- int EVP_PKEY_set_octet_string_param(EVP_PKEY *pkey, const char *key_name,
+ int OPENSSL_BOX_EVP_PKEY_set_octet_string_param(EVP_PKEY *pkey, const char *key_name,
                                      const unsigned char *buf, size_t bsize);
 
 =head1 DESCRIPTION
@@ -40,13 +40,13 @@ associated field I<key_name>.
 OPENSSL_BOX_EVP_PKEY_set_size_t_param() sets an size_t value I<in> into a key I<pkey> for
 the associated field I<key_name>.
 
-EVP_PKEY_set_bn_param() sets the BIGNUM value I<bn> into a key I<pkey> for the
+OPENSSL_BOX_EVP_PKEY_set_bn_param() sets the BIGNUM value I<bn> into a key I<pkey> for the
 associated field I<key_name>.
 
-EVP_PKEY_set_utf8_string_param() sets the UTF8 string I<str> into a key I<pkey>
+OPENSSL_BOX_EVP_PKEY_set_utf8_string_param() sets the UTF8 string I<str> into a key I<pkey>
 for the associated field I<key_name>.
 
-EVP_PKEY_set_octet_string_param() sets the octet string value I<buf> with a
+OPENSSL_BOX_EVP_PKEY_set_octet_string_param() sets the octet string value I<buf> with a
 size I<bsize> into a key I<pkey> for the associated field I<key_name>.
 
 =head1 NOTES

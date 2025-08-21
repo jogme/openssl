@@ -45,7 +45,7 @@ key derivation will fail.
 =head1 STRING CTRLS
 
 scrypt also supports string based control operations via
-L<EVP_PKEY_CTX_ctrl_str(3)>.
+L<OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(3)>.
 Similarly, the B<salt> can either be specified using the B<type>
 parameter "salt" or in hex encoding by using the "hexsalt" parameter.
 The work factors B<N>, B<r> and B<p> as well as B<maxmem_bytes> can be
@@ -72,7 +72,7 @@ supported by the public key algorithm.
 
 L<EVP_KDF(3)>
 L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
-L<EVP_PKEY_CTX_ctrl_str(3)>,
+L<OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(3)>,
 L<OPENSSL_BOX_EVP_PKEY_derive(3)>
 
 =head1 HISTORY

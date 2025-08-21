@@ -1172,7 +1172,7 @@ static int key2any_set_ctx_params(void *vctx, const OSSL_PARAM params[])
         ctx->cipher_intent = ciphername != NULL;
         if (ciphername != NULL
             && ((ctx->cipher =
-                 EVP_CIPHER_fetch(libctx, ciphername, props)) == NULL))
+                 OPENSSL_BOX_EVP_CIPHER_fetch(libctx, ciphername, props)) == NULL))
             return 0;
     }
 

@@ -855,7 +855,7 @@ int WPACKET_sub_allocate_bytes__(WPACKET *pkt, size_t len,
  * handle this:
  *
  *  if (!WPACKET_sub_reserve_bytes_u16(&pkt, OPENSSL_BOX_EVP_PKEY_get_size(pkey), &sigbytes1)
- *          || EVP_SignFinal(md_ctx, sigbytes1, &siglen, pkey) <= 0
+ *          || OPENSSL_BOX_EVP_SignFinal(md_ctx, sigbytes1, &siglen, pkey) <= 0
  *          || !WPACKET_sub_allocate_bytes_u16(&pkt, siglen, &sigbytes2)
  *          || sigbytes1 != sigbytes2)
  *      goto err;

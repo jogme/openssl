@@ -164,7 +164,7 @@ ossl_d2i_PrivateKey_legacy(int keytype, EVP_PKEY **a, const unsigned char **pp,
     return NULL;
 }
 
-EVP_PKEY *d2i_PrivateKey_ex(int keytype, EVP_PKEY **a, const unsigned char **pp,
+EVP_PKEY *OPENSSL_BOX_d2i_PrivateKey_ex(int keytype, EVP_PKEY **a, const unsigned char **pp,
                             long length, OSSL_LIB_CTX *libctx,
                             const char *propq)
 {
@@ -177,10 +177,10 @@ EVP_PKEY *d2i_PrivateKey_ex(int keytype, EVP_PKEY **a, const unsigned char **pp,
     return ret;
 }
 
-EVP_PKEY *d2i_PrivateKey(int type, EVP_PKEY **a, const unsigned char **pp,
+EVP_PKEY *OPENSSL_BOX_d2i_PrivateKey(int type, EVP_PKEY **a, const unsigned char **pp,
                          long length)
 {
-    return d2i_PrivateKey_ex(type, a, pp, length, NULL, NULL);
+    return OPENSSL_BOX_d2i_PrivateKey_ex(type, a, pp, length, NULL, NULL);
 }
 
 static EVP_PKEY *d2i_AutoPrivateKey_legacy(EVP_PKEY **a,
@@ -236,10 +236,10 @@ static EVP_PKEY *d2i_AutoPrivateKey_legacy(EVP_PKEY **a,
 }
 
 /*
- * This works like d2i_PrivateKey() except it passes the keytype as
+ * This works like OPENSSL_BOX_d2i_PrivateKey() except it passes the keytype as
  * EVP_PKEY_NONE, which then figures out the type during decoding.
  */
-EVP_PKEY *d2i_AutoPrivateKey_ex(EVP_PKEY **a, const unsigned char **pp,
+EVP_PKEY *OPENSSL_BOX_d2i_AutoPrivateKey_ex(EVP_PKEY **a, const unsigned char **pp,
                                 long length, OSSL_LIB_CTX *libctx,
                                 const char *propq)
 {
@@ -252,8 +252,8 @@ EVP_PKEY *d2i_AutoPrivateKey_ex(EVP_PKEY **a, const unsigned char **pp,
     return ret;
 }
 
-EVP_PKEY *d2i_AutoPrivateKey(EVP_PKEY **a, const unsigned char **pp,
+EVP_PKEY *OPENSSL_BOX_d2i_AutoPrivateKey(EVP_PKEY **a, const unsigned char **pp,
                              long length)
 {
-    return d2i_AutoPrivateKey_ex(a, pp, length, NULL, NULL);
+    return OPENSSL_BOX_d2i_AutoPrivateKey_ex(a, pp, length, NULL, NULL);
 }

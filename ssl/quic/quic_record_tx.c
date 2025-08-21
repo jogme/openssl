@@ -535,13 +535,13 @@ static int qtx_encrypt_into_txe(OSSL_QTX *qtx, struct iovec_cur *cur, TXE *txe,
         nonce[nonce_len - i - 1] ^= (unsigned char)(pn >> (i * 8));
 
     /* type and key will already have been setup; feed the IV. */
-    if (EVP_CipherInit_ex(cctx, NULL, NULL, NULL, nonce, /*enc=*/1) != 1) {
+    if (OPENSSL_BOX_EVP_CipherInit_ex(cctx, NULL, NULL, NULL, nonce, /*enc=*/1) != 1) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         return 0;
     }
 
     /* Feed AAD data. */
-    if (EVP_CipherUpdate(cctx, NULL, &l, hdr, (int)hdr_len) != 1) {
+    if (OPENSSL_BOX_EVP_CipherUpdate(cctx, NULL, &l, hdr, (int)hdr_len) != 1) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         return 0;
     }
@@ -555,7 +555,7 @@ static int qtx_encrypt_into_txe(OSSL_QTX *qtx, struct iovec_cur *cur, TXE *txe,
         if (src_len == 0)
             break;
 
-        if (EVP_CipherUpdate(cctx, txe_data(txe) + txe->data_len,
+        if (OPENSSL_BOX_EVP_CipherUpdate(cctx, txe_data(txe) + txe->data_len,
                              &l, src, (int)src_len) != 1) {
             ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
             return 0;
@@ -571,7 +571,7 @@ static int qtx_encrypt_into_txe(OSSL_QTX *qtx, struct iovec_cur *cur, TXE *txe,
     }
 
     /* Finalise and get tag. */
-    if (EVP_CipherFinal_ex(cctx, NULL, &l2) != 1) {
+    if (OPENSSL_BOX_EVP_CipherFinal_ex(cctx, NULL, &l2) != 1) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         return 0;
     }

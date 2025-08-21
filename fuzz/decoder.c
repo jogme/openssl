@@ -54,9 +54,9 @@ int FuzzerTestOneInput(const uint8_t *buf, size_t len)
     if (OSSL_DECODER_from_data(dctx, &buf, &len)) {
         EVP_PKEY *pkey2;
 
-        EVP_PKEY_print_public(bio, pkey, 1, pctx);
-        EVP_PKEY_print_private(bio, pkey, 1, pctx);
-        EVP_PKEY_print_params(bio, pkey, 1, pctx);
+        OPENSSL_BOX_EVP_PKEY_print_public(bio, pkey, 1, pctx);
+        OPENSSL_BOX_EVP_PKEY_print_private(bio, pkey, 1, pctx);
+        OPENSSL_BOX_EVP_PKEY_print_params(bio, pkey, 1, pctx);
 
         pkey2 = OPENSSL_BOX_EVP_PKEY_dup(pkey);
         OPENSSL_assert(pkey2 != NULL);

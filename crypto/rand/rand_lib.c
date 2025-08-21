@@ -348,7 +348,7 @@ void RAND_seed(const void *buf, int num)
 
     drbg = RAND_get0_primary(NULL);
     if (drbg != NULL && num > 0)
-        EVP_RAND_reseed(drbg, 0, NULL, 0, buf, num);
+        OPENSSL_BOX_EVP_RAND_reseed(drbg, 0, NULL, 0, buf, num);
 }
 
 void RAND_add(const void *buf, int num, double randomness)
@@ -366,10 +366,10 @@ void RAND_add(const void *buf, int num, double randomness)
     if (drbg != NULL && num > 0)
 # ifdef OPENSSL_RAND_SEED_NONE
         /* Without an entropy source, we have to rely on the user */
-        EVP_RAND_reseed(drbg, 0, buf, num, NULL, 0);
+        OPENSSL_BOX_EVP_RAND_reseed(drbg, 0, buf, num, NULL, 0);
 # else
         /* With an entropy source, we downgrade this to additional input */
-        EVP_RAND_reseed(drbg, 0, NULL, 0, buf, num);
+        OPENSSL_BOX_EVP_RAND_reseed(drbg, 0, NULL, 0, buf, num);
 # endif
 }
 
@@ -445,7 +445,7 @@ int RAND_priv_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
 #endif      /* !FIPS_MODULE */
     rand = rand_get0_private(ctx, dgbl);
     if (rand != NULL)
-        return EVP_RAND_generate(rand, buf, num, strength, 0, NULL, 0);
+        return OPENSSL_BOX_EVP_RAND_generate(rand, buf, num, strength, 0, NULL, 0);
 
     return 0;
 }
@@ -489,7 +489,7 @@ int RAND_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
 
     rand = rand_get0_public(ctx, dgbl);
     if (rand != NULL)
-        return EVP_RAND_generate(rand, buf, num, strength, 0, NULL, 0);
+        return OPENSSL_BOX_EVP_RAND_generate(rand, buf, num, strength, 0, NULL, 0);
 
     return 0;
 }
@@ -602,7 +602,7 @@ static EVP_RAND_CTX *rand_new_seed(OSSL_LIB_CTX *libctx)
     propq = "";
 # endif /* OPENSSL_NO_FIPS_JITTER */
 
-    rand = EVP_RAND_fetch(libctx, name, propq);
+    rand = OPENSSL_BOX_EVP_RAND_fetch(libctx, name, propq);
     if (rand == NULL) {
         ERR_raise(ERR_LIB_RAND, RAND_R_UNABLE_TO_FETCH_DRBG);
         goto err;
@@ -613,7 +613,7 @@ static EVP_RAND_CTX *rand_new_seed(OSSL_LIB_CTX *libctx)
         ERR_raise(ERR_LIB_RAND, RAND_R_UNABLE_TO_CREATE_DRBG);
         goto err;
     }
-    if (!EVP_RAND_instantiate(ctx, 0, 0, NULL, 0, NULL)) {
+    if (!OPENSSL_BOX_EVP_RAND_instantiate(ctx, 0, 0, NULL, 0, NULL)) {
         ERR_raise(ERR_LIB_RAND, RAND_R_ERROR_INSTANTIATING_DRBG);
         goto err;
     }
@@ -657,7 +657,7 @@ static EVP_RAND_CTX *rand_new_drbg(OSSL_LIB_CTX *libctx, EVP_RAND_CTX *parent,
     if (dgbl == NULL)
         return NULL;
     name = dgbl->rng_name != NULL ? dgbl->rng_name : "CTR-DRBG";
-    rand = EVP_RAND_fetch(libctx, name, dgbl->rng_propq);
+    rand = OPENSSL_BOX_EVP_RAND_fetch(libctx, name, dgbl->rng_propq);
     if (rand == NULL) {
         ERR_raise(ERR_LIB_RAND, RAND_R_UNABLE_TO_FETCH_DRBG);
         return NULL;
@@ -695,7 +695,7 @@ static EVP_RAND_CTX *rand_new_drbg(OSSL_LIB_CTX *libctx, EVP_RAND_CTX *parent,
     *p++ = OSSL_PARAM_construct_time_t(OSSL_DRBG_PARAM_RESEED_TIME_INTERVAL,
                                        &reseed_time_interval);
     *p = OSSL_PARAM_construct_end();
-    if (!EVP_RAND_instantiate(ctx, 0, 0, NULL, 0, params)) {
+    if (!OPENSSL_BOX_EVP_RAND_instantiate(ctx, 0, 0, NULL, 0, params)) {
         ERR_raise(ERR_LIB_RAND, RAND_R_ERROR_INSTANTIATING_DRBG);
         OPENSSL_BOX_EVP_RAND_CTX_free(ctx);
         return NULL;
@@ -709,7 +709,7 @@ static EVP_RAND_CTX *rand_new_crngt(OSSL_LIB_CTX *libctx, EVP_RAND_CTX *parent)
     EVP_RAND *rand;
     EVP_RAND_CTX *ctx;
 
-    rand = EVP_RAND_fetch(libctx, "CRNG-TEST", "-fips");
+    rand = OPENSSL_BOX_EVP_RAND_fetch(libctx, "CRNG-TEST", "-fips");
     if (rand == NULL) {
         ERR_raise(ERR_LIB_RAND, RAND_R_UNABLE_TO_FETCH_DRBG);
         return NULL;
@@ -721,7 +721,7 @@ static EVP_RAND_CTX *rand_new_crngt(OSSL_LIB_CTX *libctx, EVP_RAND_CTX *parent)
         return NULL;
     }
 
-    if (!EVP_RAND_instantiate(ctx, 0, 0, NULL, 0, NULL)) {
+    if (!OPENSSL_BOX_EVP_RAND_instantiate(ctx, 0, 0, NULL, 0, NULL)) {
         ERR_raise(ERR_LIB_RAND, RAND_R_ERROR_INSTANTIATING_DRBG);
         OPENSSL_BOX_EVP_RAND_CTX_free(ctx);
         return NULL;

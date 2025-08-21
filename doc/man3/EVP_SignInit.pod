@@ -3,7 +3,7 @@
 =head1 NAME
 
 EVP_SignInit, EVP_SignInit_ex, EVP_SignUpdate,
-EVP_SignFinal_ex, EVP_SignFinal
+OPENSSL_BOX_EVP_SignFinal_ex, OPENSSL_BOX_EVP_SignFinal
 - EVP signing functions
 
 =head1 SYNOPSIS
@@ -12,9 +12,9 @@ EVP_SignFinal_ex, EVP_SignFinal
 
  int EVP_SignInit_ex(EVP_MD_CTX *ctx, const EVP_MD *type, ENGINE *impl);
  int EVP_SignUpdate(EVP_MD_CTX *ctx, const void *d, unsigned int cnt);
- int EVP_SignFinal_ex(EVP_MD_CTX *ctx, unsigned char *md, unsigned int *s,
+ int OPENSSL_BOX_EVP_SignFinal_ex(EVP_MD_CTX *ctx, unsigned char *md, unsigned int *s,
                       EVP_PKEY *pkey, OSSL_LIB_CTX *libctx, const char *propq);
- int EVP_SignFinal(EVP_MD_CTX *ctx, unsigned char *sig, unsigned int *s,
+ int OPENSSL_BOX_EVP_SignFinal(EVP_MD_CTX *ctx, unsigned char *sig, unsigned int *s,
                    EVP_PKEY *pkey);
 
  void EVP_SignInit(EVP_MD_CTX *ctx, const EVP_MD *type);
@@ -32,7 +32,7 @@ EVP_SignUpdate() hashes I<cnt> bytes of data at I<d> into the
 signature context I<ctx>. This function can be called several times on the
 same I<ctx> to include additional data.
 
-EVP_SignFinal_ex() signs the data in I<ctx> using the private key
+OPENSSL_BOX_EVP_SignFinal_ex() signs the data in I<ctx> using the private key
 I<pkey> and places the signature in I<sig>. The library context I<libctx> and
 property query I<propq> are used when creating a context to use with the key
 I<pkey>. I<sig> must be at least C<OPENSSL_BOX_EVP_PKEY_get_size(pkey)> bytes in size.
@@ -41,7 +41,7 @@ The number of bytes of data written (i.e. the length of the signature)
 will be written to the integer at I<s>, at most C<OPENSSL_BOX_EVP_PKEY_get_size(pkey)>
 bytes will be written.
 
-EVP_SignFinal() is similar to EVP_SignFinal_ex() but uses default
+OPENSSL_BOX_EVP_SignFinal() is similar to OPENSSL_BOX_EVP_SignFinal_ex() but uses default
 values of NULL for the library context I<libctx> and the property query I<propq>.
 
 EVP_SignInit() initializes a signing context I<ctx> to use the default
@@ -49,8 +49,8 @@ implementation of digest I<type>.
 
 =head1 RETURN VALUES
 
-EVP_SignInit_ex(), EVP_SignUpdate(), EVP_SignFinal_ex() and
-EVP_SignFinal() return 1 for success and 0 for failure.
+EVP_SignInit_ex(), EVP_SignUpdate(), OPENSSL_BOX_EVP_SignFinal_ex() and
+OPENSSL_BOX_EVP_SignFinal() return 1 for success and 0 for failure.
 
 The error codes can be obtained by L<ERR_get_error(3)>.
 
@@ -64,8 +64,8 @@ When signing with some private key types the random number generator must
 be seeded. If the automatic seeding or reseeding of the OpenSSL CSPRNG fails
 due to external circumstances (see L<RAND(7)>), the operation will fail.
 
-The call to EVP_SignFinal() internally finalizes a copy of the digest context.
-This means that calls to EVP_SignUpdate() and EVP_SignFinal() can be called
+The call to OPENSSL_BOX_EVP_SignFinal() internally finalizes a copy of the digest context.
+This means that calls to EVP_SignUpdate() and OPENSSL_BOX_EVP_SignFinal() can be called
 later to digest and sign additional data.cApplications may disable this
 behavior by setting the EVP_MD_CTX_FLAG_FINALISE context flag via
 L<OPENSSL_BOX_EVP_MD_CTX_set_flags(3)>.
@@ -75,23 +75,23 @@ be cleaned up after use by calling OPENSSL_BOX_EVP_MD_CTX_free() or a memory lea
 will occur.
 
 Note that not all providers support continuation, in case the selected
-provider does not allow to duplicate contexts EVP_SignFinal() will
+provider does not allow to duplicate contexts OPENSSL_BOX_EVP_SignFinal() will
 finalize the digest context and attempting to process additional data via
 EVP_SignUpdate() will result in an error.
 
 =head1 BUGS
 
 Older versions of this documentation wrongly stated that calls to
-EVP_SignUpdate() could not be made after calling EVP_SignFinal().
+EVP_SignUpdate() could not be made after calling OPENSSL_BOX_EVP_SignFinal().
 
-Since the private key is passed in the call to EVP_SignFinal() any error
+Since the private key is passed in the call to OPENSSL_BOX_EVP_SignFinal() any error
 relating to the private key (for example an unsuitable key and digest
 combination) will not be indicated until after potentially large amounts of
 data have been passed through EVP_SignUpdate().
 
 It is not possible to change the signing parameters using these function.
 
-The previous two bugs are fixed in the newer EVP_DigestSign*() functions.
+The previous two bugs are fixed in the newer OPENSSL_BOX_EVP_DigestSign*() functions.
 
 =head1 SEE ALSO
 
@@ -105,7 +105,7 @@ L<SHA1(3)>, L<openssl-dgst(1)>
 
 =head1 HISTORY
 
-The function EVP_SignFinal_ex() was added in OpenSSL 3.0.
+The function OPENSSL_BOX_EVP_SignFinal_ex() was added in OpenSSL 3.0.
 
 =head1 COPYRIGHT
 

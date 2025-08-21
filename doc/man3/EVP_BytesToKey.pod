@@ -2,20 +2,20 @@
 
 =head1 NAME
 
-EVP_BytesToKey - password based encryption routine
+OPENSSL_BOX_EVP_BytesToKey - password based encryption routine
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- int EVP_BytesToKey(const EVP_CIPHER *type, const EVP_MD *md,
+ int OPENSSL_BOX_EVP_BytesToKey(const EVP_CIPHER *type, const EVP_MD *md,
                     const unsigned char *salt,
                     const unsigned char *data, int datal, int count,
                     unsigned char *key, unsigned char *iv);
 
 =head1 DESCRIPTION
 
-EVP_BytesToKey() derives a key and IV from various parameters. B<type> is
+OPENSSL_BOX_EVP_BytesToKey() derives a key and IV from various parameters. B<type> is
 the cipher to derive the key and IV for. B<md> is the message digest to use.
 The B<salt> parameter is used as a salt in the derivation: it should point to
 an 8 byte buffer or NULL if no salt is used. B<data> is a buffer containing
@@ -37,7 +37,7 @@ B<MD5> is used then the derivation algorithm is compatible with PKCS#5 v1.5
 otherwise a non standard extension is used to derive the extra data.
 
 Newer applications should use a more modern algorithm such as PBKDF2 as
-defined in PKCS#5v2.1 and provided by PKCS5_PBKDF2_HMAC.
+defined in PKCS#5v2.1 and provided by OPENSSL_BOX_PKCS5_PBKDF2_HMAC.
 
 =head1 KEY DERIVATION ALGORITHM
 
@@ -55,16 +55,16 @@ the IV.
 
 =head1 RETURN VALUES
 
-If B<data> is NULL, then EVP_BytesToKey() returns the number of bytes
+If B<data> is NULL, then OPENSSL_BOX_EVP_BytesToKey() returns the number of bytes
 needed to store the derived key.
-Otherwise, EVP_BytesToKey() returns the size of the derived key in bytes,
+Otherwise, OPENSSL_BOX_EVP_BytesToKey() returns the size of the derived key in bytes,
 or 0 on error.
 
 =head1 SEE ALSO
 
 L<evp(7)>, L<RAND_bytes(3)>,
-L<PKCS5_PBKDF2_HMAC(3)>,
-L<EVP_EncryptInit(3)>
+L<OPENSSL_BOX_PKCS5_PBKDF2_HMAC(3)>,
+L<OPENSSL_BOX_EVP_EncryptInit(3)>
 
 =head1 COPYRIGHT
 

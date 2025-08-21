@@ -1089,7 +1089,7 @@ int cms_main(int argc, char **argv)
                     goto end;
             }
 
-            res = EVP_PKEY_CTX_ctrl(pctx, -1, -1,
+            res = OPENSSL_BOX_EVP_PKEY_CTX_ctrl(pctx, -1, -1,
                                     EVP_PKEY_CTRL_CIPHER,
                                     OPENSSL_BOX_EVP_CIPHER_get_nid(cipher), NULL);
             if (res <= 0 && res != -2)
@@ -1103,7 +1103,7 @@ int cms_main(int argc, char **argv)
                 else if (ri_type == CMS_RECIPINFO_KEM)
                     wctx = CMS_RecipientInfo_kemri_get0_ctx(ri);
                 if (wctx != NULL) {
-                    if (EVP_EncryptInit_ex(wctx, wrap_cipher, NULL, NULL, NULL) != 1)
+                    if (OPENSSL_BOX_EVP_EncryptInit_ex(wctx, wrap_cipher, NULL, NULL, NULL) != 1)
                         goto end;
                 }
             }

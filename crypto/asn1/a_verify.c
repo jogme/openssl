@@ -70,7 +70,7 @@ int ASN1_verify(i2d_of_void *i2d, X509_ALGOR *a, ASN1_BIT_STRING *signature,
     }
     ret = -1;
 
-    if (EVP_VerifyFinal(ctx, (unsigned char *)signature->data,
+    if (OPENSSL_BOX_EVP_VerifyFinal(ctx, (unsigned char *)signature->data,
                         (unsigned int)signature->length, pkey) <= 0) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         ret = 0;
@@ -145,7 +145,7 @@ int ASN1_item_verify_ctx(const ASN1_ITEM *it, const X509_ALGOR *alg,
          * Return values meaning:
          * <=0: error.
          *   1: method does everything.
-         *   2: carry on as normal, method has called EVP_DigestVerifyInit()
+         *   2: carry on as normal, method has called OPENSSL_BOX_EVP_DigestVerifyInit()
          */
         if (ret <= 0)
             ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
@@ -165,7 +165,7 @@ int ASN1_item_verify_ctx(const ASN1_ITEM *it, const X509_ALGOR *alg,
                 ERR_raise(ERR_LIB_ASN1, ASN1_R_WRONG_PUBLIC_KEY_TYPE);
                 goto err;
             }
-            /* This function also calls EVP_DigestVerifyInit */
+            /* This function also calls OPENSSL_BOX_EVP_DigestVerifyInit */
             if (ossl_rsa_pss_to_ctx(ctx, NULL, alg, pkey) <= 0) {
                 ERR_raise(ERR_LIB_ASN1, ERR_R_INTERNAL_ERROR);
                 goto err;
@@ -191,7 +191,7 @@ int ASN1_item_verify_ctx(const ASN1_ITEM *it, const X509_ALGOR *alg,
              * Note that some algorithms (notably Ed25519 and Ed448) may allow
              * a NULL digest value.
              */
-            if (!EVP_DigestVerifyInit(ctx, NULL, type, NULL, pkey)) {
+            if (!OPENSSL_BOX_EVP_DigestVerifyInit(ctx, NULL, type, NULL, pkey)) {
                 ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
                 ret = 0;
                 goto err;
@@ -212,7 +212,7 @@ int ASN1_item_verify_ctx(const ASN1_ITEM *it, const X509_ALGOR *alg,
     }
     inll = inl;
 
-    ret = EVP_DigestVerify(ctx, signature->data, (size_t)signature->length,
+    ret = OPENSSL_BOX_EVP_DigestVerify(ctx, signature->data, (size_t)signature->length,
                            buf_in, inl);
     if (ret <= 0) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);

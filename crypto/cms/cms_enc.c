@@ -63,7 +63,7 @@ BIO *ossl_cms_EncryptedContent_init_bio(CMS_EncryptedContentInfo *ec,
         cipher = EVP_get_cipherbyobj(calg->algorithm);
     }
     if (cipher != NULL) {
-        fetched_ciph = EVP_CIPHER_fetch(libctx, OPENSSL_BOX_EVP_CIPHER_get0_name(cipher),
+        fetched_ciph = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, OPENSSL_BOX_EVP_CIPHER_get0_name(cipher),
                                         propq);
         if (fetched_ciph != NULL)
             cipher = fetched_ciph;
@@ -75,7 +75,7 @@ BIO *ossl_cms_EncryptedContent_init_bio(CMS_EncryptedContentInfo *ec,
     }
     (void)ERR_pop_to_mark();
 
-    if (EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, enc) <= 0) {
+    if (OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, enc) <= 0) {
         ERR_raise(ERR_LIB_CMS, CMS_R_CIPHER_INITIALISATION_ERROR);
         goto err;
     }
@@ -159,7 +159,7 @@ BIO *ossl_cms_EncryptedContent_init_bio(CMS_EncryptedContentInfo *ec,
         }
     }
 
-    if (EVP_CipherInit_ex(ctx, NULL, NULL, ec->key, piv, enc) <= 0) {
+    if (OPENSSL_BOX_EVP_CipherInit_ex(ctx, NULL, NULL, ec->key, piv, enc) <= 0) {
         ERR_raise(ERR_LIB_CMS, CMS_R_CIPHER_INITIALISATION_ERROR);
         goto err;
     }

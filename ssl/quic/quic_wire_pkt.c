@@ -41,14 +41,14 @@ int ossl_quic_hdr_protector_init(QUIC_HDR_PROTECTOR *hpr,
         return 0;
     }
 
-    hpr->cipher = EVP_CIPHER_fetch(libctx, cipher_name, propq);
+    hpr->cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, cipher_name, propq);
     if (hpr->cipher == NULL
         || quic_hp_key_len != (size_t)OPENSSL_BOX_EVP_CIPHER_get_key_length(hpr->cipher)) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         goto err;
     }
 
-    if (!EVP_CipherInit_ex(hpr->cipher_ctx, hpr->cipher, NULL,
+    if (!OPENSSL_BOX_EVP_CipherInit_ex(hpr->cipher_ctx, hpr->cipher, NULL,
                            quic_hp_key, NULL, 1)) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         goto err;
@@ -89,8 +89,8 @@ static int hdr_generate_mask(QUIC_HDR_PROTECTOR *hpr,
             return 0;
         }
 
-        if (!EVP_CipherInit_ex(hpr->cipher_ctx, NULL, NULL, NULL, NULL, 1)
-            || !EVP_CipherUpdate(hpr->cipher_ctx, dst, &l, sample, 16)) {
+        if (!OPENSSL_BOX_EVP_CipherInit_ex(hpr->cipher_ctx, NULL, NULL, NULL, NULL, 1)
+            || !OPENSSL_BOX_EVP_CipherUpdate(hpr->cipher_ctx, dst, &l, sample, 16)) {
             ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
             return 0;
         }
@@ -103,8 +103,8 @@ static int hdr_generate_mask(QUIC_HDR_PROTECTOR *hpr,
             return 0;
         }
 
-        if (!EVP_CipherInit_ex(hpr->cipher_ctx, NULL, NULL, NULL, sample, 1)
-            || !EVP_CipherUpdate(hpr->cipher_ctx, mask, &l,
+        if (!OPENSSL_BOX_EVP_CipherInit_ex(hpr->cipher_ctx, NULL, NULL, NULL, sample, 1)
+            || !OPENSSL_BOX_EVP_CipherUpdate(hpr->cipher_ctx, mask, &l,
                                  zeroes, sizeof(zeroes))) {
             ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
             return 0;
@@ -909,7 +909,7 @@ int ossl_quic_calculate_retry_integrity_tag(OSSL_LIB_CTX *libctx,
 
     /* Create and initialise cipher context. */
     /* TODO(QUIC FUTURE): Cipher fetch caching. */
-    if ((cipher = EVP_CIPHER_fetch(libctx, "AES-128-GCM", propq)) == NULL) {
+    if ((cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "AES-128-GCM", propq)) == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         goto err;
     }
@@ -919,27 +919,27 @@ int ossl_quic_calculate_retry_integrity_tag(OSSL_LIB_CTX *libctx,
         goto err;
     }
 
-    if (!EVP_CipherInit_ex(cctx, cipher, NULL,
+    if (!OPENSSL_BOX_EVP_CipherInit_ex(cctx, cipher, NULL,
                            retry_integrity_key, retry_integrity_nonce, /*enc=*/1)) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         goto err;
     }
 
     /* Feed packet header as AAD data. */
-    if (EVP_CipherUpdate(cctx, NULL, &l, buf, (int)hdr_enc_len) != 1) {
+    if (OPENSSL_BOX_EVP_CipherUpdate(cctx, NULL, &l, buf, (int)hdr_enc_len) != 1) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         goto err;
     }
 
     /* Feed packet body as AAD data. */
-    if (EVP_CipherUpdate(cctx, NULL, &l, hdr->data,
+    if (OPENSSL_BOX_EVP_CipherUpdate(cctx, NULL, &l, hdr->data,
                          (int)(hdr->len - QUIC_RETRY_INTEGRITY_TAG_LEN)) != 1) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         goto err;
     }
 
     /* Finalise and get tag. */
-    if (EVP_CipherFinal_ex(cctx, NULL, &l2) != 1) {
+    if (OPENSSL_BOX_EVP_CipherFinal_ex(cctx, NULL, &l2) != 1) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         goto err;
     }

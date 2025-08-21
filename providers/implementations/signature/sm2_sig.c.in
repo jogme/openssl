@@ -95,7 +95,7 @@ typedef struct {
 static int sm2sig_set_mdname(PROV_SM2_CTX *psm2ctx, const char *mdname)
 {
     if (psm2ctx->md == NULL) /* We need an SM3 md to compare with */
-        psm2ctx->md = EVP_MD_fetch(psm2ctx->libctx, psm2ctx->mdname,
+        psm2ctx->md = OPENSSL_BOX_EVP_MD_fetch(psm2ctx->libctx, psm2ctx->mdname,
                                    psm2ctx->propq);
     if (psm2ctx->md == NULL)
         return 0;
@@ -247,7 +247,7 @@ static int sm2sig_digest_signverify_init(void *vpsm2ctx, const char *mdname,
     if (aid != NULL && ctx->aid_len != 0)
         memmove(ctx->aid_buf, aid, ctx->aid_len);
 
-    if (!EVP_DigestInit_ex2(ctx->mdctx, ctx->md, params))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex2(ctx->mdctx, ctx->md, params))
         goto error;
 
     ctx->flag_compute_z_digest = 1;
@@ -271,7 +271,7 @@ static int sm2sig_compute_z_digest(PROV_SM2_CTX *ctx)
             /* get hashed prefix 'z' of tbs message */
             || !ossl_sm2_compute_z_digest(z, ctx->md, ctx->id, ctx->id_len,
                                           ctx->ec)
-            || !EVP_DigestUpdate(ctx->mdctx, z, ctx->mdsize))
+            || !OPENSSL_BOX_EVP_DigestUpdate(ctx->mdctx, z, ctx->mdsize))
             ret = 0;
         OPENSSL_free(z);
     }
@@ -288,7 +288,7 @@ int sm2sig_digest_signverify_update(void *vpsm2ctx, const unsigned char *data,
         return 0;
 
     return sm2sig_compute_z_digest(psm2ctx)
-        && EVP_DigestUpdate(psm2ctx->mdctx, data, datalen);
+        && OPENSSL_BOX_EVP_DigestUpdate(psm2ctx->mdctx, data, datalen);
 }
 
 int sm2sig_digest_sign_final(void *vpsm2ctx, unsigned char *sig, size_t *siglen,
@@ -307,7 +307,7 @@ int sm2sig_digest_sign_final(void *vpsm2ctx, unsigned char *sig, size_t *siglen,
      */
     if (sig != NULL) {
         if (!(sm2sig_compute_z_digest(psm2ctx)
-              && EVP_DigestFinal_ex(psm2ctx->mdctx, digest, &dlen)))
+              && OPENSSL_BOX_EVP_DigestFinal_ex(psm2ctx->mdctx, digest, &dlen)))
             return 0;
     }
 
@@ -331,7 +331,7 @@ int sm2sig_digest_verify_final(void *vpsm2ctx, const unsigned char *sig,
         return 0;
 
     if (!(sm2sig_compute_z_digest(psm2ctx)
-          && EVP_DigestFinal_ex(psm2ctx->mdctx, digest, &dlen)))
+          && OPENSSL_BOX_EVP_DigestFinal_ex(psm2ctx->mdctx, digest, &dlen)))
         return 0;
 
     return sm2sig_verify(vpsm2ctx, sig, siglen, digest, (size_t)dlen);

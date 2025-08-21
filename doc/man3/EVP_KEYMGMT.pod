@@ -3,15 +3,15 @@
 =head1 NAME
 
 EVP_KEYMGMT,
-EVP_KEYMGMT_fetch,
+OPENSSL_BOX_EVP_KEYMGMT_fetch,
 OPENSSL_BOX_EVP_KEYMGMT_up_ref,
 OPENSSL_BOX_EVP_KEYMGMT_free,
 OPENSSL_BOX_EVP_KEYMGMT_get0_provider,
 OPENSSL_BOX_EVP_KEYMGMT_is_a,
 OPENSSL_BOX_EVP_KEYMGMT_get0_description,
 OPENSSL_BOX_EVP_KEYMGMT_get0_name,
-EVP_KEYMGMT_do_all_provided,
-EVP_KEYMGMT_names_do_all,
+OPENSSL_BOX_EVP_KEYMGMT_do_all_provided,
+OPENSSL_BOX_EVP_KEYMGMT_names_do_all,
 OPENSSL_BOX_EVP_KEYMGMT_gettable_params,
 OPENSSL_BOX_EVP_KEYMGMT_settable_params,
 OPENSSL_BOX_EVP_KEYMGMT_gen_gettable_params,
@@ -24,7 +24,7 @@ OPENSSL_BOX_EVP_KEYMGMT_gen_settable_params
 
  typedef struct evp_keymgmt_st EVP_KEYMGMT;
 
- EVP_KEYMGMT *EVP_KEYMGMT_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
+ EVP_KEYMGMT *OPENSSL_BOX_EVP_KEYMGMT_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
                                 const char *properties);
  int OPENSSL_BOX_EVP_KEYMGMT_up_ref(EVP_KEYMGMT *keymgmt);
  void OPENSSL_BOX_EVP_KEYMGMT_free(EVP_KEYMGMT *keymgmt);
@@ -33,10 +33,10 @@ OPENSSL_BOX_EVP_KEYMGMT_gen_settable_params
  const char *OPENSSL_BOX_EVP_KEYMGMT_get0_name(const EVP_KEYMGMT *keymgmt);
  const char *OPENSSL_BOX_EVP_KEYMGMT_get0_description(const EVP_KEYMGMT *keymgmt);
 
- void EVP_KEYMGMT_do_all_provided(OSSL_LIB_CTX *libctx,
+ void OPENSSL_BOX_EVP_KEYMGMT_do_all_provided(OSSL_LIB_CTX *libctx,
                                   void (*fn)(EVP_KEYMGMT *keymgmt, void *arg),
                                   void *arg);
- int EVP_KEYMGMT_names_do_all(const EVP_KEYMGMT *keymgmt,
+ int OPENSSL_BOX_EVP_KEYMGMT_names_do_all(const EVP_KEYMGMT *keymgmt,
                               void (*fn)(const char *name, void *data),
                               void *data);
  const OSSL_PARAM *OPENSSL_BOX_EVP_KEYMGMT_gettable_params(const EVP_KEYMGMT *keymgmt);
@@ -55,7 +55,7 @@ Most of the functionality can only be used internally and has no
 public interface, this object is simply passed into other functions
 when needed.
 
-EVP_KEYMGMT_fetch() looks for an algorithm within the provider that
+OPENSSL_BOX_EVP_KEYMGMT_fetch() looks for an algorithm within the provider that
 has been loaded into the B<OSSL_LIB_CTX> given by I<ctx>, having the
 name given by I<algorithm> and the properties given by I<properties>.
 
@@ -78,14 +78,14 @@ multiple synonyms associated with it. In this case the first name from the
 algorithm definition is returned. Ownership of the returned string is
 retained by the I<keymgmt> object and should not be freed by the caller.
 
-EVP_KEYMGMT_names_do_all() traverses all names for the I<keymgmt>, and
+OPENSSL_BOX_EVP_KEYMGMT_names_do_all() traverses all names for the I<keymgmt>, and
 calls I<fn> with each name and I<data>.
 
 OPENSSL_BOX_EVP_KEYMGMT_get0_description() returns a description of the I<keymgmt>, meant
 for display and human consumption.  The description is at the discretion
 of the I<keymgmt> implementation.
 
-EVP_KEYMGMT_do_all_provided() traverses all key keymgmt implementations by
+OPENSSL_BOX_EVP_KEYMGMT_do_all_provided() traverses all key keymgmt implementations by
 all activated providers in the library context I<libctx>, and for each
 of the implementations, calls I<fn> with the implementation method and
 I<data> as arguments.
@@ -102,19 +102,19 @@ L<OPENSSL_BOX_EVP_PKEY_CTX_get_params(3)> or L<OPENSSL_BOX_EVP_PKEY_CTX_set_para
 
 =head1 NOTES
 
-EVP_KEYMGMT_fetch() may be called implicitly by other fetching
+OPENSSL_BOX_EVP_KEYMGMT_fetch() may be called implicitly by other fetching
 functions, using the same library context and properties.
 Any other API that uses keys will typically do this.
 
 =head1 RETURN VALUES
 
-EVP_KEYMGMT_fetch() returns a pointer to the key management
+OPENSSL_BOX_EVP_KEYMGMT_fetch() returns a pointer to the key management
 implementation represented by an EVP_KEYMGMT object, or NULL on
 error.
 
 OPENSSL_BOX_EVP_KEYMGMT_up_ref() returns 1 on success, or 0 on error.
 
-EVP_KEYMGMT_names_do_all() returns 1 if the callback was called for all
+OPENSSL_BOX_EVP_KEYMGMT_names_do_all() returns 1 if the callback was called for all
 names. A return value of 0 means that the callback was not called for any names.
 
 OPENSSL_BOX_EVP_KEYMGMT_free() doesn't return any value.
@@ -136,7 +136,7 @@ return a constant L<OSSL_PARAM(3)> array or NULL on error.
 
 =head1 SEE ALSO
 
-L<EVP_MD_fetch(3)>, L<OSSL_LIB_CTX(3)>
+L<OPENSSL_BOX_EVP_MD_fetch(3)>, L<OSSL_LIB_CTX(3)>
 
 =head1 HISTORY
 

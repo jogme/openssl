@@ -64,7 +64,7 @@ information cache.
 
 evp_keymgmt_util_fromdata() can be used to add key object data to a
 given key I<target> via a B<EVP_KEYMGMT> interface.  This is used as a
-helper for L<EVP_PKEY_fromdata(3)>.
+helper for L<OPENSSL_BOX_EVP_PKEY_fromdata(3)>.
 
 In all functions that take a I<selection> argument, the selection is used to
 constraint the information requested on export. It is also used in the cache

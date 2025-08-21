@@ -2,35 +2,35 @@
 
 =head1 NAME
 
-EVP_PKEY_digestsign_supports_digest - indicate support for signature digest
+OPENSSL_BOX_EVP_PKEY_digestsign_supports_digest - indicate support for signature digest
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
- int EVP_PKEY_digestsign_supports_digest(EVP_PKEY *pkey, OSSL_LIB_CTX *libctx,
+ int OPENSSL_BOX_EVP_PKEY_digestsign_supports_digest(EVP_PKEY *pkey, OSSL_LIB_CTX *libctx,
                                          const char *name, const char *propq);
 
 =head1 DESCRIPTION
 
-The EVP_PKEY_digestsign_supports_digest() function queries whether the message
+The OPENSSL_BOX_EVP_PKEY_digestsign_supports_digest() function queries whether the message
 digest I<name> is supported for public key signature operations associated with
 key I<pkey>. The query is done within an optional library context I<libctx> and
 with an optional property query I<propq>.
 
 =head1 RETURN VALUES
 
-The EVP_PKEY_digestsign_supports_digest() function returns 1 if the message
+The OPENSSL_BOX_EVP_PKEY_digestsign_supports_digest() function returns 1 if the message
 digest algorithm identified by I<name> can be used for public key signature
 operations associated with key I<pkey> and 0 if it cannot be used. It returns
 a negative value for failure.
 
 =head1 SEE ALSO
 
-L<EVP_DigestSignInit_ex(3)>,
+L<OPENSSL_BOX_EVP_DigestSignInit_ex(3)>,
 
 =head1 HISTORY
 
-The EVP_PKEY_digestsign_supports_digest() function was added in OpenSSL 3.0.
+The OPENSSL_BOX_EVP_PKEY_digestsign_supports_digest() function was added in OpenSSL 3.0.
 
 =head1 COPYRIGHT
 

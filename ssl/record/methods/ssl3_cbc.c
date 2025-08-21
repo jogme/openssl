@@ -456,26 +456,26 @@ int ssl3_cbc_digest_record(const EVP_MD *md,
     if (md_ctx == NULL)
         goto err;
 
-    if (EVP_DigestInit_ex(md_ctx, md, NULL /* engine */) <= 0)
+    if (OPENSSL_BOX_EVP_DigestInit_ex(md_ctx, md, NULL /* engine */) <= 0)
         goto err;
     if (is_sslv3) {
         /* We repurpose |hmac_pad| to contain the SSLv3 pad2 block. */
         memset(hmac_pad, 0x5c, sslv3_pad_length);
 
-        if (EVP_DigestUpdate(md_ctx, mac_secret, mac_secret_length) <= 0
-            || EVP_DigestUpdate(md_ctx, hmac_pad, sslv3_pad_length) <= 0
-            || EVP_DigestUpdate(md_ctx, mac_out, md_size) <= 0)
+        if (OPENSSL_BOX_EVP_DigestUpdate(md_ctx, mac_secret, mac_secret_length) <= 0
+            || OPENSSL_BOX_EVP_DigestUpdate(md_ctx, hmac_pad, sslv3_pad_length) <= 0
+            || OPENSSL_BOX_EVP_DigestUpdate(md_ctx, mac_out, md_size) <= 0)
             goto err;
     } else {
         /* Complete the HMAC in the standard manner. */
         for (i = 0; i < md_block_size; i++)
             hmac_pad[i] ^= 0x6a;
 
-        if (EVP_DigestUpdate(md_ctx, hmac_pad, md_block_size) <= 0
-            || EVP_DigestUpdate(md_ctx, mac_out, md_size) <= 0)
+        if (OPENSSL_BOX_EVP_DigestUpdate(md_ctx, hmac_pad, md_block_size) <= 0
+            || OPENSSL_BOX_EVP_DigestUpdate(md_ctx, mac_out, md_size) <= 0)
             goto err;
     }
-    ret = EVP_DigestFinal(md_ctx, md_out, &md_out_size_u);
+    ret = OPENSSL_BOX_EVP_DigestFinal(md_ctx, md_out, &md_out_size_u);
     if (ret && md_out_size)
         *md_out_size = md_out_size_u;
 

@@ -40,11 +40,11 @@ HMAC() - no way to specify the length of the output buffer
 
 X509_pubkey_digest() - no way to specify the length of the output buffer
 
-EVP_Q_digest() - no way to specify the length of the output buffer
+OPENSSL_BOX_EVP_Q_digest() - no way to specify the length of the output buffer
 
-EVP_Digest() - no way to specify the length of the output buffer
+OPENSSL_BOX_EVP_Digest() - no way to specify the length of the output buffer
 
-EVP_DigestFinal_ex() - this is actually documented to allow larger output
+OPENSSL_BOX_EVP_DigestFinal_ex() - this is actually documented to allow larger output
 if set explicitly by some application call that sets the output size
 
 #### Proposed solution:
@@ -129,7 +129,7 @@ APIs depending on this value.
 **Current value:** 16
 
 This macro is used in a single place in hpke to allocate a fixed buffer.
-The EVP_EncryptInit(3) manual page mentions the tag size being at most
+The OPENSSL_BOX_EVP_EncryptInit(3) manual page mentions the tag size being at most
 16 bytes for OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(EVP_CTRL_AEAD_SET_TAG). The value is
 problematic as for HMAC/KMAC based AEAD ciphers the tag length can be
 larger than block size. Even in case we would have block ciphers with

@@ -34,15 +34,15 @@ static int self_test_digest(const ST_KAT_DIGEST *t, OSSL_SELF_TEST *st,
     unsigned char out[EVP_MAX_MD_SIZE];
     unsigned int out_len = 0;
     EVP_MD_CTX *ctx = OPENSSL_BOX_EVP_MD_CTX_new();
-    EVP_MD *md = EVP_MD_fetch(libctx, t->algorithm, NULL);
+    EVP_MD *md = OPENSSL_BOX_EVP_MD_fetch(libctx, t->algorithm, NULL);
 
     OSSL_SELF_TEST_onbegin(st, OSSL_SELF_TEST_TYPE_KAT_DIGEST, t->desc);
 
     if (ctx == NULL
             || md == NULL
-            || !EVP_DigestInit_ex(ctx, md, NULL)
-            || !EVP_DigestUpdate(ctx, t->pt, t->pt_len)
-            || !EVP_DigestFinal(ctx, out, &out_len))
+            || !OPENSSL_BOX_EVP_DigestInit_ex(ctx, md, NULL)
+            || !OPENSSL_BOX_EVP_DigestUpdate(ctx, t->pt, t->pt_len)
+            || !OPENSSL_BOX_EVP_DigestFinal(ctx, out, &out_len))
         goto err;
 
     /* Optional corruption */
@@ -60,7 +60,7 @@ err:
 }
 
 /*
- * Helper function to setup a EVP_CipherInit
+ * Helper function to setup a OPENSSL_BOX_EVP_CipherInit
  * Used to hide the complexity of Authenticated ciphers.
  */
 static int cipher_init(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
@@ -73,7 +73,7 @@ static int cipher_init(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
     OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPHER_CTX_FLAG_WRAP_ALLOW);
     if (t->tag == NULL) {
         /* Use a normal cipher init */
-        return EVP_CipherInit_ex(ctx, cipher, NULL, t->key, t->iv, enc)
+        return OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, NULL, t->key, t->iv, enc)
                && OPENSSL_BOX_EVP_CIPHER_CTX_set_padding(ctx, pad);
     }
 
@@ -81,14 +81,14 @@ static int cipher_init(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher,
     if (!enc)
         in_tag = (unsigned char *)t->tag;
 
-    return EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, enc)
+    return OPENSSL_BOX_EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, enc)
            && (OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, (int)t->iv_len, NULL) > 0)
            && (in_tag == NULL
                || OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, (int)t->tag_len,
                                       in_tag) > 0)
-           && EVP_CipherInit_ex(ctx, NULL, NULL, t->key, t->iv, enc)
+           && OPENSSL_BOX_EVP_CipherInit_ex(ctx, NULL, NULL, t->key, t->iv, enc)
            && OPENSSL_BOX_EVP_CIPHER_CTX_set_padding(ctx, pad)
-           && EVP_CipherUpdate(ctx, NULL, &tmp, t->aad, (int)t->aad_len);
+           && OPENSSL_BOX_EVP_CipherUpdate(ctx, NULL, &tmp, t->aad, (int)t->aad_len);
 }
 
 /* Test a single KAT for encrypt/decrypt */
@@ -106,16 +106,16 @@ static int self_test_cipher(const ST_KAT_CIPHER *t, OSSL_SELF_TEST *st,
     ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ctx == NULL)
         goto err;
-    cipher = EVP_CIPHER_fetch(libctx, t->base.algorithm, NULL);
+    cipher = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, t->base.algorithm, NULL);
     if (cipher == NULL)
         goto err;
 
     /* Encrypt plain text message */
     if ((t->mode & CIPHER_MODE_ENCRYPT) != 0) {
         if (!cipher_init(ctx, cipher, t, encrypt)
-                || !EVP_CipherUpdate(ctx, ct_buf, &len, t->base.pt,
+                || !OPENSSL_BOX_EVP_CipherUpdate(ctx, ct_buf, &len, t->base.pt,
                                      (int)t->base.pt_len)
-                || !EVP_CipherFinal_ex(ctx, ct_buf + len, &ct_len))
+                || !OPENSSL_BOX_EVP_CipherFinal_ex(ctx, ct_buf + len, &ct_len))
             goto err;
 
         OSSL_SELF_TEST_oncorrupt_byte(st, ct_buf);
@@ -137,9 +137,9 @@ static int self_test_cipher(const ST_KAT_CIPHER *t, OSSL_SELF_TEST *st,
     /* Decrypt cipher text */
     if ((t->mode & CIPHER_MODE_DECRYPT) != 0) {
         if (!(cipher_init(ctx, cipher, t, !encrypt)
-              && EVP_CipherUpdate(ctx, pt_buf, &len,
+              && OPENSSL_BOX_EVP_CipherUpdate(ctx, pt_buf, &len,
                                   t->base.expected, (int)t->base.expected_len)
-              && EVP_CipherFinal_ex(ctx, pt_buf + len, &pt_len)))
+              && OPENSSL_BOX_EVP_CipherFinal_ex(ctx, pt_buf + len, &pt_len)))
             goto err;
         OSSL_SELF_TEST_oncorrupt_byte(st, pt_buf);
         pt_len += len;
@@ -301,7 +301,7 @@ static int self_test_drbg(const ST_KAT_DRBG *t, OSSL_SELF_TEST *st,
 
     OSSL_SELF_TEST_onbegin(st, OSSL_SELF_TEST_TYPE_DRBG, t->desc);
 
-    rand = EVP_RAND_fetch(libctx, "TEST-RAND", NULL);
+    rand = OPENSSL_BOX_EVP_RAND_fetch(libctx, "TEST-RAND", NULL);
     if (rand == NULL)
         goto err;
 
@@ -315,7 +315,7 @@ static int self_test_drbg(const ST_KAT_DRBG *t, OSSL_SELF_TEST *st,
     if (!OPENSSL_BOX_EVP_RAND_CTX_set_params(test, drbg_params))
         goto err;
 
-    rand = EVP_RAND_fetch(libctx, t->algorithm, NULL);
+    rand = OPENSSL_BOX_EVP_RAND_fetch(libctx, t->algorithm, NULL);
     if (rand == NULL)
         goto err;
 
@@ -341,9 +341,9 @@ static int self_test_drbg(const ST_KAT_DRBG *t, OSSL_SELF_TEST *st,
     drbg_params[1] =
         OSSL_PARAM_construct_octet_string(OSSL_RAND_PARAM_TEST_NONCE,
                                           (void *)t->nonce, t->noncelen);
-    if (!EVP_RAND_instantiate(test, strength, 0, NULL, 0, drbg_params))
+    if (!OPENSSL_BOX_EVP_RAND_instantiate(test, strength, 0, NULL, 0, drbg_params))
         goto err;
-    if (!EVP_RAND_instantiate(drbg, strength, 0, t->persstr, t->persstrlen,
+    if (!OPENSSL_BOX_EVP_RAND_instantiate(drbg, strength, 0, t->persstr, t->persstrlen,
                               NULL))
         goto err;
 
@@ -354,7 +354,7 @@ static int self_test_drbg(const ST_KAT_DRBG *t, OSSL_SELF_TEST *st,
     if (!OPENSSL_BOX_EVP_RAND_CTX_set_params(test, drbg_params))
         goto err;
 
-    if (!EVP_RAND_generate(drbg, out, t->expectedlen, strength,
+    if (!OPENSSL_BOX_EVP_RAND_generate(drbg, out, t->expectedlen, strength,
                            prediction_resistance,
                            t->entropyaddin1, t->entropyaddin1len))
         goto err;
@@ -370,7 +370,7 @@ static int self_test_drbg(const ST_KAT_DRBG *t, OSSL_SELF_TEST *st,
      * This calls ossl_prov_drbg_reseed() internally when
      * prediction_resistance = 1
      */
-    if (!EVP_RAND_generate(drbg, out, t->expectedlen, strength,
+    if (!OPENSSL_BOX_EVP_RAND_generate(drbg, out, t->expectedlen, strength,
                            prediction_resistance,
                            t->entropyaddin2, t->entropyaddin2len))
         goto err;
@@ -422,18 +422,18 @@ static int self_test_ka(const ST_KAT_KAS *t,
         goto err;
 
     /* Create a EVP_PKEY_CTX to load the DH keys into */
-    kactx = EVP_PKEY_CTX_new_from_name(libctx, t->algorithm, "");
+    kactx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, t->algorithm, "");
     if (kactx == NULL)
         goto err;
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(kactx) <= 0
-        || EVP_PKEY_fromdata(kactx, &pkey, EVP_PKEY_KEYPAIR, params) <= 0)
+        || OPENSSL_BOX_EVP_PKEY_fromdata(kactx, &pkey, EVP_PKEY_KEYPAIR, params) <= 0)
         goto err;
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(kactx) <= 0
-        || EVP_PKEY_fromdata(kactx, &peerkey, EVP_PKEY_KEYPAIR, params_peer) <= 0)
+        || OPENSSL_BOX_EVP_PKEY_fromdata(kactx, &peerkey, EVP_PKEY_KEYPAIR, params_peer) <= 0)
         goto err;
 
     /* Create a EVP_PKEY_CTX to perform key derivation */
-    dctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL);
+    dctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL);
     if (dctx == NULL)
         goto err;
 
@@ -467,13 +467,13 @@ static int digest_signature(const uint8_t *sig, size_t sig_len,
     int ret;
     unsigned int len = 0;
     EVP_MD_CTX *ctx = OPENSSL_BOX_EVP_MD_CTX_new();
-    EVP_MD *md = EVP_MD_fetch(lib_ctx, "SHA256", NULL);
+    EVP_MD *md = OPENSSL_BOX_EVP_MD_fetch(lib_ctx, "SHA256", NULL);
 
     ret = ctx != NULL
         && md != NULL
-        && EVP_DigestInit_ex(ctx, md, NULL) == 1
-        && EVP_DigestUpdate(ctx, sig, sig_len) == 1
-        && EVP_DigestFinal(ctx, out, &len) == 1;
+        && OPENSSL_BOX_EVP_DigestInit_ex(ctx, md, NULL) == 1
+        && OPENSSL_BOX_EVP_DigestUpdate(ctx, sig, sig_len) == 1
+        && OPENSSL_BOX_EVP_DigestFinal(ctx, out, &len) == 1;
     OPENSSL_BOX_EVP_MD_free(md);
     OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     *out_len = len;
@@ -498,20 +498,20 @@ static int self_test_LMS(OSSL_SELF_TEST *st, OSSL_LIB_CTX *libctx)
                                               t->publen);
     pm[1] = OSSL_PARAM_construct_end();
 
-    ctx = EVP_PKEY_CTX_new_from_name(libctx, "LMS", "");
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "LMS", "");
     if (ctx == NULL
             || OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0
-            || EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_PUBLIC_KEY, pm) <= 0)
+            || OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_PUBLIC_KEY, pm) <= 0)
         goto err;
     OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
-    ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, "");
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, "");
     if (ctx == NULL)
         goto err;
 
-    sig = EVP_SIGNATURE_fetch(libctx, "LMS", NULL);
+    sig = OPENSSL_BOX_EVP_SIGNATURE_fetch(libctx, "LMS", NULL);
     if (sig == NULL
-            || EVP_PKEY_verify_message_init(ctx, sig, NULL) <= 0
-            || EVP_PKEY_verify(ctx, t->sig, t->siglen,
+            || OPENSSL_BOX_EVP_PKEY_verify_message_init(ctx, sig, NULL) <= 0
+            || OPENSSL_BOX_EVP_PKEY_verify(ctx, t->sig, t->siglen,
                                t->msg, t->msglen) <= 0)
         goto err;
 
@@ -558,20 +558,20 @@ static int self_test_digest_sign(const ST_KAT_SIGN *t,
     paramsinit = kat_params_to_ossl_params(libctx, t->init, NULL);
     paramsverify = kat_params_to_ossl_params(libctx, t->verify, NULL);
 
-    fromctx = EVP_PKEY_CTX_new_from_name(libctx, t->keytype, NULL);
+    fromctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, t->keytype, NULL);
     if (fromctx == NULL
             || paramskey == NULL
             || paramsinit == NULL
             || paramsverify == NULL)
         goto err;
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(fromctx) <= 0
-            || EVP_PKEY_fromdata(fromctx, &pkey, EVP_PKEY_KEYPAIR, paramskey) <= 0)
+            || OPENSSL_BOX_EVP_PKEY_fromdata(fromctx, &pkey, EVP_PKEY_KEYPAIR, paramskey) <= 0)
         goto err;
 
-    sigalg = EVP_SIGNATURE_fetch(libctx, t->sigalgorithm, NULL);
+    sigalg = OPENSSL_BOX_EVP_SIGNATURE_fetch(libctx, t->sigalgorithm, NULL);
     if (sigalg == NULL)
         goto err;
-    ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL);
     if (ctx == NULL)
         goto err;
 
@@ -582,15 +582,15 @@ static int self_test_digest_sign(const ST_KAT_SIGN *t,
         memcpy(psig, t->sig_expected, siglen);
     } else {
         if (digested) {
-            if (EVP_PKEY_sign_init_ex2(ctx, sigalg, paramsinit) <= 0)
+            if (OPENSSL_BOX_EVP_PKEY_sign_init_ex2(ctx, sigalg, paramsinit) <= 0)
                 goto err;
         } else {
-            if (EVP_PKEY_sign_message_init(ctx, sigalg, paramsinit) <= 0)
+            if (OPENSSL_BOX_EVP_PKEY_sign_message_init(ctx, sigalg, paramsinit) <= 0)
                 goto err;
         }
         siglen = sizeof(sig);
         if ((t->mode & SIGNATURE_MODE_SIG_DIGESTED) != 0) {
-            if (EVP_PKEY_sign(ctx, NULL, &siglen, t->msg, t->msg_len) <= 0)
+            if (OPENSSL_BOX_EVP_PKEY_sign(ctx, NULL, &siglen, t->msg, t->msg_len) <= 0)
                 goto err;
             if (siglen > sizeof(sig)) {
                 psig = OPENSSL_malloc(siglen);
@@ -598,7 +598,7 @@ static int self_test_digest_sign(const ST_KAT_SIGN *t,
                     goto err;
             }
         }
-        if (EVP_PKEY_sign(ctx, psig, &siglen, t->msg, t->msg_len) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_sign(ctx, psig, &siglen, t->msg, t->msg_len) <= 0)
             goto err;
 
         if (t->sig_expected != NULL) {
@@ -621,14 +621,14 @@ static int self_test_digest_sign(const ST_KAT_SIGN *t,
 
     if ((t->mode & SIGNATURE_MODE_SIGN_ONLY) == 0) {
         if (digested) {
-            if (EVP_PKEY_verify_init_ex2(ctx, sigalg, paramsverify) <= 0)
+            if (OPENSSL_BOX_EVP_PKEY_verify_init_ex2(ctx, sigalg, paramsverify) <= 0)
                 goto err;
         } else {
-            if (EVP_PKEY_verify_message_init(ctx, sigalg, paramsverify) <= 0)
+            if (OPENSSL_BOX_EVP_PKEY_verify_message_init(ctx, sigalg, paramsverify) <= 0)
                 goto err;
         }
         OSSL_SELF_TEST_oncorrupt_byte(st, psig);
-        if (EVP_PKEY_verify(ctx, psig, siglen, t->msg, t->msg_len) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_verify(ctx, psig, siglen, t->msg, t->msg_len) <= 0)
             goto err;
     }
     ret = 1;
@@ -667,7 +667,7 @@ static int self_test_asym_keygen(const ST_KAT_ASYM_KEYGEN *t, OSSL_SELF_TEST *st
 
     OSSL_SELF_TEST_onbegin(st, OSSL_SELF_TEST_TYPE_KAT_ASYM_KEYGEN, t->desc);
 
-    key_ctx = EVP_PKEY_CTX_new_from_name(libctx, t->algorithm, NULL);
+    key_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, t->algorithm, NULL);
     if (key_ctx == NULL)
         goto err;
     if (t->keygen_params != NULL) {
@@ -682,7 +682,7 @@ static int self_test_asym_keygen(const ST_KAT_ASYM_KEYGEN *t, OSSL_SELF_TEST *st
 
     for (expected = t->expected_params; expected->data != NULL; ++expected) {
         if (expected->type != OSSL_PARAM_OCTET_STRING
-                || !EVP_PKEY_get_octet_string_param(key, expected->name,
+                || !OPENSSL_BOX_EVP_PKEY_get_octet_string_param(key, expected->name,
                                                     out, sizeof(out), &out_len))
             goto err;
         OSSL_SELF_TEST_oncorrupt_byte(st, out);
@@ -718,7 +718,7 @@ static int self_test_kem_encapsulate(const ST_KAT_KEM *t, OSSL_SELF_TEST *st,
     OSSL_SELF_TEST_onbegin(st, OSSL_SELF_TEST_TYPE_KAT_KEM,
                            OSSL_SELF_TEST_DESC_ENCAP_KEM);
 
-    ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, "");
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, "");
     if (ctx == NULL)
         goto err;
 
@@ -735,7 +735,7 @@ static int self_test_kem_encapsulate(const ST_KAT_KEM *t, OSSL_SELF_TEST *st,
         goto err;
 
     /* Encapsulate */
-    if (EVP_PKEY_encapsulate(ctx, wrapped, &wrappedlen, secret, &secretlen) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_encapsulate(ctx, wrapped, &wrappedlen, secret, &secretlen) <= 0)
         goto err;
 
     /* Compare outputs */
@@ -784,7 +784,7 @@ static int self_test_kem_decapsulate(const ST_KAT_KEM *t, OSSL_SELF_TEST *st,
         test_secret = t->reject_secret;
     }
 
-    ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, "");
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, "");
     if (ctx == NULL)
         goto err;
 
@@ -797,7 +797,7 @@ static int self_test_kem_decapsulate(const ST_KAT_KEM *t, OSSL_SELF_TEST *st,
         goto err;
 
     /* Decapsulate */
-    if (EVP_PKEY_decapsulate(ctx, secret, &secretlen,
+    if (OPENSSL_BOX_EVP_PKEY_decapsulate(ctx, secret, &secretlen,
                              cipher_text, t->cipher_text_len) <= 0)
         goto err;
 
@@ -833,7 +833,7 @@ static int self_test_kem(const ST_KAT_KEM *t, OSSL_SELF_TEST *st,
     EVP_PKEY_CTX *ctx;
     OSSL_PARAM *params = NULL;
 
-    ctx = EVP_PKEY_CTX_new_from_name(libctx, t->algorithm, NULL);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, t->algorithm, NULL);
     if (ctx == NULL)
         goto err;
     params = kat_params_to_ossl_params(libctx, t->key, NULL);
@@ -841,7 +841,7 @@ static int self_test_kem(const ST_KAT_KEM *t, OSSL_SELF_TEST *st,
         goto err;
 
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0
-            || EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_KEYPAIR, params) <= 0)
+            || OPENSSL_BOX_EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_KEYPAIR, params) <= 0)
         goto err;
 
     if (!self_test_kem_encapsulate(t, st, libctx, pkey)
@@ -980,7 +980,7 @@ static int set_kat_drbg(OSSL_LIB_CTX *ctx,
     if (kat_rand != NULL)
         return 0;
 
-    rand = EVP_RAND_fetch(ctx, "TEST-RAND", NULL);
+    rand = OPENSSL_BOX_EVP_RAND_fetch(ctx, "TEST-RAND", NULL);
     if (rand == NULL)
         return 0;
 
@@ -994,7 +994,7 @@ static int set_kat_drbg(OSSL_LIB_CTX *ctx,
     if (!OPENSSL_BOX_EVP_RAND_CTX_set_params(parent_rand, drbg_params))
         goto err;
 
-    rand = EVP_RAND_fetch(ctx, "HASH-DRBG", NULL);
+    rand = OPENSSL_BOX_EVP_RAND_fetch(ctx, "HASH-DRBG", NULL);
     if (rand == NULL)
         goto err;
 
@@ -1014,13 +1014,13 @@ static int set_kat_drbg(OSSL_LIB_CTX *ctx,
     drbg_params[1] =
         OSSL_PARAM_construct_octet_string(OSSL_RAND_PARAM_TEST_NONCE,
                                           (void *)nonce, nonce_len);
-    if (!EVP_RAND_instantiate(parent_rand, strength, 0, NULL, 0, drbg_params))
+    if (!OPENSSL_BOX_EVP_RAND_instantiate(parent_rand, strength, 0, NULL, 0, drbg_params))
         goto err;
 
     OPENSSL_BOX_EVP_RAND_CTX_free(parent_rand);
     parent_rand = NULL;
 
-    if (!EVP_RAND_instantiate(kat_rand, strength, 0, persstr, persstr_len, NULL))
+    if (!OPENSSL_BOX_EVP_RAND_instantiate(kat_rand, strength, 0, persstr, persstr_len, NULL))
         goto err;
 
     /* When we set the new private generator this one is freed, so upref it */
@@ -1065,7 +1065,7 @@ static int setup_main_random(OSSL_LIB_CTX *libctx)
     unsigned int strength = 256, generate = 1;
     EVP_RAND *rand;
 
-    rand = EVP_RAND_fetch(libctx, "TEST-RAND", NULL);
+    rand = OPENSSL_BOX_EVP_RAND_fetch(libctx, "TEST-RAND", NULL);
     if (rand == NULL)
         return 0;
 
@@ -1079,7 +1079,7 @@ static int setup_main_random(OSSL_LIB_CTX *libctx)
     drbg_params[1] = OSSL_PARAM_construct_uint(OSSL_RAND_PARAM_STRENGTH,
                                                &strength);
 
-    if (!EVP_RAND_instantiate(main_rand, strength, 0, NULL, 0, drbg_params))
+    if (!OPENSSL_BOX_EVP_RAND_instantiate(main_rand, strength, 0, NULL, 0, drbg_params))
         goto err;
     return 1;
  err:

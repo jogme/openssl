@@ -945,7 +945,7 @@ static int qrx_decrypt_pkt_body(OSSL_QRX *qrx, unsigned char *dst,
         nonce[nonce_len - i - 1] ^= (unsigned char)(pn >> (i * 8));
 
     /* type and key will already have been setup; feed the IV. */
-    if (EVP_CipherInit_ex(cctx, NULL,
+    if (OPENSSL_BOX_EVP_CipherInit_ex(cctx, NULL,
                           NULL, NULL, nonce, /*enc=*/0) != 1)
         return 0;
 
@@ -956,11 +956,11 @@ static int qrx_decrypt_pkt_body(OSSL_QRX *qrx, unsigned char *dst,
         return 0;
 
     /* Feed AAD data. */
-    if (EVP_CipherUpdate(cctx, NULL, &l, aad, (int)aad_len) != 1)
+    if (OPENSSL_BOX_EVP_CipherUpdate(cctx, NULL, &l, aad, (int)aad_len) != 1)
         return 0;
 
     /* Feed encrypted packet body. */
-    if (EVP_CipherUpdate(cctx, dst, &l, src, (int)(src_len - el->tag_len)) != 1)
+    if (OPENSSL_BOX_EVP_CipherUpdate(cctx, dst, &l, src, (int)(src_len - el->tag_len)) != 1)
         return 0;
 
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
@@ -971,12 +971,12 @@ static int qrx_decrypt_pkt_body(OSSL_QRX *qrx, unsigned char *dst,
     memcpy(dst, src, l);
 
     /* Pretend to authenticate the tag but ignore it */
-    if (EVP_CipherFinal_ex(cctx, NULL, &l2) != 1) {
+    if (OPENSSL_BOX_EVP_CipherFinal_ex(cctx, NULL, &l2) != 1) {
         /* We don't care */
     }
 #else
     /* Ensure authentication succeeded. */
-    if (EVP_CipherFinal_ex(cctx, NULL, &l2) != 1) {
+    if (OPENSSL_BOX_EVP_CipherFinal_ex(cctx, NULL, &l2) != 1) {
         /* Authentication failed, increment failed auth counter. */
         ++qrx->forged_pkt_count;
         return 0;

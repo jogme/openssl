@@ -110,7 +110,7 @@ int pkeyparam_main(int argc, char **argv)
 
     if (check) {
         if (e == NULL)
-            ctx = EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), pkey,
+            ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), pkey,
                                              app_get0_propq());
         else
             ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, e);
@@ -138,7 +138,7 @@ int pkeyparam_main(int argc, char **argv)
         PEM_write_bio_Parameters(out, pkey);
 
     if (text)
-        EVP_PKEY_print_params(out, pkey, 0, NULL);
+        OPENSSL_BOX_EVP_PKEY_print_params(out, pkey, 0, NULL);
 
     ret = EXIT_SUCCESS;
 

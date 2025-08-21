@@ -15,7 +15,7 @@
 #include "crypto/asn1.h"
 #include "crypto/evp.h"
 
-EVP_PKEY *d2i_KeyParams(int type, EVP_PKEY **a, const unsigned char **pp,
+EVP_PKEY *OPENSSL_BOX_d2i_KeyParams(int type, EVP_PKEY **a, const unsigned char **pp,
                         long length)
 {
     EVP_PKEY *ret = NULL;
@@ -58,7 +58,7 @@ EVP_PKEY *OPENSSL_BOX_d2i_KeyParams_bio(int type, EVP_PKEY **a, BIO *in)
         goto err;
 
     p = (unsigned char *)b->data;
-    ret = d2i_KeyParams(type, a, &p, len);
+    ret = OPENSSL_BOX_d2i_KeyParams(type, a, &p, len);
 err:
     BUF_MEM_free(b);
     return ret;

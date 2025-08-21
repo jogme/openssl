@@ -149,8 +149,8 @@ together and are being used.
 
 The usual way to obtain random bytes is to call RAND_bytes(...) or
 RAND_priv_bytes(...). These calls are roughly equivalent to calling
-EVP_RAND_generate(<public>, ...) and
-EVP_RAND_generate(<private>, ...),
+OPENSSL_BOX_EVP_RAND_generate(<public>, ...) and
+OPENSSL_BOX_EVP_RAND_generate(<private>, ...),
 respectively.
 
 =head1 RESEEDING
@@ -166,7 +166,7 @@ the reseeding process in more detail.
 
 =head2 Automatic Reseeding
 
-Before satisfying a generate request (L<EVP_RAND_generate(3)>), the DRBG
+Before satisfying a generate request (L<OPENSSL_BOX_EVP_RAND_generate(3)>), the DRBG
 reseeds itself automatically, if one of the following conditions holds:
 
 - the DRBG was not instantiated (=seeded) yet or has been uninstantiated.
@@ -191,7 +191,7 @@ from the error as soon as the entropy source is available again.
 In addition to automatic reseeding, the caller can request an immediate
 reseeding of the DRBG with fresh entropy by setting the
 I<prediction resistance> parameter to 1 when calling
-L<EVP_RAND_generate(3)>.
+L<OPENSSL_BOX_EVP_RAND_generate(3)>.
 
 The document [NIST SP 800-90C] describes prediction resistance requests
 in detail and imposes strict conditions on the entropy sources that are

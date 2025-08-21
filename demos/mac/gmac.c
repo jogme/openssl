@@ -72,9 +72,9 @@ int main(int argc, char **argv)
     }
 
     /* Fetch the GMAC implementation */
-    mac = EVP_MAC_fetch(library_context, "GMAC", propq);
+    mac = OPENSSL_BOX_EVP_MAC_fetch(library_context, "GMAC", propq);
     if (mac == NULL) {
-        fprintf(stderr, "EVP_MAC_fetch() returned NULL\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_fetch() returned NULL\n");
         goto end;
     }
 
@@ -103,8 +103,8 @@ int main(int argc, char **argv)
     *p = OSSL_PARAM_construct_end();
 
     /* Initialise the GMAC operation */
-    if (!EVP_MAC_init(mctx, key, sizeof(key), params)) {
-        fprintf(stderr, "EVP_MAC_init() failed\n");
+    if (!OPENSSL_BOX_EVP_MAC_init(mctx, key, sizeof(key), params)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_init() failed\n");
         goto end;
     }
 
@@ -115,8 +115,8 @@ int main(int argc, char **argv)
     }
 
     /* Make one call to the final to get the MAC */
-    if (!EVP_MAC_final(mctx, out, &out_len, sizeof(out))) {
-        fprintf(stderr, "EVP_MAC_final() failed\n");
+    if (!OPENSSL_BOX_EVP_MAC_final(mctx, out, &out_len, sizeof(out))) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_final() failed\n");
         goto end;
     }
 

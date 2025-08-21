@@ -47,7 +47,7 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
 
     /* Load DER-encoded RSA private key. */
     ppriv_key = rsa_priv_key;
-    pkey = d2i_PrivateKey_ex(EVP_PKEY_RSA, NULL, &ppriv_key,
+    pkey = OPENSSL_BOX_d2i_PrivateKey_ex(EVP_PKEY_RSA, NULL, &ppriv_key,
                              sizeof(rsa_priv_key), libctx, propq);
     if (pkey == NULL) {
         fprintf(stderr, "Failed to load private key\n");
@@ -55,14 +55,14 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
     }
 
     /* Fetch hash algorithm we want to use. */
-    md = EVP_MD_fetch(libctx, "SHA256", propq);
+    md = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHA256", propq);
     if (md == NULL) {
         fprintf(stderr, "Failed to fetch hash algorithm\n");
         goto end;
     }
 
     /* Create signing context. */
-    ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
     if (ctx == NULL) {
         fprintf(stderr, "Failed to create signing context\n");
         goto end;
@@ -85,7 +85,7 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
     }
 
     /* Determine length of signature. */
-    if (EVP_PKEY_sign(ctx, NULL, sig_len,
+    if (OPENSSL_BOX_EVP_PKEY_sign(ctx, NULL, sig_len,
                       test_digest, sizeof(test_digest)) == 0) {
         fprintf(stderr, "Failed to get signature length\n");
         goto end;
@@ -99,7 +99,7 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
     }
 
     /* Generate signature. */
-    if (EVP_PKEY_sign(ctx, *sig, sig_len,
+    if (OPENSSL_BOX_EVP_PKEY_sign(ctx, *sig, sig_len,
                       test_digest, sizeof(test_digest)) != 1) {
         fprintf(stderr, "Failed to sign\n");
         goto end;
@@ -131,21 +131,21 @@ static int verify(OSSL_LIB_CTX *libctx, const unsigned char *sig, size_t sig_len
 
     /* Load DER-encoded RSA public key. */
     ppub_key = rsa_pub_key;
-    pkey = d2i_PublicKey(EVP_PKEY_RSA, NULL, &ppub_key, sizeof(rsa_pub_key));
+    pkey = OPENSSL_BOX_d2i_PublicKey(EVP_PKEY_RSA, NULL, &ppub_key, sizeof(rsa_pub_key));
     if (pkey == NULL) {
         fprintf(stderr, "Failed to load public key\n");
         goto end;
     }
 
     /* Fetch hash algorithm we want to use. */
-    md = EVP_MD_fetch(libctx, "SHA256", propq);
+    md = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHA256", propq);
     if (md == NULL) {
         fprintf(stderr, "Failed to fetch hash algorithm\n");
         goto end;
     }
 
     /* Create verification context. */
-    ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
     if (ctx == NULL) {
         fprintf(stderr, "Failed to create verification context\n");
         goto end;
@@ -168,7 +168,7 @@ static int verify(OSSL_LIB_CTX *libctx, const unsigned char *sig, size_t sig_len
     }
 
     /* Verify signature. */
-    if (EVP_PKEY_verify(ctx, sig, sig_len,
+    if (OPENSSL_BOX_EVP_PKEY_verify(ctx, sig, sig_len,
                         test_digest, sizeof(test_digest)) == 0) {
         fprintf(stderr, "Failed to verify signature; "
                 "signature may be invalid\n");

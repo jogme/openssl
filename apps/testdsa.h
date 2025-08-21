@@ -236,7 +236,7 @@ EVP_PKEY *get_dsa(int dsa_bits)
         return NULL;
     }
 
-    if ((pctx = EVP_PKEY_CTX_new_from_name(NULL, "DSA", NULL)) == NULL)
+    if ((pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(NULL, "DSA", NULL)) == NULL)
         return NULL;
 
     priv_key = BN_bin2bn(dsa_t.priv, dsa_t.priv_l, NULL);
@@ -263,7 +263,7 @@ EVP_PKEY *get_dsa(int dsa_bits)
         goto err;
 
     if (OPENSSL_BOX_EVP_PKEY_fromdata_init(pctx) <= 0
-        || EVP_PKEY_fromdata(pctx, &pkey, EVP_PKEY_KEYPAIR,
+        || OPENSSL_BOX_EVP_PKEY_fromdata(pctx, &pkey, EVP_PKEY_KEYPAIR,
                              params) <= 0)
         pkey = NULL;
 err:

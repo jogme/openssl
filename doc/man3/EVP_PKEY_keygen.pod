@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-EVP_PKEY_Q_keygen,
+OPENSSL_BOX_EVP_PKEY_Q_keygen,
 OPENSSL_BOX_EVP_PKEY_keygen_init, OPENSSL_BOX_EVP_PKEY_paramgen_init, OPENSSL_BOX_EVP_PKEY_generate,
 OPENSSL_BOX_EVP_PKEY_CTX_set_cb, OPENSSL_BOX_EVP_PKEY_CTX_get_cb,
 OPENSSL_BOX_EVP_PKEY_CTX_get_keygen_info, OPENSSL_BOX_EVP_PKEY_CTX_set_app_data,
@@ -15,7 +15,7 @@ OPENSSL_BOX_EVP_PKEY_paramgen, OPENSSL_BOX_EVP_PKEY_keygen
 
  #include <openssl/evp.h>
 
- EVP_PKEY *EVP_PKEY_Q_keygen(OSSL_LIB_CTX *libctx, const char *propq,
+ EVP_PKEY *OPENSSL_BOX_EVP_PKEY_Q_keygen(OSSL_LIB_CTX *libctx, const char *propq,
                              const char *type, ...);
 
  int OPENSSL_BOX_EVP_PKEY_keygen_init(EVP_PKEY_CTX *ctx);
@@ -58,7 +58,7 @@ OPENSSL_BOX_EVP_PKEY_paramgen_init() is similar to OPENSSL_BOX_EVP_PKEY_keygen_i
 parameters are generated.
 
 After initialization, generation parameters may be provided with
-L<EVP_PKEY_CTX_ctrl(3)> or L<OPENSSL_BOX_EVP_PKEY_CTX_set_params(3)>, or any other
+L<OPENSSL_BOX_EVP_PKEY_CTX_ctrl(3)> or L<OPENSSL_BOX_EVP_PKEY_CTX_set_params(3)>, or any other
 function described in those manuals.
 
 OPENSSL_BOX_EVP_PKEY_generate() performs the generation operation, the resulting key
@@ -91,7 +91,7 @@ and retrieve an opaque pointer. This can be used to set some application
 defined value which can be retrieved in the callback: for example a handle
 which is used to update a "progress dialog".
 
-EVP_PKEY_Q_keygen() abstracts from the explicit use of B<EVP_PKEY_CTX> while
+OPENSSL_BOX_EVP_PKEY_Q_keygen() abstracts from the explicit use of B<EVP_PKEY_CTX> while
 providing a 'quick' but limited way of generating a new asymmetric key pair.
 It provides shorthands for simple and common cases of key generation.
 As usual, the library context I<libctx> and property query I<propq>
@@ -113,7 +113,7 @@ C<ML-KEM-512>,
 C<ML-KEM-768>, or
 C<ML-KEM-1024>
 no further parameters are needed. Other key types may be possible if they are
-supplied by the loaded providers. EVP_PKEY_Q_keygen() may be usable with such
+supplied by the loaded providers. OPENSSL_BOX_EVP_PKEY_Q_keygen() may be usable with such
 key types as long as they do not require further parameters.
 
 =head1 RETURN VALUES
@@ -123,7 +123,7 @@ OPENSSL_BOX_EVP_PKEY_paramgen() return 1 for success and 0 or a negative value f
 In particular a return value of -2 indicates the operation is not supported by
 the public key algorithm.
 
-EVP_PKEY_Q_keygen() returns an B<EVP_PKEY>, or NULL on failure.
+OPENSSL_BOX_EVP_PKEY_Q_keygen() returns an B<EVP_PKEY>, or NULL on failure.
 
 =head1 NOTES
 
@@ -220,11 +220,11 @@ Example of generation callback for OpenSSL public key implementations:
 
 L<EVP_RSA_gen(3)>, L<EVP_EC_gen(3)>,
 L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
-L<EVP_PKEY_encrypt(3)>,
-L<EVP_PKEY_decrypt(3)>,
-L<EVP_PKEY_sign(3)>,
-L<EVP_PKEY_verify(3)>,
-L<EVP_PKEY_verify_recover(3)>,
+L<OPENSSL_BOX_EVP_PKEY_encrypt(3)>,
+L<OPENSSL_BOX_EVP_PKEY_decrypt(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify_recover(3)>,
 L<OPENSSL_BOX_EVP_PKEY_derive(3)>
 
 =head1 HISTORY
@@ -235,7 +235,7 @@ OPENSSL_BOX_EVP_PKEY_CTX_get_cb(), OPENSSL_BOX_EVP_PKEY_CTX_get_keygen_info(),
 OPENSSL_BOX_EVP_PKEY_CTX_set_app_data() and OPENSSL_BOX_EVP_PKEY_CTX_get_app_data() were added in
 OpenSSL 1.0.0.
 
-EVP_PKEY_Q_keygen() and OPENSSL_BOX_EVP_PKEY_generate() were added in OpenSSL 3.0.
+OPENSSL_BOX_EVP_PKEY_Q_keygen() and OPENSSL_BOX_EVP_PKEY_generate() were added in OpenSSL 3.0.
 
 =head1 COPYRIGHT
 

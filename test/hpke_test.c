@@ -79,7 +79,7 @@ static int cmpkey(const EVP_PKEY *pkey,
 
     if (!TEST_true(publen <= sizeof(pubbuf)))
         return 0;
-    erv = EVP_PKEY_get_octet_string_param(pkey,
+    erv = OPENSSL_BOX_EVP_PKEY_get_octet_string_param(pkey,
                                           OSSL_PKEY_PARAM_ENCODED_PUBLIC_KEY,
                                           pubbuf, sizeof(pubbuf), &pubbuflen);
     if (!TEST_true(erv))
@@ -1820,11 +1820,11 @@ static int test_hpke_compressed(void)
                                     NULL, 0, testctx, NULL)))
         goto end;
     /* now get the compressed form public key */
-    if (!TEST_true(EVP_PKEY_set_utf8_string_param(authpriv,
+    if (!TEST_true(OPENSSL_BOX_EVP_PKEY_set_utf8_string_param(authpriv,
                       OSSL_PKEY_PARAM_EC_POINT_CONVERSION_FORMAT,
                       OSSL_PKEY_EC_POINT_CONVERSION_FORMAT_COMPRESSED)))
         goto end;
-    if (!TEST_true(EVP_PKEY_get_octet_string_param(authpriv,
+    if (!TEST_true(OPENSSL_BOX_EVP_PKEY_get_octet_string_param(authpriv,
                                                    OSSL_PKEY_PARAM_PUB_KEY,
                                                    authpub,
                                                    sizeof(authpub),

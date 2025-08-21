@@ -165,11 +165,11 @@ static int generate_canonical_g(BN_CTX *ctx, BN_MONT_CTX *mont,
         md[0] = (unsigned char)(gindex & 0xff);
         md[1] = (unsigned char)((counter >> 8) & 0xff);
         md[2] = (unsigned char)(counter & 0xff);
-        if (!EVP_DigestInit_ex(mctx, evpmd, NULL)
-                || !EVP_DigestUpdate(mctx, seed, seedlen)
-                || !EVP_DigestUpdate(mctx, ggen, sizeof(ggen))
-                || !EVP_DigestUpdate(mctx, md, 3)
-                || !EVP_DigestFinal_ex(mctx, md, NULL)
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(mctx, evpmd, NULL)
+                || !OPENSSL_BOX_EVP_DigestUpdate(mctx, seed, seedlen)
+                || !OPENSSL_BOX_EVP_DigestUpdate(mctx, ggen, sizeof(ggen))
+                || !OPENSSL_BOX_EVP_DigestUpdate(mctx, md, 3)
+                || !OPENSSL_BOX_EVP_DigestFinal_ex(mctx, md, NULL)
                 || (BN_bin2bn(md, mdsize, tmp) == NULL)
                 || !BN_mod_exp_mont(g, tmp, e, p, ctx, mont))
                     break; /* exit on failure */
@@ -241,7 +241,7 @@ static int generate_p(BN_CTX *ctx, const EVP_MD *evpmd, int max_counter, int n,
              * A.1.1.3 Step (13.1)
              * tmp = V(j) = Hash((seed + offset + j) % 2^seedlen)
              */
-            if (!EVP_Digest(buf, buf_len, md, NULL, evpmd, NULL)
+            if (!OPENSSL_BOX_EVP_Digest(buf, buf_len, md, NULL, evpmd, NULL)
                     || (BN_bin2bn(md, mdsize, tmp) == NULL)
                     /*
                      * A.1.1.2 Step (11.2)
@@ -339,7 +339,7 @@ static int generate_q_fips186_4(BN_CTX *ctx, BIGNUM *q, const EVP_MD *evpmd,
          * A.1.1.3 Step (7)
          * U = Hash(seed) % (2^(N-1))
          */
-        if (!EVP_Digest(seed, seedlen, md, NULL, evpmd, NULL))
+        if (!OPENSSL_BOX_EVP_Digest(seed, seedlen, md, NULL, evpmd, NULL))
             goto err;
         /* Take least significant bits of md */
         if (mdsize > qsize)
@@ -416,9 +416,9 @@ static int generate_q_fips186_2(BN_CTX *ctx, BIGNUM *q, const EVP_MD *evpmd,
         }
 
         /* step 2 */
-        if (!EVP_Digest(seed, qsize, md, NULL, evpmd, NULL))
+        if (!OPENSSL_BOX_EVP_Digest(seed, qsize, md, NULL, evpmd, NULL))
             goto err;
-        if (!EVP_Digest(buf, qsize, buf2, NULL, evpmd, NULL))
+        if (!OPENSSL_BOX_EVP_Digest(buf, qsize, buf2, NULL, evpmd, NULL))
             goto err;
         for (i = 0; i < (int)qsize; i++)
             md[i] ^= buf2[i];
@@ -537,7 +537,7 @@ int ossl_ffc_params_FIPS186_4_gen_verify(OSSL_LIB_CTX *libctx,
     *res = 0;
 
     if (params->mdname != NULL) {
-        md = EVP_MD_fetch(libctx, params->mdname, params->mdprops);
+        md = OPENSSL_BOX_EVP_MD_fetch(libctx, params->mdname, params->mdprops);
     } else {
         if (N == 0)
             N = (L >= 2048 ? SHA256_DIGEST_LENGTH : SHA_DIGEST_LENGTH) * 8;
@@ -546,7 +546,7 @@ int ossl_ffc_params_FIPS186_4_gen_verify(OSSL_LIB_CTX *libctx,
             *res = FFC_CHECK_INVALID_Q_VALUE;
             goto err;
         }
-        md = EVP_MD_fetch(libctx, def_name, params->mdprops);
+        md = OPENSSL_BOX_EVP_MD_fetch(libctx, def_name, params->mdprops);
     }
     if (md == NULL)
         goto err;
@@ -833,7 +833,7 @@ int ossl_ffc_params_FIPS186_2_gen_verify(OSSL_LIB_CTX *libctx,
     *res = 0;
 
     if (params->mdname != NULL) {
-        md = EVP_MD_fetch(libctx, params->mdname, params->mdprops);
+        md = OPENSSL_BOX_EVP_MD_fetch(libctx, params->mdname, params->mdprops);
     } else {
         if (N == 0)
             N = (L >= 2048 ? SHA256_DIGEST_LENGTH : SHA_DIGEST_LENGTH) * 8;
@@ -842,7 +842,7 @@ int ossl_ffc_params_FIPS186_2_gen_verify(OSSL_LIB_CTX *libctx,
             *res = FFC_CHECK_INVALID_Q_VALUE;
             goto err;
         }
-        md = EVP_MD_fetch(libctx, def_name, params->mdprops);
+        md = OPENSSL_BOX_EVP_MD_fetch(libctx, def_name, params->mdprops);
     }
     if (md == NULL)
         goto err;

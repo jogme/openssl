@@ -108,7 +108,7 @@ EVP_MD_CTX *evp_md_ctx_new_ex(EVP_PKEY *pkey, const ASN1_OCTET_STRING *id,
     EVP_PKEY_CTX *pctx = NULL;
 
     if ((ctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL
-        || (pctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq)) == NULL) {
+        || (pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq)) == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         goto err;
     }
@@ -166,15 +166,15 @@ static int evp_md_init_internal(EVP_MD_CTX *ctx, const EVP_MD *type,
             && EVP_PKEY_CTX_IS_SIGNATURE_OP(ctx->pctx)
             && ctx->pctx->op.sig.algctx != NULL) {
         /*
-         * Prior to OpenSSL 3.0 calling EVP_DigestInit_ex() on an mdctx
-         * previously initialised with EVP_DigestSignInit() would retain
+         * Prior to OpenSSL 3.0 calling OPENSSL_BOX_EVP_DigestInit_ex() on an mdctx
+         * previously initialised with OPENSSL_BOX_EVP_DigestSignInit() would retain
          * information about the key, and re-initialise for another sign
-         * operation. So in that case we redirect to EVP_DigestSignInit()
+         * operation. So in that case we redirect to OPENSSL_BOX_EVP_DigestSignInit()
          */
         if (ctx->pctx->operation == EVP_PKEY_OP_SIGNCTX)
-            return EVP_DigestSignInit(ctx, NULL, type, impl, NULL);
+            return OPENSSL_BOX_EVP_DigestSignInit(ctx, NULL, type, impl, NULL);
         if (ctx->pctx->operation == EVP_PKEY_OP_VERIFYCTX)
-            return EVP_DigestVerifyInit(ctx, NULL, type, impl, NULL);
+            return OPENSSL_BOX_EVP_DigestVerifyInit(ctx, NULL, type, impl, NULL);
         ERR_raise(ERR_LIB_EVP, EVP_R_UPDATE_ERROR);
         return 0;
     }
@@ -263,7 +263,7 @@ static int evp_md_init_internal(EVP_MD_CTX *ctx, const EVP_MD *type,
         return 0;
 #else
         /* The NULL digest is a special case */
-        EVP_MD *provmd = EVP_MD_fetch(NULL,
+        EVP_MD *provmd = OPENSSL_BOX_EVP_MD_fetch(NULL,
                                       type->type != NID_undef ? OBJ_nid2sn(type->type)
                                                               : "NULL", "");
 
@@ -354,7 +354,7 @@ static int evp_md_init_internal(EVP_MD_CTX *ctx, const EVP_MD *type,
             && (!EVP_PKEY_CTX_IS_SIGNATURE_OP(ctx->pctx)
                  || ctx->pctx->op.sig.signature == NULL)) {
         int r;
-        r = EVP_PKEY_CTX_ctrl(ctx->pctx, -1, EVP_PKEY_OP_TYPE_SIG,
+        r = OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx->pctx, -1, EVP_PKEY_OP_TYPE_SIG,
                               EVP_PKEY_CTRL_DIGESTINIT, 0, ctx);
         if (r <= 0 && (r != -2))
             return 0;
@@ -365,7 +365,7 @@ static int evp_md_init_internal(EVP_MD_CTX *ctx, const EVP_MD *type,
     return ctx->digest->init(ctx);
 }
 
-int EVP_DigestInit_ex2(EVP_MD_CTX *ctx, const EVP_MD *type,
+int OPENSSL_BOX_EVP_DigestInit_ex2(EVP_MD_CTX *ctx, const EVP_MD *type,
                        const OSSL_PARAM params[])
 {
     return evp_md_init_internal(ctx, type, params, NULL);
@@ -377,12 +377,12 @@ int OPENSSL_BOX_EVP_DigestInit(EVP_MD_CTX *ctx, const EVP_MD *type)
     return evp_md_init_internal(ctx, type, NULL, NULL);
 }
 
-int EVP_DigestInit_ex(EVP_MD_CTX *ctx, const EVP_MD *type, ENGINE *impl)
+int OPENSSL_BOX_EVP_DigestInit_ex(EVP_MD_CTX *ctx, const EVP_MD *type, ENGINE *impl)
 {
     return evp_md_init_internal(ctx, type, NULL, impl);
 }
 
-int EVP_DigestUpdate(EVP_MD_CTX *ctx, const void *data, size_t count)
+int OPENSSL_BOX_EVP_DigestUpdate(EVP_MD_CTX *ctx, const void *data, size_t count)
 {
     if (ossl_unlikely(count == 0))
         return 1;
@@ -398,11 +398,11 @@ int EVP_DigestUpdate(EVP_MD_CTX *ctx, const void *data, size_t count)
 #ifndef FIPS_MODULE
         /*
          * Prior to OpenSSL 3.0 OPENSSL_BOX_EVP_DigestSignUpdate() and
-         * OPENSSL_BOX_EVP_DigestVerifyUpdate() were just macros for EVP_DigestUpdate().
-         * Some code calls EVP_DigestUpdate() directly even when initialised
-         * with EVP_DigestSignInit_ex() or
-         * EVP_DigestVerifyInit_ex(), so we detect that and redirect to
-         * the correct EVP_Digest*Update() function
+         * OPENSSL_BOX_EVP_DigestVerifyUpdate() were just macros for OPENSSL_BOX_EVP_DigestUpdate().
+         * Some code calls OPENSSL_BOX_EVP_DigestUpdate() directly even when initialised
+         * with OPENSSL_BOX_EVP_DigestSignInit_ex() or
+         * OPENSSL_BOX_EVP_DigestVerifyInit_ex(), so we detect that and redirect to
+         * the correct OPENSSL_BOX_EVP_Digest*Update() function
          */
         if (ctx->pctx->operation == EVP_PKEY_OP_SIGNCTX)
             return OPENSSL_BOX_EVP_DigestSignUpdate(ctx, data, count);
@@ -430,16 +430,16 @@ int EVP_DigestUpdate(EVP_MD_CTX *ctx, const void *data, size_t count)
 }
 
 /* The caller can assume that this removes any secret data from the context */
-int EVP_DigestFinal(EVP_MD_CTX *ctx, unsigned char *md, unsigned int *size)
+int OPENSSL_BOX_EVP_DigestFinal(EVP_MD_CTX *ctx, unsigned char *md, unsigned int *size)
 {
     int ret;
-    ret = EVP_DigestFinal_ex(ctx, md, size);
+    ret = OPENSSL_BOX_EVP_DigestFinal_ex(ctx, md, size);
     OPENSSL_BOX_EVP_MD_CTX_reset(ctx);
     return ret;
 }
 
 /* The caller can assume that this removes any secret data from the context */
-int EVP_DigestFinal_ex(EVP_MD_CTX *ctx, unsigned char *md, unsigned int *isize)
+int OPENSSL_BOX_EVP_DigestFinal_ex(EVP_MD_CTX *ctx, unsigned char *md, unsigned int *isize)
 {
     int ret, sz;
     size_t size = 0;
@@ -495,7 +495,7 @@ int EVP_DigestFinal_ex(EVP_MD_CTX *ctx, unsigned char *md, unsigned int *isize)
 }
 
 /* This is a one shot operation */
-int EVP_DigestFinalXOF(EVP_MD_CTX *ctx, unsigned char *md, size_t size)
+int OPENSSL_BOX_EVP_DigestFinalXOF(EVP_MD_CTX *ctx, unsigned char *md, size_t size)
 {
     int ret = 0;
     OSSL_PARAM params[2];
@@ -551,8 +551,8 @@ legacy:
     return ret;
 }
 
-/* EVP_DigestSqueeze() can be called multiple times */
-int EVP_DigestSqueeze(EVP_MD_CTX *ctx, unsigned char *md, size_t size)
+/* OPENSSL_BOX_EVP_DigestSqueeze() can be called multiple times */
+int OPENSSL_BOX_EVP_DigestSqueeze(EVP_MD_CTX *ctx, unsigned char *md, size_t size)
 {
     if (ctx->digest == NULL) {
         ERR_raise(ERR_LIB_EVP, EVP_R_INVALID_NULL_ALGORITHM);
@@ -723,7 +723,7 @@ int OPENSSL_BOX_EVP_MD_CTX_copy_ex(EVP_MD_CTX *out, const EVP_MD_CTX *in)
     return 1;
 }
 
-int EVP_Digest(const void *data, size_t count,
+int OPENSSL_BOX_EVP_Digest(const void *data, size_t count,
                unsigned char *md, unsigned int *size, const EVP_MD *type,
                ENGINE *impl)
 {
@@ -733,24 +733,24 @@ int EVP_Digest(const void *data, size_t count,
     if (ctx == NULL)
         return 0;
     OPENSSL_BOX_EVP_MD_CTX_set_flags(ctx, EVP_MD_CTX_FLAG_ONESHOT);
-    ret = EVP_DigestInit_ex(ctx, type, impl)
-        && EVP_DigestUpdate(ctx, data, count)
-        && EVP_DigestFinal_ex(ctx, md, size);
+    ret = OPENSSL_BOX_EVP_DigestInit_ex(ctx, type, impl)
+        && OPENSSL_BOX_EVP_DigestUpdate(ctx, data, count)
+        && OPENSSL_BOX_EVP_DigestFinal_ex(ctx, md, size);
     OPENSSL_BOX_EVP_MD_CTX_free(ctx);
 
     return ret;
 }
 
-int EVP_Q_digest(OSSL_LIB_CTX *libctx, const char *name, const char *propq,
+int OPENSSL_BOX_EVP_Q_digest(OSSL_LIB_CTX *libctx, const char *name, const char *propq,
                  const void *data, size_t datalen,
                  unsigned char *md, size_t *mdlen)
 {
-    EVP_MD *digest = EVP_MD_fetch(libctx, name, propq);
+    EVP_MD *digest = OPENSSL_BOX_EVP_MD_fetch(libctx, name, propq);
     unsigned int temp = 0;
     int ret = 0;
 
     if (digest != NULL) {
-        ret = EVP_Digest(data, datalen, md, &temp, digest, NULL);
+        ret = OPENSSL_BOX_EVP_Digest(data, datalen, md, &temp, digest, NULL);
         OPENSSL_BOX_EVP_MD_free(digest);
     }
     if (mdlen != NULL)
@@ -990,7 +990,7 @@ static int evp_md_cache_constants(EVP_MD *md)
 
     /*
      * Note that these parameters are 'constants' that are only set up
-     * during the EVP_MD_fetch(). For this reason the XOF functions set the
+     * during the OPENSSL_BOX_EVP_MD_fetch(). For this reason the XOF functions set the
      * md_size to 0, since the output size is unknown.
      */
     params[0] = OSSL_PARAM_construct_size_t(OSSL_DIGEST_PARAM_BLOCK_SIZE, &blksz);
@@ -1021,7 +1021,7 @@ static void *evp_md_from_algorithm(int name_id,
     EVP_MD *md = NULL;
     int fncnt = 0;
 
-    /* EVP_MD_fetch() will set the legacy NID if available */
+    /* OPENSSL_BOX_EVP_MD_fetch() will set the legacy NID if available */
     if ((md = evp_md_new()) == NULL) {
         ERR_raise(ERR_LIB_EVP, ERR_R_EVP_LIB);
         return NULL;
@@ -1160,7 +1160,7 @@ static void evp_md_free(void *md)
     OPENSSL_BOX_EVP_MD_free(md);
 }
 
-EVP_MD *EVP_MD_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
+EVP_MD *OPENSSL_BOX_EVP_MD_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
                      const char *properties)
 {
     EVP_MD *md =
@@ -1192,7 +1192,7 @@ void OPENSSL_BOX_EVP_MD_free(EVP_MD *md)
     evp_md_free_int(md);
 }
 
-void EVP_MD_do_all_provided(OSSL_LIB_CTX *libctx,
+void OPENSSL_BOX_EVP_MD_do_all_provided(OSSL_LIB_CTX *libctx,
                             void (*fn)(EVP_MD *mac, void *arg),
                             void *arg)
 {

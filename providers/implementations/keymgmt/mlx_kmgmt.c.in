@@ -242,7 +242,7 @@ export_sub(EXPORT_CB_ARG *sub_arg, int selection, MLX_KEY *key)
             sub_arg->publen = key->xinfo->pubkey_bytes;
             sub_arg->prvlen = key->xinfo->prvkey_bytes;
         }
-        if (!EVP_PKEY_export(pkey, selection, export_sub_cb, (void *)sub_arg))
+        if (!OPENSSL_BOX_EVP_PKEY_export(pkey, selection, export_sub_cb, (void *)sub_arg))
             return 0;
     }
     return 1;
@@ -360,14 +360,14 @@ load_slot(OSSL_LIB_CTX *libctx, const char *propq, const char *pname,
     }
     val = (void *)(in + off);
 
-    if ((ctx = EVP_PKEY_CTX_new_from_name(libctx, alg, propq)) == NULL
+    if ((ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, alg, propq)) == NULL
         || OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0)
         goto err;
     parr[0] = OSSL_PARAM_construct_octet_string(pname, val, len);
     if (group != NULL)
         parr[1] = OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME,
                                                    group, 0);
-    if (EVP_PKEY_fromdata(ctx, ppkey, selection, parr) > 0)
+    if (OPENSSL_BOX_EVP_PKEY_fromdata(ctx, ppkey, selection, parr) > 0)
         ret = 1;
 
  err:
@@ -706,9 +706,9 @@ static void *mlx_kem_gen(void *vgctx, OSSL_CALLBACK *osslcb, void *cbarg)
         return key;
 
     /* For now, using the same "propq" for all components */
-    key->mkey = EVP_PKEY_Q_keygen(key->libctx, key->propq,
+    key->mkey = OPENSSL_BOX_EVP_PKEY_Q_keygen(key->libctx, key->propq,
                                   key->minfo->algorithm_name);
-    key->xkey = EVP_PKEY_Q_keygen(key->libctx, key->propq,
+    key->xkey = OPENSSL_BOX_EVP_PKEY_Q_keygen(key->libctx, key->propq,
                                   key->xinfo->algorithm_name,
                                   key->xinfo->group_name);
     if (key->mkey != NULL && key->xkey != NULL) {

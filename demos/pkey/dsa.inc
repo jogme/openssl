@@ -93,7 +93,7 @@ static void print_bn(BIO *bio, const EVP_PKEY *pkey, const char *name)
 {
     BIGNUM *bn = NULL;
 
-    if (EVP_PKEY_get_bn_param(pkey, name, &bn) == 0)
+    if (OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, name, &bn) == 0)
         return;
 
     BIO_printf(bio, "  %s = 0x", name);
@@ -126,16 +126,16 @@ static int dsa_print_key(const EVP_PKEY *pkey, int keypair,
     print_bn(bio, pkey, OSSL_PKEY_PARAM_FFC_Q);
     print_bn(bio, pkey, OSSL_PKEY_PARAM_FFC_G);
 
-    if (EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_FFC_SEED, seed,
+    if (OPENSSL_BOX_EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_FFC_SEED, seed,
                                         sizeof(seed), &seedlen) > 0) {
         BIO_printf(bio, "  %s\n", OSSL_PKEY_PARAM_FFC_SEED);
         BIO_dump(bio, seed, (int)seedlen);
     }
-    if (EVP_PKEY_get_int_param(pkey, OSSL_PKEY_PARAM_FFC_GINDEX, &gindex) > 0) {
+    if (OPENSSL_BOX_EVP_PKEY_get_int_param(pkey, OSSL_PKEY_PARAM_FFC_GINDEX, &gindex) > 0) {
         if (gindex != -1)
             BIO_printf(bio, "  %s = %d\n", OSSL_PKEY_PARAM_FFC_GINDEX, gindex);
     }
-    if (EVP_PKEY_get_int_param(pkey, OSSL_PKEY_PARAM_FFC_PCOUNTER, &counter) > 0) {
+    if (OPENSSL_BOX_EVP_PKEY_get_int_param(pkey, OSSL_PKEY_PARAM_FFC_PCOUNTER, &counter) > 0) {
         if (counter != -1)
             BIO_printf(bio, "  %s = %d\n", OSSL_PKEY_PARAM_FFC_PCOUNTER, counter);
     }

@@ -28,7 +28,7 @@ QUIC_SRT_GEN *ossl_quic_srt_gen_new(OSSL_LIB_CTX *libctx, const char *propq,
     if ((srt_gen = OPENSSL_zalloc(sizeof(*srt_gen))) == NULL)
         return NULL;
 
-    if ((srt_gen->mac = EVP_MAC_fetch(libctx, "HMAC", propq)) == NULL)
+    if ((srt_gen->mac = OPENSSL_BOX_EVP_MAC_fetch(libctx, "HMAC", propq)) == NULL)
         goto err;
 
     if ((srt_gen->mac_ctx = OPENSSL_BOX_EVP_MAC_CTX_new(srt_gen->mac)) == NULL)
@@ -40,7 +40,7 @@ QUIC_SRT_GEN *ossl_quic_srt_gen_new(OSSL_LIB_CTX *libctx, const char *propq,
                                                 (char *)propq, 0);
     *p++ = OSSL_PARAM_construct_end();
 
-    if (!EVP_MAC_init(srt_gen->mac_ctx, key, key_len, params))
+    if (!OPENSSL_BOX_EVP_MAC_init(srt_gen->mac_ctx, key, key_len, params))
         goto err;
 
     return srt_gen;
@@ -67,14 +67,14 @@ int ossl_quic_srt_gen_calculate_token(QUIC_SRT_GEN *srt_gen,
     size_t outl = 0;
     unsigned char mac[SHA256_DIGEST_LENGTH];
 
-    if (!EVP_MAC_init(srt_gen->mac_ctx, NULL, 0, NULL))
+    if (!OPENSSL_BOX_EVP_MAC_init(srt_gen->mac_ctx, NULL, 0, NULL))
         return 0;
 
     if (!OPENSSL_BOX_EVP_MAC_update(srt_gen->mac_ctx, (const unsigned char *)dcid->id,
                         dcid->id_len))
         return 0;
 
-    if (!EVP_MAC_final(srt_gen->mac_ctx, mac, &outl, sizeof(mac))
+    if (!OPENSSL_BOX_EVP_MAC_final(srt_gen->mac_ctx, mac, &outl, sizeof(mac))
         || outl != sizeof(mac))
         return 0;
 

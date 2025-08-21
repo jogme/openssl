@@ -313,7 +313,7 @@ static int ossl_rsa_prf(OSSL_LIB_CTX *ctx,
      * messages for the same ciphertext, they'll know that the message is
      * synthetically generated, which means that the padding check failed
      */
-    md = EVP_MD_fetch(ctx, "sha256", NULL);
+    md = OPENSSL_BOX_EVP_MD_fetch(ctx, "sha256", NULL);
     if (md == NULL) {
         ERR_raise(ERR_LIB_RSA, ERR_R_INTERNAL_ERROR);
         goto err;

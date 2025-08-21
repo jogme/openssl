@@ -268,10 +268,10 @@ static int test_redirect(void)
 
     if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, NULL)))
         goto err;
-    TEST_info("EVP_PKEY_encrypt test: no redirection");
+    TEST_info("OPENSSL_BOX_EVP_PKEY_encrypt test: no redirection");
     /* Encrypt some data: should succeed but not be redirected */
     if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encrypt_init(ctx), 0)
-            || !TEST_int_gt(EVP_PKEY_encrypt(ctx, tmp, &len, pt, sizeof(pt)), 0)
+            || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encrypt(ctx, tmp, &len, pt, sizeof(pt)), 0)
             || !TEST_false(called_encrypt))
         goto err;
     OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
@@ -307,14 +307,14 @@ static int test_redirect(void)
     ctx = NULL;
 
     /* Add test encrypt operation to method */
-    EVP_PKEY_meth_set_encrypt(test_rsa, 0, test_encrypt);
+    OPENSSL_BOX_EVP_PKEY_meth_set_encrypt(test_rsa, 0, test_encrypt);
 
-    TEST_info("EVP_PKEY_encrypt test: redirection via OPENSSL_BOX_EVP_PKEY_CTX_new()");
+    TEST_info("OPENSSL_BOX_EVP_PKEY_encrypt test: redirection via OPENSSL_BOX_EVP_PKEY_CTX_new()");
     if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, e)))
         goto err;
     /* Encrypt some data: should succeed and be redirected */
     if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encrypt_init(ctx), 0)
-            || !TEST_int_gt(EVP_PKEY_encrypt(ctx, tmp, &len, pt, sizeof(pt)), 0)
+            || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encrypt(ctx, tmp, &len, pt, sizeof(pt)), 0)
             || !TEST_true(called_encrypt))
         goto err;
 
@@ -325,7 +325,7 @@ static int test_redirect(void)
     /* Create context with default engine: should not be redirected */
     if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, NULL))
             || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encrypt_init(ctx), 0)
-            || !TEST_int_gt(EVP_PKEY_encrypt(ctx, tmp, &len, pt, sizeof(pt)), 0)
+            || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encrypt(ctx, tmp, &len, pt, sizeof(pt)), 0)
             || !TEST_false(called_encrypt))
         goto err;
 
@@ -336,12 +336,12 @@ static int test_redirect(void)
     if (!TEST_true(OPENSSL_BOX_EVP_PKEY_set1_engine(pkey, e)))
         goto err;
 
-    TEST_info("EVP_PKEY_encrypt test: redirection via OPENSSL_BOX_EVP_PKEY_set1_engine()");
+    TEST_info("OPENSSL_BOX_EVP_PKEY_encrypt test: redirection via OPENSSL_BOX_EVP_PKEY_set1_engine()");
 
     /* Create context with default engine: should be redirected now */
     if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, NULL))
             || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encrypt_init(ctx), 0)
-            || !TEST_int_gt(EVP_PKEY_encrypt(ctx, tmp, &len, pt, sizeof(pt)), 0)
+            || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encrypt(ctx, tmp, &len, pt, sizeof(pt)), 0)
             || !TEST_true(called_encrypt))
         goto err;
 

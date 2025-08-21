@@ -230,17 +230,17 @@ static int bind_dasync(ENGINE *e)
         || (dasync_rsa = OPENSSL_BOX_EVP_PKEY_meth_new(EVP_PKEY_RSA,
                                            EVP_PKEY_FLAG_AUTOARGLEN)) == NULL)
         return 0;
-    EVP_PKEY_meth_set_init(dasync_rsa, dasync_rsa_init);
-    EVP_PKEY_meth_set_cleanup(dasync_rsa, dasync_rsa_cleanup);
-    EVP_PKEY_meth_set_paramgen(dasync_rsa, dasync_rsa_paramgen_init,
+    OPENSSL_BOX_EVP_PKEY_meth_set_init(dasync_rsa, dasync_rsa_init);
+    OPENSSL_BOX_EVP_PKEY_meth_set_cleanup(dasync_rsa, dasync_rsa_cleanup);
+    OPENSSL_BOX_EVP_PKEY_meth_set_paramgen(dasync_rsa, dasync_rsa_paramgen_init,
                                dasync_rsa_paramgen);
-    EVP_PKEY_meth_set_keygen(dasync_rsa, dasync_rsa_keygen_init,
+    OPENSSL_BOX_EVP_PKEY_meth_set_keygen(dasync_rsa, dasync_rsa_keygen_init,
                              dasync_rsa_keygen);
-    EVP_PKEY_meth_set_encrypt(dasync_rsa, dasync_rsa_encrypt_init,
+    OPENSSL_BOX_EVP_PKEY_meth_set_encrypt(dasync_rsa, dasync_rsa_encrypt_init,
                               dasync_rsa_encrypt);
-    EVP_PKEY_meth_set_decrypt(dasync_rsa, dasync_rsa_decrypt_init,
+    OPENSSL_BOX_EVP_PKEY_meth_set_decrypt(dasync_rsa, dasync_rsa_decrypt_init,
                               dasync_rsa_decrypt);
-    EVP_PKEY_meth_set_ctrl(dasync_rsa, dasync_rsa_ctrl,
+    OPENSSL_BOX_EVP_PKEY_meth_set_ctrl(dasync_rsa, dasync_rsa_ctrl,
                            dasync_rsa_ctrl_str);
 
     /* Ensure the dasync error handling is set up */
@@ -270,8 +270,8 @@ static int bind_dasync(ENGINE *e)
                                          sizeof(EVP_MD *) + sizeof(SHA_CTX))
         || !OPENSSL_BOX_EVP_MD_meth_set_flags(_hidden_sha1_md, EVP_MD_FLAG_DIGALGID_ABSENT)
         || !OPENSSL_BOX_EVP_MD_meth_set_init(_hidden_sha1_md, dasync_sha1_init)
-        || !EVP_MD_meth_set_update(_hidden_sha1_md, dasync_sha1_update)
-        || !EVP_MD_meth_set_final(_hidden_sha1_md, dasync_sha1_final)) {
+        || !OPENSSL_BOX_EVP_MD_meth_set_update(_hidden_sha1_md, dasync_sha1_update)
+        || !OPENSSL_BOX_EVP_MD_meth_set_final(_hidden_sha1_md, dasync_sha1_final)) {
         OPENSSL_BOX_EVP_MD_meth_free(_hidden_sha1_md);
         _hidden_sha1_md = NULL;
     }
@@ -286,13 +286,13 @@ static int bind_dasync(ENGINE *e)
                                           | EVP_CIPH_CBC_MODE
                                           | EVP_CIPH_FLAG_PIPELINE
                                           | EVP_CIPH_CUSTOM_COPY)
-            || !EVP_CIPHER_meth_set_init(_hidden_aes_128_cbc,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_init(_hidden_aes_128_cbc,
                                          dasync_aes128_init_key)
-            || !EVP_CIPHER_meth_set_do_cipher(_hidden_aes_128_cbc,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(_hidden_aes_128_cbc,
                                               dasync_aes128_cbc_cipher)
-            || !EVP_CIPHER_meth_set_cleanup(_hidden_aes_128_cbc,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_cleanup(_hidden_aes_128_cbc,
                                             dasync_aes128_cbc_cleanup)
-            || !EVP_CIPHER_meth_set_ctrl(_hidden_aes_128_cbc,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_ctrl(_hidden_aes_128_cbc,
                                          dasync_aes128_cbc_ctrl)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(_hidden_aes_128_cbc,
                                 sizeof(struct dasync_pipeline_ctx))) {
@@ -310,13 +310,13 @@ static int bind_dasync(ENGINE *e)
                                           | EVP_CIPH_CTR_MODE
                                           | EVP_CIPH_FLAG_PIPELINE
                                           | EVP_CIPH_CUSTOM_COPY)
-            || !EVP_CIPHER_meth_set_init(_hidden_aes_256_ctr,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_init(_hidden_aes_256_ctr,
                                          dasync_aes256_init_key)
-            || !EVP_CIPHER_meth_set_do_cipher(_hidden_aes_256_ctr,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(_hidden_aes_256_ctr,
                                               dasync_aes256_ctr_cipher)
-            || !EVP_CIPHER_meth_set_cleanup(_hidden_aes_256_ctr,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_cleanup(_hidden_aes_256_ctr,
                                             dasync_aes256_ctr_cleanup)
-            || !EVP_CIPHER_meth_set_ctrl(_hidden_aes_256_ctr,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_ctrl(_hidden_aes_256_ctr,
                                          dasync_aes256_ctr_ctrl)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(_hidden_aes_256_ctr,
                                 sizeof(struct dasync_pipeline_ctx))) {
@@ -336,13 +336,13 @@ static int bind_dasync(ENGINE *e)
                                           | EVP_CIPH_FLAG_AEAD_CIPHER
                                           | EVP_CIPH_FLAG_PIPELINE
                                           | EVP_CIPH_CUSTOM_COPY)
-            || !EVP_CIPHER_meth_set_init(_hidden_aes_128_cbc_hmac_sha1,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_init(_hidden_aes_128_cbc_hmac_sha1,
                                          dasync_aes128_cbc_hmac_sha1_init_key)
-            || !EVP_CIPHER_meth_set_do_cipher(_hidden_aes_128_cbc_hmac_sha1,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(_hidden_aes_128_cbc_hmac_sha1,
                                             dasync_aes128_cbc_hmac_sha1_cipher)
-            || !EVP_CIPHER_meth_set_cleanup(_hidden_aes_128_cbc_hmac_sha1,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_cleanup(_hidden_aes_128_cbc_hmac_sha1,
                                             dasync_aes128_cbc_hmac_sha1_cleanup)
-            || !EVP_CIPHER_meth_set_ctrl(_hidden_aes_128_cbc_hmac_sha1,
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_ctrl(_hidden_aes_128_cbc_hmac_sha1,
                                          dasync_aes128_cbc_hmac_sha1_ctrl)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(_hidden_aes_128_cbc_hmac_sha1,
                                 sizeof(struct dasync_pipeline_ctx))) {
@@ -892,7 +892,7 @@ static int dasync_rsa_init(EVP_PKEY_CTX *ctx)
     static int (*pinit)(EVP_PKEY_CTX *ctx);
 
     if (pinit == NULL)
-        EVP_PKEY_meth_get_init(dasync_rsa_orig, &pinit);
+        OPENSSL_BOX_EVP_PKEY_meth_get_init(dasync_rsa_orig, &pinit);
     return pinit(ctx);
 }
 
@@ -901,7 +901,7 @@ static void dasync_rsa_cleanup(EVP_PKEY_CTX *ctx)
     static void (*pcleanup)(EVP_PKEY_CTX *ctx);
 
     if (pcleanup == NULL)
-        EVP_PKEY_meth_get_cleanup(dasync_rsa_orig, &pcleanup);
+        OPENSSL_BOX_EVP_PKEY_meth_get_cleanup(dasync_rsa_orig, &pcleanup);
     pcleanup(ctx);
 }
 
@@ -910,7 +910,7 @@ static int dasync_rsa_paramgen_init(EVP_PKEY_CTX *ctx)
     static int (*pparamgen_init)(EVP_PKEY_CTX *ctx);
 
     if (pparamgen_init == NULL)
-        EVP_PKEY_meth_get_paramgen(dasync_rsa_orig, &pparamgen_init, NULL);
+        OPENSSL_BOX_EVP_PKEY_meth_get_paramgen(dasync_rsa_orig, &pparamgen_init, NULL);
     return pparamgen_init != NULL ? pparamgen_init(ctx) : 1;
 }
 
@@ -919,7 +919,7 @@ static int dasync_rsa_paramgen(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
     static int (*pparamgen)(EVP_PKEY_CTX *c, EVP_PKEY *pkey);
 
     if (pparamgen == NULL)
-        EVP_PKEY_meth_get_paramgen(dasync_rsa_orig, NULL, &pparamgen);
+        OPENSSL_BOX_EVP_PKEY_meth_get_paramgen(dasync_rsa_orig, NULL, &pparamgen);
     return pparamgen != NULL ? pparamgen(ctx, pkey) : 1;
 }
 
@@ -928,7 +928,7 @@ static int dasync_rsa_keygen_init(EVP_PKEY_CTX *ctx)
     static int (*pkeygen_init)(EVP_PKEY_CTX *ctx);
 
     if (pkeygen_init == NULL)
-        EVP_PKEY_meth_get_keygen(dasync_rsa_orig, &pkeygen_init, NULL);
+        OPENSSL_BOX_EVP_PKEY_meth_get_keygen(dasync_rsa_orig, &pkeygen_init, NULL);
     return pkeygen_init != NULL ? pkeygen_init(ctx) : 1;
 }
 
@@ -937,7 +937,7 @@ static int dasync_rsa_keygen(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
     static int (*pkeygen)(EVP_PKEY_CTX *c, EVP_PKEY *pkey);
 
     if (pkeygen == NULL)
-        EVP_PKEY_meth_get_keygen(dasync_rsa_orig, NULL, &pkeygen);
+        OPENSSL_BOX_EVP_PKEY_meth_get_keygen(dasync_rsa_orig, NULL, &pkeygen);
     return pkeygen(ctx, pkey);
 }
 
@@ -946,7 +946,7 @@ static int dasync_rsa_encrypt_init(EVP_PKEY_CTX *ctx)
     static int (*pencrypt_init)(EVP_PKEY_CTX *ctx);
 
     if (pencrypt_init == NULL)
-        EVP_PKEY_meth_get_encrypt(dasync_rsa_orig, &pencrypt_init, NULL);
+        OPENSSL_BOX_EVP_PKEY_meth_get_encrypt(dasync_rsa_orig, &pencrypt_init, NULL);
     return pencrypt_init != NULL ? pencrypt_init(ctx) : 1;
 }
 
@@ -959,7 +959,7 @@ static int dasync_rsa_encrypt(EVP_PKEY_CTX *ctx, unsigned char *out,
                              size_t inlen);
 
     if (pencryptfn == NULL)
-        EVP_PKEY_meth_get_encrypt(dasync_rsa_orig, NULL, &pencryptfn);
+        OPENSSL_BOX_EVP_PKEY_meth_get_encrypt(dasync_rsa_orig, NULL, &pencryptfn);
     return pencryptfn(ctx, out, outlen, in, inlen);
 }
 
@@ -968,7 +968,7 @@ static int dasync_rsa_decrypt_init(EVP_PKEY_CTX *ctx)
     static int (*pdecrypt_init)(EVP_PKEY_CTX *ctx);
 
     if (pdecrypt_init == NULL)
-        EVP_PKEY_meth_get_decrypt(dasync_rsa_orig, &pdecrypt_init, NULL);
+        OPENSSL_BOX_EVP_PKEY_meth_get_decrypt(dasync_rsa_orig, &pdecrypt_init, NULL);
     return pdecrypt_init != NULL ? pdecrypt_init(ctx) : 1;
 }
 
@@ -981,7 +981,7 @@ static int dasync_rsa_decrypt(EVP_PKEY_CTX *ctx, unsigned char *out,
                              size_t inlen);
 
     if (pdecrypt == NULL)
-        EVP_PKEY_meth_get_decrypt(dasync_rsa_orig, NULL, &pdecrypt);
+        OPENSSL_BOX_EVP_PKEY_meth_get_decrypt(dasync_rsa_orig, NULL, &pdecrypt);
     return pdecrypt(ctx, out, outlen, in, inlen);
 }
 
@@ -990,7 +990,7 @@ static int dasync_rsa_ctrl(EVP_PKEY_CTX *ctx, int type, int p1, void *p2)
     static int (*pctrl)(EVP_PKEY_CTX *ctx, int type, int p1, void *p2);
 
     if (pctrl == NULL)
-        EVP_PKEY_meth_get_ctrl(dasync_rsa_orig, &pctrl, NULL);
+        OPENSSL_BOX_EVP_PKEY_meth_get_ctrl(dasync_rsa_orig, &pctrl, NULL);
     return pctrl(ctx, type, p1, p2);
 }
 
@@ -1001,6 +1001,6 @@ static int dasync_rsa_ctrl_str(EVP_PKEY_CTX *ctx, const char *type,
                             const char *value);
 
     if (pctrl_str == NULL)
-        EVP_PKEY_meth_get_ctrl(dasync_rsa_orig, NULL, &pctrl_str);
+        OPENSSL_BOX_EVP_PKEY_meth_get_ctrl(dasync_rsa_orig, NULL, &pctrl_str);
     return pctrl_str(ctx, type, value);
 }

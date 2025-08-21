@@ -24,7 +24,7 @@ static int test_no_deflt_ctx_init(void)
     if (!TEST_ptr(ctx))
         return 0;
 
-    md = EVP_MD_fetch(ctx, "SHA2-256", NULL);
+    md = OPENSSL_BOX_EVP_MD_fetch(ctx, "SHA2-256", NULL);
     if (!TEST_ptr(md))
         goto err;
 

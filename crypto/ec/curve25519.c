@@ -5448,7 +5448,7 @@ static int hash_init_with_dom(EVP_MD_CTX *hash_ctx,
             "\x6c\x6c\x69\x73\x69\x6f\x6e\x73";
     uint8_t dom[2];
 
-    if (!EVP_DigestInit_ex(hash_ctx, sha512, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(hash_ctx, sha512, NULL))
         return 0;
 
     /* return early if dom2flag is not set */
@@ -5461,9 +5461,9 @@ static int hash_init_with_dom(EVP_MD_CTX *hash_ctx,
     dom[0] = (uint8_t)(phflag >= 1 ? 1 : 0);
     dom[1] = (uint8_t)context_len;
 
-    if (!EVP_DigestUpdate(hash_ctx, dom_s, sizeof(dom_s)-1)
-        || !EVP_DigestUpdate(hash_ctx, dom, sizeof(dom))
-        || !EVP_DigestUpdate(hash_ctx, context, context_len)) {
+    if (!OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, dom_s, sizeof(dom_s)-1)
+        || !OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, dom, sizeof(dom))
+        || !OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, context, context_len)) {
         return 0;
     }
 
@@ -5481,7 +5481,7 @@ ossl_ed25519_sign(uint8_t *out_sig, const uint8_t *tbs, size_t tbs_len,
     uint8_t nonce[SHA512_DIGEST_LENGTH];
     ge_p3 R;
     uint8_t hram[SHA512_DIGEST_LENGTH];
-    EVP_MD *sha512 = EVP_MD_fetch(libctx, SN_sha512, propq);
+    EVP_MD *sha512 = OPENSSL_BOX_EVP_MD_fetch(libctx, SN_sha512, propq);
     EVP_MD_CTX *hash_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     unsigned int sz;
     int res = 0;
@@ -5500,9 +5500,9 @@ ossl_ed25519_sign(uint8_t *out_sig, const uint8_t *tbs, size_t tbs_len,
     if (sha512 == NULL || hash_ctx == NULL)
         goto err;
 
-    if (!EVP_DigestInit_ex(hash_ctx, sha512, NULL)
-        || !EVP_DigestUpdate(hash_ctx, private_key, 32)
-        || !EVP_DigestFinal_ex(hash_ctx, az, &sz))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(hash_ctx, sha512, NULL)
+        || !OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, private_key, 32)
+        || !OPENSSL_BOX_EVP_DigestFinal_ex(hash_ctx, az, &sz))
         goto err;
 
     az[0] &= 248;
@@ -5510,9 +5510,9 @@ ossl_ed25519_sign(uint8_t *out_sig, const uint8_t *tbs, size_t tbs_len,
     az[31] |= 64;
 
     if (!hash_init_with_dom(hash_ctx, sha512, dom2flag, phflag, context, context_len)
-        || !EVP_DigestUpdate(hash_ctx, az + 32, 32)
-        || !EVP_DigestUpdate(hash_ctx, tbs, tbs_len)
-        || !EVP_DigestFinal_ex(hash_ctx, nonce, &sz))
+        || !OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, az + 32, 32)
+        || !OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, tbs, tbs_len)
+        || !OPENSSL_BOX_EVP_DigestFinal_ex(hash_ctx, nonce, &sz))
         goto err;
 
     x25519_sc_reduce(nonce);
@@ -5520,10 +5520,10 @@ ossl_ed25519_sign(uint8_t *out_sig, const uint8_t *tbs, size_t tbs_len,
     ge_p3_tobytes(out_sig, &R);
 
     if (!hash_init_with_dom(hash_ctx, sha512, dom2flag, phflag, context, context_len)
-        || !EVP_DigestUpdate(hash_ctx, out_sig, 32)
-        || !EVP_DigestUpdate(hash_ctx, public_key, 32)
-        || !EVP_DigestUpdate(hash_ctx, tbs, tbs_len)
-        || !EVP_DigestFinal_ex(hash_ctx, hram, &sz))
+        || !OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, out_sig, 32)
+        || !OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, public_key, 32)
+        || !OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, tbs, tbs_len)
+        || !OPENSSL_BOX_EVP_DigestFinal_ex(hash_ctx, hram, &sz))
         goto err;
 
     x25519_sc_reduce(hram);
@@ -5626,7 +5626,7 @@ ossl_ed25519_verify(const uint8_t *tbs, size_t tbs_len,
     fe_neg(A.X, A.X);
     fe_neg(A.T, A.T);
 
-    sha512 = EVP_MD_fetch(libctx, SN_sha512, propq);
+    sha512 = OPENSSL_BOX_EVP_MD_fetch(libctx, SN_sha512, propq);
     if (sha512 == NULL)
         return 0;
     hash_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
@@ -5634,10 +5634,10 @@ ossl_ed25519_verify(const uint8_t *tbs, size_t tbs_len,
         goto err;
 
     if (!hash_init_with_dom(hash_ctx, sha512, dom2flag, phflag, context, context_len)
-        || !EVP_DigestUpdate(hash_ctx, r, 32)
-        || !EVP_DigestUpdate(hash_ctx, public_key, 32)
-        || !EVP_DigestUpdate(hash_ctx, tbs, tbs_len)
-        || !EVP_DigestFinal_ex(hash_ctx, h, &sz))
+        || !OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, r, 32)
+        || !OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, public_key, 32)
+        || !OPENSSL_BOX_EVP_DigestUpdate(hash_ctx, tbs, tbs_len)
+        || !OPENSSL_BOX_EVP_DigestFinal_ex(hash_ctx, h, &sz))
         goto err;
 
     x25519_sc_reduce(h);
@@ -5671,10 +5671,10 @@ ossl_ed25519_public_from_private(OSSL_LIB_CTX *ctx, uint8_t out_public_key[32],
     int r;
     EVP_MD *sha512 = NULL;
 
-    sha512 = EVP_MD_fetch(ctx, SN_sha512, propq);
+    sha512 = OPENSSL_BOX_EVP_MD_fetch(ctx, SN_sha512, propq);
     if (sha512 == NULL)
         return 0;
-    r = EVP_Digest(private_key, 32, az, NULL, sha512, NULL);
+    r = OPENSSL_BOX_EVP_Digest(private_key, 32, az, NULL, sha512, NULL);
     OPENSSL_BOX_EVP_MD_free(sha512);
     if (!r) {
         OPENSSL_cleanse(az, sizeof(az));

@@ -227,7 +227,7 @@ int SSL_use_PrivateKey_ASN1(int type, SSL *ssl, const unsigned char *d,
     EVP_PKEY *pkey;
 
     p = d;
-    if ((pkey = d2i_PrivateKey_ex(type, NULL, &p, (long)len, ssl->ctx->libctx,
+    if ((pkey = OPENSSL_BOX_d2i_PrivateKey_ex(type, NULL, &p, (long)len, ssl->ctx->libctx,
                                   ssl->ctx->propq)) == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_ASN1_LIB);
         return 0;
@@ -442,7 +442,7 @@ int SSL_CTX_use_PrivateKey_ASN1(int type, SSL_CTX *ctx,
     EVP_PKEY *pkey;
 
     p = d;
-    if ((pkey = d2i_PrivateKey_ex(type, NULL, &p, (long)len, ctx->libctx,
+    if ((pkey = OPENSSL_BOX_d2i_PrivateKey_ex(type, NULL, &p, (long)len, ctx->libctx,
                                   ctx->propq)) == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_ASN1_LIB);
         return 0;

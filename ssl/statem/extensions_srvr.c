@@ -1044,7 +1044,7 @@ int tls_parse_ctos_cookie(SSL_CONNECTION *s, PACKET *pkt, unsigned int context,
 
     /* Verify the HMAC of the cookie */
     hctx = EVP_MD_CTX_create();
-    pkey = EVP_PKEY_new_raw_private_key_ex(sctx->libctx, "HMAC",
+    pkey = OPENSSL_BOX_EVP_PKEY_new_raw_private_key_ex(sctx->libctx, "HMAC",
                                            sctx->propq,
                                            s->session_ctx->ext.cookie_hmac_key,
                                            sizeof(s->session_ctx->ext.cookie_hmac_key));
@@ -1056,9 +1056,9 @@ int tls_parse_ctos_cookie(SSL_CONNECTION *s, PACKET *pkt, unsigned int context,
     }
 
     hmaclen = SHA256_DIGEST_LENGTH;
-    if (EVP_DigestSignInit_ex(hctx, NULL, "SHA2-256", sctx->libctx,
+    if (OPENSSL_BOX_EVP_DigestSignInit_ex(hctx, NULL, "SHA2-256", sctx->libctx,
                               sctx->propq, pkey, NULL) <= 0
-            || EVP_DigestSign(hctx, hmac, &hmaclen, data,
+            || OPENSSL_BOX_EVP_DigestSign(hctx, hmac, &hmaclen, data,
                               rawlen - SHA256_DIGEST_LENGTH) <= 0
             || hmaclen != SHA256_DIGEST_LENGTH) {
         OPENSSL_BOX_EVP_MD_CTX_free(hctx);
@@ -2142,7 +2142,7 @@ EXT_RETURN tls_construct_stoc_cookie(SSL_CONNECTION *s, WPACKET *pkt,
 
     /* HMAC the cookie */
     hctx = EVP_MD_CTX_create();
-    pkey = EVP_PKEY_new_raw_private_key_ex(sctx->libctx, "HMAC",
+    pkey = OPENSSL_BOX_EVP_PKEY_new_raw_private_key_ex(sctx->libctx, "HMAC",
                                            sctx->propq,
                                            s->session_ctx->ext.cookie_hmac_key,
                                            sizeof(s->session_ctx->ext.cookie_hmac_key));
@@ -2151,9 +2151,9 @@ EXT_RETURN tls_construct_stoc_cookie(SSL_CONNECTION *s, WPACKET *pkt,
         goto err;
     }
 
-    if (EVP_DigestSignInit_ex(hctx, NULL, "SHA2-256", sctx->libctx,
+    if (OPENSSL_BOX_EVP_DigestSignInit_ex(hctx, NULL, "SHA2-256", sctx->libctx,
                               sctx->propq, pkey, NULL) <= 0
-            || EVP_DigestSign(hctx, hmac, &hmaclen, cookie,
+            || OPENSSL_BOX_EVP_DigestSign(hctx, hmac, &hmaclen, cookie,
                               totcookielen) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;

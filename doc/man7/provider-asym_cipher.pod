@@ -49,8 +49,8 @@ for further information.
 
 The asymmetric cipher (OSSL_OP_ASYM_CIPHER) operation enables providers to
 implement asymmetric cipher algorithms and make them available to applications
-via the API functions L<EVP_PKEY_encrypt(3)>,
-L<EVP_PKEY_decrypt(3)> and
+via the API functions L<OPENSSL_BOX_EVP_PKEY_encrypt(3)>,
+L<OPENSSL_BOX_EVP_PKEY_decrypt(3)> and
 other related functions).
 
 All "functions" mentioned here are passed as function pointers between

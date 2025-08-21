@@ -12,7 +12,7 @@ for test purposes only, it does not generate random numbers.
 =head2 Identity
 
 "TEST-RAND" is the name for this implementation; it can be used with the
-EVP_RAND_fetch() function.
+OPENSSL_BOX_EVP_RAND_fetch() function.
 
 =head2 Supported parameters
 
@@ -75,7 +75,7 @@ to zero.
 
 A context for a test generator can be obtained by calling:
 
- EVP_RAND *rand = EVP_RAND_fetch(NULL, "TEST-RAND", NULL);
+ EVP_RAND *rand = OPENSSL_BOX_EVP_RAND_fetch(NULL, "TEST-RAND", NULL);
  EVP_RAND_CTX *rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
 
 =head1 EXAMPLES
@@ -88,7 +88,7 @@ A context for a test generator can be obtained by calling:
  unsigned char nonce[20] = { ... };
  unsigned int strength = 48;
 
- rand = EVP_RAND_fetch(NULL, "TEST-RAND", NULL);
+ rand = OPENSSL_BOX_EVP_RAND_fetch(NULL, "TEST-RAND", NULL);
  rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
  OPENSSL_BOX_EVP_RAND_free(rand);
 
@@ -98,9 +98,9 @@ A context for a test generator can be obtained by calling:
  *p++ = OSSL_PARAM_construct_octet_string(OSSL_RAND_PARAM_TEST_NONCE,
                                           nonce, sizeof(nonce));
  *p = OSSL_PARAM_construct_end();
- EVP_RAND_instantiate(rctx, strength, 0, NULL, 0, params);
+ OPENSSL_BOX_EVP_RAND_instantiate(rctx, strength, 0, NULL, 0, params);
 
- EVP_RAND_generate(rctx, bytes, sizeof(bytes), strength, 0, NULL, 0);
+ OPENSSL_BOX_EVP_RAND_generate(rctx, bytes, sizeof(bytes), strength, 0, NULL, 0);
 
  OPENSSL_BOX_EVP_RAND_CTX_free(rctx);
 

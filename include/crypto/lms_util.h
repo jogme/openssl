@@ -50,5 +50,5 @@ int lms_evp_md_ctx_init(EVP_MD_CTX *ctx, const EVP_MD *md,
                                                 (uint32_t *)&lms_params->n);
         p = params;
     }
-    return EVP_DigestInit_ex2(ctx, md, p);
+    return OPENSSL_BOX_EVP_DigestInit_ex2(ctx, md, p);
 }

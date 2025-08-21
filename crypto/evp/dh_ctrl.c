@@ -20,7 +20,7 @@ static int dh_paramgen_check(EVP_PKEY_CTX *ctx)
 {
     if (ctx == NULL || !EVP_PKEY_CTX_IS_GEN_OP(ctx)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
     /* If key type not DH return error */
@@ -35,7 +35,7 @@ static int dh_param_derive_check(EVP_PKEY_CTX *ctx)
 {
     if (ctx == NULL || !EVP_PKEY_CTX_IS_DERIVE_OP(ctx)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
     /* If key type not DH return error */
@@ -78,12 +78,12 @@ int EVP_PKEY_CTX_set_dh_paramgen_seed(EVP_PKEY_CTX *ctx,
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_dh_paramgen_type(EVP_PKEY_CTX *ctx, int typ)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DH, EVP_PKEY_OP_PARAMGEN,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DH, EVP_PKEY_OP_PARAMGEN,
                              EVP_PKEY_CTRL_DH_PARAMGEN_TYPE, typ, NULL);
 }
 
@@ -131,12 +131,12 @@ int EVP_PKEY_CTX_set_dh_paramgen_generator(EVP_PKEY_CTX *ctx, int gen)
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_dh_rfc5114(EVP_PKEY_CTX *ctx, int gen)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_PARAMGEN,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_PARAMGEN,
                              EVP_PKEY_CTRL_DH_RFC5114, gen, NULL);
 }
 
@@ -146,12 +146,12 @@ int EVP_PKEY_CTX_set_dhx_rfc5114(EVP_PKEY_CTX *ctx, int gen)
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_dh_nid(EVP_PKEY_CTX *ctx, int nid)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DH,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DH,
                              EVP_PKEY_OP_PARAMGEN | EVP_PKEY_OP_KEYGEN,
                              EVP_PKEY_CTRL_DH_NID, nid, NULL);
 }
@@ -161,7 +161,7 @@ int EVP_PKEY_CTX_set_dh_pad(EVP_PKEY_CTX *ctx, int pad)
     OSSL_PARAM dh_pad_params[2];
     unsigned int upad = pad;
 
-    /* We use EVP_PKEY_CTX_ctrl return values */
+    /* We use OPENSSL_BOX_EVP_PKEY_CTX_ctrl return values */
     if (ctx == NULL || !EVP_PKEY_CTX_IS_DERIVE_OP(ctx)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
         return -2;
@@ -174,62 +174,62 @@ int EVP_PKEY_CTX_set_dh_pad(EVP_PKEY_CTX *ctx, int pad)
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_dh_kdf_type(EVP_PKEY_CTX *ctx, int kdf)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_DERIVE,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_DERIVE,
                              EVP_PKEY_CTRL_DH_KDF_TYPE, kdf, NULL);
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_get_dh_kdf_type(EVP_PKEY_CTX *ctx)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_DERIVE,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_DERIVE,
                              EVP_PKEY_CTRL_DH_KDF_TYPE, -2, NULL);
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set0_dh_kdf_oid(EVP_PKEY_CTX *ctx, ASN1_OBJECT *oid)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_DERIVE,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_DERIVE,
                              EVP_PKEY_CTRL_DH_KDF_OID, 0, (void *)(oid));
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_get0_dh_kdf_oid(EVP_PKEY_CTX *ctx, ASN1_OBJECT **oid)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_DERIVE,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_DERIVE,
                              EVP_PKEY_CTRL_GET_DH_KDF_OID, 0, (void *)(oid));
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_dh_kdf_md(EVP_PKEY_CTX *ctx, const EVP_MD *md)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_DERIVE,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_DERIVE,
                              EVP_PKEY_CTRL_DH_KDF_MD, 0, (void *)(md));
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_get_dh_kdf_md(EVP_PKEY_CTX *ctx, const EVP_MD **pmd)
 {
-        return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_DERIVE,
+        return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_DHX, EVP_PKEY_OP_DERIVE,
                                  EVP_PKEY_CTRL_GET_DH_KDF_MD, 0, (void *)(pmd));
 }
 
@@ -246,7 +246,7 @@ int EVP_PKEY_CTX_set_dh_kdf_outlen(EVP_PKEY_CTX *ctx, int outlen)
     if (outlen <= 0) {
         /*
          * This would ideally be -1 or 0, but we have to retain compatibility
-         * with legacy behaviour of EVP_PKEY_CTX_ctrl() which returned -2 if
+         * with legacy behaviour of OPENSSL_BOX_EVP_PKEY_CTX_ctrl() which returned -2 if
          * inlen <= 0
          */
         return -2;

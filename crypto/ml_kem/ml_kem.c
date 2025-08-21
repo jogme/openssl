@@ -339,11 +339,11 @@ int single_keccak(uint8_t *out, size_t outlen, const uint8_t *in, size_t inlen,
 {
     unsigned int sz = (unsigned int) outlen;
 
-    if (!EVP_DigestUpdate(mdctx, in, inlen))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(mdctx, in, inlen))
         return 0;
     if (OPENSSL_BOX_EVP_MD_xof(OPENSSL_BOX_EVP_MD_CTX_get0_md(mdctx)))
-        return EVP_DigestFinalXOF(mdctx, out, outlen);
-    return EVP_DigestFinal_ex(mdctx, out, &sz)
+        return OPENSSL_BOX_EVP_DigestFinalXOF(mdctx, out, outlen);
+    return OPENSSL_BOX_EVP_DigestFinal_ex(mdctx, out, &sz)
         && ossl_assert((size_t) sz == outlen);
 }
 
@@ -355,7 +355,7 @@ static __owur
 int prf(uint8_t *out, size_t len, const uint8_t in[ML_KEM_RANDOM_BYTES + 1],
         EVP_MD_CTX *mdctx, const ML_KEM_KEY *key)
 {
-    return EVP_DigestInit_ex(mdctx, key->shake256_md, NULL)
+    return OPENSSL_BOX_EVP_DigestInit_ex(mdctx, key->shake256_md, NULL)
         && single_keccak(out, len, in, ML_KEM_RANDOM_BYTES + 1, mdctx);
 }
 
@@ -367,7 +367,7 @@ static __owur
 int hash_h(uint8_t out[ML_KEM_PKHASH_BYTES], const uint8_t *in, size_t len,
            EVP_MD_CTX *mdctx, const ML_KEM_KEY *key)
 {
-    return EVP_DigestInit_ex(mdctx, key->sha3_256_md, NULL)
+    return OPENSSL_BOX_EVP_DigestInit_ex(mdctx, key->sha3_256_md, NULL)
         && single_keccak(out, ML_KEM_PKHASH_BYTES, in, len, mdctx);
 }
 
@@ -380,20 +380,20 @@ hash_h_pubkey(uint8_t pkhash[ML_KEM_PKHASH_BYTES],
     const scalar *t = key->t, *end = t + vinfo->rank;
     unsigned int sz;
 
-    if (!EVP_DigestInit_ex(mdctx, key->sha3_256_md, NULL))
+    if (!OPENSSL_BOX_EVP_DigestInit_ex(mdctx, key->sha3_256_md, NULL))
         return 0;
 
     do {
         uint8_t buf[3 * DEGREE / 2];
 
         scalar_encode(buf, t++, 12);
-        if (!EVP_DigestUpdate(mdctx, buf, sizeof(buf)))
+        if (!OPENSSL_BOX_EVP_DigestUpdate(mdctx, buf, sizeof(buf)))
             return 0;
     } while (t < end);
 
-    if (!EVP_DigestUpdate(mdctx, key->rho, ML_KEM_RANDOM_BYTES))
+    if (!OPENSSL_BOX_EVP_DigestUpdate(mdctx, key->rho, ML_KEM_RANDOM_BYTES))
         return 0;
-    return EVP_DigestFinal_ex(mdctx, pkhash, &sz)
+    return OPENSSL_BOX_EVP_DigestFinal_ex(mdctx, pkhash, &sz)
         && ossl_assert(sz == ML_KEM_PKHASH_BYTES);
 }
 
@@ -406,7 +406,7 @@ static __owur
 int hash_g(uint8_t out[ML_KEM_SEED_BYTES], const uint8_t *in, size_t len,
            EVP_MD_CTX *mdctx, const ML_KEM_KEY *key)
 {
-    return EVP_DigestInit_ex(mdctx, key->sha3_512_md, NULL)
+    return OPENSSL_BOX_EVP_DigestInit_ex(mdctx, key->sha3_512_md, NULL)
         && single_keccak(out, ML_KEM_SEED_BYTES, in, len, mdctx);
 }
 
@@ -422,10 +422,10 @@ int kdf(uint8_t out[ML_KEM_SHARED_SECRET_BYTES],
         const uint8_t *ctext, size_t len,
         EVP_MD_CTX *mdctx, const ML_KEM_KEY *key)
 {
-    return EVP_DigestInit_ex(mdctx, key->shake256_md, NULL)
-        && EVP_DigestUpdate(mdctx, z, ML_KEM_RANDOM_BYTES)
-        && EVP_DigestUpdate(mdctx, ctext, len)
-        && EVP_DigestFinalXOF(mdctx, out, ML_KEM_SHARED_SECRET_BYTES);
+    return OPENSSL_BOX_EVP_DigestInit_ex(mdctx, key->shake256_md, NULL)
+        && OPENSSL_BOX_EVP_DigestUpdate(mdctx, z, ML_KEM_RANDOM_BYTES)
+        && OPENSSL_BOX_EVP_DigestUpdate(mdctx, ctext, len)
+        && OPENSSL_BOX_EVP_DigestFinalXOF(mdctx, out, ML_KEM_SHARED_SECRET_BYTES);
 }
 
 /*
@@ -444,7 +444,7 @@ int sample_scalar(scalar *out, EVP_MD_CTX *mdctx)
     uint8_t b1, b2, b3;
 
     do {
-        if (!EVP_DigestSqueeze(mdctx, in = buf, sizeof(buf)))
+        if (!OPENSSL_BOX_EVP_DigestSqueeze(mdctx, in = buf, sizeof(buf)))
             return 0;
         do {
             b1 = *in++;
@@ -1001,8 +1001,8 @@ int matrix_expand(EVP_MD_CTX *mdctx, ML_KEM_KEY *key)
         for (j = 0; j < rank; j++) {
             input[ML_KEM_RANDOM_BYTES] = i;
             input[ML_KEM_RANDOM_BYTES + 1] = j;
-            if (!EVP_DigestInit_ex(mdctx, key->shake128_md, NULL)
-                || !EVP_DigestUpdate(mdctx, input, sizeof(input))
+            if (!OPENSSL_BOX_EVP_DigestInit_ex(mdctx, key->shake128_md, NULL)
+                || !OPENSSL_BOX_EVP_DigestUpdate(mdctx, input, sizeof(input))
                 || !sample_scalar(out++, mdctx))
                 return 0;
         }
@@ -1651,10 +1651,10 @@ ML_KEM_KEY *ossl_ml_kem_key_new(OSSL_LIB_CTX *libctx, const char *properties,
     key->vinfo = vinfo;
     key->libctx = libctx;
     key->prov_flags = ML_KEM_KEY_PROV_FLAGS_DEFAULT;
-    key->shake128_md = EVP_MD_fetch(libctx, "SHAKE128", properties);
-    key->shake256_md = EVP_MD_fetch(libctx, "SHAKE256", properties);
-    key->sha3_256_md = EVP_MD_fetch(libctx, "SHA3-256", properties);
-    key->sha3_512_md = EVP_MD_fetch(libctx, "SHA3-512", properties);
+    key->shake128_md = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHAKE128", properties);
+    key->shake256_md = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHAKE256", properties);
+    key->sha3_256_md = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHA3-256", properties);
+    key->sha3_512_md = OPENSSL_BOX_EVP_MD_fetch(libctx, "SHA3-512", properties);
     key->d = key->z = key->rho = key->pkhash = key->encoded_dk = key->seedbuf = NULL;
     key->s = key->m = key->t = NULL;
 

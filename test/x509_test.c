@@ -193,7 +193,7 @@ int setup_tests(void)
     pubkey = d2i_PUBKEY(NULL, &p, sizeof(pubkeydata));
 
     p = privkeydata;
-    privkey = d2i_PrivateKey(EVP_PKEY_EC, NULL, &p, sizeof(privkeydata));
+    privkey = OPENSSL_BOX_d2i_PrivateKey(EVP_PKEY_EC, NULL, &p, sizeof(privkeydata));
 
     if (pubkey == NULL || privkey == NULL) {
         BIO_printf(bio_err, "Failed to create keys\n");
@@ -201,7 +201,7 @@ int setup_tests(void)
     }
 
     /* Note this digest is different from the certificate digest */
-    signmd = EVP_MD_fetch(NULL, "SHA384", NULL);
+    signmd = OPENSSL_BOX_EVP_MD_fetch(NULL, "SHA384", NULL);
     if (signmd == NULL) {
         BIO_printf(bio_err, "Failed to fetch digest\n");
         return 0;

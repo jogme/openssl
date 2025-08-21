@@ -70,12 +70,12 @@ The usual life-cycle of a MD is illustrated:
        +----+-------------------> '                initialised                  ' <+  OPENSSL_BOX_EVP_DigestInit   |         |
        |    |                     + - - - - - - - - - - - - - - - - - - - - - - +  |                   |         |
        |    |                       |                     ^                        |                   |         |
-       |    |                       | EVP_DigestUpdate    | OPENSSL_BOX_EVP_DigestInit         |                   |         |
+       |    |                       | OPENSSL_BOX_EVP_DigestUpdate    | OPENSSL_BOX_EVP_DigestInit         |                   |         |
        |    |                       v                     |                        |                   |         |
        |    |                     +---------------------------------------------+  |                   |         |
        |    +-------------------- |                                             |  |                   |         |
        |                          |                                             |  |                   |         |
-       |      EVP_DigestUpdate    |                                             |  |                   |         |
+       |      OPENSSL_BOX_EVP_DigestUpdate    |                                             |  |                   |         |
        |    +-------------------- |                                             |  |                   |         |
        |    |                     |                   updated                   |  |                   |         |
        |    +-------------------> |                                             |  |                   |         |
@@ -84,9 +84,9 @@ The usual life-cycle of a MD is illustrated:
   +----+------------------------- |                                             | -+-------------------+----+    |
   |    |                          +---------------------------------------------+  |                   |    |    |
   |    |                            |                                              |                   |    |    |
-  |    |                            | EVP_DigestSqueeze        +-------------------+                   |    |    |
+  |    |                            | OPENSSL_BOX_EVP_DigestSqueeze        +-------------------+                   |    |    |
   |    |                            v                          |                                       |    |    |
-  |    |      EVP_DigestSqueeze   +---------------------------------------------+                      |    |    |
+  |    |      OPENSSL_BOX_EVP_DigestSqueeze   +---------------------------------------------+                      |    |    |
   |    |    +-------------------- |                                             |                      |    |    |
   |    |    |                     |                  squeezed                   |                      |    |    |
   |    |    +-------------------> |                                             | ---------------------+    |    |
@@ -94,10 +94,10 @@ The usual life-cycle of a MD is illustrated:
   |    |                                                       |                                            |    |
   |    |                                                       +---------------------------------------+    |    |
   |    |                                                                                               |    |    |
-  |    |                          +---------------------------------------------+  EVP_DigestFinalXOF  |    |    |
+  |    |                          +---------------------------------------------+  OPENSSL_BOX_EVP_DigestFinalXOF  |    |    |
   |    +------------------------- |             finaled                         | <--------------------+----+    |
   |                               +---------------------------------------------+                      |         |
-  |   EVP_DigestFinal               ^                     |    |                                       |         |
+  |   OPENSSL_BOX_EVP_DigestFinal               ^                     |    |                                       |         |
   +---------------------------------+                     |    | OPENSSL_BOX_EVP_MD_CTX_free                       |         |
                                                           |    v                                       |         |
                                                           |  +------------------+  OPENSSL_BOX_EVP_MD_CTX_free     |         |
@@ -121,10 +121,10 @@ This is the canonical list.
                               start   newed    initialised   updated     finaled     squeezed   freed
  OPENSSL_BOX_EVP_MD_CTX_new               newed
  OPENSSL_BOX_EVP_DigestInit                    initialised initialised initialised initialised  initialised
- EVP_DigestUpdate                                updated     updated
- EVP_DigestFinal                                             finaled
- EVP_DigestFinalXOF                                          finaled
- EVP_DigestSqueeze                                           squeezed                squeezed
+ OPENSSL_BOX_EVP_DigestUpdate                                updated     updated
+ OPENSSL_BOX_EVP_DigestFinal                                             finaled
+ OPENSSL_BOX_EVP_DigestFinalXOF                                          finaled
+ OPENSSL_BOX_EVP_DigestSqueeze                                           squeezed                squeezed
  OPENSSL_BOX_EVP_MD_CTX_free              freed   freed       freed       freed       freed
  OPENSSL_BOX_EVP_MD_CTX_reset                     newed       newed       newed       newed
  OPENSSL_BOX_EVP_MD_CTX_get_params                newed    initialised   updated
@@ -164,7 +164,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">initialised</td>
     <td style="border:1px solid" align="center">initialised</td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_DigestUpdate</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_DigestUpdate</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">updated</td>
@@ -172,7 +172,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_DigestFinal</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_DigestFinal</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -180,7 +180,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_DigestSqueeze</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_DigestSqueeze</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -188,7 +188,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">squeezed</td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_DigestFinalXOF</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_DigestFinalXOF</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>

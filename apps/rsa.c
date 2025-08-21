@@ -266,8 +266,8 @@ int rsa_main(int argc, char **argv)
 
     if (text) {
         assert(pubin || private);
-        if ((pubin && EVP_PKEY_print_public(out, pkey, 0, NULL) <= 0)
-            || (!pubin && EVP_PKEY_print_private(out, pkey, 0, NULL) <= 0)) {
+        if ((pubin && OPENSSL_BOX_EVP_PKEY_print_public(out, pkey, 0, NULL) <= 0)
+            || (!pubin && OPENSSL_BOX_EVP_PKEY_print_private(out, pkey, 0, NULL) <= 0)) {
             perror(outfile);
             ERR_print_errors(bio_err);
             goto end;
@@ -278,7 +278,7 @@ int rsa_main(int argc, char **argv)
         BIGNUM *n = NULL;
 
         /* Every RSA key has an 'n' */
-        EVP_PKEY_get_bn_param(pkey, "n", &n);
+        OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, "n", &n);
         BIO_printf(out, "Modulus=");
         BN_print(out, n);
         BIO_printf(out, "\n");
@@ -288,7 +288,7 @@ int rsa_main(int argc, char **argv)
     if (check) {
         int r;
 
-        pctx = EVP_PKEY_CTX_new_from_pkey(NULL, pkey, NULL);
+        pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, pkey, NULL);
         if (pctx == NULL) {
             BIO_printf(bio_err, "RSA unable to create PKEY context\n");
             ERR_print_errors(bio_err);

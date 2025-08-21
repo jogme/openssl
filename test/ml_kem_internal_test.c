@@ -99,7 +99,7 @@ static int sanity_test(void)
     };
     EVP_RAND_CTX *privctx;
     EVP_RAND_CTX *pubctx;
-    EVP_MD *sha256 = EVP_MD_fetch(NULL, "sha256", NULL);
+    EVP_MD *sha256 = OPENSSL_BOX_EVP_MD_fetch(NULL, "sha256", NULL);
     uint8_t *decap_entropy;
     int i, ret = 0;
 
@@ -193,7 +193,7 @@ static int sanity_test(void)
 
         ret2 = -6;
         /* Check the ciphertext hash */
-        if (!TEST_true(EVP_Digest(ciphertext, v->ctext_bytes,
+        if (!TEST_true(OPENSSL_BOX_EVP_Digest(ciphertext, v->ctext_bytes,
                                   hash, NULL, sha256, NULL))
             || !TEST_mem_eq(hash, sizeof(hash),
                             ml_kem_expected_ctext_sha256[i],

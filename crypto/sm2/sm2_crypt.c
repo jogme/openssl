@@ -224,16 +224,16 @@ again:
     for (i = 0; i != msg_len; ++i)
         msg_mask[i] ^= msg[i];
 
-    fetched_digest = EVP_MD_fetch(libctx, OPENSSL_BOX_EVP_MD_get0_name(digest), propq);
+    fetched_digest = OPENSSL_BOX_EVP_MD_fetch(libctx, OPENSSL_BOX_EVP_MD_get0_name(digest), propq);
     if (fetched_digest == NULL) {
         ERR_raise(ERR_LIB_SM2, ERR_R_INTERNAL_ERROR);
         goto done;
     }
     if (OPENSSL_BOX_EVP_DigestInit(hash, fetched_digest) == 0
-            || EVP_DigestUpdate(hash, x2y2, field_size) == 0
-            || EVP_DigestUpdate(hash, msg, msg_len) == 0
-            || EVP_DigestUpdate(hash, x2y2 + field_size, field_size) == 0
-            || EVP_DigestFinal(hash, C3, NULL) == 0) {
+            || OPENSSL_BOX_EVP_DigestUpdate(hash, x2y2, field_size) == 0
+            || OPENSSL_BOX_EVP_DigestUpdate(hash, msg, msg_len) == 0
+            || OPENSSL_BOX_EVP_DigestUpdate(hash, x2y2 + field_size, field_size) == 0
+            || OPENSSL_BOX_EVP_DigestFinal(hash, C3, NULL) == 0) {
         ERR_raise(ERR_LIB_SM2, ERR_R_EVP_LIB);
         goto done;
     }
@@ -387,10 +387,10 @@ int ossl_sm2_decrypt(const EC_KEY *key,
     }
 
     if (!OPENSSL_BOX_EVP_DigestInit(hash, digest)
-            || !EVP_DigestUpdate(hash, x2y2, field_size)
-            || !EVP_DigestUpdate(hash, ptext_buf, msg_len)
-            || !EVP_DigestUpdate(hash, x2y2 + field_size, field_size)
-            || !EVP_DigestFinal(hash, computed_C3, NULL)) {
+            || !OPENSSL_BOX_EVP_DigestUpdate(hash, x2y2, field_size)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hash, ptext_buf, msg_len)
+            || !OPENSSL_BOX_EVP_DigestUpdate(hash, x2y2 + field_size, field_size)
+            || !OPENSSL_BOX_EVP_DigestFinal(hash, computed_C3, NULL)) {
         ERR_raise(ERR_LIB_SM2, ERR_R_EVP_LIB);
         goto done;
     }

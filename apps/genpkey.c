@@ -82,7 +82,7 @@ static void show_gen_pkeyopt(const char *algname, OSSL_LIB_CTX *libctx, const ch
 
     if (algname == NULL)
         return;
-    ctx = EVP_PKEY_CTX_new_from_name(libctx, algname, propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, algname, propq);
     if (ctx == NULL)
         return;
 
@@ -284,9 +284,9 @@ int genpkey_main(int argc, char **argv)
 
     if (text) {
         if (do_param)
-            rv = EVP_PKEY_print_params(mem_out, pkey, 0, NULL);
+            rv = OPENSSL_BOX_EVP_PKEY_print_params(mem_out, pkey, 0, NULL);
         else
-            rv = EVP_PKEY_print_private(mem_out, pkey, 0, NULL);
+            rv = OPENSSL_BOX_EVP_PKEY_print_private(mem_out, pkey, 0, NULL);
 
         if (rv <= 0) {
             BIO_puts(bio_err, "Error printing key\n");
@@ -351,7 +351,7 @@ static int init_keygen_file(EVP_PKEY_CTX **pctx, const char *file, ENGINE *e,
     if (e != NULL)
         ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, e);
     else
-        ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
     if (ctx == NULL)
         goto err;
     if (OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) <= 0)
@@ -389,7 +389,7 @@ int init_gen_str(EVP_PKEY_CTX **pctx,
         ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(pkey_id, e);
     else
 #endif
-        ctx = EVP_PKEY_CTX_new_from_name(libctx, algname, propq);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, algname, propq);
 
     if (ctx == NULL)
         goto err;

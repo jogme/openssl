@@ -12,7 +12,7 @@ Support for computing KMAC MACs through the B<EVP_MAC> API.
 =head2 Identity
 
 These implementations are identified with one of these names and
-properties, to be used with EVP_MAC_fetch():
+properties, to be used with OPENSSL_BOX_EVP_MAC_fetch():
 
 =over 4
 
@@ -40,7 +40,7 @@ OPENSSL_BOX_EVP_MAC_CTX_get_params(), or with OPENSSL_BOX_EVP_MAC_CTX_get_block_
 =item "key" (B<OSSL_MAC_PARAM_KEY>) <octet string>
 
 Sets the MAC key.
-Setting this parameter is identical to passing a I<key> to L<EVP_MAC_init(3)>.
+Setting this parameter is identical to passing a I<key> to L<OPENSSL_BOX_EVP_MAC_init(3)>.
 The length of the key (in bytes) must be in the range 4...512.
 
 =item "custom" (B<OSSL_MAC_PARAM_CUSTOM>) <octet string>
@@ -81,9 +81,9 @@ This settable parameter is described in L<provider-mac(7)>.
 =back
 
 The "custom" and "no-short-mac" parameters must be set as part of or before
-the EVP_MAC_init() call.
-The "xof" and "size" parameters can be set at any time before EVP_MAC_final().
-The "key" parameter is set as part of the EVP_MAC_init() call, but can be
+the OPENSSL_BOX_EVP_MAC_init() call.
+The "xof" and "size" parameters can be set at any time before OPENSSL_BOX_EVP_MAC_final().
+The "key" parameter is set as part of the OPENSSL_BOX_EVP_MAC_init() call, but can be
 set before it instead.
 
 =head1 EXAMPLES
@@ -102,7 +102,7 @@ set before it instead.
       int ret = 0;
       size_t l = 0;
 
-      mac = EVP_MAC_fetch(NULL, "KMAC-128", NULL);
+      mac = OPENSSL_BOX_EVP_MAC_fetch(NULL, "KMAC-128", NULL);
       if (mac == NULL)
           goto err;
       ctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac);
@@ -112,7 +112,7 @@ set before it instead.
           goto err;
 
       /*
-       * Setup parameters required before calling EVP_MAC_init()
+       * Setup parameters required before calling OPENSSL_BOX_EVP_MAC_init()
        * The parameters OSSL_MAC_PARAM_XOF and OSSL_MAC_PARAM_SIZE may also be
        * used at this point.
        */
@@ -126,12 +126,12 @@ set before it instead.
       if (!OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, params))
           goto err;
 
-      if (!EVP_MAC_init(ctx))
+      if (!OPENSSL_BOX_EVP_MAC_init(ctx))
           goto err;
 
       /*
        * Note: the following optional parameters can be set any time
-       * before EVP_MAC_final().
+       * before OPENSSL_BOX_EVP_MAC_final().
        */
       p = params;
       *p++ = OSSL_PARAM_construct_int(OSSL_MAC_PARAM_XOF, &xof_enabled);
@@ -143,7 +143,7 @@ set before it instead.
       /* The update may be called multiple times here for streamed input */
       if (!OPENSSL_BOX_EVP_MAC_update(ctx, in, in_len))
           goto err;
-      if (!EVP_MAC_final(ctx, out, &l, out_len))
+      if (!OPENSSL_BOX_EVP_MAC_final(ctx, out, &l, out_len))
           goto err;
       ret = 1;
   err:

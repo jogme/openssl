@@ -54,15 +54,15 @@ The usual life-cycle of a RAND is illustrated:
                         |          newed          |
                         +-------------------------+
                           |
-                          | EVP_RAND_instantiate
+                          | OPENSSL_BOX_EVP_RAND_instantiate
                           v
-    EVP_RAND_generate   +-------------------------+
+    OPENSSL_BOX_EVP_RAND_generate   +-------------------------+
   +-------------------- |                         |
   |                     |      instantiated       |
   +-------------------> |                         | <+
                         +-------------------------+  '
                           |                          '
-                          | OPENSSL_BOX_EVP_RAND_uninstantiate   ' EVP_RAND_instantiate
+                          | OPENSSL_BOX_EVP_RAND_uninstantiate   ' OPENSSL_BOX_EVP_RAND_instantiate
                           v                          '
                         +-------------------------+  '
                         |     uninstantiated      | -+
@@ -88,8 +88,8 @@ This is the canonical list.
  Function Call              ------------------ Current State ------------------
                             start   newed   instantiated  uninstantiated  freed
  OPENSSL_BOX_EVP_RAND_CTX_new           newed
- EVP_RAND_instantiate            instantiated
- EVP_RAND_generate                          instantiated
+ OPENSSL_BOX_EVP_RAND_instantiate            instantiated
+ OPENSSL_BOX_EVP_RAND_generate                          instantiated
  OPENSSL_BOX_EVP_RAND_uninstantiate                    uninstantiated
  OPENSSL_BOX_EVP_RAND_CTX_free          freed   freed      freed          freed
  OPENSSL_BOX_EVP_RAND_CTX_get_params            newed   instantiated  uninstantiated  freed
@@ -116,13 +116,13 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_RAND_instantiate</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_RAND_instantiate</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">instantiated</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_RAND_generate</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_RAND_generate</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">instantiated</td>

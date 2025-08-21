@@ -185,7 +185,7 @@ int ec_main(int argc, char **argv)
         goto end;
 
     if (point_format
-        && !EVP_PKEY_set_utf8_string_param(
+        && !OPENSSL_BOX_EVP_PKEY_set_utf8_string_param(
                 eckey, OSSL_PKEY_PARAM_EC_POINT_CONVERSION_FORMAT,
                 point_format)) {
         BIO_printf(bio_err, "unable to set point conversion format\n");
@@ -193,7 +193,7 @@ int ec_main(int argc, char **argv)
     }
 
     if (asn1_encoding != NULL
-        && !EVP_PKEY_set_utf8_string_param(
+        && !OPENSSL_BOX_EVP_PKEY_set_utf8_string_param(
                 eckey, OSSL_PKEY_PARAM_EC_ENCODING, asn1_encoding)) {
         BIO_printf(bio_err, "unable to set asn1 encoding format\n");
         goto end;
@@ -213,15 +213,15 @@ int ec_main(int argc, char **argv)
 
     if (text) {
         assert(pubin || private);
-        if ((pubin && EVP_PKEY_print_public(out, eckey, 0, NULL) <= 0)
-            || (!pubin && EVP_PKEY_print_private(out, eckey, 0, NULL) <= 0)) {
+        if ((pubin && OPENSSL_BOX_EVP_PKEY_print_public(out, eckey, 0, NULL) <= 0)
+            || (!pubin && OPENSSL_BOX_EVP_PKEY_print_private(out, eckey, 0, NULL) <= 0)) {
             BIO_printf(bio_err, "unable to print EC key\n");
             goto end;
         }
     }
 
     if (check) {
-        pctx = EVP_PKEY_CTX_new_from_pkey(NULL, eckey, NULL);
+        pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(NULL, eckey, NULL);
         if (pctx == NULL) {
             BIO_printf(bio_err, "unable to check EC key\n");
             goto end;

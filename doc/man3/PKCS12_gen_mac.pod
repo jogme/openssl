@@ -85,7 +85,7 @@ recommendation MP 26.2.002-2012 (or in its later versions, standartisation
 recommendation P 50.1.112-2016 or P 1323565.1.041-2022)
 of Technical Committee 26, that specifies that the key used for MAC
 generation should be the last 32 bytes of the 96-byte sequence generated
-by L<PKCS5_PBKDF2_HMAC(3)> and not the whole sequence.
+by L<OPENSSL_BOX_PKCS5_PBKDF2_HMAC(3)> and not the whole sequence.
 
 =back
 

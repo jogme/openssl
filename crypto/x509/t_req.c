@@ -97,7 +97,7 @@ int X509_REQ_print_ex(BIO *bp, X509_REQ *x, unsigned long nmflags,
                 goto err;
             ERR_print_errors(bp);
         } else {
-            if (EVP_PKEY_print_public(bp, pkey, 16, NULL) <= 0)
+            if (OPENSSL_BOX_EVP_PKEY_print_public(bp, pkey, 16, NULL) <= 0)
                 goto err;
         }
     }

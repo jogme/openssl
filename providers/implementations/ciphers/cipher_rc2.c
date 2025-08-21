@@ -212,7 +212,7 @@ static int rc2_set_ctx_params(void *vctx, const OSSL_PARAM params[])
             return 0;
         /*
          * This code assumes that the caller will call
-         * EVP_CipherInit_ex() with a non NULL key in order to setup a key that
+         * OPENSSL_BOX_EVP_CipherInit_ex() with a non NULL key in order to setup a key that
          * uses the keylen and keybits that were set here.
          */
         ctx->base.keylen = ctx->key_bits / 8;

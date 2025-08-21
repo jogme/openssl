@@ -8,7 +8,7 @@
  */
 
 /*
- * An example that uses EVP_PKEY_encrypt and EVP_PKEY_decrypt methods
+ * An example that uses OPENSSL_BOX_EVP_PKEY_encrypt and OPENSSL_BOX_EVP_PKEY_decrypt methods
  * to encrypt and decrypt data using an RSA keypair.
  * RSA encryption produces different encrypted output each time it is run,
  * hence this is not a known answer test.
@@ -111,9 +111,9 @@ static int do_encrypt(OSSL_LIB_CTX *libctx,
         fprintf(stderr, "Get public key failed.\n");
         goto cleanup;
     }
-    ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pub_key, propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pub_key, propq);
     if (ctx == NULL) {
-        fprintf(stderr, "EVP_PKEY_CTX_new_from_pkey() failed.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey() failed.\n");
         goto cleanup;
     }
     set_optional_params(params, propq);
@@ -123,8 +123,8 @@ static int do_encrypt(OSSL_LIB_CTX *libctx,
         goto cleanup;
     }
     /* Calculate the size required to hold the encrypted data */
-    if (EVP_PKEY_encrypt(ctx, NULL, &buf_len, in, in_len) <= 0) {
-        fprintf(stderr, "EVP_PKEY_encrypt() failed.\n");
+    if (OPENSSL_BOX_EVP_PKEY_encrypt(ctx, NULL, &buf_len, in, in_len) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_encrypt() failed.\n");
         goto cleanup;
     }
     buf = OPENSSL_zalloc(buf_len);
@@ -132,8 +132,8 @@ static int do_encrypt(OSSL_LIB_CTX *libctx,
         fprintf(stderr, "Malloc failed.\n");
         goto cleanup;
     }
-    if (EVP_PKEY_encrypt(ctx, buf, &buf_len, in, in_len) <= 0) {
-        fprintf(stderr, "EVP_PKEY_encrypt() failed.\n");
+    if (OPENSSL_BOX_EVP_PKEY_encrypt(ctx, buf, &buf_len, in, in_len) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_encrypt() failed.\n");
         goto cleanup;
     }
     *out_len = buf_len;
@@ -168,9 +168,9 @@ static int do_decrypt(OSSL_LIB_CTX *libctx, const unsigned char *in, size_t in_l
         fprintf(stderr, "Get private key failed.\n");
         goto cleanup;
     }
-    ctx = EVP_PKEY_CTX_new_from_pkey(libctx, priv_key, propq);
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, priv_key, propq);
     if (ctx == NULL) {
-        fprintf(stderr, "EVP_PKEY_CTX_new_from_pkey() failed.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey() failed.\n");
         goto cleanup;
     }
 
@@ -182,8 +182,8 @@ static int do_decrypt(OSSL_LIB_CTX *libctx, const unsigned char *in, size_t in_l
         goto cleanup;
     }
     /* Calculate the size required to hold the decrypted data */
-    if (EVP_PKEY_decrypt(ctx, NULL, &buf_len, in, in_len) <= 0) {
-        fprintf(stderr, "EVP_PKEY_decrypt() failed.\n");
+    if (OPENSSL_BOX_EVP_PKEY_decrypt(ctx, NULL, &buf_len, in, in_len) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_decrypt() failed.\n");
         goto cleanup;
     }
     buf = OPENSSL_zalloc(buf_len);
@@ -191,8 +191,8 @@ static int do_decrypt(OSSL_LIB_CTX *libctx, const unsigned char *in, size_t in_l
         fprintf(stderr, "Malloc failed.\n");
         goto cleanup;
     }
-    if (EVP_PKEY_decrypt(ctx, buf, &buf_len, in, in_len) <= 0) {
-        fprintf(stderr, "EVP_PKEY_decrypt() failed.\n");
+    if (OPENSSL_BOX_EVP_PKEY_decrypt(ctx, buf, &buf_len, in, in_len) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_decrypt() failed.\n");
         goto cleanup;
     }
     *out_len = buf_len;

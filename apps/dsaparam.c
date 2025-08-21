@@ -150,7 +150,7 @@ int dsaparam_main(int argc, char **argv)
     numbits = num;
     private = genkey ? 1 : 0;
 
-    ctx = EVP_PKEY_CTX_new_from_name(app_get0_libctx(), "DSA", app_get0_propq());
+    ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(app_get0_libctx(), "DSA", app_get0_propq());
     if (ctx == NULL) {
         BIO_printf(bio_err,
                    "Error, DSA parameter generation context allocation failed\n");
@@ -201,7 +201,7 @@ int dsaparam_main(int argc, char **argv)
         goto end;
 
     if (text) {
-        EVP_PKEY_print_params(out, params, 0, NULL);
+        OPENSSL_BOX_EVP_PKEY_print_params(out, params, 0, NULL);
     }
 
     if (outformat == FORMAT_ASN1 && genkey)
@@ -219,7 +219,7 @@ int dsaparam_main(int argc, char **argv)
     }
     if (genkey) {
         OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
-        ctx = EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), params,
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), params,
                 app_get0_propq());
         if (ctx == NULL) {
             BIO_printf(bio_err,

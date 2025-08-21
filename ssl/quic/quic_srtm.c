@@ -120,13 +120,13 @@ QUIC_SRTM *ossl_quic_srtm_new(OSSL_LIB_CTX *libctx, const char *propq)
         return NULL;
 
     /* Use AES-128-ECB as a permutation over 128-bit SRTs. */
-    if ((ecb = EVP_CIPHER_fetch(libctx, "AES-128-ECB", propq)) == NULL)
+    if ((ecb = OPENSSL_BOX_EVP_CIPHER_fetch(libctx, "AES-128-ECB", propq)) == NULL)
         goto err;
 
     if ((srtm->blind_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto err;
 
-    if (!EVP_EncryptInit_ex2(srtm->blind_ctx, ecb, key, NULL, NULL))
+    if (!OPENSSL_BOX_EVP_EncryptInit_ex2(srtm->blind_ctx, ecb, key, NULL, NULL))
         goto err;
 
     OPENSSL_BOX_EVP_CIPHER_free(ecb);
@@ -269,7 +269,7 @@ static int srtm_compute_blinded(QUIC_SRTM *srtm, SRTM_ITEM *item,
      * blinding for side-channel purposes. Encrypt the token as a single AES
      * block.
      */
-    if (!EVP_EncryptUpdate(srtm->blind_ctx, item->srt_blinded, &outl,
+    if (!OPENSSL_BOX_EVP_EncryptUpdate(srtm->blind_ctx, item->srt_blinded, &outl,
                            (const unsigned char *)token, sizeof(*token)))
         return 0;
 

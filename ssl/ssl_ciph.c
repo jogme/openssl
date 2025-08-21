@@ -291,8 +291,8 @@ static int get_optional_pkey_id(const char *pkey_name)
 {
     const EVP_PKEY_ASN1_METHOD *ameth;
     int pkey_id = 0;
-    ameth = EVP_PKEY_asn1_find_str(NULL, pkey_name, -1);
-    if (ameth && EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, NULL, NULL,
+    ameth = OPENSSL_BOX_EVP_PKEY_asn1_find_str(NULL, pkey_name, -1);
+    if (ameth && OPENSSL_BOX_EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, NULL, NULL,
                                          ameth) > 0)
         return pkey_id;
     return 0;
@@ -305,9 +305,9 @@ static int get_optional_pkey_id(const char *pkey_name)
     const EVP_PKEY_ASN1_METHOD *ameth;
     ENGINE *tmpeng = NULL;
     int pkey_id = 0;
-    ameth = EVP_PKEY_asn1_find_str(&tmpeng, pkey_name, -1);
+    ameth = OPENSSL_BOX_EVP_PKEY_asn1_find_str(&tmpeng, pkey_name, -1);
     if (ameth) {
-        if (EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, NULL, NULL,
+        if (OPENSSL_BOX_EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, NULL, NULL,
                                     ameth) <= 0)
             pkey_id = 0;
     }
@@ -366,22 +366,22 @@ int ssl_load_ciphers(SSL_CTX *ctx)
      * if these algorithms are not available.
      */
     ERR_set_mark();
-    sig = EVP_SIGNATURE_fetch(ctx->libctx, "DSA", ctx->propq);
+    sig = OPENSSL_BOX_EVP_SIGNATURE_fetch(ctx->libctx, "DSA", ctx->propq);
     if (sig == NULL)
         ctx->disabled_auth_mask |= SSL_aDSS;
     else
         OPENSSL_BOX_EVP_SIGNATURE_free(sig);
-    kex = EVP_KEYEXCH_fetch(ctx->libctx, "DH", ctx->propq);
+    kex = OPENSSL_BOX_EVP_KEYEXCH_fetch(ctx->libctx, "DH", ctx->propq);
     if (kex == NULL)
         ctx->disabled_mkey_mask |= SSL_kDHE | SSL_kDHEPSK;
     else
         OPENSSL_BOX_EVP_KEYEXCH_free(kex);
-    kex = EVP_KEYEXCH_fetch(ctx->libctx, "ECDH", ctx->propq);
+    kex = OPENSSL_BOX_EVP_KEYEXCH_fetch(ctx->libctx, "ECDH", ctx->propq);
     if (kex == NULL)
         ctx->disabled_mkey_mask |= SSL_kECDHE | SSL_kECDHEPSK;
     else
         OPENSSL_BOX_EVP_KEYEXCH_free(kex);
-    sig = EVP_SIGNATURE_fetch(ctx->libctx, "ECDSA", ctx->propq);
+    sig = OPENSSL_BOX_EVP_SIGNATURE_fetch(ctx->libctx, "ECDSA", ctx->propq);
     if (sig == NULL)
         ctx->disabled_auth_mask |= SSL_aECDSA;
     else
@@ -462,10 +462,10 @@ int ssl_cipher_get_evp_cipher(SSL_CTX *ctx, const SSL_CIPHER *sslc,
         if (i == SSL_ENC_NULL_IDX) {
             /*
              * We assume we don't care about this coming from an ENGINE so
-             * just do a normal EVP_CIPHER_fetch instead of
+             * just do a normal OPENSSL_BOX_EVP_CIPHER_fetch instead of
              * ssl_evp_cipher_fetch()
              */
-            *enc = EVP_CIPHER_fetch(ctx->libctx, "NULL", ctx->propq);
+            *enc = OPENSSL_BOX_EVP_CIPHER_fetch(ctx->libctx, "NULL", ctx->propq);
             if (*enc == NULL)
                 return 0;
         } else {

@@ -160,12 +160,12 @@ static EVP_MD_CTX *shake_setup(const char *name)
     EVP_MD_CTX *ctx = NULL;
     EVP_MD *md = NULL;
 
-    if (!TEST_ptr(md = EVP_MD_fetch(NULL, name, NULL)))
+    if (!TEST_ptr(md = OPENSSL_BOX_EVP_MD_fetch(NULL, name, NULL)))
         return NULL;
 
     if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_MD_CTX_new()))
         goto err;
-    if (!TEST_true(EVP_DigestInit_ex2(ctx, md, NULL)))
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestInit_ex2(ctx, md, NULL)))
         goto err;
     OPENSSL_BOX_EVP_MD_free(md);
     return ctx;
@@ -183,15 +183,15 @@ static int shake_kat_test(void)
 
     if (!TEST_ptr(ctx = shake_setup("SHAKE256")))
         return 0;
-    if (!TEST_true(EVP_DigestUpdate(ctx, shake256_input,
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestUpdate(ctx, shake256_input,
                                     sizeof(shake256_input)))
-        || !TEST_true(EVP_DigestFinalXOF(ctx, out, sizeof(out)))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestFinalXOF(ctx, out, sizeof(out)))
         || !TEST_mem_eq(out, sizeof(out),
                         shake256_output,sizeof(shake256_output))
-        /* Test that a second call to EVP_DigestFinalXOF fails */
-        || !TEST_false(EVP_DigestFinalXOF(ctx, out, sizeof(out)))
-        /* Test that a call to EVP_DigestSqueeze fails */
-        || !TEST_false(EVP_DigestSqueeze(ctx, out, sizeof(out))))
+        /* Test that a second call to OPENSSL_BOX_EVP_DigestFinalXOF fails */
+        || !TEST_false(OPENSSL_BOX_EVP_DigestFinalXOF(ctx, out, sizeof(out)))
+        /* Test that a call to OPENSSL_BOX_EVP_DigestSqueeze fails */
+        || !TEST_false(OPENSSL_BOX_EVP_DigestSqueeze(ctx, out, sizeof(out))))
         goto err;
     ret = 1;
 err:
@@ -206,30 +206,30 @@ static int shake_kat_digestfinal_test(void)
     EVP_MD_CTX *ctx = NULL;
     unsigned char out[sizeof(shake256_output)];
 
-    /* Test that EVP_DigestFinal without setting XOFLEN fails */
+    /* Test that OPENSSL_BOX_EVP_DigestFinal without setting XOFLEN fails */
     if (!TEST_ptr(ctx = shake_setup("SHAKE256")))
         return 0;
-    if (!TEST_true(EVP_DigestUpdate(ctx, shake256_input,
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestUpdate(ctx, shake256_input,
                    sizeof(shake256_input))))
         return 0;
     ERR_set_mark();
-    if (!TEST_false(EVP_DigestFinal(ctx, out, &digest_length))) {
+    if (!TEST_false(OPENSSL_BOX_EVP_DigestFinal(ctx, out, &digest_length))) {
         ERR_clear_last_mark();
         return 0;
     }
     ERR_pop_to_mark();
     OPENSSL_BOX_EVP_MD_CTX_free(ctx);
 
-    /* However EVP_DigestFinalXOF must work */
+    /* However OPENSSL_BOX_EVP_DigestFinalXOF must work */
     if (!TEST_ptr(ctx = shake_setup("SHAKE256")))
         return 0;
-    if (!TEST_true(EVP_DigestUpdate(ctx, shake256_input,
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestUpdate(ctx, shake256_input,
                    sizeof(shake256_input))))
         return 0;
-    if (!TEST_true(EVP_DigestFinalXOF(ctx, out, sizeof(out)))
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestFinalXOF(ctx, out, sizeof(out)))
         || !TEST_mem_eq(out, sizeof(out),
                         shake256_output, sizeof(shake256_output))
-        || !TEST_false(EVP_DigestFinalXOF(ctx, out, sizeof(out))))
+        || !TEST_false(OPENSSL_BOX_EVP_DigestFinalXOF(ctx, out, sizeof(out))))
         goto err;
     ret = 1;
 err:
@@ -238,7 +238,7 @@ err:
 }
 
 /*
- * Test that EVP_DigestFinal() returns the output length
+ * Test that OPENSSL_BOX_EVP_DigestFinal() returns the output length
  * set by the OSSL_DIGEST_PARAM_XOFLEN param.
  */
 static int shake_kat_digestfinal_xoflen_test(void)
@@ -264,9 +264,9 @@ static int shake_kat_digestfinal_xoflen_test(void)
         || !TEST_int_eq(EVP_MD_CTX_size(ctx), (int)sz)
         || !TEST_int_eq(OPENSSL_BOX_EVP_MD_get_size(md), 0)
         || !TEST_true(OPENSSL_BOX_EVP_MD_xof(md))
-        || !TEST_true(EVP_DigestUpdate(ctx, shake256_input,
+        || !TEST_true(OPENSSL_BOX_EVP_DigestUpdate(ctx, shake256_input,
                                        sizeof(shake256_input)))
-        || !TEST_true(EVP_DigestFinal(ctx, out, &digest_length))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestFinal(ctx, out, &digest_length))
         || !TEST_uint_eq(digest_length, (unsigned int)sz)
         || !TEST_mem_eq(out, digest_length,
                         shake256_output, digest_length)
@@ -299,16 +299,16 @@ static int shake_absorb_test(void)
             sz += stride;
             if ((i + sz) > total)
                 sz = total - i;
-            if (!TEST_true(EVP_DigestUpdate(ctx, shake256_largemsg_input + i,
+            if (!TEST_true(OPENSSL_BOX_EVP_DigestUpdate(ctx, shake256_largemsg_input + i,
                                             sz)))
                 goto err;
         }
-        if (!TEST_true(EVP_DigestFinalXOF(ctx, out, sizeof(out)))
+        if (!TEST_true(OPENSSL_BOX_EVP_DigestFinalXOF(ctx, out, sizeof(out)))
             || !TEST_mem_eq(out, sizeof(out),
                             shake256_largemsg_output,
                             sizeof(shake256_largemsg_output)))
             goto err;
-        if (!TEST_true(EVP_DigestInit_ex2(ctx, NULL, NULL)))
+        if (!TEST_true(OPENSSL_BOX_EVP_DigestInit_ex2(ctx, NULL, NULL)))
             goto err;
     }
     ret = 1;
@@ -380,13 +380,13 @@ static int do_shake_squeeze_test(int tst,
         return 0;
     if (!TEST_ptr(out = OPENSSL_malloc(expected_outlen)))
         goto err;
-    if (!TEST_true(EVP_DigestUpdate(ctx, in, inlen)))
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestUpdate(ctx, in, inlen)))
         goto err;
 
     while (i < expected_outlen) {
         if ((i + sz) > expected_outlen)
             sz = expected_outlen - i;
-        if (!TEST_true(EVP_DigestSqueeze(ctx, out + i, sz)))
+        if (!TEST_true(OPENSSL_BOX_EVP_DigestSqueeze(ctx, out + i, sz)))
             goto err;
         i += sz;
         sz = stride_tests[tst].incsz;
@@ -421,8 +421,8 @@ static int shake_squeeze_large_test(int tst)
 
     if (!TEST_int_gt(RAND_bytes(msg, sizeof(msg)), 0)
         || !TEST_ptr(ctx = shake_setup("SHAKE256"))
-        || !TEST_true(EVP_DigestUpdate(ctx, msg, sizeof(msg)))
-        || !TEST_true(EVP_DigestFinalXOF(ctx, out, sizeof(out))))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestUpdate(ctx, msg, sizeof(msg)))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestFinalXOF(ctx, out, sizeof(out))))
         goto err;
 
     ret = do_shake_squeeze_test(tst, msg, sizeof(msg), out, sizeof(out));
@@ -452,13 +452,13 @@ static int do_shake_squeeze_dup_test(int tst, const char *alg,
     cur = ctx;
     if (!TEST_ptr(out = OPENSSL_malloc(expected_outlen)))
         goto err;
-    if (!TEST_true(EVP_DigestUpdate(ctx, in, inlen)))
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestUpdate(ctx, in, inlen)))
         goto err;
 
     while (i < expected_outlen) {
         if ((i + sz) > expected_outlen)
             sz = expected_outlen - i;
-        if (!TEST_true(EVP_DigestSqueeze(cur, out + i, sz)))
+        if (!TEST_true(OPENSSL_BOX_EVP_DigestSqueeze(cur, out + i, sz)))
             goto err;
         i += sz;
         /* At a certain offset we swap to a new ctx that copies the state */
@@ -489,8 +489,8 @@ static int shake_squeeze_dup_test(int tst)
 
     if (!TEST_int_gt(RAND_bytes(msg, sizeof(msg)), 0)
         || !TEST_ptr(ctx = shake_setup(alg))
-        || !TEST_true(EVP_DigestUpdate(ctx, msg, sizeof(msg)))
-        || !TEST_true(EVP_DigestFinalXOF(ctx, out, sizeof(out))))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestUpdate(ctx, msg, sizeof(msg)))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestFinalXOF(ctx, out, sizeof(out))))
         goto err;
 
     ret = do_shake_squeeze_dup_test(tst, alg, msg, sizeof(msg),
@@ -510,12 +510,12 @@ static int shake_squeeze_no_absorb_test(void)
     const char *alg = "SHAKE128";
 
     if (!TEST_ptr(ctx = shake_setup(alg))
-        || !TEST_true(EVP_DigestFinalXOF(ctx, out, sizeof(out))))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestFinalXOF(ctx, out, sizeof(out))))
         goto err;
 
-    if (!TEST_true(EVP_DigestInit_ex2(ctx, NULL, NULL))
-        || !TEST_true(EVP_DigestSqueeze(ctx, out2, sizeof(out2) / 2))
-        || !TEST_true(EVP_DigestSqueeze(ctx, out2 + sizeof(out2) / 2,
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestInit_ex2(ctx, NULL, NULL))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestSqueeze(ctx, out2, sizeof(out2) / 2))
+        || !TEST_true(OPENSSL_BOX_EVP_DigestSqueeze(ctx, out2 + sizeof(out2) / 2,
                                         sizeof(out2) / 2)))
         goto err;
 
@@ -533,7 +533,7 @@ static int xof_fail_test(void)
     int ret;
     EVP_MD *md = NULL;
 
-    ret = TEST_ptr(md = EVP_MD_fetch(NULL, "SHA256", NULL))
+    ret = TEST_ptr(md = OPENSSL_BOX_EVP_MD_fetch(NULL, "SHA256", NULL))
             && TEST_false(OPENSSL_BOX_EVP_MD_xof(md));
     OPENSSL_BOX_EVP_MD_free(md);
     return ret;

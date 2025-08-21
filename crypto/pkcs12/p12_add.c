@@ -111,7 +111,7 @@ PKCS7 *PKCS12_pack_p7encdata_ex(int pbe_nid, const char *pass, int passlen,
     }
 
     ERR_set_mark();
-    pbe_ciph = pbe_ciph_fetch = EVP_CIPHER_fetch(ctx, OBJ_nid2sn(pbe_nid), propq);
+    pbe_ciph = pbe_ciph_fetch = OPENSSL_BOX_EVP_CIPHER_fetch(ctx, OBJ_nid2sn(pbe_nid), propq);
     if (pbe_ciph == NULL)
         pbe_ciph = EVP_get_cipherbynid(pbe_nid);
     ERR_pop_to_mark();

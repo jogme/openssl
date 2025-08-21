@@ -42,7 +42,7 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
 
     /* Load DER-encoded RSA private key. */
     ppriv_key = rsa_priv_key;
-    pkey = d2i_PrivateKey_ex(EVP_PKEY_RSA, NULL, &ppriv_key,
+    pkey = OPENSSL_BOX_d2i_PrivateKey_ex(EVP_PKEY_RSA, NULL, &ppriv_key,
                              sizeof(rsa_priv_key), libctx, propq);
     if (pkey == NULL) {
         fprintf(stderr, "Failed to load private key\n");
@@ -61,7 +61,7 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
                                             OSSL_PKEY_RSA_PAD_MODE_PSS, 0);
     *p = OSSL_PARAM_construct_end();
 
-    if (EVP_DigestSignInit_ex(mctx, NULL, "SHA256", libctx, propq,
+    if (OPENSSL_BOX_EVP_DigestSignInit_ex(mctx, NULL, "SHA256", libctx, propq,
                               pkey, params) == 0) {
         fprintf(stderr, "Failed to initialize signing context\n");
         goto end;
@@ -77,7 +77,7 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
     }
 
     /* Determine signature length. */
-    if (EVP_DigestSignFinal(mctx, NULL, sig_len) == 0) {
+    if (OPENSSL_BOX_EVP_DigestSignFinal(mctx, NULL, sig_len) == 0) {
         fprintf(stderr, "Failed to get signature length\n");
         goto end;
     }
@@ -90,7 +90,7 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
     }
 
     /* Generate signature. */
-    if (EVP_DigestSignFinal(mctx, *sig, sig_len) == 0) {
+    if (OPENSSL_BOX_EVP_DigestSignFinal(mctx, *sig, sig_len) == 0) {
         fprintf(stderr, "Failed to sign\n");
         goto end;
     }
@@ -121,7 +121,7 @@ static int verify(OSSL_LIB_CTX *libctx, const unsigned char *sig, size_t sig_len
 
     /* Load DER-encoded RSA public key. */
     ppub_key = rsa_pub_key;
-    pkey = d2i_PublicKey(EVP_PKEY_RSA, NULL, &ppub_key, sizeof(rsa_pub_key));
+    pkey = OPENSSL_BOX_d2i_PublicKey(EVP_PKEY_RSA, NULL, &ppub_key, sizeof(rsa_pub_key));
     if (pkey == NULL) {
         fprintf(stderr, "Failed to load public key\n");
         goto end;
@@ -139,7 +139,7 @@ static int verify(OSSL_LIB_CTX *libctx, const unsigned char *sig, size_t sig_len
                                             OSSL_PKEY_RSA_PAD_MODE_PSS, 0);
     *p = OSSL_PARAM_construct_end();
 
-    if (EVP_DigestVerifyInit_ex(mctx, NULL, "SHA256", libctx, propq,
+    if (OPENSSL_BOX_EVP_DigestVerifyInit_ex(mctx, NULL, "SHA256", libctx, propq,
                                 pkey, params) == 0) {
         fprintf(stderr, "Failed to initialize signing context\n");
         goto end;
@@ -155,7 +155,7 @@ static int verify(OSSL_LIB_CTX *libctx, const unsigned char *sig, size_t sig_len
     }
 
     /* Verify signature. */
-    if (EVP_DigestVerifyFinal(mctx, sig, sig_len) == 0) {
+    if (OPENSSL_BOX_EVP_DigestVerifyFinal(mctx, sig, sig_len) == 0) {
         fprintf(stderr, "Failed to verify signature; "
                 "signature may be invalid\n");
         goto end;

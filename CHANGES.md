@@ -375,9 +375,9 @@ OpenSSL 3.5
    *Dan Zimmerman, Alina Elizarova*
 
  * Cipher pipelining support for provided ciphers with new API functions
-   OPENSSL_BOX_EVP_CIPHER_can_pipeline(), EVP_CipherPipelineEncryptInit(),
-   EVP_CipherPipelineDecryptInit(), EVP_CipherPipelineUpdate(),
-   and EVP_CipherPipelineFinal(). Cipher pipelining support allows application to
+   OPENSSL_BOX_EVP_CIPHER_can_pipeline(), OPENSSL_BOX_EVP_CipherPipelineEncryptInit(),
+   OPENSSL_BOX_EVP_CipherPipelineDecryptInit(), OPENSSL_BOX_EVP_CipherPipelineUpdate(),
+   and OPENSSL_BOX_EVP_CipherPipelineFinal(). Cipher pipelining support allows application to
    submit multiple chunks of data in one cipher update call, thereby allowing the
    provided implementation to take advantage of parallel computing. There are
    currently no built-in ciphers that support pipelining. This new API replaces
@@ -414,10 +414,10 @@ OpenSSL 3.5
 
    *Pablo De Lara Guarch, Dan Pittman*
 
- * Fixed EVP_DecodeUpdate() to not write padding zeros to the decoded output.
+ * Fixed OPENSSL_BOX_EVP_DecodeUpdate() to not write padding zeros to the decoded output.
 
    According to the documentation, for every 4 valid base64 bytes processed
-   (ignoring whitespace, carriage returns and line feeds), EVP_DecodeUpdate()
+   (ignoring whitespace, carriage returns and line feeds), OPENSSL_BOX_EVP_DecodeUpdate()
    produces 3 bytes of binary output data (except at the end of data
    terminated with one or two padding characters). However, the function
    behaved like an OPENSSL_BOX_EVP_DecodeBlock(). It produced exactly 3 output bytes for
@@ -425,7 +425,7 @@ OpenSSL 3.5
    output buffer if a user allocates its size based on the documentation and
    knowing the padding size.
 
-   The fix makes EVP_DecodeUpdate() produce exactly as many output bytes as
+   The fix makes OPENSSL_BOX_EVP_DecodeUpdate() produce exactly as many output bytes as
    in the initial non-encoded message.
 
    *Valerii Krygin*
@@ -514,8 +514,8 @@ OpenSSL 3.4
    *Viktor Dukhovni*
 
  * Added support for directly fetched composite signature algorithms such as
-   RSA-SHA2-256 including new API functions in the EVP_PKEY_sign,
-   EVP_PKEY_verify and EVP_PKEY_verify_recover groups.
+   RSA-SHA2-256 including new API functions in the OPENSSL_BOX_EVP_PKEY_sign,
+   OPENSSL_BOX_EVP_PKEY_verify and OPENSSL_BOX_EVP_PKEY_verify_recover groups.
 
    *Richard Levitte*
 
@@ -610,7 +610,7 @@ OpenSSL 3.4
 
  * SHAKE-128 and SHAKE-256 implementations have no default digest length
    anymore. That means these algorithms cannot be used with
-   EVP_DigestFinal/_ex() unless the `xoflen` param is set before.
+   OPENSSL_BOX_EVP_DigestFinal/_ex() unless the `xoflen` param is set before.
 
    This change was necessary because the preexisting default lengths were
    half the size necessary for full collision resistance supported by these
@@ -811,7 +811,7 @@ OpenSSL 3.3
 
    *Tomáš Mráz*
 
- * The EVP_PKEY_fromdata function has been augmented to allow for the derivation
+ * The OPENSSL_BOX_EVP_PKEY_fromdata function has been augmented to allow for the derivation
    of CRT (Chinese Remainder Theorem) parameters when requested.  See the
    OSSL_PKEY_PARAM_RSA_DERIVE_FROM_PQ param in the EVP_PKEY-RSA documentation.
 
@@ -943,7 +943,7 @@ OpenSSL 3.3
 
    *Tom Cosgrove*
 
- * Added a new EVP_DigestSqueeze() API. This allows SHAKE to squeeze multiple
+ * Added a new OPENSSL_BOX_EVP_DigestSqueeze() API. This allows SHAKE to squeeze multiple
    times with different output sizes.
 
    *Shane Lontis, Holger Dengler*
@@ -1509,7 +1509,7 @@ OpenSSL 3.2
    padding during PKCS#1 v1.5 decryption. This is a general protection against
    issues like CVE-2020-25659 and CVE-2020-25657. This protection can be
    disabled by calling
-   `EVP_PKEY_CTX_ctrl_str(ctx, "rsa_pkcs1_implicit_rejection". "0")`
+   `OPENSSL_BOX_EVP_PKEY_CTX_ctrl_str(ctx, "rsa_pkcs1_implicit_rejection". "0")`
    on the RSA decryption context.
 
    *Hubert Kario*
@@ -1532,8 +1532,8 @@ OpenSSL 3.1
 
 ### Changes between 3.1.3 and 3.1.4 [24 Oct 2023]
 
- * Fix incorrect key and IV resizing issues when calling EVP_EncryptInit_ex2(),
-   EVP_DecryptInit_ex2() or EVP_CipherInit_ex2() with OSSL_PARAM parameters
+ * Fix incorrect key and IV resizing issues when calling OPENSSL_BOX_EVP_EncryptInit_ex2(),
+   OPENSSL_BOX_EVP_DecryptInit_ex2() or OPENSSL_BOX_EVP_CipherInit_ex2() with OSSL_PARAM parameters
    that alter the key or IV length ([CVE-2023-5363]).
 
    *Paul Dale*
@@ -1604,7 +1604,7 @@ OpenSSL 3.1
 
    The AES-SIV algorithm allows for authentication of multiple associated
    data entries along with the encryption. To authenticate empty data the
-   application has to call `EVP_EncryptUpdate()` (or `EVP_CipherUpdate()`)
+   application has to call `OPENSSL_BOX_EVP_EncryptUpdate()` (or `OPENSSL_BOX_EVP_CipherUpdate()`)
    with NULL pointer as the output buffer and 0 as the input buffer length.
    The AES-SIV implementation in OpenSSL just returns success for such call
    instead of performing the associated data authentication operation.
@@ -1615,7 +1615,7 @@ OpenSSL 3.1
    The fix changes the authentication tag value and the ciphertext for
    applications that use empty associated data entries with AES-SIV.
    To decrypt data encrypted with previous versions of OpenSSL the application
-   has to skip calls to `EVP_DecryptUpdate()` for empty associated data
+   has to skip calls to `OPENSSL_BOX_EVP_DecryptUpdate()` for empty associated data
    entries.
 
    *Tomáš Mráz*
@@ -1963,7 +1963,7 @@ breaking changes, and mappings for the large list of deprecated functions.
    for legacy EC and SM2 keys is also changed similarly to honor the
    equivalent conversion format flag as specified in the underlying
    `EC_KEY` object being exported to a provider, when this function is
-   called through `EVP_PKEY_export()`.
+   called through `OPENSSL_BOX_EVP_PKEY_export()`.
 
    *Nicola Tuveri*
 
@@ -2033,8 +2033,8 @@ breaking changes, and mappings for the large list of deprecated functions.
    to use the new provider mechanism in order to implement custom ciphers.
 
    OpenSSL versions 3.0.0 to 3.0.5 incorrectly handle legacy custom ciphers
-   passed to the EVP_EncryptInit_ex2(), EVP_DecryptInit_ex2() and
-   EVP_CipherInit_ex2() functions (as well as other similarly named encryption
+   passed to the OPENSSL_BOX_EVP_EncryptInit_ex2(), OPENSSL_BOX_EVP_DecryptInit_ex2() and
+   OPENSSL_BOX_EVP_CipherInit_ex2() functions (as well as other similarly named encryption
    and decryption initialisation functions). Instead of using the custom cipher
    directly it incorrectly tries to fetch an equivalent cipher from the
    available providers. An equivalent cipher is found based on the NID passed to
@@ -2470,7 +2470,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
  * The OPENSSL_BOX_EVP_get_cipherbyname() function will return NULL for algorithms such as
    "AES-128-SIV", "AES-128-CBC-CTS" and "CAMELLIA-128-CBC-CTS" which were
-   previously only accessible via low-level interfaces. Use EVP_CIPHER_fetch()
+   previously only accessible via low-level interfaces. Use OPENSSL_BOX_EVP_CIPHER_fetch()
    instead to retrieve these algorithms from a provider.
 
    *Shane Lontis*
@@ -2570,10 +2570,10 @@ breaking changes, and mappings for the large list of deprecated functions.
    *Benjamin Kaduk*
 
  * The signature of the `copy` functional parameter of the
-   EVP_PKEY_meth_set_copy() function has changed so its `src` argument is
+   OPENSSL_BOX_EVP_PKEY_meth_set_copy() function has changed so its `src` argument is
    now `const EVP_PKEY_CTX *` instead of `EVP_PKEY_CTX *`. Similarly
    the signature of the `pub_decode` functional parameter of the
-   EVP_PKEY_asn1_set_public() function has changed so its `pub` argument is
+   OPENSSL_BOX_EVP_PKEY_asn1_set_public() function has changed so its `pub` argument is
    now `const X509_PUBKEY *` instead of `X509_PUBKEY *`.
 
    *David von Oheimb*
@@ -2673,7 +2673,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Matt Caswell*
 
- * PKCS#5 PBKDF1 key derivation has been moved from PKCS5_PBE_keyivgen() into
+ * PKCS#5 PBKDF1 key derivation has been moved from OPENSSL_BOX_PKCS5_PBE_keyivgen() into
    the legacy crypto provider as an EVP_KDF. Applications requiring this KDF
    will need to load the legacy crypto provider. This includes these PBE
    algorithms which use this KDF:
@@ -2772,7 +2772,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Kurt Roeckx*
 
- * Deprecated EVP_MD_CTX_set_update_fn() and EVP_MD_CTX_update_fn().
+ * Deprecated OPENSSL_BOX_EVP_MD_CTX_set_update_fn() and EVP_MD_CTX_update_fn().
 
    *Rich Salz*
 
@@ -2813,7 +2813,7 @@ breaking changes, and mappings for the large list of deprecated functions.
    *Dmitry Belyavskiy*
 
  * Added convenience functions for generating asymmetric key pairs:
-   The 'quick' one-shot (yet somewhat limited) function L<EVP_PKEY_Q_keygen(3)>
+   The 'quick' one-shot (yet somewhat limited) function L<OPENSSL_BOX_EVP_PKEY_Q_keygen(3)>
    and macros for the most common cases: <EVP_RSA_gen(3)> and L<EVP_EC_gen(3)>.
 
    *David von Oheimb*
@@ -3141,7 +3141,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Paul Dale*
 
- * Deprecated EVP_PKEY_decrypt_old() and EVP_PKEY_encrypt_old().
+ * Deprecated OPENSSL_BOX_EVP_PKEY_decrypt_old() and OPENSSL_BOX_EVP_PKEY_encrypt_old().
 
    *Richard Levitte*
 
@@ -3181,13 +3181,13 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Paul Dale and David von Oheimb*
 
- * Corrected the documentation of the return values from the `EVP_DigestSign*`
+ * Corrected the documentation of the return values from the `OPENSSL_BOX_EVP_DigestSign*`
    set of functions.  The documentation mentioned negative values for some
    errors, but this was never the case, so the mention of negative values
    was removed.
 
    Code that followed the documentation and thereby check with something
-   like `EVP_DigestSignInit(...) <= 0` will continue to work undisturbed.
+   like `OPENSSL_BOX_EVP_DigestSignInit(...) <= 0` will continue to work undisturbed.
 
    *Richard Levitte*
 
@@ -3335,8 +3335,8 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Rich Salz*
 
- * Introduced the new functions EVP_DigestSignInit_ex() and
-   EVP_DigestVerifyInit_ex(). The macros OPENSSL_BOX_EVP_DigestSignUpdate() and
+ * Introduced the new functions OPENSSL_BOX_EVP_DigestSignInit_ex() and
+   OPENSSL_BOX_EVP_DigestVerifyInit_ex(). The macros OPENSSL_BOX_EVP_DigestSignUpdate() and
    OPENSSL_BOX_EVP_DigestVerifyUpdate() have been converted to functions. See the man
    pages for further details.
 
@@ -3539,7 +3539,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
  * A new type, EVP_KEYEXCH, has been introduced to represent key exchange
    algorithms. An implementation of a key exchange algorithm can be obtained
-   by using the function EVP_KEYEXCH_fetch(). An EVP_KEYEXCH algorithm can be
+   by using the function OPENSSL_BOX_EVP_KEYEXCH_fetch(). An EVP_KEYEXCH algorithm can be
    used in a call to OPENSSL_BOX_EVP_PKEY_derive_init_ex() which works in a similar way to
    the older OPENSSL_BOX_EVP_PKEY_derive_init() function. See the man pages for the new
    functions for further details.
@@ -3715,7 +3715,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Bernd Edlinger*
 
- * Move strictness check from EVP_PKEY_asn1_new() to OPENSSL_BOX_EVP_PKEY_asn1_add0().
+ * Move strictness check from OPENSSL_BOX_EVP_PKEY_asn1_new() to OPENSSL_BOX_EVP_PKEY_asn1_add0().
 
    *Richard Levitte*
 
@@ -3768,7 +3768,7 @@ breaking changes, and mappings for the large list of deprecated functions.
  * Added EVP_MAC, an EVP layer MAC API, to simplify adding MAC
    implementations.  This includes a generic EVP_PKEY to EVP_MAC bridge,
    to facilitate the continued use of MACs through raw private keys in
-   functionality such as `EVP_DigestSign*` and `EVP_DigestVerify*`.
+   functionality such as `OPENSSL_BOX_EVP_DigestSign*` and `OPENSSL_BOX_EVP_DigestVerify*`.
 
    *Richard Levitte*
 
@@ -3873,18 +3873,18 @@ OpenSSL 1.1.1
  * Fixed an SM2 Decryption Buffer Overflow.
 
    In order to decrypt SM2 encrypted data an application is expected to
-   call the API function EVP_PKEY_decrypt(). Typically an application will
+   call the API function OPENSSL_BOX_EVP_PKEY_decrypt(). Typically an application will
    call this function twice. The first time, on entry, the "out" parameter
    can be NULL and, on exit, the "outlen" parameter is populated with the
    buffer size required to hold the decrypted plaintext. The application
-   can then allocate a sufficiently sized buffer and call EVP_PKEY_decrypt()
+   can then allocate a sufficiently sized buffer and call OPENSSL_BOX_EVP_PKEY_decrypt()
    again, but this time passing a non-NULL value for the "out" parameter.
 
    A bug in the implementation of the SM2 decryption code means that the
    calculation of the buffer size required to hold the plaintext returned
-   by the first call to EVP_PKEY_decrypt() can be smaller than the actual
+   by the first call to OPENSSL_BOX_EVP_PKEY_decrypt() can be smaller than the actual
    size required by the second call. This can lead to a buffer overflow
-   when EVP_PKEY_decrypt() is called by the application a second time with
+   when OPENSSL_BOX_EVP_PKEY_decrypt() is called by the application a second time with
    a buffer that is too small.
 
    A malicious attacker who is able present SM2 content for decryption to
@@ -4006,7 +4006,7 @@ OpenSSL 1.1.1
 
    *Matt Caswell*
 
-   Fixed the EVP_CipherUpdate, EVP_EncryptUpdate and EVP_DecryptUpdate
+   Fixed the OPENSSL_BOX_EVP_CipherUpdate, OPENSSL_BOX_EVP_EncryptUpdate and OPENSSL_BOX_EVP_DecryptUpdate
    functions. Previously they could overflow the output length argument in some
    cases where the input length is close to the maximum permissible length for
    an integer on the platform. In such cases the return value from the function
@@ -4428,7 +4428,7 @@ OpenSSL 1.1.1
 
    *Patrick Steuer*
 
- * Make EVP_PKEY_asn1_new() a bit stricter about its input.  A NULL pem_str
+ * Make OPENSSL_BOX_EVP_PKEY_asn1_new() a bit stricter about its input.  A NULL pem_str
    parameter is no longer accepted, as it leads to a corrupt table.  NULL
    pem_str is reserved for alias entries only.
 
@@ -4590,7 +4590,7 @@ OpenSSL 1.1.1
 
    *Matt Caswell*
 
- * Added EVP_PKEY_sign() and EVP_PKEY_verify() for EdDSA
+ * Added OPENSSL_BOX_EVP_PKEY_sign() and OPENSSL_BOX_EVP_PKEY_verify() for EdDSA
 
    *Matt Caswell*
 
@@ -5049,7 +5049,7 @@ OpenSSL 1.1.0
 
    *Bernd Edlinger*
 
- * Move strictness check from EVP_PKEY_asn1_new() to OPENSSL_BOX_EVP_PKEY_asn1_add0().
+ * Move strictness check from OPENSSL_BOX_EVP_PKEY_asn1_new() to OPENSSL_BOX_EVP_PKEY_asn1_add0().
 
    *Richard Levitte*
 
@@ -5117,7 +5117,7 @@ OpenSSL 1.1.0
 
    *Billy Brumley*
 
- * Make EVP_PKEY_asn1_new() a bit stricter about its input.  A NULL pem_str
+ * Make OPENSSL_BOX_EVP_PKEY_asn1_new() a bit stricter about its input.  A NULL pem_str
    parameter is no longer accepted, as it leads to a corrupt table.  NULL
    pem_str is reserved for alias entries only.
 
@@ -5538,7 +5538,7 @@ OpenSSL 1.1.0
 
    *Matt Caswell*
 
- * The EVP_EncryptUpdate() function has had its return type changed from void
+ * The OPENSSL_BOX_EVP_EncryptUpdate() function has had its return type changed from void
    to int. A return of 0 indicates and error while a return of 1 indicates
    success.
 
@@ -6171,7 +6171,7 @@ OpenSSL 1.1.0
 
    *Matt Caswell*
 
- * Rewrite EVP_DecodeUpdate (base64 decoding) to fix several bugs.
+ * Rewrite OPENSSL_BOX_EVP_DecodeUpdate (base64 decoding) to fix several bugs.
    This changes the decoding behaviour for some invalid messages,
    though the change is mostly in the more lenient direction, and
    legacy behaviour is preserved as much as possible.
@@ -6725,7 +6725,7 @@ OpenSSL 1.1.0
 
  * Extensive audit of libcrypto with DEBUG_UNUSED. Fix many cases where
    return value is ignored. NB. The functions RAND_add(), RAND_seed(),
-   BIO_set_cipher() and some obscure PEM functions were changed so they
+   OPENSSL_BOX_BIO_set_cipher() and some obscure PEM functions were changed so they
    can now return an error. The RAND changes required a change to the
    RAND_METHOD structure.
 
@@ -6842,7 +6842,7 @@ OpenSSL 1.0.2
 
    *Matt Caswell*
 
- * Move strictness check from EVP_PKEY_asn1_new() to OPENSSL_BOX_EVP_PKEY_asn1_add0().
+ * Move strictness check from OPENSSL_BOX_EVP_PKEY_asn1_new() to OPENSSL_BOX_EVP_PKEY_asn1_add0().
 
    *Richard Levitte*
 
@@ -6907,7 +6907,7 @@ OpenSSL 1.0.2
 
    *Billy Brumley*
 
- * Make EVP_PKEY_asn1_new() a bit stricter about its input.  A NULL pem_str
+ * Make OPENSSL_BOX_EVP_PKEY_asn1_new() a bit stricter about its input.  A NULL pem_str
    parameter is no longer accepted, as it leads to a corrupt table.  NULL
    pem_str is reserved for alias entries only.
 
@@ -7157,9 +7157,9 @@ OpenSSL 1.0.2
  * OOB write in MDC2_Update()
 
    An overflow can occur in MDC2_Update() either if called directly or
-   through the EVP_DigestUpdate() function using MDC2. If an attacker
+   through the OPENSSL_BOX_EVP_DigestUpdate() function using MDC2. If an attacker
    is able to supply very large amounts of input data after a previous
-   call to EVP_EncryptUpdate() with a partial block then a length check
+   call to OPENSSL_BOX_EVP_EncryptUpdate() with a partial block then a length check
    can overflow resulting in a heap corruption.
 
    The amount of data needed is comparable to SIZE_MAX which is impractical
@@ -7318,14 +7318,14 @@ OpenSSL 1.0.2
 
    *Kurt Roeckx*
 
- * Fix EVP_EncodeUpdate overflow
+ * Fix OPENSSL_BOX_EVP_EncodeUpdate overflow
 
-   An overflow can occur in the EVP_EncodeUpdate() function which is used for
+   An overflow can occur in the OPENSSL_BOX_EVP_EncodeUpdate() function which is used for
    Base64 encoding of binary data. If an attacker is able to supply very large
    amounts of input data then a length check can overflow resulting in a heap
    corruption.
 
-   Internally to OpenSSL the EVP_EncodeUpdate() function is primarily used by
+   Internally to OpenSSL the OPENSSL_BOX_EVP_EncodeUpdate() function is primarily used by
    the `PEM_write_bio*` family of functions. These are mainly used within the
    OpenSSL command line applications, so any application which processes data
    from an untrusted source and outputs it as a PEM file should be considered
@@ -7337,22 +7337,22 @@ OpenSSL 1.0.2
 
    *Matt Caswell*
 
- * Fix EVP_EncryptUpdate overflow
+ * Fix OPENSSL_BOX_EVP_EncryptUpdate overflow
 
-   An overflow can occur in the EVP_EncryptUpdate() function. If an attacker
+   An overflow can occur in the OPENSSL_BOX_EVP_EncryptUpdate() function. If an attacker
    is able to supply very large amounts of input data after a previous call to
-   EVP_EncryptUpdate() with a partial block then a length check can overflow
+   OPENSSL_BOX_EVP_EncryptUpdate() with a partial block then a length check can overflow
    resulting in a heap corruption. Following an analysis of all OpenSSL
-   internal usage of the EVP_EncryptUpdate() function all usage is one of two
-   forms. The first form is where the EVP_EncryptUpdate() call is known to be
-   the first called function after an EVP_EncryptInit(), and therefore that
+   internal usage of the OPENSSL_BOX_EVP_EncryptUpdate() function all usage is one of two
+   forms. The first form is where the OPENSSL_BOX_EVP_EncryptUpdate() call is known to be
+   the first called function after an OPENSSL_BOX_EVP_EncryptInit(), and therefore that
    specific call must be safe. The second form is where the length passed to
-   EVP_EncryptUpdate() can be seen from the code to be some small value and
+   OPENSSL_BOX_EVP_EncryptUpdate() can be seen from the code to be some small value and
    therefore there is no possibility of an overflow. Since all instances are
    one of these two forms, it is believed that there can be no overflows in
    internal code due to this problem. It should be noted that
-   EVP_DecryptUpdate() can call EVP_EncryptUpdate() in certain code paths.
-   Also EVP_CipherUpdate() is a synonym for EVP_EncryptUpdate(). All instances
+   OPENSSL_BOX_EVP_DecryptUpdate() can call OPENSSL_BOX_EVP_EncryptUpdate() in certain code paths.
+   Also OPENSSL_BOX_EVP_CipherUpdate() is a synonym for OPENSSL_BOX_EVP_EncryptUpdate(). All instances
    of these calls have also been analysed too and it is believed there are no
    instances in internal usage where an overflow could occur.
 
@@ -7641,7 +7641,7 @@ OpenSSL 1.0.2
 
    *Stephen Henson*
 
- * Rewrite EVP_DecodeUpdate (base64 decoding) to fix several bugs.
+ * Rewrite OPENSSL_BOX_EVP_DecodeUpdate (base64 decoding) to fix several bugs.
    This changes the decoding behaviour for some invalid messages,
    though the change is mostly in the more lenient direction, and
    legacy behaviour is preserved as much as possible.
@@ -7907,7 +7907,7 @@ OpenSSL 1.0.2
 
    A malformed EC private key file consumed via the d2i_ECPrivateKey function
    could cause a use after free condition. This, in turn, could cause a double
-   free in several private key parsing functions (such as d2i_PrivateKey
+   free in several private key parsing functions (such as OPENSSL_BOX_d2i_PrivateKey
    or EVP_PKCS82PKEY) and could lead to a DoS attack or memory corruption
    for applications that receive EC private keys from untrusted
    sources. This scenario is considered rare.
@@ -8358,9 +8358,9 @@ OpenSSL 1.0.1
  * OOB write in MDC2_Update()
 
    An overflow can occur in MDC2_Update() either if called directly or
-   through the EVP_DigestUpdate() function using MDC2. If an attacker
+   through the OPENSSL_BOX_EVP_DigestUpdate() function using MDC2. If an attacker
    is able to supply very large amounts of input data after a previous
-   call to EVP_EncryptUpdate() with a partial block then a length check
+   call to OPENSSL_BOX_EVP_EncryptUpdate() with a partial block then a length check
    can overflow resulting in a heap corruption.
 
    The amount of data needed is comparable to SIZE_MAX which is impractical
@@ -8520,14 +8520,14 @@ OpenSSL 1.0.1
 
    *Kurt Roeckx*
 
- * Fix EVP_EncodeUpdate overflow
+ * Fix OPENSSL_BOX_EVP_EncodeUpdate overflow
 
-   An overflow can occur in the EVP_EncodeUpdate() function which is used for
+   An overflow can occur in the OPENSSL_BOX_EVP_EncodeUpdate() function which is used for
    Base64 encoding of binary data. If an attacker is able to supply very large
    amounts of input data then a length check can overflow resulting in a heap
    corruption.
 
-   Internally to OpenSSL the EVP_EncodeUpdate() function is primarily used by
+   Internally to OpenSSL the OPENSSL_BOX_EVP_EncodeUpdate() function is primarily used by
    the `PEM_write_bio*` family of functions. These are mainly used within the
    OpenSSL command line applications, so any application which processes data
    from an untrusted source and outputs it as a PEM file should be considered
@@ -8539,22 +8539,22 @@ OpenSSL 1.0.1
 
    *Matt Caswell*
 
- * Fix EVP_EncryptUpdate overflow
+ * Fix OPENSSL_BOX_EVP_EncryptUpdate overflow
 
-   An overflow can occur in the EVP_EncryptUpdate() function. If an attacker
+   An overflow can occur in the OPENSSL_BOX_EVP_EncryptUpdate() function. If an attacker
    is able to supply very large amounts of input data after a previous call to
-   EVP_EncryptUpdate() with a partial block then a length check can overflow
+   OPENSSL_BOX_EVP_EncryptUpdate() with a partial block then a length check can overflow
    resulting in a heap corruption. Following an analysis of all OpenSSL
-   internal usage of the EVP_EncryptUpdate() function all usage is one of two
-   forms. The first form is where the EVP_EncryptUpdate() call is known to be
-   the first called function after an EVP_EncryptInit(), and therefore that
+   internal usage of the OPENSSL_BOX_EVP_EncryptUpdate() function all usage is one of two
+   forms. The first form is where the OPENSSL_BOX_EVP_EncryptUpdate() call is known to be
+   the first called function after an OPENSSL_BOX_EVP_EncryptInit(), and therefore that
    specific call must be safe. The second form is where the length passed to
-   EVP_EncryptUpdate() can be seen from the code to be some small value and
+   OPENSSL_BOX_EVP_EncryptUpdate() can be seen from the code to be some small value and
    therefore there is no possibility of an overflow. Since all instances are
    one of these two forms, it is believed that there can be no overflows in
    internal code due to this problem. It should be noted that
-   EVP_DecryptUpdate() can call EVP_EncryptUpdate() in certain code paths.
-   Also EVP_CipherUpdate() is a synonym for EVP_EncryptUpdate(). All instances
+   OPENSSL_BOX_EVP_DecryptUpdate() can call OPENSSL_BOX_EVP_EncryptUpdate() in certain code paths.
+   Also OPENSSL_BOX_EVP_CipherUpdate() is a synonym for OPENSSL_BOX_EVP_EncryptUpdate(). All instances
    of these calls have also been analysed too and it is believed there are no
    instances in internal usage where an overflow could occur.
 
@@ -8803,7 +8803,7 @@ OpenSSL 1.0.1
 
    *Stephen Henson*
 
- * Rewrite EVP_DecodeUpdate (base64 decoding) to fix several bugs.
+ * Rewrite OPENSSL_BOX_EVP_DecodeUpdate (base64 decoding) to fix several bugs.
    This changes the decoding behaviour for some invalid messages,
    though the change is mostly in the more lenient direction, and
    legacy behaviour is preserved as much as possible.
@@ -8988,7 +8988,7 @@ OpenSSL 1.0.1
 
    A malformed EC private key file consumed via the d2i_ECPrivateKey function
    could cause a use after free condition. This, in turn, could cause a double
-   free in several private key parsing functions (such as d2i_PrivateKey
+   free in several private key parsing functions (such as OPENSSL_BOX_d2i_PrivateKey
    or EVP_PKCS82PKEY) and could lead to a DoS attack or memory corruption
    for applications that receive EC private keys from untrusted
    sources. This scenario is considered rare.
@@ -10053,7 +10053,7 @@ OpenSSL 1.0.0
 
    A malformed EC private key file consumed via the d2i_ECPrivateKey function
    could cause a use after free condition. This, in turn, could cause a double
-   free in several private key parsing functions (such as d2i_PrivateKey
+   free in several private key parsing functions (such as OPENSSL_BOX_d2i_PrivateKey
    or EVP_PKCS82PKEY) and could lead to a DoS attack or memory corruption
    for applications that receive EC private keys from untrusted
    sources. This scenario is considered rare.
@@ -10644,7 +10644,7 @@ OpenSSL 1.0.1.]
 
    *Steve Henson*
 
- * The function EVP_PKEY_sign() returns <=0 on error: check return code
+ * The function OPENSSL_BOX_EVP_PKEY_sign() returns <=0 on error: check return code
    correctly.
 
    *Julia Lawall <julia@diku.dk>*
@@ -10687,7 +10687,7 @@ OpenSSL 1.0.1.]
 
  * Add "missing" function EVP_MD_flags() (without this the only way to
    retrieve a digest flags is by accessing the structure directly. Update
-   `EVP_MD_do_all*()` and `EVP_CIPHER_do_all*()` to include the name a digest
+   `OPENSSL_BOX_EVP_MD_do_all*()` and `OPENSSL_BOX_EVP_CIPHER_do_all*()` to include the name a digest
    or cipher is registered as in the "from" argument. Print out all
    registered digests in the dgst usage message instead of manually
    attempting to work them out.
@@ -11039,7 +11039,7 @@ OpenSSL 1.0.1.]
    *Steve Henson*
 
  * Experimental support for use of HMAC via EVP_PKEY interface. This
-   allows HMAC to be handled via the `EVP_DigestSign*()` interface. The
+   allows HMAC to be handled via the `OPENSSL_BOX_EVP_DigestSign*()` interface. The
    EVP_PKEY "key" in this case is the HMAC key, potentially allowing
    ENGINE support for HMAC keys which are unextractable. New -mac and
    -macopt options to dgst utility.
@@ -11047,7 +11047,7 @@ OpenSSL 1.0.1.]
    *Steve Henson*
 
  * New option -sigopt to dgst utility. Update dgst to use
-   `EVP_Digest{Sign,Verify}*`. These two changes make it possible to use
+   `OPENSSL_BOX_EVP_Digest{Sign,Verify}*`. These two changes make it possible to use
    alternative signing parameters such as X9.31 or PSS in the dgst
    utility.
 
@@ -11209,8 +11209,8 @@ OpenSSL 1.0.1.]
 
    *Steve Henson*
 
- * New functions EVP_CIPHER_do_all(), EVP_CIPHER_do_all_sorted(),
-   EVP_MD_do_all() and EVP_MD_do_all_sorted() to enumerate internal
+ * New functions OPENSSL_BOX_EVP_CIPHER_do_all(), OPENSSL_BOX_EVP_CIPHER_do_all_sorted(),
+   OPENSSL_BOX_EVP_MD_do_all() and OPENSSL_BOX_EVP_MD_do_all_sorted() to enumerate internal
    digest and cipher tables. New options added to openssl utility:
    list-message-digest-algorithms and list-cipher-algorithms.
 
@@ -11274,7 +11274,7 @@ OpenSSL 1.0.1.]
 
    *Steve Henson*
 
- * New functions `EVP_Digest{Sign,Verify)*`. These are enhanced versions of
+ * New functions `OPENSSL_BOX_EVP_Digest{Sign,Verify)*`. These are enhanced versions of
    `EVP_{Sign,Verify}*` which allow an application to customise the signature
    process.
 
@@ -11393,7 +11393,7 @@ OpenSSL 1.0.1.]
 
    *Steve Henson*
 
- * New function EVP_PKEY_asn1_get0_info() to retrieve information about
+ * New function OPENSSL_BOX_EVP_PKEY_asn1_get0_info() to retrieve information about
    public key algorithms. New option to openssl utility:
    "list-public-key-algorithms" to print out info.
 
@@ -11416,7 +11416,7 @@ OpenSSL 1.0.1.]
    *Steve Henson*
 
  * Transfer public key printing routines to EVP_PKEY_ASN1_METHOD. New
-   functions EVP_PKEY_print_public(), EVP_PKEY_print_private(),
+   functions OPENSSL_BOX_EVP_PKEY_print_public(), OPENSSL_BOX_EVP_PKEY_print_private(),
    EVP_PKEY_print_param() to print public key data from an EVP_PKEY
    structure.
 
@@ -11845,7 +11845,7 @@ OpenSSL 0.9.x
 
 ### Changes between 0.9.8i and 0.9.8j  [07 Jan 2009]
 
- * Properly check EVP_VerifyFinal() and similar return values
+ * Properly check OPENSSL_BOX_EVP_VerifyFinal() and similar return values
    ([CVE-2008-5077]).
 
    *Ben Laurie, Bodo Moeller, Google Security Team*
@@ -13428,7 +13428,7 @@ OpenSSL 0.9.8.]
    - 'openssl req' now has a '-newkey ecdsa:file' option;
    - EVP_PKCS82PKEY (crypto/evp/evp_pkey.c) now can handle ECDSA;
    - X509_PUBKEY_get (crypto/asn1/x_pubkey.c) and
-     d2i_PublicKey (crypto/asn1/d2i_pu.c) have been modified to make
+     OPENSSL_BOX_d2i_PublicKey (crypto/asn1/d2i_pu.c) have been modified to make
      them suitable for ECDSA where domain parameters must be
      extracted before the specific public key;
    - ECDSA engine support has been added.
@@ -14571,17 +14571,17 @@ OpenSSL 0.9.7.]
 
    *Steve Henson*
 
- * Modify the behaviour of OPENSSL_BOX_EVP_DigestInit() and EVP_DigestFinal() to retain
+ * Modify the behaviour of OPENSSL_BOX_EVP_DigestInit() and OPENSSL_BOX_EVP_DigestFinal() to retain
    compatibility with existing code. In particular the 'ctx' parameter does
    not have to be to be initialized before the call to OPENSSL_BOX_EVP_DigestInit() and
-   it is tidied up after a call to EVP_DigestFinal(). New function
-   EVP_DigestFinal_ex() which does not tidy up the ctx. Similarly function
+   it is tidied up after a call to OPENSSL_BOX_EVP_DigestFinal(). New function
+   OPENSSL_BOX_EVP_DigestFinal_ex() which does not tidy up the ctx. Similarly function
    OPENSSL_BOX_EVP_MD_CTX_copy() changed to not require the destination to be
    initialized valid and new function OPENSSL_BOX_EVP_MD_CTX_copy_ex() added which
    requires the destination to be valid.
 
-   Modify all the OpenSSL digest calls to use EVP_DigestInit_ex(),
-   EVP_DigestFinal_ex() and OPENSSL_BOX_EVP_MD_CTX_copy_ex().
+   Modify all the OpenSSL digest calls to use OPENSSL_BOX_EVP_DigestInit_ex(),
+   OPENSSL_BOX_EVP_DigestFinal_ex() and OPENSSL_BOX_EVP_MD_CTX_copy_ex().
 
    *Steve Henson*
 
@@ -14795,8 +14795,8 @@ OpenSSL 0.9.7.]
 
            EVP_MD_CTX_init(&md);             /* new function call */
            OPENSSL_BOX_EVP_DigestInit(&md, OPENSSL_BOX_EVP_sha1());
-           EVP_DigestUpdate(&md, in, len);
-           EVP_DigestFinal(&md, out, NULL);
+           OPENSSL_BOX_EVP_DigestUpdate(&md, in, len);
+           OPENSSL_BOX_EVP_DigestFinal(&md, out, NULL);
            EVP_MD_CTX_cleanup(&md);          /* new function call */
 
    *Ben Laurie*
@@ -15199,7 +15199,7 @@ s-cbc           3624.96k     5258.21k     5530.91k     5624.30k     5628.26k
 
    *Bodo Moeller*
 
- * Modify `EVP_Digest*()` routines so they now return values. Although the
+ * Modify `OPENSSL_BOX_EVP_Digest*()` routines so they now return values. Although the
    internal software routines can never fail additional hardware versions
    might.
 
@@ -15470,7 +15470,7 @@ s-cbc           3624.96k     5258.21k     5530.91k     5624.30k     5628.26k
 
    *Steve Henson*
 
- * Various new functions. EVP_Digest() combines EVP_Digest{Init,Update,Final}()
+ * Various new functions. OPENSSL_BOX_EVP_Digest() combines OPENSSL_BOX_EVP_Digest{Init,Update,Final}()
    in a single operation. X509_get0_pubkey_bitstr() extracts the public_key
    structure from a certificate. X509_pubkey_digest() digests the public_key
    contents: this is used in various key identifiers.
@@ -16371,7 +16371,7 @@ s-cbc           3624.96k     5258.21k     5530.91k     5624.30k     5628.26k
 
    *Nils Larsch <nla@trustcenter.de>*
 
- * Fix BASE64 decode (EVP_DecodeUpdate) for data with CR/LF ended lines:
+ * Fix BASE64 decode (OPENSSL_BOX_EVP_DecodeUpdate) for data with CR/LF ended lines:
    an end-of-file condition would erroneously be flagged, when the CRLF
    was just at the end of a processed block. The bug was discovered when
    processing data through a buffering memory BIO handing the data to a
@@ -17849,7 +17849,7 @@ s-cbc           3624.96k     5258.21k     5530.91k     5624.30k     5628.26k
    key length ciphers via the OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length() function and
    setting of RC2 and RC5 parameters.
 
-   Modify EVP_OpenInit() and EVP_SealInit() to cope with variable key length
+   Modify OPENSSL_BOX_EVP_OpenInit() and OPENSSL_BOX_EVP_SealInit() to cope with variable key length
    ciphers.
 
    Remove lots of duplicated code from the EVP library. For example *every*
@@ -17862,12 +17862,12 @@ s-cbc           3624.96k     5258.21k     5530.91k     5624.30k     5628.26k
    Most of the routines have the same form and so can be declared in terms
    of macros.
 
-   By shifting this to the top level EVP_CipherInit() it can be removed from
+   By shifting this to the top level OPENSSL_BOX_EVP_CipherInit() it can be removed from
    all individual ciphers. If the cipher wants to handle IVs or keys
    differently it can set the EVP_CIPH_CUSTOM_IV or EVP_CIPH_ALWAYS_CALL_INIT
    flags.
 
-   Change lots of functions like EVP_EncryptUpdate() to now return a
+   Change lots of functions like OPENSSL_BOX_EVP_EncryptUpdate() to now return a
    value: although software versions of the algorithms cannot fail
    any installed hardware versions can.
 
@@ -18659,7 +18659,7 @@ s-cbc           3624.96k     5258.21k     5530.91k     5624.30k     5628.26k
 
    *Steve Henson*
 
- * Add a function 'd2i_AutoPrivateKey()' this will automatically decide
+ * Add a function 'OPENSSL_BOX_d2i_AutoPrivateKey()' this will automatically decide
    if a DER encoded private key is RSA or DSA traditional format. Changed
    d2i_PrivateKey_bio() to use it. This is only needed for the "traditional"
    format DER encoded private key. Newer code should use PKCS#8 format which
@@ -19350,7 +19350,7 @@ s-cbc           3624.96k     5258.21k     5530.91k     5624.30k     5628.26k
 
  * Fix a horrible bug in enc_read() in crypto/evp/bio_enc.c: if the first
    data read consists of only the final block it would not decrypted because
-   EVP_CipherUpdate() would correctly report zero bytes had been decrypted.
+   OPENSSL_BOX_EVP_CipherUpdate() would correctly report zero bytes had been decrypted.
    A misplaced 'break' also meant the decrypted final block might not be
    copied until the next read.
 
@@ -19774,7 +19774,7 @@ ndif
    but doesn't apply to PKCS#5 v2.0 where it can be something else. Now
    the 'parameter' field of the AlgorithmIdentifier is passed to the
    underlying key generation function so it must do its own ASN1 parsing.
-   This has also changed the EVP_PBE_CipherInit() function which now has a
+   This has also changed the OPENSSL_BOX_EVP_PBE_CipherInit() function which now has a
    'parameter' argument instead of literal salt and iteration count values
    and the function EVP_PBE_ALGOR_CipherInit() has been deleted.
 
@@ -20640,7 +20640,7 @@ ndif
 
  * Change type of another md_len variable in pk7_doit.c:PKCS7_dataFinal()
    from `int` to `unsigned int` because it is a length and initialized by
-   EVP_DigestFinal() which expects an `unsigned int *`.
+   OPENSSL_BOX_EVP_DigestFinal() which expects an `unsigned int *`.
 
    *Richard Levitte <levitte@stacken.kth.se>*
 
@@ -21024,7 +21024,7 @@ ndif
    *Ben Laurie*
 
  * Make DH_free() tolerate being passed a NULL pointer (like RSA_free() and
-   DSA_free()). Make X509_PUBKEY_set() check for errors in d2i_PublicKey().
+   DSA_free()). Make X509_PUBKEY_set() check for errors in OPENSSL_BOX_d2i_PublicKey().
 
    *Steve Henson*
 

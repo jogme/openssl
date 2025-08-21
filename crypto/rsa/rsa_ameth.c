@@ -561,7 +561,7 @@ int ossl_rsa_pss_to_ctx(EVP_MD_CTX *ctx, EVP_PKEY_CTX *pkctx,
 
     /* We have all parameters now set up context */
     if (pkey) {
-        if (!EVP_DigestVerifyInit(ctx, &pkctx, md, NULL, pkey))
+        if (!OPENSSL_BOX_EVP_DigestVerifyInit(ctx, &pkctx, md, NULL, pkey))
             goto err;
     } else {
         const EVP_MD *checkmd;

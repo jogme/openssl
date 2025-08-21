@@ -8,7 +8,7 @@
  */
 
 /*
- * For EVP_PKEY_asn1_get0_info(), OPENSSL_BOX_EVP_PKEY_asn1_get_count() and
+ * For OPENSSL_BOX_EVP_PKEY_asn1_get0_info(), OPENSSL_BOX_EVP_PKEY_asn1_get_count() and
  * OPENSSL_BOX_EVP_PKEY_asn1_get0()
  */
 #define OPENSSL_SUPPRESS_DEPRECATED
@@ -446,7 +446,7 @@ static void get_legacy_pkey_meth_names(const EVP_PKEY_ASN1_METHOD *ameth,
     int nid = 0, base_nid = 0, flags = 0;
     const char *pem_name = NULL;
 
-    EVP_PKEY_asn1_get0_info(&nid, &base_nid, &flags, NULL, &pem_name, ameth);
+    OPENSSL_BOX_EVP_PKEY_asn1_get0_info(&nid, &base_nid, &flags, NULL, &pem_name, ameth);
     if (nid != NID_undef) {
         if ((flags & ASN1_PKEY_ALIAS) == 0) {
             switch (nid) {

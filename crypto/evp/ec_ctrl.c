@@ -25,7 +25,7 @@ int evp_pkey_ctx_getset_ecdh_param_checks(const EVP_PKEY_CTX *ctx)
 {
     if (ctx == NULL || !EVP_PKEY_CTX_IS_DERIVE_OP(ctx)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_COMMAND_NOT_SUPPORTED);
-        /* Uses the same return values as EVP_PKEY_CTX_ctrl */
+        /* Uses the same return values as OPENSSL_BOX_EVP_PKEY_CTX_ctrl */
         return -2;
     }
 
@@ -105,42 +105,42 @@ int EVP_PKEY_CTX_get_ecdh_cofactor_mode(EVP_PKEY_CTX *ctx)
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_ecdh_kdf_type(EVP_PKEY_CTX *ctx, int kdf)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_DERIVE,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_DERIVE,
                              EVP_PKEY_CTRL_EC_KDF_TYPE, kdf, NULL);
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_get_ecdh_kdf_type(EVP_PKEY_CTX *ctx)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_DERIVE,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_DERIVE,
                              EVP_PKEY_CTRL_EC_KDF_TYPE, -2, NULL);
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_ecdh_kdf_md(EVP_PKEY_CTX *ctx, const EVP_MD *md)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_DERIVE,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_DERIVE,
                              EVP_PKEY_CTRL_EC_KDF_MD, 0, (void *)(md));
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_get_ecdh_kdf_md(EVP_PKEY_CTX *ctx, const EVP_MD **pmd)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_DERIVE,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_DERIVE,
                              EVP_PKEY_CTRL_GET_EC_KDF_MD, 0, (void *)(pmd));
 }
 
@@ -157,7 +157,7 @@ int EVP_PKEY_CTX_set_ecdh_kdf_outlen(EVP_PKEY_CTX *ctx, int outlen)
     if (outlen <= 0) {
         /*
          * This would ideally be -1 or 0, but we have to retain compatibility
-         * with legacy behaviour of EVP_PKEY_CTX_ctrl() which returned -2 if
+         * with legacy behaviour of OPENSSL_BOX_EVP_PKEY_CTX_ctrl() which returned -2 if
          * in <= 0
          */
         return -2;
@@ -277,7 +277,7 @@ int EVP_PKEY_CTX_get0_ecdh_kdf_ukm(EVP_PKEY_CTX *ctx, unsigned char **pukm)
 
 #ifndef FIPS_MODULE
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  * ASN1_OBJECT (which would be converted to text internally)?
  */
@@ -285,18 +285,18 @@ int EVP_PKEY_CTX_set_ec_paramgen_curve_nid(EVP_PKEY_CTX *ctx, int nid)
 {
     int keytype = nid == EVP_PKEY_SM2 ? EVP_PKEY_SM2 : EVP_PKEY_EC;
 
-    return EVP_PKEY_CTX_ctrl(ctx, keytype, EVP_PKEY_OP_TYPE_GEN,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, keytype, EVP_PKEY_OP_TYPE_GEN,
                              EVP_PKEY_CTRL_EC_PARAMGEN_CURVE_NID,
                              nid, NULL);
 }
 
 /*
- * This one is currently implemented as an EVP_PKEY_CTX_ctrl() wrapper,
+ * This one is currently implemented as an OPENSSL_BOX_EVP_PKEY_CTX_ctrl() wrapper,
  * simply because that's easier.
  */
 int EVP_PKEY_CTX_set_ec_param_enc(EVP_PKEY_CTX *ctx, int param_enc)
 {
-    return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_TYPE_GEN,
+    return OPENSSL_BOX_EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_TYPE_GEN,
                              EVP_PKEY_CTRL_EC_PARAM_ENC, param_enc, NULL);
 }
 #endif

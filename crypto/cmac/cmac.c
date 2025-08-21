@@ -120,7 +120,7 @@ int ossl_cmac_init(CMAC_CTX *ctx, const void *key, size_t keylen,
         /* Not initialised */
         if (ctx->nlast_block == -1)
             return 0;
-        if (!EVP_EncryptInit_ex2(ctx->cctx, NULL, NULL, zero_iv, param))
+        if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx->cctx, NULL, NULL, zero_iv, param))
             return 0;
         block_len = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx->cctx);
         if (block_len == 0)
@@ -134,10 +134,10 @@ int ossl_cmac_init(CMAC_CTX *ctx, const void *key, size_t keylen,
         /* Ensure we can't use this ctx until we also have a key */
         ctx->nlast_block = -1;
         if (impl != NULL) {
-            if (!EVP_EncryptInit_ex(ctx->cctx, cipher, impl, NULL, NULL))
+            if (!OPENSSL_BOX_EVP_EncryptInit_ex(ctx->cctx, cipher, impl, NULL, NULL))
                 return 0;
         } else {
-            if (!EVP_EncryptInit_ex2(ctx->cctx, cipher, NULL, NULL, param))
+            if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx->cctx, cipher, NULL, NULL, param))
                 return 0;
         }
     }
@@ -152,17 +152,17 @@ int ossl_cmac_init(CMAC_CTX *ctx, const void *key, size_t keylen,
         if (keylen > INT_MAX
             || OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length(ctx->cctx, (int)keylen) <= 0)
             return 0;
-        if (!EVP_EncryptInit_ex2(ctx->cctx, NULL, key, zero_iv, param))
+        if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx->cctx, NULL, key, zero_iv, param))
             return 0;
         if ((bl = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx->cctx)) < 0)
             return 0;
-        if (EVP_Cipher(ctx->cctx, ctx->tbl, zero_iv, bl) <= 0)
+        if (OPENSSL_BOX_EVP_Cipher(ctx->cctx, ctx->tbl, zero_iv, bl) <= 0)
             return 0;
         make_kn(ctx->k1, ctx->tbl, bl);
         make_kn(ctx->k2, ctx->k1, bl);
         OPENSSL_cleanse(ctx->tbl, bl);
         /* Reset context again ready for first data block */
-        if (!EVP_EncryptInit_ex2(ctx->cctx, NULL, NULL, zero_iv, param))
+        if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx->cctx, NULL, NULL, zero_iv, param))
             return 0;
         /* Zero tbl so resume works */
         memset(ctx->tbl, 0, bl);
@@ -205,7 +205,7 @@ int CMAC_Update(CMAC_CTX *ctx, const void *in, size_t dlen)
             return 1;
         data += nleft;
         /* Else not final block so encrypt it */
-        if (EVP_Cipher(ctx->cctx, ctx->tbl, ctx->last_block, bl) <= 0)
+        if (OPENSSL_BOX_EVP_Cipher(ctx->cctx, ctx->tbl, ctx->last_block, bl) <= 0)
             return 0;
     }
     /* Encrypt all but one of the complete blocks left */
@@ -218,21 +218,21 @@ int CMAC_Update(CMAC_CTX *ctx, const void *in, size_t dlen)
          * use ctx->tbl as cipher output.
          */
         while (dlen > (size_t)bl) {
-            if (EVP_Cipher(ctx->cctx, ctx->tbl, data, bl) <= 0)
+            if (OPENSSL_BOX_EVP_Cipher(ctx->cctx, ctx->tbl, data, bl) <= 0)
                 return 0;
             dlen -= bl;
             data += bl;
         }
     } else {
         while (cipher_blocks > max_burst_blocks) {
-            if (EVP_Cipher(ctx->cctx, buf, data, (int)(max_burst_blocks * bl)) <= 0)
+            if (OPENSSL_BOX_EVP_Cipher(ctx->cctx, buf, data, (int)(max_burst_blocks * bl)) <= 0)
                 return 0;
             dlen -= max_burst_blocks * bl;
             data += max_burst_blocks * bl;
             cipher_blocks -= max_burst_blocks;
         }
         if (cipher_blocks > 0) {
-            if (EVP_Cipher(ctx->cctx, buf, data, (int)(cipher_blocks * bl)) <= 0)
+            if (OPENSSL_BOX_EVP_Cipher(ctx->cctx, buf, data, (int)(cipher_blocks * bl)) <= 0)
                 return 0;
             dlen -= cipher_blocks * bl;
             data += cipher_blocks * bl;
@@ -270,7 +270,7 @@ int CMAC_Final(CMAC_CTX *ctx, unsigned char *out, size_t *poutlen)
         for (i = 0; i < bl; i++)
             out[i] = ctx->last_block[i] ^ ctx->k2[i];
     }
-    if (EVP_Cipher(ctx->cctx, out, out, bl) <= 0) {
+    if (OPENSSL_BOX_EVP_Cipher(ctx->cctx, out, out, bl) <= 0) {
         OPENSSL_cleanse(out, bl);
         return 0;
     }
@@ -288,5 +288,5 @@ int CMAC_resume(CMAC_CTX *ctx)
      * decrypted block will allow CMAC to continue after calling
      * CMAC_Final().
      */
-    return EVP_EncryptInit_ex(ctx->cctx, NULL, NULL, NULL, ctx->tbl);
+    return OPENSSL_BOX_EVP_EncryptInit_ex(ctx->cctx, NULL, NULL, NULL, ctx->tbl);
 }

@@ -533,15 +533,15 @@ __owur static int parse_expected_key_type(int *ptype, const char *value)
     if (value == NULL)
         return 0;
 #ifndef OPENSSL_NO_DEPRECATED_3_6
-    ameth = EVP_PKEY_asn1_find_str(NULL, value, -1);
+    ameth = OPENSSL_BOX_EVP_PKEY_asn1_find_str(NULL, value, -1);
     if (ameth != NULL)
-        EVP_PKEY_asn1_get0_info(&nid, NULL, NULL, NULL, NULL, ameth);
+        OPENSSL_BOX_EVP_PKEY_asn1_get0_info(&nid, NULL, NULL, NULL, NULL, ameth);
     else
         nid = OBJ_sn2nid(value);
 #else
     /*
      * These functions map the values differently than
-     * EVP_PKEY_asn1_find_str (which was used before) so use this hack
+     * OPENSSL_BOX_EVP_PKEY_asn1_find_str (which was used before) so use this hack
      * to make it work
      */
     if (strcmp("RSA", value) == 0) {

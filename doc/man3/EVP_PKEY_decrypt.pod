@@ -3,7 +3,7 @@
 =head1 NAME
 
 OPENSSL_BOX_EVP_PKEY_decrypt_init, OPENSSL_BOX_EVP_PKEY_decrypt_init_ex,
-EVP_PKEY_decrypt - decrypt using a public key algorithm
+OPENSSL_BOX_EVP_PKEY_decrypt - decrypt using a public key algorithm
 
 =head1 SYNOPSIS
 
@@ -11,7 +11,7 @@ EVP_PKEY_decrypt - decrypt using a public key algorithm
 
  int OPENSSL_BOX_EVP_PKEY_decrypt_init(EVP_PKEY_CTX *ctx);
  int OPENSSL_BOX_EVP_PKEY_decrypt_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[]);
- int EVP_PKEY_decrypt(EVP_PKEY_CTX *ctx,
+ int OPENSSL_BOX_EVP_PKEY_decrypt(EVP_PKEY_CTX *ctx,
                       unsigned char *out, size_t *outlen,
                       const unsigned char *in, size_t inlen);
 
@@ -24,7 +24,7 @@ The OPENSSL_BOX_EVP_PKEY_decrypt_init_ex() function initializes a public key alg
 context using key I<pkey> for a decryption operation and sets the
 algorithm specific I<params>.
 
-The EVP_PKEY_decrypt() function performs a public key decryption operation
+The OPENSSL_BOX_EVP_PKEY_decrypt() function performs a public key decryption operation
 using I<ctx>. The data to be decrypted is specified using the I<in> and
 I<inlen> parameters. If I<out> is NULL then the minimum required size of
 the output buffer is written to the I<*outlen> parameter.
@@ -41,12 +41,12 @@ operations can be performed to set any appropriate parameters for the
 operation.  These operations can be included in the OPENSSL_BOX_EVP_PKEY_decrypt_init_ex()
 call.
 
-The function EVP_PKEY_decrypt() can be called more than once on the same
+The function OPENSSL_BOX_EVP_PKEY_decrypt() can be called more than once on the same
 context if several operations are performed using the same parameters.
 
 =head1 RETURN VALUES
 
-OPENSSL_BOX_EVP_PKEY_decrypt_init(), OPENSSL_BOX_EVP_PKEY_decrypt_init_ex() and EVP_PKEY_decrypt()
+OPENSSL_BOX_EVP_PKEY_decrypt_init(), OPENSSL_BOX_EVP_PKEY_decrypt_init_ex() and OPENSSL_BOX_EVP_PKEY_decrypt()
 return 1 for success and 0 or a negative value for failure. In particular a
 return value of -2 indicates the operation is not supported by the public key
 algorithm.
@@ -54,11 +54,11 @@ algorithm.
 =head1 WARNINGS
 
 In OpenSSL versions before 3.2.0, when used in PKCS#1 v1.5 padding,
-both the return value from the EVP_PKEY_decrypt() and the B<outlen> provided
+both the return value from the OPENSSL_BOX_EVP_PKEY_decrypt() and the B<outlen> provided
 information useful in mounting a Bleichenbacher attack against the
 used private key. They had to be processed in a side-channel free way.
 
-Since version 3.2.0, the EVP_PKEY_decrypt() method when used with PKCS#1
+Since version 3.2.0, the OPENSSL_BOX_EVP_PKEY_decrypt() method when used with PKCS#1
 v1.5 padding as implemented in the B<default> provider implements
 the implicit rejection mechanism (see
 B<OSSL_ASYM_CIPHER_PARAM_IMPLICIT_REJECTION> in L<provider-asym_cipher(7)>).
@@ -98,7 +98,7 @@ Decrypt data using OAEP (for RSA keys):
      /* Error */
 
  /* Determine buffer length */
- if (EVP_PKEY_decrypt(ctx, NULL, &outlen, in, inlen) <= 0)
+ if (OPENSSL_BOX_EVP_PKEY_decrypt(ctx, NULL, &outlen, in, inlen) <= 0)
      /* Error */
 
  out = OPENSSL_malloc(outlen);
@@ -106,7 +106,7 @@ Decrypt data using OAEP (for RSA keys):
  if (!out)
      /* malloc failure */
 
- if (EVP_PKEY_decrypt(ctx, out, &outlen, in, inlen) <= 0)
+ if (OPENSSL_BOX_EVP_PKEY_decrypt(ctx, out, &outlen, in, inlen) <= 0)
      /* Error */
 
  /* Decrypted data is outlen bytes written to buffer out */
@@ -114,10 +114,10 @@ Decrypt data using OAEP (for RSA keys):
 =head1 SEE ALSO
 
 L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
-L<EVP_PKEY_encrypt(3)>,
-L<EVP_PKEY_sign(3)>,
-L<EVP_PKEY_verify(3)>,
-L<EVP_PKEY_verify_recover(3)>,
+L<OPENSSL_BOX_EVP_PKEY_encrypt(3)>,
+L<OPENSSL_BOX_EVP_PKEY_sign(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify(3)>,
+L<OPENSSL_BOX_EVP_PKEY_verify_recover(3)>,
 L<OPENSSL_BOX_EVP_PKEY_derive(3)>
 
 =head1 HISTORY

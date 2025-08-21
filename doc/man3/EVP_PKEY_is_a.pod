@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_PKEY_is_a, OPENSSL_BOX_EVP_PKEY_can_sign, EVP_PKEY_type_names_do_all,
+OPENSSL_BOX_EVP_PKEY_is_a, OPENSSL_BOX_EVP_PKEY_can_sign, OPENSSL_BOX_EVP_PKEY_type_names_do_all,
 OPENSSL_BOX_EVP_PKEY_get0_type_name, OPENSSL_BOX_EVP_PKEY_get0_description, OPENSSL_BOX_EVP_PKEY_get0_provider
 - key type and capabilities functions
 
@@ -12,7 +12,7 @@ OPENSSL_BOX_EVP_PKEY_get0_type_name, OPENSSL_BOX_EVP_PKEY_get0_description, OPEN
 
  int OPENSSL_BOX_EVP_PKEY_is_a(const EVP_PKEY *pkey, const char *name);
  int OPENSSL_BOX_EVP_PKEY_can_sign(const EVP_PKEY *pkey);
- int EVP_PKEY_type_names_do_all(const EVP_PKEY *pkey,
+ int OPENSSL_BOX_EVP_PKEY_type_names_do_all(const EVP_PKEY *pkey,
                                 void (*fn)(const char *name, void *data),
                                 void *data);
  const char *OPENSSL_BOX_EVP_PKEY_get0_type_name(const EVP_PKEY *key);
@@ -27,7 +27,7 @@ OPENSSL_BOX_EVP_PKEY_can_sign() checks if the functionality for the key type of
 I<pkey> supports signing.  No other check is done, such as whether
 I<pkey> contains a private key.
 
-EVP_PKEY_type_names_do_all() traverses all names for I<pkey>'s key type, and
+OPENSSL_BOX_EVP_PKEY_type_names_do_all() traverses all names for I<pkey>'s key type, and
 calls I<fn> with each name and I<data>.  For example, an RSA B<EVP_PKEY> may
 be named both C<RSA> and C<rsaEncryption>.
 The order of the names depends on the provider implementation that holds
@@ -61,7 +61,7 @@ OPENSSL_BOX_EVP_PKEY_get0_description() returns the description if found or NULL
 
 OPENSSL_BOX_EVP_PKEY_get0_provider() returns the provider if found or NULL if not.
 
-EVP_PKEY_type_names_do_all() returns 1 if the callback was called for all
+OPENSSL_BOX_EVP_PKEY_type_names_do_all() returns 1 if the callback was called for all
 names. A return value of 0 means that the callback was not called for any
 names.
 
@@ -80,7 +80,7 @@ this as an crude example:
      /* |pkey| is an EVP_PKEY* */
      if (OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA")) {
          BIGNUM *modulus = NULL;
-         if (EVP_PKEY_get_bn_param(pkey, "n", &modulus))
+         if (OPENSSL_BOX_EVP_PKEY_get_bn_param(pkey, "n", &modulus))
              /* do whatever with the modulus */
          BN_free(modulus);
      }

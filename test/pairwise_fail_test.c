@@ -96,14 +96,14 @@ static int test_keygen_pairwise_failure(void)
     if (strcmp(pairwise_name, "rsa") == 0) {
         if (!TEST_true(setup_selftest_pairwise_failure(type)))
             goto err;
-        if (!TEST_ptr_null(pkey = EVP_PKEY_Q_keygen(libctx, NULL, "RSA", (size_t)2048)))
+        if (!TEST_ptr_null(pkey = OPENSSL_BOX_EVP_PKEY_Q_keygen(libctx, NULL, "RSA", (size_t)2048)))
             goto err;
     } else if (strncmp(pairwise_name, "ec", 2) == 0) {
         if (strcmp(pairwise_name, "eckat") == 0)
             type = OSSL_SELF_TEST_TYPE_PCT_KAT;
         if (!TEST_true(setup_selftest_pairwise_failure(type)))
             goto err;
-        if (!TEST_ptr_null(pkey = EVP_PKEY_Q_keygen(libctx, NULL, "EC", "P-256")))
+        if (!TEST_ptr_null(pkey = OPENSSL_BOX_EVP_PKEY_Q_keygen(libctx, NULL, "EC", "P-256")))
             goto err;
     } else if (strncmp(pairwise_name, "dsa", 3) == 0) {
         if (strcmp(pairwise_name, "dsakat") == 0)
@@ -114,7 +114,7 @@ static int test_keygen_pairwise_failure(void)
             goto err;
         if (!TEST_ptr(pParams = PEM_read_bio_Parameters_ex(bio, NULL, libctx, NULL)))
             goto err;
-        if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pParams, NULL)))
+        if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(libctx, pParams, NULL)))
             goto err;
         if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx), 1))
             goto err;
@@ -125,7 +125,7 @@ static int test_keygen_pairwise_failure(void)
     } else if (strncmp(pairwise_name, "eddsa", 5) == 0) {
         if (!TEST_true(setup_selftest_pairwise_failure(type)))
             goto err;
-        if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "ED25519", NULL)))
+        if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "ED25519", NULL)))
             goto err;
         if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx), 1))
             goto err;
@@ -136,7 +136,7 @@ static int test_keygen_pairwise_failure(void)
     } else if (strncmp(pairwise_name, "ml-dsa", 6) == 0) {
         if (!TEST_true(setup_selftest_pairwise_failure(type)))
             goto err;
-        if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "ML-DSA-87", NULL)))
+        if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "ML-DSA-87", NULL)))
             goto err;
         if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx), 1))
             goto err;
@@ -147,7 +147,7 @@ static int test_keygen_pairwise_failure(void)
     } else if (strncmp(pairwise_name, "slh-dsa", 7) == 0) {
         if (!TEST_true(setup_selftest_pairwise_failure(type)))
             goto err;
-        if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "SLH-DSA-SHA2-256f", NULL)))
+        if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "SLH-DSA-SHA2-256f", NULL)))
             goto err;
         if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx), 1))
             goto err;
@@ -158,7 +158,7 @@ static int test_keygen_pairwise_failure(void)
     } else if (strncmp(pairwise_name, "ml-kem", 6) == 0) {
         if (!TEST_true(setup_selftest_pairwise_failure(type)))
             goto err;
-        if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "ML-KEM-1024", NULL)))
+        if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_name(libctx, "ML-KEM-1024", NULL)))
             goto err;
         if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx), 1))
             goto err;

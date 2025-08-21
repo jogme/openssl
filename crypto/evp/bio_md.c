@@ -88,7 +88,7 @@ static int md_read(BIO *b, char *out, int outl)
     ret = BIO_read(next, out, outl);
     if (BIO_get_init(b)) {
         if (ret > 0) {
-            if (EVP_DigestUpdate(ctx, (unsigned char *)out,
+            if (OPENSSL_BOX_EVP_DigestUpdate(ctx, (unsigned char *)out,
                                  (unsigned int)ret) <= 0)
                 return -1;
         }
@@ -114,7 +114,7 @@ static int md_write(BIO *b, const char *in, int inl)
 
     if (BIO_get_init(b)) {
         if (ret > 0) {
-            if (!EVP_DigestUpdate(ctx, (const unsigned char *)in,
+            if (!OPENSSL_BOX_EVP_DigestUpdate(ctx, (const unsigned char *)in,
                                   (unsigned int)ret)) {
                 BIO_clear_retry_flags(b);
                 return 0;
@@ -143,7 +143,7 @@ static long md_ctrl(BIO *b, int cmd, long num, void *ptr)
     switch (cmd) {
     case BIO_CTRL_RESET:
         if (BIO_get_init(b))
-            ret = EVP_DigestInit_ex(ctx, OPENSSL_BOX_EVP_MD_CTX_get0_md(ctx), NULL);
+            ret = OPENSSL_BOX_EVP_DigestInit_ex(ctx, OPENSSL_BOX_EVP_MD_CTX_get0_md(ctx), NULL);
         else
             ret = 0;
         if (ret > 0)
@@ -175,7 +175,7 @@ static long md_ctrl(BIO *b, int cmd, long num, void *ptr)
 
     case BIO_C_SET_MD:
         md = ptr;
-        ret = EVP_DigestInit_ex(ctx, md, NULL);
+        ret = OPENSSL_BOX_EVP_DigestInit_ex(ctx, md, NULL);
         if (ret > 0)
             BIO_set_init(b, 1);
         break;
@@ -215,7 +215,7 @@ static int md_gets(BIO *bp, char *buf, int size)
     if (size < EVP_MD_CTX_get_size(ctx))
         return 0;
 
-    if (EVP_DigestFinal_ex(ctx, (unsigned char *)buf, &ret) <= 0)
+    if (OPENSSL_BOX_EVP_DigestFinal_ex(ctx, (unsigned char *)buf, &ret) <= 0)
         return -1;
 
     return (int)ret;

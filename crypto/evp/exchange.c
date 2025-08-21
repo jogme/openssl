@@ -178,7 +178,7 @@ OSSL_PROVIDER *OPENSSL_BOX_EVP_KEYEXCH_get0_provider(const EVP_KEYEXCH *exchange
     return exchange->prov;
 }
 
-EVP_KEYEXCH *EVP_KEYEXCH_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
+EVP_KEYEXCH *OPENSSL_BOX_EVP_KEYEXCH_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
                                const char *properties)
 {
     return evp_generic_fetch(ctx, OSSL_OP_KEYEXCH, algorithm, properties,
@@ -293,7 +293,7 @@ int OPENSSL_BOX_EVP_PKEY_derive_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM para
         switch (iter) {
         case 1:
             exchange =
-                EVP_KEYEXCH_fetch(ctx->libctx, supported_exch, ctx->propquery);
+                OPENSSL_BOX_EVP_KEYEXCH_fetch(ctx->libctx, supported_exch, ctx->propquery);
             if (exchange != NULL)
                 tmp_prov = OPENSSL_BOX_EVP_KEYEXCH_get0_provider(exchange);
             break;
@@ -384,7 +384,7 @@ int OPENSSL_BOX_EVP_PKEY_derive_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM para
 #endif
 }
 
-int EVP_PKEY_derive_set_peer_ex(EVP_PKEY_CTX *ctx, EVP_PKEY *peer,
+int OPENSSL_BOX_EVP_PKEY_derive_set_peer_ex(EVP_PKEY_CTX *ctx, EVP_PKEY *peer,
                                 int validate_peer)
 {
     int ret = 0, check;
@@ -406,7 +406,7 @@ int EVP_PKEY_derive_set_peer_ex(EVP_PKEY_CTX *ctx, EVP_PKEY *peer,
     }
 
     if (validate_peer) {
-        check_ctx = EVP_PKEY_CTX_new_from_pkey(ctx->libctx, peer, ctx->propquery);
+        check_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_from_pkey(ctx->libctx, peer, ctx->propquery);
         if (check_ctx == NULL)
             return -1;
         check = OPENSSL_BOX_EVP_PKEY_public_check(check_ctx);
@@ -514,7 +514,7 @@ int EVP_PKEY_derive_set_peer_ex(EVP_PKEY_CTX *ctx, EVP_PKEY *peer,
 
 int OPENSSL_BOX_EVP_PKEY_derive_set_peer(EVP_PKEY_CTX *ctx, EVP_PKEY *peer)
 {
-    return EVP_PKEY_derive_set_peer_ex(ctx, peer, 1);
+    return OPENSSL_BOX_EVP_PKEY_derive_set_peer_ex(ctx, peer, 1);
 }
 
 int OPENSSL_BOX_EVP_PKEY_derive(EVP_PKEY_CTX *ctx, unsigned char *key, size_t *pkeylen)
@@ -569,7 +569,7 @@ int OPENSSL_BOX_EVP_KEYEXCH_is_a(const EVP_KEYEXCH *keyexch, const char *name)
            && evp_is_a(keyexch->prov, keyexch->name_id, NULL, name);
 }
 
-void EVP_KEYEXCH_do_all_provided(OSSL_LIB_CTX *libctx,
+void OPENSSL_BOX_EVP_KEYEXCH_do_all_provided(OSSL_LIB_CTX *libctx,
                                  void (*fn)(EVP_KEYEXCH *keyexch, void *arg),
                                  void *arg)
 {
@@ -580,7 +580,7 @@ void EVP_KEYEXCH_do_all_provided(OSSL_LIB_CTX *libctx,
                        evp_keyexch_free);
 }
 
-int EVP_KEYEXCH_names_do_all(const EVP_KEYEXCH *keyexch,
+int OPENSSL_BOX_EVP_KEYEXCH_names_do_all(const EVP_KEYEXCH *keyexch,
                              void (*fn)(const char *name, void *data),
                              void *data)
 {

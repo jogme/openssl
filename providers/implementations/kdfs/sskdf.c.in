@@ -140,20 +140,20 @@ static int SSKDF_hash_kdm(const EVP_MD *kdf_md,
         c[3] = (unsigned char)(counter & 0xff);
 
         if (!(OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx, ctx_init)
-                && (append_ctr || EVP_DigestUpdate(ctx, c, sizeof(c)))
-                && EVP_DigestUpdate(ctx, z, z_len)
-                && (!append_ctr || EVP_DigestUpdate(ctx, c, sizeof(c)))
-                && EVP_DigestUpdate(ctx, info, info_len)))
+                && (append_ctr || OPENSSL_BOX_EVP_DigestUpdate(ctx, c, sizeof(c)))
+                && OPENSSL_BOX_EVP_DigestUpdate(ctx, z, z_len)
+                && (!append_ctr || OPENSSL_BOX_EVP_DigestUpdate(ctx, c, sizeof(c)))
+                && OPENSSL_BOX_EVP_DigestUpdate(ctx, info, info_len)))
             goto end;
         if (len >= out_len) {
-            if (!EVP_DigestFinal_ex(ctx, out, NULL))
+            if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, out, NULL))
                 goto end;
             out += out_len;
             len -= out_len;
             if (len == 0)
                 break;
         } else {
-            if (!EVP_DigestFinal_ex(ctx, mac, NULL))
+            if (!OPENSSL_BOX_EVP_DigestFinal_ex(ctx, mac, NULL))
                 goto end;
             memcpy(out, mac, len);
             break;
@@ -247,7 +247,7 @@ static int SSKDF_mac_kdm(EVP_MAC_CTX *ctx_init,
     if (kmac_buffer != NULL)
         mac = kmac_buffer;
 
-    if (!EVP_MAC_init(ctx_init, salt, salt_len, NULL))
+    if (!OPENSSL_BOX_EVP_MAC_init(ctx_init, salt, salt_len, NULL))
         goto end;
 
     out_len = OPENSSL_BOX_EVP_MAC_CTX_get_mac_size(ctx_init); /* output size */
@@ -268,14 +268,14 @@ static int SSKDF_mac_kdm(EVP_MAC_CTX *ctx_init,
                 && OPENSSL_BOX_EVP_MAC_update(ctx, info, info_len)))
             goto end;
         if (len >= out_len) {
-            if (!EVP_MAC_final(ctx, out, NULL, len))
+            if (!OPENSSL_BOX_EVP_MAC_final(ctx, out, NULL, len))
                 goto end;
             out += out_len;
             len -= out_len;
             if (len == 0)
                 break;
         } else {
-            if (!EVP_MAC_final(ctx, mac, NULL, out_len))
+            if (!OPENSSL_BOX_EVP_MAC_final(ctx, mac, NULL, out_len))
                 goto end;
             memcpy(out, mac, len);
             break;

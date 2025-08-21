@@ -37,8 +37,8 @@ function, further described in L<provider-base(7)/Provider Functions>.
 =item I<algorithm_names>
 
 This string is a colon separated set of names / identities, and is used by
-the appropriate fetching functionality (such as L<EVP_CIPHER_fetch(3)>,
-L<EVP_MD_fetch(3)>, etc) to find the desired algorithm.
+the appropriate fetching functionality (such as L<OPENSSL_BOX_EVP_CIPHER_fetch(3)>,
+L<OPENSSL_BOX_EVP_MD_fetch(3)>, etc) to find the desired algorithm.
 
 Multiple names / identities allow a specific algorithm implementation to be
 fetched multiple ways.  For example, the RSA algorithm has the following
@@ -80,7 +80,7 @@ applications and libraries, including OpenSSL's.
 
 This string defines a set of properties associated with a particular
 algorithm implementation, and is used by the appropriate fetching
-functionality (such as L<EVP_CIPHER_fetch(3)>, L<EVP_MD_fetch(3)>, etc) for
+functionality (such as L<OPENSSL_BOX_EVP_CIPHER_fetch(3)>, L<OPENSSL_BOX_EVP_MD_fetch(3)>, etc) for
 a finer grained lookup of an algorithm implementation, which is useful in
 case multiple implementations of the same algorithm are available.
 

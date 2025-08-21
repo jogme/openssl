@@ -484,7 +484,7 @@ OSSL_PROVIDER *OPENSSL_BOX_EVP_SIGNATURE_get0_provider(const EVP_SIGNATURE *sign
     return signature->prov;
 }
 
-EVP_SIGNATURE *EVP_SIGNATURE_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
+EVP_SIGNATURE *OPENSSL_BOX_EVP_SIGNATURE_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
                                    const char *properties)
 {
     return evp_generic_fetch(ctx, OSSL_OP_SIGNATURE, algorithm, properties,
@@ -525,7 +525,7 @@ const char *OPENSSL_BOX_EVP_SIGNATURE_get0_description(const EVP_SIGNATURE *sign
     return signature->description;
 }
 
-void EVP_SIGNATURE_do_all_provided(OSSL_LIB_CTX *libctx,
+void OPENSSL_BOX_EVP_SIGNATURE_do_all_provided(OSSL_LIB_CTX *libctx,
                                    void (*fn)(EVP_SIGNATURE *signature,
                                               void *arg),
                                    void *arg)
@@ -538,7 +538,7 @@ void EVP_SIGNATURE_do_all_provided(OSSL_LIB_CTX *libctx,
 }
 
 
-int EVP_SIGNATURE_names_do_all(const EVP_SIGNATURE *signature,
+int OPENSSL_BOX_EVP_SIGNATURE_names_do_all(const EVP_SIGNATURE *signature,
                                void (*fn)(const char *name, void *data),
                                void *data)
 {
@@ -735,7 +735,7 @@ static int evp_pkey_signature_init(EVP_PKEY_CTX *ctx, EVP_SIGNATURE *signature,
             switch (iter) {
             case 1:
                 signature =
-                    EVP_SIGNATURE_fetch(ctx->libctx, supported_sig, ctx->propquery);
+                    OPENSSL_BOX_EVP_SIGNATURE_fetch(ctx->libctx, supported_sig, ctx->propquery);
                 if (signature != NULL)
                     tmp_prov = OPENSSL_BOX_EVP_SIGNATURE_get0_provider(signature);
                 break;
@@ -916,19 +916,19 @@ int OPENSSL_BOX_EVP_PKEY_sign_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params
     return evp_pkey_signature_init(ctx, NULL, EVP_PKEY_OP_SIGN, params);
 }
 
-int EVP_PKEY_sign_init_ex2(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_sign_init_ex2(EVP_PKEY_CTX *ctx,
                            EVP_SIGNATURE *algo, const OSSL_PARAM params[])
 {
     return evp_pkey_signature_init(ctx, algo, EVP_PKEY_OP_SIGN, params);
 }
 
-int EVP_PKEY_sign_message_init(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_sign_message_init(EVP_PKEY_CTX *ctx,
                                EVP_SIGNATURE *algo, const OSSL_PARAM params[])
 {
     return evp_pkey_signature_init(ctx, algo, EVP_PKEY_OP_SIGNMSG, params);
 }
 
-int EVP_PKEY_sign_message_update(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_sign_message_update(EVP_PKEY_CTX *ctx,
                                  const unsigned char *in, size_t inlen)
 {
     EVP_SIGNATURE *signature;
@@ -960,7 +960,7 @@ int EVP_PKEY_sign_message_update(EVP_PKEY_CTX *ctx,
     return ret;
 }
 
-int EVP_PKEY_sign_message_final(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_sign_message_final(EVP_PKEY_CTX *ctx,
                                 unsigned char *sig, size_t *siglen)
 {
     EVP_SIGNATURE *signature;
@@ -993,7 +993,7 @@ int EVP_PKEY_sign_message_final(EVP_PKEY_CTX *ctx,
     return ret;
 }
 
-int EVP_PKEY_sign(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_sign(EVP_PKEY_CTX *ctx,
                   unsigned char *sig, size_t *siglen,
                   const unsigned char *tbs, size_t tbslen)
 {
@@ -1050,19 +1050,19 @@ int OPENSSL_BOX_EVP_PKEY_verify_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM para
     return evp_pkey_signature_init(ctx, NULL, EVP_PKEY_OP_VERIFY, params);
 }
 
-int EVP_PKEY_verify_init_ex2(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_verify_init_ex2(EVP_PKEY_CTX *ctx,
                              EVP_SIGNATURE *algo, const OSSL_PARAM params[])
 {
     return evp_pkey_signature_init(ctx, algo, EVP_PKEY_OP_VERIFY, params);
 }
 
-int EVP_PKEY_verify_message_init(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_verify_message_init(EVP_PKEY_CTX *ctx,
                                  EVP_SIGNATURE *algo, const OSSL_PARAM params[])
 {
     return evp_pkey_signature_init(ctx, algo, EVP_PKEY_OP_VERIFYMSG, params);
 }
 
-int EVP_PKEY_CTX_set_signature(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_CTX_set_signature(EVP_PKEY_CTX *ctx,
                                const unsigned char *sig, size_t siglen)
 {
     OSSL_PARAM sig_params[2], *p = sig_params;
@@ -1083,7 +1083,7 @@ int EVP_PKEY_CTX_set_signature(EVP_PKEY_CTX *ctx,
     return OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, sig_params);
 }
 
-int EVP_PKEY_verify_message_update(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_verify_message_update(EVP_PKEY_CTX *ctx,
                                    const unsigned char *in, size_t inlen)
 {
     EVP_SIGNATURE *signature;
@@ -1139,7 +1139,7 @@ int OPENSSL_BOX_EVP_PKEY_verify_message_final(EVP_PKEY_CTX *ctx)
         return -2;
     }
 
-    /* The signature must have been set with EVP_PKEY_CTX_set_signature() */
+    /* The signature must have been set with OPENSSL_BOX_EVP_PKEY_CTX_set_signature() */
     ret = signature->verify_message_final(ctx->op.sig.algctx);
     if (ret <= 0)
         ERR_raise_data(ERR_LIB_EVP, EVP_R_PROVIDER_SIGNATURE_FAILURE,
@@ -1147,7 +1147,7 @@ int OPENSSL_BOX_EVP_PKEY_verify_message_final(EVP_PKEY_CTX *ctx)
     return ret;
 }
 
-int EVP_PKEY_verify(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_verify(EVP_PKEY_CTX *ctx,
                     const unsigned char *sig, size_t siglen,
                     const unsigned char *tbs, size_t tbslen)
 {
@@ -1198,19 +1198,19 @@ int OPENSSL_BOX_EVP_PKEY_verify_recover_init(EVP_PKEY_CTX *ctx)
     return evp_pkey_signature_init(ctx, NULL, EVP_PKEY_OP_VERIFYRECOVER, NULL);
 }
 
-int EVP_PKEY_verify_recover_init_ex(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_verify_recover_init_ex(EVP_PKEY_CTX *ctx,
                                     const OSSL_PARAM params[])
 {
     return evp_pkey_signature_init(ctx, NULL, EVP_PKEY_OP_VERIFYRECOVER, params);
 }
 
-int EVP_PKEY_verify_recover_init_ex2(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_verify_recover_init_ex2(EVP_PKEY_CTX *ctx,
                                      EVP_SIGNATURE *algo, const OSSL_PARAM params[])
 {
     return evp_pkey_signature_init(ctx, algo, EVP_PKEY_OP_VERIFYRECOVER, params);
 }
 
-int EVP_PKEY_verify_recover(EVP_PKEY_CTX *ctx,
+int OPENSSL_BOX_EVP_PKEY_verify_recover(EVP_PKEY_CTX *ctx,
                             unsigned char *rout, size_t *routlen,
                             const unsigned char *sig, size_t siglen)
 {
