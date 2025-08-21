@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_whirlpool
+EVP_whirlpool
 - WHIRLPOOL For EVP
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_MD *OPENSSL_BOX_EVP_whirlpool(void);
+ const EVP_MD *EVP_whirlpool(void);
 
 =head1 DESCRIPTION
 
@@ -19,7 +19,7 @@ only available with the legacy provider.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_whirlpool()
+=item EVP_whirlpool()
 
 The WHIRLPOOL algorithm that produces a message digest of 512-bits from a given
 input.

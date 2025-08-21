@@ -1765,7 +1765,7 @@ static int test_EVP_Enveloped(int n)
         return TEST_skip("Test does not support a non-default library context");
 
     if (n == 0)
-        type = (EVP_CIPHER *)OPENSSL_BOX_EVP_aes_256_cbc();
+        type = (EVP_CIPHER *)EVP_aes_256_cbc();
     else if (!TEST_ptr(type = OPENSSL_BOX_EVP_CIPHER_fetch(testctx, "AES-256-CBC",
                                                testpropq)))
         goto err;
@@ -1876,7 +1876,7 @@ static int test_EVP_DigestSignInit(int tst)
     if (tst >= 3 && tst <= 5)
         md = mdexp = OPENSSL_BOX_EVP_MD_fetch(NULL, "SHA256", NULL);
     else
-        md = OPENSSL_BOX_EVP_sha256();
+        md = EVP_sha256();
 
     if (!TEST_true(OPENSSL_BOX_EVP_DigestSignInit(md_ctx, NULL, md, NULL, pkey)))
         goto out;
@@ -1997,7 +1997,7 @@ static int test_EVP_DigestVerifyInit(void)
             || !TEST_ptr(pkey = load_example_rsa_key()))
         goto out;
 
-    if (!TEST_true(OPENSSL_BOX_EVP_DigestVerifyInit(md_ctx, NULL, OPENSSL_BOX_EVP_sha256(), NULL, pkey))
+    if (!TEST_true(OPENSSL_BOX_EVP_DigestVerifyInit(md_ctx, NULL, EVP_sha256(), NULL, pkey))
             || !TEST_true(OPENSSL_BOX_EVP_DigestVerifyUpdate(md_ctx, kMsg, sizeof(kMsg)))
             || !TEST_int_gt(OPENSSL_BOX_EVP_DigestVerifyFinal(md_ctx, kSignature,
                                                  sizeof(kSignature)), 0))
@@ -2165,7 +2165,7 @@ static int test_EVP_md_null(void)
 {
     int ret = 0;
     EVP_MD_CTX *md_ctx = NULL;
-    const EVP_MD *md_null = OPENSSL_BOX_EVP_md_null();
+    const EVP_MD *md_null = EVP_md_null();
     unsigned char md_value[EVP_MAX_MD_SIZE];
     unsigned int md_len = sizeof(md_value);
 
@@ -3400,7 +3400,7 @@ static int test_CMAC_keygen(void)
     if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_keygen_init(kctx), 0)
             || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_CTX_ctrl(kctx, -1, EVP_PKEY_OP_KEYGEN,
                                             EVP_PKEY_CTRL_CIPHER,
-                                            0, (void *)OPENSSL_BOX_EVP_aes_256_cbc()), 0)
+                                            0, (void *)EVP_aes_256_cbc()), 0)
             || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_CTX_ctrl(kctx, -1, EVP_PKEY_OP_KEYGEN,
                                             EVP_PKEY_CTRL_SET_MAC_KEY,
                                             sizeof(key), (void *)key), 0)
@@ -3416,7 +3416,7 @@ static int test_CMAC_keygen(void)
      * Test a CMAC key using the direct method, and compare with the mac
      * created above.
      */
-    pkey = OPENSSL_BOX_EVP_PKEY_new_CMAC_key(NULL, key, sizeof(key), OPENSSL_BOX_EVP_aes_256_cbc());
+    pkey = OPENSSL_BOX_EVP_PKEY_new_CMAC_key(NULL, key, sizeof(key), EVP_aes_256_cbc());
     if (!TEST_ptr(pkey)
             || !TEST_true(get_cmac_val(pkey, mac2))
             || !TEST_mem_eq(mac, sizeof(mac), mac2, sizeof(mac2)))
@@ -3456,7 +3456,7 @@ static int test_HKDF(void)
         memset(out, 0, outlen);
 
         if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_derive_init(pctx), 0)
-                || !TEST_int_gt(EVP_PKEY_CTX_set_hkdf_md(pctx, OPENSSL_BOX_EVP_sha256()), 0)
+                || !TEST_int_gt(EVP_PKEY_CTX_set_hkdf_md(pctx, EVP_sha256()), 0)
                 || !TEST_int_gt(EVP_PKEY_CTX_set1_hkdf_salt(pctx, salt,
                                                             sizeof(salt) - 1), 0)
                 || !TEST_int_gt(EVP_PKEY_CTX_set1_hkdf_key(pctx, key,
@@ -3498,7 +3498,7 @@ static int test_emptyikm_HKDF(void)
     memset(out, 0, outlen);
 
     if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_derive_init(pctx), 0)
-            || !TEST_int_gt(EVP_PKEY_CTX_set_hkdf_md(pctx, OPENSSL_BOX_EVP_sha256()), 0)
+            || !TEST_int_gt(EVP_PKEY_CTX_set_hkdf_md(pctx, EVP_sha256()), 0)
             || !TEST_int_gt(EVP_PKEY_CTX_set1_hkdf_salt(pctx, salt,
                                                         sizeof(salt) - 1), 0)
             || !TEST_int_gt(EVP_PKEY_CTX_set1_hkdf_key(pctx, key,
@@ -3540,7 +3540,7 @@ static int test_empty_salt_info_HKDF(void)
     memset(out, 0, outlen);
 
     if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_derive_init(pctx), 0)
-            || !TEST_int_gt(EVP_PKEY_CTX_set_hkdf_md(pctx, OPENSSL_BOX_EVP_sha256()), 0)
+            || !TEST_int_gt(EVP_PKEY_CTX_set_hkdf_md(pctx, EVP_sha256()), 0)
             || !TEST_int_gt(EVP_PKEY_CTX_set1_hkdf_salt(pctx, fake,
                                                         sizeof(fake) - 1), 0)
             || !TEST_int_gt(EVP_PKEY_CTX_set1_hkdf_salt(pctx, salt,
@@ -3694,9 +3694,9 @@ static int test_EVP_PKEY_CTX_get_set_params(EVP_PKEY *pkey)
      * Test the TEST_PKEY_CTX_set_signature_md() and
      * TEST_PKEY_CTX_get_signature_md() functions
      */
-    if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md(ctx, OPENSSL_BOX_EVP_sha256()), 0)
+    if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md(ctx, EVP_sha256()), 0)
             || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_CTX_get_signature_md(ctx, &md), 0)
-            || !TEST_ptr_eq(md, OPENSSL_BOX_EVP_sha256()))
+            || !TEST_ptr_eq(md, EVP_sha256()))
         goto err;
 
     /*
@@ -3953,7 +3953,7 @@ static int test_RSA_legacy(void)
     BIGNUM *n = NULL;
     BIGNUM *e = NULL;
     BIGNUM *d = NULL;
-    const EVP_MD *md = OPENSSL_BOX_EVP_sha256();
+    const EVP_MD *md = EVP_sha256();
     EVP_MD_CTX *ctx = NULL;
     EVP_PKEY *pkey = NULL;
     RSA *rsa = NULL;
@@ -4357,7 +4357,7 @@ static int test_evp_iv_aes(int idx)
 
     switch (idx) {
     case 0:
-        type = OPENSSL_BOX_EVP_aes_128_cbc();
+        type = EVP_aes_128_cbc();
         /* FALLTHROUGH */
     case 6:
         type = (type != NULL) ? type :
@@ -4367,7 +4367,7 @@ static int test_evp_iv_aes(int idx)
         iv_reset = 1;
         break;
     case 1:
-        type = OPENSSL_BOX_EVP_aes_128_ofb();
+        type = EVP_aes_128_ofb();
         /* FALLTHROUGH */
     case 7:
         type = (type != NULL) ? type :
@@ -4387,7 +4387,7 @@ static int test_evp_iv_aes(int idx)
         iv_reset = 1;
         break;
     case 3:
-        type = OPENSSL_BOX_EVP_aes_128_gcm();
+        type = EVP_aes_128_gcm();
         /* FALLTHROUGH */
     case 9:
         type = (type != NULL) ? type :
@@ -4396,7 +4396,7 @@ static int test_evp_iv_aes(int idx)
         ref_len = sizeof(gcm_state);
         break;
     case 4:
-        type = OPENSSL_BOX_EVP_aes_128_ccm();
+        type = EVP_aes_128_ccm();
         /* FALLTHROUGH */
     case 10:
         type = (type != NULL) ? type :
@@ -4410,7 +4410,7 @@ static int test_evp_iv_aes(int idx)
         return 1;
 #else
     case 5:
-        type = OPENSSL_BOX_EVP_aes_128_ocb();
+        type = EVP_aes_128_ocb();
         /* FALLTHROUGH */
     case 11:
         type = (type != NULL) ? type :
@@ -5561,7 +5561,7 @@ static int test_custom_pmeth(int idx)
     size_t reslen;
     unsigned char *res = NULL;
     unsigned char msg[] = { 'H', 'e', 'l', 'l', 'o' };
-    const EVP_MD *md = OPENSSL_BOX_EVP_sha256();
+    const EVP_MD *md = EVP_sha256();
     int doderive = 0;
 
     ctrl_called = 0;
@@ -5729,8 +5729,8 @@ static int test_custom_pmeth(int idx)
 
 static int test_evp_md_cipher_meth(void)
 {
-    EVP_MD *md = OPENSSL_BOX_EVP_MD_meth_dup(OPENSSL_BOX_EVP_sha256());
-    EVP_CIPHER *ciph = OPENSSL_BOX_EVP_CIPHER_meth_dup(OPENSSL_BOX_EVP_aes_128_cbc());
+    EVP_MD *md = OPENSSL_BOX_EVP_MD_meth_dup(EVP_sha256());
+    EVP_CIPHER *ciph = OPENSSL_BOX_EVP_CIPHER_meth_dup(EVP_aes_128_cbc());
     int testresult = 0;
 
     if (!TEST_ptr(md) || !TEST_ptr(ciph))
@@ -5818,7 +5818,7 @@ static int test_custom_md_meth(void)
                 * being called.
                 */
             || !TEST_true(OPENSSL_BOX_EVP_DigestInit_ex(mdctx, tmp, NULL))
-            || !TEST_true(OPENSSL_BOX_EVP_DigestInit_ex(mdctx, OPENSSL_BOX_EVP_sha256(), NULL))
+            || !TEST_true(OPENSSL_BOX_EVP_DigestInit_ex(mdctx, EVP_sha256(), NULL))
             || !TEST_true(OPENSSL_BOX_EVP_DigestUpdate(mdctx, mess, strlen(mess)))
             || !TEST_true(OPENSSL_BOX_EVP_DigestFinal_ex(mdctx, md_value, &md_len))
             || !TEST_int_eq(custom_md_init_called, 1)
@@ -5916,7 +5916,7 @@ static int test_custom_ciph_meth(void)
              * cipher being called.
              */
             || !TEST_true(OPENSSL_BOX_EVP_CipherInit_ex(ciphctx, tmp, NULL, NULL, NULL, 1))
-            || !TEST_true(OPENSSL_BOX_EVP_CipherInit_ex(ciphctx, OPENSSL_BOX_EVP_aes_128_cbc(), NULL,
+            || !TEST_true(OPENSSL_BOX_EVP_CipherInit_ex(ciphctx, EVP_aes_128_cbc(), NULL,
                                             NULL, NULL, 1))
             || !TEST_int_eq(custom_ciph_init_called, 1)
             || !TEST_int_eq(custom_ciph_cleanup_called, 1))
@@ -5975,11 +5975,11 @@ static int test_signatures_with_engine(int tst)
     switch (tst) {
     case 0:
         pkey = OPENSSL_BOX_EVP_PKEY_new_CMAC_key(e, cmackey, sizeof(cmackey),
-                                     OPENSSL_BOX_EVP_aes_128_cbc());
+                                     EVP_aes_128_cbc());
         break;
     case 1:
         pkey = OPENSSL_BOX_EVP_PKEY_new_CMAC_key(e, badcmackey, sizeof(badcmackey),
-                                     OPENSSL_BOX_EVP_aes_128_cbc());
+                                     EVP_aes_128_cbc());
         break;
     case 2:
         pkey = OPENSSL_BOX_EVP_PKEY_new_raw_private_key(EVP_PKEY_ED25519, e, ed25519key,
@@ -5995,7 +5995,7 @@ static int test_signatures_with_engine(int tst)
     if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_MD_CTX_new()))
         goto err;
 
-    ret = OPENSSL_BOX_EVP_DigestSignInit(ctx, NULL, tst == 2 ? NULL : OPENSSL_BOX_EVP_sha256(), NULL,
+    ret = OPENSSL_BOX_EVP_DigestSignInit(ctx, NULL, tst == 2 ? NULL : EVP_sha256(), NULL,
                              pkey);
     if (tst == 0) {
         if (!TEST_true(ret))
@@ -6053,7 +6053,7 @@ static int test_cipher_with_engine(void)
             || !TEST_ptr(ctx2 = OPENSSL_BOX_EVP_CIPHER_CTX_new()))
         goto err;
 
-    if (!TEST_true(OPENSSL_BOX_EVP_EncryptInit_ex(ctx, OPENSSL_BOX_EVP_aes_128_cbc(), e, keyiv, keyiv)))
+    if (!TEST_true(OPENSSL_BOX_EVP_EncryptInit_ex(ctx, EVP_aes_128_cbc(), e, keyiv, keyiv)))
         goto err;
 
     /* Copy the ctx, and complete the operation with the new ctx */
@@ -6551,7 +6551,7 @@ static int test_evp_cipher_pipeline(void)
     /* Negative tests */
     if (!TEST_false(OPENSSL_BOX_EVP_CIPHER_can_pipeline(cipher, 1)))
         goto end;
-    if (!TEST_false(OPENSSL_BOX_EVP_CIPHER_can_pipeline(OPENSSL_BOX_EVP_aes_256_gcm(), 1)))
+    if (!TEST_false(OPENSSL_BOX_EVP_CIPHER_can_pipeline(EVP_aes_256_gcm(), 1)))
         goto end;
     if (!TEST_false(OPENSSL_BOX_EVP_CipherPipelineEncryptInit(ctx, pipeline_cipher,
                                                   key, keylen,

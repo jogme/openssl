@@ -189,7 +189,7 @@ static const EVP_CIPHER *dasync_aes_256_ctr(void)
  * Holds the EVP_CIPHER object for aes_128_cbc_hmac_sha1 in this engine. Set up
  * once only during engine bind and can then be reused many times.
  *
- * This 'stitched' cipher depends on the OPENSSL_BOX_EVP_aes_128_cbc_hmac_sha1() cipher,
+ * This 'stitched' cipher depends on the EVP_aes_128_cbc_hmac_sha1() cipher,
  * which is implemented only if the AES-NI instruction set extension is available
  * (see OPENSSL_IA32CAP(3)). If that's not the case, then this cipher will not
  * be available either.
@@ -604,7 +604,7 @@ static int dasync_sha1_init(EVP_MD_CTX *ctx)
 {
     dummy_pause_job();
 
-    return EVP_MD_meth_get_init(OPENSSL_BOX_EVP_sha1())(ctx);
+    return EVP_MD_meth_get_init(EVP_sha1())(ctx);
 }
 
 static int dasync_sha1_update(EVP_MD_CTX *ctx, const void *data,
@@ -612,14 +612,14 @@ static int dasync_sha1_update(EVP_MD_CTX *ctx, const void *data,
 {
     dummy_pause_job();
 
-    return EVP_MD_meth_get_update(OPENSSL_BOX_EVP_sha1())(ctx, data, count);
+    return EVP_MD_meth_get_update(EVP_sha1())(ctx, data, count);
 }
 
 static int dasync_sha1_final(EVP_MD_CTX *ctx, unsigned char *md)
 {
     dummy_pause_job();
 
-    return EVP_MD_meth_get_final(OPENSSL_BOX_EVP_sha1())(ctx, md);
+    return EVP_MD_meth_get_final(EVP_sha1())(ctx, md);
 }
 
 /* Cipher helper functions */
@@ -667,7 +667,7 @@ static int dasync_cipher_ctrl_helper(EVP_CIPHER_CTX *ctx, int type, int arg,
             if (!aeadcapable)
                 return -1;
             OPENSSL_BOX_EVP_CIPHER_CTX_set_cipher_data(ctx, pipe_ctx->inner_cipher_data);
-            ret = EVP_CIPHER_meth_get_ctrl(OPENSSL_BOX_EVP_aes_128_cbc_hmac_sha1())
+            ret = EVP_CIPHER_meth_get_ctrl(EVP_aes_128_cbc_hmac_sha1())
                                           (ctx, type, arg, ptr);
             OPENSSL_BOX_EVP_CIPHER_CTX_set_cipher_data(ctx, pipe_ctx);
             return ret;
@@ -799,47 +799,47 @@ static int dasync_cipher_cleanup_helper(EVP_CIPHER_CTX *ctx,
 static int dasync_aes128_cbc_ctrl(EVP_CIPHER_CTX *ctx, int type, int arg,
                                   void *ptr)
 {
-    return dasync_cipher_ctrl_helper(ctx, type, arg, ptr, 0, OPENSSL_BOX_EVP_aes_128_cbc());
+    return dasync_cipher_ctrl_helper(ctx, type, arg, ptr, 0, EVP_aes_128_cbc());
 }
 
 static int dasync_aes128_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
                              const unsigned char *iv, int enc)
 {
-    return dasync_cipher_init_key_helper(ctx, key, iv, enc, OPENSSL_BOX_EVP_aes_128_cbc());
+    return dasync_cipher_init_key_helper(ctx, key, iv, enc, EVP_aes_128_cbc());
 }
 
 static int dasync_aes128_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                                const unsigned char *in, size_t inl)
 {
-    return dasync_cipher_helper(ctx, out, in, inl, OPENSSL_BOX_EVP_aes_128_cbc());
+    return dasync_cipher_helper(ctx, out, in, inl, EVP_aes_128_cbc());
 }
 
 static int dasync_aes128_cbc_cleanup(EVP_CIPHER_CTX *ctx)
 {
-    return dasync_cipher_cleanup_helper(ctx, OPENSSL_BOX_EVP_aes_128_cbc());
+    return dasync_cipher_cleanup_helper(ctx, EVP_aes_128_cbc());
 }
 
 static int dasync_aes256_ctr_ctrl(EVP_CIPHER_CTX *ctx, int type, int arg,
                                   void *ptr)
 {
-    return dasync_cipher_ctrl_helper(ctx, type, arg, ptr, 0, OPENSSL_BOX_EVP_aes_256_ctr());
+    return dasync_cipher_ctrl_helper(ctx, type, arg, ptr, 0, EVP_aes_256_ctr());
 }
 
 static int dasync_aes256_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
                              const unsigned char *iv, int enc)
 {
-    return dasync_cipher_init_key_helper(ctx, key, iv, enc, OPENSSL_BOX_EVP_aes_256_ctr());
+    return dasync_cipher_init_key_helper(ctx, key, iv, enc, EVP_aes_256_ctr());
 }
 
 static int dasync_aes256_ctr_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                                const unsigned char *in, size_t inl)
 {
-    return dasync_cipher_helper(ctx, out, in, inl, OPENSSL_BOX_EVP_aes_256_ctr());
+    return dasync_cipher_helper(ctx, out, in, inl, EVP_aes_256_ctr());
 }
 
 static int dasync_aes256_ctr_cleanup(EVP_CIPHER_CTX *ctx)
 {
-    return dasync_cipher_cleanup_helper(ctx, OPENSSL_BOX_EVP_aes_256_ctr());
+    return dasync_cipher_cleanup_helper(ctx, EVP_aes_256_ctr());
 }
 
 
@@ -850,7 +850,7 @@ static int dasync_aes256_ctr_cleanup(EVP_CIPHER_CTX *ctx)
 static int dasync_aes128_cbc_hmac_sha1_ctrl(EVP_CIPHER_CTX *ctx, int type,
                                              int arg, void *ptr)
 {
-    return dasync_cipher_ctrl_helper(ctx, type, arg, ptr, 1, OPENSSL_BOX_EVP_aes_128_cbc_hmac_sha1());
+    return dasync_cipher_ctrl_helper(ctx, type, arg, ptr, 1, EVP_aes_128_cbc_hmac_sha1());
 }
 
 static int dasync_aes128_cbc_hmac_sha1_init_key(EVP_CIPHER_CTX *ctx,
@@ -859,11 +859,11 @@ static int dasync_aes128_cbc_hmac_sha1_init_key(EVP_CIPHER_CTX *ctx,
                                                 int enc)
 {
     /*
-     * We can safely assume that OPENSSL_BOX_EVP_aes_128_cbc_hmac_sha1() != NULL,
+     * We can safely assume that EVP_aes_128_cbc_hmac_sha1() != NULL,
      * see comment before the definition of dasync_aes_128_cbc_hmac_sha1().
      */
     return dasync_cipher_init_key_helper(ctx, key, iv, enc,
-                                         OPENSSL_BOX_EVP_aes_128_cbc_hmac_sha1());
+                                         EVP_aes_128_cbc_hmac_sha1());
 }
 
 static int dasync_aes128_cbc_hmac_sha1_cipher(EVP_CIPHER_CTX *ctx,
@@ -871,16 +871,16 @@ static int dasync_aes128_cbc_hmac_sha1_cipher(EVP_CIPHER_CTX *ctx,
                                                const unsigned char *in,
                                                size_t inl)
 {
-    return dasync_cipher_helper(ctx, out, in, inl, OPENSSL_BOX_EVP_aes_128_cbc_hmac_sha1());
+    return dasync_cipher_helper(ctx, out, in, inl, EVP_aes_128_cbc_hmac_sha1());
 }
 
 static int dasync_aes128_cbc_hmac_sha1_cleanup(EVP_CIPHER_CTX *ctx)
 {
     /*
-     * We can safely assume that OPENSSL_BOX_EVP_aes_128_cbc_hmac_sha1() != NULL,
+     * We can safely assume that EVP_aes_128_cbc_hmac_sha1() != NULL,
      * see comment before the definition of dasync_aes_128_cbc_hmac_sha1().
      */
-    return dasync_cipher_cleanup_helper(ctx, OPENSSL_BOX_EVP_aes_128_cbc_hmac_sha1());
+    return dasync_cipher_cleanup_helper(ctx, EVP_aes_128_cbc_hmac_sha1());
 }
 
 

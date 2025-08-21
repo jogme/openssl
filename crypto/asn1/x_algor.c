@@ -159,7 +159,7 @@ const EVP_MD *ossl_x509_algor_get_md(X509_ALGOR *alg)
     const EVP_MD *md;
 
     if (alg == NULL)
-        return OPENSSL_BOX_EVP_sha1();
+        return EVP_sha1();
     md = EVP_get_digestbyobj(alg->algorithm);
     if (md == NULL)
         ERR_raise(ERR_LIB_ASN1, ASN1_R_UNKNOWN_DIGEST);

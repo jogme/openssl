@@ -2,22 +2,22 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_idea_cbc,
+EVP_idea_cbc,
 EVP_idea_cfb,
-OPENSSL_BOX_EVP_idea_cfb64,
-OPENSSL_BOX_EVP_idea_ecb,
-OPENSSL_BOX_EVP_idea_ofb
+EVP_idea_cfb64,
+EVP_idea_ecb,
+EVP_idea_ofb
 - EVP IDEA cipher
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_CIPHER *OPENSSL_BOX_EVP_idea_cbc(void);
+ const EVP_CIPHER *EVP_idea_cbc(void);
  const EVP_CIPHER *EVP_idea_cfb(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_idea_cfb64(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_idea_ecb(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_idea_ofb(void);
+ const EVP_CIPHER *EVP_idea_cfb64(void);
+ const EVP_CIPHER *EVP_idea_ecb(void);
+ const EVP_CIPHER *EVP_idea_ofb(void);
 
 =head1 DESCRIPTION
 
@@ -25,11 +25,11 @@ The IDEA encryption algorithm for EVP.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_idea_cbc(),
+=item EVP_idea_cbc(),
 EVP_idea_cfb(),
-OPENSSL_BOX_EVP_idea_cfb64(),
-OPENSSL_BOX_EVP_idea_ecb(),
-OPENSSL_BOX_EVP_idea_ofb()
+EVP_idea_cfb64(),
+EVP_idea_ecb(),
+EVP_idea_ofb()
 
 The IDEA encryption algorithm in CBC, CFB, ECB and OFB modes respectively.
 

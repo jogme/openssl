@@ -67,9 +67,9 @@ If I<md> is NULL, the digest is placed in a static array.  The size of
 the output is placed in I<md_len>, unless it is NULL. Note: passing a NULL
 value for I<md> to use the static array is not thread safe.
 
-I<evp_md> is a message digest such as OPENSSL_BOX_EVP_sha1(), OPENSSL_BOX_EVP_ripemd160() etc.
-HMAC does not support variable output length digests such as OPENSSL_BOX_EVP_shake128() and
-OPENSSL_BOX_EVP_shake256().
+I<evp_md> is a message digest such as EVP_sha1(), EVP_ripemd160() etc.
+HMAC does not support variable output length digests such as EVP_shake128() and
+EVP_shake256().
 
 HMAC() uses the default B<OSSL_LIB_CTX>.
 Use L<OPENSSL_BOX_EVP_Q_mac(3)> instead if a library context is required.

@@ -4411,7 +4411,7 @@ int tls_construct_cert_status_body(SSL_CONNECTION *s, size_t chainidx, WPACKET *
                 if (cert_id_md_oid != NULL)
                     cert_id_md = EVP_get_digestbyobj(cert_id_md_oid);
                 else
-                    cert_id_md = OPENSSL_BOX_EVP_sha1();
+                    cert_id_md = EVP_sha1();
 
                 /* get serial number and issuer name hash of the certificate from the chain */
                 certSerial = X509_get0_serialNumber(x);

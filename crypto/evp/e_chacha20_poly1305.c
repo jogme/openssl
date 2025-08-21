@@ -142,7 +142,7 @@ static const EVP_CIPHER chacha20 = {
     NULL
 };
 
-const EVP_CIPHER *OPENSSL_BOX_EVP_chacha20(void)
+const EVP_CIPHER *EVP_chacha20(void)
 {
     return &chacha20;
 }
@@ -627,7 +627,7 @@ static EVP_CIPHER chacha20_poly1305 = {
     NULL        /* app_data */
 };
 
-const EVP_CIPHER *OPENSSL_BOX_EVP_chacha20_poly1305(void)
+const EVP_CIPHER *EVP_chacha20_poly1305(void)
 {
     return(&chacha20_poly1305);
 }

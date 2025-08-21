@@ -87,7 +87,7 @@ static OCSP_BASICRESP *make_dummy_resp(void)
         || !TEST_true(ASN1_BIT_STRING_set(key, keybytes, sizeof(keybytes)))
         || !TEST_true(ASN1_INTEGER_set_uint64(serial, (uint64_t)1)))
         goto err;
-    cid = OCSP_cert_id_new(OPENSSL_BOX_EVP_sha256(), name, key, serial);
+    cid = OCSP_cert_id_new(EVP_sha256(), name, key, serial);
     if (!TEST_ptr(bs)
         || !TEST_ptr(thisupd)
         || !TEST_ptr(nextupd)
@@ -127,7 +127,7 @@ static int test_resp_signer(void)
         || !TEST_ptr(extra_certs)
         || !TEST_true(get_cert_and_key(&signer, &key))
         || !TEST_true(sk_X509_push(extra_certs, signer))
-        || !TEST_true(OCSP_basic_sign(bs, signer, key, OPENSSL_BOX_EVP_sha1(),
+        || !TEST_true(OCSP_basic_sign(bs, signer, key, EVP_sha1(),
                                       NULL, OCSP_NOCERTS)))
         goto err;
     if (!TEST_true(OCSP_resp_get0_signer(bs, &tmp, extra_certs))
@@ -139,7 +139,7 @@ static int test_resp_signer(void)
     bs = make_dummy_resp();
     tmp = NULL;
     if (!TEST_ptr(bs)
-        || !TEST_true(OCSP_basic_sign(bs, signer, key, OPENSSL_BOX_EVP_sha1(),
+        || !TEST_true(OCSP_basic_sign(bs, signer, key, EVP_sha1(),
                                       NULL, 0)))
         goto err;
     if (!TEST_true(OCSP_resp_get0_signer(bs, &tmp, NULL))

@@ -388,7 +388,7 @@ PEM_ASN1_write_bio_internal(
          * The 'iv' is used as the iv and as a salt.  It is NOT taken from
          * the BytesToKey function
          */
-        if (!OPENSSL_BOX_EVP_BytesToKey(enc, OPENSSL_BOX_EVP_md5(), iv, kstr, klen, 1, key, NULL))
+        if (!OPENSSL_BOX_EVP_BytesToKey(enc, EVP_md5(), iv, kstr, klen, 1, key, NULL))
             goto err;
 
         if (kstr == (unsigned char *)buf)
@@ -476,7 +476,7 @@ int PEM_do_header(EVP_CIPHER_INFO *cipher, unsigned char *data, long *plen,
     ebcdic2ascii(buf, buf, keylen);
 #endif
 
-    if (!OPENSSL_BOX_EVP_BytesToKey(cipher->cipher, OPENSSL_BOX_EVP_md5(), &(cipher->iv[0]),
+    if (!OPENSSL_BOX_EVP_BytesToKey(cipher->cipher, EVP_md5(), &(cipher->iv[0]),
                         (unsigned char *)buf, keylen, 1, key, NULL))
         return 0;
 

@@ -31,7 +31,7 @@ static int test_kdf_tls1_prf(int index)
         TEST_error("OPENSSL_BOX_EVP_PKEY_derive_init");
         goto err;
     }
-    if (EVP_PKEY_CTX_set_tls1_prf_md(pctx, OPENSSL_BOX_EVP_sha256()) <= 0) {
+    if (EVP_PKEY_CTX_set_tls1_prf_md(pctx, EVP_sha256()) <= 0) {
         TEST_error("EVP_PKEY_CTX_set_tls1_prf_md");
         goto err;
     }
@@ -93,7 +93,7 @@ static int test_kdf_hkdf(int index)
         TEST_error("OPENSSL_BOX_EVP_PKEY_derive_init");
         goto err;
     }
-    if (EVP_PKEY_CTX_set_hkdf_md(pctx, OPENSSL_BOX_EVP_sha256()) <= 0) {
+    if (EVP_PKEY_CTX_set_hkdf_md(pctx, EVP_sha256()) <= 0) {
         TEST_error("EVP_PKEY_CTX_set_hkdf_md");
         goto err;
     }

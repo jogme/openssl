@@ -22,7 +22,7 @@ searched in various ways, ie. two ways of encrypting with the "des_cbc"
 algorithm/mode pair are;
 
     (i) directly;
-         const EVP_CIPHER *cipher = OPENSSL_BOX_EVP_des_cbc();
+         const EVP_CIPHER *cipher = EVP_des_cbc();
          OPENSSL_BOX_EVP_EncryptInit(&ctx, cipher, key, iv);
          [ ... use OPENSSL_BOX_EVP_EncryptUpdate() and OPENSSL_BOX_EVP_EncryptFinal() ...]
 

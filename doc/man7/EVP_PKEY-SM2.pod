@@ -73,7 +73,7 @@ a message with the SM2 signature algorithm and the SM3 hash algorithm:
  pctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, NULL);
  OPENSSL_BOX_EVP_PKEY_CTX_set1_id(pctx, id, id_len);
  OPENSSL_BOX_EVP_MD_CTX_set_pkey_ctx(mctx, pctx);
- OPENSSL_BOX_EVP_DigestVerifyInit(mctx, NULL, OPENSSL_BOX_EVP_sm3(), NULL, pkey);
+ OPENSSL_BOX_EVP_DigestVerifyInit(mctx, NULL, EVP_sm3(), NULL, pkey);
  OPENSSL_BOX_EVP_DigestVerifyUpdate(mctx, msg, msg_len);
  OPENSSL_BOX_EVP_DigestVerifyFinal(mctx, sig, sig_len)
 

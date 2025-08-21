@@ -295,7 +295,7 @@ static const EVP_CIPHER *ossltest_aes_128_cbc(void)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_do_cipher(_hidden_aes_128_cbc,
                                               ossltest_aes128_cbc_cipher)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(_hidden_aes_128_cbc,
-                    OPENSSL_BOX_EVP_CIPHER_impl_ctx_size(OPENSSL_BOX_EVP_aes_128_cbc())))) {
+                    OPENSSL_BOX_EVP_CIPHER_impl_ctx_size(EVP_aes_128_cbc())))) {
         OPENSSL_BOX_EVP_CIPHER_meth_free(_hidden_aes_128_cbc);
         _hidden_aes_128_cbc = NULL;
     }
@@ -325,7 +325,7 @@ static const EVP_CIPHER *ossltest_aes_128_gcm(void)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_ctrl(_hidden_aes_128_gcm,
                                               ossltest_aes128_gcm_ctrl)
             || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(_hidden_aes_128_gcm,
-                    OPENSSL_BOX_EVP_CIPHER_impl_ctx_size(OPENSSL_BOX_EVP_aes_128_gcm())))) {
+                    OPENSSL_BOX_EVP_CIPHER_impl_ctx_size(EVP_aes_128_gcm())))) {
         OPENSSL_BOX_EVP_CIPHER_meth_free(_hidden_aes_128_gcm);
         _hidden_aes_128_gcm = NULL;
     }
@@ -568,18 +568,18 @@ static void fill_known_data(unsigned char *md, unsigned int len)
  */
 static int digest_md5_init(EVP_MD_CTX *ctx)
 {
-   return EVP_MD_meth_get_init(OPENSSL_BOX_EVP_md5())(ctx);
+   return EVP_MD_meth_get_init(EVP_md5())(ctx);
 }
 
 static int digest_md5_update(EVP_MD_CTX *ctx, const void *data,
                              size_t count)
 {
-    return EVP_MD_meth_get_update(OPENSSL_BOX_EVP_md5())(ctx, data, count);
+    return EVP_MD_meth_get_update(EVP_md5())(ctx, data, count);
 }
 
 static int digest_md5_final(EVP_MD_CTX *ctx, unsigned char *md)
 {
-    int ret = EVP_MD_meth_get_final(OPENSSL_BOX_EVP_md5())(ctx, md);
+    int ret = EVP_MD_meth_get_final(EVP_md5())(ctx, md);
 
     if (ret > 0) {
         fill_known_data(md, MD5_DIGEST_LENGTH);
@@ -592,18 +592,18 @@ static int digest_md5_final(EVP_MD_CTX *ctx, unsigned char *md)
  */
 static int digest_sha1_init(EVP_MD_CTX *ctx)
 {
-    return EVP_MD_meth_get_init(OPENSSL_BOX_EVP_sha1())(ctx);
+    return EVP_MD_meth_get_init(EVP_sha1())(ctx);
 }
 
 static int digest_sha1_update(EVP_MD_CTX *ctx, const void *data,
                               size_t count)
 {
-    return EVP_MD_meth_get_update(OPENSSL_BOX_EVP_sha1())(ctx, data, count);
+    return EVP_MD_meth_get_update(EVP_sha1())(ctx, data, count);
 }
 
 static int digest_sha1_final(EVP_MD_CTX *ctx, unsigned char *md)
 {
-    int ret = EVP_MD_meth_get_final(OPENSSL_BOX_EVP_sha1())(ctx, md);
+    int ret = EVP_MD_meth_get_final(EVP_sha1())(ctx, md);
 
     if (ret > 0) {
         fill_known_data(md, SHA_DIGEST_LENGTH);
@@ -616,18 +616,18 @@ static int digest_sha1_final(EVP_MD_CTX *ctx, unsigned char *md)
  */
 static int digest_sha256_init(EVP_MD_CTX *ctx)
 {
-    return EVP_MD_meth_get_init(OPENSSL_BOX_EVP_sha256())(ctx);
+    return EVP_MD_meth_get_init(EVP_sha256())(ctx);
 }
 
 static int digest_sha256_update(EVP_MD_CTX *ctx, const void *data,
                                 size_t count)
 {
-    return EVP_MD_meth_get_update(OPENSSL_BOX_EVP_sha256())(ctx, data, count);
+    return EVP_MD_meth_get_update(EVP_sha256())(ctx, data, count);
 }
 
 static int digest_sha256_final(EVP_MD_CTX *ctx, unsigned char *md)
 {
-    int ret = EVP_MD_meth_get_final(OPENSSL_BOX_EVP_sha256())(ctx, md);
+    int ret = EVP_MD_meth_get_final(EVP_sha256())(ctx, md);
 
     if (ret > 0) {
         fill_known_data(md, SHA256_DIGEST_LENGTH);
@@ -640,18 +640,18 @@ static int digest_sha256_final(EVP_MD_CTX *ctx, unsigned char *md)
  */
 static int digest_sha384_init(EVP_MD_CTX *ctx)
 {
-    return EVP_MD_meth_get_init(OPENSSL_BOX_EVP_sha384())(ctx);
+    return EVP_MD_meth_get_init(EVP_sha384())(ctx);
 }
 
 static int digest_sha384_update(EVP_MD_CTX *ctx, const void *data,
                                 size_t count)
 {
-    return EVP_MD_meth_get_update(OPENSSL_BOX_EVP_sha384())(ctx, data, count);
+    return EVP_MD_meth_get_update(EVP_sha384())(ctx, data, count);
 }
 
 static int digest_sha384_final(EVP_MD_CTX *ctx, unsigned char *md)
 {
-    int ret = EVP_MD_meth_get_final(OPENSSL_BOX_EVP_sha384())(ctx, md);
+    int ret = EVP_MD_meth_get_final(EVP_sha384())(ctx, md);
 
     if (ret > 0) {
         fill_known_data(md, SHA384_DIGEST_LENGTH);
@@ -664,18 +664,18 @@ static int digest_sha384_final(EVP_MD_CTX *ctx, unsigned char *md)
  */
 static int digest_sha512_init(EVP_MD_CTX *ctx)
 {
-    return EVP_MD_meth_get_init(OPENSSL_BOX_EVP_sha512())(ctx);
+    return EVP_MD_meth_get_init(EVP_sha512())(ctx);
 }
 
 static int digest_sha512_update(EVP_MD_CTX *ctx, const void *data,
                                 size_t count)
 {
-    return EVP_MD_meth_get_update(OPENSSL_BOX_EVP_sha512())(ctx, data, count);
+    return EVP_MD_meth_get_update(EVP_sha512())(ctx, data, count);
 }
 
 static int digest_sha512_final(EVP_MD_CTX *ctx, unsigned char *md)
 {
-    int ret = EVP_MD_meth_get_final(OPENSSL_BOX_EVP_sha512())(ctx, md);
+    int ret = EVP_MD_meth_get_final(EVP_sha512())(ctx, md);
 
     if (ret > 0) {
         fill_known_data(md, SHA512_DIGEST_LENGTH);
@@ -691,7 +691,7 @@ static int ossltest_aes128_init_key(EVP_CIPHER_CTX *ctx,
                                     const unsigned char *key,
                                     const unsigned char *iv, int enc)
 {
-    return EVP_CIPHER_meth_get_init(OPENSSL_BOX_EVP_aes_128_cbc()) (ctx, key, iv, enc);
+    return EVP_CIPHER_meth_get_init(EVP_aes_128_cbc()) (ctx, key, iv, enc);
 }
 
 static int ossltest_aes128_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
@@ -711,7 +711,7 @@ static int ossltest_aes128_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         memcpy(tmpbuf, in, inl);
 
     /* Go through the motions of encrypting it */
-    ret = EVP_CIPHER_meth_get_do_cipher(OPENSSL_BOX_EVP_aes_128_cbc())(ctx, out, in, inl);
+    ret = EVP_CIPHER_meth_get_do_cipher(EVP_aes_128_cbc())(ctx, out, in, inl);
 
     /* Throw it all away and just use the plaintext as the output */
     if (tmpbuf != NULL)
@@ -725,7 +725,7 @@ static int ossltest_aes128_gcm_init_key(EVP_CIPHER_CTX *ctx,
                                         const unsigned char *key,
                                         const unsigned char *iv, int enc)
 {
-    return EVP_CIPHER_meth_get_init(OPENSSL_BOX_EVP_aes_128_gcm()) (ctx, key, iv, enc);
+    return EVP_CIPHER_meth_get_init(EVP_aes_128_gcm()) (ctx, key, iv, enc);
 }
 
 static int ossltest_aes128_gcm_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
@@ -742,7 +742,7 @@ static int ossltest_aes128_gcm_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         memcpy(tmpbuf, in, inl);
 
     /* Go through the motions of encrypting it */
-    EVP_CIPHER_meth_get_do_cipher(OPENSSL_BOX_EVP_aes_128_gcm())(ctx, out, in, inl);
+    EVP_CIPHER_meth_get_do_cipher(EVP_aes_128_gcm())(ctx, out, in, inl);
 
     /* Throw it all away and just use the plaintext as the output */
     if (tmpbuf != NULL && out != NULL)
@@ -756,7 +756,7 @@ static int ossltest_aes128_gcm_ctrl(EVP_CIPHER_CTX *ctx, int type, int arg,
                                     void *ptr)
 {
     /* Pass the ctrl down */
-    int ret = EVP_CIPHER_meth_get_ctrl(OPENSSL_BOX_EVP_aes_128_gcm())(ctx, type, arg, ptr);
+    int ret = EVP_CIPHER_meth_get_ctrl(EVP_aes_128_gcm())(ctx, type, arg, ptr);
 
     if (ret <= 0)
         return ret;

@@ -75,7 +75,7 @@ static ESS_CERT_ID *ESS_CERT_ID_new_init(const X509 *cert,
         ERR_raise(ERR_LIB_ESS, ERR_R_ESS_LIB);
         goto err;
     }
-    if (!X509_digest(cert, OPENSSL_BOX_EVP_sha1(), cert_sha1, NULL)) {
+    if (!X509_digest(cert, EVP_sha1(), cert_sha1, NULL)) {
         ERR_raise(ERR_LIB_ESS, ERR_R_X509_LIB);
         goto err;
     }

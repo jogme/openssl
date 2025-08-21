@@ -147,7 +147,7 @@ static int test_cmac_bad(void)
         || !TEST_false(CMAC_Init(ctx, NULL, 0, NULL, NULL))
         || !TEST_false(CMAC_Update(ctx, test[0].data, test[0].data_len))
            /* Should be able to pass cipher first, and then key */
-        || !TEST_true(CMAC_Init(ctx, NULL, 0, OPENSSL_BOX_EVP_aes_128_cbc(), NULL))
+        || !TEST_true(CMAC_Init(ctx, NULL, 0, EVP_aes_128_cbc(), NULL))
            /* Must have a key */
         || !TEST_false(CMAC_Update(ctx, test[0].data, test[0].data_len))
            /* Now supply the key */
@@ -155,7 +155,7 @@ static int test_cmac_bad(void)
            /* Update should now work */
         || !TEST_true(CMAC_Update(ctx, test[0].data, test[0].data_len))
            /* XTS is not a suitable cipher to use */
-        || !TEST_false(CMAC_Init(ctx, xtskey, sizeof(xtskey), OPENSSL_BOX_EVP_aes_128_xts(),
+        || !TEST_false(CMAC_Init(ctx, xtskey, sizeof(xtskey), EVP_aes_128_xts(),
                                  NULL))
         || !TEST_false(CMAC_Update(ctx, test[0].data, test[0].data_len)))
         goto err;
@@ -195,7 +195,7 @@ static int test_cmac_run(void)
     }
 
     if (!TEST_true(CMAC_Init(ctx, test[0].key, test[0].key_len,
-                             OPENSSL_BOX_EVP_aes_128_cbc(), NULL))
+                             EVP_aes_128_cbc(), NULL))
         || !TEST_true(CMAC_Update(ctx, test[0].data, test[0].data_len))
         || !TEST_true(CMAC_Final(ctx, buf, &len)))
         goto err;
@@ -205,7 +205,7 @@ static int test_cmac_run(void)
         goto err;
 
     if (!TEST_true(CMAC_Init(ctx, test[1].key, test[1].key_len,
-                             OPENSSL_BOX_EVP_aes_256_cbc(), NULL))
+                             EVP_aes_256_cbc(), NULL))
         || !TEST_true(CMAC_Update(ctx, test[1].data, test[1].data_len))
         || !TEST_true(CMAC_Final(ctx, buf, &len)))
         goto err;
@@ -231,7 +231,7 @@ static int test_cmac_run(void)
         goto err;
 
     /* Test setting the cipher and key separately */
-    if (!TEST_true(CMAC_Init(ctx, NULL, 0, OPENSSL_BOX_EVP_aes_256_cbc(), NULL))
+    if (!TEST_true(CMAC_Init(ctx, NULL, 0, EVP_aes_256_cbc(), NULL))
         || !TEST_true(CMAC_Init(ctx, test[2].key, test[2].key_len, NULL, NULL))
         || !TEST_true(CMAC_Update(ctx, test[2].data, test[2].data_len))
         || !TEST_true(CMAC_Final(ctx, buf, &len)))
@@ -242,7 +242,7 @@ static int test_cmac_run(void)
 
     /* Test data length is greater than 1 block length */
     if (!TEST_true(CMAC_Init(ctx, test[3].key, test[3].key_len,
-                             OPENSSL_BOX_EVP_aes_128_cbc(), NULL))
+                             EVP_aes_128_cbc(), NULL))
         || !TEST_true(CMAC_Update(ctx, test[3].data, test[3].data_len))
         || !TEST_true(CMAC_Final(ctx, buf, &len)))
         goto err;
@@ -251,7 +251,7 @@ static int test_cmac_run(void)
         goto err;
 
     if (!TEST_true(CMAC_Init(ctx, test[4].key, test[4].key_len,
-                             OPENSSL_BOX_EVP_aes_192_cbc(), NULL))
+                             EVP_aes_192_cbc(), NULL))
         || !TEST_true(CMAC_Update(ctx, test[4].data, test[4].data_len))
         || !TEST_true(CMAC_Final(ctx, buf, &len)))
         goto err;
@@ -260,7 +260,7 @@ static int test_cmac_run(void)
         goto err;
 
     if (!TEST_true(CMAC_Init(ctx, test[5].key, test[5].key_len,
-                             OPENSSL_BOX_EVP_aes_256_cbc(), NULL))
+                             EVP_aes_256_cbc(), NULL))
         || !TEST_true(CMAC_Update(ctx, test[5].data, test[5].data_len))
         || !TEST_true(CMAC_Final(ctx, buf, &len)))
         goto err;
@@ -270,7 +270,7 @@ static int test_cmac_run(void)
 
 #ifndef OPENSSL_NO_DES
     if (!TEST_true(CMAC_Init(ctx, test[6].key, test[6].key_len,
-                             OPENSSL_BOX_EVP_des_ede3_cbc(), NULL))
+                             EVP_des_ede3_cbc(), NULL))
         || !TEST_true(CMAC_Update(ctx, test[6].data, test[6].data_len))
         || !TEST_true(CMAC_Final(ctx, buf, &len)))
         goto err;
@@ -281,7 +281,7 @@ static int test_cmac_run(void)
 
 #ifndef OPENSSL_NO_SM4
     if (!TEST_true(CMAC_Init(ctx, test[7].key, test[7].key_len,
-                             OPENSSL_BOX_EVP_sm4_cbc(), NULL))
+                             EVP_sm4_cbc(), NULL))
         || !TEST_true(CMAC_Update(ctx, test[7].data, test[7].data_len))
         || !TEST_true(CMAC_Final(ctx, buf, &len)))
         goto err;
@@ -310,7 +310,7 @@ static int test_cmac_copy(void)
         goto err;
 
     if (!TEST_true(CMAC_Init(ctx, test[0].key, test[0].key_len,
-                             OPENSSL_BOX_EVP_aes_128_cbc(), NULL))
+                             EVP_aes_128_cbc(), NULL))
         || !TEST_true(CMAC_Update(ctx, test[0].data, test[0].data_len))
         || !TEST_true(CMAC_CTX_copy(ctx2, ctx))
         || !TEST_true(CMAC_Final(ctx2, buf, &len)))

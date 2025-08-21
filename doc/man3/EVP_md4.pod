@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_md4
+EVP_md4
 - MD4 For EVP
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_MD *OPENSSL_BOX_EVP_md4(void);
+ const EVP_MD *EVP_md4(void);
 
 =head1 DESCRIPTION
 
@@ -19,7 +19,7 @@ with the legacy provider.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_md4()
+=item EVP_md4()
 
 The MD4 algorithm which produces a 128-bit output from a given input.
 

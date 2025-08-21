@@ -23,7 +23,7 @@ TLS. It has no associated private key and only implements key derivation
 using L<OPENSSL_BOX_EVP_PKEY_derive(3)>.
 
 EVP_PKEY_set_tls1_prf_md() sets the message digest associated with the
-TLS PRF. OPENSSL_BOX_EVP_md5_sha1() is treated as a special case which uses the PRF
+TLS PRF. EVP_md5_sha1() is treated as a special case which uses the PRF
 algorithm using both B<MD5> and B<SHA1> as used in TLS 1.0 and 1.1.
 
 EVP_PKEY_CTX_set_tls1_prf_secret() sets the secret value of the TLS PRF
@@ -80,7 +80,7 @@ and seed value "seed":
  pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_TLS1_PRF, NULL);
  if (OPENSSL_BOX_EVP_PKEY_derive_init(pctx) <= 0)
      /* Error */
- if (EVP_PKEY_CTX_set_tls1_prf_md(pctx, OPENSSL_BOX_EVP_sha256()) <= 0)
+ if (EVP_PKEY_CTX_set_tls1_prf_md(pctx, EVP_sha256()) <= 0)
      /* Error */
  if (EVP_PKEY_CTX_set1_tls1_prf_secret(pctx, "secret", 6) <= 0)
      /* Error */

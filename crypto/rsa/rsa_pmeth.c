@@ -461,7 +461,7 @@ static int pkey_rsa_ctrl(EVP_PKEY_CTX *ctx, int type, int p1, void *p2)
                       (EVP_PKEY_OP_SIGN | EVP_PKEY_OP_VERIFY)))
                     goto bad_pad;
                 if (!rctx->md)
-                    rctx->md = OPENSSL_BOX_EVP_sha1();
+                    rctx->md = EVP_sha1();
             } else if (pkey_ctx_is_pss(ctx)) {
                 goto bad_pad;
             }
@@ -469,7 +469,7 @@ static int pkey_rsa_ctrl(EVP_PKEY_CTX *ctx, int type, int p1, void *p2)
                 if (!(ctx->operation & EVP_PKEY_OP_TYPE_CRYPT))
                     goto bad_pad;
                 if (!rctx->md)
-                    rctx->md = OPENSSL_BOX_EVP_sha1();
+                    rctx->md = EVP_sha1();
             }
             rctx->pad_mode = p1;
             return 1;

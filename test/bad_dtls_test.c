@@ -72,7 +72,7 @@ static int do_PRF(const void *seed1, int seed1_len,
 
     /* No error handling. If it all screws up, the test will fail anyway */
     OPENSSL_BOX_EVP_PKEY_derive_init(pctx);
-    EVP_PKEY_CTX_set_tls1_prf_md(pctx, OPENSSL_BOX_EVP_md5_sha1());
+    EVP_PKEY_CTX_set_tls1_prf_md(pctx, EVP_md5_sha1());
     EVP_PKEY_CTX_set1_tls1_prf_secret(pctx, master_secret, sizeof(master_secret));
     EVP_PKEY_CTX_add1_tls1_prf_seed(pctx, seed1, seed1_len);
     EVP_PKEY_CTX_add1_tls1_prf_seed(pctx, seed2, seed2_len);
@@ -333,7 +333,7 @@ static int send_record(BIO *rbio, unsigned char type, uint64_t seqnr,
     /* Generate IV, and encrypt */
     if (!TEST_int_gt(RAND_bytes(iv, sizeof(iv)), 0)
             || !TEST_ptr(enc_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
-            || !TEST_true(OPENSSL_BOX_EVP_CipherInit_ex(enc_ctx, OPENSSL_BOX_EVP_aes_128_cbc(), NULL,
+            || !TEST_true(OPENSSL_BOX_EVP_CipherInit_ex(enc_ctx, EVP_aes_128_cbc(), NULL,
                                             enc_key, iv, 1))
             || !TEST_int_ge(OPENSSL_BOX_EVP_Cipher(enc_ctx, enc, enc, (unsigned int)len), 0))
         goto end;
@@ -490,7 +490,7 @@ static int test_bad_dtls(void)
 
     handshake_md = OPENSSL_BOX_EVP_MD_CTX_new();
     if (!TEST_ptr(handshake_md)
-            || !TEST_true(OPENSSL_BOX_EVP_DigestInit_ex(handshake_md, OPENSSL_BOX_EVP_md5_sha1(),
+            || !TEST_true(OPENSSL_BOX_EVP_DigestInit_ex(handshake_md, EVP_md5_sha1(),
                                             NULL)))
         goto end;
 

@@ -29,7 +29,7 @@ static const EVP_MD whirlpool_md = {
                              WHIRLPOOL_BBLOCK / 8),
 };
 
-const EVP_MD *OPENSSL_BOX_EVP_whirlpool(void)
+const EVP_MD *EVP_whirlpool(void)
 {
     return &whirlpool_md;
 }

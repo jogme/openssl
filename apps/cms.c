@@ -915,7 +915,7 @@ int cms_main(int argc, char **argv)
 
     if (operation == SMIME_ENCRYPT) {
         if (!cipher)
-            cipher = (EVP_CIPHER *)OPENSSL_BOX_EVP_aes_256_cbc();
+            cipher = (EVP_CIPHER *)EVP_aes_256_cbc();
         if (secret_key && !secret_keyid) {
             BIO_printf(bio_err, "No secret key id\n");
             goto end;

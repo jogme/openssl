@@ -837,7 +837,7 @@ static int test_PEM_read_bio_negative_wrong_password(int testid)
     UI_set_default_method(ui_method);
 
     if (/* Output Encrypted private key in PEM form */
-        !TEST_true(PEM_write_bio_PrivateKey(key_bio, write_pkey, OPENSSL_BOX_EVP_aes_256_cbc(),
+        !TEST_true(PEM_write_bio_PrivateKey(key_bio, write_pkey, EVP_aes_256_cbc(),
                                            NULL, 0, NULL, "pass")))
         goto err;
 
@@ -1402,7 +1402,7 @@ static int test_evp_pbe_alg_add(void)
     EVP_PBE_KEYGEN_EX *keygen_ex = NULL;
     EVP_PBE_KEYGEN *keygen = NULL;
 
-    if (!TEST_true(OPENSSL_BOX_EVP_PBE_alg_add(NID_pbeWithMD5AndDES_CBC, OPENSSL_BOX_EVP_des_cbc(), OPENSSL_BOX_EVP_md5(),
+    if (!TEST_true(OPENSSL_BOX_EVP_PBE_alg_add(NID_pbeWithMD5AndDES_CBC, EVP_des_cbc(), EVP_md5(),
                                    OPENSSL_BOX_PKCS5_PBE_keyivgen)))
         goto err;
 

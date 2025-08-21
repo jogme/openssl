@@ -69,7 +69,7 @@ const EVP_CIPHER *OPENSSL_BOX_EVP_rc4(void)
     return &r4_cipher;
 }
 
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc4_40(void)
+const EVP_CIPHER *EVP_rc4_40(void)
 {
     return &r4_40_cipher;
 }

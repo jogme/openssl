@@ -2,22 +2,22 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_rc5_32_12_16_cbc,
+EVP_rc5_32_12_16_cbc,
 EVP_rc5_32_12_16_cfb,
-OPENSSL_BOX_EVP_rc5_32_12_16_cfb64,
-OPENSSL_BOX_EVP_rc5_32_12_16_ecb,
-OPENSSL_BOX_EVP_rc5_32_12_16_ofb
+EVP_rc5_32_12_16_cfb64,
+EVP_rc5_32_12_16_ecb,
+EVP_rc5_32_12_16_ofb
 - EVP RC5 cipher
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_CIPHER *OPENSSL_BOX_EVP_rc5_32_12_16_cbc(void);
+ const EVP_CIPHER *EVP_rc5_32_12_16_cbc(void);
  const EVP_CIPHER *EVP_rc5_32_12_16_cfb(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_rc5_32_12_16_cfb64(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_rc5_32_12_16_ecb(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_rc5_32_12_16_ofb(void);
+ const EVP_CIPHER *EVP_rc5_32_12_16_cfb64(void);
+ const EVP_CIPHER *EVP_rc5_32_12_16_ecb(void);
+ const EVP_CIPHER *EVP_rc5_32_12_16_ofb(void);
 
 =head1 DESCRIPTION
 
@@ -25,11 +25,11 @@ The RC5 encryption algorithm for EVP.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_rc5_32_12_16_cbc(),
+=item EVP_rc5_32_12_16_cbc(),
 EVP_rc5_32_12_16_cfb(),
-OPENSSL_BOX_EVP_rc5_32_12_16_cfb64(),
-OPENSSL_BOX_EVP_rc5_32_12_16_ecb(),
-OPENSSL_BOX_EVP_rc5_32_12_16_ofb()
+EVP_rc5_32_12_16_cfb64(),
+EVP_rc5_32_12_16_ecb(),
+EVP_rc5_32_12_16_ofb()
 
 RC5 encryption algorithm in CBC, CFB, ECB and OFB modes respectively. This is a
 variable key length cipher with an additional "number of rounds" parameter. By

@@ -332,7 +332,7 @@ int dgst_main(int argc, char **argv)
 
     if (hmac_key != NULL) {
         if (md == NULL) {
-            md = (EVP_MD *)OPENSSL_BOX_EVP_sha256();
+            md = (EVP_MD *)EVP_sha256();
             digestname = SN_sha256;
         }
         sigkey = OPENSSL_BOX_EVP_PKEY_new_raw_private_key(EVP_PKEY_HMAC, impl,
@@ -396,7 +396,7 @@ int dgst_main(int argc, char **argv)
             goto end;
         }
         if (md == NULL)
-            md = (EVP_MD *)OPENSSL_BOX_EVP_sha256();
+            md = (EVP_MD *)EVP_sha256();
         if (!OPENSSL_BOX_EVP_DigestInit_ex(mctx, md, impl)) {
             BIO_printf(bio_err, "Error setting digest\n");
             goto end;

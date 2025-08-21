@@ -67,7 +67,7 @@ PKCS12 *PKCS12_create_ex2(const char *pass, const char *name, EVP_PKEY *pkey,
     if (pkey && cert) {
         if (!X509_check_private_key(cert, pkey))
             return NULL;
-        if (!X509_digest(cert, OPENSSL_BOX_EVP_sha1(), keyid, &keyidlen))
+        if (!X509_digest(cert, EVP_sha1(), keyid, &keyidlen))
             return NULL;
     }
 

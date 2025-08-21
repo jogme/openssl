@@ -2,26 +2,26 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_rc2_cbc,
+EVP_rc2_cbc,
 EVP_rc2_cfb,
-OPENSSL_BOX_EVP_rc2_cfb64,
-OPENSSL_BOX_EVP_rc2_ecb,
-OPENSSL_BOX_EVP_rc2_ofb,
-OPENSSL_BOX_EVP_rc2_40_cbc,
-OPENSSL_BOX_EVP_rc2_64_cbc
+EVP_rc2_cfb64,
+EVP_rc2_ecb,
+EVP_rc2_ofb,
+EVP_rc2_40_cbc,
+EVP_rc2_64_cbc
 - EVP RC2 cipher
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_cbc(void);
+ const EVP_CIPHER *EVP_rc2_cbc(void);
  const EVP_CIPHER *EVP_rc2_cfb(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_cfb64(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_ecb(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_ofb(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_40_cbc(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_64_cbc(void);
+ const EVP_CIPHER *EVP_rc2_cfb64(void);
+ const EVP_CIPHER *EVP_rc2_ecb(void);
+ const EVP_CIPHER *EVP_rc2_ofb(void);
+ const EVP_CIPHER *EVP_rc2_40_cbc(void);
+ const EVP_CIPHER *EVP_rc2_64_cbc(void);
 
 =head1 DESCRIPTION
 
@@ -29,24 +29,24 @@ The RC2 encryption algorithm for EVP.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_rc2_cbc(),
+=item EVP_rc2_cbc(),
 EVP_rc2_cfb(),
-OPENSSL_BOX_EVP_rc2_cfb64(),
-OPENSSL_BOX_EVP_rc2_ecb(),
-OPENSSL_BOX_EVP_rc2_ofb()
+EVP_rc2_cfb64(),
+EVP_rc2_ecb(),
+EVP_rc2_ofb()
 
 RC2 encryption algorithm in CBC, CFB, ECB and OFB modes respectively. This is a
 variable key length cipher with an additional parameter called "effective key
 bits" or "effective key length". By default both are set to 128 bits.
 
-=item OPENSSL_BOX_EVP_rc2_40_cbc(),
-OPENSSL_BOX_EVP_rc2_64_cbc()
+=item EVP_rc2_40_cbc(),
+EVP_rc2_64_cbc()
 
 RC2 algorithm in CBC mode with a default key length and effective key length of
 40 and 64 bits.
 
 WARNING: these functions are obsolete. Their usage should be replaced with the
-OPENSSL_BOX_EVP_rc2_cbc(), OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length() and OPENSSL_BOX_EVP_CIPHER_CTX_ctrl()
+EVP_rc2_cbc(), OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length() and OPENSSL_BOX_EVP_CIPHER_CTX_ctrl()
 functions to set the key length and effective key length.
 
 =back

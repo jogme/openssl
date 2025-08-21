@@ -35,7 +35,7 @@ static const EVP_MD md5_sha1_md = {
                              MD5_SHA1_CBLOCK),
 };
 
-const EVP_MD *OPENSSL_BOX_EVP_md5_sha1(void)
+const EVP_MD *EVP_md5_sha1(void)
 {
     return &md5_sha1_md;
 }

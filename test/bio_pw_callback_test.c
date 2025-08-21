@@ -170,11 +170,11 @@ static int re_encrypt_key(char **enc_data, int *enc_data_size,
     cb_data.result = 0;
     switch (key_encoding) {
     case KE_PEM:
-        w_ret = PEM_write_bio_PrivateKey(bio, original_pkey, OPENSSL_BOX_EVP_aes_256_cbc(),
+        w_ret = PEM_write_bio_PrivateKey(bio, original_pkey, EVP_aes_256_cbc(),
                                          NULL, 0, write_callback, &cb_data);
         break;
     case KE_PKCS8:
-        w_ret = i2d_PKCS8PrivateKey_bio(bio, original_pkey, OPENSSL_BOX_EVP_aes_256_cbc(),
+        w_ret = i2d_PKCS8PrivateKey_bio(bio, original_pkey, EVP_aes_256_cbc(),
                                         NULL, 0, write_callback, &cb_data);
         break;
     }

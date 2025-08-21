@@ -83,7 +83,7 @@ OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting,
 OPENSSL_BOX_EVP_CIPHER_param_to_asn1,
 OPENSSL_BOX_EVP_CIPHER_asn1_to_param,
 OPENSSL_BOX_EVP_CIPHER_CTX_set_padding,
-OPENSSL_BOX_EVP_enc_null,
+EVP_enc_null,
 OPENSSL_BOX_EVP_CIPHER_do_all_provided,
 EVP_CIPHER_nid,
 EVP_CIPHER_name,
@@ -382,7 +382,7 @@ can be set in the context's current state.
 
 Sets up cipher context I<ctx> for encryption with cipher I<type>. I<ctx> B<MUST NOT> be NULL.
 I<type> is typically supplied by calling OPENSSL_BOX_EVP_CIPHER_fetch(). I<type> may also be set
-using legacy functions such as OPENSSL_BOX_EVP_aes_256_cbc(), but this is not recommended
+using legacy functions such as EVP_aes_256_cbc(), but this is not recommended
 for new applications. I<key> is the symmetric key to use and I<iv> is the IV to
 use (if necessary), the actual number of bytes used for the key and IV depends
 on the cipher. The parameters I<params> will be set on the context after
@@ -496,7 +496,7 @@ OPENSSL_BOX_EVP_CipherFinal_ex() instead.
 
 This function checks if a B<EVP_CIPHER> fetched using OPENSSL_BOX_EVP_CIPHER_fetch() supports
 cipher pipelining. If the cipher supports pipelining, it returns 1, otherwise 0.
-This function will return 0 for non-fetched ciphers such as OPENSSL_BOX_EVP_aes_128_gcm().
+This function will return 0 for non-fetched ciphers such as EVP_aes_128_gcm().
 There are currently no built-in ciphers that support pipelining.
 
 Cipher pipelining support allows an application to submit multiple chunks of
@@ -1466,7 +1466,7 @@ interface.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_enc_null()
+=item EVP_enc_null()
 
 Null cipher: does nothing.
 
@@ -1744,7 +1744,7 @@ Encrypt a string using IDEA:
      FILE *out;
 
      ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
-     if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx, OPENSSL_BOX_EVP_idea_cbc(), key, iv, NULL)) {
+     if (!OPENSSL_BOX_EVP_EncryptInit_ex2(ctx, EVP_idea_cbc(), key, iv, NULL)) {
          /* Error */
          OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
          return 0;
@@ -1806,7 +1806,7 @@ with a 128-bit key:
 
      /* Don't set key or IV right away; we want to check lengths */
      ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
-     if (!OPENSSL_BOX_EVP_CipherInit_ex2(ctx, OPENSSL_BOX_EVP_aes_128_cbc(), NULL, NULL,
+     if (!OPENSSL_BOX_EVP_CipherInit_ex2(ctx, EVP_aes_128_cbc(), NULL, NULL,
                              do_encrypt, NULL)) {
          /* Error */
          OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
@@ -1898,20 +1898,20 @@ L<life_cycle-cipher(7)>
 
 Supported ciphers are listed in:
 
-L<OPENSSL_BOX_EVP_aes_128_gcm(3)>,
-L<OPENSSL_BOX_EVP_aria_128_gcm(3)>,
-L<OPENSSL_BOX_EVP_bf_cbc(3)>,
-L<OPENSSL_BOX_EVP_camellia_128_ecb(3)>,
-L<OPENSSL_BOX_EVP_cast5_cbc(3)>,
-L<OPENSSL_BOX_EVP_chacha20(3)>,
-L<OPENSSL_BOX_EVP_des_cbc(3)>,
-L<OPENSSL_BOX_EVP_desx_cbc(3)>,
-L<OPENSSL_BOX_EVP_idea_cbc(3)>,
-L<OPENSSL_BOX_EVP_rc2_cbc(3)>,
+L<EVP_aes_128_gcm(3)>,
+L<EVP_aria_128_gcm(3)>,
+L<EVP_bf_cbc(3)>,
+L<EVP_camellia_128_ecb(3)>,
+L<EVP_cast5_cbc(3)>,
+L<EVP_chacha20(3)>,
+L<EVP_des_cbc(3)>,
+L<EVP_desx_cbc(3)>,
+L<EVP_idea_cbc(3)>,
+L<EVP_rc2_cbc(3)>,
 L<OPENSSL_BOX_EVP_rc4(3)>,
-L<OPENSSL_BOX_EVP_rc5_32_12_16_cbc(3)>,
-L<OPENSSL_BOX_EVP_seed_cbc(3)>,
-L<OPENSSL_BOX_EVP_sm4_cbc(3)>,
+L<EVP_rc5_32_12_16_cbc(3)>,
+L<EVP_seed_cbc(3)>,
+L<EVP_sm4_cbc(3)>,
 
 =head1 HISTORY
 

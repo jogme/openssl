@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_ripemd160
+EVP_ripemd160
 - RIPEMD160 For EVP
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_MD *OPENSSL_BOX_EVP_ripemd160(void);
+ const EVP_MD *EVP_ripemd160(void);
 
 =head1 DESCRIPTION
 
@@ -19,7 +19,7 @@ This implementation is only available with the legacy provider.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_ripemd160()
+=item EVP_ripemd160()
 
 The RIPEMD-160 algorithm which produces a 160-bit output from a given input.
 

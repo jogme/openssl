@@ -3768,7 +3768,7 @@ static const EVP_CIPHER aes_128_wrap = {
     NULL, NULL, NULL, NULL
 };
 
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_wrap(void)
+const EVP_CIPHER *EVP_aes_128_wrap(void)
 {
     return &aes_128_wrap;
 }
@@ -3782,7 +3782,7 @@ static const EVP_CIPHER aes_192_wrap = {
     NULL, NULL, NULL, NULL
 };
 
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_wrap(void)
+const EVP_CIPHER *EVP_aes_192_wrap(void)
 {
     return &aes_192_wrap;
 }
@@ -3796,7 +3796,7 @@ static const EVP_CIPHER aes_256_wrap = {
     NULL, NULL, NULL, NULL
 };
 
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_wrap(void)
+const EVP_CIPHER *EVP_aes_256_wrap(void)
 {
     return &aes_256_wrap;
 }
@@ -3810,7 +3810,7 @@ static const EVP_CIPHER aes_128_wrap_pad = {
     NULL, NULL, NULL, NULL
 };
 
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_wrap_pad(void)
+const EVP_CIPHER *EVP_aes_128_wrap_pad(void)
 {
     return &aes_128_wrap_pad;
 }
@@ -3824,7 +3824,7 @@ static const EVP_CIPHER aes_192_wrap_pad = {
     NULL, NULL, NULL, NULL
 };
 
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_wrap_pad(void)
+const EVP_CIPHER *EVP_aes_192_wrap_pad(void)
 {
     return &aes_192_wrap_pad;
 }
@@ -3838,7 +3838,7 @@ static const EVP_CIPHER aes_256_wrap_pad = {
     NULL, NULL, NULL, NULL
 };
 
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_wrap_pad(void)
+const EVP_CIPHER *EVP_aes_256_wrap_pad(void)
 {
     return &aes_256_wrap_pad;
 }

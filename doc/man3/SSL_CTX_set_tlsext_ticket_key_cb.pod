@@ -179,7 +179,7 @@ Reference Implementation:
          }
          memcpy(key_name, key->name, 16);
 
-         if (OPENSSL_BOX_EVP_EncryptInit_ex(&ctx, OPENSSL_BOX_EVP_aes_256_cbc(), NULL, key->aes_key,
+         if (OPENSSL_BOX_EVP_EncryptInit_ex(&ctx, EVP_aes_256_cbc(), NULL, key->aes_key,
                                 iv) == 0)
             return -1; /* error in cipher initialisation */
 
@@ -208,7 +208,7 @@ Reference Implementation:
          if (OPENSSL_BOX_EVP_MAC_CTX_set_params(hctx, params) == 0)
             return -1; /* error in mac initialisation */
 
-         if (OPENSSL_BOX_EVP_DecryptInit_ex(&ctx, OPENSSL_BOX_EVP_aes_256_cbc(), NULL, key->aes_key,
+         if (OPENSSL_BOX_EVP_DecryptInit_ex(&ctx, EVP_aes_256_cbc(), NULL, key->aes_key,
                                 iv) == 0)
             return -1; /* error in cipher initialisation */
 

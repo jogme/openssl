@@ -351,7 +351,7 @@ int PKCS12_set_mac(PKCS12 *p12, const char *pass, int passlen,
 
     if (md_type == NULL)
         /* No need to do a fetch as the md_type is used only to get a NID */
-        md_type = OPENSSL_BOX_EVP_sha256();
+        md_type = EVP_sha256();
     if (!iter)
         iter = PKCS12_DEFAULT_ITER;
     if (PKCS12_setup_mac(p12, iter, salt, saltlen, md_type) == PKCS12_ERROR) {
@@ -450,7 +450,7 @@ int PKCS12_set_pbmac1_pbkdf2(PKCS12 *p12, const char *pass, int passlen,
 
     if (md_type == NULL)
         /* No need to do a fetch as the md_type is used only to get a NID */
-        md_type = OPENSSL_BOX_EVP_sha256();
+        md_type = EVP_sha256();
 
     if (prf_md_name == NULL)
         prf_md_nid = OPENSSL_BOX_EVP_MD_get_type(md_type);

@@ -228,7 +228,7 @@ and L<OSSL_PROVIDER-FIPS(7)/Message Authentication Code (MAC)>.
 
 =head4 Algorithm Fetching
 
-Using calls to convenience functions such as OPENSSL_BOX_EVP_sha256() and OPENSSL_BOX_EVP_aes_256_gcm() may
+Using calls to convenience functions such as EVP_sha256() and EVP_aes_256_gcm() may
 incur a performance penalty when using providers.
 Retrieving algorithms from providers involves searching for an algorithm by name.
 This is much slower than directly accessing a method table.
@@ -673,11 +673,11 @@ library context.
 =head4 Using a Library Context - Old functions that should be changed
 
 If a library context is needed then all EVP_* digest functions that return a
-B<const EVP_MD *> such as OPENSSL_BOX_EVP_sha256() should be replaced with a call to
+B<const EVP_MD *> such as EVP_sha256() should be replaced with a call to
 L<OPENSSL_BOX_EVP_MD_fetch(3)>. See L<crypto(7)/ALGORITHM FETCHING>.
 
 If a library context is needed then all EVP_* cipher functions that return a
-B<const EVP_CIPHER *> such as OPENSSL_BOX_EVP_aes_128_cbc() should be replaced vith a call to
+B<const EVP_CIPHER *> such as EVP_aes_128_cbc() should be replaced vith a call to
 L<OPENSSL_BOX_EVP_CIPHER_fetch(3)>. See L<crypto(7)/ALGORITHM FETCHING>.
 
 Some functions can be passed an object that has already been set up with a library

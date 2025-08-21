@@ -2,16 +2,16 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_blake2b512,
-OPENSSL_BOX_EVP_blake2s256
+EVP_blake2b512,
+EVP_blake2s256
 - BLAKE2 For EVP
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_MD *OPENSSL_BOX_EVP_blake2b512(void);
- const EVP_MD *OPENSSL_BOX_EVP_blake2s256(void);
+ const EVP_MD *EVP_blake2b512(void);
+ const EVP_MD *EVP_blake2s256(void);
 
 =head1 DESCRIPTION
 
@@ -21,11 +21,11 @@ RFC 7693.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_blake2s256()
+=item EVP_blake2s256()
 
 The BLAKE2s algorithm that produces a 256-bit output from a given input.
 
-=item OPENSSL_BOX_EVP_blake2b512()
+=item EVP_blake2b512()
 
 The BLAKE2b algorithm that produces a 512-bit output from a given input.
 

@@ -70,22 +70,22 @@ static int test_encrypt_decrypt(const EVP_CIPHER *cipher)
 
 static int test_encrypt_decrypt_aes_cbc(void)
 {
-    return test_encrypt_decrypt(OPENSSL_BOX_EVP_aes_128_cbc());
+    return test_encrypt_decrypt(EVP_aes_128_cbc());
 }
 
 static int test_encrypt_decrypt_aes_128_gcm(void)
 {
-    return test_encrypt_decrypt(OPENSSL_BOX_EVP_aes_128_gcm());
+    return test_encrypt_decrypt(EVP_aes_128_gcm());
 }
 
 static int test_encrypt_decrypt_aes_192_gcm(void)
 {
-    return test_encrypt_decrypt(OPENSSL_BOX_EVP_aes_192_gcm());
+    return test_encrypt_decrypt(EVP_aes_192_gcm());
 }
 
 static int test_encrypt_decrypt_aes_256_gcm(void)
 {
-    return test_encrypt_decrypt(OPENSSL_BOX_EVP_aes_256_gcm());
+    return test_encrypt_decrypt(EVP_aes_256_gcm());
 }
 
 static int test_CMS_add1_cert(void)

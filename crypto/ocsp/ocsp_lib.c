@@ -27,7 +27,7 @@ OCSP_CERTID *OCSP_cert_to_id(const EVP_MD *dgst, const X509 *subject,
     ASN1_BIT_STRING *ikey;
 
     if (!dgst)
-        dgst = OPENSSL_BOX_EVP_sha1();
+        dgst = EVP_sha1();
     if (subject) {
         iname = X509_get_issuer_name(subject);
         serial = X509_get0_serialNumber(subject);

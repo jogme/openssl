@@ -175,7 +175,7 @@ CMS_ContentInfo *CMS_digest_create_ex(BIO *in, const EVP_MD *md,
      * cannot fetch the algorithm if it isn't supplied.
      */
     if (md == NULL)
-        md = OPENSSL_BOX_EVP_sha1();
+        md = EVP_sha1();
     cms = ossl_cms_DigestedData_create(md, ctx, propq);
     if (cms == NULL)
         return NULL;

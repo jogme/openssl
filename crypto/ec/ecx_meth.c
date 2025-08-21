@@ -900,7 +900,7 @@ static int pkey_ecd_ctrl(EVP_PKEY_CTX *ctx, int type, int p1, void *p2)
     switch (type) {
     case EVP_PKEY_CTRL_MD:
         /* Only NULL allowed as digest */
-        if (p2 == NULL || (const EVP_MD *)p2 == OPENSSL_BOX_EVP_md_null())
+        if (p2 == NULL || (const EVP_MD *)p2 == EVP_md_null())
             return 1;
         ERR_raise(ERR_LIB_EC, EC_R_INVALID_DIGEST_TYPE);
         return 0;

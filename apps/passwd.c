@@ -373,7 +373,7 @@ static char *md5crypt(const char *passwd, const char *magic, const char *salt)
 
     md = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md == NULL
-        || !OPENSSL_BOX_EVP_DigestInit_ex(md, OPENSSL_BOX_EVP_md5(), NULL)
+        || !OPENSSL_BOX_EVP_DigestInit_ex(md, EVP_md5(), NULL)
         || !OPENSSL_BOX_EVP_DigestUpdate(md, passwd, passwd_len))
         goto err;
 
@@ -388,7 +388,7 @@ static char *md5crypt(const char *passwd, const char *magic, const char *salt)
 
     md2 = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md2 == NULL
-        || !OPENSSL_BOX_EVP_DigestInit_ex(md2, OPENSSL_BOX_EVP_md5(), NULL)
+        || !OPENSSL_BOX_EVP_DigestInit_ex(md2, EVP_md5(), NULL)
         || !OPENSSL_BOX_EVP_DigestUpdate(md2, passwd, passwd_len)
         || !OPENSSL_BOX_EVP_DigestUpdate(md2, ascii_salt, salt_len)
         || !OPENSSL_BOX_EVP_DigestUpdate(md2, passwd, passwd_len)
@@ -412,7 +412,7 @@ static char *md5crypt(const char *passwd, const char *magic, const char *salt)
         goto err;
 
     for (i = 0; i < 1000; i++) {
-        if (!OPENSSL_BOX_EVP_DigestInit_ex(md2, OPENSSL_BOX_EVP_md5(), NULL))
+        if (!OPENSSL_BOX_EVP_DigestInit_ex(md2, EVP_md5(), NULL))
             goto err;
         if (!OPENSSL_BOX_EVP_DigestUpdate(md2,
                               (i & 1) ? (const unsigned char *)passwd : buf,
@@ -532,11 +532,11 @@ static char *shacrypt(const char *passwd, const char *magic, const char *salt)
 
     switch (magic[0]) {
     case '5':
-        sha = OPENSSL_BOX_EVP_sha256();
+        sha = EVP_sha256();
         buf_size = 32;
         break;
     case '6':
-        sha = OPENSSL_BOX_EVP_sha512();
+        sha = EVP_sha512();
         buf_size = 64;
         break;
     default:

@@ -67,7 +67,7 @@ int ossl_rsa_padding_add_PKCS1_OAEP_mgf1_ex(OSSL_LIB_CTX *libctx,
 
     if (md == NULL) {
 #ifndef FIPS_MODULE
-        md = OPENSSL_BOX_EVP_sha1();
+        md = EVP_sha1();
 #else
         ERR_raise(ERR_LIB_RSA, ERR_R_PASSED_NULL_PARAMETER);
         return 0;
@@ -184,7 +184,7 @@ int RSA_padding_check_PKCS1_OAEP_mgf1(unsigned char *to, int tlen,
 
     if (md == NULL) {
 #ifndef FIPS_MODULE
-        md = OPENSSL_BOX_EVP_sha1();
+        md = EVP_sha1();
 #else
         ERR_raise(ERR_LIB_RSA, ERR_R_PASSED_NULL_PARAMETER);
         return -1;

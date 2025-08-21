@@ -45,7 +45,7 @@ static int do_encrypt(unsigned char *iv_gen, unsigned char *ct, int *ct_len,
 
     *tag_len = 16;
     ret = TEST_ptr(ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
-          && TEST_true(OPENSSL_BOX_EVP_EncryptInit_ex(ctx, OPENSSL_BOX_EVP_aes_256_gcm(), NULL, NULL,
+          && TEST_true(OPENSSL_BOX_EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL,
                                           NULL) > 0)
           && TEST_true(OPENSSL_BOX_EVP_EncryptInit_ex(ctx, NULL, NULL, gcm_key,
                                           iv_gen != NULL ? NULL : gcm_iv) > 0)
@@ -73,7 +73,7 @@ static int do_decrypt(const unsigned char *iv, const unsigned char *ct,
     unsigned char outbuf[32];
 
     ret = TEST_ptr(ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
-              && TEST_true(OPENSSL_BOX_EVP_DecryptInit_ex(ctx, OPENSSL_BOX_EVP_aes_256_gcm(), NULL,
+              && TEST_true(OPENSSL_BOX_EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL,
                                               NULL, NULL) > 0)
               && TEST_true(OPENSSL_BOX_EVP_DecryptInit_ex(ctx, NULL, NULL, gcm_key, iv) > 0)
               && TEST_int_eq(OPENSSL_BOX_EVP_CIPHER_CTX_get_tag_length(ctx), 16)
@@ -108,7 +108,7 @@ static int badkeylen_test(void)
     EVP_CIPHER_CTX *ctx = NULL;
     const EVP_CIPHER *cipher;
 
-    ret = TEST_ptr(cipher = OPENSSL_BOX_EVP_aes_192_gcm())
+    ret = TEST_ptr(cipher = EVP_aes_192_gcm())
           && TEST_ptr(ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
           && TEST_true(OPENSSL_BOX_EVP_EncryptInit_ex(ctx, cipher, NULL, NULL, NULL))
           && TEST_int_le(OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length(ctx, 2), 0);

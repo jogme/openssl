@@ -462,7 +462,7 @@ int ossl_x509v3_cache_extensions(X509 *x)
     ERR_set_mark();
 
     /* Cache the SHA1 digest of the cert */
-    if (!X509_digest(x, OPENSSL_BOX_EVP_sha1(), x->sha1_hash, NULL))
+    if (!X509_digest(x, EVP_sha1(), x->sha1_hash, NULL))
         x->ex_flags |= EXFLAG_NO_FINGERPRINT;
 
     /* V1 should mean no extensions ... */

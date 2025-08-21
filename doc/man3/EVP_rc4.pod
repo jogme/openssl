@@ -3,8 +3,8 @@
 =head1 NAME
 
 OPENSSL_BOX_EVP_rc4,
-OPENSSL_BOX_EVP_rc4_40,
-OPENSSL_BOX_EVP_rc4_hmac_md5
+EVP_rc4_40,
+EVP_rc4_hmac_md5
 - EVP RC4 stream cipher
 
 =head1 SYNOPSIS
@@ -12,8 +12,8 @@ OPENSSL_BOX_EVP_rc4_hmac_md5
  #include <openssl/evp.h>
 
  const EVP_CIPHER *OPENSSL_BOX_EVP_rc4(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_rc4_40(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_rc4_hmac_md5(void);
+ const EVP_CIPHER *EVP_rc4_40(void);
+ const EVP_CIPHER *EVP_rc4_hmac_md5(void);
 
 =head1 DESCRIPTION
 
@@ -26,14 +26,14 @@ The RC4 stream cipher for EVP.
 RC4 stream cipher. This is a variable key length cipher with a default key
 length of 128 bits.
 
-=item OPENSSL_BOX_EVP_rc4_40()
+=item EVP_rc4_40()
 
 RC4 stream cipher with 40 bit key length.
 
 WARNING: this function is obsolete. Its usage should be replaced with the
 OPENSSL_BOX_EVP_rc4() and the OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length() functions.
 
-=item OPENSSL_BOX_EVP_rc4_hmac_md5()
+=item EVP_rc4_hmac_md5()
 
 Authenticated encryption with the RC4 stream cipher with MD5 as HMAC.
 

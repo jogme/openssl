@@ -958,72 +958,72 @@ const BIO_METHOD *OPENSSL_BOX_BIO_f_reliable(void);
 __owur int OPENSSL_BOX_BIO_set_cipher(BIO *b, const EVP_CIPHER *c, const unsigned char *k,
                           const unsigned char *i, int enc);
 
-const EVP_MD *OPENSSL_BOX_EVP_md_null(void);
+const EVP_MD *EVP_md_null(void);
 # ifndef OPENSSL_NO_MD2
-const EVP_MD *OPENSSL_BOX_EVP_md2(void);
+const EVP_MD *EVP_md2(void);
 # endif
 # ifndef OPENSSL_NO_MD4
-const EVP_MD *OPENSSL_BOX_EVP_md4(void);
+const EVP_MD *EVP_md4(void);
 # endif
 # ifndef OPENSSL_NO_MD5
-const EVP_MD *OPENSSL_BOX_EVP_md5(void);
-const EVP_MD *OPENSSL_BOX_EVP_md5_sha1(void);
+const EVP_MD *EVP_md5(void);
+const EVP_MD *EVP_md5_sha1(void);
 # endif
 # ifndef OPENSSL_NO_BLAKE2
-const EVP_MD *OPENSSL_BOX_EVP_blake2b512(void);
-const EVP_MD *OPENSSL_BOX_EVP_blake2s256(void);
+const EVP_MD *EVP_blake2b512(void);
+const EVP_MD *EVP_blake2s256(void);
 # endif
-const EVP_MD *OPENSSL_BOX_EVP_sha1(void);
-const EVP_MD *OPENSSL_BOX_EVP_sha224(void);
-const EVP_MD *OPENSSL_BOX_EVP_sha256(void);
-const EVP_MD *OPENSSL_BOX_EVP_sha384(void);
-const EVP_MD *OPENSSL_BOX_EVP_sha512(void);
-const EVP_MD *OPENSSL_BOX_EVP_sha512_224(void);
-const EVP_MD *OPENSSL_BOX_EVP_sha512_256(void);
-const EVP_MD *OPENSSL_BOX_EVP_sha3_224(void);
-const EVP_MD *OPENSSL_BOX_EVP_sha3_256(void);
-const EVP_MD *OPENSSL_BOX_EVP_sha3_384(void);
-const EVP_MD *OPENSSL_BOX_EVP_sha3_512(void);
-const EVP_MD *OPENSSL_BOX_EVP_shake128(void);
-const EVP_MD *OPENSSL_BOX_EVP_shake256(void);
+const EVP_MD *EVP_sha1(void);
+const EVP_MD *EVP_sha224(void);
+const EVP_MD *EVP_sha256(void);
+const EVP_MD *EVP_sha384(void);
+const EVP_MD *EVP_sha512(void);
+const EVP_MD *EVP_sha512_224(void);
+const EVP_MD *EVP_sha512_256(void);
+const EVP_MD *EVP_sha3_224(void);
+const EVP_MD *EVP_sha3_256(void);
+const EVP_MD *EVP_sha3_384(void);
+const EVP_MD *EVP_sha3_512(void);
+const EVP_MD *EVP_shake128(void);
+const EVP_MD *EVP_shake256(void);
 
 # ifndef OPENSSL_NO_MDC2
-const EVP_MD *OPENSSL_BOX_EVP_mdc2(void);
+const EVP_MD *EVP_mdc2(void);
 # endif
 # ifndef OPENSSL_NO_RMD160
-const EVP_MD *OPENSSL_BOX_EVP_ripemd160(void);
+const EVP_MD *EVP_ripemd160(void);
 # endif
 # ifndef OPENSSL_NO_WHIRLPOOL
-const EVP_MD *OPENSSL_BOX_EVP_whirlpool(void);
+const EVP_MD *EVP_whirlpool(void);
 # endif
 # ifndef OPENSSL_NO_SM3
-const EVP_MD *OPENSSL_BOX_EVP_sm3(void);
+const EVP_MD *EVP_sm3(void);
 # endif
-const EVP_CIPHER *OPENSSL_BOX_EVP_enc_null(void); /* does nothing :-) */
+const EVP_CIPHER *EVP_enc_null(void); /* does nothing :-) */
 # ifndef OPENSSL_NO_DES
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede3(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede3_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_cfb64(void);
-#  define EVP_des_cfb OPENSSL_BOX_EVP_des_cfb64
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_cfb1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_cfb8(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede_cfb64(void);
-#  define EVP_des_ede_cfb OPENSSL_BOX_EVP_des_ede_cfb64
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede3_cfb64(void);
-#  define EVP_des_ede3_cfb OPENSSL_BOX_EVP_des_ede3_cfb64
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede3_cfb1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede3_cfb8(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede3_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede3_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_desx_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede3_wrap(void);
+const EVP_CIPHER *EVP_des_ecb(void);
+const EVP_CIPHER *EVP_des_ede(void);
+const EVP_CIPHER *EVP_des_ede3(void);
+const EVP_CIPHER *EVP_des_ede_ecb(void);
+const EVP_CIPHER *EVP_des_ede3_ecb(void);
+const EVP_CIPHER *EVP_des_cfb64(void);
+#  define EVP_des_cfb EVP_des_cfb64
+const EVP_CIPHER *EVP_des_cfb1(void);
+const EVP_CIPHER *EVP_des_cfb8(void);
+const EVP_CIPHER *EVP_des_ede_cfb64(void);
+#  define EVP_des_ede_cfb EVP_des_ede_cfb64
+const EVP_CIPHER *EVP_des_ede3_cfb64(void);
+#  define EVP_des_ede3_cfb EVP_des_ede3_cfb64
+const EVP_CIPHER *EVP_des_ede3_cfb1(void);
+const EVP_CIPHER *EVP_des_ede3_cfb8(void);
+const EVP_CIPHER *EVP_des_ofb(void);
+const EVP_CIPHER *EVP_des_ede_ofb(void);
+const EVP_CIPHER *EVP_des_ede3_ofb(void);
+const EVP_CIPHER *EVP_des_cbc(void);
+const EVP_CIPHER *EVP_des_ede_cbc(void);
+const EVP_CIPHER *EVP_des_ede3_cbc(void);
+const EVP_CIPHER *EVP_desx_cbc(void);
+const EVP_CIPHER *EVP_des_ede3_wrap(void);
 /*
  * This should now be supported through the dev_crypto ENGINE. But also, why
  * are rc4 and md5 declarations made here inside a "NO_DES" precompiler
@@ -1032,179 +1032,179 @@ const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede3_wrap(void);
 # endif
 # ifndef OPENSSL_NO_RC4
 const EVP_CIPHER *OPENSSL_BOX_EVP_rc4(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc4_40(void);
+const EVP_CIPHER *EVP_rc4_40(void);
 #  ifndef OPENSSL_NO_MD5
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc4_hmac_md5(void);
+const EVP_CIPHER *EVP_rc4_hmac_md5(void);
 #  endif
 # endif
 # ifndef OPENSSL_NO_IDEA
-const EVP_CIPHER *OPENSSL_BOX_EVP_idea_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_idea_cfb64(void);
-#  define EVP_idea_cfb OPENSSL_BOX_EVP_idea_cfb64
-const EVP_CIPHER *OPENSSL_BOX_EVP_idea_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_idea_cbc(void);
+const EVP_CIPHER *EVP_idea_ecb(void);
+const EVP_CIPHER *EVP_idea_cfb64(void);
+#  define EVP_idea_cfb EVP_idea_cfb64
+const EVP_CIPHER *EVP_idea_ofb(void);
+const EVP_CIPHER *EVP_idea_cbc(void);
 # endif
 # ifndef OPENSSL_NO_RC2
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_40_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_64_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_cfb64(void);
-#  define EVP_rc2_cfb OPENSSL_BOX_EVP_rc2_cfb64
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_ofb(void);
+const EVP_CIPHER *EVP_rc2_ecb(void);
+const EVP_CIPHER *EVP_rc2_cbc(void);
+const EVP_CIPHER *EVP_rc2_40_cbc(void);
+const EVP_CIPHER *EVP_rc2_64_cbc(void);
+const EVP_CIPHER *EVP_rc2_cfb64(void);
+#  define EVP_rc2_cfb EVP_rc2_cfb64
+const EVP_CIPHER *EVP_rc2_ofb(void);
 # endif
 # ifndef OPENSSL_NO_BF
-const EVP_CIPHER *OPENSSL_BOX_EVP_bf_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_bf_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_bf_cfb64(void);
-#  define EVP_bf_cfb OPENSSL_BOX_EVP_bf_cfb64
-const EVP_CIPHER *OPENSSL_BOX_EVP_bf_ofb(void);
+const EVP_CIPHER *EVP_bf_ecb(void);
+const EVP_CIPHER *EVP_bf_cbc(void);
+const EVP_CIPHER *EVP_bf_cfb64(void);
+#  define EVP_bf_cfb EVP_bf_cfb64
+const EVP_CIPHER *EVP_bf_ofb(void);
 # endif
 # ifndef OPENSSL_NO_CAST
-const EVP_CIPHER *OPENSSL_BOX_EVP_cast5_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_cast5_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_cast5_cfb64(void);
-#  define EVP_cast5_cfb OPENSSL_BOX_EVP_cast5_cfb64
-const EVP_CIPHER *OPENSSL_BOX_EVP_cast5_ofb(void);
+const EVP_CIPHER *EVP_cast5_ecb(void);
+const EVP_CIPHER *EVP_cast5_cbc(void);
+const EVP_CIPHER *EVP_cast5_cfb64(void);
+#  define EVP_cast5_cfb EVP_cast5_cfb64
+const EVP_CIPHER *EVP_cast5_ofb(void);
 # endif
 # ifndef OPENSSL_NO_RC5
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc5_32_12_16_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc5_32_12_16_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc5_32_12_16_cfb64(void);
-#  define EVP_rc5_32_12_16_cfb OPENSSL_BOX_EVP_rc5_32_12_16_cfb64
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc5_32_12_16_ofb(void);
+const EVP_CIPHER *EVP_rc5_32_12_16_cbc(void);
+const EVP_CIPHER *EVP_rc5_32_12_16_ecb(void);
+const EVP_CIPHER *EVP_rc5_32_12_16_cfb64(void);
+#  define EVP_rc5_32_12_16_cfb EVP_rc5_32_12_16_cfb64
+const EVP_CIPHER *EVP_rc5_32_12_16_ofb(void);
 # endif
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_cfb1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_cfb8(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_cfb128(void);
-# define EVP_aes_128_cfb OPENSSL_BOX_EVP_aes_128_cfb128
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_ctr(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_ccm(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_gcm(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_xts(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_wrap(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_wrap_pad(void);
+const EVP_CIPHER *EVP_aes_128_ecb(void);
+const EVP_CIPHER *EVP_aes_128_cbc(void);
+const EVP_CIPHER *EVP_aes_128_cfb1(void);
+const EVP_CIPHER *EVP_aes_128_cfb8(void);
+const EVP_CIPHER *EVP_aes_128_cfb128(void);
+# define EVP_aes_128_cfb EVP_aes_128_cfb128
+const EVP_CIPHER *EVP_aes_128_ofb(void);
+const EVP_CIPHER *EVP_aes_128_ctr(void);
+const EVP_CIPHER *EVP_aes_128_ccm(void);
+const EVP_CIPHER *EVP_aes_128_gcm(void);
+const EVP_CIPHER *EVP_aes_128_xts(void);
+const EVP_CIPHER *EVP_aes_128_wrap(void);
+const EVP_CIPHER *EVP_aes_128_wrap_pad(void);
 # ifndef OPENSSL_NO_OCB
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_ocb(void);
+const EVP_CIPHER *EVP_aes_128_ocb(void);
 # endif
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_cfb1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_cfb8(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_cfb128(void);
-# define EVP_aes_192_cfb OPENSSL_BOX_EVP_aes_192_cfb128
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_ctr(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_ccm(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_gcm(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_wrap(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_wrap_pad(void);
+const EVP_CIPHER *EVP_aes_192_ecb(void);
+const EVP_CIPHER *EVP_aes_192_cbc(void);
+const EVP_CIPHER *EVP_aes_192_cfb1(void);
+const EVP_CIPHER *EVP_aes_192_cfb8(void);
+const EVP_CIPHER *EVP_aes_192_cfb128(void);
+# define EVP_aes_192_cfb EVP_aes_192_cfb128
+const EVP_CIPHER *EVP_aes_192_ofb(void);
+const EVP_CIPHER *EVP_aes_192_ctr(void);
+const EVP_CIPHER *EVP_aes_192_ccm(void);
+const EVP_CIPHER *EVP_aes_192_gcm(void);
+const EVP_CIPHER *EVP_aes_192_wrap(void);
+const EVP_CIPHER *EVP_aes_192_wrap_pad(void);
 # ifndef OPENSSL_NO_OCB
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_192_ocb(void);
+const EVP_CIPHER *EVP_aes_192_ocb(void);
 # endif
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_cfb1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_cfb8(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_cfb128(void);
-# define EVP_aes_256_cfb OPENSSL_BOX_EVP_aes_256_cfb128
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_ctr(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_ccm(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_gcm(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_xts(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_wrap(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_wrap_pad(void);
+const EVP_CIPHER *EVP_aes_256_ecb(void);
+const EVP_CIPHER *EVP_aes_256_cbc(void);
+const EVP_CIPHER *EVP_aes_256_cfb1(void);
+const EVP_CIPHER *EVP_aes_256_cfb8(void);
+const EVP_CIPHER *EVP_aes_256_cfb128(void);
+# define EVP_aes_256_cfb EVP_aes_256_cfb128
+const EVP_CIPHER *EVP_aes_256_ofb(void);
+const EVP_CIPHER *EVP_aes_256_ctr(void);
+const EVP_CIPHER *EVP_aes_256_ccm(void);
+const EVP_CIPHER *EVP_aes_256_gcm(void);
+const EVP_CIPHER *EVP_aes_256_xts(void);
+const EVP_CIPHER *EVP_aes_256_wrap(void);
+const EVP_CIPHER *EVP_aes_256_wrap_pad(void);
 # ifndef OPENSSL_NO_OCB
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_ocb(void);
+const EVP_CIPHER *EVP_aes_256_ocb(void);
 # endif
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_cbc_hmac_sha1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_cbc_hmac_sha1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_cbc_hmac_sha256(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_cbc_hmac_sha256(void);
+const EVP_CIPHER *EVP_aes_128_cbc_hmac_sha1(void);
+const EVP_CIPHER *EVP_aes_256_cbc_hmac_sha1(void);
+const EVP_CIPHER *EVP_aes_128_cbc_hmac_sha256(void);
+const EVP_CIPHER *EVP_aes_256_cbc_hmac_sha256(void);
 # ifndef OPENSSL_NO_ARIA
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_128_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_128_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_128_cfb1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_128_cfb8(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_128_cfb128(void);
-#  define EVP_aria_128_cfb OPENSSL_BOX_EVP_aria_128_cfb128
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_128_ctr(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_128_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_128_gcm(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_128_ccm(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_192_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_192_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_192_cfb1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_192_cfb8(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_192_cfb128(void);
-#  define EVP_aria_192_cfb OPENSSL_BOX_EVP_aria_192_cfb128
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_192_ctr(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_192_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_192_gcm(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_192_ccm(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_256_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_256_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_256_cfb1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_256_cfb8(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_256_cfb128(void);
-#  define EVP_aria_256_cfb OPENSSL_BOX_EVP_aria_256_cfb128
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_256_ctr(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_256_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_256_gcm(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_aria_256_ccm(void);
+const EVP_CIPHER *EVP_aria_128_ecb(void);
+const EVP_CIPHER *EVP_aria_128_cbc(void);
+const EVP_CIPHER *EVP_aria_128_cfb1(void);
+const EVP_CIPHER *EVP_aria_128_cfb8(void);
+const EVP_CIPHER *EVP_aria_128_cfb128(void);
+#  define EVP_aria_128_cfb EVP_aria_128_cfb128
+const EVP_CIPHER *EVP_aria_128_ctr(void);
+const EVP_CIPHER *EVP_aria_128_ofb(void);
+const EVP_CIPHER *EVP_aria_128_gcm(void);
+const EVP_CIPHER *EVP_aria_128_ccm(void);
+const EVP_CIPHER *EVP_aria_192_ecb(void);
+const EVP_CIPHER *EVP_aria_192_cbc(void);
+const EVP_CIPHER *EVP_aria_192_cfb1(void);
+const EVP_CIPHER *EVP_aria_192_cfb8(void);
+const EVP_CIPHER *EVP_aria_192_cfb128(void);
+#  define EVP_aria_192_cfb EVP_aria_192_cfb128
+const EVP_CIPHER *EVP_aria_192_ctr(void);
+const EVP_CIPHER *EVP_aria_192_ofb(void);
+const EVP_CIPHER *EVP_aria_192_gcm(void);
+const EVP_CIPHER *EVP_aria_192_ccm(void);
+const EVP_CIPHER *EVP_aria_256_ecb(void);
+const EVP_CIPHER *EVP_aria_256_cbc(void);
+const EVP_CIPHER *EVP_aria_256_cfb1(void);
+const EVP_CIPHER *EVP_aria_256_cfb8(void);
+const EVP_CIPHER *EVP_aria_256_cfb128(void);
+#  define EVP_aria_256_cfb EVP_aria_256_cfb128
+const EVP_CIPHER *EVP_aria_256_ctr(void);
+const EVP_CIPHER *EVP_aria_256_ofb(void);
+const EVP_CIPHER *EVP_aria_256_gcm(void);
+const EVP_CIPHER *EVP_aria_256_ccm(void);
 # endif
 # ifndef OPENSSL_NO_CAMELLIA
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_128_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_128_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_128_cfb1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_128_cfb8(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_128_cfb128(void);
-#  define EVP_camellia_128_cfb OPENSSL_BOX_EVP_camellia_128_cfb128
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_128_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_128_ctr(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_192_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_192_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_192_cfb1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_192_cfb8(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_192_cfb128(void);
-#  define EVP_camellia_192_cfb OPENSSL_BOX_EVP_camellia_192_cfb128
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_192_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_192_ctr(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_256_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_256_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_256_cfb1(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_256_cfb8(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_256_cfb128(void);
-#  define EVP_camellia_256_cfb OPENSSL_BOX_EVP_camellia_256_cfb128
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_256_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_camellia_256_ctr(void);
+const EVP_CIPHER *EVP_camellia_128_ecb(void);
+const EVP_CIPHER *EVP_camellia_128_cbc(void);
+const EVP_CIPHER *EVP_camellia_128_cfb1(void);
+const EVP_CIPHER *EVP_camellia_128_cfb8(void);
+const EVP_CIPHER *EVP_camellia_128_cfb128(void);
+#  define EVP_camellia_128_cfb EVP_camellia_128_cfb128
+const EVP_CIPHER *EVP_camellia_128_ofb(void);
+const EVP_CIPHER *EVP_camellia_128_ctr(void);
+const EVP_CIPHER *EVP_camellia_192_ecb(void);
+const EVP_CIPHER *EVP_camellia_192_cbc(void);
+const EVP_CIPHER *EVP_camellia_192_cfb1(void);
+const EVP_CIPHER *EVP_camellia_192_cfb8(void);
+const EVP_CIPHER *EVP_camellia_192_cfb128(void);
+#  define EVP_camellia_192_cfb EVP_camellia_192_cfb128
+const EVP_CIPHER *EVP_camellia_192_ofb(void);
+const EVP_CIPHER *EVP_camellia_192_ctr(void);
+const EVP_CIPHER *EVP_camellia_256_ecb(void);
+const EVP_CIPHER *EVP_camellia_256_cbc(void);
+const EVP_CIPHER *EVP_camellia_256_cfb1(void);
+const EVP_CIPHER *EVP_camellia_256_cfb8(void);
+const EVP_CIPHER *EVP_camellia_256_cfb128(void);
+#  define EVP_camellia_256_cfb EVP_camellia_256_cfb128
+const EVP_CIPHER *EVP_camellia_256_ofb(void);
+const EVP_CIPHER *EVP_camellia_256_ctr(void);
 # endif
 # ifndef OPENSSL_NO_CHACHA
-const EVP_CIPHER *OPENSSL_BOX_EVP_chacha20(void);
+const EVP_CIPHER *EVP_chacha20(void);
 #  ifndef OPENSSL_NO_POLY1305
-const EVP_CIPHER *OPENSSL_BOX_EVP_chacha20_poly1305(void);
+const EVP_CIPHER *EVP_chacha20_poly1305(void);
 #  endif
 # endif
 
 # ifndef OPENSSL_NO_SEED
-const EVP_CIPHER *OPENSSL_BOX_EVP_seed_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_seed_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_seed_cfb128(void);
-#  define EVP_seed_cfb OPENSSL_BOX_EVP_seed_cfb128
-const EVP_CIPHER *OPENSSL_BOX_EVP_seed_ofb(void);
+const EVP_CIPHER *EVP_seed_ecb(void);
+const EVP_CIPHER *EVP_seed_cbc(void);
+const EVP_CIPHER *EVP_seed_cfb128(void);
+#  define EVP_seed_cfb EVP_seed_cfb128
+const EVP_CIPHER *EVP_seed_ofb(void);
 # endif
 
 # ifndef OPENSSL_NO_SM4
-const EVP_CIPHER *OPENSSL_BOX_EVP_sm4_ecb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_sm4_cbc(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_sm4_cfb128(void);
-#  define EVP_sm4_cfb OPENSSL_BOX_EVP_sm4_cfb128
-const EVP_CIPHER *OPENSSL_BOX_EVP_sm4_ofb(void);
-const EVP_CIPHER *OPENSSL_BOX_EVP_sm4_ctr(void);
+const EVP_CIPHER *EVP_sm4_ecb(void);
+const EVP_CIPHER *EVP_sm4_cbc(void);
+const EVP_CIPHER *EVP_sm4_cfb128(void);
+#  define EVP_sm4_cfb EVP_sm4_cfb128
+const EVP_CIPHER *EVP_sm4_ofb(void);
+const EVP_CIPHER *EVP_sm4_ctr(void);
 # endif
 
 # ifndef OPENSSL_NO_DEPRECATED_1_1_0

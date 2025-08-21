@@ -65,15 +65,15 @@ static int test_afalg_aes_cbc(int keysize_idx)
 
     switch (keysize_idx) {
         case 0:
-            cipher = OPENSSL_BOX_EVP_aes_128_cbc();
+            cipher = EVP_aes_128_cbc();
             enc_result = &encresult_128[0];
             break;
         case 1:
-            cipher = OPENSSL_BOX_EVP_aes_192_cbc();
+            cipher = EVP_aes_192_cbc();
             enc_result = &encresult_192[0];
             break;
         case 2:
-            cipher = OPENSSL_BOX_EVP_aes_256_cbc();
+            cipher = EVP_aes_256_cbc();
             enc_result = &encresult_256[0];
             break;
         default:

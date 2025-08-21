@@ -133,7 +133,7 @@ static int test_store_search_by_key_fingerprint_fail(void)
     OSSL_STORE_SEARCH *search = NULL;
 
     ret = TEST_ptr_null(search = OSSL_STORE_SEARCH_by_key_fingerprint(
-                                     OPENSSL_BOX_EVP_sha256(), NULL, 0));
+                                     EVP_sha256(), NULL, 0));
     OSSL_STORE_SEARCH_free(search);
     return ret;
 }

@@ -114,14 +114,14 @@ err:
 #if !defined OPENSSL_NO_RC4 && !defined OPENSSL_NO_MD5
 static int test_pkcs5_pbe_rc4_md5(void)
 {
-    return test_pkcs5_pbe(OPENSSL_BOX_EVP_rc4(), OPENSSL_BOX_EVP_md5(), pbe_ciphertext_rc4_md5, sizeof(pbe_ciphertext_rc4_md5));
+    return test_pkcs5_pbe(OPENSSL_BOX_EVP_rc4(), EVP_md5(), pbe_ciphertext_rc4_md5, sizeof(pbe_ciphertext_rc4_md5));
 }
 #endif
 
 #if !defined OPENSSL_NO_DES && !defined OPENSSL_NO_SHA1
 static int test_pkcs5_pbe_des_sha1(void)
 {
-    return test_pkcs5_pbe(OPENSSL_BOX_EVP_des_cbc(), OPENSSL_BOX_EVP_sha1(), pbe_ciphertext_des_sha1, sizeof(pbe_ciphertext_des_sha1));
+    return test_pkcs5_pbe(EVP_des_cbc(), EVP_sha1(), pbe_ciphertext_des_sha1, sizeof(pbe_ciphertext_des_sha1));
 }
 #endif
 

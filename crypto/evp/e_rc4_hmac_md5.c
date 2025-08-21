@@ -266,7 +266,7 @@ static EVP_CIPHER r4_hmac_md5_cipher = {
     NULL
 };
 
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc4_hmac_md5(void)
+const EVP_CIPHER *EVP_rc4_hmac_md5(void)
 {
     return &r4_hmac_md5_cipher;
 }

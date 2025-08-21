@@ -308,7 +308,7 @@ static int test_tls13_encryption(void)
 {
     TLS_RL_RECORD rec;
     unsigned char *key = NULL;
-    const EVP_CIPHER *ciph = OPENSSL_BOX_EVP_aes_128_gcm();
+    const EVP_CIPHER *ciph = EVP_aes_128_gcm();
     int ret = 0;
     size_t ivlen, ctr;
     unsigned char seqbuf[SEQ_NUM_SIZE];
@@ -336,7 +336,7 @@ static int test_tls13_encryption(void)
                           NULL, NULL, TLS1_3_VERSION, OSSL_RECORD_ROLE_SERVER,
                           OSSL_RECORD_DIRECTION_WRITE,
                           OSSL_RECORD_PROTECTION_LEVEL_APPLICATION, 0, NULL, 0,
-                          key, 16, iv, ivlen, NULL, 0, OPENSSL_BOX_EVP_aes_128_gcm(),
+                          key, 16, iv, ivlen, NULL, 0, EVP_aes_128_gcm(),
                           EVP_GCM_TLS_TAG_LEN, 0, NULL, NULL, NULL, NULL, NULL,
                           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
                           &wrl)))
@@ -359,7 +359,7 @@ static int test_tls13_encryption(void)
                           NULL, NULL, TLS1_3_VERSION, OSSL_RECORD_ROLE_SERVER,
                           OSSL_RECORD_DIRECTION_READ,
                           OSSL_RECORD_PROTECTION_LEVEL_APPLICATION, 0, NULL, 0,
-                          key, 16, iv, ivlen, NULL, 0, OPENSSL_BOX_EVP_aes_128_gcm(),
+                          key, 16, iv, ivlen, NULL, 0, EVP_aes_128_gcm(),
                           EVP_GCM_TLS_TAG_LEN, 0, NULL, NULL, NULL, NULL, NULL,
                           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
                           &rrl)))

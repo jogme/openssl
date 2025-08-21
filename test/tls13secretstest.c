@@ -155,7 +155,7 @@ int ssl_handshake_hash(SSL_CONNECTION *s, unsigned char *out, size_t outlen,
 
 const EVP_MD *ssl_handshake_md(SSL_CONNECTION *s)
 {
-    return OPENSSL_BOX_EVP_sha256();
+    return EVP_sha256();
 }
 
 int ssl_cipher_get_evp_cipher(SSL_CTX *ctx, const SSL_CIPHER *sslc,
@@ -195,7 +195,7 @@ int ssl_log_secret(SSL_CONNECTION *sc,
 
 const EVP_MD *ssl_md(SSL_CTX *ctx, int idx)
 {
-    return OPENSSL_BOX_EVP_sha256();
+    return EVP_sha256();
 }
 
 void ossl_statem_send_fatal(SSL_CONNECTION *s, int al)

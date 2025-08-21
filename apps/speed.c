@@ -1354,7 +1354,7 @@ static int SM2_sign_loop(void *args)
     for (count = 0; COND(sm2_c[testnum][0]); count++) {
         sm2sigsize = max_size;
 
-        if (!OPENSSL_BOX_EVP_DigestSignInit(sm2ctx[testnum], NULL, OPENSSL_BOX_EVP_sm3(),
+        if (!OPENSSL_BOX_EVP_DigestSignInit(sm2ctx[testnum], NULL, EVP_sm3(),
                                 NULL, sm2_pkey[testnum])) {
             BIO_printf(bio_err, "SM2 init sign failure\n");
             dofail();
@@ -1387,7 +1387,7 @@ static int SM2_verify_loop(void *args)
     EVP_PKEY **sm2_pkey = tempargs->sm2_pkey;
 
     for (count = 0; COND(sm2_c[testnum][1]); count++) {
-        if (!OPENSSL_BOX_EVP_DigestVerifyInit(sm2ctx[testnum], NULL, OPENSSL_BOX_EVP_sm3(),
+        if (!OPENSSL_BOX_EVP_DigestVerifyInit(sm2ctx[testnum], NULL, EVP_sm3(),
                                   NULL, sm2_pkey[testnum])) {
             BIO_printf(bio_err, "SM2 verify init failure\n");
             dofail();
@@ -3790,10 +3790,10 @@ int speed_main(int argc, char **argv)
                 break;
 
             if (!OPENSSL_BOX_EVP_DigestSignInit(loopargs[i].sm2_ctx[testnum], NULL,
-                                    OPENSSL_BOX_EVP_sm3(), NULL, sm2_pkey))
+                                    EVP_sm3(), NULL, sm2_pkey))
                 break;
             if (!OPENSSL_BOX_EVP_DigestVerifyInit(loopargs[i].sm2_vfy_ctx[testnum], NULL,
-                                      OPENSSL_BOX_EVP_sm3(), NULL, sm2_pkey))
+                                      EVP_sm3(), NULL, sm2_pkey))
                 break;
             st = 1;         /* mark loop as succeeded */
         }

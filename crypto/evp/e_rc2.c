@@ -79,12 +79,12 @@ static const EVP_CIPHER r2_40_cbc_cipher = {
     NULL
 };
 
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_64_cbc(void)
+const EVP_CIPHER *EVP_rc2_64_cbc(void)
 {
     return &r2_64_cbc_cipher;
 }
 
-const EVP_CIPHER *OPENSSL_BOX_EVP_rc2_40_cbc(void)
+const EVP_CIPHER *EVP_rc2_40_cbc(void)
 {
     return &r2_40_cbc_cipher;
 }

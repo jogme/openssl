@@ -26,7 +26,7 @@ providers.
 Only certificates carrying RSA, Diffie-Hellman or EC keys are supported by this
 function.
 
-OPENSSL_BOX_EVP_des_ede3_cbc() (triple DES) is the algorithm of choice for S/MIME use
+EVP_des_ede3_cbc() (triple DES) is the algorithm of choice for S/MIME use
 because most clients will support it.
 
 The algorithm passed in the B<cipher> parameter must support ASN1 encoding of

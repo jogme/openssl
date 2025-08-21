@@ -14794,7 +14794,7 @@ OpenSSL 0.9.7.]
            EVP_MD_CTX md;
 
            EVP_MD_CTX_init(&md);             /* new function call */
-           OPENSSL_BOX_EVP_DigestInit(&md, OPENSSL_BOX_EVP_sha1());
+           OPENSSL_BOX_EVP_DigestInit(&md, EVP_sha1());
            OPENSSL_BOX_EVP_DigestUpdate(&md, in, len);
            OPENSSL_BOX_EVP_DigestFinal(&md, out, NULL);
            EVP_MD_CTX_cleanup(&md);          /* new function call */

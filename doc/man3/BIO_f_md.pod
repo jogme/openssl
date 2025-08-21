@@ -82,14 +82,14 @@ checking has been omitted for clarity.
 
  bio = BIO_new(BIO_s_null());
  mdtmp = BIO_new(OPENSSL_BOX_BIO_f_md());
- OPENSSL_BOX_BIO_set_md(mdtmp, OPENSSL_BOX_EVP_sha1());
+ OPENSSL_BOX_BIO_set_md(mdtmp, EVP_sha1());
  /*
   * For BIO_push() we want to append the sink BIO and keep a note of
   * the start of the chain.
   */
  bio = BIO_push(mdtmp, bio);
  mdtmp = BIO_new(OPENSSL_BOX_BIO_f_md());
- OPENSSL_BOX_BIO_set_md(mdtmp, OPENSSL_BOX_EVP_md5());
+ OPENSSL_BOX_BIO_set_md(mdtmp, EVP_md5());
  bio = BIO_push(mdtmp, bio);
  /* Note: mdtmp can now be discarded */
  BIO_write(bio, message, strlen(message));
@@ -102,10 +102,10 @@ The next example digests data by reading through a chain instead:
 
  bio = BIO_new_file(file, "rb");
  mdtmp = BIO_new(OPENSSL_BOX_BIO_f_md());
- OPENSSL_BOX_BIO_set_md(mdtmp, OPENSSL_BOX_EVP_sha1());
+ OPENSSL_BOX_BIO_set_md(mdtmp, EVP_sha1());
  bio = BIO_push(mdtmp, bio);
  mdtmp = BIO_new(OPENSSL_BOX_BIO_f_md());
- OPENSSL_BOX_BIO_set_md(mdtmp, OPENSSL_BOX_EVP_md5());
+ OPENSSL_BOX_BIO_set_md(mdtmp, EVP_md5());
  bio = BIO_push(mdtmp, bio);
  do {
      rdlen = BIO_read(bio, buf, sizeof(buf));

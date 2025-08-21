@@ -1878,7 +1878,7 @@ static OCSP_RESPONSE *create_ocsp_resp(X509 *ssl_cert, X509 *issuer, int status,
             goto end;
         signer_cert_file = test_mk_file_path(certsdir, signer_cert_files);
         if (!TEST_ptr(signer_cert = load_cert_pem(signer_cert_file, libctx))
-            || !TEST_true(OCSP_basic_sign(bs, signer_cert, signer_key, OPENSSL_BOX_EVP_sha256(),
+            || !TEST_true(OCSP_basic_sign(bs, signer_cert, signer_key, EVP_sha256(),
                                           NULL, OCSP_NOCERTS)))
             goto end;
         ocsp_resp = OCSP_response_create(OCSP_RESPONSE_STATUS_SUCCESSFUL, bs);
@@ -10593,7 +10593,7 @@ static int create_cert_key(int idx, char *certfilename, char *privkeyfilename)
         || !TEST_true(X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC,
                            (unsigned char *)"localhost", -1, -1, 0))
         || !TEST_true(X509_set_issuer_name(x509, name))
-        || !TEST_true(X509_sign(x509, pkey, OPENSSL_BOX_EVP_sha1()))
+        || !TEST_true(X509_sign(x509, pkey, EVP_sha1()))
         || !TEST_ptr(keybio = BIO_new_file(privkeyfilename, "wb"))
         || !TEST_true(PEM_write_bio_PrivateKey(keybio, pkey, NULL, NULL, 0, NULL, NULL))
         || !TEST_ptr(certbio = BIO_new_file(certfilename, "wb"))

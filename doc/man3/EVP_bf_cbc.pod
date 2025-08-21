@@ -2,22 +2,22 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_bf_cbc,
+EVP_bf_cbc,
 EVP_bf_cfb,
-OPENSSL_BOX_EVP_bf_cfb64,
-OPENSSL_BOX_EVP_bf_ecb,
-OPENSSL_BOX_EVP_bf_ofb
+EVP_bf_cfb64,
+EVP_bf_ecb,
+EVP_bf_ofb
 - EVP Blowfish cipher
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_CIPHER *OPENSSL_BOX_EVP_bf_cbc(void);
+ const EVP_CIPHER *EVP_bf_cbc(void);
  const EVP_CIPHER *EVP_bf_cfb(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_bf_cfb64(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_bf_ecb(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_bf_ofb(void);
+ const EVP_CIPHER *EVP_bf_cfb64(void);
+ const EVP_CIPHER *EVP_bf_ecb(void);
+ const EVP_CIPHER *EVP_bf_ofb(void);
 
 =head1 DESCRIPTION
 
@@ -27,11 +27,11 @@ This is a variable key length cipher.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_bf_cbc(),
+=item EVP_bf_cbc(),
 EVP_bf_cfb(),
-OPENSSL_BOX_EVP_bf_cfb64(),
-OPENSSL_BOX_EVP_bf_ecb(),
-OPENSSL_BOX_EVP_bf_ofb()
+EVP_bf_cfb64(),
+EVP_bf_ecb(),
+EVP_bf_ofb()
 
 Blowfish encryption algorithm in CBC, CFB, ECB and OFB modes respectively.
 

@@ -2,22 +2,22 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_cast5_cbc,
+EVP_cast5_cbc,
 EVP_cast5_cfb,
-OPENSSL_BOX_EVP_cast5_cfb64,
-OPENSSL_BOX_EVP_cast5_ecb,
-OPENSSL_BOX_EVP_cast5_ofb
+EVP_cast5_cfb64,
+EVP_cast5_ecb,
+EVP_cast5_ofb
 - EVP CAST cipher
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_CIPHER *OPENSSL_BOX_EVP_cast5_cbc(void);
+ const EVP_CIPHER *EVP_cast5_cbc(void);
  const EVP_CIPHER *EVP_cast5_cfb(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_cast5_cfb64(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_cast5_ecb(void);
- const EVP_CIPHER *OPENSSL_BOX_EVP_cast5_ofb(void);
+ const EVP_CIPHER *EVP_cast5_cfb64(void);
+ const EVP_CIPHER *EVP_cast5_ecb(void);
+ const EVP_CIPHER *EVP_cast5_ofb(void);
 
 =head1 DESCRIPTION
 
@@ -27,11 +27,11 @@ This is a variable key length cipher.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_cast5_cbc(),
-OPENSSL_BOX_EVP_cast5_ecb(),
+=item EVP_cast5_cbc(),
+EVP_cast5_ecb(),
 EVP_cast5_cfb(),
-OPENSSL_BOX_EVP_cast5_cfb64(),
-OPENSSL_BOX_EVP_cast5_ofb()
+EVP_cast5_cfb64(),
+EVP_cast5_ofb()
 
 CAST encryption algorithm in CBC, ECB, CFB and OFB modes respectively.
 

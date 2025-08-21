@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_desx_cbc
+EVP_desx_cbc
 - EVP DES-X cipher
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_CIPHER *OPENSSL_BOX_EVP_desx_cbc(void);
+ const EVP_CIPHER *EVP_desx_cbc(void);
 
 =head1 DESCRIPTION
 
@@ -19,7 +19,7 @@ All modes below use a key length of 128 bits and acts on blocks of 128-bits.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_desx_cbc()
+=item EVP_desx_cbc()
 
 The DES-X algorithm in CBC mode.
 

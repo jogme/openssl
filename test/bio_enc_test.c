@@ -234,12 +234,12 @@ static int do_test_bio_cipher(const EVP_CIPHER* cipher, int idx)
 
 static int test_bio_enc_aes_128_cbc(int idx)
 {
-    return do_test_bio_cipher(OPENSSL_BOX_EVP_aes_128_cbc(), idx);
+    return do_test_bio_cipher(EVP_aes_128_cbc(), idx);
 }
 
 static int test_bio_enc_aes_128_ctr(int idx)
 {
-    return do_test_bio_cipher(OPENSSL_BOX_EVP_aes_128_ctr(), idx);
+    return do_test_bio_cipher(EVP_aes_128_ctr(), idx);
 }
 
 static int test_bio_enc_aes_256_cfb(int idx)
@@ -249,19 +249,19 @@ static int test_bio_enc_aes_256_cfb(int idx)
 
 static int test_bio_enc_aes_256_ofb(int idx)
 {
-    return do_test_bio_cipher(OPENSSL_BOX_EVP_aes_256_ofb(), idx);
+    return do_test_bio_cipher(EVP_aes_256_ofb(), idx);
 }
 
 # ifndef OPENSSL_NO_CHACHA
 static int test_bio_enc_chacha20(int idx)
 {
-    return do_test_bio_cipher(OPENSSL_BOX_EVP_chacha20(), idx);
+    return do_test_bio_cipher(EVP_chacha20(), idx);
 }
 
 #  ifndef OPENSSL_NO_POLY1305
 static int test_bio_enc_chacha20_poly1305(int idx)
 {
-    return do_test_bio_cipher(OPENSSL_BOX_EVP_chacha20_poly1305(), idx);
+    return do_test_bio_cipher(EVP_chacha20_poly1305(), idx);
 }
 #  endif
 # endif
@@ -271,7 +271,7 @@ static int test_bio_enc_eof_read_flush(void)
     /* Length chosen to ensure base64 encoding employs padding */
     const unsigned char pbuf[] = "Attack at dawn";
     unsigned char cbuf[16];     /* At least as long as pbuf */
-    const EVP_CIPHER *cipher = OPENSSL_BOX_EVP_aes_256_gcm();
+    const EVP_CIPHER *cipher = EVP_aes_256_gcm();
     EVP_CIPHER_CTX *ctx = NULL;
     BIO *mem = NULL, *b64 = NULL, *cbio = NULL;
     unsigned char tag[16];

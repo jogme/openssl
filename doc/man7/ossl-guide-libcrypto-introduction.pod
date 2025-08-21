@@ -108,7 +108,7 @@ call to L<OPENSSL_BOX_EVP_MD_fetch(3)>.
 =head2 Implicit fetching
 
 OpenSSL has a number of functions that return an algorithm object with no
-associated implementation, such as L<OPENSSL_BOX_EVP_sha256(3)>, L<OPENSSL_BOX_EVP_aes_128_cbc(3)>,
+associated implementation, such as L<EVP_sha256(3)>, L<EVP_aes_128_cbc(3)>,
 L<OPENSSL_BOX_EVP_get_cipherbyname(3)> or L<OPENSSL_BOX_EVP_get_digestbyname(3)>. These are present for
 compatibility with OpenSSL before version 3.0 where explicit fetching was not
 available.
@@ -136,7 +136,7 @@ explicitly fetched algorithm each subsequent time. This will typically be
 faster than implicitly fetching the algorithm every time you use it. See an
 example of Explicit fetching in L</USING ALGORITHMS IN APPLICATIONS>.
 
-Prior to OpenSSL 3.0, functions such as OPENSSL_BOX_EVP_sha256() which return a "const"
+Prior to OpenSSL 3.0, functions such as EVP_sha256() which return a "const"
 object were used directly to indicate the algorithm to use in various function
 calls. If you pass the return value of one of these convenience functions to an
 operation then you are using implicit fetching. If you are converting an

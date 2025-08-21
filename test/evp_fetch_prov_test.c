@@ -181,7 +181,7 @@ static int test_implicit_EVP_MD_fetch(void)
     int ret = 0;
 
     ret = (use_default_ctx == 0 || load_providers(&ctx, prov))
-        && test_md(OPENSSL_BOX_EVP_sha256());
+        && test_md(EVP_sha256());
 
     unload_providers(&ctx, prov);
     return ret;
@@ -299,7 +299,7 @@ static int test_implicit_EVP_CIPHER_fetch(void)
     int ret = 0;
 
     ret = (use_default_ctx == 0 || load_providers(&ctx, prov))
-        && test_cipher(OPENSSL_BOX_EVP_aes_128_cbc());
+        && test_cipher(EVP_aes_128_cbc());
 
     unload_providers(&ctx, prov);
     return ret;

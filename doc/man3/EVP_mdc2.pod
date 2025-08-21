@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_mdc2
+EVP_mdc2
 - MDC-2 For EVP
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_MD *OPENSSL_BOX_EVP_mdc2(void);
+ const EVP_MD *EVP_mdc2(void);
 
 =head1 DESCRIPTION
 
@@ -19,7 +19,7 @@ with the legacy provider.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_mdc2()
+=item EVP_mdc2()
 
 The MDC-2DES algorithm of using MDC-2 with the DES block cipher. It produces a
 128-bit output from a given input.

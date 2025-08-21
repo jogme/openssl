@@ -187,7 +187,7 @@ int pkcs12_main(int argc, char **argv)
     BIO *in = NULL, *out = NULL;
     PKCS12 *p12 = NULL;
     STACK_OF(OPENSSL_STRING) *canames = NULL;
-    EVP_CIPHER *default_enc = (EVP_CIPHER *)OPENSSL_BOX_EVP_aes_256_cbc();
+    EVP_CIPHER *default_enc = (EVP_CIPHER *)EVP_aes_256_cbc();
     EVP_CIPHER *enc = (EVP_CIPHER *)default_enc;
     OPTION_CHOICE o;
 
@@ -472,7 +472,7 @@ int pkcs12_main(int argc, char **argv)
         if (key_pbe == NID_undef)
             key_pbe = NID_pbe_WithSHA1And3_Key_TripleDES_CBC;
         if (enc == default_enc)
-            enc = (EVP_CIPHER *)OPENSSL_BOX_EVP_des_ede3_cbc();
+            enc = (EVP_CIPHER *)EVP_des_ede3_cbc();
         if (macalg == NULL)
             macalg = "sha1";
     }

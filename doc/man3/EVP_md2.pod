@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_md2
+EVP_md2
 - MD2 For EVP
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_MD *OPENSSL_BOX_EVP_md2(void);
+ const EVP_MD *EVP_md2(void);
 
 =head1 DESCRIPTION
 
@@ -18,7 +18,7 @@ Ronald Rivest. This implementation is only available with the legacy provider.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_md2()
+=item EVP_md2()
 
 The MD2 algorithm which produces a 128-bit output from a given input.
 

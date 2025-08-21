@@ -59,7 +59,7 @@ int main(int argc, char **argv)
         goto err;
 
     /* encrypt content */
-    p7 = PKCS7_encrypt(recips, in, OPENSSL_BOX_EVP_des_ede3_cbc(), flags);
+    p7 = PKCS7_encrypt(recips, in, EVP_des_ede3_cbc(), flags);
 
     if (!p7)
         goto err;

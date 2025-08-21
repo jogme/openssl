@@ -147,22 +147,22 @@ static int test_print_key_using_pem(const char *alg, const EVP_PKEY *pk)
         goto err;
 
     if (/* Output Encrypted private key in PEM form */
-        !TEST_true(PEM_write_bio_PrivateKey(bio_out, pk, OPENSSL_BOX_EVP_aes_256_cbc(),
+        !TEST_true(PEM_write_bio_PrivateKey(bio_out, pk, EVP_aes_256_cbc(),
                                             (unsigned char *)"pass", 4,
                                             NULL, NULL))
         /* Output zero-length passphrase encrypted private key in PEM form */
         || !TEST_true(PEM_write_bio_PKCS8PrivateKey(bio_out, pk,
-                                                    OPENSSL_BOX_EVP_aes_256_cbc(),
+                                                    EVP_aes_256_cbc(),
                                                     (const char *)~0, 0,
                                                     NULL, NULL))
         || !TEST_true(PEM_write_bio_PKCS8PrivateKey(bio_out, pk,
-                                                    OPENSSL_BOX_EVP_aes_256_cbc(),
+                                                    EVP_aes_256_cbc(),
                                                     NULL, 0, NULL, ""))
         || !TEST_true(PEM_write_bio_PKCS8PrivateKey(bio_out, pk,
-                                                    OPENSSL_BOX_EVP_aes_256_cbc(),
+                                                    EVP_aes_256_cbc(),
                                                     NULL, 0, pass_cb, NULL))
         || !TEST_false(PEM_write_bio_PKCS8PrivateKey(bio_out, pk,
-                                                     OPENSSL_BOX_EVP_aes_256_cbc(),
+                                                     EVP_aes_256_cbc(),
                                                      NULL, 0, pass_cb_error,
                                                      NULL))
 #ifndef OPENSSL_NO_DES

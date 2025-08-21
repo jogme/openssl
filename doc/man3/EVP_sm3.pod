@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_sm3
+EVP_sm3
 - SM3 for EVP
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_MD *OPENSSL_BOX_EVP_sm3(void);
+ const EVP_MD *EVP_sm3(void);
 
 =head1 DESCRIPTION
 
@@ -18,7 +18,7 @@ SM3 is a cryptographic hash function with a 256-bit output, defined in GB/T
 
 =over 4
 
-=item OPENSSL_BOX_EVP_sm3()
+=item EVP_sm3()
 
 The SM3 hash function.
 

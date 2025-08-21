@@ -551,7 +551,7 @@ int rehash_main(int argc, char **argv)
     argc = opt_num_rest();
     argv = opt_rest();
 
-    evpmd = OPENSSL_BOX_EVP_sha1();
+    evpmd = EVP_sha1();
     evpmdsize = OPENSSL_BOX_EVP_MD_get_size(evpmd);
 
     if (evpmdsize <= 0 || evpmdsize > EVP_MAX_MD_SIZE)

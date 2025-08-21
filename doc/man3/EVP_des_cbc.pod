@@ -2,28 +2,28 @@
 
 =head1 NAME
 
-OPENSSL_BOX_EVP_des_cbc,
+EVP_des_cbc,
 EVP_des_cfb,
-OPENSSL_BOX_EVP_des_cfb1,
-OPENSSL_BOX_EVP_des_cfb8,
-OPENSSL_BOX_EVP_des_cfb64,
-OPENSSL_BOX_EVP_des_ecb,
-OPENSSL_BOX_EVP_des_ofb,
-OPENSSL_BOX_EVP_des_ede,
-OPENSSL_BOX_EVP_des_ede_cbc,
+EVP_des_cfb1,
+EVP_des_cfb8,
+EVP_des_cfb64,
+EVP_des_ecb,
+EVP_des_ofb,
+EVP_des_ede,
+EVP_des_ede_cbc,
 EVP_des_ede_cfb,
-OPENSSL_BOX_EVP_des_ede_cfb64,
-OPENSSL_BOX_EVP_des_ede_ecb,
-OPENSSL_BOX_EVP_des_ede_ofb,
-OPENSSL_BOX_EVP_des_ede3,
-OPENSSL_BOX_EVP_des_ede3_cbc,
+EVP_des_ede_cfb64,
+EVP_des_ede_ecb,
+EVP_des_ede_ofb,
+EVP_des_ede3,
+EVP_des_ede3_cbc,
 EVP_des_ede3_cfb,
-OPENSSL_BOX_EVP_des_ede3_cfb1,
-OPENSSL_BOX_EVP_des_ede3_cfb8,
-OPENSSL_BOX_EVP_des_ede3_cfb64,
-OPENSSL_BOX_EVP_des_ede3_ecb,
-OPENSSL_BOX_EVP_des_ede3_ofb,
-OPENSSL_BOX_EVP_des_ede3_wrap
+EVP_des_ede3_cfb1,
+EVP_des_ede3_cfb8,
+EVP_des_ede3_cfb64,
+EVP_des_ede3_ecb,
+EVP_des_ede3_ofb,
+EVP_des_ede3_wrap
 - EVP DES cipher
 
 =head1 SYNOPSIS
@@ -35,7 +35,7 @@ OPENSSL_BOX_EVP_des_ede3_wrap
  const EVP_CIPHER *EVP_ciphername(void)
 
 I<EVP_ciphername> is used a placeholder for any of the described cipher
-functions, such as I<OPENSSL_BOX_EVP_des_cbc>.
+functions, such as I<EVP_des_cbc>.
 
 =head1 DESCRIPTION
 
@@ -43,13 +43,13 @@ The DES encryption algorithm for EVP.
 
 =over 4
 
-=item OPENSSL_BOX_EVP_des_cbc(),
-OPENSSL_BOX_EVP_des_ecb(),
+=item EVP_des_cbc(),
+EVP_des_ecb(),
 EVP_des_cfb(),
-OPENSSL_BOX_EVP_des_cfb1(),
-OPENSSL_BOX_EVP_des_cfb8(),
-OPENSSL_BOX_EVP_des_cfb64(),
-OPENSSL_BOX_EVP_des_ofb()
+EVP_des_cfb1(),
+EVP_des_cfb8(),
+EVP_des_cfb64(),
+EVP_des_ofb()
 
 DES in CBC, ECB, CFB with 64-bit shift, CFB with 1-bit shift, CFB with 8-bit
 shift and OFB modes.
@@ -58,28 +58,28 @@ None of these algorithms are provided by the OpenSSL default provider.
 To use them it is necessary to load either the OpenSSL legacy provider or another
 implementation.
 
-=item OPENSSL_BOX_EVP_des_ede(),
-OPENSSL_BOX_EVP_des_ede_cbc(),
+=item EVP_des_ede(),
+EVP_des_ede_cbc(),
 EVP_des_ede_cfb(),
-OPENSSL_BOX_EVP_des_ede_cfb64(),
-OPENSSL_BOX_EVP_des_ede_ecb(),
-OPENSSL_BOX_EVP_des_ede_ofb()
+EVP_des_ede_cfb64(),
+EVP_des_ede_ecb(),
+EVP_des_ede_ofb()
 
 Two key triple DES in ECB, CBC, CFB with 64-bit shift and OFB modes.
 
-=item OPENSSL_BOX_EVP_des_ede3(),
-OPENSSL_BOX_EVP_des_ede3_cbc(),
+=item EVP_des_ede3(),
+EVP_des_ede3_cbc(),
 EVP_des_ede3_cfb(),
-OPENSSL_BOX_EVP_des_ede3_cfb1(),
-OPENSSL_BOX_EVP_des_ede3_cfb8(),
-OPENSSL_BOX_EVP_des_ede3_cfb64(),
-OPENSSL_BOX_EVP_des_ede3_ecb(),
-OPENSSL_BOX_EVP_des_ede3_ofb()
+EVP_des_ede3_cfb1(),
+EVP_des_ede3_cfb8(),
+EVP_des_ede3_cfb64(),
+EVP_des_ede3_ecb(),
+EVP_des_ede3_ofb()
 
 Three-key triple DES in ECB, CBC, CFB with 64-bit shift, CFB with 1-bit shift,
 CFB with 8-bit shift and OFB modes.
 
-=item OPENSSL_BOX_EVP_des_ede3_wrap()
+=item EVP_des_ede3_wrap()
 
 Triple-DES key wrap according to RFC 3217 Section 3.
 
