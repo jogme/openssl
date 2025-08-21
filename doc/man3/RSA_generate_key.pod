@@ -32,7 +32,7 @@ EVP_RSA_gen() generates a new RSA key pair with modulus size I<bits>.
 
 All of the functions described below are deprecated.
 Applications should instead use EVP_RSA_gen(), L<EVP_PKEY_Q_keygen(3)>, or
-L<EVP_PKEY_keygen_init(3)> and L<EVP_PKEY_keygen(3)>.
+L<OPENSSL_BOX_EVP_PKEY_keygen_init(3)> and L<OPENSSL_BOX_EVP_PKEY_keygen(3)>.
 
 RSA_generate_key_ex() generates a 2-prime RSA key pair and stores it in the
 B<RSA> structure provided in I<rsa>.

@@ -74,8 +74,8 @@ static struct test_stanza_st {
     const char *structure[2];
     int evp_type;
 
-    i2d_of_void *i2d_PrivateKey;
-    i2d_of_void *i2d_PublicKey;
+    i2d_of_void *OPENSSL_BOX_i2d_PrivateKey;
+    i2d_of_void *OPENSSL_BOX_i2d_PublicKey;
     i2d_of_void *i2d_params;
     i2d_of_void *i2d_PUBKEY;
     PEM_write_bio_of_void_protected *pem_write_bio_PrivateKey;
@@ -188,7 +188,7 @@ static struct test_stanza_st {
 /*
  * Keys that we're going to test with.  We initialize this with the intended
  * key types, and generate the keys themselves on program setup.
- * They must all be downgradable with EVP_PKEY_get0()
+ * They must all be downgradable with OPENSSL_BOX_EVP_PKEY_get0()
  */
 
 #ifndef OPENSSL_NO_DH
@@ -246,12 +246,12 @@ static EVP_PKEY *make_key(const char *type,
 
     if (gen_template_params != NULL
         && ((ctx = EVP_PKEY_CTX_new_from_name(NULL, type, NULL)) == NULL
-            || EVP_PKEY_paramgen_init(ctx) <= 0
+            || OPENSSL_BOX_EVP_PKEY_paramgen_init(ctx) <= 0
             || (gen_template_params[0].key != NULL
-                && EVP_PKEY_CTX_set_params(ctx, gen_template_params_noconst) <= 0)
-            || EVP_PKEY_generate(ctx, &template) <= 0))
+                && OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, gen_template_params_noconst) <= 0)
+            || OPENSSL_BOX_EVP_PKEY_generate(ctx, &template) <= 0))
         goto end;
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
 
     /*
      * No real need to check the errors other than for the cascade
@@ -259,16 +259,16 @@ static EVP_PKEY *make_key(const char *type,
      */
     ctx =
         template != NULL
-        ? EVP_PKEY_CTX_new(template, NULL)
+        ? OPENSSL_BOX_EVP_PKEY_CTX_new(template, NULL)
         : EVP_PKEY_CTX_new_from_name(NULL, type, NULL);
 
     (void)(ctx != NULL
-           && EVP_PKEY_keygen_init(ctx) > 0
-           && EVP_PKEY_keygen(ctx, &pkey) > 0);
+           && OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) > 0
+           && OPENSSL_BOX_EVP_PKEY_keygen(ctx, &pkey) > 0);
 
  end:
-    EVP_PKEY_free(template);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(template);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return pkey;
 }
 
@@ -331,7 +331,7 @@ static int test_protected_PEM(const char *keytype, int evp_type,
     if (pem_read_bio != NULL) {
         /* Now try decoding the results and compare the resulting keys */
 
-        if (!TEST_ptr(decoded_legacy_pkey = EVP_PKEY_new())
+        if (!TEST_ptr(decoded_legacy_pkey = OPENSSL_BOX_EVP_PKEY_new())
             || !TEST_ptr(dctx =
                          OSSL_DECODER_CTX_new_for_pkey(&decoded_provided_pkey,
                                                        "PEM", structure,
@@ -340,7 +340,7 @@ static int test_protected_PEM(const char *keytype, int evp_type,
             || !TEST_true(OSSL_DECODER_from_bio(dctx, membio_provided))
             || !TEST_ptr(decoded_legacy_key =
                          pem_read_bio(membio_legacy, NULL, NULL, NULL))
-            || !TEST_true(EVP_PKEY_assign(decoded_legacy_pkey, evp_type,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_assign(decoded_legacy_pkey, evp_type,
                                           decoded_legacy_key)))
             goto end;
 
@@ -354,8 +354,8 @@ static int test_protected_PEM(const char *keytype, int evp_type,
     }
     ok = 1;
  end:
-    EVP_PKEY_free(decoded_legacy_pkey);
-    EVP_PKEY_free(decoded_provided_pkey);
+    OPENSSL_BOX_EVP_PKEY_free(decoded_legacy_pkey);
+    OPENSSL_BOX_EVP_PKEY_free(decoded_provided_pkey);
     OSSL_ENCODER_CTX_free(ectx);
     OSSL_DECODER_CTX_free(dctx);
     BIO_free(membio_provided);
@@ -398,7 +398,7 @@ static int test_unprotected_PEM(const char *keytype, int evp_type,
     if (pem_read_bio != NULL) {
         /* Now try decoding the results and compare the resulting keys */
 
-        if (!TEST_ptr(decoded_legacy_pkey = EVP_PKEY_new())
+        if (!TEST_ptr(decoded_legacy_pkey = OPENSSL_BOX_EVP_PKEY_new())
             || !TEST_ptr(dctx =
                          OSSL_DECODER_CTX_new_for_pkey(&decoded_provided_pkey,
                                                        "PEM", structure,
@@ -407,7 +407,7 @@ static int test_unprotected_PEM(const char *keytype, int evp_type,
             || !TEST_true(OSSL_DECODER_from_bio(dctx, membio_provided))
             || !TEST_ptr(decoded_legacy_key =
                          pem_read_bio(membio_legacy, NULL, NULL, NULL))
-            || !TEST_true(EVP_PKEY_assign(decoded_legacy_pkey, evp_type,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_assign(decoded_legacy_pkey, evp_type,
                                           decoded_legacy_key)))
             goto end;
 
@@ -421,8 +421,8 @@ static int test_unprotected_PEM(const char *keytype, int evp_type,
     }
     ok = 1;
  end:
-    EVP_PKEY_free(decoded_legacy_pkey);
-    EVP_PKEY_free(decoded_provided_pkey);
+    OPENSSL_BOX_EVP_PKEY_free(decoded_legacy_pkey);
+    OPENSSL_BOX_EVP_PKEY_free(decoded_provided_pkey);
     OSSL_ENCODER_CTX_free(ectx);
     OSSL_DECODER_CTX_free(dctx);
     BIO_free(membio_provided);
@@ -465,7 +465,7 @@ static int test_DER(const char *keytype, int evp_type,
     if (d2i != NULL) {
         /* Now try decoding the results and compare the resulting keys */
 
-        if (!TEST_ptr(decoded_legacy_pkey = EVP_PKEY_new())
+        if (!TEST_ptr(decoded_legacy_pkey = OPENSSL_BOX_EVP_PKEY_new())
             || !TEST_ptr(dctx =
                          OSSL_DECODER_CTX_new_for_pkey(&decoded_provided_pkey,
                                                        "DER", structure,
@@ -478,7 +478,7 @@ static int test_DER(const char *keytype, int evp_type,
             || !TEST_ptr((pder_legacy = der_legacy,
                           decoded_legacy_key = d2i(NULL, &pder_legacy,
                                                    (long)der_legacy_len)))
-            || !TEST_true(EVP_PKEY_assign(decoded_legacy_pkey, evp_type,
+            || !TEST_true(OPENSSL_BOX_EVP_PKEY_assign(decoded_legacy_pkey, evp_type,
                                           decoded_legacy_key)))
             goto end;
 
@@ -492,8 +492,8 @@ static int test_DER(const char *keytype, int evp_type,
     }
     ok = 1;
  end:
-    EVP_PKEY_free(decoded_legacy_pkey);
-    EVP_PKEY_free(decoded_provided_pkey);
+    OPENSSL_BOX_EVP_PKEY_free(decoded_legacy_pkey);
+    OPENSSL_BOX_EVP_PKEY_free(decoded_provided_pkey);
     OSSL_ENCODER_CTX_free(ectx);
     OSSL_DECODER_CTX_free(dctx);
     OPENSSL_free(der_provided);
@@ -519,8 +519,8 @@ static int test_key(int idx)
     if (!TEST_ptr(pkey = key->key)
         || !TEST_true(evp_pkey_copy_downgraded(&downgraded_pkey, pkey))
         || !TEST_ptr(downgraded_pkey)
-        || !TEST_int_eq(EVP_PKEY_get_id(downgraded_pkey), key->evp_type)
-        || !TEST_ptr(legacy_obj = EVP_PKEY_get0(downgraded_pkey)))
+        || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_get_id(downgraded_pkey), key->evp_type)
+        || !TEST_ptr(legacy_obj = OPENSSL_BOX_EVP_PKEY_get0(downgraded_pkey)))
         goto end;
 
     ok = 1;
@@ -537,7 +537,7 @@ static int test_key(int idx)
             if (!test_protected_PEM(key->keytype, key->evp_type, legacy_obj,
                                     test_stanza->pem_write_bio_PrivateKey,
                                     test_stanza->pem_read_bio_PrivateKey,
-                                    EVP_PKEY_eq, EVP_PKEY_print_private,
+                                    OPENSSL_BOX_EVP_PKEY_eq, EVP_PKEY_print_private,
                                     pkey, selection, structure))
                 ok = 0;
         }
@@ -557,7 +557,7 @@ static int test_key(int idx)
             if (!test_unprotected_PEM(key->keytype, key->evp_type, legacy_obj,
                                       test_stanza->pem_write_bio_PublicKey,
                                       test_stanza->pem_read_bio_PublicKey,
-                                      EVP_PKEY_eq, EVP_PKEY_print_public,
+                                      OPENSSL_BOX_EVP_PKEY_eq, EVP_PKEY_print_public,
                                       pkey, selection, structure))
                 ok = 0;
         }
@@ -575,7 +575,7 @@ static int test_key(int idx)
             if (!test_unprotected_PEM(key->keytype, key->evp_type, legacy_obj,
                                       test_stanza->pem_write_bio_params,
                                       test_stanza->pem_read_bio_params,
-                                      EVP_PKEY_parameters_eq,
+                                      OPENSSL_BOX_EVP_PKEY_parameters_eq,
                                       EVP_PKEY_print_params,
                                       pkey, selection, structure))
                 ok = 0;
@@ -594,14 +594,14 @@ static int test_key(int idx)
         if (!test_unprotected_PEM(key->keytype, key->evp_type, legacy_obj,
                                   test_stanza->pem_write_bio_PUBKEY,
                                   test_stanza->pem_read_bio_PUBKEY,
-                                  EVP_PKEY_eq, EVP_PKEY_print_public,
+                                  OPENSSL_BOX_EVP_PKEY_eq, EVP_PKEY_print_public,
                                   pkey, selection, structure))
             ok = 0;
     }
 
 
     /* Test PrivateKey to DER */
-    if (test_stanza->i2d_PrivateKey != NULL) {
+    if (test_stanza->OPENSSL_BOX_i2d_PrivateKey != NULL) {
         int selection = OSSL_KEYMGMT_SELECT_ALL;
 
         for (i = 0; i < OSSL_NELEM(test_stanza->structure); i++) {
@@ -610,16 +610,16 @@ static int test_key(int idx)
             TEST_info("Test OSSL_ENCODER against i2d_{TYPE}PrivateKey for %s, %s",
                       test_stanza->keytype, structure);
             if (!test_DER(key->keytype, key->evp_type, legacy_obj,
-                          test_stanza->i2d_PrivateKey,
+                          test_stanza->OPENSSL_BOX_i2d_PrivateKey,
                           test_stanza->d2i_PrivateKey,
-                          EVP_PKEY_eq, EVP_PKEY_print_private,
+                          OPENSSL_BOX_EVP_PKEY_eq, EVP_PKEY_print_private,
                           pkey, selection, structure))
                 ok = 0;
         }
     }
 
     /* Test PublicKey to DER */
-    if (test_stanza->i2d_PublicKey != NULL) {
+    if (test_stanza->OPENSSL_BOX_i2d_PublicKey != NULL) {
         int selection =
             OSSL_KEYMGMT_SELECT_PUBLIC_KEY
             | OSSL_KEYMGMT_SELECT_ALL_PARAMETERS;
@@ -630,9 +630,9 @@ static int test_key(int idx)
             TEST_info("Test OSSL_ENCODER against i2d_{TYPE}PublicKey for %s, %s",
                       test_stanza->keytype, structure);
             if (!test_DER(key->keytype, key->evp_type, legacy_obj,
-                          test_stanza->i2d_PublicKey,
+                          test_stanza->OPENSSL_BOX_i2d_PublicKey,
                           test_stanza->d2i_PublicKey,
-                          EVP_PKEY_eq, EVP_PKEY_print_public,
+                          OPENSSL_BOX_EVP_PKEY_eq, EVP_PKEY_print_public,
                           pkey, selection, structure))
                 ok = 0;
         }
@@ -649,7 +649,7 @@ static int test_key(int idx)
                       test_stanza->keytype, structure);
             if (!test_DER(key->keytype, key->evp_type, legacy_obj,
                           test_stanza->i2d_params, test_stanza->d2i_params,
-                          EVP_PKEY_parameters_eq, EVP_PKEY_print_params,
+                          OPENSSL_BOX_EVP_PKEY_parameters_eq, EVP_PKEY_print_params,
                           pkey, selection, structure))
                 ok = 0;
         }
@@ -666,12 +666,12 @@ static int test_key(int idx)
                   test_stanza->keytype, structure);
         if (!test_DER(key->keytype, key->evp_type, legacy_obj,
                       test_stanza->i2d_PUBKEY, test_stanza->d2i_PUBKEY,
-                      EVP_PKEY_eq, EVP_PKEY_print_public,
+                      OPENSSL_BOX_EVP_PKEY_eq, EVP_PKEY_print_public,
                       pkey, selection, structure))
             ok = 0;
     }
  end:
-    EVP_PKEY_free(downgraded_pkey);
+    OPENSSL_BOX_EVP_PKEY_free(downgraded_pkey);
     return ok;
 }
 
@@ -727,5 +727,5 @@ void cleanup_tests(void)
     size_t i;
 
     for (i = 0; i < OSSL_NELEM(keys); i++)
-        EVP_PKEY_free(keys[i].key);
+        OPENSSL_BOX_EVP_PKEY_free(keys[i].key);
 }

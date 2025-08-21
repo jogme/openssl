@@ -193,21 +193,21 @@ The auxiliary probable primes.
 
 =head2 RSA key validation
 
-For RSA keys, L<EVP_PKEY_param_check(3)> and L<EVP_PKEY_param_check_quick(3)>
+For RSA keys, L<OPENSSL_BOX_EVP_PKEY_param_check(3)> and L<OPENSSL_BOX_EVP_PKEY_param_check_quick(3)>
 both return 1 unconditionally.
 
-For RSA keys, L<EVP_PKEY_public_check(3)> conforms to the SP800-56Br1 I<public key
+For RSA keys, L<OPENSSL_BOX_EVP_PKEY_public_check(3)> conforms to the SP800-56Br1 I<public key
 check> when the OpenSSL FIPS provider is used. The OpenSSL default provider
 performs similar tests but relaxes the keysize restrictions for backwards
 compatibility.
 
-For RSA keys, L<EVP_PKEY_public_check_quick(3)> is the same as
-L<EVP_PKEY_public_check(3)>.
+For RSA keys, L<OPENSSL_BOX_EVP_PKEY_public_check_quick(3)> is the same as
+L<OPENSSL_BOX_EVP_PKEY_public_check(3)>.
 
-For RSA keys, L<EVP_PKEY_private_check(3)> conforms to the SP800-56Br1
+For RSA keys, L<OPENSSL_BOX_EVP_PKEY_private_check(3)> conforms to the SP800-56Br1
 I<private key test>.
 
-For RSA keys, L<EVP_PKEY_pairwise_check(3)> conforms to the
+For RSA keys, L<OPENSSL_BOX_EVP_PKEY_pairwise_check(3)> conforms to the
 SP800-56Br1 I<KeyPair Validation check> for the OpenSSL FIPS provider. The
 OpenSSL default provider allows testing of the validity of multi-primes.
 
@@ -244,9 +244,9 @@ or like this:
     EVP_PKEY_CTX *pctx =
         EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL);
 
-    EVP_PKEY_keygen_init(pctx);
-    EVP_PKEY_generate(pctx, &pkey);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_keygen_init(pctx);
+    OPENSSL_BOX_EVP_PKEY_generate(pctx, &pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
 
 An B<RSA> key can be generated with key generation parameters:
 
@@ -256,16 +256,16 @@ An B<RSA> key can be generated with key generation parameters:
     EVP_PKEY *pkey = NULL;
     EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL);
 
-    EVP_PKEY_keygen_init(pctx);
+    OPENSSL_BOX_EVP_PKEY_keygen_init(pctx);
 
     params[0] = OSSL_PARAM_construct_uint("bits", &bits);
     params[1] = OSSL_PARAM_construct_uint("primes", &primes);
     params[2] = OSSL_PARAM_construct_end();
-    EVP_PKEY_CTX_set_params(pctx, params);
+    OPENSSL_BOX_EVP_PKEY_CTX_set_params(pctx, params);
 
-    EVP_PKEY_generate(pctx, &pkey);
+    OPENSSL_BOX_EVP_PKEY_generate(pctx, &pkey);
     EVP_PKEY_print_private(bio_out, pkey, 0, NULL);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
 
 =head1 SEE ALSO
 

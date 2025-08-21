@@ -2548,7 +2548,7 @@ CON_FUNC_RETURN tls_construct_server_key_exchange(SSL_CONNECTION *s,
     int i;
     unsigned long type;
     BIGNUM *r[4];
-    EVP_MD_CTX *md_ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     EVP_PKEY_CTX *pctx = NULL;
     size_t paramlen, paramoffset;
     int freer = 0;
@@ -2603,7 +2603,7 @@ CON_FUNC_RETURN tls_construct_server_key_exchange(SSL_CONNECTION *s,
             goto err;
         }
         if (!ssl_security(s, SSL_SECOP_TMP_DH,
-                          EVP_PKEY_get_security_bits(pkdhp), 0, pkdhp)) {
+                          OPENSSL_BOX_EVP_PKEY_get_security_bits(pkdhp), 0, pkdhp)) {
             SSLfatal(s, SSL_AD_HANDSHAKE_FAILURE, SSL_R_DH_KEY_TOO_SMALL);
             goto err;
         }
@@ -2618,7 +2618,7 @@ CON_FUNC_RETURN tls_construct_server_key_exchange(SSL_CONNECTION *s,
             goto err;
         }
 
-        EVP_PKEY_free(pkdh);
+        OPENSSL_BOX_EVP_PKEY_free(pkdh);
         pkdh = NULL;
 
         /* These BIGNUMs need to be freed when we're finished */
@@ -2656,7 +2656,7 @@ CON_FUNC_RETURN tls_construct_server_key_exchange(SSL_CONNECTION *s,
         }
 
         /* Encode the public key. */
-        encodedlen = EVP_PKEY_get1_encoded_public_key(s->s3.tmp.pkey,
+        encodedlen = OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(s->s3.tmp.pkey,
                                                       &encodedPoint);
         if (encodedlen == 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EC_LIB);
@@ -2801,7 +2801,7 @@ CON_FUNC_RETURN tls_construct_server_key_exchange(SSL_CONNECTION *s,
         }
 
         if (EVP_DigestSignInit_ex(md_ctx, &pctx,
-                                  md == NULL ? NULL : EVP_MD_get0_name(md),
+                                  md == NULL ? NULL : OPENSSL_BOX_EVP_MD_get0_name(md),
                                   sctx->libctx, sctx->propq, pkey,
                                   NULL) <= 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
@@ -2836,9 +2836,9 @@ CON_FUNC_RETURN tls_construct_server_key_exchange(SSL_CONNECTION *s,
 
     ret = CON_FUNC_SUCCESS;
  err:
-    EVP_PKEY_free(pkdh);
+    OPENSSL_BOX_EVP_PKEY_free(pkdh);
     OPENSSL_free(encodedPoint);
-    EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     if (freer) {
         BN_free(r[0]);
         BN_free(r[1]);
@@ -3032,7 +3032,7 @@ static int tls_process_cke_rsa(SSL_CONNECTION *s, PACKET *pkt)
      * still fail if the input is publicly invalid.
      * See https://tools.ietf.org/html/rfc5246#section-7.4.7.1
      */
-    if (EVP_PKEY_decrypt_init(ctx) <= 0
+    if (OPENSSL_BOX_EVP_PKEY_decrypt_init(ctx) <= 0
             || EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_WITH_TLS_PADDING) <= 0) {
         SSLfatal(s, SSL_AD_DECRYPT_ERROR, SSL_R_DECRYPTION_FAILED);
         goto err;
@@ -3046,7 +3046,7 @@ static int tls_process_cke_rsa(SSL_CONNECTION *s, PACKET *pkt)
             (unsigned int *)&s->version);
     *p++ = OSSL_PARAM_construct_end();
 
-    if (!EVP_PKEY_CTX_set_params(ctx, params)
+    if (!OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, params)
             || EVP_PKEY_decrypt(ctx, rsa_decrypt, &outlen,
                                 PACKET_data(&enc_premaster),
                                 PACKET_remaining(&enc_premaster)) <= 0) {
@@ -3073,7 +3073,7 @@ static int tls_process_cke_rsa(SSL_CONNECTION *s, PACKET *pkt)
     ret = 1;
  err:
     OPENSSL_free(rsa_decrypt);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 
@@ -3104,8 +3104,8 @@ static int tls_process_cke_dhe(SSL_CONNECTION *s, PACKET *pkt)
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
-    ckey = EVP_PKEY_new();
-    if (ckey == NULL || EVP_PKEY_copy_parameters(ckey, skey) == 0) {
+    ckey = OPENSSL_BOX_EVP_PKEY_new();
+    if (ckey == NULL || OPENSSL_BOX_EVP_PKEY_copy_parameters(ckey, skey) == 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_COPY_PARAMETERS_FAILED);
         goto err;
     }
@@ -3121,10 +3121,10 @@ static int tls_process_cke_dhe(SSL_CONNECTION *s, PACKET *pkt)
     }
 
     ret = 1;
-    EVP_PKEY_free(s->s3.tmp.pkey);
+    OPENSSL_BOX_EVP_PKEY_free(s->s3.tmp.pkey);
     s->s3.tmp.pkey = NULL;
  err:
-    EVP_PKEY_free(ckey);
+    OPENSSL_BOX_EVP_PKEY_free(ckey);
     return ret;
 }
 
@@ -3161,8 +3161,8 @@ static int tls_process_cke_ecdhe(SSL_CONNECTION *s, PACKET *pkt)
             goto err;
         }
 
-        ckey = EVP_PKEY_new();
-        if (ckey == NULL || EVP_PKEY_copy_parameters(ckey, skey) <= 0) {
+        ckey = OPENSSL_BOX_EVP_PKEY_new();
+        if (ckey == NULL || OPENSSL_BOX_EVP_PKEY_copy_parameters(ckey, skey) <= 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_COPY_PARAMETERS_FAILED);
             goto err;
         }
@@ -3179,10 +3179,10 @@ static int tls_process_cke_ecdhe(SSL_CONNECTION *s, PACKET *pkt)
     }
 
     ret = 1;
-    EVP_PKEY_free(s->s3.tmp.pkey);
+    OPENSSL_BOX_EVP_PKEY_free(s->s3.tmp.pkey);
     s->s3.tmp.pkey = NULL;
  err:
-    EVP_PKEY_free(ckey);
+    OPENSSL_BOX_EVP_PKEY_free(ckey);
 
     return ret;
 }
@@ -3262,19 +3262,19 @@ static int tls_process_cke_gost(SSL_CONNECTION *s, PACKET *pkt)
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         return 0;
     }
-    if (EVP_PKEY_decrypt_init(pkey_ctx) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_decrypt_init(pkey_ctx) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
     /*
      * If client certificate is present and is of the same type, maybe
      * use it for key exchange.  Don't mind errors from
-     * EVP_PKEY_derive_set_peer, because it is completely valid to use a
+     * OPENSSL_BOX_EVP_PKEY_derive_set_peer, because it is completely valid to use a
      * client certificate for authorization only.
      */
     client_pub_pkey = tls_get_peer_pkey(s);
     if (client_pub_pkey) {
-        if (EVP_PKEY_derive_set_peer(pkey_ctx, client_pub_pkey) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_derive_set_peer(pkey_ctx, client_pub_pkey) <= 0)
             ERR_clear_error();
     }
 
@@ -3319,7 +3319,7 @@ static int tls_process_cke_gost(SSL_CONNECTION *s, PACKET *pkt)
 
     ret = 1;
  err:
-    EVP_PKEY_CTX_free(pkey_ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pkey_ctx);
     GOST_KX_MESSAGE_free(pKX);
     return ret;
 #else
@@ -3366,7 +3366,7 @@ static int tls_process_cke_gost18(SSL_CONNECTION *s, PACKET *pkt)
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
     }
-    if (EVP_PKEY_decrypt_init(pkey_ctx) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_decrypt_init(pkey_ctx) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
@@ -3398,7 +3398,7 @@ static int tls_process_cke_gost18(SSL_CONNECTION *s, PACKET *pkt)
     ret = 1;
 
  err:
-    EVP_PKEY_CTX_free(pkey_ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pkey_ctx);
     return ret;
 #else
     /* Should never happen */
@@ -3590,7 +3590,7 @@ MSG_PROCESS_RETURN tls_process_client_rpk(SSL_CONNECTION *sc, PACKET *pkt)
     sk_X509_pop_free(sc->session->peer_chain, X509_free);
     sc->session->peer_chain = NULL;
     /* Save RPK */
-    EVP_PKEY_free(sc->session->peer_rpk);
+    OPENSSL_BOX_EVP_PKEY_free(sc->session->peer_rpk);
     sc->session->peer_rpk = peer_rpk;
     peer_rpk = NULL;
 
@@ -3621,7 +3621,7 @@ MSG_PROCESS_RETURN tls_process_client_rpk(SSL_CONNECTION *sc, PACKET *pkt)
     ret = MSG_PROCESS_CONTINUE_READING;
 
  err:
-    EVP_PKEY_free(peer_rpk);
+    OPENSSL_BOX_EVP_PKEY_free(peer_rpk);
     return ret;
 }
 
@@ -3787,7 +3787,7 @@ MSG_PROCESS_RETURN tls_process_client_certificate(SSL_CONNECTION *s,
     s->session->peer_chain = sk;
     sk = NULL;
     /* Ensure there is no RPK */
-    EVP_PKEY_free(s->session->peer_rpk);
+    OPENSSL_BOX_EVP_PKEY_free(s->session->peer_rpk);
     s->session->peer_rpk = NULL;
 
     /*
@@ -3985,7 +3985,7 @@ static CON_FUNC_RETURN construct_stateless_ticket(SSL_CONNECTION *s,
         goto err;
     }
 
-    ctx = EVP_CIPHER_CTX_new();
+    ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ctx == NULL) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
@@ -4068,7 +4068,7 @@ static CON_FUNC_RETURN construct_stateless_ticket(SSL_CONNECTION *s,
                 goto err;
             }
             OPENSSL_free(senc);
-            EVP_CIPHER_CTX_free(ctx);
+            OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
             ssl_hmac_free(hctx);
             return CON_FUNC_SUCCESS;
         }
@@ -4076,7 +4076,7 @@ static CON_FUNC_RETURN construct_stateless_ticket(SSL_CONNECTION *s,
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_CALLBACK_FAILED);
             goto err;
         }
-        iv_len = EVP_CIPHER_CTX_get_iv_length(ctx);
+        iv_len = OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(ctx);
         if (iv_len < 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
             goto err;
@@ -4091,7 +4091,7 @@ static CON_FUNC_RETURN construct_stateless_ticket(SSL_CONNECTION *s,
             goto err;
         }
 
-        iv_len = EVP_CIPHER_get_iv_length(cipher);
+        iv_len = OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher);
         if (iv_len < 0
                 || RAND_bytes_ex(sctx->libctx, iv, iv_len, 0) <= 0
                 || !EVP_EncryptInit_ex(ctx, cipher, NULL,
@@ -4099,11 +4099,11 @@ static CON_FUNC_RETURN construct_stateless_ticket(SSL_CONNECTION *s,
                 || !ssl_hmac_init(hctx, tctx->ext.secure->tick_hmac_key,
                                   sizeof(tctx->ext.secure->tick_hmac_key),
                                   "SHA256")) {
-            EVP_CIPHER_free(cipher);
+            OPENSSL_BOX_EVP_CIPHER_free(cipher);
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
             goto err;
         }
-        EVP_CIPHER_free(cipher);
+        OPENSSL_BOX_EVP_CIPHER_free(cipher);
         memcpy(key_name, tctx->ext.tick_key_name,
                sizeof(tctx->ext.tick_key_name));
     }
@@ -4150,7 +4150,7 @@ static CON_FUNC_RETURN construct_stateless_ticket(SSL_CONNECTION *s,
     ok = CON_FUNC_SUCCESS;
  err:
     OPENSSL_free(senc);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     ssl_hmac_free(hctx);
     return ok;
 }
@@ -4205,7 +4205,7 @@ CON_FUNC_RETURN tls_construct_new_session_ticket(SSL_CONNECTION *s, WPACKET *pkt
         uint64_t nonce;
         static const unsigned char nonce_label[] = "resumption";
         const EVP_MD *md = ssl_handshake_md(s);
-        int hashleni = EVP_MD_get_size(md);
+        int hashleni = OPENSSL_BOX_EVP_MD_get_size(md);
 
         /* Ensure cast to size_t is safe */
         if (!ossl_assert(hashleni > 0)) {
@@ -4411,7 +4411,7 @@ int tls_construct_cert_status_body(SSL_CONNECTION *s, size_t chainidx, WPACKET *
                 if (cert_id_md_oid != NULL)
                     cert_id_md = EVP_get_digestbyobj(cert_id_md_oid);
                 else
-                    cert_id_md = EVP_sha1();
+                    cert_id_md = OPENSSL_BOX_EVP_sha1();
 
                 /* get serial number and issuer name hash of the certificate from the chain */
                 certSerial = X509_get0_serialNumber(x);

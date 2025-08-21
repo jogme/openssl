@@ -65,7 +65,7 @@ Title = RSA tests with EVP_PKEY_sign, EVP_PKEY_verify, EVP_PKEY_verify_recover
 
 # Demonstrate the possibility to use the RSA (not RSA-SHA1) signature
 # implementation with EVP_PKEY_sign_init_ex2() the same way as with
-#  EVP_PKEY_sign_init_ex().
+#  OPENSSL_BOX_EVP_PKEY_sign_init_ex().
 Availablein = default
 Sign = RSA:RSA-2048
 Ctrl = digest:SHA1

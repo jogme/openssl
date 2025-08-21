@@ -173,8 +173,8 @@ static int mac_match(const void *keydata1, const void *keydata2, int selection)
                         || CRYPTO_memcmp(key1->priv_key, key2->priv_key,
                                          key1->priv_key_len) == 0);
         if (key1->cipher.cipher != NULL)
-            ok = ok && EVP_CIPHER_is_a(key1->cipher.cipher,
-                                       EVP_CIPHER_get0_name(key2->cipher.cipher));
+            ok = ok && OPENSSL_BOX_EVP_CIPHER_is_a(key1->cipher.cipher,
+                                       OPENSSL_BOX_EVP_CIPHER_get0_name(key2->cipher.cipher));
     }
     return ok;
 }
@@ -250,7 +250,7 @@ static int key_to_params(MAC_KEY *key, OSSL_PARAM_BLD *tmpl,
     if (key->cipher.cipher != NULL
         && !ossl_param_build_set_utf8_string(tmpl, params,
                                              OSSL_PKEY_PARAM_CIPHER,
-                                             EVP_CIPHER_get0_name(key->cipher.cipher)))
+                                             OPENSSL_BOX_EVP_CIPHER_get0_name(key->cipher.cipher)))
         return 0;
 
 #if !defined(OPENSSL_NO_ENGINE) && !defined(FIPS_MODULE)

@@ -75,7 +75,7 @@ static ESS_CERT_ID *ESS_CERT_ID_new_init(const X509 *cert,
         ERR_raise(ERR_LIB_ESS, ERR_R_ESS_LIB);
         goto err;
     }
-    if (!X509_digest(cert, EVP_sha1(), cert_sha1, NULL)) {
+    if (!X509_digest(cert, OPENSSL_BOX_EVP_sha1(), cert_sha1, NULL)) {
         ERR_raise(ERR_LIB_ESS, ERR_R_X509_LIB);
         goto err;
     }
@@ -184,7 +184,7 @@ static ESS_CERT_ID_V2 *ESS_CERT_ID_V2_new_init(const EVP_MD *hash_alg,
         goto err;
     }
 
-    if (!EVP_MD_is_a(hash_alg, SN_sha256)) {
+    if (!OPENSSL_BOX_EVP_MD_is_a(hash_alg, SN_sha256)) {
         alg = X509_ALGOR_new();
         if (alg == NULL) {
             ERR_raise(ERR_LIB_ESS, ERR_R_ASN1_LIB);
@@ -295,7 +295,7 @@ static int find(const ESS_CERT_ID *cid, const ESS_CERT_ID_V2 *cid_v2,
     md = EVP_MD_fetch(NULL, name, NULL);
 
     if (md == NULL)
-        md = (EVP_MD *)EVP_get_digestbyname(name);
+        md = (EVP_MD *)OPENSSL_BOX_EVP_get_digestbyname(name);
 
     if (md == NULL) {
         (void)ERR_clear_last_mark();
@@ -332,7 +332,7 @@ static int find(const ESS_CERT_ID *cid, const ESS_CERT_ID_V2 *cid_v2,
     ret = 0;
     ERR_raise(ERR_LIB_ESS, ESS_R_ESS_CERT_ID_NOT_FOUND);
 end:
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     return ret;
 }
 

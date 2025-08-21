@@ -123,13 +123,13 @@ QUIC_SRTM *ossl_quic_srtm_new(OSSL_LIB_CTX *libctx, const char *propq)
     if ((ecb = EVP_CIPHER_fetch(libctx, "AES-128-ECB", propq)) == NULL)
         goto err;
 
-    if ((srtm->blind_ctx = EVP_CIPHER_CTX_new()) == NULL)
+    if ((srtm->blind_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto err;
 
     if (!EVP_EncryptInit_ex2(srtm->blind_ctx, ecb, key, NULL, NULL))
         goto err;
 
-    EVP_CIPHER_free(ecb);
+    OPENSSL_BOX_EVP_CIPHER_free(ecb);
     ecb = NULL;
 
     /* Create mappings. */
@@ -145,7 +145,7 @@ err:
      * mitigation.
      */
     ossl_quic_srtm_free(srtm);
-    EVP_CIPHER_free(ecb);
+    OPENSSL_BOX_EVP_CIPHER_free(ecb);
     return NULL;
 }
 
@@ -172,7 +172,7 @@ void ossl_quic_srtm_free(QUIC_SRTM *srtm)
         lh_SRTM_ITEM_free(srtm->items_fwd);
     }
 
-    EVP_CIPHER_CTX_free(srtm->blind_ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(srtm->blind_ctx);
     OPENSSL_free(srtm);
 }
 

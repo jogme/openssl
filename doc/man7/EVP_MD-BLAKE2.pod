@@ -27,8 +27,8 @@ Known names are "BLAKE2B-512" and "BLAKE2b512".
 
 =head2 Settable Parameters
 
-"BLAKE2B-512" supports the following EVP_MD_CTX_set_params() key
-described in L<EVP_DigestInit(3)/PARAMETERS>.
+"BLAKE2B-512" supports the following OPENSSL_BOX_EVP_MD_CTX_set_params() key
+described in L<OPENSSL_BOX_EVP_DigestInit(3)/PARAMETERS>.
 
 =over 4
 
@@ -45,7 +45,7 @@ in L<EVP_MD-common(7)>.
 
 The implementation supports the following L<OSSL_PARAM(3)> entries which
 are settable for an B<EVP_MD_CTX> with L<EVP_DigestInit_ex2(3)> or
-L<EVP_MD_CTX_set_params(3)>:
+L<OPENSSL_BOX_EVP_MD_CTX_set_params(3)>:
 
 =over 4
 
@@ -56,7 +56,7 @@ The value of the "size" parameter must not exceed the default digest length
 of the respective BLAKE2 algorithm variants, 64 for BLAKE2B-512 and
 32 for BLAKE2S-256. The parameter must be set with the
 L<EVP_DigestInit_ex2(3)> call to have an immediate effect. When set with
-L<EVP_MD_CTX_set_params(3)> it will have an effect only if the B<EVP_MD_CTX>
+L<OPENSSL_BOX_EVP_MD_CTX_set_params(3)> it will have an effect only if the B<EVP_MD_CTX>
 context is reinitialized.
 
 =back

@@ -33,7 +33,7 @@ static int test_rand(void)
     *p = OSSL_PARAM_construct_end();
 
     if (!TEST_ptr(privctx = RAND_get0_private(NULL))
-            || !TEST_true(EVP_RAND_CTX_set_params(privctx, params))
+            || !TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(privctx, params))
             || !TEST_int_gt(RAND_priv_bytes(outbuf, sizeof(outbuf)), 0)
             || !TEST_mem_eq(outbuf, sizeof(outbuf), entropy1, sizeof(outbuf))
             || !TEST_int_le(RAND_priv_bytes(outbuf, sizeof(outbuf) + 1), 0)
@@ -44,15 +44,15 @@ static int test_rand(void)
 
     *params = OSSL_PARAM_construct_octet_string(OSSL_RAND_PARAM_TEST_ENTROPY,
                                                 entropy2, sizeof(entropy2));
-    if (!TEST_true(EVP_RAND_CTX_set_params(privctx, params))
+    if (!TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(privctx, params))
             || !TEST_int_gt(RAND_priv_bytes(outbuf, sizeof(outbuf)), 0)
             || !TEST_mem_eq(outbuf, sizeof(outbuf), entropy2, sizeof(outbuf)))
         return 0;
 
     *params = OSSL_PARAM_construct_octet_string(OSSL_RAND_PARAM_TEST_NONCE,
                                                 nonce, sizeof(nonce));
-    if (!TEST_true(EVP_RAND_CTX_set_params(privctx, params))
-            || !TEST_true(EVP_RAND_nonce(privctx, outbuf, sizeof(outbuf)))
+    if (!TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(privctx, params))
+            || !TEST_true(OPENSSL_BOX_EVP_RAND_nonce(privctx, outbuf, sizeof(outbuf)))
             || !TEST_mem_eq(outbuf, sizeof(outbuf), nonce, sizeof(outbuf)))
         return 0;
 
@@ -61,12 +61,12 @@ static int test_rand(void)
         return 1;
     }
     /* Verify that the FIPS indicator can be read and is false */
-    prov = EVP_RAND_get0_provider(EVP_RAND_CTX_get0_rand(privctx));
+    prov = OPENSSL_BOX_EVP_RAND_get0_provider(OPENSSL_BOX_EVP_RAND_CTX_get0_rand(privctx));
     if (prov != NULL
             && strcmp(OSSL_PROVIDER_get0_name(prov), "fips") == 0) {
         params[0] = OSSL_PARAM_construct_int(OSSL_RAND_PARAM_FIPS_APPROVED_INDICATOR,
                                              &indicator);
-        if (!TEST_true(EVP_RAND_CTX_get_params(privctx, params))
+        if (!TEST_true(OPENSSL_BOX_EVP_RAND_CTX_get_params(privctx, params))
                 || !TEST_int_eq(indicator, 0))
             return 0;
     }
@@ -120,8 +120,8 @@ static int fips_health_test_one(const uint8_t *buf, size_t n, size_t gen)
 
     if (!TEST_ptr(parent_alg = EVP_RAND_fetch(NULL, "TEST-RAND", "-fips"))
             || !TEST_ptr(crngt_alg = EVP_RAND_fetch(NULL, "CRNG-TEST", "-fips"))
-            || !TEST_ptr(parent = EVP_RAND_CTX_new(parent_alg, NULL))
-            || !TEST_ptr(crngt = EVP_RAND_CTX_new(crngt_alg, parent))
+            || !TEST_ptr(parent = OPENSSL_BOX_EVP_RAND_CTX_new(parent_alg, NULL))
+            || !TEST_ptr(crngt = OPENSSL_BOX_EVP_RAND_CTX_new(crngt_alg, parent))
             || !TEST_true(EVP_RAND_instantiate(parent, 0, 0,
                                                (unsigned char *)"abc", 3, p))
             || !TEST_true(EVP_RAND_instantiate(crngt, 0, 0,
@@ -132,7 +132,7 @@ static int fips_health_test_one(const uint8_t *buf, size_t n, size_t gen)
     /* Verify that the FIPS indicator is negative */
     p[0] = OSSL_PARAM_construct_int(OSSL_RAND_PARAM_FIPS_APPROVED_INDICATOR,
                                     &indicator);
-    if (!TEST_true(EVP_RAND_CTX_get_params(crngt, p))
+    if (!TEST_true(OPENSSL_BOX_EVP_RAND_CTX_get_params(crngt, p))
             || !TEST_int_le(indicator, 0))
         goto err;
 
@@ -140,10 +140,10 @@ static int fips_health_test_one(const uint8_t *buf, size_t n, size_t gen)
     res = EVP_RAND_generate(crngt, out, gen, 0, 0, NULL, 0);
     ERR_pop_to_mark();
  err:
-    EVP_RAND_CTX_free(crngt);
-    EVP_RAND_CTX_free(parent);
-    EVP_RAND_free(crngt_alg);
-    EVP_RAND_free(parent_alg);
+    OPENSSL_BOX_EVP_RAND_CTX_free(crngt);
+    OPENSSL_BOX_EVP_RAND_CTX_free(parent);
+    OPENSSL_BOX_EVP_RAND_free(crngt_alg);
+    OPENSSL_BOX_EVP_RAND_free(parent_alg);
     return res;
 }
 

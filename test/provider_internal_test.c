@@ -60,14 +60,14 @@ static int test_builtin_provider(void)
      * This should mean that the p_test provider will fail any fetches - which
      * is something we test inside the provider.
      */
-    EVP_set_default_properties(NULL, "fips=yes");
+    OPENSSL_BOX_EVP_set_default_properties(NULL, "fips=yes");
 
     ret =
         TEST_ptr(prov =
                  ossl_provider_new(NULL, name, PROVIDER_INIT_FUNCTION_NAME, NULL, 0))
         && test_provider(prov, expected_greeting1(name));
 
-    EVP_set_default_properties(NULL, "");
+    OPENSSL_BOX_EVP_set_default_properties(NULL, "");
 
     return ret;
 }
@@ -111,7 +111,7 @@ static int test_cache_flushes(void)
             || !TEST_true(OSSL_PROVIDER_available(ctx, "default"))
             || !TEST_ptr(md = EVP_MD_fetch(ctx, "SHA256", NULL)))
         goto err;
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     md = NULL;
     OSSL_PROVIDER_unload(prov);
     prov = NULL;
@@ -120,7 +120,7 @@ static int test_cache_flushes(void)
         goto err;
 
     if (!TEST_ptr_null(md = EVP_MD_fetch(ctx, "SHA256", NULL))) {
-        const char *provname = OSSL_PROVIDER_get0_name(EVP_MD_get0_provider(md));
+        const char *provname = OSSL_PROVIDER_get0_name(OPENSSL_BOX_EVP_MD_get0_provider(md));
 
         if (OSSL_PROVIDER_available(NULL, provname))
             TEST_info("%s provider is available\n", provname);
@@ -131,7 +131,7 @@ static int test_cache_flushes(void)
     ret = 1;
  err:
     OSSL_PROVIDER_unload(prov);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     OSSL_LIB_CTX_free(ctx);
     return ret;
 }

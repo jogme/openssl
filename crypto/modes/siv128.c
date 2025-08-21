@@ -94,16 +94,16 @@ __owur static ossl_inline int siv128_do_s2v_p(SIV128_CONTEXT *ctx, SIV_BLOCK *ou
     EVP_MAC_CTX *mac_ctx;
     int ret = 0;
 
-    mac_ctx = EVP_MAC_CTX_dup(ctx->mac_ctx_init);
+    mac_ctx = OPENSSL_BOX_EVP_MAC_CTX_dup(ctx->mac_ctx_init);
     if (mac_ctx == NULL)
         return 0;
 
     if (len >= SIV_LEN) {
-        if (!EVP_MAC_update(mac_ctx, in, len - SIV_LEN))
+        if (!OPENSSL_BOX_EVP_MAC_update(mac_ctx, in, len - SIV_LEN))
             goto err;
         memcpy(&t, in + (len-SIV_LEN), SIV_LEN);
         siv128_xorblock(&t, &ctx->d);
-        if (!EVP_MAC_update(mac_ctx, t.byte, SIV_LEN))
+        if (!OPENSSL_BOX_EVP_MAC_update(mac_ctx, t.byte, SIV_LEN))
             goto err;
     } else {
         memset(&t, 0, sizeof(t));
@@ -111,7 +111,7 @@ __owur static ossl_inline int siv128_do_s2v_p(SIV128_CONTEXT *ctx, SIV_BLOCK *ou
         t.byte[len] = 0x80;
         siv128_dbl(&ctx->d);
         siv128_xorblock(&t, &ctx->d);
-        if (!EVP_MAC_update(mac_ctx, t.byte, SIV_LEN))
+        if (!OPENSSL_BOX_EVP_MAC_update(mac_ctx, t.byte, SIV_LEN))
             goto err;
     }
     if (!EVP_MAC_final(mac_ctx, out->byte, &out_len, sizeof(out->byte))
@@ -121,7 +121,7 @@ __owur static ossl_inline int siv128_do_s2v_p(SIV128_CONTEXT *ctx, SIV_BLOCK *ou
     ret = 1;
 
 err:
-    EVP_MAC_CTX_free(mac_ctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(mac_ctx);
     return ret;
 }
 
@@ -174,9 +174,9 @@ int ossl_siv128_init(SIV128_CONTEXT *ctx, const unsigned char *key, int klen,
         return 0;
 
     memset(&ctx->d, 0, sizeof(ctx->d));
-    EVP_CIPHER_CTX_free(ctx->cipher_ctx);
-    EVP_MAC_CTX_free(ctx->mac_ctx_init);
-    EVP_MAC_free(ctx->mac);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx->cipher_ctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx->mac_ctx_init);
+    OPENSSL_BOX_EVP_MAC_free(ctx->mac);
     ctx->mac = NULL;
     ctx->cipher_ctx = NULL;
     ctx->mac_ctx_init = NULL;
@@ -184,30 +184,30 @@ int ossl_siv128_init(SIV128_CONTEXT *ctx, const unsigned char *key, int klen,
     if (key == NULL || cbc == NULL || ctr == NULL)
         return 0;
 
-    cbc_name = EVP_CIPHER_get0_name(cbc);
+    cbc_name = OPENSSL_BOX_EVP_CIPHER_get0_name(cbc);
     params[0] = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_CIPHER,
                                                  (char *)cbc_name, 0);
     params[1] = OSSL_PARAM_construct_octet_string(OSSL_MAC_PARAM_KEY,
                                                   (void *)key, klen);
     params[2] = OSSL_PARAM_construct_end();
 
-    if ((ctx->cipher_ctx = EVP_CIPHER_CTX_new()) == NULL
+    if ((ctx->cipher_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL
             || (ctx->mac =
                 EVP_MAC_fetch(libctx, OSSL_MAC_NAME_CMAC, propq)) == NULL
-            || (ctx->mac_ctx_init = EVP_MAC_CTX_new(ctx->mac)) == NULL
-            || !EVP_MAC_CTX_set_params(ctx->mac_ctx_init, params)
+            || (ctx->mac_ctx_init = OPENSSL_BOX_EVP_MAC_CTX_new(ctx->mac)) == NULL
+            || !OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx->mac_ctx_init, params)
             || !EVP_EncryptInit_ex(ctx->cipher_ctx, ctr, NULL, key + klen, NULL)
-            || (mac_ctx = EVP_MAC_CTX_dup(ctx->mac_ctx_init)) == NULL
-            || !EVP_MAC_update(mac_ctx, zero, sizeof(zero))
+            || (mac_ctx = OPENSSL_BOX_EVP_MAC_CTX_dup(ctx->mac_ctx_init)) == NULL
+            || !OPENSSL_BOX_EVP_MAC_update(mac_ctx, zero, sizeof(zero))
             || !EVP_MAC_final(mac_ctx, ctx->d.byte, &out_len,
                               sizeof(ctx->d.byte))) {
-        EVP_CIPHER_CTX_free(ctx->cipher_ctx);
-        EVP_MAC_CTX_free(ctx->mac_ctx_init);
-        EVP_MAC_CTX_free(mac_ctx);
-        EVP_MAC_free(ctx->mac);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx->cipher_ctx);
+        OPENSSL_BOX_EVP_MAC_CTX_free(ctx->mac_ctx_init);
+        OPENSSL_BOX_EVP_MAC_CTX_free(mac_ctx);
+        OPENSSL_BOX_EVP_MAC_free(ctx->mac);
         return 0;
     }
-    EVP_MAC_CTX_free(mac_ctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(mac_ctx);
 
     ctx->final_ret = -1;
     ctx->crypto_ok = 1;
@@ -222,19 +222,19 @@ int ossl_siv128_copy_ctx(SIV128_CONTEXT *dest, SIV128_CONTEXT *src)
 {
     memcpy(&dest->d, &src->d, sizeof(src->d));
     if (dest->cipher_ctx == NULL) {
-        dest->cipher_ctx = EVP_CIPHER_CTX_new();
+        dest->cipher_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
         if (dest->cipher_ctx == NULL)
             return 0;
     }
-    if (!EVP_CIPHER_CTX_copy(dest->cipher_ctx, src->cipher_ctx))
+    if (!OPENSSL_BOX_EVP_CIPHER_CTX_copy(dest->cipher_ctx, src->cipher_ctx))
         return 0;
-    EVP_MAC_CTX_free(dest->mac_ctx_init);
-    dest->mac_ctx_init = EVP_MAC_CTX_dup(src->mac_ctx_init);
+    OPENSSL_BOX_EVP_MAC_CTX_free(dest->mac_ctx_init);
+    dest->mac_ctx_init = OPENSSL_BOX_EVP_MAC_CTX_dup(src->mac_ctx_init);
     if (dest->mac_ctx_init == NULL)
         return 0;
     dest->mac = src->mac;
     if (dest->mac != NULL)
-        EVP_MAC_up_ref(dest->mac);
+        OPENSSL_BOX_EVP_MAC_up_ref(dest->mac);
     return 1;
 }
 
@@ -252,15 +252,15 @@ int ossl_siv128_aad(SIV128_CONTEXT *ctx, const unsigned char *aad,
 
     siv128_dbl(&ctx->d);
 
-    if ((mac_ctx = EVP_MAC_CTX_dup(ctx->mac_ctx_init)) == NULL
-        || !EVP_MAC_update(mac_ctx, aad, len)
+    if ((mac_ctx = OPENSSL_BOX_EVP_MAC_CTX_dup(ctx->mac_ctx_init)) == NULL
+        || !OPENSSL_BOX_EVP_MAC_update(mac_ctx, aad, len)
         || !EVP_MAC_final(mac_ctx, mac_out.byte, &out_len,
                           sizeof(mac_out.byte))
         || out_len != SIV_LEN) {
-        EVP_MAC_CTX_free(mac_ctx);
+        OPENSSL_BOX_EVP_MAC_CTX_free(mac_ctx);
         return 0;
     }
-    EVP_MAC_CTX_free(mac_ctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(mac_ctx);
 
     siv128_xorblock(&ctx->d, &mac_out);
 
@@ -370,11 +370,11 @@ int ossl_siv128_get_tag(SIV128_CONTEXT *ctx, unsigned char *tag, size_t len)
 int ossl_siv128_cleanup(SIV128_CONTEXT *ctx)
 {
     if (ctx != NULL) {
-        EVP_CIPHER_CTX_free(ctx->cipher_ctx);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx->cipher_ctx);
         ctx->cipher_ctx = NULL;
-        EVP_MAC_CTX_free(ctx->mac_ctx_init);
+        OPENSSL_BOX_EVP_MAC_CTX_free(ctx->mac_ctx_init);
         ctx->mac_ctx_init = NULL;
-        EVP_MAC_free(ctx->mac);
+        OPENSSL_BOX_EVP_MAC_free(ctx->mac);
         ctx->mac = NULL;
         OPENSSL_cleanse(&ctx->d, sizeof(ctx->d));
         OPENSSL_cleanse(&ctx->tag, sizeof(ctx->tag));

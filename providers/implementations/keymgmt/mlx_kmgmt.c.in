@@ -69,8 +69,8 @@ static void mlx_kem_key_free(void *vkey)
     if (key == NULL)
         return;
     OPENSSL_free(key->propq);
-    EVP_PKEY_free(key->mkey);
-    EVP_PKEY_free(key->xkey);
+    OPENSSL_BOX_EVP_PKEY_free(key->mkey);
+    OPENSSL_BOX_EVP_PKEY_free(key->xkey);
     OPENSSL_free(key);
 }
 
@@ -143,8 +143,8 @@ static int mlx_kem_match(const void *vkey1, const void *vkey2, int selection)
     if (!have_pub1)
         return 1;
 
-    return EVP_PKEY_eq(key1->mkey, key2->mkey)
-        && EVP_PKEY_eq(key1->xkey, key2->xkey);
+    return OPENSSL_BOX_EVP_PKEY_eq(key1->mkey, key2->mkey)
+        && OPENSSL_BOX_EVP_PKEY_eq(key1->xkey, key2->xkey);
 }
 
 {- produce_param_decoder('ml_kem_import_export',
@@ -361,7 +361,7 @@ load_slot(OSSL_LIB_CTX *libctx, const char *propq, const char *pname,
     val = (void *)(in + off);
 
     if ((ctx = EVP_PKEY_CTX_new_from_name(libctx, alg, propq)) == NULL
-        || EVP_PKEY_fromdata_init(ctx) <= 0)
+        || OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0)
         goto err;
     parr[0] = OSSL_PARAM_construct_octet_string(pname, val, len);
     if (group != NULL)
@@ -371,7 +371,7 @@ load_slot(OSSL_LIB_CTX *libctx, const char *propq, const char *pname,
         ret = 1;
 
  err:
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 
@@ -403,8 +403,8 @@ load_keys(MLX_KEY *key,
     return 1;
 
  err:
-    EVP_PKEY_free(key->mkey);
-    EVP_PKEY_free(key->xkey);
+    OPENSSL_BOX_EVP_PKEY_free(key->mkey);
+    OPENSSL_BOX_EVP_PKEY_free(key->xkey);
     key->xkey = key->mkey = NULL;
     key->state = MLX_HAVE_NOKEYS;
     return 0;
@@ -759,8 +759,8 @@ static void *mlx_kem_dup(const void *vkey, int selection)
         ret->xkey = ret->mkey = NULL;
         return ret;
     case OSSL_KEYMGMT_SELECT_KEYPAIR:
-        ret->mkey = EVP_PKEY_dup(key->mkey);
-        ret->xkey = EVP_PKEY_dup(key->xkey);
+        ret->mkey = OPENSSL_BOX_EVP_PKEY_dup(key->mkey);
+        ret->xkey = OPENSSL_BOX_EVP_PKEY_dup(key->xkey);
         if (ret->xkey != NULL && ret->mkey != NULL)
             return ret;
         break;

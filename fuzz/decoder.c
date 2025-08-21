@@ -58,29 +58,29 @@ int FuzzerTestOneInput(const uint8_t *buf, size_t len)
         EVP_PKEY_print_private(bio, pkey, 1, pctx);
         EVP_PKEY_print_params(bio, pkey, 1, pctx);
 
-        pkey2 = EVP_PKEY_dup(pkey);
+        pkey2 = OPENSSL_BOX_EVP_PKEY_dup(pkey);
         OPENSSL_assert(pkey2 != NULL);
-        EVP_PKEY_eq(pkey, pkey2);
-        EVP_PKEY_free(pkey2);
+        OPENSSL_BOX_EVP_PKEY_eq(pkey, pkey2);
+        OPENSSL_BOX_EVP_PKEY_free(pkey2);
 
-        ctx = EVP_PKEY_CTX_new(pkey, NULL);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, NULL);
         /*
          * Param check will take too long time on large DH parameters.
          * Skip it.
          */
-        if ((!EVP_PKEY_is_a(pkey, "DH") && !EVP_PKEY_is_a(pkey, "DHX"))
-            || EVP_PKEY_get_bits(pkey) <= 2048)
-            EVP_PKEY_param_check(ctx);
+        if ((!OPENSSL_BOX_EVP_PKEY_is_a(pkey, "DH") && !OPENSSL_BOX_EVP_PKEY_is_a(pkey, "DHX"))
+            || OPENSSL_BOX_EVP_PKEY_get_bits(pkey) <= 2048)
+            OPENSSL_BOX_EVP_PKEY_param_check(ctx);
 
-        EVP_PKEY_public_check(ctx);
+        OPENSSL_BOX_EVP_PKEY_public_check(ctx);
         /* Private and pairwise checks are unbounded, skip for large keys. */
-        if (EVP_PKEY_get_bits(pkey) <= 4096) {
-            EVP_PKEY_private_check(ctx);
-            EVP_PKEY_pairwise_check(ctx);
+        if (OPENSSL_BOX_EVP_PKEY_get_bits(pkey) <= 4096) {
+            OPENSSL_BOX_EVP_PKEY_private_check(ctx);
+            OPENSSL_BOX_EVP_PKEY_pairwise_check(ctx);
         }
         OPENSSL_assert(ctx != NULL);
-        EVP_PKEY_CTX_free(ctx);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
     }
     OSSL_DECODER_CTX_free(dctx);
 

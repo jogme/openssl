@@ -439,7 +439,7 @@ int ocsp_main(int argc, char **argv)
             if (cert == NULL)
                 goto end;
             if (cert_id_md == NULL)
-                cert_id_md = (EVP_MD *)EVP_sha1();
+                cert_id_md = (EVP_MD *)OPENSSL_BOX_EVP_sha1();
             if (!add_ocsp_cert(&req, cert, cert_id_md, issuer, ids))
                 goto end;
             if (!sk_OPENSSL_STRING_push(reqnames, opt_arg()))
@@ -449,7 +449,7 @@ int ocsp_main(int argc, char **argv)
         case OPT_SERIAL:
             reset_unknown();
             if (cert_id_md == NULL)
-                cert_id_md = (EVP_MD *)EVP_sha1();
+                cert_id_md = (EVP_MD *)OPENSSL_BOX_EVP_sha1();
             if (!add_ocsp_serial(&req, opt_arg(), cert_id_md, issuer, ids))
                 goto end;
             if (!sk_OPENSSL_STRING_push(reqnames, opt_arg()))
@@ -852,11 +852,11 @@ redo_accept:
     X509_STORE_free(store);
     X509_VERIFY_PARAM_free(vpm);
     sk_OPENSSL_STRING_free(rsign_sigopts);
-    EVP_PKEY_free(key);
-    EVP_PKEY_free(rkey);
-    EVP_MD_free(cert_id_md);
-    EVP_MD_free(rsign_md);
-    EVP_MD_free(resp_certid_md);
+    OPENSSL_BOX_EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_free(rkey);
+    OPENSSL_BOX_EVP_MD_free(cert_id_md);
+    OPENSSL_BOX_EVP_MD_free(rsign_md);
+    OPENSSL_BOX_EVP_MD_free(resp_certid_md);
     X509_free(cert);
     OSSL_STACK_OF_X509_free(issuers);
     X509_free(rsigner);
@@ -1142,7 +1142,7 @@ static void make_ocsp_response(BIO *err, OCSP_RESPONSE **resp, OCSP_REQUEST *req
 
     OCSP_copy_nonce(bs, req);
 
-    mctx = EVP_MD_CTX_new();
+    mctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (mctx == NULL || !EVP_DigestSignInit(mctx, &pkctx, rmd, NULL, rkey)) {
         *resp = OCSP_response_create(OCSP_RESPONSE_STATUS_INTERNALERROR, NULL);
         goto end;
@@ -1171,7 +1171,7 @@ static void make_ocsp_response(BIO *err, OCSP_RESPONSE **resp, OCSP_REQUEST *req
     *resp = OCSP_response_create(OCSP_RESPONSE_STATUS_SUCCESSFUL, bs);
 
  end:
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
     ASN1_TIME_free(thisupd);
     ASN1_TIME_free(nextupd);
     OCSP_BASICRESP_free(bs);

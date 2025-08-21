@@ -85,7 +85,7 @@ static void kdf_scrypt_free(void *vctx)
 
     if (ctx != NULL) {
         OPENSSL_free(ctx->propq);
-        EVP_MD_free(ctx->sha256);
+        OPENSSL_BOX_EVP_MD_free(ctx->sha256);
         kdf_scrypt_reset(ctx);
         OPENSSL_free(ctx);
     }
@@ -109,7 +109,7 @@ static void *kdf_scrypt_dup(void *vctx)
 
     dest = kdf_scrypt_new_inner(src->libctx);
     if (dest != NULL) {
-        if (src->sha256 != NULL && !EVP_MD_up_ref(src->sha256))
+        if (src->sha256 != NULL && !OPENSSL_BOX_EVP_MD_up_ref(src->sha256))
             goto err;
         if (src->propq != NULL) {
             dest->propq = OPENSSL_strdup(src->propq);
@@ -165,7 +165,7 @@ static int scrypt_set_membuf(unsigned char **buffer, size_t *buflen,
 
 static int set_digest(KDF_SCRYPT *ctx)
 {
-    EVP_MD_free(ctx->sha256);
+    OPENSSL_BOX_EVP_MD_free(ctx->sha256);
     ctx->sha256 = EVP_MD_fetch(ctx->libctx, "sha256", ctx->propq);
     if (ctx->sha256 == NULL) {
         ERR_raise(ERR_LIB_PROV, PROV_R_UNABLE_TO_LOAD_SHA256);

@@ -160,7 +160,7 @@ int pkcs8_main(int argc, char **argv)
                 goto opthelp;
             }
             if (cipher == NULL)
-                cipher = (EVP_CIPHER *)EVP_aes_256_cbc();
+                cipher = (EVP_CIPHER *)OPENSSL_BOX_EVP_aes_256_cbc();
             break;
         case OPT_ITER:
             iter =  opt_int_arg();
@@ -180,7 +180,7 @@ int pkcs8_main(int argc, char **argv)
             scrypt_r = 8;
             scrypt_p = 1;
             if (cipher == NULL)
-                cipher = (EVP_CIPHER *)EVP_aes_256_cbc();
+                cipher = (EVP_CIPHER *)OPENSSL_BOX_EVP_aes_256_cbc();
             break;
         case OPT_SCRYPT_N:
             if (!opt_long(opt_arg(), &scrypt_N) || scrypt_N <= 0)
@@ -221,7 +221,7 @@ int pkcs8_main(int argc, char **argv)
     }
 
     if ((pbe_nid == -1) && cipher == NULL)
-        cipher = (EVP_CIPHER *)EVP_aes_256_cbc();
+        cipher = (EVP_CIPHER *)OPENSSL_BOX_EVP_aes_256_cbc();
 
     in = bio_open_default(infile, 'r',
                           informat == FORMAT_UNDEF ? FORMAT_PEM : informat);
@@ -274,7 +274,7 @@ int pkcs8_main(int argc, char **argv)
                 /* To avoid bit rot */
 #ifndef OPENSSL_NO_UI_CONSOLE
                 p8pass = pass;
-                if (EVP_read_pw_string
+                if (OPENSSL_BOX_EVP_read_pw_string
                     (pass, sizeof(pass), "Enter Encryption Password:", 1)) {
                     X509_ALGOR_free(pbe);
                     goto end;
@@ -335,7 +335,7 @@ int pkcs8_main(int argc, char **argv)
         } else if (1) {
 #ifndef OPENSSL_NO_UI_CONSOLE
             p8pass = pass;
-            if (EVP_read_pw_string(pass, sizeof(pass), "Enter Password:", 0)) {
+            if (OPENSSL_BOX_EVP_read_pw_string(pass, sizeof(pass), "Enter Password:", 0)) {
                 BIO_printf(bio_err, "Can't read Password\n");
                 goto end;
             }
@@ -380,8 +380,8 @@ int pkcs8_main(int argc, char **argv)
  end:
     X509_SIG_free(p8);
     PKCS8_PRIV_KEY_INFO_free(p8inf);
-    EVP_PKEY_free(pkey);
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     release_engine(e);
     BIO_free_all(out);
     BIO_free(in);

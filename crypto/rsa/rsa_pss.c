@@ -52,7 +52,7 @@ int ossl_rsa_verify_PKCS1_PSS_mgf1(RSA *rsa, const unsigned char *mHash,
     int hLen, maskedDBLen, MSBits, emLen;
     const unsigned char *H;
     unsigned char *DB = NULL;
-    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     unsigned char H_[EVP_MAX_MD_SIZE];
 
     if (ctx == NULL)
@@ -61,7 +61,7 @@ int ossl_rsa_verify_PKCS1_PSS_mgf1(RSA *rsa, const unsigned char *mHash,
     if (mgf1Hash == NULL)
         mgf1Hash = Hash;
 
-    hLen = EVP_MD_get_size(Hash);
+    hLen = OPENSSL_BOX_EVP_MD_get_size(Hash);
     if (hLen <= 0)
         goto err;
     /*-
@@ -149,7 +149,7 @@ int ossl_rsa_verify_PKCS1_PSS_mgf1(RSA *rsa, const unsigned char *mHash,
     *sLenOut = sLen;
  err:
     OPENSSL_free(DB);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
 
     return ret;
 
@@ -186,7 +186,7 @@ int ossl_rsa_padding_add_PKCS1_PSS_mgf1(RSA *rsa, unsigned char *EM,
     if (mgf1Hash == NULL)
         mgf1Hash = Hash;
 
-    hLen = EVP_MD_get_size(Hash);
+    hLen = OPENSSL_BOX_EVP_MD_get_size(Hash);
     if (hLen <= 0)
         goto err;
     /*-
@@ -244,7 +244,7 @@ int ossl_rsa_padding_add_PKCS1_PSS_mgf1(RSA *rsa, unsigned char *EM,
     }
     maskedDBLen = emLen - hLen - 1;
     H = EM + maskedDBLen;
-    ctx = EVP_MD_CTX_new();
+    ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx == NULL)
         goto err;
     if (!EVP_DigestInit_ex(ctx, Hash, NULL)
@@ -283,7 +283,7 @@ int ossl_rsa_padding_add_PKCS1_PSS_mgf1(RSA *rsa, unsigned char *EM,
 
     *sLenOut = sLen;
  err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     OPENSSL_clear_free(salt, (size_t)sLen); /* salt != NULL implies sLen > 0 */
 
     return ret;

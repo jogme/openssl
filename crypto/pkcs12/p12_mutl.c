@@ -146,7 +146,7 @@ static int PBMAC1_PBKDF2_HMAC(OSSL_LIB_CTX *ctx, const char *propq,
     ret = keylen;
 
  err:
-    EVP_MD_free(kdf_md);
+    OPENSSL_BOX_EVP_MD_free(kdf_md);
     PBKDF2PARAM_free(pbkdf2_param);
 
     return ret;
@@ -212,8 +212,8 @@ static int pkcs12_gen_mac(PKCS12 *p12, const char *pass, int passlen,
     }
     (void)ERR_pop_to_mark();
 
-    keylen = EVP_MD_get_size(md);
-    md_nid = EVP_MD_get_type(md);
+    keylen = OPENSSL_BOX_EVP_MD_get_size(md);
+    md_nid = OPENSSL_BOX_EVP_MD_get_type(md);
     if (keylen <= 0)
         goto err;
 
@@ -252,14 +252,14 @@ static int pkcs12_gen_mac(PKCS12 *p12, const char *pass, int passlen,
                                         iter, keylen, key, hmac_md);
 
             if (fetched)
-                EVP_MD_free(hmac_md);
+                OPENSSL_BOX_EVP_MD_free(hmac_md);
             if (res != 1) {
                 ERR_raise(ERR_LIB_PKCS12, PKCS12_R_KEY_GEN_ERROR);
                 goto err;
             }
         } else {
             if (fetched)
-                EVP_MD_free(hmac_md);
+                OPENSSL_BOX_EVP_MD_free(hmac_md);
             /* Default to UTF-8 password */
             if (!PKCS12_key_gen_utf8_ex(pass, passlen, salt, saltlen, PKCS12_MAC_ID,
                                         iter, keylen, key, md,
@@ -281,7 +281,7 @@ static int pkcs12_gen_mac(PKCS12 *p12, const char *pass, int passlen,
 err:
     OPENSSL_cleanse(key, sizeof(key));
     HMAC_CTX_free(hmac);
-    EVP_MD_free(md_fetch);
+    OPENSSL_BOX_EVP_MD_free(md_fetch);
     return ret;
 }
 
@@ -351,7 +351,7 @@ int PKCS12_set_mac(PKCS12 *p12, const char *pass, int passlen,
 
     if (md_type == NULL)
         /* No need to do a fetch as the md_type is used only to get a NID */
-        md_type = EVP_sha256();
+        md_type = OPENSSL_BOX_EVP_sha256();
     if (!iter)
         iter = PKCS12_DEFAULT_ITER;
     if (PKCS12_setup_mac(p12, iter, salt, saltlen, md_type) == PKCS12_ERROR) {
@@ -430,7 +430,7 @@ static int pkcs12_setup_mac(PKCS12 *p12, int iter, unsigned char *salt, int salt
 int PKCS12_setup_mac(PKCS12 *p12, int iter, unsigned char *salt, int saltlen,
                      const EVP_MD *md_type)
 {
-    return pkcs12_setup_mac(p12, iter, salt, saltlen, EVP_MD_get_type(md_type));
+    return pkcs12_setup_mac(p12, iter, salt, saltlen, OPENSSL_BOX_EVP_MD_get_type(md_type));
 }
 
 int PKCS12_set_pbmac1_pbkdf2(PKCS12 *p12, const char *pass, int passlen,
@@ -450,20 +450,20 @@ int PKCS12_set_pbmac1_pbkdf2(PKCS12 *p12, const char *pass, int passlen,
 
     if (md_type == NULL)
         /* No need to do a fetch as the md_type is used only to get a NID */
-        md_type = EVP_sha256();
+        md_type = OPENSSL_BOX_EVP_sha256();
 
     if (prf_md_name == NULL)
-        prf_md_nid = EVP_MD_get_type(md_type);
+        prf_md_nid = OPENSSL_BOX_EVP_MD_get_type(md_type);
     else
         prf_md_nid = OBJ_txt2nid(prf_md_name);
 
     if (iter == 0)
         iter = PKCS12_DEFAULT_ITER;
 
-    keylen = EVP_MD_get_size(md_type);
+    keylen = OPENSSL_BOX_EVP_MD_get_size(md_type);
 
     prf_nid  = ossl_md2hmacnid(prf_md_nid);
-    hmac_nid = ossl_md2hmacnid(EVP_MD_get_type(md_type));
+    hmac_nid = ossl_md2hmacnid(OPENSSL_BOX_EVP_MD_get_type(md_type));
 
     if (prf_nid == NID_undef || hmac_nid == NID_undef) {
         ERR_raise(ERR_LIB_PKCS12, PKCS12_R_UNKNOWN_DIGEST_ALGORITHM);
@@ -511,7 +511,7 @@ int PKCS12_set_pbmac1_pbkdf2(PKCS12 *p12, const char *pass, int passlen,
      * Note that output mac is forced to UTF-8...
      */
     if (!pkcs12_gen_mac(p12, pass, passlen, mac, &maclen,
-                        EVP_MD_get_type(md_type), prf_md_nid,
+                        OPENSSL_BOX_EVP_MD_get_type(md_type), prf_md_nid,
                         pkcs12_pbmac1_pbkdf2_key_gen)) {
         ERR_raise(ERR_LIB_PKCS12, PKCS12_R_MAC_GENERATION_ERROR);
         goto err;

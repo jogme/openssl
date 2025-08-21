@@ -79,9 +79,9 @@ int main(int argc, char **argv)
     }
 
     /* Create a context for the GMAC operation */
-    mctx = EVP_MAC_CTX_new(mac);
+    mctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac);
     if (mctx == NULL) {
-        fprintf(stderr, "EVP_MAC_CTX_new() returned NULL\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_CTX_new() returned NULL\n");
         goto end;
     }
 
@@ -109,8 +109,8 @@ int main(int argc, char **argv)
     }
 
     /* Make one or more calls to process the data to be authenticated */
-    if (!EVP_MAC_update(mctx, data, sizeof(data))) {
-        fprintf(stderr, "EVP_MAC_update() failed\n");
+    if (!OPENSSL_BOX_EVP_MAC_update(mctx, data, sizeof(data))) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_update() failed\n");
         goto end;
     }
 
@@ -136,8 +136,8 @@ int main(int argc, char **argv)
 
     ret = EXIT_SUCCESS;
 end:
-    EVP_MAC_CTX_free(mctx);
-    EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_MAC_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MAC_free(mac);
     OSSL_LIB_CTX_free(library_context);
     if (ret != EXIT_SUCCESS)
         ERR_print_errors_fp(stderr);

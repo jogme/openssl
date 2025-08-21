@@ -88,7 +88,7 @@ used.
 See L<EVP_PKEY-X25519(7)> for information related to B<X25519> and B<X448> keys.
 
 The following signature parameters can be retrieved using
-EVP_PKEY_CTX_get_params().
+OPENSSL_BOX_EVP_PKEY_CTX_get_params().
 
 =over 4
 
@@ -142,7 +142,7 @@ To sign a message using an ED25519 EVP_PKEY structure:
     {
         size_t sig_len;
         unsigned char *sig = NULL;
-        EVP_MD_CTX *md_ctx = EVP_MD_CTX_new();
+        EVP_MD_CTX *md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
 
         const OSSL_PARAM params[] = {
             OSSL_PARAM_utf8_string ("instance", "Ed25519ctx", 10),
@@ -160,7 +160,7 @@ To sign a message using an ED25519 EVP_PKEY structure:
         EVP_DigestSign(md_ctx, sig, &sig_len, msg, msg_len);
         ...
         OPENSSL_free(sig);
-        EVP_MD_CTX_free(md_ctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     }
 
 =head1 SEE ALSO

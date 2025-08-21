@@ -402,7 +402,7 @@ static int int_load(dynamic_data_ctx *ctx)
  * engines built for openssl 1.1.x and openssl 3.x, but loading
  * an engine that is built for openssl 1.1.x will cause a fatal
  * error.  Detect such engines, since EVP_PKEY_base_id is exported
- * as a function in openssl 1.1.x, while it is named EVP_PKEY_get_base_id
+ * as a function in openssl 1.1.x, while it is named OPENSSL_BOX_EVP_PKEY_get_base_id
  * in openssl 3.x.  Therefore we take the presence of that symbol
  * as an indication that the engine will be incompatible.
  */

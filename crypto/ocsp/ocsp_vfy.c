@@ -209,7 +209,7 @@ static X509 *ocsp_find_signer_sk(STACK_OF(X509) *certs, OCSP_RESPID *id)
             if ((md = EVP_MD_fetch(x->libctx, SN_sha1, x->propq)) == NULL)
                 break;
             r = X509_pubkey_digest(x, md, tmphash, NULL);
-            EVP_MD_free(md);
+            OPENSSL_BOX_EVP_MD_free(md);
             if (!r)
                 break;
             if (memcmp(keyhash, tmphash, SHA_DIGEST_LENGTH) == 0)
@@ -318,7 +318,7 @@ static int ocsp_match_issuerid(X509 *cert, OCSP_CERTID *cid,
         (void)ERR_set_mark();
         dgst = EVP_MD_fetch(NULL, name, NULL);
         if (dgst == NULL)
-            dgst = (EVP_MD *)EVP_get_digestbyname(name);
+            dgst = (EVP_MD *)OPENSSL_BOX_EVP_get_digestbyname(name);
 
         if (dgst == NULL) {
             (void)ERR_clear_last_mark();
@@ -327,7 +327,7 @@ static int ocsp_match_issuerid(X509 *cert, OCSP_CERTID *cid,
         }
         (void)ERR_pop_to_mark();
 
-        mdlen = EVP_MD_get_size(dgst);
+        mdlen = OPENSSL_BOX_EVP_MD_get_size(dgst);
         if (mdlen <= 0) {
             ERR_raise(ERR_LIB_OCSP, OCSP_R_DIGEST_SIZE_ERR);
             goto end;
@@ -364,7 +364,7 @@ static int ocsp_match_issuerid(X509 *cert, OCSP_CERTID *cid,
     }
     return 1;
 end:
-    EVP_MD_free(dgst);
+    OPENSSL_BOX_EVP_MD_free(dgst);
     return ret;
 }
 

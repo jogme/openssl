@@ -23,7 +23,7 @@
 
 void ossl_prov_cipher_reset(PROV_CIPHER *pc)
 {
-    EVP_CIPHER_free(pc->alloc_cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(pc->alloc_cipher);
     pc->alloc_cipher = NULL;
     pc->cipher = NULL;
 #if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_ENGINE)
@@ -34,11 +34,11 @@ void ossl_prov_cipher_reset(PROV_CIPHER *pc)
 
 int ossl_prov_cipher_copy(PROV_CIPHER *dst, const PROV_CIPHER *src)
 {
-    if (src->alloc_cipher != NULL && !EVP_CIPHER_up_ref(src->alloc_cipher))
+    if (src->alloc_cipher != NULL && !OPENSSL_BOX_EVP_CIPHER_up_ref(src->alloc_cipher))
         return 0;
 #if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_ENGINE)
     if (src->engine != NULL && !ENGINE_init(src->engine)) {
-        EVP_CIPHER_free(src->alloc_cipher);
+        OPENSSL_BOX_EVP_CIPHER_free(src->alloc_cipher);
         return 0;
     }
 #endif
@@ -101,7 +101,7 @@ int ossl_prov_cipher_load(PROV_CIPHER *pc, const OSSL_PARAM *cipher,
     if (cipher->data_type != OSSL_PARAM_UTF8_STRING)
         return 0;
 
-    EVP_CIPHER_free(pc->alloc_cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(pc->alloc_cipher);
     ERR_set_mark();
     pc->cipher = pc->alloc_cipher = EVP_CIPHER_fetch(ctx, cipher->data,
                                                      propquery);
@@ -109,7 +109,7 @@ int ossl_prov_cipher_load(PROV_CIPHER *pc, const OSSL_PARAM *cipher,
     if (pc->cipher == NULL) {
         const EVP_CIPHER *evp_cipher;
 
-        evp_cipher = EVP_get_cipherbyname(cipher->data);
+        evp_cipher = OPENSSL_BOX_EVP_get_cipherbyname(cipher->data);
         /* Do not use global EVP_CIPHERs */
         if (evp_cipher != NULL && evp_cipher->origin != EVP_ORIG_GLOBAL)
             pc->cipher = evp_cipher;
@@ -145,7 +145,7 @@ ENGINE *ossl_prov_cipher_engine(const PROV_CIPHER *pc)
 
 void ossl_prov_digest_reset(PROV_DIGEST *pd)
 {
-    EVP_MD_free(pd->alloc_md);
+    OPENSSL_BOX_EVP_MD_free(pd->alloc_md);
     pd->alloc_md = NULL;
     pd->md = NULL;
 #if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_ENGINE)
@@ -156,11 +156,11 @@ void ossl_prov_digest_reset(PROV_DIGEST *pd)
 
 int ossl_prov_digest_copy(PROV_DIGEST *dst, const PROV_DIGEST *src)
 {
-    if (src->alloc_md != NULL && !EVP_MD_up_ref(src->alloc_md))
+    if (src->alloc_md != NULL && !OPENSSL_BOX_EVP_MD_up_ref(src->alloc_md))
         return 0;
 #if !defined(FIPS_MODULE) && !defined(OPENSSL_NO_ENGINE)
     if (src->engine != NULL && !ENGINE_init(src->engine)) {
-        EVP_MD_free(src->alloc_md);
+        OPENSSL_BOX_EVP_MD_free(src->alloc_md);
         return 0;
     }
 #endif
@@ -173,7 +173,7 @@ int ossl_prov_digest_copy(PROV_DIGEST *dst, const PROV_DIGEST *src)
 const EVP_MD *ossl_prov_digest_fetch(PROV_DIGEST *pd, OSSL_LIB_CTX *libctx,
                                      const char *mdname, const char *propquery)
 {
-    EVP_MD_free(pd->alloc_md);
+    OPENSSL_BOX_EVP_MD_free(pd->alloc_md);
     pd->md = pd->alloc_md = EVP_MD_fetch(libctx, mdname, propquery);
 
     return pd->md;
@@ -199,7 +199,7 @@ int ossl_prov_digest_load(PROV_DIGEST *pd, const OSSL_PARAM *digest,
     if (pd->md == NULL) {
         const EVP_MD *md;
 
-        md = EVP_get_digestbyname(digest->data);
+        md = OPENSSL_BOX_EVP_get_digestbyname(digest->data);
         /* Do not use global EVP_MDs */
         if (md != NULL && md->origin != EVP_ORIG_GLOBAL)
             pd->md = md;
@@ -265,7 +265,7 @@ int ossl_prov_set_macctx(EVP_MAC_CTX *macctx,
 
     *mp = OSSL_PARAM_construct_end();
 
-    return EVP_MAC_CTX_set_params(macctx, mac_params);
+    return OPENSSL_BOX_EVP_MAC_CTX_set_params(macctx, mac_params);
 
 }
 
@@ -289,10 +289,10 @@ int ossl_prov_macctx_load(EVP_MAC_CTX **macctx,
     if (macname != NULL) {
         EVP_MAC *mac = EVP_MAC_fetch(libctx, macname, properties);
 
-        EVP_MAC_CTX_free(*macctx);
-        *macctx = mac == NULL ? NULL : EVP_MAC_CTX_new(mac);
+        OPENSSL_BOX_EVP_MAC_CTX_free(*macctx);
+        *macctx = mac == NULL ? NULL : OPENSSL_BOX_EVP_MAC_CTX_new(mac);
         /* The context holds on to the MAC */
-        EVP_MAC_free(mac);
+        OPENSSL_BOX_EVP_MAC_free(mac);
         if (*macctx == NULL)
             return 0;
     }
@@ -316,7 +316,7 @@ int ossl_prov_macctx_load(EVP_MAC_CTX **macctx,
     if (ossl_prov_set_macctx(*macctx, ciphername, mdname, engine, properties))
         return 1;
 
-    EVP_MAC_CTX_free(*macctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(*macctx);
     *macctx = NULL;
     return 0;
 }

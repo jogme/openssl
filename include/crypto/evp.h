@@ -26,7 +26,7 @@
 # define PKCS5_DEFAULT_PBE1_SALT_LEN     PKCS5_SALT_LEN
 # define PKCS5_DEFAULT_PBE2_SALT_LEN     16
 /*
- * Don't free up md_ctx->pctx in EVP_MD_CTX_reset, use the reserved flag
+ * Don't free up md_ctx->pctx in OPENSSL_BOX_EVP_MD_CTX_reset, use the reserved flag
  * values in evp.h
  */
 #define EVP_MD_CTX_FLAG_KEEP_PKEY_CTX   0x0400
@@ -363,11 +363,11 @@ struct evp_cipher_st {
 /* Wrapper functions for each cipher mode */
 
 #define EVP_C_DATA(kstruct, ctx) \
-        ((kstruct *)EVP_CIPHER_CTX_get_cipher_data(ctx))
+        ((kstruct *)OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx))
 
 #define BLOCK_CIPHER_ecb_loop() \
         size_t i, bl; \
-        bl = EVP_CIPHER_CTX_get0_cipher(ctx)->block_size;    \
+        bl = OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(ctx)->block_size;    \
         if (inl < bl) return 1;\
         inl -= bl; \
         for (i=0; i <= inl; i+=bl)
@@ -376,7 +376,7 @@ struct evp_cipher_st {
 static int cname##_ecb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, size_t inl) \
 {\
         BLOCK_CIPHER_ecb_loop() \
-            cprefix##_ecb_encrypt(in + i, out + i, &EVP_C_DATA(kstruct,ctx)->ksched, EVP_CIPHER_CTX_is_encrypting(ctx)); \
+            cprefix##_ecb_encrypt(in + i, out + i, &EVP_C_DATA(kstruct,ctx)->ksched, OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx)); \
         return 1;\
 }
 
@@ -386,17 +386,17 @@ static int cname##_ecb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const uns
     static int cname##_ofb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, size_t inl) \
 {\
         while(inl>=EVP_MAXCHUNK) {\
-            int num = EVP_CIPHER_CTX_get_num(ctx);\
+            int num = OPENSSL_BOX_EVP_CIPHER_CTX_get_num(ctx);\
             cprefix##_ofb##cbits##_encrypt(in, out, (long)EVP_MAXCHUNK, &EVP_C_DATA(kstruct,ctx)->ksched, ctx->iv, &num); \
-            EVP_CIPHER_CTX_set_num(ctx, num);\
+            OPENSSL_BOX_EVP_CIPHER_CTX_set_num(ctx, num);\
             inl-=EVP_MAXCHUNK;\
             in +=EVP_MAXCHUNK;\
             out+=EVP_MAXCHUNK;\
         }\
         if (inl) {\
-            int num = EVP_CIPHER_CTX_get_num(ctx);\
+            int num = OPENSSL_BOX_EVP_CIPHER_CTX_get_num(ctx);\
             cprefix##_ofb##cbits##_encrypt(in, out, (long)inl, &EVP_C_DATA(kstruct,ctx)->ksched, ctx->iv, &num); \
-            EVP_CIPHER_CTX_set_num(ctx, num);\
+            OPENSSL_BOX_EVP_CIPHER_CTX_set_num(ctx, num);\
         }\
         return 1;\
 }
@@ -405,13 +405,13 @@ static int cname##_ecb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const uns
 static int cname##_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, size_t inl) \
 {\
         while(inl>=EVP_MAXCHUNK) {\
-            cprefix##_cbc_encrypt(in, out, (long)EVP_MAXCHUNK, &EVP_C_DATA(kstruct,ctx)->ksched, ctx->iv, EVP_CIPHER_CTX_is_encrypting(ctx));\
+            cprefix##_cbc_encrypt(in, out, (long)EVP_MAXCHUNK, &EVP_C_DATA(kstruct,ctx)->ksched, ctx->iv, OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));\
             inl-=EVP_MAXCHUNK;\
             in +=EVP_MAXCHUNK;\
             out+=EVP_MAXCHUNK;\
         }\
         if (inl)\
-            cprefix##_cbc_encrypt(in, out, (long)inl, &EVP_C_DATA(kstruct,ctx)->ksched, ctx->iv, EVP_CIPHER_CTX_is_encrypting(ctx));\
+            cprefix##_cbc_encrypt(in, out, (long)inl, &EVP_C_DATA(kstruct,ctx)->ksched, ctx->iv, OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));\
         return 1;\
 }
 
@@ -422,14 +422,14 @@ static int cname##_cfb##cbits##_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, 
     if (cbits == 1)  chunk >>= 3;\
     if (inl < chunk) chunk = inl;\
     while (inl && inl >= chunk) {\
-        int num = EVP_CIPHER_CTX_get_num(ctx);\
+        int num = OPENSSL_BOX_EVP_CIPHER_CTX_get_num(ctx);\
         cprefix##_cfb##cbits##_encrypt(in, out, (long) \
             ((cbits == 1) \
-                && !EVP_CIPHER_CTX_test_flags(ctx, EVP_CIPH_FLAG_LENGTH_BITS) \
+                && !OPENSSL_BOX_EVP_CIPHER_CTX_test_flags(ctx, EVP_CIPH_FLAG_LENGTH_BITS) \
                 ? chunk*8 : chunk), \
             &EVP_C_DATA(kstruct, ctx)->ksched, ctx->iv,\
-            &num, EVP_CIPHER_CTX_is_encrypting(ctx));\
-        EVP_CIPHER_CTX_set_num(ctx, num);\
+            &num, OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));\
+        OPENSSL_BOX_EVP_CIPHER_CTX_set_num(ctx, num);\
         inl -= chunk;\
         in += chunk;\
         out += chunk;\

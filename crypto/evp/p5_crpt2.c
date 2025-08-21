@@ -28,7 +28,7 @@ int ossl_pkcs5_pbkdf2_hmac_ex(const char *pass, int passlen,
     int rv = 1, mode = 1;
     EVP_KDF *kdf;
     EVP_KDF_CTX *kctx;
-    const char *mdname = EVP_MD_get0_name(digest);
+    const char *mdname = OPENSSL_BOX_EVP_MD_get0_name(digest);
     OSSL_PARAM params[6], *p = params;
 
     /* Keep documented behaviour. */
@@ -99,7 +99,7 @@ int PKCS5_PBKDF2_HMAC_SHA1(const char *pass, int passlen,
     if ((digest = EVP_MD_fetch(NULL, SN_sha1, NULL)) != NULL)
         r = ossl_pkcs5_pbkdf2_hmac_ex(pass, passlen, salt, saltlen, iter,
                                       digest, keylen, out, NULL, NULL);
-    EVP_MD_free(digest);
+    OPENSSL_BOX_EVP_MD_free(digest);
     return r;
 }
 
@@ -147,7 +147,7 @@ int PKCS5_v2_PBE_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
     cipher = cipher_fetch = EVP_CIPHER_fetch(libctx, ciph_name, propq);
     /* Fallback to legacy method */
     if (cipher == NULL)
-        cipher = EVP_get_cipherbyname(ciph_name);
+        cipher = OPENSSL_BOX_EVP_get_cipherbyname(ciph_name);
 
     if (cipher == NULL) {
         (void)ERR_clear_last_mark();
@@ -159,13 +159,13 @@ int PKCS5_v2_PBE_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
     /* Fixup cipher based on AlgorithmIdentifier */
     if (!EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, en_de))
         goto err;
-    if (EVP_CIPHER_asn1_to_param(ctx, pbe2->encryption->parameter) <= 0) {
+    if (OPENSSL_BOX_EVP_CIPHER_asn1_to_param(ctx, pbe2->encryption->parameter) <= 0) {
         ERR_raise(ERR_LIB_EVP, EVP_R_CIPHER_PARAMETER_ERROR);
         goto err;
     }
     rv = kdf(ctx, pass, passlen, pbe2->keyfunc->parameter, NULL, NULL, en_de, libctx, propq);
  err:
-    EVP_CIPHER_free(cipher_fetch);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher_fetch);
     PBE2PARAM_free(pbe2);
     return rv;
 }
@@ -191,11 +191,11 @@ int PKCS5_v2_PBKDF2_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass,
     const EVP_MD *prfmd = NULL;
     EVP_MD *prfmd_fetch = NULL;
 
-    if (EVP_CIPHER_CTX_get0_cipher(ctx) == NULL) {
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(ctx) == NULL) {
         ERR_raise(ERR_LIB_EVP, EVP_R_NO_CIPHER_SET);
         goto err;
     }
-    keylen = EVP_CIPHER_CTX_get_key_length(ctx);
+    keylen = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx);
     OPENSSL_assert(keylen <= sizeof(key));
 
     /* Decode parameter */
@@ -207,7 +207,7 @@ int PKCS5_v2_PBKDF2_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass,
         goto err;
     }
 
-    t = EVP_CIPHER_CTX_get_key_length(ctx);
+    t = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx);
     if (t < 0) {
         ERR_raise(ERR_LIB_EVP, EVP_R_INVALID_KEY_LENGTH);
         goto err;
@@ -258,7 +258,7 @@ int PKCS5_v2_PBKDF2_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass,
  err:
     OPENSSL_cleanse(key, keylen);
     PBKDF2PARAM_free(kdf);
-    EVP_MD_free(prfmd_fetch);
+    OPENSSL_BOX_EVP_MD_free(prfmd_fetch);
     return rv;
 }
 

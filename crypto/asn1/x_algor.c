@@ -91,7 +91,7 @@ void X509_ALGOR_set_md(X509_ALGOR *alg, const EVP_MD *md)
     int type = md->flags & EVP_MD_FLAG_DIGALGID_ABSENT ? V_ASN1_UNDEF
                                                        : V_ASN1_NULL;
 
-    (void)X509_ALGOR_set0(alg, OBJ_nid2obj(EVP_MD_get_type(md)), type, NULL);
+    (void)X509_ALGOR_set0(alg, OBJ_nid2obj(OPENSSL_BOX_EVP_MD_get_type(md)), type, NULL);
 }
 
 int X509_ALGOR_cmp(const X509_ALGOR *a, const X509_ALGOR *b)
@@ -144,7 +144,7 @@ int ossl_x509_algor_new_from_md(X509_ALGOR **palg, const EVP_MD *md)
     X509_ALGOR *alg;
 
     /* Default is SHA1 so no need to create it - still success */
-    if (md == NULL || EVP_MD_is_a(md, "SHA1"))
+    if (md == NULL || OPENSSL_BOX_EVP_MD_is_a(md, "SHA1"))
         return 1;
     if ((alg = X509_ALGOR_new()) == NULL)
         return 0;
@@ -159,7 +159,7 @@ const EVP_MD *ossl_x509_algor_get_md(X509_ALGOR *alg)
     const EVP_MD *md;
 
     if (alg == NULL)
-        return EVP_sha1();
+        return OPENSSL_BOX_EVP_sha1();
     md = EVP_get_digestbyobj(alg->algorithm);
     if (md == NULL)
         ERR_raise(ERR_LIB_ASN1, ASN1_R_UNKNOWN_DIGEST);
@@ -181,7 +181,7 @@ int ossl_x509_algor_md_to_mgf1(X509_ALGOR **palg, const EVP_MD *mgf1md)
     ASN1_STRING *stmp = NULL;
 
     *palg = NULL;
-    if (mgf1md == NULL || EVP_MD_is_a(mgf1md, "SHA1"))
+    if (mgf1md == NULL || OPENSSL_BOX_EVP_MD_is_a(mgf1md, "SHA1"))
         return 1;
     /* need to embed algorithm ID inside another */
     if (!ossl_x509_algor_new_from_md(&algtmp, mgf1md))

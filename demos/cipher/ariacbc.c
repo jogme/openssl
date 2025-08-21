@@ -65,7 +65,7 @@ static int aria_cbc_encrypt(void)
     BIO_dump_fp(stdout, cbc_pt, sizeof(cbc_pt));
 
     /* Create a context for the encrypt operation */
-    if ((ctx = EVP_CIPHER_CTX_new()) == NULL)
+    if ((ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto err;
 
     /* Fetch the cipher implementation */
@@ -102,8 +102,8 @@ err:
     if (!ret)
         ERR_print_errors_fp(stderr);
 
-    EVP_CIPHER_free(cipher);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
 
     return ret;
 }
@@ -120,7 +120,7 @@ static int aria_cbc_decrypt(void)
     printf("Ciphertext:\n");
     BIO_dump_fp(stdout, cbc_ct, sizeof(cbc_ct));
 
-    if ((ctx = EVP_CIPHER_CTX_new()) == NULL)
+    if ((ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto err;
 
     /* Fetch the cipher implementation */
@@ -157,8 +157,8 @@ err:
     if (!ret)
         ERR_print_errors_fp(stderr);
 
-    EVP_CIPHER_free(cipher);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
 
     return ret;
 }

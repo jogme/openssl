@@ -33,8 +33,8 @@ static int ssl3_generate_key_block(SSL_CONNECTION *s, unsigned char *km, int num
     k = 0;
     md5 = ssl_evp_md_fetch(sctx->libctx, NID_md5, sctx->propq);
     sha1 = ssl_evp_md_fetch(sctx->libctx, NID_sha1, sctx->propq);
-    m5 = EVP_MD_CTX_new();
-    s1 = EVP_MD_CTX_new();
+    m5 = OPENSSL_BOX_EVP_MD_CTX_new();
+    s1 = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md5 == NULL || sha1 == NULL || m5 == NULL || s1 == NULL) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
@@ -81,8 +81,8 @@ static int ssl3_generate_key_block(SSL_CONNECTION *s, unsigned char *km, int num
     OPENSSL_cleanse(smd, sizeof(smd));
     ret = 1;
  err:
-    EVP_MD_CTX_free(m5);
-    EVP_MD_CTX_free(s1);
+    OPENSSL_BOX_EVP_MD_CTX_free(m5);
+    OPENSSL_BOX_EVP_MD_CTX_free(s1);
     ssl_evp_md_free(md5);
     ssl_evp_md_free(sha1);
     return ret;
@@ -113,14 +113,14 @@ int ssl3_change_cipher_state(SSL_CONNECTION *s, int which)
 #endif
 
     p = s->s3.tmp.key_block;
-    mdi = EVP_MD_get_size(md);
+    mdi = OPENSSL_BOX_EVP_MD_get_size(md);
     if (mdi <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
     md_len = (size_t)mdi;
-    key_len = EVP_CIPHER_get_key_length(ciph);
-    iv_len = EVP_CIPHER_get_iv_length(ciph);
+    key_len = OPENSSL_BOX_EVP_CIPHER_get_key_length(ciph);
+    iv_len = OPENSSL_BOX_EVP_CIPHER_get_iv_length(ciph);
 
     if ((which == SSL3_CHANGE_CIPHER_CLIENT_WRITE) ||
         (which == SSL3_CHANGE_CIPHER_SERVER_READ)) {
@@ -188,11 +188,11 @@ int ssl3_setup_key_block(SSL_CONNECTION *s)
     s->s3.tmp.new_compression = comp;
 #endif
 
-    num = EVP_MD_get_size(hash);
+    num = OPENSSL_BOX_EVP_MD_get_size(hash);
     if (num <= 0)
         return 0;
 
-    num = EVP_CIPHER_get_key_length(c) + num + EVP_CIPHER_get_iv_length(c);
+    num = OPENSSL_BOX_EVP_CIPHER_get_key_length(c) + num + OPENSSL_BOX_EVP_CIPHER_get_iv_length(c);
     num *= 2;
 
     ssl3_cleanup_key_block(s);
@@ -241,7 +241,7 @@ void ssl3_free_digest_list(SSL_CONNECTION *s)
 {
     BIO_free(s->s3.handshake_buffer);
     s->s3.handshake_buffer = NULL;
-    EVP_MD_CTX_free(s->s3.handshake_dgst);
+    OPENSSL_BOX_EVP_MD_CTX_free(s->s3.handshake_dgst);
     s->s3.handshake_dgst = NULL;
 }
 
@@ -283,7 +283,7 @@ int ssl3_digest_cached_records(SSL_CONNECTION *s, int keep)
             return 0;
         }
 
-        s->s3.handshake_dgst = EVP_MD_CTX_new();
+        s->s3.handshake_dgst = OPENSSL_BOX_EVP_MD_CTX_new();
         if (s->s3.handshake_dgst == NULL) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
             return 0;
@@ -335,12 +335,12 @@ size_t ssl3_final_finish_mac(SSL_CONNECTION *s, const char *sender, size_t len,
         return 0;
     }
 
-    ctx = EVP_MD_CTX_new();
+    ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx == NULL) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         return 0;
     }
-    if (!EVP_MD_CTX_copy_ex(ctx, s->s3.handshake_dgst)) {
+    if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx, s->s3.handshake_dgst)) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         ret = 0;
         goto err;
@@ -359,7 +359,7 @@ size_t ssl3_final_finish_mac(SSL_CONNECTION *s, const char *sender, size_t len,
         ssl3_digest_master_key_set_params(s->session, digest_cmd_params);
 
         if (EVP_DigestUpdate(ctx, sender, len) <= 0
-            || EVP_MD_CTX_set_params(ctx, digest_cmd_params) <= 0
+            || OPENSSL_BOX_EVP_MD_CTX_set_params(ctx, digest_cmd_params) <= 0
             || EVP_DigestFinal_ex(ctx, p, NULL) <= 0) {
                 SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
                 ret = 0;
@@ -367,7 +367,7 @@ size_t ssl3_final_finish_mac(SSL_CONNECTION *s, const char *sender, size_t len,
     }
 
  err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
 
     return ret;
 }
@@ -388,7 +388,7 @@ int ssl3_generate_master_secret(SSL_CONNECTION *s, unsigned char *out,
 #endif
     };
     unsigned char buf[EVP_MAX_MD_SIZE];
-    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     int i, ret = 1;
     unsigned int n;
     size_t ret_secret_size = 0;
@@ -418,7 +418,7 @@ int ssl3_generate_master_secret(SSL_CONNECTION *s, unsigned char *out,
         out += n;
         ret_secret_size += n;
     }
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
 
     OPENSSL_cleanse(buf, sizeof(buf));
     if (ret)

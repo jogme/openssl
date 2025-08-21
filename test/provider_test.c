@@ -55,7 +55,7 @@ static int test_provider(OSSL_LIB_CTX **libctx, const char *name,
      * This should mean that the p_test provider will fail any fetches - which
      * is something we test inside the provider.
      */
-    EVP_set_default_properties(*libctx, "fips=yes");
+    OPENSSL_BOX_EVP_set_default_properties(*libctx, "fips=yes");
     /*
      * Check that it is possible to have a built-in provider mirrored in
      * a child lib ctx.
@@ -69,7 +69,7 @@ static int test_provider(OSSL_LIB_CTX **libctx, const char *name,
      * Once the provider is loaded we clear the default properties and fetches
      * should start working again.
      */
-    EVP_set_default_properties(*libctx, "");
+    OPENSSL_BOX_EVP_set_default_properties(*libctx, "");
     if (dolegacycheck) {
         if (!TEST_true(OSSL_PROVIDER_get_params(prov, digest_check))
                 || !TEST_true(digestsuccess))
@@ -82,11 +82,11 @@ static int test_provider(OSSL_LIB_CTX **libctx, const char *name,
         if (!TEST_true(OSSL_PROVIDER_get_params(prov, stop_property_mirror))
                 || !TEST_true(stopsuccess))
             goto err;
-        EVP_set_default_properties(*libctx, "fips=yes");
+        OPENSSL_BOX_EVP_set_default_properties(*libctx, "fips=yes");
         if (!TEST_true(OSSL_PROVIDER_get_params(prov, digest_check))
                 || !TEST_true(digestsuccess))
             goto err;
-        EVP_set_default_properties(*libctx, "");
+        OPENSSL_BOX_EVP_set_default_properties(*libctx, "");
     }
     if (!TEST_true(OSSL_PROVIDER_get_params(prov, greeting_request))
             || !TEST_ptr(greeting = greeting_request[0].data)

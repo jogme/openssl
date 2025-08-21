@@ -29,7 +29,7 @@ static const EVP_MD ripemd160_md = {
                              RIPEMD160_CBLOCK),
 };
 
-const EVP_MD *EVP_ripemd160(void)
+const EVP_MD *OPENSSL_BOX_EVP_ripemd160(void)
 {
     return &ripemd160_md;
 }

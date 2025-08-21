@@ -378,7 +378,7 @@ int OSSL_STORE_find(OSSL_STORE_CTX *ctx, const OSSL_STORE_SEARCH *search)
             break;
         case OSSL_STORE_SEARCH_BY_KEY_FINGERPRINT:
             if (OSSL_PARAM_BLD_push_utf8_string(bld, OSSL_STORE_PARAM_DIGEST,
-                                                EVP_MD_get0_name(search->digest),
+                                                OPENSSL_BOX_EVP_MD_get0_name(search->digest),
                                                 0)
                 && OSSL_PARAM_BLD_push_octet_string(bld,
                                                     OSSL_STORE_PARAM_FINGERPRINT,
@@ -745,7 +745,7 @@ EVP_PKEY *OSSL_STORE_INFO_get0_PARAMS(const OSSL_STORE_INFO *info)
 EVP_PKEY *OSSL_STORE_INFO_get1_PARAMS(const OSSL_STORE_INFO *info)
 {
     if (info->type == OSSL_STORE_INFO_PARAMS) {
-        if (!EVP_PKEY_up_ref(info->_.params))
+        if (!OPENSSL_BOX_EVP_PKEY_up_ref(info->_.params))
             return NULL;
         return info->_.params;
     }
@@ -763,7 +763,7 @@ EVP_PKEY *OSSL_STORE_INFO_get0_PUBKEY(const OSSL_STORE_INFO *info)
 EVP_PKEY *OSSL_STORE_INFO_get1_PUBKEY(const OSSL_STORE_INFO *info)
 {
     if (info->type == OSSL_STORE_INFO_PUBKEY) {
-        if (!EVP_PKEY_up_ref(info->_.pubkey))
+        if (!OPENSSL_BOX_EVP_PKEY_up_ref(info->_.pubkey))
             return NULL;
         return info->_.pubkey;
     }
@@ -781,7 +781,7 @@ EVP_PKEY *OSSL_STORE_INFO_get0_PKEY(const OSSL_STORE_INFO *info)
 EVP_PKEY *OSSL_STORE_INFO_get1_PKEY(const OSSL_STORE_INFO *info)
 {
     if (info->type == OSSL_STORE_INFO_PKEY) {
-        if (!EVP_PKEY_up_ref(info->_.pkey))
+        if (!OPENSSL_BOX_EVP_PKEY_up_ref(info->_.pkey))
             return NULL;
         return info->_.pkey;
     }
@@ -837,13 +837,13 @@ void OSSL_STORE_INFO_free(OSSL_STORE_INFO *info)
             OPENSSL_free(info->_.name.desc);
             break;
         case OSSL_STORE_INFO_PARAMS:
-            EVP_PKEY_free(info->_.params);
+            OPENSSL_BOX_EVP_PKEY_free(info->_.params);
             break;
         case OSSL_STORE_INFO_PUBKEY:
-            EVP_PKEY_free(info->_.pubkey);
+            OPENSSL_BOX_EVP_PKEY_free(info->_.pubkey);
             break;
         case OSSL_STORE_INFO_PKEY:
-            EVP_PKEY_free(info->_.pkey);
+            OPENSSL_BOX_EVP_PKEY_free(info->_.pkey);
             break;
         case OSSL_STORE_INFO_CERT:
             X509_free(info->_.x509);
@@ -946,7 +946,7 @@ OSSL_STORE_SEARCH *OSSL_STORE_SEARCH_by_key_fingerprint(const EVP_MD *digest,
     if (search == NULL)
         return NULL;
 
-    md_size = EVP_MD_get_size(digest);
+    md_size = OPENSSL_BOX_EVP_MD_get_size(digest);
     if (md_size <= 0) {
         OPENSSL_free(search);
         return NULL;
@@ -956,7 +956,7 @@ OSSL_STORE_SEARCH *OSSL_STORE_SEARCH_by_key_fingerprint(const EVP_MD *digest,
         ERR_raise_data(ERR_LIB_OSSL_STORE,
                        OSSL_STORE_R_FINGERPRINT_SIZE_DOES_NOT_MATCH_DIGEST,
                        "%s size is %d, fingerprint size is %zu",
-                       EVP_MD_get0_name(digest), md_size, len);
+                       OPENSSL_BOX_EVP_MD_get0_name(digest), md_size, len);
         OPENSSL_free(search);
         return NULL;
     }

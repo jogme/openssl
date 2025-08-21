@@ -108,9 +108,9 @@ int main(int argc, char **argv)
     }
 
     /* Create a context for the Poly1305 operation */
-    mctx = EVP_MAC_CTX_new(mac);
+    mctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac);
     if (mctx == NULL) {
-        fprintf(stderr, "EVP_MAC_CTX_new() returned NULL\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_CTX_new() returned NULL\n");
         goto end;
     }
 
@@ -122,9 +122,9 @@ int main(int argc, char **argv)
     }
 
     /* Create a context for AES */
-    aesctx = EVP_CIPHER_CTX_new();
+    aesctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (aesctx == NULL) {
-        fprintf(stderr, "EVP_CIPHER_CTX_new() returned NULL\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_CIPHER_CTX_new() returned NULL\n");
         goto end;
     }
 
@@ -141,8 +141,8 @@ int main(int argc, char **argv)
      * padding would be required for some reason, which in this circumstance
      * would indicate an implementation bug.
      */
-    if (!EVP_CIPHER_CTX_set_padding(aesctx, 0)) {
-        fprintf(stderr, "EVP_CIPHER_CTX_set_padding() failed\n");
+    if (!OPENSSL_BOX_EVP_CIPHER_CTX_set_padding(aesctx, 0)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_CIPHER_CTX_set_padding() failed\n");
         goto end;
     }
 
@@ -171,8 +171,8 @@ int main(int argc, char **argv)
     }
 
     /* Make one or more calls to process the data to be authenticated */
-    if (!EVP_MAC_update(mctx, test_m, sizeof(test_m))) {
-        fprintf(stderr, "EVP_MAC_update() failed\n");
+    if (!OPENSSL_BOX_EVP_MAC_update(mctx, test_m, sizeof(test_m))) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_update() failed\n");
         goto end;
     }
 
@@ -198,10 +198,10 @@ int main(int argc, char **argv)
 
     ret = EXIT_SUCCESS;
 end:
-    EVP_CIPHER_CTX_free(aesctx);
-    EVP_CIPHER_free(aes);
-    EVP_MAC_CTX_free(mctx);
-    EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(aesctx);
+    OPENSSL_BOX_EVP_CIPHER_free(aes);
+    OPENSSL_BOX_EVP_MAC_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MAC_free(mac);
     OSSL_LIB_CTX_free(library_context);
     if (ret != EXIT_SUCCESS)
         ERR_print_errors_fp(stderr);

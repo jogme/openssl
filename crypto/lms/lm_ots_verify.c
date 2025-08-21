@@ -51,7 +51,7 @@ int ossl_lm_ots_compute_pubkey(EVP_MD_CTX *ctx, EVP_MD_CTX *ctxIq,
 
     return (EVP_DigestUpdate(ctxIq, Id, LMS_SIZE_I)
             && EVP_DigestUpdate(ctxIq, qbuf, sizeof(qbuf))
-            && EVP_MD_CTX_copy_ex(ctx, ctxIq)
+            && OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx, ctxIq)
             /* Q = H(I || u32str(q) || u16str(D_MESG) || C || msg) */
             && EVP_DigestUpdate(ctx, d_mesg, sizeof(d_mesg))
             && EVP_DigestUpdate(ctx, sig->C, sig->params->n)
@@ -110,7 +110,7 @@ static int lm_ots_compute_pubkey_final(EVP_MD_CTX *ctx, EVP_MD_CTX *ctxIq,
     OPENSSL_store_u16_be(Qsum, sum);
     OPENSSL_store_u16_be(d_pblc, OSSL_LMS_D_PBLC);
 
-    if (!(EVP_MD_CTX_copy_ex(ctxKc, ctxIq))
+    if (!(OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctxKc, ctxIq))
             || !EVP_DigestUpdate(ctxKc, d_pblc, sizeof(d_pblc)))
         goto err;
 
@@ -129,7 +129,7 @@ static int lm_ots_compute_pubkey_final(EVP_MD_CTX *ctx, EVP_MD_CTX *ctxIq,
         y += n;
         for (j = a; j < end; ++j) {
             *tag2 = (j & 0xFF);
-            if (!(EVP_MD_CTX_copy_ex(ctx, ctxIq))
+            if (!(OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx, ctxIq))
                     || !EVP_DigestUpdate(ctx, tag, sizeof(tag))
                     || !EVP_DigestUpdate(ctx, z, n)
                     || !EVP_DigestFinal_ex(ctx, z, NULL))
@@ -145,6 +145,6 @@ static int lm_ots_compute_pubkey_final(EVP_MD_CTX *ctx, EVP_MD_CTX *ctxIq,
         goto err;
     ret = 1;
 err:
-    EVP_MD_CTX_free(ctxKc);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctxKc);
     return ret;
 }

@@ -87,9 +87,9 @@ static int demo_sign(OSSL_LIB_CTX *libctx,  const char *sig_name,
      * Make a message signature context to hold temporary state
      * during signature creation
      */
-    sign_context = EVP_MD_CTX_new();
+    sign_context = OPENSSL_BOX_EVP_MD_CTX_new();
     if (sign_context == NULL) {
-        fprintf(stderr, "EVP_MD_CTX_new failed.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MD_CTX_new failed.\n");
         goto cleanup;
     }
     /*
@@ -102,15 +102,15 @@ static int demo_sign(OSSL_LIB_CTX *libctx,  const char *sig_name,
         goto cleanup;
     }
     /*
-     * EVP_DigestSignUpdate() can be called several times on the same context
+     * OPENSSL_BOX_EVP_DigestSignUpdate() can be called several times on the same context
      * to include additional data.
      */
-    if (!EVP_DigestSignUpdate(sign_context, hamlet_1, strlen(hamlet_1))) {
-        fprintf(stderr, "EVP_DigestSignUpdate(hamlet_1) failed.\n");
+    if (!OPENSSL_BOX_EVP_DigestSignUpdate(sign_context, hamlet_1, strlen(hamlet_1))) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestSignUpdate(hamlet_1) failed.\n");
         goto cleanup;
     }
-    if (!EVP_DigestSignUpdate(sign_context, hamlet_2, strlen(hamlet_2))) {
-        fprintf(stderr, "EVP_DigestSignUpdate(hamlet_2) failed.\n");
+    if (!OPENSSL_BOX_EVP_DigestSignUpdate(sign_context, hamlet_2, strlen(hamlet_2))) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestSignUpdate(hamlet_2) failed.\n");
         goto cleanup;
     }
     /* Call EVP_DigestSignFinal to get signature length sig_len */
@@ -142,8 +142,8 @@ cleanup:
     /* OpenSSL free functions will ignore NULL arguments */
     if (!ret)
         OPENSSL_free(sig_value);
-    EVP_PKEY_free(priv_key);
-    EVP_MD_CTX_free(sign_context);
+    OPENSSL_BOX_EVP_PKEY_free(priv_key);
+    OPENSSL_BOX_EVP_MD_CTX_free(sign_context);
     return ret;
 }
 
@@ -159,9 +159,9 @@ static int demo_verify(OSSL_LIB_CTX *libctx, const char *sig_name,
      * Make a verify signature context to hold temporary state
      * during signature verification
      */
-    verify_context = EVP_MD_CTX_new();
+    verify_context = OPENSSL_BOX_EVP_MD_CTX_new();
     if (verify_context == NULL) {
-        fprintf(stderr, "EVP_MD_CTX_new failed.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MD_CTX_new failed.\n");
         goto cleanup;
     }
     /* Get public key */
@@ -177,15 +177,15 @@ static int demo_verify(OSSL_LIB_CTX *libctx, const char *sig_name,
         goto cleanup;
     }
     /*
-     * EVP_DigestVerifyUpdate() can be called several times on the same context
+     * OPENSSL_BOX_EVP_DigestVerifyUpdate() can be called several times on the same context
      * to include additional data.
      */
-    if (!EVP_DigestVerifyUpdate(verify_context, hamlet_1, strlen(hamlet_1))) {
-        fprintf(stderr, "EVP_DigestVerifyUpdate(hamlet_1) failed.\n");
+    if (!OPENSSL_BOX_EVP_DigestVerifyUpdate(verify_context, hamlet_1, strlen(hamlet_1))) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestVerifyUpdate(hamlet_1) failed.\n");
         goto cleanup;
     }
-    if (!EVP_DigestVerifyUpdate(verify_context, hamlet_2, strlen(hamlet_2))) {
-        fprintf(stderr, "EVP_DigestVerifyUpdate(hamlet_2) failed.\n");
+    if (!OPENSSL_BOX_EVP_DigestVerifyUpdate(verify_context, hamlet_2, strlen(hamlet_2))) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestVerifyUpdate(hamlet_2) failed.\n");
         goto cleanup;
     }
     if (EVP_DigestVerifyFinal(verify_context, sig_value, sig_len) <= 0) {
@@ -197,8 +197,8 @@ static int demo_verify(OSSL_LIB_CTX *libctx, const char *sig_name,
 
 cleanup:
     /* OpenSSL free functions will ignore NULL arguments */
-    EVP_PKEY_free(pub_key);
-    EVP_MD_CTX_free(verify_context);
+    OPENSSL_BOX_EVP_PKEY_free(pub_key);
+    OPENSSL_BOX_EVP_MD_CTX_free(verify_context);
     return ret;
 }
 

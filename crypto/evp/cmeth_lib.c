@@ -20,7 +20,7 @@
 #include "internal/provider.h"
 #include "evp_local.h"
 
-EVP_CIPHER *EVP_CIPHER_meth_new(int cipher_type, int block_size, int key_len)
+EVP_CIPHER *OPENSSL_BOX_EVP_CIPHER_meth_new(int cipher_type, int block_size, int key_len)
 {
     EVP_CIPHER *cipher = evp_cipher_new();
 
@@ -33,18 +33,18 @@ EVP_CIPHER *EVP_CIPHER_meth_new(int cipher_type, int block_size, int key_len)
     return cipher;
 }
 
-EVP_CIPHER *EVP_CIPHER_meth_dup(const EVP_CIPHER *cipher)
+EVP_CIPHER *OPENSSL_BOX_EVP_CIPHER_meth_dup(const EVP_CIPHER *cipher)
 {
     EVP_CIPHER *to = NULL;
 
     /*
      * Non-legacy EVP_CIPHERs can't be duplicated like this.
-     * Use EVP_CIPHER_up_ref() instead.
+     * Use OPENSSL_BOX_EVP_CIPHER_up_ref() instead.
      */
     if (cipher->prov != NULL)
         return NULL;
 
-    if ((to = EVP_CIPHER_meth_new(cipher->nid, cipher->block_size,
+    if ((to = OPENSSL_BOX_EVP_CIPHER_meth_new(cipher->nid, cipher->block_size,
                                   cipher->key_len)) != NULL) {
         CRYPTO_REF_COUNT refcnt = to->refcnt;
 
@@ -55,7 +55,7 @@ EVP_CIPHER *EVP_CIPHER_meth_dup(const EVP_CIPHER *cipher)
     return to;
 }
 
-void EVP_CIPHER_meth_free(EVP_CIPHER *cipher)
+void OPENSSL_BOX_EVP_CIPHER_meth_free(EVP_CIPHER *cipher)
 {
     if (cipher == NULL || cipher->origin != EVP_ORIG_METH)
        return;
@@ -63,7 +63,7 @@ void EVP_CIPHER_meth_free(EVP_CIPHER *cipher)
     evp_cipher_free_int(cipher);
 }
 
-int EVP_CIPHER_meth_set_iv_length(EVP_CIPHER *cipher, int iv_len)
+int OPENSSL_BOX_EVP_CIPHER_meth_set_iv_length(EVP_CIPHER *cipher, int iv_len)
 {
     if (cipher->iv_len != 0)
         return 0;
@@ -72,7 +72,7 @@ int EVP_CIPHER_meth_set_iv_length(EVP_CIPHER *cipher, int iv_len)
     return 1;
 }
 
-int EVP_CIPHER_meth_set_flags(EVP_CIPHER *cipher, unsigned long flags)
+int OPENSSL_BOX_EVP_CIPHER_meth_set_flags(EVP_CIPHER *cipher, unsigned long flags)
 {
     if (cipher->flags != 0)
         return 0;
@@ -81,7 +81,7 @@ int EVP_CIPHER_meth_set_flags(EVP_CIPHER *cipher, unsigned long flags)
     return 1;
 }
 
-int EVP_CIPHER_meth_set_impl_ctx_size(EVP_CIPHER *cipher, int ctx_size)
+int OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(EVP_CIPHER *cipher, int ctx_size)
 {
     if (cipher->ctx_size != 0)
         return 0;

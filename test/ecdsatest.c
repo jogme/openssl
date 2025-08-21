@@ -101,7 +101,7 @@ static int x9_62_tests(int n)
         return TEST_skip("skip non approved curves");
 #endif /* FIPS_MODULE */
 
-    if (!TEST_ptr(mctx = EVP_MD_CTX_new())
+    if (!TEST_ptr(mctx = OPENSSL_BOX_EVP_MD_CTX_new())
         /* get the message digest */
         || !TEST_ptr(message = OPENSSL_hexstr2buf(tbs, &msg_len))
         || !TEST_true(EVP_DigestInit_ex(mctx, EVP_get_digestbynid(md_nid), NULL))
@@ -151,7 +151,7 @@ static int x9_62_tests(int n)
     ECDSA_SIG_free(signature);
     BN_free(r);
     BN_free(s);
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
     BN_clear_free(kinv);
     BN_clear_free(rp);
     return ret;
@@ -179,8 +179,8 @@ static int set_sm2_id(EVP_MD_CTX *mctx, EVP_PKEY *pkey)
     static const char sm2_id[] = { 1, 2, 3, 4, 'l', 'e', 't', 't', 'e', 'r' };
     EVP_PKEY_CTX *pctx;
 
-    if (!TEST_ptr(pctx = EVP_MD_CTX_get_pkey_ctx(mctx))
-        || !TEST_int_gt(EVP_PKEY_CTX_set1_id(pctx, sm2_id, sizeof(sm2_id)), 0))
+    if (!TEST_ptr(pctx = OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(mctx))
+        || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_CTX_set1_id(pctx, sm2_id, sizeof(sm2_id)), 0))
         return 0;
     return 1;
 }
@@ -221,24 +221,24 @@ static int test_builtin(int n, int as)
     TEST_info("testing ECDSA for curve %s as %s key type", OBJ_nid2sn(nid),
               as == EVP_PKEY_EC ? "EC" : "SM2");
 
-    if (!TEST_ptr(mctx = EVP_MD_CTX_new())
+    if (!TEST_ptr(mctx = OPENSSL_BOX_EVP_MD_CTX_new())
         /* get some random message data */
         || !TEST_int_gt(RAND_bytes(tbs, sizeof(tbs)), 0)
         /* real key */
         || !TEST_ptr(eckey = EC_KEY_new_by_curve_name(nid))
         || !TEST_true(EC_KEY_generate_key(eckey))
-        || !TEST_ptr(pkey = EVP_PKEY_new())
+        || !TEST_ptr(pkey = OPENSSL_BOX_EVP_PKEY_new())
         || !TEST_true(EVP_PKEY_assign_EC_KEY(pkey, eckey))
         /* fake key for negative testing */
         || !TEST_ptr(eckey_neg = EC_KEY_new_by_curve_name(nid))
         || !TEST_true(EC_KEY_generate_key(eckey_neg))
-        || !TEST_ptr(pkey_neg = EVP_PKEY_new())
+        || !TEST_ptr(pkey_neg = OPENSSL_BOX_EVP_PKEY_new())
         || !TEST_false(EVP_PKEY_assign_EC_KEY(pkey_neg, NULL))
         || !TEST_true(EVP_PKEY_assign_EC_KEY(pkey_neg, eckey_neg)))
         goto err;
 
-    if (!TEST_ptr(dup_pk = EVP_PKEY_dup(pkey))
-        || !TEST_int_eq(EVP_PKEY_eq(pkey, dup_pk), 1))
+    if (!TEST_ptr(dup_pk = OPENSSL_BOX_EVP_PKEY_dup(pkey))
+        || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_eq(pkey, dup_pk), 1))
         goto err;
 
     temp = ECDSA_size(eckey);
@@ -250,22 +250,22 @@ static int test_builtin(int n, int as)
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
         || !TEST_true(EVP_DigestSign(mctx, sig, &sig_len, tbs, sizeof(tbs)))
         || !TEST_size_t_le(sig_len, (size_t)ECDSA_size(eckey))
-        || !TEST_true(EVP_MD_CTX_reset(mctx))
+        || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx))
         /* negative test, verify with wrong key, 0 return */
         || !TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey_neg))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey_neg))
         || !TEST_int_eq(EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 0)
-        || !TEST_true(EVP_MD_CTX_reset(mctx))
+        || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx))
         /* negative test, verify with wrong signature length, -1 return */
         || !TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
         || !TEST_int_eq(EVP_DigestVerify(mctx, sig, sig_len - 1, tbs, sizeof(tbs)), -1)
-        || !TEST_true(EVP_MD_CTX_reset(mctx))
+        || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx))
         /* positive test, verify with correct key, 1 return */
         || !TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
         || !TEST_int_eq(EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 1)
-        || !TEST_true(EVP_MD_CTX_reset(mctx)))
+        || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx)))
         goto err;
 
     /* muck with the message, test it fails with 0 return */
@@ -273,14 +273,14 @@ static int test_builtin(int n, int as)
     if (!TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
         || !TEST_int_eq(EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 0)
-        || !TEST_true(EVP_MD_CTX_reset(mctx)))
+        || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx)))
         goto err;
     /* un-muck and test it verifies */
     tbs[0] ^= 1;
     if (!TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
         || !TEST_int_eq(EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 1)
-        || !TEST_true(EVP_MD_CTX_reset(mctx)))
+        || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx)))
         goto err;
 
     /*-
@@ -315,22 +315,22 @@ static int test_builtin(int n, int as)
     if (!TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
         || !TEST_int_ne(EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 1)
-        || !TEST_true(EVP_MD_CTX_reset(mctx)))
+        || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx)))
         goto err;
     /* un-muck and test it verifies */
     sig[offset] ^= dirt;
     if (!TEST_true(EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey))
         || (as == EVP_PKEY_SM2 && !set_sm2_id(mctx, pkey))
         || !TEST_int_eq(EVP_DigestVerify(mctx, sig, sig_len, tbs, sizeof(tbs)), 1)
-        || !TEST_true(EVP_MD_CTX_reset(mctx)))
+        || !TEST_true(OPENSSL_BOX_EVP_MD_CTX_reset(mctx)))
         goto err;
 
     ret = 1;
  err:
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_free(pkey_neg);
-    EVP_PKEY_free(dup_pk);
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey_neg);
+    OPENSSL_BOX_EVP_PKEY_free(dup_pk);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
     OPENSSL_free(sig);
     return ret;
 }

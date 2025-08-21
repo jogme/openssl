@@ -16,7 +16,7 @@ BIO_f_prefix, BIO_set_prefix, BIO_set_indent, BIO_get_indent
 
 =head1 DESCRIPTION
 
-BIO_f_cipher() returns the prefix BIO method. This is a filter for
+OPENSSL_BOX_BIO_f_cipher() returns the prefix BIO method. This is a filter for
 text output, where each line gets automatically prefixed and indented
 according to user input.
 

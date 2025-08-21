@@ -1472,7 +1472,7 @@ OpenSSL 0.9.x
   * Cipher string fixes.
   * Fixes for VC++ 2005.
   * Updated ECC cipher suite support.
-  * New functions EVP_CIPHER_CTX_new() and EVP_CIPHER_CTX_free().
+  * New functions OPENSSL_BOX_EVP_CIPHER_CTX_new() and OPENSSL_BOX_EVP_CIPHER_CTX_free().
   * Zlib compression usage fixes.
   * Built in dynamic engine compilation support on Win32.
   * Fixes auto dynamic engine loading in Win32.

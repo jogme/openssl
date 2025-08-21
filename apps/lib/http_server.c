@@ -388,7 +388,7 @@ int http_server_get_asn1_req(const ASN1_ITEM *it, ASN1_VALUE **preq,
         }
         if (strlen(meth) == 3) { /* GET */
             if ((getbio = BIO_new_mem_buf(url, len)) == NULL
-                || (b64 = BIO_new(BIO_f_base64())) == NULL) {
+                || (b64 = BIO_new(OPENSSL_BOX_BIO_f_base64())) == NULL) {
                 log_HTTP1(prog, LOG_ERR,
                           "could not allocate base64 bio with size = %d", len);
                 goto fatal;

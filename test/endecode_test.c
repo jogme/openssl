@@ -96,11 +96,11 @@ static EVP_PKEY *make_template(const char *type, OSSL_PARAM *genparams)
      * effect.  |pkey| will simply remain NULL if something goes wrong.
      */
     (void)((ctx = EVP_PKEY_CTX_new_from_name(keyctx, type, testpropq)) != NULL
-           && EVP_PKEY_paramgen_init(ctx) > 0
+           && OPENSSL_BOX_EVP_PKEY_paramgen_init(ctx) > 0
            && (genparams == NULL
-               || EVP_PKEY_CTX_set_params(ctx, genparams) > 0)
-           && EVP_PKEY_generate(ctx, &pkey) > 0);
-    EVP_PKEY_CTX_free(ctx);
+               || OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, genparams) > 0)
+           && OPENSSL_BOX_EVP_PKEY_generate(ctx, &pkey) > 0);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
 
     return pkey;
 }
@@ -126,11 +126,11 @@ static EVP_PKEY *make_key(const char *type, EVP_PKEY *template,
      * effect.  |pkey| will simply remain NULL if something goes wrong.
      */
     (void)(ctx != NULL
-           && EVP_PKEY_keygen_init(ctx) > 0
+           && OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) > 0
            && (genparams == NULL
-               || EVP_PKEY_CTX_set_params(ctx, genparams) > 0)
-           && EVP_PKEY_keygen(ctx, &pkey) > 0);
-    EVP_PKEY_CTX_free(ctx);
+               || OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, genparams) > 0)
+           && OPENSSL_BOX_EVP_PKEY_keygen(ctx, &pkey) > 0);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return pkey;
 }
 #endif
@@ -207,14 +207,14 @@ static int test_encode_decode(const char *file, const int line,
         goto end;
 
     if (selection == OSSL_KEYMGMT_SELECT_DOMAIN_PARAMETERS) {
-        if (!TEST_int_eq(EVP_PKEY_parameters_eq(pkey, pkey2), 1)
+        if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_parameters_eq(pkey, pkey2), 1)
             || (pkey3 != NULL
-                && !TEST_int_eq(EVP_PKEY_parameters_eq(pkey, pkey3), 1)))
+                && !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_parameters_eq(pkey, pkey3), 1)))
             goto end;
     } else {
-        if (!TEST_int_eq(EVP_PKEY_eq(pkey, pkey2), 1)
+        if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_eq(pkey, pkey2), 1)
             || (pkey3 != NULL
-                && !TEST_int_eq(EVP_PKEY_eq(pkey, pkey3), 1)))
+                && !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_eq(pkey, pkey3), 1)))
             goto end;
     }
 
@@ -238,8 +238,8 @@ static int test_encode_decode(const char *file, const int line,
 
     OPENSSL_free(encoded);
     OPENSSL_free(encoded2);
-    EVP_PKEY_free(pkey2);
-    EVP_PKEY_free(pkey3);
+    OPENSSL_BOX_EVP_PKEY_free(pkey2);
+    OPENSSL_BOX_EVP_PKEY_free(pkey3);
     return ok;
 }
 
@@ -299,9 +299,9 @@ static int encode_EVP_PKEY_i2d(const char *unused_file,
     unsigned char *buf = NULL, *p;
     int len, ok = 0;
 
-    if (!TEST_int_gt((len = i2d_PKCS8PrivateKey(pkey, NULL)), 0)
+    if (!TEST_int_gt((len = OPENSSL_BOX_i2d_PKCS8PrivateKey(pkey, NULL)), 0)
         || !TEST_ptr(p = buf = OPENSSL_malloc(len))
-        || !TEST_int_eq(i2d_PKCS8PrivateKey(pkey, &p), len)
+        || !TEST_int_eq(OPENSSL_BOX_i2d_PKCS8PrivateKey(pkey, &p), len)
         || !TEST_int_eq((int)(p - buf), len))
         goto end;
 
@@ -369,10 +369,10 @@ static int decode_EVP_PKEY_prov(const char *file, const int line,
             testpkey = NULL;
         } else if (i == 1) {
             if (selection == OSSL_KEYMGMT_SELECT_DOMAIN_PARAMETERS) {
-                if (!TEST_FL_int_eq(EVP_PKEY_parameters_eq(pkey, testpkey), 1))
+                if (!TEST_FL_int_eq(OPENSSL_BOX_EVP_PKEY_parameters_eq(pkey, testpkey), 1))
                     goto end;
             } else {
-                if (!TEST_FL_int_eq(EVP_PKEY_eq(pkey, testpkey), 1))
+                if (!TEST_FL_int_eq(OPENSSL_BOX_EVP_PKEY_eq(pkey, testpkey), 1))
                     goto end;
             }
         }
@@ -382,8 +382,8 @@ static int decode_EVP_PKEY_prov(const char *file, const int line,
     pkey = NULL;
 
  end:
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_free(testpkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(testpkey);
     BIO_free(encoded_bio);
     OSSL_DECODER_CTX_free(dctx);
     return ok;
@@ -425,7 +425,7 @@ static int encode_EVP_PKEY_legacy_PEM(const char *file, const int line,
     ok = 1;
  end:
     BIO_free(mem_ser);
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     return ok;
 }
 
@@ -570,14 +570,14 @@ static int check_unprotected_PKCS8_DER(const char *file, const int line,
         char *namelist = NULL;
 
         if (TEST_FL_ptr(pkey)) {
-            if (!(ok = TEST_FL_true(EVP_PKEY_is_a(pkey, type)))) {
+            if (!(ok = TEST_FL_true(OPENSSL_BOX_EVP_PKEY_is_a(pkey, type)))) {
                 EVP_PKEY_type_names_do_all(pkey, collect_name, &namelist);
                 if (namelist != NULL)
                     TEST_note("%s isn't any of %s", type, namelist);
                 OPENSSL_free(namelist);
             }
             ok = ok && TEST_FL_true(evp_pkey_is_provided(pkey));
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
         }
     }
     PKCS8_PRIV_KEY_INFO_free(p8inf);
@@ -649,7 +649,7 @@ static int check_params_DER(const char *file, const int line,
     if (itype != NID_undef) {
         pkey = d2i_KeyParams(itype, NULL, &datap, (long)data_len);
         ok = (pkey != NULL);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
     }
 
     return ok;
@@ -721,7 +721,7 @@ static int check_MSBLOB(const char *file, const int line,
     EVP_PKEY *pkey = b2i_PrivateKey(&datap, (long)data_len);
     int ok = TEST_FL_ptr(pkey);
 
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ok;
 }
 
@@ -861,9 +861,9 @@ static int check_public_DER(const char *file, const int line,
     const unsigned char *datap = data;
     EVP_PKEY *pkey = d2i_PUBKEY_ex(NULL, &datap, (long)data_len, testctx,
                                    testpropq);
-    int ok = (TEST_FL_ptr(pkey) && TEST_FL_true(EVP_PKEY_is_a(pkey, type)));
+    int ok = (TEST_FL_ptr(pkey) && TEST_FL_true(OPENSSL_BOX_EVP_PKEY_is_a(pkey, type)));
 
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ok;
 }
 
@@ -908,7 +908,7 @@ static int check_public_MSBLOB(const char *file, const int line,
     EVP_PKEY *pkey = b2i_PublicKey(&datap, (long)data_len);
     int ok = TEST_FL_ptr(pkey);
 
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ok;
 }
 
@@ -927,7 +927,7 @@ static int test_public_via_MSBLOB(const char *type, EVP_PKEY *key)
     ok = ok                                                             \
         && TEST_ptr(key_##KEYTYPE = make_key(KEYTYPEstr, NULL, params))
 #define FREE_KEYS(KEYTYPE)                                              \
-    EVP_PKEY_free(key_##KEYTYPE);                                       \
+    OPENSSL_BOX_EVP_PKEY_free(key_##KEYTYPE);                                       \
 
 #define DOMAIN_KEYS(KEYTYPE)                    \
     static EVP_PKEY *template_##KEYTYPE = NULL; \
@@ -939,8 +939,8 @@ static int test_public_via_MSBLOB(const char *type, EVP_PKEY *key)
         && TEST_ptr(key_##KEYTYPE =                                     \
                     make_key(KEYTYPEstr, template_##KEYTYPE, NULL))
 #define FREE_DOMAIN_KEYS(KEYTYPE)                                       \
-    EVP_PKEY_free(template_##KEYTYPE);                                  \
-    EVP_PKEY_free(key_##KEYTYPE)
+    OPENSSL_BOX_EVP_PKEY_free(template_##KEYTYPE);                                  \
+    OPENSSL_BOX_EVP_PKEY_free(key_##KEYTYPE)
 
 #define IMPLEMENT_TEST_SUITE(KEYTYPE, KEYTYPEstr, fips)                 \
     static int test_unprotected_##KEYTYPE##_via_DER(void)               \
@@ -1364,7 +1364,7 @@ static int ec_encode_to_data_multi(void)
         && TEST_int_eq(OSSL_ENCODER_to_data(ectx, NULL, &enc_len), 1)
         && TEST_int_eq(OSSL_ENCODER_to_data(ectx, &enc, &enc_len), 1);
     OPENSSL_free(enc);
-    EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     OSSL_ENCODER_CTX_free(ectx);
     return ret;
 }

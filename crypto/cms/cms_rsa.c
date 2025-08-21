@@ -232,7 +232,7 @@ static int rsa_cms_sign(CMS_SignerInfo *si)
         OSSL_SIGNATURE_PARAM_ALGORITHM_ID, aid, sizeof(aid));
     params[1] = OSSL_PARAM_construct_end();
 
-    if (EVP_PKEY_CTX_get_params(pkctx, params) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_CTX_get_params(pkctx, params) <= 0)
         return 0;
     if ((aid_len = params[0].return_size) == 0)
         return 0;
@@ -246,14 +246,14 @@ static int rsa_cms_verify(CMS_SignerInfo *si)
     int nid, nid2;
     X509_ALGOR *alg;
     EVP_PKEY_CTX *pkctx = CMS_SignerInfo_get0_pkey_ctx(si);
-    EVP_PKEY *pkey = EVP_PKEY_CTX_get0_pkey(pkctx);
+    EVP_PKEY *pkey = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(pkctx);
 
     CMS_SignerInfo_get0_algs(si, NULL, NULL, NULL, &alg);
     nid = OBJ_obj2nid(alg->algorithm);
     if (nid == EVP_PKEY_RSA_PSS)
         return ossl_rsa_pss_to_ctx(NULL, pkctx, alg, NULL) > 0;
     /* Only PSS allowed for PSS keys */
-    if (EVP_PKEY_is_a(pkey, "RSA-PSS")) {
+    if (OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA-PSS")) {
         ERR_raise(ERR_LIB_RSA, RSA_R_ILLEGAL_OR_UNSUPPORTED_PADDING_MODE);
         return 0;
     }

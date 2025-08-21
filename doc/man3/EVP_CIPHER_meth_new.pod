@@ -2,9 +2,9 @@
 
 =head1 NAME
 
-EVP_CIPHER_meth_new, EVP_CIPHER_meth_dup, EVP_CIPHER_meth_free,
-EVP_CIPHER_meth_set_iv_length, EVP_CIPHER_meth_set_flags,
-EVP_CIPHER_meth_set_impl_ctx_size, EVP_CIPHER_meth_set_init,
+OPENSSL_BOX_EVP_CIPHER_meth_new, OPENSSL_BOX_EVP_CIPHER_meth_dup, OPENSSL_BOX_EVP_CIPHER_meth_free,
+OPENSSL_BOX_EVP_CIPHER_meth_set_iv_length, OPENSSL_BOX_EVP_CIPHER_meth_set_flags,
+OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size, EVP_CIPHER_meth_set_init,
 EVP_CIPHER_meth_set_do_cipher, EVP_CIPHER_meth_set_cleanup,
 EVP_CIPHER_meth_set_set_asn1_params, EVP_CIPHER_meth_set_get_asn1_params,
 EVP_CIPHER_meth_set_ctrl, EVP_CIPHER_meth_get_init,
@@ -21,13 +21,13 @@ The following functions have been deprecated since OpenSSL 3.0, and can be
 hidden entirely by defining B<OPENSSL_API_COMPAT> with a suitable version value,
 see L<openssl_user_macros(7)>:
 
- EVP_CIPHER *EVP_CIPHER_meth_new(int cipher_type, int block_size, int key_len);
- EVP_CIPHER *EVP_CIPHER_meth_dup(const EVP_CIPHER *cipher);
- void EVP_CIPHER_meth_free(EVP_CIPHER *cipher);
+ EVP_CIPHER *OPENSSL_BOX_EVP_CIPHER_meth_new(int cipher_type, int block_size, int key_len);
+ EVP_CIPHER *OPENSSL_BOX_EVP_CIPHER_meth_dup(const EVP_CIPHER *cipher);
+ void OPENSSL_BOX_EVP_CIPHER_meth_free(EVP_CIPHER *cipher);
 
- int EVP_CIPHER_meth_set_iv_length(EVP_CIPHER *cipher, int iv_len);
- int EVP_CIPHER_meth_set_flags(EVP_CIPHER *cipher, unsigned long flags);
- int EVP_CIPHER_meth_set_impl_ctx_size(EVP_CIPHER *cipher, int ctx_size);
+ int OPENSSL_BOX_EVP_CIPHER_meth_set_iv_length(EVP_CIPHER *cipher, int iv_len);
+ int OPENSSL_BOX_EVP_CIPHER_meth_set_flags(EVP_CIPHER *cipher, unsigned long flags);
+ int OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(EVP_CIPHER *cipher, int ctx_size);
  int EVP_CIPHER_meth_set_init(EVP_CIPHER *cipher,
                               int (*init)(EVP_CIPHER_CTX *ctx,
                                           const unsigned char *key,
@@ -75,17 +75,17 @@ Applications should instead use the OSSL_PROVIDER APIs.
 The B<EVP_CIPHER> type is a structure for symmetric cipher method
 implementation.
 
-EVP_CIPHER_meth_new() creates a new B<EVP_CIPHER> structure.
+OPENSSL_BOX_EVP_CIPHER_meth_new() creates a new B<EVP_CIPHER> structure.
 
-EVP_CIPHER_meth_dup() creates a copy of B<cipher>.
+OPENSSL_BOX_EVP_CIPHER_meth_dup() creates a copy of B<cipher>.
 
-EVP_CIPHER_meth_free() destroys a B<EVP_CIPHER> structure.
+OPENSSL_BOX_EVP_CIPHER_meth_free() destroys a B<EVP_CIPHER> structure.
 If the argument is NULL, nothing is done.
 
-EVP_CIPHER_meth_set_iv_length() sets the length of the IV.
+OPENSSL_BOX_EVP_CIPHER_meth_set_iv_length() sets the length of the IV.
 This is only needed when the implemented cipher mode requires it.
 
-EVP_CIPHER_meth_set_flags() sets the flags to describe optional
+OPENSSL_BOX_EVP_CIPHER_meth_set_flags() sets the flags to describe optional
 behaviours in the particular B<cipher>.
 With the exception of cipher modes, of which only one may be present,
 several flags can be or'd together.
@@ -123,7 +123,7 @@ command code B<EVP_CTRL_INIT> early in its setup.
 
 Checking and setting the key length after creating the B<EVP_CIPHER>
 is left to the implementation.
-Whenever someone uses EVP_CIPHER_CTX_set_key_length() on a
+Whenever someone uses OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length() on a
 B<EVP_CIPHER> with this flag set, the implementation's ctrl() function
 will be called with the control code B<EVP_CTRL_SET_KEY_LENGTH> and
 the key length in B<arg>.
@@ -142,13 +142,13 @@ storage in B<ptr>.
 =item EVP_CIPH_CUSTOM_COPY
 
 Set this to have the implementation's ctrl() function called with
-command code B<EVP_CTRL_COPY> at the end of EVP_CIPHER_CTX_copy().
+command code B<EVP_CTRL_COPY> at the end of OPENSSL_BOX_EVP_CIPHER_CTX_copy().
 The intended use is for further things to deal with after the
 implementation specific data block has been copied.
 The destination B<EVP_CIPHER_CTX> is passed to the control with the
 B<ptr> parameter.
 The implementation specific data block is reached with
-EVP_CIPHER_CTX_get_cipher_data().
+OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data().
 
 =item EVP_CIPH_FLAG_DEFAULT_ASN1
 
@@ -184,7 +184,7 @@ to certain TLS ciphers.
 
 =back
 
-EVP_CIPHER_meth_set_impl_ctx_size() sets the size of the EVP_CIPHER's
+OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size() sets the size of the EVP_CIPHER's
 implementation context so that it can be automatically allocated.
 
 EVP_CIPHER_meth_set_init() sets the cipher init function for
@@ -205,20 +205,20 @@ extra cleanup before the method's private data structure is cleaned
 out and freed.
 Note that the cleanup function is passed a B<EVP_CIPHER_CTX *>, the
 private data structure is then available with
-EVP_CIPHER_CTX_get_cipher_data().
-This cleanup function is called by EVP_CIPHER_CTX_reset() and
-EVP_CIPHER_CTX_free().
+OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data().
+This cleanup function is called by OPENSSL_BOX_EVP_CIPHER_CTX_reset() and
+OPENSSL_BOX_EVP_CIPHER_CTX_free().
 
 EVP_CIPHER_meth_set_set_asn1_params() sets the function for B<cipher>
 to set the AlgorithmIdentifier "parameter" based on the passed cipher.
-This function is called by EVP_CIPHER_param_to_asn1().
+This function is called by OPENSSL_BOX_EVP_CIPHER_param_to_asn1().
 EVP_CIPHER_meth_set_get_asn1_params() sets the function for B<cipher>
 that sets the cipher parameters based on an ASN.1 AlgorithmIdentifier
 "parameter".
 Both these functions are needed when there is a need for custom data
 (more or other than the cipher IV).
-They are called by EVP_CIPHER_param_to_asn1() and
-EVP_CIPHER_asn1_to_param() respectively if defined.
+They are called by OPENSSL_BOX_EVP_CIPHER_param_to_asn1() and
+OPENSSL_BOX_EVP_CIPHER_asn1_to_param() respectively if defined.
 
 EVP_CIPHER_meth_set_ctrl() sets the control function for B<cipher>.
 
@@ -230,7 +230,7 @@ EVP_CIPHER_meth_set_*() functions above.
 
 =head1 RETURN VALUES
 
-EVP_CIPHER_meth_new() and EVP_CIPHER_meth_dup() return a pointer to a
+OPENSSL_BOX_EVP_CIPHER_meth_new() and OPENSSL_BOX_EVP_CIPHER_meth_dup() return a pointer to a
 newly created B<EVP_CIPHER>, or NULL on failure.
 All EVP_CIPHER_meth_set_*() functions return 1.
 All EVP_CIPHER_meth_get_*() functions return pointers to their

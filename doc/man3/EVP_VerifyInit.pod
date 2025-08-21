@@ -27,7 +27,7 @@ signatures.
 
 EVP_VerifyInit_ex() sets up verification context I<ctx> to use digest
 I<type> from ENGINE I<impl>. I<ctx> must be created by calling
-EVP_MD_CTX_new() before calling this function.
+OPENSSL_BOX_EVP_MD_CTX_new() before calling this function.
 
 EVP_VerifyUpdate() hashes I<cnt> bytes of data at I<d> into the
 verification context I<ctx>. This function can be called several times on the
@@ -64,10 +64,10 @@ The call to EVP_VerifyFinal() internally finalizes a copy of the digest context.
 This means that calls to EVP_VerifyUpdate() and EVP_VerifyFinal() can be called
 later to digest and verify additional data. Applications may disable this
 behavior by setting the EVP_MD_CTX_FLAG_FINALISE context flag via
-L<EVP_MD_CTX_set_flags(3)>.
+L<OPENSSL_BOX_EVP_MD_CTX_set_flags(3)>.
 
 Since only a copy of the digest context is ever finalized the context must
-be cleaned up after use by calling EVP_MD_CTX_free() or a memory leak
+be cleaned up after use by calling OPENSSL_BOX_EVP_MD_CTX_free() or a memory leak
 will occur.
 
 Note that not all providers support continuation, in case the selected
@@ -93,7 +93,7 @@ The previous two bugs are fixed in the newer EVP_DigestVerify*() function.
 
 L<evp(7)>,
 L<EVP_SignInit(3)>,
-L<EVP_DigestInit(3)>,
+L<OPENSSL_BOX_EVP_DigestInit(3)>,
 L<evp(7)>, L<HMAC(3)>, L<MD2(3)>,
 L<MD5(3)>, L<MDC2(3)>, L<RIPEMD160(3)>,
 L<SHA1(3)>, L<openssl-dgst(1)>

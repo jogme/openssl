@@ -70,7 +70,7 @@ static int i2d_provided(const EVP_PKEY *a, int selection,
     return ret;
 }
 
-int i2d_KeyParams(const EVP_PKEY *a, unsigned char **pp)
+int OPENSSL_BOX_i2d_KeyParams(const EVP_PKEY *a, unsigned char **pp)
 {
     if (evp_pkey_is_provided(a)) {
         static const struct type_and_structure_st output_info[] = {
@@ -86,9 +86,9 @@ int i2d_KeyParams(const EVP_PKEY *a, unsigned char **pp)
     return -1;
 }
 
-int i2d_KeyParams_bio(BIO *bp, const EVP_PKEY *pkey)
+int OPENSSL_BOX_i2d_KeyParams_bio(BIO *bp, const EVP_PKEY *pkey)
 {
-    return ASN1_i2d_bio_of(EVP_PKEY, i2d_KeyParams, bp, pkey);
+    return ASN1_i2d_bio_of(EVP_PKEY, OPENSSL_BOX_i2d_KeyParams, bp, pkey);
 }
 
 static int
@@ -124,17 +124,17 @@ i2d_PrivateKey_impl(const EVP_PKEY *a, unsigned char **pp, int traditional)
     return -1;
 }
 
-int i2d_PrivateKey(const EVP_PKEY *a, unsigned char **pp)
+int OPENSSL_BOX_i2d_PrivateKey(const EVP_PKEY *a, unsigned char **pp)
 {
     return i2d_PrivateKey_impl(a, pp, 1);
 }
 
-int i2d_PKCS8PrivateKey(const EVP_PKEY *a, unsigned char **pp)
+int OPENSSL_BOX_i2d_PKCS8PrivateKey(const EVP_PKEY *a, unsigned char **pp)
 {
     return i2d_PrivateKey_impl(a, pp, 0);
 }
 
-int i2d_PublicKey(const EVP_PKEY *a, unsigned char **pp)
+int OPENSSL_BOX_i2d_PublicKey(const EVP_PKEY *a, unsigned char **pp)
 {
     if (evp_pkey_is_provided(a)) {
         static const struct type_and_structure_st output_info[] = {
@@ -145,16 +145,16 @@ int i2d_PublicKey(const EVP_PKEY *a, unsigned char **pp)
 
         return i2d_provided(a, EVP_PKEY_PUBLIC_KEY, output_info, pp);
     }
-    switch (EVP_PKEY_get_base_id(a)) {
+    switch (OPENSSL_BOX_EVP_PKEY_get_base_id(a)) {
     case EVP_PKEY_RSA:
-        return i2d_RSAPublicKey(EVP_PKEY_get0_RSA(a), pp);
+        return i2d_RSAPublicKey(OPENSSL_BOX_EVP_PKEY_get0_RSA(a), pp);
 #ifndef OPENSSL_NO_DSA
     case EVP_PKEY_DSA:
-        return i2d_DSAPublicKey(EVP_PKEY_get0_DSA(a), pp);
+        return i2d_DSAPublicKey(OPENSSL_BOX_EVP_PKEY_get0_DSA(a), pp);
 #endif
 #ifndef OPENSSL_NO_EC
     case EVP_PKEY_EC:
-        return i2o_ECPublicKey(EVP_PKEY_get0_EC_KEY(a), pp);
+        return i2o_ECPublicKey(OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(a), pp);
 #endif
     default:
         ERR_raise(ERR_LIB_ASN1, ASN1_R_UNSUPPORTED_PUBLIC_KEY_TYPE);

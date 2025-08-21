@@ -128,16 +128,16 @@ static int test_ml_kem(void)
         goto err;
 
     /* Get the raw public key */
-    publen = EVP_PKEY_get1_encoded_public_key(akey, &rawpub);
+    publen = OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(akey, &rawpub);
     if (!TEST_size_t_gt(publen, 0))
         goto err;
 
     /* Create Bob's key and populate it with Alice's public key data */
-    bkey = EVP_PKEY_new();
+    bkey = OPENSSL_BOX_EVP_PKEY_new();
     if (!TEST_ptr(bkey))
         goto err;
 
-    if (!TEST_int_gt(EVP_PKEY_copy_parameters(bkey, akey), 0))
+    if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_copy_parameters(bkey, akey), 0))
         goto err;
 
     if (!TEST_true(EVP_PKEY_set1_encoded_public_key(bkey, rawpub, publen)))
@@ -148,7 +148,7 @@ static int test_ml_kem(void)
     if (!TEST_ptr(ctx))
         goto err;
 
-    if (!TEST_int_gt(EVP_PKEY_encapsulate_init(ctx, NULL), 0))
+    if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encapsulate_init(ctx, NULL), 0))
         goto err;
 
     if (!TEST_int_gt(EVP_PKEY_encapsulate(ctx, NULL, &wrpkeylen, NULL,
@@ -167,14 +167,14 @@ static int test_ml_kem(void)
                                           &bgenkeylen), 0))
         goto err;
 
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
 
     /* Alice now decapsulates Bob's key */
     ctx = EVP_PKEY_CTX_new_from_pkey(testctx, akey, NULL);
     if (!TEST_ptr(ctx))
         goto err;
 
-    if (!TEST_int_gt(EVP_PKEY_decapsulate_init(ctx, NULL), 0))
+    if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_decapsulate_init(ctx, NULL), 0))
         goto err;
 
     if (!TEST_int_gt(EVP_PKEY_decapsulate(ctx, NULL, &agenkeylen, wrpkey,
@@ -205,9 +205,9 @@ static int test_ml_kem(void)
 
     res = 1;
  err:
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(akey);
-    EVP_PKEY_free(bkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(akey);
+    OPENSSL_BOX_EVP_PKEY_free(bkey);
     OPENSSL_free(rawpub);
     OPENSSL_free(wrpkey);
     OPENSSL_free(agenkey);
@@ -257,7 +257,7 @@ static int test_non_derandomised_ml_kem(void)
                                                  gen_seed, sizeof(gen_seed));
         *p++ = OSSL_PARAM_construct_uint(OSSL_RAND_PARAM_STRENGTH, &strength);
         *p = OSSL_PARAM_construct_end();
-        if (!TEST_true(EVP_RAND_CTX_set_params(privctx, params)))
+        if (!TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(privctx, params)))
             goto done;
 
         res = -2;
@@ -271,7 +271,7 @@ static int test_non_derandomised_ml_kem(void)
             goto done;
 
         /* Get the raw public key */
-        publen = EVP_PKEY_get1_encoded_public_key(akey, &rawpub);
+        publen = OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(akey, &rawpub);
         if (!TEST_size_t_eq(publen, v->pubkey_bytes))
             goto done;
 
@@ -283,10 +283,10 @@ static int test_non_derandomised_ml_kem(void)
 
         res = -4;
         /* Create Bob's key and populate it with Alice's public key data */
-        bkey = EVP_PKEY_new();
+        bkey = OPENSSL_BOX_EVP_PKEY_new();
         if (!TEST_ptr(bkey))
             goto done;
-        if (!TEST_int_gt(EVP_PKEY_copy_parameters(bkey, akey), 0))
+        if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_copy_parameters(bkey, akey), 0))
             goto done;
         if (!TEST_true(EVP_PKEY_set1_encoded_public_key(bkey, rawpub, publen)))
             goto done;
@@ -295,7 +295,7 @@ static int test_non_derandomised_ml_kem(void)
         p = params;
         *p = OSSL_PARAM_construct_octet_string(OSSL_RAND_PARAM_TEST_ENTROPY,
                                                enc_seed, sizeof(enc_seed));
-        if (!TEST_true(EVP_RAND_CTX_set_params(pubctx, params)))
+        if (!TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(pubctx, params)))
             goto done;
 
         /* Encapsulate Bob's key */
@@ -303,7 +303,7 @@ static int test_non_derandomised_ml_kem(void)
         ctx = EVP_PKEY_CTX_new_from_pkey(testctx, bkey, NULL);
         if (!TEST_ptr(ctx))
             goto done;
-        if (!TEST_int_gt(EVP_PKEY_encapsulate_init(ctx, NULL), 0))
+        if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_encapsulate_init(ctx, NULL), 0))
             goto done;
         if (!TEST_int_gt(EVP_PKEY_encapsulate(ctx, NULL, &wrpkeylen, NULL,
                                               &bgenkeylen), 0))
@@ -318,7 +318,7 @@ static int test_non_derandomised_ml_kem(void)
         if (!TEST_true(EVP_PKEY_encapsulate(ctx, wrpkey, &wrpkeylen, bgenkey,
                                             &bgenkeylen)))
             goto done;
-        EVP_PKEY_CTX_free(ctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
         ctx = NULL;
         /* Check that no more public entropy is available! */
         if (!TEST_int_le(RAND_bytes(&c, 1), 0))
@@ -345,7 +345,7 @@ static int test_non_derandomised_ml_kem(void)
         ctx = EVP_PKEY_CTX_new_from_pkey(testctx, akey, NULL);
         if (!TEST_ptr(ctx))
             goto done;
-        if (!TEST_int_gt(EVP_PKEY_decapsulate_init(ctx, NULL), 0))
+        if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_decapsulate_init(ctx, NULL), 0))
             goto done;
         if (!TEST_true(EVP_PKEY_decapsulate(ctx, NULL, &agenkeylen, wrpkey,
                                             wrpkeylen)))
@@ -376,7 +376,7 @@ static int test_non_derandomised_ml_kem(void)
         p = params;
         *p = OSSL_PARAM_construct_octet_string(OSSL_RAND_PARAM_TEST_ENTROPY,
                                                dec_seed, sizeof(dec_seed));
-        if (!TEST_true(EVP_RAND_CTX_set_params(pubctx, params)))
+        if (!TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(pubctx, params)))
             goto done;
 
         /* This time decap should fail, and return the decap entropy */
@@ -389,9 +389,9 @@ static int test_non_derandomised_ml_kem(void)
         res = 0;
 
      done:
-        EVP_PKEY_CTX_free(ctx);
-        EVP_PKEY_free(akey);
-        EVP_PKEY_free(bkey);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+        OPENSSL_BOX_EVP_PKEY_free(akey);
+        OPENSSL_BOX_EVP_PKEY_free(bkey);
         OPENSSL_free(rawpub);
         OPENSSL_free(wrpkey);
         OPENSSL_free(agenkey);
@@ -400,7 +400,7 @@ static int test_non_derandomised_ml_kem(void)
             ret = res;
     }
 
-    EVP_MD_free(sha256);
+    OPENSSL_BOX_EVP_MD_free(sha256);
     return ret == 0;
 }
 

@@ -3328,7 +3328,7 @@ int s_client_main(int argc, char **argv)
     set_keylog_file(NULL, NULL);
     X509_free(cert);
     sk_X509_CRL_pop_free(crls, X509_CRL_free);
-    EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     OSSL_STACK_OF_X509_free(chain);
     OPENSSL_free(pass);
 #ifndef OPENSSL_NO_SRP
@@ -3384,9 +3384,9 @@ static void print_cert_key_info(BIO *bio, X509 *cert)
 
     if (pkey == NULL)
         return;
-    keyalg = EVP_PKEY_get0_type_name(pkey);
+    keyalg = OPENSSL_BOX_EVP_PKEY_get0_type_name(pkey);
     if (keyalg == NULL)
-        keyalg = OBJ_nid2ln(EVP_PKEY_get_base_id(pkey));
+        keyalg = OBJ_nid2ln(OPENSSL_BOX_EVP_PKEY_get_base_id(pkey));
     if (EVP_PKEY_id(pkey) == EVP_PKEY_EC)
         curve = ec_curve_name(pkey);
     if (curve != NULL)
@@ -3395,7 +3395,7 @@ static void print_cert_key_info(BIO *bio, X509 *cert)
                    OBJ_nid2ln(X509_get_signature_nid(cert)));
     else
         BIO_printf(bio, "   a:PKEY: %s, %d (bit); sigalg: %s\n",
-                   keyalg, EVP_PKEY_get_bits(pkey),
+                   keyalg, OPENSSL_BOX_EVP_PKEY_get_bits(pkey),
                    OBJ_nid2ln(X509_get_signature_nid(cert)));
     OPENSSL_free(curve);
 }
@@ -3527,7 +3527,7 @@ static void print_stuff(BIO *bio, SSL *s, int full)
 
         pktmp = X509_get0_pubkey(peer);
         BIO_printf(bio, "Server public key is %d bit\n",
-                   EVP_PKEY_get_bits(pktmp));
+                   OPENSSL_BOX_EVP_PKEY_get_bits(pktmp));
     }
 
     ssl_print_secure_renegotiation_notes(bio, s);

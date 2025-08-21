@@ -270,10 +270,10 @@ static int do_mac(EVP_MAC_CTX *ctx, unsigned char *tmp, BIO *in,
 
     if (!EVP_MAC_init(ctx, NULL, 0, NULL))
         goto err;
-    if (EVP_MAC_CTX_get_mac_size(ctx) > outsz)
+    if (OPENSSL_BOX_EVP_MAC_CTX_get_mac_size(ctx) > outsz)
         goto end;
     while ((i = BIO_read(in, (char *)tmp, BUFSIZE)) != 0) {
-        if (i < 0 || !EVP_MAC_update(ctx, tmp, i))
+        if (i < 0 || !OPENSSL_BOX_EVP_MAC_update(ctx, tmp, i))
             goto err;
     }
 end:
@@ -818,7 +818,7 @@ int fipsinstall_main(int argc, char **argv)
         goto end;
     }
 
-    ctx = EVP_MAC_CTX_new(mac);
+    ctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac);
     if (ctx == NULL) {
         BIO_printf(bio_err, "Unable to create MAC CTX for module check\n");
         goto end;
@@ -827,12 +827,12 @@ int fipsinstall_main(int argc, char **argv)
     if (opts != NULL) {
         int ok = 1;
         OSSL_PARAM *params =
-            app_params_new_from_opts(opts, EVP_MAC_settable_ctx_params(mac));
+            app_params_new_from_opts(opts, OPENSSL_BOX_EVP_MAC_settable_ctx_params(mac));
 
         if (params == NULL)
             goto end;
 
-        if (!EVP_MAC_CTX_set_params(ctx, params)) {
+        if (!OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, params)) {
             BIO_printf(bio_err, "MAC parameter error\n");
             ERR_print_errors(bio_err);
             ok = 0;
@@ -842,7 +842,7 @@ int fipsinstall_main(int argc, char **argv)
             goto end;
     }
 
-    ctx2 = EVP_MAC_CTX_dup(ctx);
+    ctx2 = OPENSSL_BOX_EVP_MAC_CTX_dup(ctx);
     if (ctx2 == NULL) {
         BIO_printf(bio_err, "Unable to create MAC CTX for install indicator\n");
         goto end;
@@ -918,9 +918,9 @@ cleanup:
     BIO_free(mem_bio);
     BIO_free(module_bio);
     sk_OPENSSL_STRING_free(opts);
-    EVP_MAC_free(mac);
-    EVP_MAC_CTX_free(ctx2);
-    EVP_MAC_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx2);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
     OPENSSL_free(read_buffer);
     free_config_and_unload(conf);
     return ret;

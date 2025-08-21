@@ -31,7 +31,7 @@ QUIC_SRT_GEN *ossl_quic_srt_gen_new(OSSL_LIB_CTX *libctx, const char *propq,
     if ((srt_gen->mac = EVP_MAC_fetch(libctx, "HMAC", propq)) == NULL)
         goto err;
 
-    if ((srt_gen->mac_ctx = EVP_MAC_CTX_new(srt_gen->mac)) == NULL)
+    if ((srt_gen->mac_ctx = OPENSSL_BOX_EVP_MAC_CTX_new(srt_gen->mac)) == NULL)
         goto err;
 
     *p++ = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_DIGEST, "SHA256", 7);
@@ -55,8 +55,8 @@ void ossl_quic_srt_gen_free(QUIC_SRT_GEN *srt_gen)
     if (srt_gen == NULL)
         return;
 
-    EVP_MAC_CTX_free(srt_gen->mac_ctx);
-    EVP_MAC_free(srt_gen->mac);
+    OPENSSL_BOX_EVP_MAC_CTX_free(srt_gen->mac_ctx);
+    OPENSSL_BOX_EVP_MAC_free(srt_gen->mac);
     OPENSSL_free(srt_gen);
 }
 
@@ -70,7 +70,7 @@ int ossl_quic_srt_gen_calculate_token(QUIC_SRT_GEN *srt_gen,
     if (!EVP_MAC_init(srt_gen->mac_ctx, NULL, 0, NULL))
         return 0;
 
-    if (!EVP_MAC_update(srt_gen->mac_ctx, (const unsigned char *)dcid->id,
+    if (!OPENSSL_BOX_EVP_MAC_update(srt_gen->mac_ctx, (const unsigned char *)dcid->id,
                         dcid->id_len))
         return 0;
 

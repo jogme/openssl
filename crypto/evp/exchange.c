@@ -20,12 +20,12 @@
 
 static void evp_keyexch_free(void *data)
 {
-    EVP_KEYEXCH_free(data);
+    OPENSSL_BOX_EVP_KEYEXCH_free(data);
 }
 
 static int evp_keyexch_up_ref(void *data)
 {
-    return EVP_KEYEXCH_up_ref(data);
+    return OPENSSL_BOX_EVP_KEYEXCH_up_ref(data);
 }
 
 static EVP_KEYEXCH *evp_keyexch_new(OSSL_PROVIDER *prov)
@@ -146,11 +146,11 @@ static void *evp_keyexch_from_algorithm(int name_id,
     return exchange;
 
  err:
-    EVP_KEYEXCH_free(exchange);
+    OPENSSL_BOX_EVP_KEYEXCH_free(exchange);
     return NULL;
 }
 
-void EVP_KEYEXCH_free(EVP_KEYEXCH *exchange)
+void OPENSSL_BOX_EVP_KEYEXCH_free(EVP_KEYEXCH *exchange)
 {
     int i;
 
@@ -165,7 +165,7 @@ void EVP_KEYEXCH_free(EVP_KEYEXCH *exchange)
     OPENSSL_free(exchange);
 }
 
-int EVP_KEYEXCH_up_ref(EVP_KEYEXCH *exchange)
+int OPENSSL_BOX_EVP_KEYEXCH_up_ref(EVP_KEYEXCH *exchange)
 {
     int ref = 0;
 
@@ -173,7 +173,7 @@ int EVP_KEYEXCH_up_ref(EVP_KEYEXCH *exchange)
     return 1;
 }
 
-OSSL_PROVIDER *EVP_KEYEXCH_get0_provider(const EVP_KEYEXCH *exchange)
+OSSL_PROVIDER *OPENSSL_BOX_EVP_KEYEXCH_get0_provider(const EVP_KEYEXCH *exchange)
 {
     return exchange->prov;
 }
@@ -198,12 +198,12 @@ EVP_KEYEXCH *evp_keyexch_fetch_from_prov(OSSL_PROVIDER *prov,
                                        evp_keyexch_free);
 }
 
-int EVP_PKEY_derive_init(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_derive_init(EVP_PKEY_CTX *ctx)
 {
-    return EVP_PKEY_derive_init_ex(ctx, NULL);
+    return OPENSSL_BOX_EVP_PKEY_derive_init_ex(ctx, NULL);
 }
 
-int EVP_PKEY_derive_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
+int OPENSSL_BOX_EVP_PKEY_derive_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
 {
     int ret;
     void *provkey = NULL;
@@ -231,13 +231,13 @@ int EVP_PKEY_derive_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
      * a blank one.
      */
     if (ctx->pkey == NULL) {
-        EVP_PKEY *pkey = EVP_PKEY_new();
+        EVP_PKEY *pkey = OPENSSL_BOX_EVP_PKEY_new();
 
         if (pkey == NULL
-            || !EVP_PKEY_set_type_by_keymgmt(pkey, ctx->keymgmt)
+            || !OPENSSL_BOX_EVP_PKEY_set_type_by_keymgmt(pkey, ctx->keymgmt)
             || (pkey->keydata = evp_keymgmt_newdata(ctx->keymgmt)) == NULL) {
             ERR_clear_last_mark();
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             ERR_raise(ERR_LIB_EVP, EVP_R_INITIALIZATION_ERROR);
             goto err;
         }
@@ -287,18 +287,18 @@ int EVP_PKEY_derive_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
          * They are NULL on the first iteration, so no need to check what
          * iteration we're on.
          */
-        EVP_KEYEXCH_free(exchange);
-        EVP_KEYMGMT_free(tmp_keymgmt);
+        OPENSSL_BOX_EVP_KEYEXCH_free(exchange);
+        OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
 
         switch (iter) {
         case 1:
             exchange =
                 EVP_KEYEXCH_fetch(ctx->libctx, supported_exch, ctx->propquery);
             if (exchange != NULL)
-                tmp_prov = EVP_KEYEXCH_get0_provider(exchange);
+                tmp_prov = OPENSSL_BOX_EVP_KEYEXCH_get0_provider(exchange);
             break;
         case 2:
-            tmp_prov = EVP_KEYMGMT_get0_provider(ctx->keymgmt);
+            tmp_prov = OPENSSL_BOX_EVP_KEYMGMT_get0_provider(ctx->keymgmt);
             exchange =
                 evp_keyexch_fetch_from_prov((OSSL_PROVIDER *)tmp_prov,
                                               supported_exch, ctx->propquery);
@@ -320,17 +320,17 @@ int EVP_PKEY_derive_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
          */
         tmp_keymgmt_tofree = tmp_keymgmt =
             evp_keymgmt_fetch_from_prov((OSSL_PROVIDER *)tmp_prov,
-                                        EVP_KEYMGMT_get0_name(ctx->keymgmt),
+                                        OPENSSL_BOX_EVP_KEYMGMT_get0_name(ctx->keymgmt),
                                         ctx->propquery);
         if (tmp_keymgmt != NULL)
             provkey = evp_pkey_export_to_provider(ctx->pkey, ctx->libctx,
                                                   &tmp_keymgmt, ctx->propquery);
         if (tmp_keymgmt == NULL)
-            EVP_KEYMGMT_free(tmp_keymgmt_tofree);
+            OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt_tofree);
     }
 
     if (provkey == NULL) {
-        EVP_KEYEXCH_free(exchange);
+        OPENSSL_BOX_EVP_KEYEXCH_free(exchange);
         goto legacy;
     }
 
@@ -351,12 +351,12 @@ int EVP_PKEY_derive_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
     }
     ret = exchange->init(ctx->op.kex.algctx, provkey, params);
 
-    EVP_KEYMGMT_free(tmp_keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
     return ret ? 1 : 0;
  err:
     evp_pkey_ctx_free_old_ops(ctx);
     ctx->operation = EVP_PKEY_OP_UNDEFINED;
-    EVP_KEYMGMT_free(tmp_keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
     return 0;
 
  legacy:
@@ -379,7 +379,7 @@ int EVP_PKEY_derive_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
     ret = ctx->pmeth->derive_init(ctx);
     if (ret <= 0)
         ctx->operation = EVP_PKEY_OP_UNDEFINED;
-    EVP_KEYMGMT_free(tmp_keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
     return ret;
 #endif
 }
@@ -409,8 +409,8 @@ int EVP_PKEY_derive_set_peer_ex(EVP_PKEY_CTX *ctx, EVP_PKEY *peer,
         check_ctx = EVP_PKEY_CTX_new_from_pkey(ctx->libctx, peer, ctx->propquery);
         if (check_ctx == NULL)
             return -1;
-        check = EVP_PKEY_public_check(check_ctx);
-        EVP_PKEY_CTX_free(check_ctx);
+        check = OPENSSL_BOX_EVP_PKEY_public_check(check_ctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(check_ctx);
         if (check <= 0)
             return -1;
     }
@@ -426,15 +426,15 @@ int EVP_PKEY_derive_set_peer_ex(EVP_PKEY_CTX *ctx, EVP_PKEY *peer,
      */
     tmp_keymgmt_tofree = tmp_keymgmt =
         evp_keymgmt_fetch_from_prov((OSSL_PROVIDER *)
-                                    EVP_KEYEXCH_get0_provider(ctx->op.kex.exchange),
-                                    EVP_KEYMGMT_get0_name(ctx->keymgmt),
+                                    OPENSSL_BOX_EVP_KEYEXCH_get0_provider(ctx->op.kex.exchange),
+                                    OPENSSL_BOX_EVP_KEYMGMT_get0_name(ctx->keymgmt),
                                     ctx->propquery);
     if (tmp_keymgmt != NULL)
         /* A Coverity issue with up_ref/down_ref and free */
         /* coverity[pass_freed_arg] */
         provkey = evp_pkey_export_to_provider(peer, ctx->libctx,
                                               &tmp_keymgmt, ctx->propquery);
-    EVP_KEYMGMT_free(tmp_keymgmt_tofree);
+    OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt_tofree);
 
     /*
      * If making the key provided wasn't possible, legacy may be able to pick
@@ -486,13 +486,13 @@ int EVP_PKEY_derive_set_peer_ex(EVP_PKEY_CTX *ctx, EVP_PKEY *peer,
 
     /*
      * For clarity.  The error is if parameters in peer are
-     * present (!missing) but don't match.  EVP_PKEY_parameters_eq may return
+     * present (!missing) but don't match.  OPENSSL_BOX_EVP_PKEY_parameters_eq may return
      * 1 (match), 0 (don't match) and -2 (comparison is not defined).  -1
      * (different key types) is impossible here because it is checked earlier.
      * -2 is OK for us here, as well as 1, so we can check for 0 only.
      */
-    if (!EVP_PKEY_missing_parameters(peer) &&
-        !EVP_PKEY_parameters_eq(ctx->pkey, peer)) {
+    if (!OPENSSL_BOX_EVP_PKEY_missing_parameters(peer) &&
+        !OPENSSL_BOX_EVP_PKEY_parameters_eq(ctx->pkey, peer)) {
         ERR_raise(ERR_LIB_EVP, EVP_R_DIFFERENT_PARAMETERS);
         return -1;
     }
@@ -503,21 +503,21 @@ int EVP_PKEY_derive_set_peer_ex(EVP_PKEY_CTX *ctx, EVP_PKEY *peer,
 #endif
 
  common:
-    if (!EVP_PKEY_up_ref(peer))
+    if (!OPENSSL_BOX_EVP_PKEY_up_ref(peer))
         return -1;
 
-    EVP_PKEY_free(ctx->peerkey);
+    OPENSSL_BOX_EVP_PKEY_free(ctx->peerkey);
     ctx->peerkey = peer;
 
     return 1;
 }
 
-int EVP_PKEY_derive_set_peer(EVP_PKEY_CTX *ctx, EVP_PKEY *peer)
+int OPENSSL_BOX_EVP_PKEY_derive_set_peer(EVP_PKEY_CTX *ctx, EVP_PKEY *peer)
 {
     return EVP_PKEY_derive_set_peer_ex(ctx, peer, 1);
 }
 
-int EVP_PKEY_derive(EVP_PKEY_CTX *ctx, unsigned char *key, size_t *pkeylen)
+int OPENSSL_BOX_EVP_PKEY_derive(EVP_PKEY_CTX *ctx, unsigned char *key, size_t *pkeylen)
 {
     int ret;
 
@@ -553,17 +553,17 @@ int evp_keyexch_get_number(const EVP_KEYEXCH *keyexch)
     return keyexch->name_id;
 }
 
-const char *EVP_KEYEXCH_get0_name(const EVP_KEYEXCH *keyexch)
+const char *OPENSSL_BOX_EVP_KEYEXCH_get0_name(const EVP_KEYEXCH *keyexch)
 {
     return keyexch->type_name;
 }
 
-const char *EVP_KEYEXCH_get0_description(const EVP_KEYEXCH *keyexch)
+const char *OPENSSL_BOX_EVP_KEYEXCH_get0_description(const EVP_KEYEXCH *keyexch)
 {
     return keyexch->description;
 }
 
-int EVP_KEYEXCH_is_a(const EVP_KEYEXCH *keyexch, const char *name)
+int OPENSSL_BOX_EVP_KEYEXCH_is_a(const EVP_KEYEXCH *keyexch, const char *name)
 {
     return keyexch != NULL
            && evp_is_a(keyexch->prov, keyexch->name_id, NULL, name);
@@ -590,23 +590,23 @@ int EVP_KEYEXCH_names_do_all(const EVP_KEYEXCH *keyexch,
     return 1;
 }
 
-const OSSL_PARAM *EVP_KEYEXCH_gettable_ctx_params(const EVP_KEYEXCH *keyexch)
+const OSSL_PARAM *OPENSSL_BOX_EVP_KEYEXCH_gettable_ctx_params(const EVP_KEYEXCH *keyexch)
 {
     void *provctx;
 
     if (keyexch == NULL || keyexch->gettable_ctx_params == NULL)
         return NULL;
 
-    provctx = ossl_provider_ctx(EVP_KEYEXCH_get0_provider(keyexch));
+    provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_KEYEXCH_get0_provider(keyexch));
     return keyexch->gettable_ctx_params(NULL, provctx);
 }
 
-const OSSL_PARAM *EVP_KEYEXCH_settable_ctx_params(const EVP_KEYEXCH *keyexch)
+const OSSL_PARAM *OPENSSL_BOX_EVP_KEYEXCH_settable_ctx_params(const EVP_KEYEXCH *keyexch)
 {
     void *provctx;
 
     if (keyexch == NULL || keyexch->settable_ctx_params == NULL)
         return NULL;
-    provctx = ossl_provider_ctx(EVP_KEYEXCH_get0_provider(keyexch));
+    provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_KEYEXCH_get0_provider(keyexch));
     return keyexch->settable_ctx_params(NULL, provctx);
 }

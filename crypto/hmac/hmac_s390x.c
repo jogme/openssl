@@ -25,13 +25,13 @@ static int s390x_fc_from_md(const EVP_MD *md)
 {
     int fc;
 
-    if (EVP_MD_is_a(md, "SHA2-224"))
+    if (OPENSSL_BOX_EVP_MD_is_a(md, "SHA2-224"))
         fc = S390X_HMAC_SHA_224;
-    else if (EVP_MD_is_a(md, "SHA2-256"))
+    else if (OPENSSL_BOX_EVP_MD_is_a(md, "SHA2-256"))
         fc = S390X_HMAC_SHA_256;
-    else if (EVP_MD_is_a(md, "SHA2-384"))
+    else if (OPENSSL_BOX_EVP_MD_is_a(md, "SHA2-384"))
         fc = S390X_HMAC_SHA_384;
-    else if (EVP_MD_is_a(md, "SHA2-512"))
+    else if (OPENSSL_BOX_EVP_MD_is_a(md, "SHA2-512"))
         fc = S390X_HMAC_SHA_512;
     else
         return 0;
@@ -79,13 +79,13 @@ static int s390x_check_engine_used(const EVP_MD *md, ENGINE *impl)
         if (!ENGINE_init(impl))
             return 0;
     } else {
-        impl = ENGINE_get_digest_engine(EVP_MD_get_type(md));
+        impl = ENGINE_get_digest_engine(OPENSSL_BOX_EVP_MD_get_type(md));
     }
 
     if (impl == NULL)
         return 0;
 
-    d = ENGINE_get_digest(impl, EVP_MD_get_type(md));
+    d = ENGINE_get_digest(impl, OPENSSL_BOX_EVP_MD_get_type(md));
     ENGINE_finish(impl);
 
     if (d != NULL)
@@ -109,7 +109,7 @@ int s390x_HMAC_init(HMAC_CTX *ctx, const void *key, int key_len, ENGINE *impl)
         return -1; /* An engine handles the digest, disable acceleration */
     }
 
-    ctx->plat.s390x.blk_size = EVP_MD_get_block_size(ctx->md);
+    ctx->plat.s390x.blk_size = OPENSSL_BOX_EVP_MD_get_block_size(ctx->md);
     if (ctx->plat.s390x.blk_size < 0)
         return 0;
 

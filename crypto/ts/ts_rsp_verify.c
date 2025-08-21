@@ -441,7 +441,7 @@ static int ts_compute_imprint(BIO *data, TS_TST_INFO *tst_info,
     md = EVP_MD_fetch(NULL, name, NULL);
 
     if (md == NULL)
-        md = (EVP_MD *)EVP_get_digestbyname(name);
+        md = (EVP_MD *)OPENSSL_BOX_EVP_get_digestbyname(name);
 
     if (md == NULL) {
         (void)ERR_clear_last_mark();
@@ -449,21 +449,21 @@ static int ts_compute_imprint(BIO *data, TS_TST_INFO *tst_info,
     }
     (void)ERR_pop_to_mark();
 
-    length = EVP_MD_get_size(md);
+    length = OPENSSL_BOX_EVP_MD_get_size(md);
     if (length <= 0)
         goto err;
     *imprint_len = length;
     if ((*imprint = OPENSSL_malloc(*imprint_len)) == NULL)
         goto err;
 
-    md_ctx = EVP_MD_CTX_new();
+    md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md_ctx == NULL) {
         ERR_raise(ERR_LIB_TS, ERR_R_EVP_LIB);
         goto err;
     }
-    if (!EVP_DigestInit(md_ctx, md))
+    if (!OPENSSL_BOX_EVP_DigestInit(md_ctx, md))
         goto err;
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     md = NULL;
     while ((length = BIO_read(data, buffer, sizeof(buffer))) > 0) {
         if (!EVP_DigestUpdate(md_ctx, buffer, length))
@@ -471,12 +471,12 @@ static int ts_compute_imprint(BIO *data, TS_TST_INFO *tst_info,
     }
     if (!EVP_DigestFinal(md_ctx, *imprint, NULL))
         goto err;
-    EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
 
     return 1;
  err:
-    EVP_MD_CTX_free(md_ctx);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_free(md);
     X509_ALGOR_free(*md_alg);
     *md_alg = NULL;
     OPENSSL_free(*imprint);

@@ -85,12 +85,12 @@ int f(void) /*
         return 0;
     }
     {
-        ctx->buf_len = EVP_EncodeBlock((unsigned char *)ctx->buf,
+        ctx->buf_len = OPENSSL_BOX_EVP_EncodeBlock((unsigned char *)ctx->buf,
                                        (unsigned char *)ctx->tmp, /* no decl */
                                        ctx->tmp_len);
     }
     {
-        EVP_EncodeFinal(ctx->base64,
+        OPENSSL_BOX_EVP_EncodeFinal(ctx->base64,
                         (unsigned char *)ctx->buf, &(ctx->len)); /* no decl */
         /* push out the bytes */
         goto again;
@@ -336,7 +336,7 @@ static int verify_cb_crl(X509_STORE_CTX *ctx, int err)
 typedef int (*X509_STORE_CTX_check_revocation_fn)(X509_STORE_CTX *ctx);
 #define X509_STORE_CTX_set_error_depth(ctx, depth) \
     { (ctx)->error_depth = (depth); }
-#define EVP_PKEY_up_ref(x) ((x)->references++)
+#define OPENSSL_BOX_EVP_PKEY_up_ref(x) ((x)->references++)
 /* should not report missing blank line: */
 DECLARE_STACK_OF(OPENSSL_CSTRING)
 bool UTIL_iterate_dir(int (*fn)(const char *file, void *arg), void *arg,

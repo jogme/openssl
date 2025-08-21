@@ -199,7 +199,7 @@ static SSL_SESSION *ssl_session_dup_intern(const SSL_SESSION *src, int ticket)
     }
 
     if (src->peer_rpk != NULL) {
-        if (!EVP_PKEY_up_ref(src->peer_rpk))
+        if (!OPENSSL_BOX_EVP_PKEY_up_ref(src->peer_rpk))
             goto err;
         dest->peer_rpk = src->peer_rpk;
     }
@@ -862,7 +862,7 @@ void SSL_SESSION_free(SSL_SESSION *ss)
     OPENSSL_cleanse(ss->master_key, sizeof(ss->master_key));
     OPENSSL_cleanse(ss->session_id, sizeof(ss->session_id));
     X509_free(ss->peer);
-    EVP_PKEY_free(ss->peer_rpk);
+    OPENSSL_BOX_EVP_PKEY_free(ss->peer_rpk);
     OSSL_STACK_OF_X509_free(ss->peer_chain);
     OPENSSL_free(ss->ext.hostname);
     OPENSSL_free(ss->ext.tick);

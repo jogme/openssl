@@ -19,8 +19,8 @@ see L<openssl_user_macros(7)>:
 =head1 DESCRIPTION
 
 Both of the functions described on this page are deprecated.
-Applications should instead use L<EVP_PKEY_public_check(3)>,
-L<EVP_PKEY_private_check(3)> and L<EVP_PKEY_pairwise_check(3)>.
+Applications should instead use L<OPENSSL_BOX_EVP_PKEY_public_check(3)>,
+L<OPENSSL_BOX_EVP_PKEY_private_check(3)> and L<OPENSSL_BOX_EVP_PKEY_pairwise_check(3)>.
 
 RSA_check_key_ex() function validates RSA keys.
 It checks that B<p> and B<q> are

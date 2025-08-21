@@ -99,7 +99,7 @@ static int dh_pub_decode(EVP_PKEY *pkey, const X509_PUBKEY *pubkey)
     }
 
     ASN1_INTEGER_free(public_key);
-    EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, dh);
+    OPENSSL_BOX_EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, dh);
     return 1;
 
  err:
@@ -168,7 +168,7 @@ static int dh_priv_decode(EVP_PKEY *pkey, const PKCS8_PRIV_KEY_INFO *p8)
 
     if (dh != NULL) {
         ret = 1;
-        EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, dh);
+        OPENSSL_BOX_EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, dh);
     }
 
     return ret;
@@ -232,7 +232,7 @@ static int dh_param_decode(EVP_PKEY *pkey,
     if ((dh = d2i_dhp(pkey, pder, derlen)) == NULL)
         return 0;
     dh->dirty_cnt++;
-    EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, dh);
+    OPENSSL_BOX_EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, dh);
     return 1;
 }
 
@@ -407,7 +407,7 @@ static int dh_pkey_ctrl(EVP_PKEY *pkey, int op, long arg1, void *arg2)
             return 0;
         return ossl_dh_buf2key(dh, arg2, arg1);
     case ASN1_PKEY_CTRL_GET1_TLS_ENCPT:
-        dh = (DH *) EVP_PKEY_get0_DH(pkey);
+        dh = (DH *) OPENSSL_BOX_EVP_PKEY_get0_DH(pkey);
         if (dh == NULL)
             return 0;
         return (int)ossl_dh_key2buf(dh, arg2, 0, 1);
@@ -510,7 +510,7 @@ static int dh_pkey_import_from_type(const OSSL_PARAM params[], void *vpctx,
                                     int type)
 {
     EVP_PKEY_CTX *pctx = vpctx;
-    EVP_PKEY *pkey = EVP_PKEY_CTX_get0_pkey(pctx);
+    EVP_PKEY *pkey = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(pctx);
     DH *dh = ossl_dh_new_ex(pctx->libctx);
 
     if (dh == NULL) {
@@ -522,7 +522,7 @@ static int dh_pkey_import_from_type(const OSSL_PARAM params[], void *vpctx,
 
     if (!ossl_dh_params_fromdata(dh, params)
         || !ossl_dh_key_fromdata(dh, params, 1)
-        || !EVP_PKEY_assign(pkey, type, dh)) {
+        || !OPENSSL_BOX_EVP_PKEY_assign(pkey, type, dh)) {
         DH_free(dh);
         return 0;
     }
@@ -551,7 +551,7 @@ static int dh_pkey_copy(EVP_PKEY *to, EVP_PKEY *from)
             return 0;
     }
 
-    ret = EVP_PKEY_assign(to, from->type, dupkey);
+    ret = OPENSSL_BOX_EVP_PKEY_assign(to, from->type, dupkey);
     if (!ret)
         DH_free(dupkey);
     return ret;

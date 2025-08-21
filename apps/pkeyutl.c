@@ -323,7 +323,7 @@ int pkeyutl_main(int argc, char **argv)
         goto end;
     }
 
-    if (pkey_op == EVP_PKEY_OP_VERIFYRECOVER && !EVP_PKEY_is_a(pkey, "RSA")) {
+    if (pkey_op == EVP_PKEY_OP_VERIFYRECOVER && !OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA")) {
         BIO_printf(bio_err, "%s: -verifyrecover can be used only with RSA\n", prog);
         goto end;
     }
@@ -331,7 +331,7 @@ int pkeyutl_main(int argc, char **argv)
     if (pkey_op == EVP_PKEY_OP_SIGN || pkey_op == EVP_PKEY_OP_VERIFY) {
         if (only_nomd(pkey)) {
             if (digestname != NULL) {
-                const char *alg = EVP_PKEY_get0_type_name(pkey);
+                const char *alg = OPENSSL_BOX_EVP_PKEY_get0_type_name(pkey);
 
                 BIO_printf(bio_err,
                            "%s: -digest (prehash) is not supported with %s\n",
@@ -352,7 +352,7 @@ int pkeyutl_main(int argc, char **argv)
     }
 
     if (rawin) {
-        if ((mctx = EVP_MD_CTX_new()) == NULL) {
+        if ((mctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL) {
             BIO_printf(bio_err, "Error: out of memory\n");
             goto end;
         }
@@ -396,7 +396,7 @@ int pkeyutl_main(int argc, char **argv)
                 int r;
 
                 BIO_snprintf(passwd_buf, sizeof(passwd_buf), "Enter %s: ", opt);
-                r = EVP_read_pw_string(passwd_buf, sizeof(passwd_buf) - 1,
+                r = OPENSSL_BOX_EVP_read_pw_string(passwd_buf, sizeof(passwd_buf) - 1,
                                        passwd_buf, 0);
                 if (r < 0) {
                     if (r == -2)
@@ -597,10 +597,10 @@ int pkeyutl_main(int argc, char **argv)
  end:
     if (ret != 0)
         ERR_print_errors(bio_err);
-    EVP_MD_CTX_free(mctx);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_MD_free(md);
     release_engine(e);
     BIO_free(in);
     BIO_free_all(out);
@@ -686,16 +686,16 @@ static EVP_PKEY_CTX *init_ctx(const char *kdfalg, int *pkeysize,
             }
         }
         if (impl != NULL)
-            ctx = EVP_PKEY_CTX_new_id(kdfnid, impl);
+            ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(kdfnid, impl);
         else
             ctx = EVP_PKEY_CTX_new_from_name(libctx, kdfalg, propq);
     } else {
         if (pkey == NULL)
             return NULL;
 
-        *pkeysize = EVP_PKEY_get_size(pkey);
+        *pkeysize = OPENSSL_BOX_EVP_PKEY_get_size(pkey);
         if (impl != NULL)
-            ctx = EVP_PKEY_CTX_new(pkey, impl);
+            ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, impl);
         else
             ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
     }
@@ -704,7 +704,7 @@ static EVP_PKEY_CTX *init_ctx(const char *kdfalg, int *pkeysize,
         return NULL;
 
     if (rawin) {
-        EVP_MD_CTX_set_pkey_ctx(mctx, ctx);
+        OPENSSL_BOX_EVP_MD_CTX_set_pkey_ctx(mctx, ctx);
 
         switch (pkey_op) {
         case EVP_PKEY_OP_SIGN:
@@ -721,45 +721,45 @@ static EVP_PKEY_CTX *init_ctx(const char *kdfalg, int *pkeysize,
     } else {
         switch (pkey_op) {
         case EVP_PKEY_OP_SIGN:
-            rv = EVP_PKEY_sign_init(ctx);
+            rv = OPENSSL_BOX_EVP_PKEY_sign_init(ctx);
             break;
 
         case EVP_PKEY_OP_VERIFY:
-            rv = EVP_PKEY_verify_init(ctx);
+            rv = OPENSSL_BOX_EVP_PKEY_verify_init(ctx);
             break;
 
         case EVP_PKEY_OP_VERIFYRECOVER:
-            rv = EVP_PKEY_verify_recover_init(ctx);
+            rv = OPENSSL_BOX_EVP_PKEY_verify_recover_init(ctx);
             break;
 
         case EVP_PKEY_OP_ENCRYPT:
-            rv = EVP_PKEY_encrypt_init(ctx);
+            rv = OPENSSL_BOX_EVP_PKEY_encrypt_init(ctx);
             break;
 
         case EVP_PKEY_OP_DECRYPT:
-            rv = EVP_PKEY_decrypt_init(ctx);
+            rv = OPENSSL_BOX_EVP_PKEY_decrypt_init(ctx);
             break;
 
         case EVP_PKEY_OP_DERIVE:
-            rv = EVP_PKEY_derive_init(ctx);
+            rv = OPENSSL_BOX_EVP_PKEY_derive_init(ctx);
             break;
 
         case EVP_PKEY_OP_ENCAPSULATE:
-            rv = EVP_PKEY_encapsulate_init(ctx, NULL);
+            rv = OPENSSL_BOX_EVP_PKEY_encapsulate_init(ctx, NULL);
             if (rv > 0 && kemop != NULL)
-                rv = EVP_PKEY_CTX_set_kem_op(ctx, kemop);
+                rv = OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op(ctx, kemop);
             break;
 
         case EVP_PKEY_OP_DECAPSULATE:
-            rv = EVP_PKEY_decapsulate_init(ctx, NULL);
+            rv = OPENSSL_BOX_EVP_PKEY_decapsulate_init(ctx, NULL);
             if (rv > 0 && kemop != NULL)
-                rv = EVP_PKEY_CTX_set_kem_op(ctx, kemop);
+                rv = OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op(ctx, kemop);
             break;
         }
     }
 
     if (rv <= 0) {
-        EVP_PKEY_CTX_free(ctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
         ctx = NULL;
     }
 
@@ -769,7 +769,7 @@ static EVP_PKEY_CTX *init_ctx(const char *kdfalg, int *pkeysize,
 static int setup_peer(EVP_PKEY_CTX *ctx, int peerform, const char *file,
                       ENGINE *e)
 {
-    EVP_PKEY *pkey = EVP_PKEY_CTX_get0_pkey(ctx);
+    EVP_PKEY *pkey = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(ctx);
     EVP_PKEY *peer = NULL;
     ENGINE *engine = NULL;
     int ret = 1;
@@ -781,16 +781,16 @@ static int setup_peer(EVP_PKEY_CTX *ctx, int peerform, const char *file,
         BIO_printf(bio_err, "Error reading peer key %s\n", file);
         return 0;
     }
-    if (strcmp(EVP_PKEY_get0_type_name(peer), EVP_PKEY_get0_type_name(pkey)) != 0) {
+    if (strcmp(OPENSSL_BOX_EVP_PKEY_get0_type_name(peer), OPENSSL_BOX_EVP_PKEY_get0_type_name(pkey)) != 0) {
         BIO_printf(bio_err,
                    "Type of peer public key: %s does not match type of private key: %s\n",
-                   EVP_PKEY_get0_type_name(peer), EVP_PKEY_get0_type_name(pkey));
+                   OPENSSL_BOX_EVP_PKEY_get0_type_name(peer), OPENSSL_BOX_EVP_PKEY_get0_type_name(pkey));
         ret = 0;
     } else {
-        ret = EVP_PKEY_derive_set_peer(ctx, peer) > 0;
+        ret = OPENSSL_BOX_EVP_PKEY_derive_set_peer(ctx, peer) > 0;
     }
 
-    EVP_PKEY_free(peer);
+    OPENSSL_BOX_EVP_PKEY_free(peer);
     return ret;
 }
 
@@ -819,7 +819,7 @@ static int do_keyop(EVP_PKEY_CTX *ctx, int pkey_op,
         break;
 
     case EVP_PKEY_OP_DERIVE:
-        rv = EVP_PKEY_derive(ctx, out, poutlen);
+        rv = OPENSSL_BOX_EVP_PKEY_derive(ctx, out, poutlen);
         break;
 
     case EVP_PKEY_OP_ENCAPSULATE:
@@ -889,7 +889,7 @@ static int do_raw_keyop(int pkey_op, EVP_MD_CTX *mctx,
                 BIO_printf(bio_err, "Error reading raw input data\n");
                 goto end;
             }
-            rv = EVP_DigestVerifyUpdate(mctx, tbuf, (size_t)buf_len);
+            rv = OPENSSL_BOX_EVP_DigestVerifyUpdate(mctx, tbuf, (size_t)buf_len);
             if (rv != 1) {
                 BIO_printf(bio_err, "Error verifying raw input data\n");
                 goto end;
@@ -906,7 +906,7 @@ static int do_raw_keyop(int pkey_op, EVP_MD_CTX *mctx,
                 BIO_printf(bio_err, "Error reading raw input data\n");
                 goto end;
             }
-            rv = EVP_DigestSignUpdate(mctx, tbuf, (size_t)buf_len);
+            rv = OPENSSL_BOX_EVP_DigestSignUpdate(mctx, tbuf, (size_t)buf_len);
             if (rv != 1) {
                 BIO_printf(bio_err, "Error signing raw input data\n");
                 goto end;

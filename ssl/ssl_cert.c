@@ -119,7 +119,7 @@ CERT *ssl_cert_dup(CERT *cert)
     }
 
     if (cert->dh_tmp != NULL) {
-        if (!EVP_PKEY_up_ref(cert->dh_tmp))
+        if (!OPENSSL_BOX_EVP_PKEY_up_ref(cert->dh_tmp))
             goto err;
         ret->dh_tmp = cert->dh_tmp;
     }
@@ -138,7 +138,7 @@ CERT *ssl_cert_dup(CERT *cert)
         }
 
         if (cpk->privatekey != NULL) {
-            if (!EVP_PKEY_up_ref(cpk->privatekey))
+            if (!OPENSSL_BOX_EVP_PKEY_up_ref(cpk->privatekey))
                 goto err;
             rpk->privatekey = cpk->privatekey;
         }
@@ -252,7 +252,7 @@ void ssl_cert_clear_certs(CERT *c)
         CERT_PKEY *cpk = c->pkeys + i;
         X509_free(cpk->x509);
         cpk->x509 = NULL;
-        EVP_PKEY_free(cpk->privatekey);
+        OPENSSL_BOX_EVP_PKEY_free(cpk->privatekey);
         cpk->privatekey = NULL;
         OSSL_STACK_OF_X509_free(cpk->chain);
         cpk->chain = NULL;
@@ -281,7 +281,7 @@ void ssl_cert_free(CERT *c)
         return;
     REF_ASSERT_ISNT(i < 0);
 
-    EVP_PKEY_free(c->dh_tmp);
+    OPENSSL_BOX_EVP_PKEY_free(c->dh_tmp);
 
     ssl_cert_clear_certs(c);
     OPENSSL_free(c->conf_sigalgs);
@@ -1354,8 +1354,8 @@ const SSL_CERT_LOOKUP *ssl_cert_lookup_by_pkey(const EVP_PKEY *pk, size_t *pidx,
     for (i = 0; i < OSSL_NELEM(ssl_cert_info); i++) {
         const SSL_CERT_LOOKUP *tmp_lu = &ssl_cert_info[i];
 
-        if (EVP_PKEY_is_a(pk, OBJ_nid2sn(tmp_lu->nid))
-            || EVP_PKEY_is_a(pk, OBJ_nid2ln(tmp_lu->nid))) {
+        if (OPENSSL_BOX_EVP_PKEY_is_a(pk, OBJ_nid2sn(tmp_lu->nid))
+            || OPENSSL_BOX_EVP_PKEY_is_a(pk, OBJ_nid2ln(tmp_lu->nid))) {
             if (pidx != NULL)
                 *pidx = i;
             return tmp_lu;
@@ -1365,8 +1365,8 @@ const SSL_CERT_LOOKUP *ssl_cert_lookup_by_pkey(const EVP_PKEY *pk, size_t *pidx,
     for (i = 0; i < ctx->sigalg_list_len; i++) {
         SSL_CERT_LOOKUP *tmp_lu = &(ctx->ssl_cert_info[i]);
 
-        if (EVP_PKEY_is_a(pk, OBJ_nid2sn(tmp_lu->nid))
-            || EVP_PKEY_is_a(pk, OBJ_nid2ln(tmp_lu->nid))) {
+        if (OPENSSL_BOX_EVP_PKEY_is_a(pk, OBJ_nid2sn(tmp_lu->nid))
+            || OPENSSL_BOX_EVP_PKEY_is_a(pk, OBJ_nid2ln(tmp_lu->nid))) {
             if (pidx != NULL)
                 *pidx = SSL_PKEY_NUM + i;
             return &ctx->ssl_cert_info[i];

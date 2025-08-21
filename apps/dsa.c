@@ -185,7 +185,7 @@ int dsa_main(int argc, char **argv)
         ERR_print_errors(bio_err);
         goto end;
     }
-    if (!EVP_PKEY_is_a(pkey, "DSA")) {
+    if (!OPENSSL_BOX_EVP_PKEY_is_a(pkey, "DSA")) {
         BIO_printf(bio_err, "Not a DSA key\n");
         goto end;
     }
@@ -265,7 +265,7 @@ int dsa_main(int argc, char **argv)
 
     /* Passphrase setup */
     if (enc != NULL)
-        OSSL_ENCODER_CTX_set_cipher(ectx, EVP_CIPHER_get0_name(enc), NULL);
+        OSSL_ENCODER_CTX_set_cipher(ectx, OPENSSL_BOX_EVP_CIPHER_get0_name(enc), NULL);
 
     /* Default passphrase prompter */
     if (enc != NULL || outformat == FORMAT_PVK) {
@@ -298,8 +298,8 @@ int dsa_main(int argc, char **argv)
         ERR_print_errors(bio_err);
     OSSL_ENCODER_CTX_free(ectx);
     BIO_free_all(out);
-    EVP_PKEY_free(pkey);
-    EVP_CIPHER_free(enc);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_CIPHER_free(enc);
     release_engine(e);
     OPENSSL_free(passin);
     OPENSSL_free(passout);

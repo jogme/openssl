@@ -46,7 +46,7 @@ int PEM_def_callback(char *buf, int num, int rwflag, void *userdata)
         return i;
     }
 
-    prompt = EVP_get_pw_prompt();
+    prompt = OPENSSL_BOX_EVP_get_pw_prompt();
     if (prompt == NULL)
         prompt = "Enter PEM pass phrase:";
 
@@ -333,14 +333,14 @@ PEM_ASN1_write_bio_internal(
     unsigned char iv[EVP_MAX_IV_LENGTH];
 
     if (enc != NULL) {
-        objstr = EVP_CIPHER_get0_name(enc);
-        if (objstr == NULL || EVP_CIPHER_get_iv_length(enc) == 0
-                || EVP_CIPHER_get_iv_length(enc) > (int)sizeof(iv)
+        objstr = OPENSSL_BOX_EVP_CIPHER_get0_name(enc);
+        if (objstr == NULL || OPENSSL_BOX_EVP_CIPHER_get_iv_length(enc) == 0
+                || OPENSSL_BOX_EVP_CIPHER_get_iv_length(enc) > (int)sizeof(iv)
                    /*
                     * Check "Proc-Type: 4,Encrypted\nDEK-Info: objstr,hex-iv\n"
                     * fits into buf
                     */
-                || strlen(objstr) + 23 + 2 * EVP_CIPHER_get_iv_length(enc) + 13
+                || strlen(objstr) + 23 + 2 * OPENSSL_BOX_EVP_CIPHER_get_iv_length(enc) + 13
                    > sizeof(buf)) {
             ERR_raise(ERR_LIB_PEM, PEM_R_UNSUPPORTED_CIPHER);
             goto err;
@@ -382,13 +382,13 @@ PEM_ASN1_write_bio_internal(
             kstr = (unsigned char *)buf;
         }
         /* Generate a salt */
-        if (RAND_bytes(iv, EVP_CIPHER_get_iv_length(enc)) <= 0)
+        if (RAND_bytes(iv, OPENSSL_BOX_EVP_CIPHER_get_iv_length(enc)) <= 0)
             goto err;
         /*
          * The 'iv' is used as the iv and as a salt.  It is NOT taken from
          * the BytesToKey function
          */
-        if (!EVP_BytesToKey(enc, EVP_md5(), iv, kstr, klen, 1, key, NULL))
+        if (!EVP_BytesToKey(enc, OPENSSL_BOX_EVP_md5(), iv, kstr, klen, 1, key, NULL))
             goto err;
 
         if (kstr == (unsigned char *)buf)
@@ -396,11 +396,11 @@ PEM_ASN1_write_bio_internal(
 
         buf[0] = '\0';
         PEM_proc_type(buf, PEM_TYPE_ENCRYPTED);
-        PEM_dek_info(buf, objstr, EVP_CIPHER_get_iv_length(enc), (char *)iv);
+        PEM_dek_info(buf, objstr, OPENSSL_BOX_EVP_CIPHER_get_iv_length(enc), (char *)iv);
         /* k=strlen(buf); */
 
         ret = 1;
-        if ((ctx = EVP_CIPHER_CTX_new()) == NULL
+        if ((ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL
             || !EVP_EncryptInit_ex(ctx, enc, NULL, key, iv)
             || !EVP_EncryptUpdate(ctx, data, &j, data, i)
             || !EVP_EncryptFinal_ex(ctx, &(data[j]), &i))
@@ -418,7 +418,7 @@ PEM_ASN1_write_bio_internal(
  err:
     OPENSSL_cleanse(key, sizeof(key));
     OPENSSL_cleanse(iv, sizeof(iv));
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     OPENSSL_cleanse(buf, PEM_BUFSIZE);
     OPENSSL_clear_free(data, (unsigned int)dsize);
     return ret;
@@ -476,11 +476,11 @@ int PEM_do_header(EVP_CIPHER_INFO *cipher, unsigned char *data, long *plen,
     ebcdic2ascii(buf, buf, keylen);
 #endif
 
-    if (!EVP_BytesToKey(cipher->cipher, EVP_md5(), &(cipher->iv[0]),
+    if (!EVP_BytesToKey(cipher->cipher, OPENSSL_BOX_EVP_md5(), &(cipher->iv[0]),
                         (unsigned char *)buf, keylen, 1, key, NULL))
         return 0;
 
-    ctx = EVP_CIPHER_CTX_new();
+    ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ctx == NULL)
         return 0;
 
@@ -497,7 +497,7 @@ int PEM_do_header(EVP_CIPHER_INFO *cipher, unsigned char *data, long *plen,
     else
         ERR_raise(ERR_LIB_PEM, PEM_R_BAD_DECRYPT);
 
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     OPENSSL_cleanse((char *)buf, sizeof(buf));
     OPENSSL_cleanse((char *)key, sizeof(key));
     return ok;
@@ -569,7 +569,7 @@ int PEM_get_EVP_CIPHER_INFO(char *header, EVP_CIPHER_INFO *cipher)
     header += strcspn(header, " \t,");
     c = *header;
     *header = '\0';
-    cipher->cipher = enc = EVP_get_cipherbyname(dekinfostart);
+    cipher->cipher = enc = OPENSSL_BOX_EVP_get_cipherbyname(dekinfostart);
     *header = c;
     header += strspn(header, " \t");
 
@@ -577,7 +577,7 @@ int PEM_get_EVP_CIPHER_INFO(char *header, EVP_CIPHER_INFO *cipher)
         ERR_raise(ERR_LIB_PEM, PEM_R_UNSUPPORTED_ENCRYPTION);
         return 0;
     }
-    ivlen = EVP_CIPHER_get_iv_length(enc);
+    ivlen = OPENSSL_BOX_EVP_CIPHER_get_iv_length(enc);
     if (ivlen > 0 && *header++ != ',') {
         ERR_raise(ERR_LIB_PEM, PEM_R_MISSING_DEK_IV);
         return 0;
@@ -586,7 +586,7 @@ int PEM_get_EVP_CIPHER_INFO(char *header, EVP_CIPHER_INFO *cipher)
         return 0;
     }
 
-    if (!load_iv(&header, cipher->iv, EVP_CIPHER_get_iv_length(enc)))
+    if (!load_iv(&header, cipher->iv, OPENSSL_BOX_EVP_CIPHER_get_iv_length(enc)))
         return 0;
 
     return 1;
@@ -638,7 +638,7 @@ int PEM_write_bio(BIO *bp, const char *name, const char *header,
 {
     int nlen, n, i, j, outl;
     unsigned char *buf = NULL;
-    EVP_ENCODE_CTX *ctx = EVP_ENCODE_CTX_new();
+    EVP_ENCODE_CTX *ctx = OPENSSL_BOX_EVP_ENCODE_CTX_new();
     int reason = 0;
     int retval = 0;
 
@@ -647,7 +647,7 @@ int PEM_write_bio(BIO *bp, const char *name, const char *header,
         goto err;
     }
 
-    EVP_EncodeInit(ctx);
+    OPENSSL_BOX_EVP_EncodeInit(ctx);
     nlen = (int)strlen(name);
 
     if ((BIO_write(bp, "-----BEGIN ", 11) != 11) ||
@@ -684,7 +684,7 @@ int PEM_write_bio(BIO *bp, const char *name, const char *header,
         len -= n;
         j += n;
     }
-    EVP_EncodeFinal(ctx, buf, &outl);
+    OPENSSL_BOX_EVP_EncodeFinal(ctx, buf, &outl);
     if ((outl > 0) && (BIO_write(bp, (char *)buf, outl) != outl)) {
         reason = ERR_R_BIO_LIB;
         goto err;
@@ -700,7 +700,7 @@ int PEM_write_bio(BIO *bp, const char *name, const char *header,
  err:
     if (retval == 0 && reason != 0)
         ERR_raise(ERR_LIB_PEM, reason);
-    EVP_ENCODE_CTX_free(ctx);
+    OPENSSL_BOX_EVP_ENCODE_CTX_free(ctx);
     OPENSSL_clear_free(buf, PEM_BUFSIZE * 8);
     return retval;
 }
@@ -753,7 +753,7 @@ static int sanitize_line(char *linebuf, int len, unsigned int flags, int first_c
         }
         len = i;
     } else {
-        /* EVP_DecodeBlock strips leading and trailing whitespace, so just strip
+        /* OPENSSL_BOX_EVP_DecodeBlock strips leading and trailing whitespace, so just strip
          * control characters in-place and let everything through. */
         for (i = 0; i < len; ++i) {
             if (linebuf[i] == '\n' || linebuf[i] == '\r')
@@ -990,13 +990,13 @@ int PEM_read_bio_ex(BIO *bp, char **name_out, char **header,
     if (len == 0)
         goto end;
 
-    ctx = EVP_ENCODE_CTX_new();
+    ctx = OPENSSL_BOX_EVP_ENCODE_CTX_new();
     if (ctx == NULL) {
         ERR_raise(ERR_LIB_PEM, ERR_R_EVP_LIB);
         goto end;
     }
 
-    EVP_DecodeInit(ctx);
+    OPENSSL_BOX_EVP_DecodeInit(ctx);
     if (EVP_DecodeUpdate(ctx, (unsigned char*)buf_mem->data, &len,
                          (unsigned char*)buf_mem->data, len) < 0
             || EVP_DecodeFinal(ctx, (unsigned char*)&(buf_mem->data[len]),
@@ -1029,7 +1029,7 @@ out_free:
     PEM_FREE(*data, flags, 0);
     *data = NULL;
 end:
-    EVP_ENCODE_CTX_free(ctx);
+    OPENSSL_BOX_EVP_ENCODE_CTX_free(ctx);
     PEM_FREE(name, flags, 0);
     BIO_free(headerB);
     BIO_free(dataB);

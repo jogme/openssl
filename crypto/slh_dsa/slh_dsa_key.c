@@ -24,10 +24,10 @@ static void slh_dsa_key_hash_cleanup(SLH_DSA_KEY *key)
 {
     OPENSSL_free(key->propq);
     if (key->md_big != key->md)
-        EVP_MD_free(key->md_big);
+        OPENSSL_BOX_EVP_MD_free(key->md_big);
     key->md_big = NULL;
-    EVP_MD_free(key->md);
-    EVP_MAC_free(key->hmac);
+    OPENSSL_BOX_EVP_MD_free(key->md);
+    OPENSSL_BOX_EVP_MAC_free(key->hmac);
     key->md = NULL;
 }
 
@@ -69,11 +69,11 @@ static int slh_dsa_key_hash_init(SLH_DSA_KEY *key)
 static void slh_dsa_key_hash_dup(SLH_DSA_KEY *dst, const SLH_DSA_KEY *src)
 {
     if (src->md_big != NULL && src->md_big != src->md)
-        EVP_MD_up_ref(src->md_big);
+        OPENSSL_BOX_EVP_MD_up_ref(src->md_big);
     if (src->md != NULL)
-        EVP_MD_up_ref(src->md);
+        OPENSSL_BOX_EVP_MD_up_ref(src->md);
     if (src->hmac != NULL)
-        EVP_MAC_up_ref(src->hmac);
+        OPENSSL_BOX_EVP_MAC_up_ref(src->hmac);
 }
 
 /**

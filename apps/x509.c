@@ -1034,14 +1034,14 @@ int x509_main(int argc, char **argv)
                 purpose_print(out, x, X509_PURPOSE_get0(j));
         } else if (i == modulus) {
             BIO_printf(out, "Modulus=");
-            if (EVP_PKEY_is_a(pkey, "RSA") || EVP_PKEY_is_a(pkey, "RSA-PSS")) {
+            if (OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA") || OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA-PSS")) {
                 BIGNUM *n = NULL;
 
                 /* Every RSA key has an 'n' */
                 EVP_PKEY_get_bn_param(pkey, "n", &n);
                 BN_print(out, n);
                 BN_free(n);
-            } else if (EVP_PKEY_is_a(pkey, "DSA")) {
+            } else if (OPENSSL_BOX_EVP_PKEY_is_a(pkey, "DSA")) {
                 BIGNUM *dsapub = NULL;
 
                 /* Every DSA key has a 'pub' */
@@ -1080,7 +1080,7 @@ int x509_main(int argc, char **argv)
                 goto err;
             }
             digres = X509_digest(x, fdig, md, &n);
-            EVP_MD_free(fdig);
+            OPENSSL_BOX_EVP_MD_free(fdig);
             if (!digres) {
                 BIO_printf(bio_err, "Out of memory\n");
                 goto err;
@@ -1154,9 +1154,9 @@ int x509_main(int argc, char **argv)
     X509_REQ_free(req);
     X509_free(x);
     X509_free(xca);
-    EVP_PKEY_free(privkey);
-    EVP_PKEY_free(CAkey);
-    EVP_PKEY_free(pubkey);
+    OPENSSL_BOX_EVP_PKEY_free(privkey);
+    OPENSSL_BOX_EVP_PKEY_free(CAkey);
+    OPENSSL_BOX_EVP_PKEY_free(pubkey);
     sk_OPENSSL_STRING_free(sigopts);
     sk_OPENSSL_STRING_free(vfyopts);
     X509_REQ_free(rq);

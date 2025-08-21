@@ -1743,7 +1743,7 @@ static void key2any_freectx(void *vctx)
 {
     struct key2any_ctx_st *ctx = vctx;
 
-    EVP_CIPHER_free(ctx->cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(ctx->cipher);
     OPENSSL_free(ctx);
 }
 
@@ -1778,7 +1778,7 @@ static int key2any_set_ctx_params(void *vctx, const OSSL_PARAM params[])
         if (propsp != NULL && !OSSL_PARAM_get_utf8_string_ptr(propsp, &props))
             return 0;
 
-        EVP_CIPHER_free(ctx->cipher);
+        OPENSSL_BOX_EVP_CIPHER_free(ctx->cipher);
         ctx->cipher = NULL;
         ctx->cipher_intent = ciphername != NULL;
         if (ciphername != NULL
@@ -2679,20 +2679,20 @@ static int xor_sig_setup_md(PROV_XORSIG_CTX *ctx,
         if (md == NULL)
             ERR_raise_data(ERR_LIB_USER, XORPROV_R_INVALID_DIGEST,
                            "%s could not be fetched", mdname);
-        EVP_MD_free(md);
+        OPENSSL_BOX_EVP_MD_free(md);
         return 0;
     }
 
-    EVP_MD_CTX_free(ctx->mdctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx->mdctx);
     ctx->mdctx = NULL;
-    EVP_MD_free(ctx->md);
+    OPENSSL_BOX_EVP_MD_free(ctx->md);
     ctx->md = NULL;
 
     OPENSSL_free(ctx->aid);
     ctx->aid = NULL;
     ctx->aid_len = xor_get_aid(&(ctx->aid), ctx->sig->tls_name);
     if (ctx->aid_len <= 0) {
-        EVP_MD_free(md);
+        OPENSSL_BOX_EVP_MD_free(md);
         return 0;
     }
 
@@ -2831,7 +2831,7 @@ static int xor_sig_digest_signverify_init(void *vpxor_sigctx, const char *mdname
     if (!xor_sig_setup_md(pxor_sigctx, rmdname, NULL))
         return 0;
 
-    pxor_sigctx->mdctx = EVP_MD_CTX_new();
+    pxor_sigctx->mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (pxor_sigctx->mdctx == NULL)
         goto error;
 
@@ -2841,8 +2841,8 @@ static int xor_sig_digest_signverify_init(void *vpxor_sigctx, const char *mdname
     return 1;
 
  error:
-    EVP_MD_CTX_free(pxor_sigctx->mdctx);
-    EVP_MD_free(pxor_sigctx->md);
+    OPENSSL_BOX_EVP_MD_CTX_free(pxor_sigctx->mdctx);
+    OPENSSL_BOX_EVP_MD_free(pxor_sigctx->md);
     pxor_sigctx->mdctx = NULL;
     pxor_sigctx->md = NULL;
     return 0;
@@ -2918,8 +2918,8 @@ static void xor_sig_freectx(void *vpxor_sigctx)
     PROV_XORSIG_CTX *ctx = (PROV_XORSIG_CTX *)vpxor_sigctx;
 
     OPENSSL_free(ctx->propq);
-    EVP_MD_CTX_free(ctx->mdctx);
-    EVP_MD_free(ctx->md);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx->mdctx);
+    OPENSSL_BOX_EVP_MD_free(ctx->md);
     ctx->propq = NULL;
     ctx->mdctx = NULL;
     ctx->md = NULL;
@@ -2948,14 +2948,14 @@ static void *xor_sig_dupctx(void *vpxor_sigctx)
         goto err;
     dstctx->sig = srcctx->sig;
 
-    if (srcctx->md != NULL && !EVP_MD_up_ref(srcctx->md))
+    if (srcctx->md != NULL && !OPENSSL_BOX_EVP_MD_up_ref(srcctx->md))
         goto err;
     dstctx->md = srcctx->md;
 
     if (srcctx->mdctx != NULL) {
-        dstctx->mdctx = EVP_MD_CTX_new();
+        dstctx->mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (dstctx->mdctx == NULL
-                || !EVP_MD_CTX_copy_ex(dstctx->mdctx, srcctx->mdctx))
+                || !OPENSSL_BOX_EVP_MD_CTX_copy_ex(dstctx->mdctx, srcctx->mdctx))
             goto err;
     }
 
@@ -3050,7 +3050,7 @@ static int xor_sig_get_ctx_md_params(void *vpxor_sigctx, OSSL_PARAM *params)
     if (pxor_sigctx->mdctx == NULL)
         return 0;
 
-    return EVP_MD_CTX_get_params(pxor_sigctx->mdctx, params);
+    return OPENSSL_BOX_EVP_MD_CTX_get_params(pxor_sigctx->mdctx, params);
 }
 
 static const OSSL_PARAM *xor_sig_gettable_ctx_md_params(void *vpxor_sigctx)
@@ -3060,7 +3060,7 @@ static const OSSL_PARAM *xor_sig_gettable_ctx_md_params(void *vpxor_sigctx)
     if (pxor_sigctx->md == NULL)
         return 0;
 
-    return EVP_MD_gettable_ctx_params(pxor_sigctx->md);
+    return OPENSSL_BOX_EVP_MD_gettable_ctx_params(pxor_sigctx->md);
 }
 
 static int xor_sig_set_ctx_md_params(void *vpxor_sigctx, const OSSL_PARAM params[])
@@ -3070,7 +3070,7 @@ static int xor_sig_set_ctx_md_params(void *vpxor_sigctx, const OSSL_PARAM params
     if (pxor_sigctx->mdctx == NULL)
         return 0;
 
-    return EVP_MD_CTX_set_params(pxor_sigctx->mdctx, params);
+    return OPENSSL_BOX_EVP_MD_CTX_set_params(pxor_sigctx->mdctx, params);
 }
 
 static const OSSL_PARAM *xor_sig_settable_ctx_md_params(void *vpxor_sigctx)
@@ -3080,7 +3080,7 @@ static const OSSL_PARAM *xor_sig_settable_ctx_md_params(void *vpxor_sigctx)
     if (pxor_sigctx->md == NULL)
         return 0;
 
-    return EVP_MD_settable_ctx_params(pxor_sigctx->md);
+    return OPENSSL_BOX_EVP_MD_settable_ctx_params(pxor_sigctx->md);
 }
 
 static const OSSL_DISPATCH xor_signature_functions[] = {

@@ -1,7 +1,7 @@
 PROGRAMS{noinst} = EVP_MD_demo \
                    EVP_MD_stdin \
-                   EVP_MD_xof \
-                   BIO_f_md
+                   OPENSSL_BOX_EVP_MD_xof \
+                   OPENSSL_BOX_BIO_f_md
 
 INCLUDE[EVP_MD_demo]=../../include
 SOURCE[EVP_MD_demo]=EVP_MD_demo.c
@@ -11,10 +11,10 @@ INCLUDE[EVP_MD_stdin]=../../include
 SOURCE[EVP_MD_stdin]=EVP_MD_stdin.c
 DEPEND[EVP_MD_stdin]=../../libcrypto
 
-INCLUDE[EVP_MD_xof]=../../include
-SOURCE[EVP_MD_xof]=EVP_MD_xof.c
-DEPEND[EVP_MD_xof]=../../libcrypto
+INCLUDE[OPENSSL_BOX_EVP_MD_xof]=../../include
+SOURCE[OPENSSL_BOX_EVP_MD_xof]=OPENSSL_BOX_EVP_MD_xof.c
+DEPEND[OPENSSL_BOX_EVP_MD_xof]=../../libcrypto
 
-INCLUDE[BIO_f_md]=../../include
-SOURCE[BIO_f_md]=BIO_f_md.c
-DEPEND[BIO_f_md]=../../libcrypto
+INCLUDE[OPENSSL_BOX_BIO_f_md]=../../include
+SOURCE[OPENSSL_BOX_BIO_f_md]=OPENSSL_BOX_BIO_f_md.c
+DEPEND[OPENSSL_BOX_BIO_f_md]=../../libcrypto

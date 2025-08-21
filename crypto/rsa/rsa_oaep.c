@@ -67,7 +67,7 @@ int ossl_rsa_padding_add_PKCS1_OAEP_mgf1_ex(OSSL_LIB_CTX *libctx,
 
     if (md == NULL) {
 #ifndef FIPS_MODULE
-        md = EVP_sha1();
+        md = OPENSSL_BOX_EVP_sha1();
 #else
         ERR_raise(ERR_LIB_RSA, ERR_R_PASSED_NULL_PARAMETER);
         return 0;
@@ -78,17 +78,17 @@ int ossl_rsa_padding_add_PKCS1_OAEP_mgf1_ex(OSSL_LIB_CTX *libctx,
 
 #ifdef FIPS_MODULE
     /* XOF are approved as standalone; Shake256 in Ed448; MGF */
-    if (EVP_MD_xof(md)) {
+    if (OPENSSL_BOX_EVP_MD_xof(md)) {
         ERR_raise(ERR_LIB_RSA, RSA_R_DIGEST_NOT_ALLOWED);
         return 0;
     }
-    if (EVP_MD_xof(mgf1md)) {
+    if (OPENSSL_BOX_EVP_MD_xof(mgf1md)) {
         ERR_raise(ERR_LIB_RSA, RSA_R_MGF1_DIGEST_NOT_ALLOWED);
         return 0;
     }
 #endif
 
-    mdlen = EVP_MD_get_size(md);
+    mdlen = OPENSSL_BOX_EVP_MD_get_size(md);
     if (mdlen <= 0) {
         ERR_raise(ERR_LIB_RSA, RSA_R_INVALID_LENGTH);
         return 0;
@@ -184,7 +184,7 @@ int RSA_padding_check_PKCS1_OAEP_mgf1(unsigned char *to, int tlen,
 
     if (md == NULL) {
 #ifndef FIPS_MODULE
-        md = EVP_sha1();
+        md = OPENSSL_BOX_EVP_sha1();
 #else
         ERR_raise(ERR_LIB_RSA, ERR_R_PASSED_NULL_PARAMETER);
         return -1;
@@ -196,17 +196,17 @@ int RSA_padding_check_PKCS1_OAEP_mgf1(unsigned char *to, int tlen,
 
 #ifdef FIPS_MODULE
     /* XOF are approved as standalone; Shake256 in Ed448; MGF */
-    if (EVP_MD_xof(md)) {
+    if (OPENSSL_BOX_EVP_MD_xof(md)) {
         ERR_raise(ERR_LIB_RSA, RSA_R_DIGEST_NOT_ALLOWED);
         return -1;
     }
-    if (EVP_MD_xof(mgf1md)) {
+    if (OPENSSL_BOX_EVP_MD_xof(mgf1md)) {
         ERR_raise(ERR_LIB_RSA, RSA_R_MGF1_DIGEST_NOT_ALLOWED);
         return -1;
     }
 #endif
 
-    mdlen = EVP_MD_get_size(md);
+    mdlen = OPENSSL_BOX_EVP_MD_get_size(md);
 
     if (tlen <= 0 || flen <= 0 || mdlen <= 0)
         return -1;
@@ -352,14 +352,14 @@ int PKCS1_MGF1(unsigned char *mask, long len,
 {
     long i, outlen = 0;
     unsigned char cnt[4];
-    EVP_MD_CTX *c = EVP_MD_CTX_new();
+    EVP_MD_CTX *c = OPENSSL_BOX_EVP_MD_CTX_new();
     unsigned char md[EVP_MAX_MD_SIZE];
     int mdlen;
     int rv = -1;
 
     if (c == NULL)
         goto err;
-    mdlen = EVP_MD_get_size(dgst);
+    mdlen = OPENSSL_BOX_EVP_MD_get_size(dgst);
     if (mdlen <= 0)
         goto err;
     /* step 4 */
@@ -388,6 +388,6 @@ int PKCS1_MGF1(unsigned char *mask, long len,
     rv = 0;
  err:
     OPENSSL_cleanse(md, sizeof(md));
-    EVP_MD_CTX_free(c);
+    OPENSSL_BOX_EVP_MD_CTX_free(c);
     return rv;
 }

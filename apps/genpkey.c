@@ -86,9 +86,9 @@ static void show_gen_pkeyopt(const char *algname, OSSL_LIB_CTX *libctx, const ch
     if (ctx == NULL)
         return;
 
-    if (EVP_PKEY_keygen_init(ctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) <= 0)
         goto cleanup;
-    params = EVP_PKEY_CTX_settable_params(ctx);
+    params = OPENSSL_BOX_EVP_PKEY_CTX_settable_params(ctx);
     if (params == NULL)
         goto cleanup;
 
@@ -100,7 +100,7 @@ static void show_gen_pkeyopt(const char *algname, OSSL_LIB_CTX *libctx, const ch
             BIO_printf(bio_err, "    %s%s:%s\n", ishex ? "hex" : "", params[i].key, name);
     }
 cleanup:
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
 }
 
 int genpkey_main(int argc, char **argv)
@@ -250,8 +250,8 @@ int genpkey_main(int argc, char **argv)
     }
 
     if (verbose)
-        EVP_PKEY_CTX_set_cb(ctx, progress_cb);
-    EVP_PKEY_CTX_set_app_data(ctx, bio_err);
+        OPENSSL_BOX_EVP_PKEY_CTX_set_cb(ctx, progress_cb);
+    OPENSSL_BOX_EVP_PKEY_CTX_set_app_data(ctx, bio_err);
 
     pkey = do_param ? app_paramgen(ctx, algname)
                     : app_keygen(ctx, algname, 0, 0 /* not verbose */);
@@ -312,9 +312,9 @@ int genpkey_main(int argc, char **argv)
                            outfile, strerror(errno));
         }
     }
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     BIO_free_all(mem_out);
     BIO_free_all(mem_outpubkey);
     release_engine(e);
@@ -349,22 +349,22 @@ static int init_keygen_file(EVP_PKEY_CTX **pctx, const char *file, ENGINE *e,
     }
 
     if (e != NULL)
-        ctx = EVP_PKEY_CTX_new(pkey, e);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, e);
     else
         ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
     if (ctx == NULL)
         goto err;
-    if (EVP_PKEY_keygen_init(ctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) <= 0)
         goto err;
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     *pctx = ctx;
     return 1;
 
  err:
     BIO_puts(bio_err, "Error initializing context\n");
     ERR_print_errors(bio_err);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return 0;
 
 }
@@ -386,7 +386,7 @@ int init_gen_str(EVP_PKEY_CTX **pctx,
 #ifndef OPENSSL_NO_DEPRECATED_3_6
     pkey_id = get_legacy_pkey_id(libctx, algname, e);
     if (pkey_id != NID_undef)
-        ctx = EVP_PKEY_CTX_new_id(pkey_id, e);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(pkey_id, e);
     else
 #endif
         ctx = EVP_PKEY_CTX_new_from_name(libctx, algname, propq);
@@ -394,10 +394,10 @@ int init_gen_str(EVP_PKEY_CTX **pctx,
     if (ctx == NULL)
         goto err;
     if (do_param) {
-        if (EVP_PKEY_paramgen_init(ctx) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_paramgen_init(ctx) <= 0)
             goto err;
     } else {
-        if (EVP_PKEY_keygen_init(ctx) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) <= 0)
             goto err;
     }
 
@@ -407,7 +407,7 @@ int init_gen_str(EVP_PKEY_CTX **pctx,
  err:
     BIO_printf(bio_err, "Error initializing %s context\n", algname);
     ERR_print_errors(bio_err);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return 0;
 
 }

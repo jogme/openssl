@@ -579,11 +579,11 @@ static int drbg_ctr_init(PROV_DRBG *drbg)
         ERR_raise(ERR_LIB_PROV, PROV_R_MISSING_CIPHER);
         return 0;
     }
-    ctr->keylen = keylen = EVP_CIPHER_get_key_length(ctr->cipher_ctr);
+    ctr->keylen = keylen = OPENSSL_BOX_EVP_CIPHER_get_key_length(ctr->cipher_ctr);
     if (ctr->ctx_ecb == NULL)
-        ctr->ctx_ecb = EVP_CIPHER_CTX_new();
+        ctr->ctx_ecb = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ctr->ctx_ctr == NULL)
-        ctr->ctx_ctr = EVP_CIPHER_CTX_new();
+        ctr->ctx_ctr = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ctr->ctx_ecb == NULL || ctr->ctx_ctr == NULL) {
         ERR_raise(ERR_LIB_PROV, ERR_R_EVP_LIB);
         goto err;
@@ -610,7 +610,7 @@ static int drbg_ctr_init(PROV_DRBG *drbg)
         };
 
         if (ctr->ctx_df == NULL)
-            ctr->ctx_df = EVP_CIPHER_CTX_new();
+            ctr->ctx_df = OPENSSL_BOX_EVP_CIPHER_CTX_new();
         if (ctr->ctx_df == NULL) {
             ERR_raise(ERR_LIB_PROV, ERR_R_EVP_LIB);
             goto err;
@@ -625,8 +625,8 @@ static int drbg_ctr_init(PROV_DRBG *drbg)
     return drbg_ctr_init_lengths(drbg);
 
 err:
-    EVP_CIPHER_CTX_free(ctr->ctx_ecb);
-    EVP_CIPHER_CTX_free(ctr->ctx_ctr);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctr->ctx_ecb);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctr->ctx_ctr);
     ctr->ctx_ecb = ctr->ctx_ctr = NULL;
     return 0;
 }
@@ -660,11 +660,11 @@ static void drbg_ctr_free(void *vdrbg)
     PROV_DRBG_CTR *ctr;
 
     if (drbg != NULL && (ctr = (PROV_DRBG_CTR *)drbg->data) != NULL) {
-        EVP_CIPHER_CTX_free(ctr->ctx_ecb);
-        EVP_CIPHER_CTX_free(ctr->ctx_ctr);
-        EVP_CIPHER_CTX_free(ctr->ctx_df);
-        EVP_CIPHER_free(ctr->cipher_ecb);
-        EVP_CIPHER_free(ctr->cipher_ctr);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctr->ctx_ecb);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctr->ctx_ctr);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctr->ctx_df);
+        OPENSSL_BOX_EVP_CIPHER_free(ctr->cipher_ecb);
+        OPENSSL_BOX_EVP_CIPHER_free(ctr->cipher_ctr);
 
         OPENSSL_secure_clear_free(ctr, sizeof(*ctr));
     }
@@ -719,7 +719,7 @@ static int drbg_ctr_get_ctx_params(void *vdrbg, OSSL_PARAM params[])
     if (p.cipher != NULL) {
         if (ctr->cipher_ctr == NULL
             || !OSSL_PARAM_set_utf8_string(p.cipher,
-                                           EVP_CIPHER_get0_name(ctr->cipher_ctr)))
+                                           OPENSSL_BOX_EVP_CIPHER_get0_name(ctr->cipher_ctr)))
             goto err;
     }
 
@@ -787,8 +787,8 @@ static int drbg_ctr_set_ctx_params_locked(PROV_DRBG *ctx,
             return 0;
         }
         strcpy(ecb + p->cipher->data_size - ecb_str_len, "ECB");
-        EVP_CIPHER_free(ctr->cipher_ecb);
-        EVP_CIPHER_free(ctr->cipher_ctr);
+        OPENSSL_BOX_EVP_CIPHER_free(ctr->cipher_ecb);
+        OPENSSL_BOX_EVP_CIPHER_free(ctr->cipher_ctr);
         /*
          * Try to fetch algorithms from our own provider code, fallback
          * to generic fetch only if that fails

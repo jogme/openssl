@@ -28,12 +28,12 @@ The general description of these parameters can be found in
 L<EVP_MAC(3)/PARAMETERS>.
 
 All these parameters (except for "block-size") can be set with
-EVP_MAC_CTX_set_params().
+OPENSSL_BOX_EVP_MAC_CTX_set_params().
 Furthermore, the "size" parameter can be retrieved with
-EVP_MAC_CTX_get_params(), or with EVP_MAC_CTX_get_mac_size().
+OPENSSL_BOX_EVP_MAC_CTX_get_params(), or with OPENSSL_BOX_EVP_MAC_CTX_get_mac_size().
 The length of the "size" parameter should not exceed that of a B<size_t>.
 Likewise, the "block-size" parameter can be retrieved with
-EVP_MAC_CTX_get_params(), or with EVP_MAC_CTX_get_block_size().
+OPENSSL_BOX_EVP_MAC_CTX_get_params(), or with OPENSSL_BOX_EVP_MAC_CTX_get_block_size().
 
 =over 4
 
@@ -72,7 +72,7 @@ It is 64 for EVP_MAC_BLAKE2S and 128 for EVP_MAC_BLAKE2B.
 
 =head1 SEE ALSO
 
-L<EVP_MAC_CTX_get_params(3)>, L<EVP_MAC_CTX_set_params(3)>,
+L<OPENSSL_BOX_EVP_MAC_CTX_get_params(3)>, L<OPENSSL_BOX_EVP_MAC_CTX_set_params(3)>,
 L<EVP_MAC(3)/PARAMETERS>, L<OSSL_PARAM(3)>
 
 =head1 HISTORY

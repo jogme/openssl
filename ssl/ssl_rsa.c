@@ -142,10 +142,10 @@ static int ssl_set_pkey(CERT *c, EVP_PKEY *pkey, SSL_CTX *ctx)
     if (c->pkeys[i].x509 != NULL
             && !X509_check_private_key(c->pkeys[i].x509, pkey))
         return 0;
-    if (!EVP_PKEY_up_ref(pkey))
+    if (!OPENSSL_BOX_EVP_PKEY_up_ref(pkey))
         return 0;
 
-    EVP_PKEY_free(c->pkeys[i].privatekey);
+    OPENSSL_BOX_EVP_PKEY_free(c->pkeys[i].privatekey);
     c->pkeys[i].privatekey = pkey;
     c->key = &c->pkeys[i];
     return 1;
@@ -213,7 +213,7 @@ int SSL_use_PrivateKey_file(SSL *ssl, const char *file, int type)
         goto end;
     }
     ret = SSL_use_PrivateKey(ssl, pkey);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
  end:
     BIO_free(in);
     return ret;
@@ -234,7 +234,7 @@ int SSL_use_PrivateKey_ASN1(int type, SSL *ssl, const unsigned char *d,
     }
 
     ret = SSL_use_PrivateKey(ssl, pkey);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 
@@ -270,18 +270,18 @@ static int ssl_set_cert(CERT *c, X509 *x, SSL_CTX *ctx)
         return 0;
     }
 
-    if (i == SSL_PKEY_ECC && !EVP_PKEY_can_sign(pkey)) {
+    if (i == SSL_PKEY_ECC && !OPENSSL_BOX_EVP_PKEY_can_sign(pkey)) {
         ERR_raise(ERR_LIB_SSL, SSL_R_ECC_CERT_NOT_FOR_SIGNING);
         return 0;
     }
 
     if (c->pkeys[i].privatekey != NULL) {
         /*
-         * The return code from EVP_PKEY_copy_parameters is deliberately
+         * The return code from OPENSSL_BOX_EVP_PKEY_copy_parameters is deliberately
          * ignored. Some EVP_PKEY types cannot do this.
          * coverity[check_return]
          */
-        EVP_PKEY_copy_parameters(pkey, c->pkeys[i].privatekey);
+        OPENSSL_BOX_EVP_PKEY_copy_parameters(pkey, c->pkeys[i].privatekey);
         ERR_clear_error();
 
         if (!X509_check_private_key(x, c->pkeys[i].privatekey)) {
@@ -290,7 +290,7 @@ static int ssl_set_cert(CERT *c, X509 *x, SSL_CTX *ctx)
              * key (when switching to a different cert & key, first this
              * function should be used, then ssl_set_pkey
              */
-            EVP_PKEY_free(c->pkeys[i].privatekey);
+            OPENSSL_BOX_EVP_PKEY_free(c->pkeys[i].privatekey);
             c->pkeys[i].privatekey = NULL;
             /* clear error queue */
             ERR_clear_error();
@@ -428,7 +428,7 @@ int SSL_CTX_use_PrivateKey_file(SSL_CTX *ctx, const char *file, int type)
         goto end;
     }
     ret = SSL_CTX_use_PrivateKey(ctx, pkey);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
  end:
     BIO_free(in);
     return ret;
@@ -449,7 +449,7 @@ int SSL_CTX_use_PrivateKey_ASN1(int type, SSL_CTX *ctx,
     }
 
     ret = SSL_CTX_use_PrivateKey(ctx, pkey);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 
@@ -1009,28 +1009,28 @@ static int ssl_set_cert_and_key(SSL *ssl, SSL_CTX *ctx, X509 *x509, EVP_PKEY *pr
         privatekey = pubkey;
     } else {
         /* For RSA, which has no parameters, missing returns 0 */
-        if (EVP_PKEY_missing_parameters(privatekey)) {
-            if (EVP_PKEY_missing_parameters(pubkey)) {
+        if (OPENSSL_BOX_EVP_PKEY_missing_parameters(privatekey)) {
+            if (OPENSSL_BOX_EVP_PKEY_missing_parameters(pubkey)) {
                 /* nobody has parameters? - error */
                 ERR_raise(ERR_LIB_SSL, SSL_R_MISSING_PARAMETERS);
                 goto out;
             } else {
                 /* copy to privatekey from pubkey */
-                if (!EVP_PKEY_copy_parameters(privatekey, pubkey)) {
+                if (!OPENSSL_BOX_EVP_PKEY_copy_parameters(privatekey, pubkey)) {
                     ERR_raise(ERR_LIB_SSL, SSL_R_COPY_PARAMETERS_FAILED);
                     goto out;
                 }
             }
-        } else if (EVP_PKEY_missing_parameters(pubkey)) {
+        } else if (OPENSSL_BOX_EVP_PKEY_missing_parameters(pubkey)) {
             /* copy to pubkey from privatekey */
-            if (!EVP_PKEY_copy_parameters(pubkey, privatekey)) {
+            if (!OPENSSL_BOX_EVP_PKEY_copy_parameters(pubkey, privatekey)) {
                 ERR_raise(ERR_LIB_SSL, SSL_R_COPY_PARAMETERS_FAILED);
                 goto out;
             }
         } /* else both have parameters */
 
         /* check that key <-> cert match */
-        if (EVP_PKEY_eq(pubkey, privatekey) != 1) {
+        if (OPENSSL_BOX_EVP_PKEY_eq(pubkey, privatekey) != 1) {
             ERR_raise(ERR_LIB_SSL, SSL_R_PRIVATE_KEY_MISMATCH);
             goto out;
         }
@@ -1059,7 +1059,7 @@ static int ssl_set_cert_and_key(SSL *ssl, SSL_CTX *ctx, X509 *x509, EVP_PKEY *pr
     if (!X509_up_ref(x509))
         goto out;
 
-    if (!EVP_PKEY_up_ref(privatekey)) {
+    if (!OPENSSL_BOX_EVP_PKEY_up_ref(privatekey)) {
         X509_free(x509);
         goto out;
     }
@@ -1070,14 +1070,14 @@ static int ssl_set_cert_and_key(SSL *ssl, SSL_CTX *ctx, X509 *x509, EVP_PKEY *pr
     X509_free(c->pkeys[i].x509);
     c->pkeys[i].x509 = x509;
 
-    EVP_PKEY_free(c->pkeys[i].privatekey);
+    OPENSSL_BOX_EVP_PKEY_free(c->pkeys[i].privatekey);
     c->pkeys[i].privatekey = privatekey;
 
     c->key = &(c->pkeys[i]);
 
     ret = 1;
  out:
-    EVP_PKEY_free(pubkey);
+    OPENSSL_BOX_EVP_PKEY_free(pubkey);
     return ret;
 }
 

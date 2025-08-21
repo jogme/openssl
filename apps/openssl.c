@@ -470,11 +470,11 @@ static int do_cmd(LHASH_OF(FUNCTION) *prog, int argc, char *argv[])
     f.name = argv[0];
     fp = lh_FUNCTION_retrieve(prog, &f);
     if (fp == NULL) {
-        if (EVP_get_digestbyname(argv[0])) {
+        if (OPENSSL_BOX_EVP_get_digestbyname(argv[0])) {
             f.type = FT_md;
             f.func = dgst_main;
             fp = &f;
-        } else if (EVP_get_cipherbyname(argv[0])) {
+        } else if (OPENSSL_BOX_EVP_get_cipherbyname(argv[0])) {
             f.type = FT_cipher;
             f.func = enc_main;
             fp = &f;

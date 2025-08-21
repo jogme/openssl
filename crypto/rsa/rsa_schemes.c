@@ -64,7 +64,7 @@ static const OSSL_ITEM oaeppss_name_nid_map[] = {
 
 static int md_is_a(const void *md, const char *name)
 {
-    return EVP_MD_is_a(md, name);
+    return OPENSSL_BOX_EVP_MD_is_a(md, name);
 }
 
 int ossl_rsa_oaeppss_md2nid(const EVP_MD *md)

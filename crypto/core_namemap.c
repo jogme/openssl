@@ -8,8 +8,8 @@
  */
 
 /*
- * For EVP_PKEY_asn1_get0_info(), EVP_PKEY_asn1_get_count() and
- * EVP_PKEY_asn1_get0()
+ * For EVP_PKEY_asn1_get0_info(), OPENSSL_BOX_EVP_PKEY_asn1_get_count() and
+ * OPENSSL_BOX_EVP_PKEY_asn1_get0()
  */
 #define OPENSSL_SUPPRESS_DEPRECATED
 
@@ -428,7 +428,7 @@ static void get_legacy_cipher_names(const OBJ_NAME *on, void *arg)
     const EVP_CIPHER *cipher = (void *)OBJ_NAME_get(on->name, on->type);
 
     if (cipher != NULL)
-        get_legacy_evp_names(NID_undef, EVP_CIPHER_get_type(cipher), NULL, arg);
+        get_legacy_evp_names(NID_undef, OPENSSL_BOX_EVP_CIPHER_get_type(cipher), NULL, arg);
 }
 
 static void get_legacy_md_names(const OBJ_NAME *on, void *arg)
@@ -436,7 +436,7 @@ static void get_legacy_md_names(const OBJ_NAME *on, void *arg)
     const EVP_MD *md = (void *)OBJ_NAME_get(on->name, on->type);
 
     if (md != NULL)
-        get_legacy_evp_names(0, EVP_MD_get_type(md), NULL, arg);
+        get_legacy_evp_names(0, OPENSSL_BOX_EVP_MD_get_type(md), NULL, arg);
 }
 
 # ifndef OPENSSL_NO_DEPRECATED_3_6
@@ -534,8 +534,8 @@ OSSL_NAMEMAP *ossl_namemap_stored(OSSL_LIB_CTX *libctx)
             int i, end;
 
             /* We also pilfer data from the legacy EVP_PKEY_ASN1_METHODs */
-            for (i = 0, end = EVP_PKEY_asn1_get_count(); i < end; i++)
-                get_legacy_pkey_meth_names(EVP_PKEY_asn1_get0(i), namemap);
+            for (i = 0, end = OPENSSL_BOX_EVP_PKEY_asn1_get_count(); i < end; i++)
+                get_legacy_pkey_meth_names(OPENSSL_BOX_EVP_PKEY_asn1_get0(i), namemap);
         }
 # endif
     }

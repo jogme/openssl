@@ -322,8 +322,8 @@ static void rsa_freectx(void *vprsactx)
 
     RSA_free(prsactx->rsa);
 
-    EVP_MD_free(prsactx->oaep_md);
-    EVP_MD_free(prsactx->mgf1_md);
+    OPENSSL_BOX_EVP_MD_free(prsactx->oaep_md);
+    OPENSSL_BOX_EVP_MD_free(prsactx->mgf1_md);
     OPENSSL_free(prsactx->oaep_label);
 
     OPENSSL_free(prsactx);
@@ -347,15 +347,15 @@ static void *rsa_dupctx(void *vprsactx)
         return NULL;
     }
 
-    if (dstctx->oaep_md != NULL && !EVP_MD_up_ref(dstctx->oaep_md)) {
+    if (dstctx->oaep_md != NULL && !OPENSSL_BOX_EVP_MD_up_ref(dstctx->oaep_md)) {
         RSA_free(dstctx->rsa);
         OPENSSL_free(dstctx);
         return NULL;
     }
 
-    if (dstctx->mgf1_md != NULL && !EVP_MD_up_ref(dstctx->mgf1_md)) {
+    if (dstctx->mgf1_md != NULL && !OPENSSL_BOX_EVP_MD_up_ref(dstctx->mgf1_md)) {
         RSA_free(dstctx->rsa);
-        EVP_MD_free(dstctx->oaep_md);
+        OPENSSL_BOX_EVP_MD_free(dstctx->oaep_md);
         OPENSSL_free(dstctx);
         return NULL;
     }
@@ -410,7 +410,7 @@ static int rsa_get_ctx_params(void *vprsactx, OSSL_PARAM *params)
 
     if (p.oaep != NULL && !OSSL_PARAM_set_utf8_string(p.oaep, prsactx->oaep_md == NULL
                                                               ? ""
-                                                              : EVP_MD_get0_name(prsactx->oaep_md)))
+                                                              : OPENSSL_BOX_EVP_MD_get0_name(prsactx->oaep_md)))
         return 0;
 
     if (p.mgf1 != NULL) {
@@ -419,7 +419,7 @@ static int rsa_get_ctx_params(void *vprsactx, OSSL_PARAM *params)
 
         if (!OSSL_PARAM_set_utf8_string(p.mgf1, mgf1_md == NULL
                                                 ? ""
-                                                : EVP_MD_get0_name(mgf1_md)))
+                                                : OPENSSL_BOX_EVP_MD_get0_name(mgf1_md)))
         return 0;
     }
 
@@ -495,7 +495,7 @@ static int rsa_set_ctx_params(void *vprsactx, const OSSL_PARAM params[])
                 return 0;
         }
 
-        EVP_MD_free(prsactx->oaep_md);
+        OPENSSL_BOX_EVP_MD_free(prsactx->oaep_md);
         prsactx->oaep_md = EVP_MD_fetch(prsactx->libctx, mdname, mdprops);
 
         if (prsactx->oaep_md == NULL)
@@ -550,7 +550,7 @@ static int rsa_set_ctx_params(void *vprsactx, const OSSL_PARAM params[])
             str = NULL;
         }
 
-        EVP_MD_free(prsactx->mgf1_md);
+        OPENSSL_BOX_EVP_MD_free(prsactx->mgf1_md);
         prsactx->mgf1_md = EVP_MD_fetch(prsactx->libctx, mdname, str);
 
         if (prsactx->mgf1_md == NULL)

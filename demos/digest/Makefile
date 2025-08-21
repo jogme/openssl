@@ -6,8 +6,8 @@
 
 TESTS = EVP_MD_demo \
         EVP_MD_stdin \
-        EVP_MD_xof \
-        BIO_f_md
+        OPENSSL_BOX_EVP_MD_xof \
+        OPENSSL_BOX_BIO_f_md
 
 CFLAGS  = -I../../include -g -Wall
 LDFLAGS = -L../..
@@ -17,8 +17,8 @@ all: $(TESTS)
 
 EVP_MD_demo: EVP_MD_demo.o
 EVP_MD_stdin: EVP_MD_stdin.o
-EVP_MD_xof: EVP_MD_xof.o
-BIO_f_md: BIO_f_md.o
+OPENSSL_BOX_EVP_MD_xof: OPENSSL_BOX_EVP_MD_xof.o
+OPENSSL_BOX_BIO_f_md: OPENSSL_BOX_BIO_f_md.o
 
 $(TESTS):
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)

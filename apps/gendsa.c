@@ -129,21 +129,21 @@ int gendsa_main(int argc, char **argv)
     if (out == NULL)
         goto end2;
 
-    nbits = EVP_PKEY_get_bits(pkey);
+    nbits = OPENSSL_BOX_EVP_PKEY_get_bits(pkey);
     if (nbits > OPENSSL_DSA_MAX_MODULUS_BITS)
         BIO_printf(bio_err,
                    "Warning: It is not recommended to use more than %d bit for DSA keys.\n"
                    "         Your key size is %d! Larger key size may behave not as expected.\n",
-                   OPENSSL_DSA_MAX_MODULUS_BITS, EVP_PKEY_get_bits(pkey));
+                   OPENSSL_DSA_MAX_MODULUS_BITS, OPENSSL_BOX_EVP_PKEY_get_bits(pkey));
 
     ctx = EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), pkey, app_get0_propq());
     if (ctx == NULL) {
         BIO_printf(bio_err, "unable to create PKEY context\n");
         goto end;
     }
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     pkey = NULL;
-    if (EVP_PKEY_keygen_init(ctx) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) <= 0) {
         BIO_printf(bio_err, "unable to set up for key generation\n");
         goto end;
     }
@@ -163,9 +163,9 @@ int gendsa_main(int argc, char **argv)
  end2:
     BIO_free(in);
     BIO_free_all(out);
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_CIPHER_free(enc);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(enc);
     release_engine(e);
     OPENSSL_free(passout);
     return ret;

@@ -147,10 +147,10 @@ static int dtls_process_record(OSSL_RECORD_LAYER *rl, DTLS_BITMAP *bitmap)
     rr->orig_len = rr->length;
 
     if (rl->md_ctx != NULL) {
-        const EVP_MD *tmpmd = EVP_MD_CTX_get0_md(rl->md_ctx);
+        const EVP_MD *tmpmd = OPENSSL_BOX_EVP_MD_CTX_get0_md(rl->md_ctx);
 
         if (tmpmd != NULL) {
-            imac_size = EVP_MD_get_size(tmpmd);
+            imac_size = OPENSSL_BOX_EVP_MD_get_size(tmpmd);
             if (!ossl_assert(imac_size > 0 && imac_size <= EVP_MAX_MD_SIZE)) {
                 RLAYERfatal(rl, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
                 return 0;
@@ -215,7 +215,7 @@ static int dtls_process_record(OSSL_RECORD_LAYER *rl, DTLS_BITMAP *bitmap)
     /* r->length is now the compressed data plus mac */
     if (!rl->use_etm
             && (rl->enc_ctx != NULL)
-            && (EVP_MD_CTX_get0_md(rl->md_ctx) != NULL)) {
+            && (OPENSSL_BOX_EVP_MD_CTX_get0_md(rl->md_ctx) != NULL)) {
         /* rl->md_ctx != NULL => mac_size != -1 */
 
         i = rl->funcs->mac(rl, rr, md, 0 /* not send */);
@@ -747,7 +747,7 @@ static size_t dtls_get_max_record_overhead(OSSL_RECORD_LAYER *rl)
 
     if (rl->enc_ctx != NULL &&
         (EVP_CIPHER_CTX_get_mode(rl->enc_ctx) == EVP_CIPH_CBC_MODE))
-        blocksize = EVP_CIPHER_CTX_get_block_size(rl->enc_ctx);
+        blocksize = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(rl->enc_ctx);
 
     /*
      * If we have a cipher in place then the tag is mandatory. If the cipher is

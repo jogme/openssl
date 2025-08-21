@@ -118,7 +118,7 @@ int dgst_main(int argc, char **argv)
     int oneshot_sign = 0;
 
     buf = app_malloc(BUFSIZE, "I/O buffer");
-    md = (EVP_MD *)EVP_get_digestbyname(argv[0]);
+    md = (EVP_MD *)OPENSSL_BOX_EVP_get_digestbyname(argv[0]);
     if (md != NULL)
         digestname = argv[0];
 
@@ -251,7 +251,7 @@ int dgst_main(int argc, char **argv)
         impl = e;
 
     in = BIO_new(BIO_s_file());
-    bmd = BIO_new(BIO_f_md());
+    bmd = BIO_new(OPENSSL_BOX_BIO_f_md());
     if (in == NULL || bmd == NULL)
         goto end;
 
@@ -300,7 +300,7 @@ int dgst_main(int argc, char **argv)
                                                  sizeof(def_md)) == 2
                     && strcmp(def_md, "UNDEF") == 0)
                 oneshot_sign = 1;
-            signctx = EVP_MD_CTX_new();
+            signctx = OPENSSL_BOX_EVP_MD_CTX_new();
             if (signctx == NULL)
                 goto end;
         }
@@ -316,7 +316,7 @@ int dgst_main(int argc, char **argv)
                 char *macopt = sk_OPENSSL_STRING_value(macopts, i);
 
                 if (pkey_ctrl_string(mac_ctx, macopt) <= 0) {
-                    EVP_PKEY_CTX_free(mac_ctx);
+                    OPENSSL_BOX_EVP_PKEY_CTX_free(mac_ctx);
                     BIO_printf(bio_err, "MAC parameter error \"%s\"\n", macopt);
                     goto end;
                 }
@@ -325,14 +325,14 @@ int dgst_main(int argc, char **argv)
 
         sigkey = app_keygen(mac_ctx, mac_name, 0, 0 /* not verbose */);
         /* Verbose output would make external-tests gost-engine fail */
-        EVP_PKEY_CTX_free(mac_ctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(mac_ctx);
         if (sigkey == NULL)
             goto end;
     }
 
     if (hmac_key != NULL) {
         if (md == NULL) {
-            md = (EVP_MD *)EVP_sha256();
+            md = (EVP_MD *)OPENSSL_BOX_EVP_sha256();
             digestname = SN_sha256;
         }
         sigkey = EVP_PKEY_new_raw_private_key(EVP_PKEY_HMAC, impl,
@@ -396,7 +396,7 @@ int dgst_main(int argc, char **argv)
             goto end;
         }
         if (md == NULL)
-            md = (EVP_MD *)EVP_sha256();
+            md = (EVP_MD *)OPENSSL_BOX_EVP_sha256();
         if (!EVP_DigestInit_ex(mctx, md, impl)) {
             BIO_printf(bio_err, "Error setting digest\n");
             goto end;
@@ -410,7 +410,7 @@ int dgst_main(int argc, char **argv)
             BIO_printf(bio_err, "Error opening signature file %s\n", sigfile);
             goto end;
         }
-        siglen = EVP_PKEY_get_size(sigkey);
+        siglen = OPENSSL_BOX_EVP_PKEY_get_size(sigkey);
         sigbuf = app_malloc(siglen, "signature buffer");
         siglen = BIO_read(sigbio, sigbuf, siglen);
         BIO_free(sigbio);
@@ -426,13 +426,13 @@ int dgst_main(int argc, char **argv)
             EVP_MD_CTX *tctx;
 
             BIO_get_md_ctx(bmd, &tctx);
-            md = EVP_MD_CTX_get1_md(tctx);
+            md = OPENSSL_BOX_EVP_MD_CTX_get1_md(tctx);
         }
         if (md != NULL)
-            md_name = EVP_MD_get0_name(md);
+            md_name = OPENSSL_BOX_EVP_MD_get0_name(md);
     }
     if (xoflen > 0) {
-        if (!EVP_MD_xof(md)) {
+        if (!OPENSSL_BOX_EVP_MD_xof(md)) {
             BIO_printf(bio_err, "Length can only be specified for XOF\n");
             goto end;
         }
@@ -460,7 +460,7 @@ int dgst_main(int argc, char **argv)
 
         if (out_bin == 0) {
             if (sigkey != NULL)
-                sig_name = EVP_PKEY_get0_type_name(sigkey);
+                sig_name = OPENSSL_BOX_EVP_PKEY_get0_type_name(sigkey);
         }
         ret = EXIT_SUCCESS;
         for (i = 0; i < argc; i++) {
@@ -490,9 +490,9 @@ int dgst_main(int argc, char **argv)
     BIO_free(in);
     OPENSSL_free(passin);
     BIO_free_all(out);
-    EVP_MD_free(md);
-    EVP_PKEY_free(sigkey);
-    EVP_MD_CTX_free(signctx);
+    OPENSSL_BOX_EVP_MD_free(md);
+    OPENSSL_BOX_EVP_PKEY_free(sigkey);
+    OPENSSL_BOX_EVP_MD_CTX_free(signctx);
     sk_OPENSSL_STRING_free(sigopts);
     sk_OPENSSL_STRING_free(macopts);
     OPENSSL_free(sigbuf);
@@ -516,7 +516,7 @@ static void show_digests(const OBJ_NAME *name, void *arg)
     /* Filter out message digests that we cannot use */
     md = EVP_MD_fetch(app_get0_libctx(), name->name, app_get0_propq());
     if (md == NULL) {
-        if (EVP_get_digestbyname(name->name) == NULL)
+        if (OPENSSL_BOX_EVP_get_digestbyname(name->name) == NULL)
             return;
     }
 
@@ -528,7 +528,7 @@ static void show_digests(const OBJ_NAME *name, void *arg)
         BIO_printf(dec->bio, " ");
     }
 
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
 }
 
 /*

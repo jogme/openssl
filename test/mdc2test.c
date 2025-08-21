@@ -65,16 +65,16 @@ static int test_mdc2(void)
     ebcdic2ascii(text, text, tlen);
 # endif
 
-    c = EVP_MD_CTX_new();
+    c = OPENSSL_BOX_EVP_MD_CTX_new();
     if (!TEST_ptr(c)
-        || !TEST_true(EVP_DigestInit_ex(c, EVP_mdc2(), NULL))
+        || !TEST_true(EVP_DigestInit_ex(c, OPENSSL_BOX_EVP_mdc2(), NULL))
         || !TEST_true(EVP_DigestUpdate(c, (unsigned char *)text, tlen))
         || !TEST_true(EVP_DigestFinal_ex(c, &(md[0]), NULL))
         || !TEST_mem_eq(md, MDC2_DIGEST_LENGTH, pad1, MDC2_DIGEST_LENGTH)
-        || !TEST_true(EVP_DigestInit_ex(c, EVP_mdc2(), NULL)))
+        || !TEST_true(EVP_DigestInit_ex(c, OPENSSL_BOX_EVP_mdc2(), NULL)))
         goto end;
 
-    if (!TEST_int_gt(EVP_MD_CTX_set_params(c, params), 0)
+    if (!TEST_int_gt(OPENSSL_BOX_EVP_MD_CTX_set_params(c, params), 0)
         || !TEST_true(EVP_DigestUpdate(c, (unsigned char *)text, tlen))
         || !TEST_true(EVP_DigestFinal_ex(c, &(md[0]), NULL))
         || !TEST_mem_eq(md, MDC2_DIGEST_LENGTH, pad2, MDC2_DIGEST_LENGTH))
@@ -82,7 +82,7 @@ static int test_mdc2(void)
 
     testresult = 1;
  end:
-    EVP_MD_CTX_free(c);
+    OPENSSL_BOX_EVP_MD_CTX_free(c);
     OSSL_PROVIDER_unload(prov);
     return testresult;
 }

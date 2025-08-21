@@ -88,7 +88,7 @@ static int cmp_ctx_set_md(OSSL_CMP_CTX *ctx, EVP_MD **pmd, int nid)
         ERR_raise(ERR_LIB_CMP, CMP_R_UNSUPPORTED_ALGORITHM);
         return 0;
     }
-    EVP_MD_free(*pmd);
+    OPENSSL_BOX_EVP_MD_free(*pmd);
     *pmd = md;
     return 1;
 }
@@ -207,15 +207,15 @@ void OSSL_CMP_CTX_free(OSSL_CMP_CTX *ctx)
 
     X509_free(ctx->cert);
     OSSL_STACK_OF_X509_free(ctx->chain);
-    EVP_PKEY_free(ctx->pkey);
+    OPENSSL_BOX_EVP_PKEY_free(ctx->pkey);
     ASN1_OCTET_STRING_free(ctx->referenceValue);
     if (ctx->secretValue != NULL)
         OPENSSL_cleanse(ctx->secretValue->data, ctx->secretValue->length);
     ASN1_OCTET_STRING_free(ctx->secretValue);
-    EVP_MD_free(ctx->pbm_owf);
+    OPENSSL_BOX_EVP_MD_free(ctx->pbm_owf);
 
     X509_NAME_free(ctx->recipient);
-    EVP_MD_free(ctx->digest);
+    OPENSSL_BOX_EVP_MD_free(ctx->digest);
     ASN1_OCTET_STRING_free(ctx->transactionID);
     ASN1_OCTET_STRING_free(ctx->senderNonce);
     ASN1_OCTET_STRING_free(ctx->recipNonce);
@@ -223,7 +223,7 @@ void OSSL_CMP_CTX_free(OSSL_CMP_CTX *ctx)
     OSSL_CMP_ITAVs_free(ctx->geninfo_ITAVs);
     OSSL_STACK_OF_X509_free(ctx->extraCertsOut);
 
-    EVP_PKEY_free(ctx->newPkey);
+    OPENSSL_BOX_EVP_PKEY_free(ctx->newPkey);
     X509_NAME_free(ctx->issuer);
     ASN1_INTEGER_free(ctx->serialNumber);
     X509_NAME_free(ctx->subjectName);
@@ -742,7 +742,26 @@ DEFINE_OSSL_CMP_CTX_get0(validatedSrvCert, X509)
 DEFINE_OSSL_CMP_CTX_get0(newCert, X509)
 
 /* Set the client's current private key */
-DEFINE_OSSL_set1_up_ref(OSSL_CMP_CTX, pkey, EVP_PKEY)
+//DEFINE_OSSL_set1_up_ref(OSSL_CMP_CTX, pkey, EVP_PKEY)
+
+int OSSL_CMP_CTX_set1_pkey(OSSL_CMP_CTX *ctx, EVP_PKEY *val)
+{
+    if (ctx == NULL) {
+        ERR_raise(ERR_LIB_CMP, CMP_R_NULL_ARGUMENT);
+        return 0;
+    }
+
+    /* prevent misleading error later on malformed cert or provider issue */
+    if (val != NULL && EVP_PKEY_invalid(val)) {
+        ERR_raise(ERR_LIB_CMP, CMP_R_POTENTIALLY_INVALID_CERTIFICATE);
+        return 0;
+    }
+    if (val != NULL && !OPENSSL_BOX_EVP_PKEY_up_ref(val))
+        return 0;
+    OPENSSL_BOX_EVP_PKEY_free(ctx->pkey);
+    ctx->pkey = val;
+    return 1;
+}
 
 /* Set new key pair. Used e.g. when doing Key Update */
 int OSSL_CMP_CTX_set0_newPkey(OSSL_CMP_CTX *ctx, int priv, EVP_PKEY *pkey)
@@ -752,7 +771,7 @@ int OSSL_CMP_CTX_set0_newPkey(OSSL_CMP_CTX *ctx, int priv, EVP_PKEY *pkey)
         return 0;
     }
 
-    EVP_PKEY_free(ctx->newPkey);
+    OPENSSL_BOX_EVP_PKEY_free(ctx->newPkey);
     ctx->newPkey = pkey;
     ctx->newPkey_priv = priv;
     return 1;
@@ -1010,9 +1029,9 @@ int OSSL_CMP_CTX_get_option(const OSSL_CMP_CTX *ctx, int opt)
     case OSSL_CMP_OPT_POPO_METHOD:
         return ctx->popoMethod;
     case OSSL_CMP_OPT_DIGEST_ALGNID:
-        return EVP_MD_get_type(ctx->digest);
+        return OPENSSL_BOX_EVP_MD_get_type(ctx->digest);
     case OSSL_CMP_OPT_OWF_ALGNID:
-        return EVP_MD_get_type(ctx->pbm_owf);
+        return OPENSSL_BOX_EVP_MD_get_type(ctx->pbm_owf);
     case OSSL_CMP_OPT_MAC_ALGNID:
         return ctx->pbm_mac;
     case OSSL_CMP_OPT_KEEP_ALIVE:

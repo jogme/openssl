@@ -117,9 +117,9 @@ I<dctx> parameter and return the duplicate copy.
 OSSL_FUNC_digest_copyctx() should copy the provider side digest context in the
 I<vinctx> parameter to the I<voutctx> parameter which is the another provider side
 context.
-The OSSL_FUNC_digest_copyctx function is used in the EVP_MD_CTX_copy_ex function to
+The OSSL_FUNC_digest_copyctx function is used in the OPENSSL_BOX_EVP_MD_CTX_copy_ex function to
 speed up HMAC operations in the PBKDF2.
-This function is optional, and dupctx will be used if there is no EVP_MD_CTX_copy_ex
+This function is optional, and dupctx will be used if there is no OPENSSL_BOX_EVP_MD_CTX_copy_ex
 function.
 
 =head2 Digest Generation Functions
@@ -279,7 +279,7 @@ L<EVP_MD-MDC2(7)>, L<EVP_MD-RIPEMD160(7)>, L<EVP_MD-SHA1(7)>,
 L<EVP_MD-SHA2(7)>, L<EVP_MD-SHA3(7)>, L<EVP_MD-KECCAK(7)>
 L<EVP_MD-SHAKE(7)>, L<EVP_MD-SM3(7)>, L<EVP_MD-WHIRLPOOL(7)>,
 L<EVP_MD-NULL(7)>,
-L<life_cycle-digest(7)>, L<EVP_DigestInit(3)>
+L<life_cycle-digest(7)>, L<OPENSSL_BOX_EVP_DigestInit(3)>
 
 =head1 HISTORY
 

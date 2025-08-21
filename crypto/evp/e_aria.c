@@ -66,12 +66,12 @@ static int aria_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
 
     if (enc || (mode != EVP_CIPH_ECB_MODE && mode != EVP_CIPH_CBC_MODE))
         ret = ossl_aria_set_encrypt_key(key,
-                                        EVP_CIPHER_CTX_get_key_length(ctx) * 8,
-                                        EVP_CIPHER_CTX_get_cipher_data(ctx));
+                                        OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx) * 8,
+                                        OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx));
     else
         ret = ossl_aria_set_decrypt_key(key,
-                                        EVP_CIPHER_CTX_get_key_length(ctx) * 8,
-                                        EVP_CIPHER_CTX_get_cipher_data(ctx));
+                                        OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx) * 8,
+                                        OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx));
     if (ret < 0) {
         ERR_raise(ERR_LIB_EVP, EVP_R_ARIA_KEY_SETUP_FAILED);
         return 0;
@@ -134,20 +134,20 @@ static void aria_ofb128_encrypt(const unsigned char *in, unsigned char *out,
 IMPLEMENT_BLOCK_CIPHER(aria_128, ks, aria, EVP_ARIA_KEY,
                         NID_aria_128, 16, 16, 16, 128,
                         0, aria_init_key, NULL,
-                        EVP_CIPHER_set_asn1_iv,
-                        EVP_CIPHER_get_asn1_iv,
+                        OPENSSL_BOX_EVP_CIPHER_set_asn1_iv,
+                        OPENSSL_BOX_EVP_CIPHER_get_asn1_iv,
                         NULL)
 IMPLEMENT_BLOCK_CIPHER(aria_192, ks, aria, EVP_ARIA_KEY,
                         NID_aria_192, 16, 24, 16, 128,
                         0, aria_init_key, NULL,
-                        EVP_CIPHER_set_asn1_iv,
-                        EVP_CIPHER_get_asn1_iv,
+                        OPENSSL_BOX_EVP_CIPHER_set_asn1_iv,
+                        OPENSSL_BOX_EVP_CIPHER_get_asn1_iv,
                         NULL)
 IMPLEMENT_BLOCK_CIPHER(aria_256, ks, aria, EVP_ARIA_KEY,
                         NID_aria_256, 16, 32, 16, 128,
                         0, aria_init_key, NULL,
-                        EVP_CIPHER_set_asn1_iv,
-                        EVP_CIPHER_get_asn1_iv,
+                        OPENSSL_BOX_EVP_CIPHER_set_asn1_iv,
+                        OPENSSL_BOX_EVP_CIPHER_get_asn1_iv,
                         NULL)
 
 # define IMPLEMENT_ARIA_CFBR(ksize,cbits) \
@@ -175,7 +175,7 @@ const EVP_CIPHER *EVP_aria_##keylen##_##mode(void) \
 static int aria_ctr_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                                const unsigned char *in, size_t len)
 {
-    int n = EVP_CIPHER_CTX_get_num(ctx);
+    int n = OPENSSL_BOX_EVP_CIPHER_CTX_get_num(ctx);
     unsigned int num;
     EVP_ARIA_KEY *dat = EVP_C_DATA(EVP_ARIA_KEY, ctx);
 
@@ -184,9 +184,9 @@ static int aria_ctr_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
     num = (unsigned int)n;
 
     CRYPTO_ctr128_encrypt(in, out, len, &dat->ks, ctx->iv,
-                          EVP_CIPHER_CTX_buf_noconst(ctx), &num,
+                          OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(ctx), &num,
                           (block128_f) ossl_aria_encrypt);
-    EVP_CIPHER_CTX_set_num(ctx, num);
+    OPENSSL_BOX_EVP_CIPHER_CTX_set_num(ctx, num);
     return 1;
 }
 
@@ -222,7 +222,7 @@ static int aria_gcm_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
         return 1;
     if (key) {
         ret = ossl_aria_set_encrypt_key(key,
-                                        EVP_CIPHER_CTX_get_key_length(ctx) * 8,
+                                        OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx) * 8,
                                         &gctx->ks.ks);
         CRYPTO_gcm128_init(&gctx->gcm, &gctx->ks,
                            (block128_f) ossl_aria_encrypt);
@@ -261,7 +261,7 @@ static int aria_gcm_ctrl(EVP_CIPHER_CTX *c, int type, int arg, void *ptr)
     case EVP_CTRL_INIT:
         gctx->key_set = 0;
         gctx->iv_set = 0;
-        gctx->ivlen = EVP_CIPHER_get_iv_length(c->cipher);
+        gctx->ivlen = OPENSSL_BOX_EVP_CIPHER_get_iv_length(c->cipher);
         gctx->iv = c->iv;
         gctx->taglen = -1;
         gctx->iv_gen = 0;
@@ -286,17 +286,17 @@ static int aria_gcm_ctrl(EVP_CIPHER_CTX *c, int type, int arg, void *ptr)
         return 1;
 
     case EVP_CTRL_AEAD_SET_TAG:
-        if (arg <= 0 || arg > 16 || EVP_CIPHER_CTX_is_encrypting(c))
+        if (arg <= 0 || arg > 16 || OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(c))
             return 0;
-        memcpy(EVP_CIPHER_CTX_buf_noconst(c), ptr, arg);
+        memcpy(OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c), ptr, arg);
         gctx->taglen = arg;
         return 1;
 
     case EVP_CTRL_AEAD_GET_TAG:
-        if (arg <= 0 || arg > 16 || !EVP_CIPHER_CTX_is_encrypting(c)
+        if (arg <= 0 || arg > 16 || !OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(c)
             || gctx->taglen < 0)
             return 0;
-        memcpy(ptr, EVP_CIPHER_CTX_buf_noconst(c), arg);
+        memcpy(ptr, OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c), arg);
         return 1;
 
     case EVP_CTRL_GCM_SET_IV_FIXED:
@@ -314,7 +314,7 @@ static int aria_gcm_ctrl(EVP_CIPHER_CTX *c, int type, int arg, void *ptr)
             return 0;
         if (arg)
             memcpy(gctx->iv, ptr, arg);
-        if (EVP_CIPHER_CTX_is_encrypting(c)
+        if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(c)
             && RAND_bytes(gctx->iv + arg, gctx->ivlen - arg) <= 0)
             return 0;
         gctx->iv_gen = 1;
@@ -337,7 +337,7 @@ static int aria_gcm_ctrl(EVP_CIPHER_CTX *c, int type, int arg, void *ptr)
 
     case EVP_CTRL_GCM_SET_IV_INV:
         if (gctx->iv_gen == 0 || gctx->key_set == 0
-            || EVP_CIPHER_CTX_is_encrypting(c))
+            || OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(c))
             return 0;
         memcpy(gctx->iv + gctx->ivlen - arg, ptr, arg);
         CRYPTO_gcm128_setiv(&gctx->gcm, gctx->iv, gctx->ivlen);
@@ -348,24 +348,24 @@ static int aria_gcm_ctrl(EVP_CIPHER_CTX *c, int type, int arg, void *ptr)
         /* Save the AAD for later use */
         if (arg != EVP_AEAD_TLS1_AAD_LEN)
             return 0;
-        memcpy(EVP_CIPHER_CTX_buf_noconst(c), ptr, arg);
+        memcpy(OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c), ptr, arg);
         gctx->tls_aad_len = arg;
         {
             unsigned int len =
-                EVP_CIPHER_CTX_buf_noconst(c)[arg - 2] << 8
-                | EVP_CIPHER_CTX_buf_noconst(c)[arg - 1];
+                OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c)[arg - 2] << 8
+                | OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c)[arg - 1];
             /* Correct length for explicit IV */
             if (len < EVP_GCM_TLS_EXPLICIT_IV_LEN)
                 return 0;
             len -= EVP_GCM_TLS_EXPLICIT_IV_LEN;
             /* If decrypting correct for tag too */
-            if (!EVP_CIPHER_CTX_is_encrypting(c)) {
+            if (!OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(c)) {
                 if (len < EVP_GCM_TLS_TAG_LEN)
                     return 0;
                 len -= EVP_GCM_TLS_TAG_LEN;
             }
-            EVP_CIPHER_CTX_buf_noconst(c)[arg - 2] = len >> 8;
-            EVP_CIPHER_CTX_buf_noconst(c)[arg - 1] = len & 0xff;
+            OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c)[arg - 2] = len >> 8;
+            OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c)[arg - 1] = len & 0xff;
         }
         /* Extra padding: tag appended to record */
         return EVP_GCM_TLS_TAG_LEN;
@@ -409,19 +409,19 @@ static int aria_gcm_tls_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
      * Set IV from start of buffer or generate IV and write to start of
      * buffer.
      */
-    if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CIPHER_CTX_is_encrypting(ctx) ?
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx) ?
                             EVP_CTRL_GCM_IV_GEN : EVP_CTRL_GCM_SET_IV_INV,
                             EVP_GCM_TLS_EXPLICIT_IV_LEN, out) <= 0)
         goto err;
     /* Use saved AAD */
-    if (CRYPTO_gcm128_aad(&gctx->gcm, EVP_CIPHER_CTX_buf_noconst(ctx),
+    if (CRYPTO_gcm128_aad(&gctx->gcm, OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(ctx),
                           gctx->tls_aad_len))
         goto err;
     /* Fix buffer and length to point to payload */
     in += EVP_GCM_TLS_EXPLICIT_IV_LEN;
     out += EVP_GCM_TLS_EXPLICIT_IV_LEN;
     len -= EVP_GCM_TLS_EXPLICIT_IV_LEN + EVP_GCM_TLS_TAG_LEN;
-    if (EVP_CIPHER_CTX_is_encrypting(ctx)) {
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx)) {
         /* Encrypt payload */
         if (CRYPTO_gcm128_encrypt(&gctx->gcm, in, out, len))
             goto err;
@@ -434,10 +434,10 @@ static int aria_gcm_tls_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         if (CRYPTO_gcm128_decrypt(&gctx->gcm, in, out, len))
             goto err;
         /* Retrieve tag */
-        CRYPTO_gcm128_tag(&gctx->gcm, EVP_CIPHER_CTX_buf_noconst(ctx),
+        CRYPTO_gcm128_tag(&gctx->gcm, OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(ctx),
                           EVP_GCM_TLS_TAG_LEN);
         /* If tag mismatch wipe buffer */
-        if (CRYPTO_memcmp(EVP_CIPHER_CTX_buf_noconst(ctx), in + len,
+        if (CRYPTO_memcmp(OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(ctx), in + len,
                           EVP_GCM_TLS_TAG_LEN)) {
             OPENSSL_cleanse(out, len);
             goto err;
@@ -469,7 +469,7 @@ static int aria_gcm_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         if (out == NULL) {
             if (CRYPTO_gcm128_aad(&gctx->gcm, in, len))
                 return -1;
-        } else if (EVP_CIPHER_CTX_is_encrypting(ctx)) {
+        } else if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx)) {
             if (CRYPTO_gcm128_encrypt(&gctx->gcm, in, out, len))
                 return -1;
         } else {
@@ -478,17 +478,17 @@ static int aria_gcm_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         }
         return (int)len;
     }
-    if (!EVP_CIPHER_CTX_is_encrypting(ctx)) {
+    if (!OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx)) {
         if (gctx->taglen < 0)
             return -1;
         if (CRYPTO_gcm128_finish(&gctx->gcm,
-                                 EVP_CIPHER_CTX_buf_noconst(ctx),
+                                 OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(ctx),
                                  gctx->taglen) != 0)
             return -1;
         gctx->iv_set = 0;
         return 0;
     }
-    CRYPTO_gcm128_tag(&gctx->gcm, EVP_CIPHER_CTX_buf_noconst(ctx), 16);
+    CRYPTO_gcm128_tag(&gctx->gcm, OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(ctx), 16);
     gctx->taglen = 16;
     /* Don't reuse the IV */
     gctx->iv_set = 0;
@@ -516,7 +516,7 @@ static int aria_ccm_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
 
     if (key) {
         ret = ossl_aria_set_encrypt_key(key,
-                                        EVP_CIPHER_CTX_get_key_length(ctx) * 8,
+                                        OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx) * 8,
                                         &cctx->ks.ks);
         CRYPTO_ccm128_init(&cctx->ccm, cctx->M, cctx->L,
                            &cctx->ks, (block128_f) ossl_aria_encrypt);
@@ -557,24 +557,24 @@ static int aria_ccm_ctrl(EVP_CIPHER_CTX *c, int type, int arg, void *ptr)
         /* Save the AAD for later use */
         if (arg != EVP_AEAD_TLS1_AAD_LEN)
             return 0;
-        memcpy(EVP_CIPHER_CTX_buf_noconst(c), ptr, arg);
+        memcpy(OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c), ptr, arg);
         cctx->tls_aad_len = arg;
         {
             uint16_t len =
-                EVP_CIPHER_CTX_buf_noconst(c)[arg - 2] << 8
-                | EVP_CIPHER_CTX_buf_noconst(c)[arg - 1];
+                OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c)[arg - 2] << 8
+                | OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c)[arg - 1];
             /* Correct length for explicit IV */
             if (len < EVP_CCM_TLS_EXPLICIT_IV_LEN)
                 return 0;
             len -= EVP_CCM_TLS_EXPLICIT_IV_LEN;
             /* If decrypting correct for tag too */
-            if (!EVP_CIPHER_CTX_is_encrypting(c)) {
+            if (!OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(c)) {
                 if (len < cctx->M)
                     return 0;
                 len -= cctx->M;
             }
-            EVP_CIPHER_CTX_buf_noconst(c)[arg - 2] = len >> 8;
-            EVP_CIPHER_CTX_buf_noconst(c)[arg - 1] = len & 0xff;
+            OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c)[arg - 2] = len >> 8;
+            OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c)[arg - 1] = len & 0xff;
         }
         /* Extra padding: tag appended to record */
         return cctx->M;
@@ -598,17 +598,17 @@ static int aria_ccm_ctrl(EVP_CIPHER_CTX *c, int type, int arg, void *ptr)
     case EVP_CTRL_AEAD_SET_TAG:
         if ((arg & 1) || arg < 4 || arg > 16)
             return 0;
-        if (EVP_CIPHER_CTX_is_encrypting(c) && ptr)
+        if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(c) && ptr)
             return 0;
         if (ptr) {
             cctx->tag_set = 1;
-            memcpy(EVP_CIPHER_CTX_buf_noconst(c), ptr, arg);
+            memcpy(OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(c), ptr, arg);
         }
         cctx->M = arg;
         return 1;
 
     case EVP_CTRL_AEAD_GET_TAG:
-        if (!EVP_CIPHER_CTX_is_encrypting(c) || !cctx->tag_set)
+        if (!OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(c) || !cctx->tag_set)
             return 0;
         if (!CRYPTO_ccm128_tag(&cctx->ccm, ptr, (size_t)arg))
             return 0;
@@ -644,8 +644,8 @@ static int aria_ccm_tls_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
     if (out != in || len < (EVP_CCM_TLS_EXPLICIT_IV_LEN + (size_t)cctx->M))
         return -1;
     /* If encrypting set explicit IV from sequence number (start of AAD) */
-    if (EVP_CIPHER_CTX_is_encrypting(ctx))
-        memcpy(out, EVP_CIPHER_CTX_buf_noconst(ctx),
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx))
+        memcpy(out, OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(ctx),
                EVP_CCM_TLS_EXPLICIT_IV_LEN);
     /* Get rest of IV from explicit IV */
     memcpy(ctx->iv + EVP_CCM_TLS_FIXED_IV_LEN, in,
@@ -656,12 +656,12 @@ static int aria_ccm_tls_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                             len))
             return -1;
     /* Use saved AAD */
-    CRYPTO_ccm128_aad(ccm, EVP_CIPHER_CTX_buf_noconst(ctx),
+    CRYPTO_ccm128_aad(ccm, OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(ctx),
                       cctx->tls_aad_len);
     /* Fix buffer to point to payload */
     in += EVP_CCM_TLS_EXPLICIT_IV_LEN;
     out += EVP_CCM_TLS_EXPLICIT_IV_LEN;
-    if (EVP_CIPHER_CTX_is_encrypting(ctx)) {
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx)) {
         if (cctx->str ? CRYPTO_ccm128_encrypt_ccm64(ccm, in, out, len, cctx->str)
                       : CRYPTO_ccm128_encrypt(ccm, in, out, len))
             return -1;
@@ -717,7 +717,7 @@ static int aria_ccm_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
     }
 
     /* The tag must be set before actually decrypting data */
-    if (!EVP_CIPHER_CTX_is_encrypting(ctx) && !cctx->tag_set)
+    if (!OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx) && !cctx->tag_set)
         return -1;
 
     /* If not set length yet do it */
@@ -726,7 +726,7 @@ static int aria_ccm_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
             return -1;
         cctx->len_set = 1;
     }
-    if (EVP_CIPHER_CTX_is_encrypting(ctx)) {
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx)) {
         if (cctx->str ? CRYPTO_ccm128_encrypt_ccm64(ccm, in, out, len, cctx->str)
                       : CRYPTO_ccm128_encrypt(ccm, in, out, len))
             return -1;
@@ -739,7 +739,7 @@ static int aria_ccm_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
             !CRYPTO_ccm128_decrypt(ccm, in, out, len)) {
             unsigned char tag[16];
             if (CRYPTO_ccm128_tag(ccm, tag, cctx->M)) {
-                if (!CRYPTO_memcmp(tag, EVP_CIPHER_CTX_buf_noconst(ctx),
+                if (!CRYPTO_memcmp(tag, OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(ctx),
                                    cctx->M))
                     rv = (int)len;
             }

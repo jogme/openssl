@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-EVP_md4
+OPENSSL_BOX_EVP_md4
 - MD4 For EVP
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_MD *EVP_md4(void);
+ const EVP_MD *OPENSSL_BOX_EVP_md4(void);
 
 =head1 DESCRIPTION
 
@@ -19,7 +19,7 @@ with the legacy provider.
 
 =over 4
 
-=item EVP_md4()
+=item OPENSSL_BOX_EVP_md4()
 
 The MD4 algorithm which produces a 128-bit output from a given input.
 
@@ -35,7 +35,7 @@ See L<crypto(7)/Performance> for further information.
 =head1 RETURN VALUES
 
 These functions return a B<EVP_MD> structure that contains the
-implementation of the message digest. See L<EVP_MD_meth_new(3)> for
+implementation of the message digest. See L<OPENSSL_BOX_EVP_MD_meth_new(3)> for
 details of the B<EVP_MD> structure.
 
 =head1 CONFORMING TO
@@ -46,7 +46,7 @@ IETF RFC 1320.
 
 L<evp(7)>,
 L<provider(7)>,
-L<EVP_DigestInit(3)>
+L<OPENSSL_BOX_EVP_DigestInit(3)>
 
 =head1 COPYRIGHT
 

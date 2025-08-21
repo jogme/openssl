@@ -715,7 +715,7 @@ static EVP_PKEY *capi_get_pkey(ENGINE *eng, CAPI_KEY *key)
 
         RSA_set_ex_data(rkey, rsa_capi_idx, key);
 
-        if ((ret = EVP_PKEY_new()) == NULL) {
+        if ((ret = OPENSSL_BOX_EVP_PKEY_new()) == NULL) {
             CAPIerr(CAPI_F_CAPI_GET_PKEY, ERR_R_EVP_LIB);
             goto err;
         }
@@ -782,7 +782,7 @@ static EVP_PKEY *capi_get_pkey(ENGINE *eng, CAPI_KEY *key)
 
         DSA_set_ex_data(dkey, dsa_capi_idx, key);
 
-        if ((ret = EVP_PKEY_new()) == NULL) {
+        if ((ret = OPENSSL_BOX_EVP_PKEY_new()) == NULL) {
             CAPIerr(CAPI_F_CAPI_GET_PKEY, ERR_R_EVP_LIB);
             goto err;
         }

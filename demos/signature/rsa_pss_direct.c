@@ -69,7 +69,7 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
     }
 
     /* Initialize context for signing and set options. */
-    if (EVP_PKEY_sign_init(ctx) == 0) {
+    if (OPENSSL_BOX_EVP_PKEY_sign_init(ctx) == 0) {
         fprintf(stderr, "Failed to initialize signing context\n");
         goto end;
     }
@@ -79,7 +79,7 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
         goto end;
     }
 
-    if (EVP_PKEY_CTX_set_signature_md(ctx, md) == 0) {
+    if (OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md(ctx, md) == 0) {
         fprintf(stderr, "Failed to configure digest type\n");
         goto end;
     }
@@ -107,9 +107,9 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
 
     ret = 1;
 end:
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_MD_free(md);
 
     if (ret == 0)
         OPENSSL_free(*sig);
@@ -152,7 +152,7 @@ static int verify(OSSL_LIB_CTX *libctx, const unsigned char *sig, size_t sig_len
     }
 
     /* Initialize context for verification and set options. */
-    if (EVP_PKEY_verify_init(ctx) == 0) {
+    if (OPENSSL_BOX_EVP_PKEY_verify_init(ctx) == 0) {
         fprintf(stderr, "Failed to initialize verification context\n");
         goto end;
     }
@@ -162,7 +162,7 @@ static int verify(OSSL_LIB_CTX *libctx, const unsigned char *sig, size_t sig_len
         goto end;
     }
 
-    if (EVP_PKEY_CTX_set_signature_md(ctx, md) == 0) {
+    if (OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md(ctx, md) == 0) {
         fprintf(stderr, "Failed to configure digest type\n");
         goto end;
     }
@@ -177,9 +177,9 @@ static int verify(OSSL_LIB_CTX *libctx, const unsigned char *sig, size_t sig_len
 
     ret = 1;
 end:
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_MD_free(md);
     return ret;
 }
 

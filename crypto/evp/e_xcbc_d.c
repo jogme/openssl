@@ -46,13 +46,13 @@ static const EVP_CIPHER d_xcbc_cipher = {
     desx_cbc_cipher,
     NULL,
     sizeof(DESX_CBC_KEY),
-    EVP_CIPHER_set_asn1_iv,
-    EVP_CIPHER_get_asn1_iv,
+    OPENSSL_BOX_EVP_CIPHER_set_asn1_iv,
+    OPENSSL_BOX_EVP_CIPHER_get_asn1_iv,
     NULL,
     NULL
 };
 
-const EVP_CIPHER *EVP_desx_cbc(void)
+const EVP_CIPHER *OPENSSL_BOX_EVP_desx_cbc(void)
 {
     return &d_xcbc_cipher;
 }
@@ -76,7 +76,7 @@ static int desx_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         DES_xcbc_encrypt(in, out, (long)EVP_MAXCHUNK, &data(ctx)->ks,
                          (DES_cblock *)ctx->iv,
                          &data(ctx)->inw, &data(ctx)->outw,
-                         EVP_CIPHER_CTX_is_encrypting(ctx));
+                         OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));
         inl -= EVP_MAXCHUNK;
         in += EVP_MAXCHUNK;
         out += EVP_MAXCHUNK;
@@ -85,7 +85,7 @@ static int desx_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         DES_xcbc_encrypt(in, out, (long)inl, &data(ctx)->ks,
                          (DES_cblock *)ctx->iv,
                          &data(ctx)->inw, &data(ctx)->outw,
-                         EVP_CIPHER_CTX_is_encrypting(ctx));
+                         OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));
     return 1;
 }
 #endif

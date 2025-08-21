@@ -183,7 +183,7 @@ static int newpass_bag(PKCS12_SAFEBAG *bag, const char *oldpass,
     p8new = PKCS8_encrypt_ex(p8_nid, cipher, newpass, -1, NULL, p8_saltlen,
                              p8_iter, p8, libctx, propq);
     PKCS8_PRIV_KEY_INFO_free(p8);
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     if (p8new == NULL)
         return 0;
     X509_SIG_free(bag->value.shkeybag);

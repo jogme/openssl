@@ -57,20 +57,20 @@ The usual life-cycle of a MD is illustrated:
                                   +--------------------+
                                   |       start        |
                                   +--------------------+
-                                    |                            EVP_MD_CTX_reset
-                                    | EVP_MD_CTX_new           +-------------------------------------------------+
+                                    |                            OPENSSL_BOX_EVP_MD_CTX_reset
+                                    | OPENSSL_BOX_EVP_MD_CTX_new           +-------------------------------------------------+
                                     v                          v                                                 |
-              EVP_MD_CTX_reset    + - - - - - - - - - - - - - - - - - - - - - - +    EVP_MD_CTX_reset            |
+              OPENSSL_BOX_EVP_MD_CTX_reset    + - - - - - - - - - - - - - - - - - - - - - - +    OPENSSL_BOX_EVP_MD_CTX_reset            |
             +-------------------> '                   newed                     ' <--------------------+         |
             |                     + - - - - - - - - - - - - - - - - - - - - - - +                      |         |
             |                       |                                                                  |         |
-            |                       | EVP_DigestInit                                                   |         |
+            |                       | OPENSSL_BOX_EVP_DigestInit                                                   |         |
             |                       v                                                                  |         |
-            |   EVP_DigestInit    + - - - - - - - - - - - - - - - - - - - - - - +                      |         |
-       +----+-------------------> '                initialised                  ' <+  EVP_DigestInit   |         |
+            |   OPENSSL_BOX_EVP_DigestInit    + - - - - - - - - - - - - - - - - - - - - - - +                      |         |
+       +----+-------------------> '                initialised                  ' <+  OPENSSL_BOX_EVP_DigestInit   |         |
        |    |                     + - - - - - - - - - - - - - - - - - - - - - - +  |                   |         |
        |    |                       |                     ^                        |                   |         |
-       |    |                       | EVP_DigestUpdate    | EVP_DigestInit         |                   |         |
+       |    |                       | EVP_DigestUpdate    | OPENSSL_BOX_EVP_DigestInit         |                   |         |
        |    |                       v                     |                        |                   |         |
        |    |                     +---------------------------------------------+  |                   |         |
        |    +-------------------- |                                             |  |                   |         |
@@ -98,9 +98,9 @@ The usual life-cycle of a MD is illustrated:
   |    +------------------------- |             finaled                         | <--------------------+----+    |
   |                               +---------------------------------------------+                      |         |
   |   EVP_DigestFinal               ^                     |    |                                       |         |
-  +---------------------------------+                     |    | EVP_MD_CTX_free                       |         |
+  +---------------------------------+                     |    | OPENSSL_BOX_EVP_MD_CTX_free                       |         |
                                                           |    v                                       |         |
-                                                          |  +------------------+  EVP_MD_CTX_free     |         |
+                                                          |  +------------------+  OPENSSL_BOX_EVP_MD_CTX_free     |         |
                                                           |  |      freed       | <--------------------+         |
                                                           |  +------------------+                                |
                                                           |                                                      |
@@ -119,19 +119,19 @@ This is the canonical list.
 
  Function Call                --------------------- Current State -----------------------------------
                               start   newed    initialised   updated     finaled     squeezed   freed
- EVP_MD_CTX_new               newed
- EVP_DigestInit                    initialised initialised initialised initialised  initialised
+ OPENSSL_BOX_EVP_MD_CTX_new               newed
+ OPENSSL_BOX_EVP_DigestInit                    initialised initialised initialised initialised  initialised
  EVP_DigestUpdate                                updated     updated
  EVP_DigestFinal                                             finaled
  EVP_DigestFinalXOF                                          finaled
  EVP_DigestSqueeze                                           squeezed                squeezed
- EVP_MD_CTX_free              freed   freed       freed       freed       freed
- EVP_MD_CTX_reset                     newed       newed       newed       newed
- EVP_MD_CTX_get_params                newed    initialised   updated
- EVP_MD_CTX_set_params                newed    initialised   updated
- EVP_MD_CTX_gettable_params           newed    initialised   updated
- EVP_MD_CTX_settable_params           newed    initialised   updated
- EVP_MD_CTX_copy_ex                   newed    initialised   updated                 squeezed
+ OPENSSL_BOX_EVP_MD_CTX_free              freed   freed       freed       freed       freed
+ OPENSSL_BOX_EVP_MD_CTX_reset                     newed       newed       newed       newed
+ OPENSSL_BOX_EVP_MD_CTX_get_params                newed    initialised   updated
+ OPENSSL_BOX_EVP_MD_CTX_set_params                newed    initialised   updated
+ OPENSSL_BOX_EVP_MD_CTX_gettable_params           newed    initialised   updated
+ OPENSSL_BOX_EVP_MD_CTX_settable_params           newed    initialised   updated
+ OPENSSL_BOX_EVP_MD_CTX_copy_ex                   newed    initialised   updated                 squeezed
 
 =end man
 
@@ -148,7 +148,7 @@ This is the canonical list.
     <th style="border:1px solid" align="center">finaled</th>
     <th style="border:1px solid" align="center">squeezed</th>
     <th style="border:1px solid" align="center">freed</th></tr>
-<tr><th style="border:1px solid" align="left">EVP_MD_CTX_new</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MD_CTX_new</th>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -156,7 +156,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_DigestInit</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_DigestInit</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">initialised</td>
     <td style="border:1px solid" align="center">initialised</td>
@@ -196,7 +196,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MD_CTX_free</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MD_CTX_free</th>
     <td style="border:1px solid" align="center">freed</td>
     <td style="border:1px solid" align="center">freed</td>
     <td style="border:1px solid" align="center">freed</td>
@@ -204,7 +204,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">freed</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MD_CTX_reset</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MD_CTX_reset</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">newed</td>
@@ -212,7 +212,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MD_CTX_get_params</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MD_CTX_get_params</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>
@@ -220,7 +220,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MD_CTX_set_params</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MD_CTX_set_params</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>
@@ -228,7 +228,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MD_CTX_gettable_params</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MD_CTX_gettable_params</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>
@@ -236,7 +236,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MD_CTX_settable_params</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MD_CTX_settable_params</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>
@@ -244,7 +244,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MD_CTX_copy_ex</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MD_CTX_copy_ex</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>
@@ -263,7 +263,7 @@ herein.
 
 =head1 SEE ALSO
 
-L<provider-digest(7)>, L<EVP_DigestInit(3)>
+L<provider-digest(7)>, L<OPENSSL_BOX_EVP_DigestInit(3)>
 
 =head1 COPYRIGHT
 

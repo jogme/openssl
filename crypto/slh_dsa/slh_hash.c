@@ -155,7 +155,7 @@ slh_hmsg_sha2(SLH_DSA_HASH_CTX *hctx, const uint8_t *r, const uint8_t *pk_seed,
     size_t m = params->m;
     size_t n = params->n;
     uint8_t seed[2 * SLH_MAX_N + MAX_DIGEST_SIZE];
-    int sz = EVP_MD_get_size(hctx->key->md_big);
+    int sz = OPENSSL_BOX_EVP_MD_get_size(hctx->key->md_big);
     size_t seed_len = (size_t)sz + 2 * n;
 
     if (sz <= 0)
@@ -191,7 +191,7 @@ slh_prf_msg_sha2(SLH_DSA_HASH_CTX *hctx,
         p = params;
         /* The underlying digest to be used */
         *p++ = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_DIGEST,
-                                                (char *)EVP_MD_get0_name(key->md_big), 0);
+                                                (char *)OPENSSL_BOX_EVP_MD_get0_name(key->md_big), 0);
         if (key->propq != NULL)
             *p++ = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_PROPERTIES,
                                                     (char *)key->propq, 0);
@@ -201,8 +201,8 @@ slh_prf_msg_sha2(SLH_DSA_HASH_CTX *hctx,
     }
 
     ret = EVP_MAC_init(mctx, sk_prf, n, p) == 1
-        && EVP_MAC_update(mctx, opt_rand, n) == 1
-        && EVP_MAC_update(mctx, msg, msg_len) == 1
+        && OPENSSL_BOX_EVP_MAC_update(mctx, opt_rand, n) == 1
+        && OPENSSL_BOX_EVP_MAC_update(mctx, msg, msg_len) == 1
         && EVP_MAC_final(mctx, mac, NULL, sizeof(mac)) == 1
         && WPACKET_memcpy(pkt, mac, n); /* Truncate output to n bytes */
     return ret;

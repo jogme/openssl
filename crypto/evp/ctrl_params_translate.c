@@ -71,8 +71,8 @@ struct translation_st;           /* Forwarding */
  *                              as follows:
  *
  *                              1. fixup_args(PRE_CTRL_TO_PARAMS, ...)
- *                              2. EVP_PKEY_CTX_set_params() or
- *                                 EVP_PKEY_CTX_get_params()
+ *                              2. OPENSSL_BOX_EVP_PKEY_CTX_set_params() or
+ *                                 OPENSSL_BOX_EVP_PKEY_CTX_get_params()
  *                              3. fixup_args(POST_CTRL_TO_PARAMS, ...)
  *
  *                              With the PRE_CTRL_TO_PARAMS state, the
@@ -100,8 +100,8 @@ struct translation_st;           /* Forwarding */
  *                              sequence is as follows:
  *
  *                              1. fixup_args(PRE_CTRL_STR_TO_PARAMS, ...)
- *                              2. EVP_PKEY_CTX_set_params() or
- *                                 EVP_PKEY_CTX_get_params()
+ *                              2. OPENSSL_BOX_EVP_PKEY_CTX_set_params() or
+ *                                 OPENSSL_BOX_EVP_PKEY_CTX_get_params()
  *                              3. fixup_args(POST_CTRL_STR_TO_PARAMS, ...)
  *
  *                              With the PRE_CTRL_STR_TO_PARAMS state,
@@ -118,8 +118,8 @@ struct translation_st;           /* Forwarding */
  *                              needed.
  *
  * PRE_PARAMS_TO_CTRL           The fixup_args function has been called
- * POST_PARAMS_TO_CTRL          from EVP_PKEY_CTX_get_params() or
- *                              EVP_PKEY_CTX_set_params(), to help with
+ * POST_PARAMS_TO_CTRL          from OPENSSL_BOX_EVP_PKEY_CTX_get_params() or
+ *                              OPENSSL_BOX_EVP_PKEY_CTX_set_params(), to help with
  *                              translating the OSSL_PARAM data to the
  *                              corresponding EVP_PKEY_CTX_ctrl() arguments
  *                              or the other way around.  The calling
@@ -139,8 +139,8 @@ struct translation_st;           /* Forwarding */
  *                              way necessary, when |action_type == OSSL_ACTION_GET|.
  *
  * CLEANUP_PARAMS_TO_CTRL       The cleanup_args functions has been called
- *                              from EVP_PKEY_CTX_get_params() or
- *                              EVP_PKEY_CTX_set_params(), to clean up what
+ *                              from OPENSSL_BOX_EVP_PKEY_CTX_get_params() or
+ *                              OPENSSL_BOX_EVP_PKEY_CTX_set_params(), to clean up what
  *                              the fixup_args function has done, if needed.
  */
 enum state {
@@ -573,7 +573,7 @@ static int default_fixup_args(enum state state,
                 }
             }
 
-            settable = EVP_PKEY_CTX_settable_params(ctx->pctx);
+            settable = OPENSSL_BOX_EVP_PKEY_CTX_settable_params(ctx->pctx);
             if (!OSSL_PARAM_allocate_from_text(ctx->params, settable,
                                                tmp_ctrl_str,
                                                ctx->p2, strlen(ctx->p2),
@@ -725,12 +725,12 @@ cleanup_translation_ctx(enum state state,
  */
 static const char *get_cipher_name(void *cipher)
 {
-    return EVP_CIPHER_get0_name(cipher);
+    return OPENSSL_BOX_EVP_CIPHER_get0_name(cipher);
 }
 
 static const char *get_md_name(void *md)
 {
-    return EVP_MD_get0_name(md);
+    return OPENSSL_BOX_EVP_MD_get0_name(md);
 }
 
 static const void *get_cipher_by_name(OSSL_LIB_CTX *libctx, const char *name)
@@ -1306,7 +1306,7 @@ static int fix_rsa_padding_mode(enum state state,
         size_t i;
 
         /*
-         * The EVP_PKEY_CTX_get_params() caller may have asked for a utf8
+         * The OPENSSL_BOX_EVP_PKEY_CTX_get_params() caller may have asked for a utf8
          * string, or may have asked for an integer of some sort.  If they
          * ask for an integer, we respond directly.  If not, we translate
          * the response from the ctrl function into a string.
@@ -1520,11 +1520,11 @@ static int get_payload_group_name(enum state state,
     EVP_PKEY *pkey = ctx->p2;
 
     ctx->p2 = NULL;
-    switch (EVP_PKEY_get_base_id(pkey)) {
+    switch (OPENSSL_BOX_EVP_PKEY_get_base_id(pkey)) {
 #ifndef OPENSSL_NO_DH
     case EVP_PKEY_DH:
         {
-            const DH *dh = EVP_PKEY_get0_DH(pkey);
+            const DH *dh = OPENSSL_BOX_EVP_PKEY_get0_DH(pkey);
             int uid = DH_get_nid(dh);
 
             if (uid != NID_undef) {
@@ -1540,7 +1540,7 @@ static int get_payload_group_name(enum state state,
     case EVP_PKEY_EC:
         {
             const EC_GROUP *grp =
-                EC_KEY_get0_group(EVP_PKEY_get0_EC_KEY(pkey));
+                EC_KEY_get0_group(OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(pkey));
             int nid = NID_undef;
 
             if (grp != NULL)
@@ -1576,11 +1576,11 @@ static int get_payload_private_key(enum state state,
     if (ctx->params->data_type != OSSL_PARAM_UNSIGNED_INTEGER)
         return 0;
 
-    switch (EVP_PKEY_get_base_id(pkey)) {
+    switch (OPENSSL_BOX_EVP_PKEY_get_base_id(pkey)) {
 #ifndef OPENSSL_NO_DH
     case EVP_PKEY_DH:
         {
-            const DH *dh = EVP_PKEY_get0_DH(pkey);
+            const DH *dh = OPENSSL_BOX_EVP_PKEY_get0_DH(pkey);
 
             ctx->p2 = (BIGNUM *)DH_get0_priv_key(dh);
         }
@@ -1589,7 +1589,7 @@ static int get_payload_private_key(enum state state,
 #ifndef OPENSSL_NO_EC
     case EVP_PKEY_EC:
         {
-            const EC_KEY *ec = EVP_PKEY_get0_EC_KEY(pkey);
+            const EC_KEY *ec = OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(pkey);
 
             ctx->p2 = (BIGNUM *)EC_KEY_get0_private_key(ec);
         }
@@ -1612,17 +1612,17 @@ static int get_payload_public_key(enum state state,
     int ret;
 
     ctx->p2 = NULL;
-    switch (EVP_PKEY_get_base_id(pkey)) {
+    switch (OPENSSL_BOX_EVP_PKEY_get_base_id(pkey)) {
 #ifndef OPENSSL_NO_DH
     case EVP_PKEY_DHX:
     case EVP_PKEY_DH:
         switch (ctx->params->data_type) {
         case OSSL_PARAM_OCTET_STRING:
-            ctx->sz = ossl_dh_key2buf(EVP_PKEY_get0_DH(pkey), &buf, 0, 1);
+            ctx->sz = ossl_dh_key2buf(OPENSSL_BOX_EVP_PKEY_get0_DH(pkey), &buf, 0, 1);
             ctx->p2 = buf;
             break;
         case OSSL_PARAM_UNSIGNED_INTEGER:
-            ctx->p2 = (void *)DH_get0_pub_key(EVP_PKEY_get0_DH(pkey));
+            ctx->p2 = (void *)DH_get0_pub_key(OPENSSL_BOX_EVP_PKEY_get0_DH(pkey));
             break;
         default:
             return 0;
@@ -1632,7 +1632,7 @@ static int get_payload_public_key(enum state state,
 #ifndef OPENSSL_NO_DSA
     case EVP_PKEY_DSA:
         if (ctx->params->data_type == OSSL_PARAM_UNSIGNED_INTEGER) {
-            ctx->p2 = (void *)DSA_get0_pub_key(EVP_PKEY_get0_DSA(pkey));
+            ctx->p2 = (void *)DSA_get0_pub_key(OPENSSL_BOX_EVP_PKEY_get0_DSA(pkey));
             break;
         }
         return 0;
@@ -1640,7 +1640,7 @@ static int get_payload_public_key(enum state state,
 #ifndef OPENSSL_NO_EC
     case EVP_PKEY_EC:
         if (ctx->params->data_type == OSSL_PARAM_OCTET_STRING) {
-            const EC_KEY *eckey = EVP_PKEY_get0_EC_KEY(pkey);
+            const EC_KEY *eckey = OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(pkey);
             BN_CTX *bnctx = BN_CTX_new_ex(ossl_ec_key_get_libctx(eckey));
             const EC_GROUP *ecg = EC_KEY_get0_group(eckey);
             const EC_POINT *point = EC_KEY_get0_public_key(eckey);
@@ -1672,7 +1672,7 @@ static int get_payload_public_key_ec(enum state state,
 {
 #ifndef OPENSSL_NO_EC
     EVP_PKEY *pkey = ctx->p2;
-    const EC_KEY *eckey = EVP_PKEY_get0_EC_KEY(pkey);
+    const EC_KEY *eckey = OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(pkey);
     BN_CTX *bnctx;
     const EC_POINT *point;
     const EC_GROUP *ecg;
@@ -1744,15 +1744,15 @@ static int get_dh_dsa_payload_p(enum state state,
     const BIGNUM *bn = NULL;
     EVP_PKEY *pkey = ctx->p2;
 
-    switch (EVP_PKEY_get_base_id(pkey)) {
+    switch (OPENSSL_BOX_EVP_PKEY_get_base_id(pkey)) {
 #ifndef OPENSSL_NO_DH
     case EVP_PKEY_DH:
-        bn = DH_get0_p(EVP_PKEY_get0_DH(pkey));
+        bn = DH_get0_p(OPENSSL_BOX_EVP_PKEY_get0_DH(pkey));
         break;
 #endif
 #ifndef OPENSSL_NO_DSA
     case EVP_PKEY_DSA:
-        bn = DSA_get0_p(EVP_PKEY_get0_DSA(pkey));
+        bn = DSA_get0_p(OPENSSL_BOX_EVP_PKEY_get0_DSA(pkey));
         break;
 #endif
     default:
@@ -1768,15 +1768,15 @@ static int get_dh_dsa_payload_q(enum state state,
 {
     const BIGNUM *bn = NULL;
 
-    switch (EVP_PKEY_get_base_id(ctx->p2)) {
+    switch (OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2)) {
 #ifndef OPENSSL_NO_DH
     case EVP_PKEY_DH:
-        bn = DH_get0_q(EVP_PKEY_get0_DH(ctx->p2));
+        bn = DH_get0_q(OPENSSL_BOX_EVP_PKEY_get0_DH(ctx->p2));
         break;
 #endif
 #ifndef OPENSSL_NO_DSA
     case EVP_PKEY_DSA:
-        bn = DSA_get0_q(EVP_PKEY_get0_DSA(ctx->p2));
+        bn = DSA_get0_q(OPENSSL_BOX_EVP_PKEY_get0_DSA(ctx->p2));
         break;
 #endif
     }
@@ -1790,15 +1790,15 @@ static int get_dh_dsa_payload_g(enum state state,
 {
     const BIGNUM *bn = NULL;
 
-    switch (EVP_PKEY_get_base_id(ctx->p2)) {
+    switch (OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2)) {
 #ifndef OPENSSL_NO_DH
     case EVP_PKEY_DH:
-        bn = DH_get0_g(EVP_PKEY_get0_DH(ctx->p2));
+        bn = DH_get0_g(OPENSSL_BOX_EVP_PKEY_get0_DH(ctx->p2));
         break;
 #endif
 #ifndef OPENSSL_NO_DSA
     case EVP_PKEY_DSA:
-        bn = DSA_get0_g(EVP_PKEY_get0_DSA(ctx->p2));
+        bn = DSA_get0_g(OPENSSL_BOX_EVP_PKEY_get0_DSA(ctx->p2));
         break;
 #endif
     }
@@ -1829,7 +1829,7 @@ static int get_ec_decoded_from_explicit_params(enum state state,
     switch (EVP_PKEY_base_id(pkey)) {
 #ifndef OPENSSL_NO_EC
     case EVP_PKEY_EC:
-        val = EC_KEY_decoded_from_explicit_params(EVP_PKEY_get0_EC_KEY(pkey));
+        val = EC_KEY_decoded_from_explicit_params(OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(pkey));
         if (val < 0) {
             ERR_raise(ERR_LIB_EVP, EVP_R_INVALID_KEY);
             return 0;
@@ -1850,10 +1850,10 @@ static int get_rsa_payload_n(enum state state,
 {
     const BIGNUM *bn = NULL;
 
-    if (EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA
-        && EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA_PSS)
+    if (OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA
+        && OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA_PSS)
         return 0;
-    bn = RSA_get0_n(EVP_PKEY_get0_RSA(ctx->p2));
+    bn = RSA_get0_n(OPENSSL_BOX_EVP_PKEY_get0_RSA(ctx->p2));
 
     return get_payload_bn(state, translation, ctx, bn);
 }
@@ -1864,10 +1864,10 @@ static int get_rsa_payload_e(enum state state,
 {
     const BIGNUM *bn = NULL;
 
-    if (EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA
-        && EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA_PSS)
+    if (OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA
+        && OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA_PSS)
         return 0;
-    bn = RSA_get0_e(EVP_PKEY_get0_RSA(ctx->p2));
+    bn = RSA_get0_e(OPENSSL_BOX_EVP_PKEY_get0_RSA(ctx->p2));
 
     return get_payload_bn(state, translation, ctx, bn);
 }
@@ -1878,10 +1878,10 @@ static int get_rsa_payload_d(enum state state,
 {
     const BIGNUM *bn = NULL;
 
-    if (EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA
-        && EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA_PSS)
+    if (OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA
+        && OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA_PSS)
         return 0;
-    bn = RSA_get0_d(EVP_PKEY_get0_RSA(ctx->p2));
+    bn = RSA_get0_d(OPENSSL_BOX_EVP_PKEY_get0_RSA(ctx->p2));
 
     return get_payload_bn(state, translation, ctx, bn);
 }
@@ -1891,7 +1891,7 @@ static int get_rsa_payload_factor(enum state state,
                                   struct translation_ctx_st *ctx,
                                   size_t factornum)
 {
-    const RSA *r = EVP_PKEY_get0_RSA(ctx->p2);
+    const RSA *r = OPENSSL_BOX_EVP_PKEY_get0_RSA(ctx->p2);
     const BIGNUM *bn = NULL;
 
     switch (factornum) {
@@ -1921,7 +1921,7 @@ static int get_rsa_payload_exponent(enum state state,
                                     struct translation_ctx_st *ctx,
                                     size_t exponentnum)
 {
-    const RSA *r = EVP_PKEY_get0_RSA(ctx->p2);
+    const RSA *r = OPENSSL_BOX_EVP_PKEY_get0_RSA(ctx->p2);
     const BIGNUM *bn = NULL;
 
     switch (exponentnum) {
@@ -1951,7 +1951,7 @@ static int get_rsa_payload_coefficient(enum state state,
                                        struct translation_ctx_st *ctx,
                                        size_t coefficientnum)
 {
-    const RSA *r = EVP_PKEY_get0_RSA(ctx->p2);
+    const RSA *r = OPENSSL_BOX_EVP_PKEY_get0_RSA(ctx->p2);
     const BIGNUM *bn = NULL;
 
     switch (coefficientnum) {
@@ -1979,8 +1979,8 @@ static int get_rsa_payload_coefficient(enum state state,
                          const struct translation_st *translation,      \
                          struct translation_ctx_st *ctx)                \
     {                                                                   \
-        if (EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA               \
-            && EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA_PSS)       \
+        if (OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA               \
+            && OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA_PSS)       \
             return 0;                                                   \
         return get_rsa_payload_factor(state, translation, ctx, n - 1);  \
     }
@@ -1991,8 +1991,8 @@ static int get_rsa_payload_coefficient(enum state state,
                          const struct translation_st *translation,      \
                          struct translation_ctx_st *ctx)                \
     {                                                                   \
-        if (EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA               \
-            && EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA_PSS)       \
+        if (OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA               \
+            && OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA_PSS)       \
             return 0;                                                   \
         return get_rsa_payload_exponent(state, translation, ctx,        \
                                         n - 1);                         \
@@ -2004,8 +2004,8 @@ static int get_rsa_payload_coefficient(enum state state,
                          const struct translation_st *translation,      \
                          struct translation_ctx_st *ctx)                \
     {                                                                   \
-        if (EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA               \
-            && EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA_PSS)       \
+        if (OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA               \
+            && OPENSSL_BOX_EVP_PKEY_get_base_id(ctx->p2) != EVP_PKEY_RSA_PSS)       \
             return 0;                                                   \
         return get_rsa_payload_coefficient(state, translation, ctx,     \
                                            n - 1);                      \

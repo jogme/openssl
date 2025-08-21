@@ -332,7 +332,7 @@ CON_FUNC_RETURN tls_construct_cert_verify(SSL_CONNECTION *s, WPACKET *pkt)
         goto err;
     }
 
-    mctx = EVP_MD_CTX_new();
+    mctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (mctx == NULL) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
@@ -350,7 +350,7 @@ CON_FUNC_RETURN tls_construct_cert_verify(SSL_CONNECTION *s, WPACKET *pkt)
     }
 
     if (EVP_DigestSignInit_ex(mctx, &pctx,
-                              md == NULL ? NULL : EVP_MD_get0_name(md),
+                              md == NULL ? NULL : OPENSSL_BOX_EVP_MD_get0_name(md),
                               sctx->libctx, sctx->propq, pkey,
                               NULL) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
@@ -367,11 +367,11 @@ CON_FUNC_RETURN tls_construct_cert_verify(SSL_CONNECTION *s, WPACKET *pkt)
     }
     if (s->version == SSL3_VERSION) {
         /*
-         * Here we use EVP_DigestSignUpdate followed by EVP_DigestSignFinal
+         * Here we use OPENSSL_BOX_EVP_DigestSignUpdate followed by EVP_DigestSignFinal
          * in order to add the EVP_CTRL_SSL3_MASTER_SECRET call between them.
          */
-        if (EVP_DigestSignUpdate(mctx, hdata, hdatalen) <= 0
-            || EVP_MD_CTX_ctrl(mctx, EVP_CTRL_SSL3_MASTER_SECRET,
+        if (OPENSSL_BOX_EVP_DigestSignUpdate(mctx, hdata, hdatalen) <= 0
+            || OPENSSL_BOX_EVP_MD_CTX_ctrl(mctx, EVP_CTRL_SSL3_MASTER_SECRET,
                                (int)s->session->master_key_length,
                                s->session->master_key) <= 0
             || EVP_DigestSignFinal(mctx, NULL, &siglen) <= 0) {
@@ -388,7 +388,7 @@ CON_FUNC_RETURN tls_construct_cert_verify(SSL_CONNECTION *s, WPACKET *pkt)
     } else {
         /*
          * Here we *must* use EVP_DigestSign() because Ed25519/Ed448 does not
-         * support streaming via EVP_DigestSignUpdate/EVP_DigestSignFinal
+         * support streaming via OPENSSL_BOX_EVP_DigestSignUpdate/EVP_DigestSignFinal
          */
         if (EVP_DigestSign(mctx, NULL, &siglen, hdata, hdatalen) <= 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
@@ -425,11 +425,11 @@ CON_FUNC_RETURN tls_construct_cert_verify(SSL_CONNECTION *s, WPACKET *pkt)
     }
 
     OPENSSL_free(sig);
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
     return CON_FUNC_SUCCESS;
  err:
     OPENSSL_free(sig);
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
     return CON_FUNC_ERROR;
 }
 
@@ -447,7 +447,7 @@ MSG_PROCESS_RETURN tls_process_cert_verify(SSL_CONNECTION *s, PACKET *pkt)
     size_t hdatalen = 0;
     void *hdata;
     unsigned char tls13tbs[TLS13_TBS_PREAMBLE_SIZE + EVP_MAX_MD_SIZE];
-    EVP_MD_CTX *mctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *mctx = OPENSSL_BOX_EVP_MD_CTX_new();
     EVP_PKEY_CTX *pctx = NULL;
     SSL_CTX *sctx = SSL_CONNECTION_GET_CTX(s);
 
@@ -492,7 +492,7 @@ MSG_PROCESS_RETURN tls_process_cert_verify(SSL_CONNECTION *s, PACKET *pkt)
 
     if (SSL_USE_SIGALGS(s))
         OSSL_TRACE1(TLS, "USING TLSv1.2 HASH %s\n",
-                    md == NULL ? "n/a" : EVP_MD_get0_name(md));
+                    md == NULL ? "n/a" : OPENSSL_BOX_EVP_MD_get0_name(md));
 
     /* Check for broken implementations of GOST ciphersuites */
     /*
@@ -502,10 +502,10 @@ MSG_PROCESS_RETURN tls_process_cert_verify(SSL_CONNECTION *s, PACKET *pkt)
 #ifndef OPENSSL_NO_GOST
     if (!SSL_USE_SIGALGS(s)
         && ((PACKET_remaining(pkt) == 64
-             && (EVP_PKEY_get_id(pkey) == NID_id_GostR3410_2001
-                 || EVP_PKEY_get_id(pkey) == NID_id_GostR3410_2012_256))
+             && (OPENSSL_BOX_EVP_PKEY_get_id(pkey) == NID_id_GostR3410_2001
+                 || OPENSSL_BOX_EVP_PKEY_get_id(pkey) == NID_id_GostR3410_2012_256))
             || (PACKET_remaining(pkt) == 128
-                && EVP_PKEY_get_id(pkey) == NID_id_GostR3410_2012_512))) {
+                && OPENSSL_BOX_EVP_PKEY_get_id(pkey) == NID_id_GostR3410_2012_512))) {
         len = (unsigned int)PACKET_remaining(pkt);
     } else
 #endif
@@ -529,10 +529,10 @@ MSG_PROCESS_RETURN tls_process_cert_verify(SSL_CONNECTION *s, PACKET *pkt)
     }
 
     OSSL_TRACE1(TLS, "Using client verify alg %s\n",
-                md == NULL ? "n/a" : EVP_MD_get0_name(md));
+                md == NULL ? "n/a" : OPENSSL_BOX_EVP_MD_get0_name(md));
 
     if (EVP_DigestVerifyInit_ex(mctx, &pctx,
-                                md == NULL ? NULL : EVP_MD_get0_name(md),
+                                md == NULL ? NULL : OPENSSL_BOX_EVP_MD_get0_name(md),
                                 sctx->libctx, sctx->propq, pkey,
                                 NULL) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
@@ -540,7 +540,7 @@ MSG_PROCESS_RETURN tls_process_cert_verify(SSL_CONNECTION *s, PACKET *pkt)
     }
 #ifndef OPENSSL_NO_GOST
     {
-        int pktype = EVP_PKEY_get_id(pkey);
+        int pktype = OPENSSL_BOX_EVP_PKEY_get_id(pkey);
         if (pktype == NID_id_GostR3410_2001
             || pktype == NID_id_GostR3410_2012_256
             || pktype == NID_id_GostR3410_2012_512) {
@@ -561,8 +561,8 @@ MSG_PROCESS_RETURN tls_process_cert_verify(SSL_CONNECTION *s, PACKET *pkt)
         }
     }
     if (s->version == SSL3_VERSION) {
-        if (EVP_DigestVerifyUpdate(mctx, hdata, hdatalen) <= 0
-                || EVP_MD_CTX_ctrl(mctx, EVP_CTRL_SSL3_MASTER_SECRET,
+        if (OPENSSL_BOX_EVP_DigestVerifyUpdate(mctx, hdata, hdatalen) <= 0
+                || OPENSSL_BOX_EVP_MD_CTX_ctrl(mctx, EVP_CTRL_SSL3_MASTER_SECRET,
                                    (int)s->session->master_key_length,
                                     s->session->master_key) <= 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
@@ -600,7 +600,7 @@ MSG_PROCESS_RETURN tls_process_cert_verify(SSL_CONNECTION *s, PACKET *pkt)
  err:
     BIO_free(s->s3.handshake_buffer);
     s->s3.handshake_buffer = NULL;
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
 #ifndef OPENSSL_NO_GOST
     OPENSSL_free(gost_data);
 #endif
@@ -1278,7 +1278,7 @@ int tls_process_rpk(SSL_CONNECTION *sc, PACKET *pkt, EVP_PKEY **peer_rpk)
         SSLfatal(sc, SSL_AD_DECODE_ERROR, SSL_R_LENGTH_MISMATCH);
         goto err;
     }
-    if (EVP_PKEY_missing_parameters(pkey)) {
+    if (OPENSSL_BOX_EVP_PKEY_missing_parameters(pkey)) {
         SSLfatal(sc, SSL_AD_INTERNAL_ERROR,
                  SSL_R_UNABLE_TO_FIND_PUBLIC_KEY_PARAMETERS);
         goto err;
@@ -1315,7 +1315,7 @@ int tls_process_rpk(SSL_CONNECTION *sc, PACKET *pkt, EVP_PKEY **peer_rpk)
 
  err:
     OPENSSL_free(rawexts);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 
@@ -2816,15 +2816,15 @@ int tls13_save_handshake_digest_for_pha(SSL_CONNECTION *s)
             /* SSLfatal() already called */
             return 0;
 
-        s->pha_dgst = EVP_MD_CTX_new();
+        s->pha_dgst = OPENSSL_BOX_EVP_MD_CTX_new();
         if (s->pha_dgst == NULL) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
             return 0;
         }
-        if (!EVP_MD_CTX_copy_ex(s->pha_dgst,
+        if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(s->pha_dgst,
                                 s->s3.handshake_dgst)) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
-            EVP_MD_CTX_free(s->pha_dgst);
+            OPENSSL_BOX_EVP_MD_CTX_free(s->pha_dgst);
             s->pha_dgst = NULL;
             return 0;
         }
@@ -2842,7 +2842,7 @@ int tls13_restore_handshake_digest_for_pha(SSL_CONNECTION *s)
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         return 0;
     }
-    if (!EVP_MD_CTX_copy_ex(s->s3.handshake_dgst,
+    if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(s->s3.handshake_dgst,
                             s->pha_dgst)) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         return 0;

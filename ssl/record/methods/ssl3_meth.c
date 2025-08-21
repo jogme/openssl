@@ -32,13 +32,13 @@ static int ssl3_set_crypto_state(OSSL_RECORD_LAYER *rl, int level,
         return OSSL_RECORD_RETURN_FATAL;
     }
 
-    if ((rl->enc_ctx = EVP_CIPHER_CTX_new()) == NULL) {
+    if ((rl->enc_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_INTERNAL_ERROR);
         return OSSL_RECORD_RETURN_FATAL;
     }
     ciph_ctx = rl->enc_ctx;
 
-    rl->md_ctx = EVP_MD_CTX_new();
+    rl->md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (rl->md_ctx == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_INTERNAL_ERROR);
         return OSSL_RECORD_RETURN_FATAL;
@@ -68,7 +68,7 @@ static int ssl3_set_crypto_state(OSSL_RECORD_LAYER *rl, int level,
      * The cipher we actually ended up using in the EVP_CIPHER_CTX may be
      * different to that in ciph if we have an ENGINE in use
      */
-    if (EVP_CIPHER_get0_provider(EVP_CIPHER_CTX_get0_cipher(ciph_ctx)) != NULL
+    if (OPENSSL_BOX_EVP_CIPHER_get0_provider(OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(ciph_ctx)) != NULL
             && !ossl_set_tls_provider_parameters(rl, ciph_ctx, ciph, md)) {
         /* ERR_raise already called */
         return OSSL_RECORD_RETURN_FATAL;
@@ -111,13 +111,13 @@ static int ssl3_cipher(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *inrecs,
         return 0;
 
     ds = rl->enc_ctx;
-    if (ds == NULL || (enc = EVP_CIPHER_CTX_get0_cipher(ds)) == NULL)
+    if (ds == NULL || (enc = OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(ds)) == NULL)
         return 0;
 
-    provided = (EVP_CIPHER_get0_provider(enc) != NULL);
+    provided = (OPENSSL_BOX_EVP_CIPHER_get0_provider(enc) != NULL);
 
     l = rec->length;
-    bs = EVP_CIPHER_CTX_get_block_size(ds);
+    bs = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ds);
 
     if (bs == 0)
         return 0;
@@ -170,7 +170,7 @@ static int ssl3_cipher(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *inrecs,
                                                   macsize);
             *p = OSSL_PARAM_construct_end();
 
-            if (!EVP_CIPHER_CTX_get_params(ds, params)) {
+            if (!OPENSSL_BOX_EVP_CIPHER_CTX_get_params(ds, params)) {
                 /* Shouldn't normally happen */
                 RLAYERfatal(rl, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
                 return 0;
@@ -267,7 +267,7 @@ static int ssl3_mac(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *rec, unsigned char *md
         header[j++] = (unsigned char)(rec->length & 0xff);
 
         /* Final param == is SSLv3 */
-        if (ssl3_cbc_digest_record(EVP_MD_CTX_get0_md(hash),
+        if (ssl3_cbc_digest_record(OPENSSL_BOX_EVP_MD_CTX_get0_md(hash),
                                    md, &md_size,
                                    header, rec->input,
                                    rec->length, rec->orig_len,
@@ -277,7 +277,7 @@ static int ssl3_mac(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *rec, unsigned char *md
     } else {
         unsigned int md_size_u;
         /* Chop the digest off the end :-) */
-        EVP_MD_CTX *md_ctx = EVP_MD_CTX_new();
+        EVP_MD_CTX *md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
 
         if (md_ctx == NULL)
             return 0;
@@ -285,7 +285,7 @@ static int ssl3_mac(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *rec, unsigned char *md
         rec_char = rec->type;
         p = md;
         s2n(rec->length, p);
-        if (EVP_MD_CTX_copy_ex(md_ctx, hash) <= 0
+        if (OPENSSL_BOX_EVP_MD_CTX_copy_ex(md_ctx, hash) <= 0
             || EVP_DigestUpdate(md_ctx, mac_sec, md_size) <= 0
             || EVP_DigestUpdate(md_ctx, ssl3_pad_1, npad) <= 0
             || EVP_DigestUpdate(md_ctx, seq, 8) <= 0
@@ -293,16 +293,16 @@ static int ssl3_mac(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *rec, unsigned char *md
             || EVP_DigestUpdate(md_ctx, md, 2) <= 0
             || EVP_DigestUpdate(md_ctx, rec->input, rec->length) <= 0
             || EVP_DigestFinal_ex(md_ctx, md, NULL) <= 0
-            || EVP_MD_CTX_copy_ex(md_ctx, hash) <= 0
+            || OPENSSL_BOX_EVP_MD_CTX_copy_ex(md_ctx, hash) <= 0
             || EVP_DigestUpdate(md_ctx, mac_sec, md_size) <= 0
             || EVP_DigestUpdate(md_ctx, ssl3_pad_2, npad) <= 0
             || EVP_DigestUpdate(md_ctx, md, md_size) <= 0
             || EVP_DigestFinal_ex(md_ctx, md, &md_size_u) <= 0) {
-            EVP_MD_CTX_free(md_ctx);
+            OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
             return 0;
         }
 
-        EVP_MD_CTX_free(md_ctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     }
 
     if (!tls_increment_sequence_ctr(rl))

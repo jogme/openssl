@@ -70,9 +70,9 @@ int ossl_set_tls_provider_parameters(OSSL_RECORD_LAYER *rl,
     size_t macsize = 0;
     int imacsize = -1;
 
-    if ((EVP_CIPHER_get_flags(ciph) & EVP_CIPH_FLAG_AEAD_CIPHER) == 0
+    if ((OPENSSL_BOX_EVP_CIPHER_get_flags(ciph) & EVP_CIPH_FLAG_AEAD_CIPHER) == 0
             && !rl->use_etm)
-        imacsize = EVP_MD_get_size(md);
+        imacsize = OPENSSL_BOX_EVP_MD_get_size(md);
     if (imacsize > 0)
         macsize = (size_t)imacsize;
 
@@ -82,7 +82,7 @@ int ossl_set_tls_provider_parameters(OSSL_RECORD_LAYER *rl,
                                           &macsize);
     *pprm = OSSL_PARAM_construct_end();
 
-    if (!EVP_CIPHER_CTX_set_params(ctx, params)) {
+    if (!OPENSSL_BOX_EVP_CIPHER_CTX_set_params(ctx, params)) {
         ERR_raise(ERR_LIB_SSL, ERR_R_INTERNAL_ERROR);
         return 0;
     }
@@ -731,7 +731,7 @@ int tls_get_more_records(OSSL_RECORD_LAYER *rl)
              && thisrr->type == SSL3_RT_APPLICATION_DATA
              && RLAYER_USE_EXPLICIT_IV(rl)
              && rl->enc_ctx != NULL
-             && (EVP_CIPHER_get_flags(EVP_CIPHER_CTX_get0_cipher(rl->enc_ctx))
+             && (OPENSSL_BOX_EVP_CIPHER_get_flags(OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(rl->enc_ctx))
                  & EVP_CIPH_FLAG_PIPELINE) != 0
              && tls_record_app_data_waiting(rl));
 
@@ -769,10 +769,10 @@ int tls_get_more_records(OSSL_RECORD_LAYER *rl)
     }
 
     if (rl->md_ctx != NULL) {
-        const EVP_MD *tmpmd = EVP_MD_CTX_get0_md(rl->md_ctx);
+        const EVP_MD *tmpmd = OPENSSL_BOX_EVP_MD_CTX_get0_md(rl->md_ctx);
 
         if (tmpmd != NULL) {
-            imac_size = EVP_MD_get_size(tmpmd);
+            imac_size = OPENSSL_BOX_EVP_MD_get_size(tmpmd);
             if (!ossl_assert(imac_size > 0 && imac_size <= EVP_MAX_MD_SIZE)) {
                 RLAYERfatal(rl, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
                 return OSSL_RECORD_RETURN_FATAL;
@@ -880,7 +880,7 @@ int tls_get_more_records(OSSL_RECORD_LAYER *rl)
     /* r->length is now the compressed data plus mac */
     if (rl->enc_ctx != NULL
             && !rl->use_etm
-            && EVP_MD_CTX_get0_md(rl->md_ctx) != NULL) {
+            && OPENSSL_BOX_EVP_MD_CTX_get0_md(rl->md_ctx) != NULL) {
         for (j = 0; j < num_recs; j++) {
             SSL_MAC_BUF *thismb = &macbufs[j];
 
@@ -1366,8 +1366,8 @@ tls_int_new_record_layer(OSSL_LIB_CTX *libctx, const char *propq, int vers,
 
     if ((rl->options & SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS) == 0
             && rl->version <= TLS1_VERSION
-            && !EVP_CIPHER_is_a(ciph, "NULL")
-            && !EVP_CIPHER_is_a(ciph, "RC4")) {
+            && !OPENSSL_BOX_EVP_CIPHER_is_a(ciph, "NULL")
+            && !OPENSSL_BOX_EVP_CIPHER_is_a(ciph, "RC4")) {
         /*
          * Enable vulnerability countermeasure for CBC ciphers with known-IV
          * problem (http://www.openssl.org/~bodo/tls-cbc.txt)
@@ -1450,9 +1450,9 @@ static void tls_int_free(OSSL_RECORD_LAYER *rl)
 
     tls_release_write_buffer(rl);
 
-    EVP_CIPHER_CTX_free(rl->enc_ctx);
-    EVP_MAC_CTX_free(rl->mac_ctx);
-    EVP_MD_CTX_free(rl->md_ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(rl->enc_ctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(rl->mac_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(rl->md_ctx);
 #ifndef OPENSSL_NO_COMP
     COMP_CTX_free(rl->compctx);
 #endif
@@ -1523,7 +1523,7 @@ size_t tls_get_max_records_default(OSSL_RECORD_LAYER *rl, uint8_t type,
      */
     if (rl->max_pipelines > 0
             && rl->enc_ctx != NULL
-            && (EVP_CIPHER_get_flags(EVP_CIPHER_CTX_get0_cipher(rl->enc_ctx))
+            && (OPENSSL_BOX_EVP_CIPHER_get_flags(OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(rl->enc_ctx))
                 & EVP_CIPH_FLAG_PIPELINE) != 0
             && RLAYER_USE_EXPLICIT_IV(rl)) {
         size_t pipes;
@@ -1758,7 +1758,7 @@ int tls_write_records_default(OSSL_RECORD_LAYER *rl,
     OSSL_RECORD_TEMPLATE prefixtempl;
     OSSL_RECORD_TEMPLATE *thistempl;
 
-    if (rl->md_ctx != NULL && EVP_MD_CTX_get0_md(rl->md_ctx) != NULL) {
+    if (rl->md_ctx != NULL && OPENSSL_BOX_EVP_MD_CTX_get0_md(rl->md_ctx) != NULL) {
         mac_size = EVP_MD_CTX_get_size(rl->md_ctx);
         if (mac_size < 0) {
             RLAYERfatal(rl, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);

@@ -46,8 +46,8 @@ static EVP_PKEY *generate_rsa_key_long(OSSL_LIB_CTX *libctx, unsigned int bits)
     }
 
     /* Initialize context for key generation purposes. */
-    if (EVP_PKEY_keygen_init(genctx) <= 0) {
-        fprintf(stderr, "EVP_PKEY_keygen_init() failed\n");
+    if (OPENSSL_BOX_EVP_PKEY_keygen_init(genctx) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_keygen_init() failed\n");
         goto cleanup;
     }
 
@@ -65,7 +65,7 @@ static EVP_PKEY *generate_rsa_key_long(OSSL_LIB_CTX *libctx, unsigned int bits)
      * Do not do this unless you know why you need this.
      * You ordinarily do not need to specify this, as the default is two.
      *
-     * Both of these parameters can also be set via EVP_PKEY_CTX_set_params, but
+     * Both of these parameters can also be set via OPENSSL_BOX_EVP_PKEY_CTX_set_params, but
      * these functions provide a more concise way to do so.
      */
     if (EVP_PKEY_CTX_set_rsa_keygen_primes(genctx, primes) <= 0) {
@@ -81,18 +81,18 @@ static EVP_PKEY *generate_rsa_key_long(OSSL_LIB_CTX *libctx, unsigned int bits)
      *
      * If you require progress information during the key generation process,
      * you can set a progress callback using EVP_PKEY_set_cb; see the example in
-     * EVP_PKEY_generate(3).
+     * OPENSSL_BOX_EVP_PKEY_generate(3).
      */
     fprintf(stdout, "Generating RSA key, this may take some time...\n");
-    if (EVP_PKEY_generate(genctx, &pkey) <= 0) {
-        fprintf(stderr, "EVP_PKEY_generate() failed\n");
+    if (OPENSSL_BOX_EVP_PKEY_generate(genctx, &pkey) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_generate() failed\n");
         goto cleanup;
     }
 
     /* pkey is now set to an object representing the generated key pair. */
 
 cleanup:
-    EVP_PKEY_CTX_free(genctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(genctx);
     return pkey;
 }
 
@@ -283,7 +283,7 @@ int main(int argc, char **argv)
 
     ret = EXIT_SUCCESS;
 cleanup:
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     OSSL_LIB_CTX_free(libctx);
     return ret;
 }

@@ -36,8 +36,8 @@ See L<https://www.rfc-editor.org/rfc/rfc9180.html#name-dh-based-kem-dhkem>
 
 =back
 
-This can be set using either EVP_PKEY_CTX_set_kem_op() or
-EVP_PKEY_CTX_set_params().
+This can be set using either OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op() or
+OPENSSL_BOX_EVP_PKEY_CTX_set_params().
 
 =item "ikme" (B<OSSL_KEM_PARAM_IKME>) <octet string>
 
@@ -58,7 +58,7 @@ If this value is not set, then a random ikm is used.
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_CTX_set_kem_op(3)>,
+L<OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op(3)>,
 L<EVP_PKEY_encapsulate(3)>,
 L<EVP_PKEY_decapsulate(3)>
 L<EVP_KEYMGMT(3)>,

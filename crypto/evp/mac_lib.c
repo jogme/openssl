@@ -19,14 +19,14 @@
 #include "internal/provider.h"
 #include "evp_local.h"
 
-EVP_MAC_CTX *EVP_MAC_CTX_new(EVP_MAC *mac)
+EVP_MAC_CTX *OPENSSL_BOX_EVP_MAC_CTX_new(EVP_MAC *mac)
 {
     EVP_MAC_CTX *ctx = OPENSSL_zalloc(sizeof(EVP_MAC_CTX));
 
     if (ctx != NULL) {
         ctx->meth = mac;
         if ((ctx->algctx = mac->newctx(ossl_provider_ctx(mac->prov))) == NULL
-            || !EVP_MAC_up_ref(mac)) {
+            || !OPENSSL_BOX_EVP_MAC_up_ref(mac)) {
             mac->freectx(ctx->algctx);
             ERR_raise(ERR_LIB_EVP, ERR_R_EVP_LIB);
             OPENSSL_free(ctx);
@@ -36,18 +36,18 @@ EVP_MAC_CTX *EVP_MAC_CTX_new(EVP_MAC *mac)
     return ctx;
 }
 
-void EVP_MAC_CTX_free(EVP_MAC_CTX *ctx)
+void OPENSSL_BOX_EVP_MAC_CTX_free(EVP_MAC_CTX *ctx)
 {
     if (ctx == NULL)
         return;
     ctx->meth->freectx(ctx->algctx);
     ctx->algctx = NULL;
     /* refcnt-- */
-    EVP_MAC_free(ctx->meth);
+    OPENSSL_BOX_EVP_MAC_free(ctx->meth);
     OPENSSL_free(ctx);
 }
 
-EVP_MAC_CTX *EVP_MAC_CTX_dup(const EVP_MAC_CTX *src)
+EVP_MAC_CTX *OPENSSL_BOX_EVP_MAC_CTX_dup(const EVP_MAC_CTX *src)
 {
     EVP_MAC_CTX *dst;
 
@@ -59,7 +59,7 @@ EVP_MAC_CTX *EVP_MAC_CTX_dup(const EVP_MAC_CTX *src)
         return NULL;
 
     *dst = *src;
-    if (!EVP_MAC_up_ref(dst->meth)) {
+    if (!OPENSSL_BOX_EVP_MAC_up_ref(dst->meth)) {
         ERR_raise(ERR_LIB_EVP, ERR_R_EVP_LIB);
         OPENSSL_free(dst);
         return NULL;
@@ -67,14 +67,14 @@ EVP_MAC_CTX *EVP_MAC_CTX_dup(const EVP_MAC_CTX *src)
 
     dst->algctx = src->meth->dupctx(src->algctx);
     if (dst->algctx == NULL) {
-        EVP_MAC_CTX_free(dst);
+        OPENSSL_BOX_EVP_MAC_CTX_free(dst);
         return NULL;
     }
 
     return dst;
 }
 
-EVP_MAC *EVP_MAC_CTX_get0_mac(EVP_MAC_CTX *ctx)
+EVP_MAC *OPENSSL_BOX_EVP_MAC_CTX_get0_mac(EVP_MAC_CTX *ctx)
 {
     return ctx->meth;
 }
@@ -102,12 +102,12 @@ static size_t get_size_t_ctx_param(EVP_MAC_CTX *ctx, const char *name)
     return 0;
 }
 
-size_t EVP_MAC_CTX_get_mac_size(EVP_MAC_CTX *ctx)
+size_t OPENSSL_BOX_EVP_MAC_CTX_get_mac_size(EVP_MAC_CTX *ctx)
 {
     return get_size_t_ctx_param(ctx, OSSL_MAC_PARAM_SIZE);
 }
 
-size_t EVP_MAC_CTX_get_block_size(EVP_MAC_CTX *ctx)
+size_t OPENSSL_BOX_EVP_MAC_CTX_get_block_size(EVP_MAC_CTX *ctx)
 {
     return get_size_t_ctx_param(ctx, OSSL_MAC_PARAM_BLOCK_SIZE);
 }
@@ -122,7 +122,7 @@ int EVP_MAC_init(EVP_MAC_CTX *ctx, const unsigned char *key, size_t keylen,
     return ctx->meth->init(ctx->algctx, key, keylen, params);
 }
 
-int EVP_MAC_init_SKEY(EVP_MAC_CTX *ctx, EVP_SKEY *skey, const OSSL_PARAM params[])
+int OPENSSL_BOX_EVP_MAC_init_SKEY(EVP_MAC_CTX *ctx, EVP_SKEY *skey, const OSSL_PARAM params[])
 {
     if (ctx->meth->init_skey == NULL
         || skey->skeymgmt->prov != ctx->meth->prov
@@ -133,7 +133,7 @@ int EVP_MAC_init_SKEY(EVP_MAC_CTX *ctx, EVP_SKEY *skey, const OSSL_PARAM params[
     return ctx->meth->init_skey(ctx->algctx, skey->keydata, params);
 }
 
-int EVP_MAC_update(EVP_MAC_CTX *ctx, const unsigned char *data, size_t datalen)
+int OPENSSL_BOX_EVP_MAC_update(EVP_MAC_CTX *ctx, const unsigned char *data, size_t datalen)
 {
     return ctx->meth->update(ctx->algctx, data, datalen);
 }
@@ -155,7 +155,7 @@ static int evp_mac_final(EVP_MAC_CTX *ctx, int xof,
         return 0;
     }
 
-    macsize = EVP_MAC_CTX_get_mac_size(ctx);
+    macsize = OPENSSL_BOX_EVP_MAC_CTX_get_mac_size(ctx);
     if (out == NULL) {
         if (outl == NULL) {
             ERR_raise(ERR_LIB_EVP, ERR_R_PASSED_NULL_PARAMETER);
@@ -172,7 +172,7 @@ static int evp_mac_final(EVP_MAC_CTX *ctx, int xof,
         params[0] = OSSL_PARAM_construct_int(OSSL_MAC_PARAM_XOF, &xof);
         params[1] = OSSL_PARAM_construct_end();
 
-        if (EVP_MAC_CTX_set_params(ctx, params) <= 0) {
+        if (OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, params) <= 0) {
             ERR_raise(ERR_LIB_EVP, EVP_R_SETTING_XOF_FAILED);
             return 0;
         }
@@ -189,7 +189,7 @@ int EVP_MAC_final(EVP_MAC_CTX *ctx,
     return evp_mac_final(ctx, 0, out, outl, outsize);
 }
 
-int EVP_MAC_finalXOF(EVP_MAC_CTX *ctx, unsigned char *out, size_t outsize)
+int OPENSSL_BOX_EVP_MAC_finalXOF(EVP_MAC_CTX *ctx, unsigned char *out, size_t outsize)
 {
     return evp_mac_final(ctx, 1, out, NULL, outsize);
 }
@@ -200,21 +200,21 @@ int EVP_MAC_finalXOF(EVP_MAC_CTX *ctx, unsigned char *out, size_t outsize)
  * but it didn't recognise any of the given params, i.e. nothing in the
  * bag of parameters was useful.
  */
-int EVP_MAC_get_params(EVP_MAC *mac, OSSL_PARAM params[])
+int OPENSSL_BOX_EVP_MAC_get_params(EVP_MAC *mac, OSSL_PARAM params[])
 {
     if (mac->get_params != NULL)
         return mac->get_params(params);
     return 1;
 }
 
-int EVP_MAC_CTX_get_params(EVP_MAC_CTX *ctx, OSSL_PARAM params[])
+int OPENSSL_BOX_EVP_MAC_CTX_get_params(EVP_MAC_CTX *ctx, OSSL_PARAM params[])
 {
     if (ctx->meth->get_ctx_params != NULL)
         return ctx->meth->get_ctx_params(ctx->algctx, params);
     return 1;
 }
 
-int EVP_MAC_CTX_set_params(EVP_MAC_CTX *ctx, const OSSL_PARAM params[])
+int OPENSSL_BOX_EVP_MAC_CTX_set_params(EVP_MAC_CTX *ctx, const OSSL_PARAM params[])
 {
     if (ctx->meth->set_ctx_params != NULL)
         return ctx->meth->set_ctx_params(ctx->algctx, params);
@@ -226,17 +226,17 @@ int evp_mac_get_number(const EVP_MAC *mac)
     return mac->name_id;
 }
 
-const char *EVP_MAC_get0_name(const EVP_MAC *mac)
+const char *OPENSSL_BOX_EVP_MAC_get0_name(const EVP_MAC *mac)
 {
     return mac->type_name;
 }
 
-const char *EVP_MAC_get0_description(const EVP_MAC *mac)
+const char *OPENSSL_BOX_EVP_MAC_get0_description(const EVP_MAC *mac)
 {
     return mac->description;
 }
 
-int EVP_MAC_is_a(const EVP_MAC *mac, const char *name)
+int OPENSSL_BOX_EVP_MAC_is_a(const EVP_MAC *mac, const char *name)
 {
     return mac != NULL && evp_is_a(mac->prov, mac->name_id, NULL, name);
 }
@@ -269,7 +269,7 @@ unsigned char *EVP_Q_mac(OSSL_LIB_CTX *libctx,
     if (mac == NULL)
         return NULL;
     if (subalg != NULL) {
-        const OSSL_PARAM *defined_params = EVP_MAC_settable_ctx_params(mac);
+        const OSSL_PARAM *defined_params = OPENSSL_BOX_EVP_MAC_settable_ctx_params(mac);
         const char *param_name = OSSL_MAC_PARAM_DIGEST;
 
         /*
@@ -290,11 +290,11 @@ unsigned char *EVP_Q_mac(OSSL_LIB_CTX *libctx,
     /* Single-shot - on NULL key input, set dummy key value for EVP_MAC_Init. */
     if (key == NULL && keylen == 0)
         key = data;
-    if ((ctx = EVP_MAC_CTX_new(mac)) != NULL
-            && EVP_MAC_CTX_set_params(ctx, subalg_param)
-            && EVP_MAC_CTX_set_params(ctx, params)
+    if ((ctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac)) != NULL
+            && OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, subalg_param)
+            && OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, params)
             && EVP_MAC_init(ctx, key, keylen, params)
-            && EVP_MAC_update(ctx, data, datalen)
+            && OPENSSL_BOX_EVP_MAC_update(ctx, data, datalen)
             && EVP_MAC_final(ctx, out, &len, outsize)) {
         if (out == NULL) {
             out = OPENSSL_malloc(len);
@@ -309,7 +309,7 @@ unsigned char *EVP_Q_mac(OSSL_LIB_CTX *libctx,
     }
 
  err:
-    EVP_MAC_CTX_free(ctx);
-    EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MAC_free(mac);
     return res;
 }

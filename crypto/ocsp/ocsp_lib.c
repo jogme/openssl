@@ -27,7 +27,7 @@ OCSP_CERTID *OCSP_cert_to_id(const EVP_MD *dgst, const X509 *subject,
     ASN1_BIT_STRING *ikey;
 
     if (!dgst)
-        dgst = EVP_sha1();
+        dgst = OPENSSL_BOX_EVP_sha1();
     if (subject) {
         iname = X509_get_issuer_name(subject);
         serial = X509_get0_serialNumber(subject);
@@ -55,7 +55,7 @@ OCSP_CERTID *OCSP_cert_id_new(const EVP_MD *dgst,
 
     alg = &cid->hashAlgorithm;
     ASN1_OBJECT_free(alg->algorithm);
-    if ((nid = EVP_MD_get_type(dgst)) == NID_undef) {
+    if ((nid = OPENSSL_BOX_EVP_MD_get_type(dgst)) == NID_undef) {
         ERR_raise(ERR_LIB_OCSP, OCSP_R_UNKNOWN_NID);
         goto err;
     }

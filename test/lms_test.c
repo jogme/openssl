@@ -38,13 +38,13 @@ static EVP_PKEY *lms_pubkey_from_data(const unsigned char *data, size_t datalen)
                                                   (unsigned char *)data, datalen);
     params[1] = OSSL_PARAM_construct_end();
     ret = TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "LMS", propq))
-        && TEST_int_eq(EVP_PKEY_fromdata_init(ctx), 1)
+        && TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
         && (EVP_PKEY_fromdata(ctx, &key, EVP_PKEY_PUBLIC_KEY, params) == 1);
     if (ret == 0) {
-        EVP_PKEY_free(key);
+        OPENSSL_BOX_EVP_PKEY_free(key);
         key = NULL;
     }
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return key;
 }
 
@@ -73,7 +73,7 @@ end:
     if (ret == 0)
         TEST_note("Incorrectly accepted public key of length %u (expected %u)",
                   (unsigned)publen, (unsigned)td->publen);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
 
     return ret == 1;
 }
@@ -120,7 +120,7 @@ static int lms_pubkey_decoder_fail_test(void)
 
     ret = 1;
 end:
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     OSSL_DECODER_CTX_free(dctx);
     return ret;
 }
@@ -138,7 +138,7 @@ static EVP_PKEY *key_decode_from_bio(BIO *bio, const char *keytype)
         return NULL;
 
     if (!TEST_true(OSSL_DECODER_from_bio(dctx, bio))) {
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         pkey = NULL;
     }
     OSSL_DECODER_CTX_free(dctx);
@@ -165,7 +165,7 @@ static int lms_key_decode_test(void)
     EVP_PKEY *key = NULL;
 
     ret = TEST_ptr(key = key_decode_from_data(td1->pub, td1->publen, NULL));
-    EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     return ret;
 }
 
@@ -189,7 +189,7 @@ static int lms_pubkey_decoder_test(void)
         goto err;
     ret = 1;
 err:
-    EVP_PKEY_free(pub);
+    OPENSSL_BOX_EVP_PKEY_free(pub);
     OSSL_DECODER_CTX_free(dctx);
     return ret;
 }
@@ -215,23 +215,23 @@ static int lms_key_eq_test(void)
                                                        NULL)))
         goto end;
 
-    ret = TEST_int_eq(EVP_PKEY_eq(key[0], key[1]), 1)
-        && TEST_int_ne(EVP_PKEY_eq(key[0], key[2]), 1)
-        && TEST_int_eq(EVP_PKEY_eq(key[0], key[3]), 1);
+    ret = TEST_int_eq(OPENSSL_BOX_EVP_PKEY_eq(key[0], key[1]), 1)
+        && TEST_int_ne(OPENSSL_BOX_EVP_PKEY_eq(key[0], key[2]), 1)
+        && TEST_int_eq(OPENSSL_BOX_EVP_PKEY_eq(key[0], key[3]), 1);
     if (ret == 0)
         goto end;
 
 #ifndef OPENSSL_NO_EC
     if (!TEST_ptr(eckey = EVP_PKEY_Q_keygen(libctx, NULL, "EC", "P-256")))
         goto end;
-    ret = TEST_int_ne(EVP_PKEY_eq(key[0], eckey), 1);
-    EVP_PKEY_free(eckey);
+    ret = TEST_int_ne(OPENSSL_BOX_EVP_PKEY_eq(key[0], eckey), 1);
+    OPENSSL_BOX_EVP_PKEY_free(eckey);
 #endif
 end:
-    EVP_PKEY_free(key[3]);
-    EVP_PKEY_free(key[2]);
-    EVP_PKEY_free(key[1]);
-    EVP_PKEY_free(key[0]);
+    OPENSSL_BOX_EVP_PKEY_free(key[3]);
+    OPENSSL_BOX_EVP_PKEY_free(key[2]);
+    OPENSSL_BOX_EVP_PKEY_free(key[1]);
+    OPENSSL_BOX_EVP_PKEY_free(key[0]);
     return ret;
 }
 
@@ -246,10 +246,10 @@ static int lms_key_validate_test(void)
         return 0;
     if (!TEST_ptr(vctx = EVP_PKEY_CTX_new_from_pkey(libctx, key, NULL)))
         goto end;
-    ret = TEST_int_eq(EVP_PKEY_check(vctx), 1);
-    EVP_PKEY_CTX_free(vctx);
+    ret = TEST_int_eq(OPENSSL_BOX_EVP_PKEY_check(vctx), 1);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(vctx);
 end:
-    EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     return ret;
 }
 
@@ -268,9 +268,9 @@ static int lms_verify_test(int tst)
         && TEST_int_eq(EVP_PKEY_verify(ctx, td->sig, td->siglen,
                                        td->msg, td->msglen), 1);
 
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_SIGNATURE_free(sig);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig);
     return ret;
 }
 
@@ -283,7 +283,7 @@ static int lms_digest_verify_fail_test(void)
 
     if (!TEST_ptr(pub = lms_pubkey_from_data(td->pub, td->publen)))
         return 0;
-    if (!TEST_ptr(vctx = EVP_MD_CTX_new()))
+    if (!TEST_ptr(vctx = OPENSSL_BOX_EVP_MD_CTX_new()))
         goto err;
     /* Only one shot mode is supported, streaming fails to initialise */
     if (!TEST_int_eq(EVP_DigestVerifyInit_ex(vctx, NULL, NULL, libctx, NULL,
@@ -291,8 +291,8 @@ static int lms_digest_verify_fail_test(void)
         goto err;
     ret = 1;
  err:
-    EVP_PKEY_free(pub);
-    EVP_MD_CTX_free(vctx);
+    OPENSSL_BOX_EVP_PKEY_free(pub);
+    OPENSSL_BOX_EVP_MD_CTX_free(vctx);
     return ret;
 }
 
@@ -305,15 +305,15 @@ static int lms_digest_signing_fail_test(void)
 
     if (!TEST_ptr(pub = lms_pubkey_from_data(td->pub, td->publen)))
         return 0;
-    if (!TEST_ptr(vctx = EVP_MD_CTX_new()))
+    if (!TEST_ptr(vctx = OPENSSL_BOX_EVP_MD_CTX_new()))
         goto err;
     if (!TEST_int_eq(EVP_DigestSignInit_ex(vctx, NULL, NULL, libctx, NULL,
                                            pub, NULL), 0))
         goto err;
     ret = 1;
  err:
-    EVP_PKEY_free(pub);
-    EVP_MD_CTX_free(vctx);
+    OPENSSL_BOX_EVP_PKEY_free(pub);
+    OPENSSL_BOX_EVP_MD_CTX_free(vctx);
     return ret;
 }
 
@@ -330,9 +330,9 @@ static int lms_message_signing_fail_test(void)
         && TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL))
         && TEST_int_eq(EVP_PKEY_sign_message_init(ctx, sig, NULL), -2);
 
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_SIGNATURE_free(sig);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig);
     return ret;
 }
 
@@ -342,9 +342,9 @@ static int lms_paramgen_fail_test(void)
     EVP_PKEY_CTX *ctx = NULL;
 
     ret = TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "LMS", NULL))
-        && TEST_int_eq(EVP_PKEY_paramgen_init(ctx), -2);
+        && TEST_int_eq(OPENSSL_BOX_EVP_PKEY_paramgen_init(ctx), -2);
 
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 
@@ -354,9 +354,9 @@ static int lms_keygen_fail_test(void)
     EVP_PKEY_CTX *ctx = NULL;
 
     ret = TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "LMS", NULL))
-        && TEST_int_eq(EVP_PKEY_keygen_init(ctx), -2);
+        && TEST_int_eq(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx), -2);
 
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 
@@ -371,12 +371,12 @@ static int lms_verify_fail_test(void)
             || !TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL)))
         goto end;
     /* Only one shot mode is supported, streaming fails to initialise */
-    if (!TEST_int_eq(EVP_PKEY_verify_init(ctx), -2))
+    if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_verify_init(ctx), -2))
         goto end;
     ret = 1;
 end:
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 
@@ -427,9 +427,9 @@ static int lms_verify_bad_sig_test(void)
 
     ret = 1;
 end:
-    EVP_SIGNATURE_free(sig);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     OPENSSL_free(sig_data);
 
     return ret;
@@ -479,9 +479,9 @@ static int lms_verify_bad_sig_len_test(void)
 
     ret = 1;
 end:
-    EVP_SIGNATURE_free(sig);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
 
     return ret;
 }
@@ -518,9 +518,9 @@ static int lms_verify_bad_pub_sig_test(void)
                           " was corrupted", i);
                 goto end;
             }
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             pkey = NULL;
-            EVP_PKEY_CTX_free(ctx);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
             ctx = NULL;
         }
         pub[i] ^= 1; /* restore the corrupted byte */
@@ -528,9 +528,9 @@ static int lms_verify_bad_pub_sig_test(void)
 
     ret = 1;
 end:
-    EVP_SIGNATURE_free(sig);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     OPENSSL_free(pub);
 
     return ret;

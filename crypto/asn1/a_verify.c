@@ -27,7 +27,7 @@
 int ASN1_verify(i2d_of_void *i2d, X509_ALGOR *a, ASN1_BIT_STRING *signature,
                 char *data, EVP_PKEY *pkey)
 {
-    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     const EVP_MD *type;
     unsigned char *p, *buf_in = NULL;
     int ret = -1, i, inl;
@@ -37,7 +37,7 @@ int ASN1_verify(i2d_of_void *i2d, X509_ALGOR *a, ASN1_BIT_STRING *signature,
         goto err;
     }
     i = OBJ_obj2nid(a->algorithm);
-    type = EVP_get_digestbyname(OBJ_nid2sn(i));
+    type = OPENSSL_BOX_EVP_get_digestbyname(OBJ_nid2sn(i));
     if (type == NULL) {
         ERR_raise(ERR_LIB_ASN1, ASN1_R_UNKNOWN_MESSAGE_DIGEST_ALGORITHM);
         goto err;
@@ -78,7 +78,7 @@ int ASN1_verify(i2d_of_void *i2d, X509_ALGOR *a, ASN1_BIT_STRING *signature,
     }
     ret = 1;
  err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -101,8 +101,8 @@ int ASN1_item_verify_ex(const ASN1_ITEM *it, const X509_ALGOR *alg,
 
     if ((ctx = evp_md_ctx_new_ex(pkey, id, libctx, propq)) != NULL) {
         rv = ASN1_item_verify_ctx(it, alg, signature, data, ctx);
-        EVP_PKEY_CTX_free(EVP_MD_CTX_get_pkey_ctx(ctx));
-        EVP_MD_CTX_free(ctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx));
+        OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     }
     return rv;
 }
@@ -117,7 +117,7 @@ int ASN1_item_verify_ctx(const ASN1_ITEM *it, const X509_ALGOR *alg,
     int mdnid, pknid;
     size_t inll = 0;
 
-    pkey = EVP_PKEY_CTX_get0_pkey(EVP_MD_CTX_get_pkey_ctx(ctx));
+    pkey = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx));
 
     if (pkey == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_PASSED_NULL_PARAMETER);
@@ -161,7 +161,7 @@ int ASN1_item_verify_ctx(const ASN1_ITEM *it, const X509_ALGOR *alg,
          * future version of OpenSSL we should push this to the provider.
          */
         if (mdnid == NID_undef && pknid == EVP_PKEY_RSA_PSS) {
-            if (!EVP_PKEY_is_a(pkey, "RSA") && !EVP_PKEY_is_a(pkey, "RSA-PSS")) {
+            if (!OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA") && !OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA-PSS")) {
                 ERR_raise(ERR_LIB_ASN1, ASN1_R_WRONG_PUBLIC_KEY_TYPE);
                 goto err;
             }
@@ -172,7 +172,7 @@ int ASN1_item_verify_ctx(const ASN1_ITEM *it, const X509_ALGOR *alg,
             }
         } else {
             /* Check public key OID matches public key type */
-            if (!EVP_PKEY_is_a(pkey, OBJ_nid2sn(pknid))) {
+            if (!OPENSSL_BOX_EVP_PKEY_is_a(pkey, OBJ_nid2sn(pknid))) {
                 ERR_raise(ERR_LIB_ASN1, ASN1_R_WRONG_PUBLIC_KEY_TYPE);
                 goto err;
             }

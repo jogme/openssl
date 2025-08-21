@@ -2,36 +2,36 @@
 
 =head1 NAME
 
-EVP_aria_128_cbc,
-EVP_aria_192_cbc,
-EVP_aria_256_cbc,
+OPENSSL_BOX_EVP_aria_128_cbc,
+OPENSSL_BOX_EVP_aria_192_cbc,
+OPENSSL_BOX_EVP_aria_256_cbc,
 EVP_aria_128_cfb,
 EVP_aria_192_cfb,
 EVP_aria_256_cfb,
-EVP_aria_128_cfb1,
-EVP_aria_192_cfb1,
-EVP_aria_256_cfb1,
-EVP_aria_128_cfb8,
-EVP_aria_192_cfb8,
-EVP_aria_256_cfb8,
-EVP_aria_128_cfb128,
-EVP_aria_192_cfb128,
-EVP_aria_256_cfb128,
-EVP_aria_128_ctr,
-EVP_aria_192_ctr,
-EVP_aria_256_ctr,
-EVP_aria_128_ecb,
-EVP_aria_192_ecb,
-EVP_aria_256_ecb,
-EVP_aria_128_ofb,
-EVP_aria_192_ofb,
-EVP_aria_256_ofb,
-EVP_aria_128_ccm,
-EVP_aria_192_ccm,
-EVP_aria_256_ccm,
-EVP_aria_128_gcm,
-EVP_aria_192_gcm,
-EVP_aria_256_gcm,
+OPENSSL_BOX_EVP_aria_128_cfb1,
+OPENSSL_BOX_EVP_aria_192_cfb1,
+OPENSSL_BOX_EVP_aria_256_cfb1,
+OPENSSL_BOX_EVP_aria_128_cfb8,
+OPENSSL_BOX_EVP_aria_192_cfb8,
+OPENSSL_BOX_EVP_aria_256_cfb8,
+OPENSSL_BOX_EVP_aria_128_cfb128,
+OPENSSL_BOX_EVP_aria_192_cfb128,
+OPENSSL_BOX_EVP_aria_256_cfb128,
+OPENSSL_BOX_EVP_aria_128_ctr,
+OPENSSL_BOX_EVP_aria_192_ctr,
+OPENSSL_BOX_EVP_aria_256_ctr,
+OPENSSL_BOX_EVP_aria_128_ecb,
+OPENSSL_BOX_EVP_aria_192_ecb,
+OPENSSL_BOX_EVP_aria_256_ecb,
+OPENSSL_BOX_EVP_aria_128_ofb,
+OPENSSL_BOX_EVP_aria_192_ofb,
+OPENSSL_BOX_EVP_aria_256_ofb,
+OPENSSL_BOX_EVP_aria_128_ccm,
+OPENSSL_BOX_EVP_aria_192_ccm,
+OPENSSL_BOX_EVP_aria_256_ccm,
+OPENSSL_BOX_EVP_aria_128_gcm,
+OPENSSL_BOX_EVP_aria_192_gcm,
+OPENSSL_BOX_EVP_aria_256_gcm,
 - EVP ARIA cipher
 
 =head1 SYNOPSIS
@@ -43,7 +43,7 @@ EVP_aria_256_gcm,
  const EVP_CIPHER *EVP_ciphername(void)
 
 I<EVP_ciphername> is used a placeholder for any of the described cipher
-functions, such as I<EVP_aria_128_cbc>.
+functions, such as I<OPENSSL_BOX_EVP_aria_128_cbc>.
 
 =head1 DESCRIPTION
 
@@ -51,40 +51,40 @@ The ARIA encryption algorithm for EVP.
 
 =over 4
 
-=item EVP_aria_128_cbc(),
-EVP_aria_192_cbc(),
-EVP_aria_256_cbc(),
+=item OPENSSL_BOX_EVP_aria_128_cbc(),
+OPENSSL_BOX_EVP_aria_192_cbc(),
+OPENSSL_BOX_EVP_aria_256_cbc(),
 EVP_aria_128_cfb(),
 EVP_aria_192_cfb(),
 EVP_aria_256_cfb(),
-EVP_aria_128_cfb1(),
-EVP_aria_192_cfb1(),
-EVP_aria_256_cfb1(),
-EVP_aria_128_cfb8(),
-EVP_aria_192_cfb8(),
-EVP_aria_256_cfb8(),
-EVP_aria_128_cfb128(),
-EVP_aria_192_cfb128(),
-EVP_aria_256_cfb128(),
-EVP_aria_128_ctr(),
-EVP_aria_192_ctr(),
-EVP_aria_256_ctr(),
-EVP_aria_128_ecb(),
-EVP_aria_192_ecb(),
-EVP_aria_256_ecb(),
-EVP_aria_128_ofb(),
-EVP_aria_192_ofb(),
-EVP_aria_256_ofb()
+OPENSSL_BOX_EVP_aria_128_cfb1(),
+OPENSSL_BOX_EVP_aria_192_cfb1(),
+OPENSSL_BOX_EVP_aria_256_cfb1(),
+OPENSSL_BOX_EVP_aria_128_cfb8(),
+OPENSSL_BOX_EVP_aria_192_cfb8(),
+OPENSSL_BOX_EVP_aria_256_cfb8(),
+OPENSSL_BOX_EVP_aria_128_cfb128(),
+OPENSSL_BOX_EVP_aria_192_cfb128(),
+OPENSSL_BOX_EVP_aria_256_cfb128(),
+OPENSSL_BOX_EVP_aria_128_ctr(),
+OPENSSL_BOX_EVP_aria_192_ctr(),
+OPENSSL_BOX_EVP_aria_256_ctr(),
+OPENSSL_BOX_EVP_aria_128_ecb(),
+OPENSSL_BOX_EVP_aria_192_ecb(),
+OPENSSL_BOX_EVP_aria_256_ecb(),
+OPENSSL_BOX_EVP_aria_128_ofb(),
+OPENSSL_BOX_EVP_aria_192_ofb(),
+OPENSSL_BOX_EVP_aria_256_ofb()
 
 ARIA for 128, 192 and 256 bit keys in the following modes: CBC, CFB with
 128-bit shift, CFB with 1-bit shift, CFB with 8-bit shift, CTR, ECB and OFB.
 
-=item EVP_aria_128_ccm(),
-EVP_aria_192_ccm(),
-EVP_aria_256_ccm(),
-EVP_aria_128_gcm(),
-EVP_aria_192_gcm(),
-EVP_aria_256_gcm(),
+=item OPENSSL_BOX_EVP_aria_128_ccm(),
+OPENSSL_BOX_EVP_aria_192_ccm(),
+OPENSSL_BOX_EVP_aria_256_ccm(),
+OPENSSL_BOX_EVP_aria_128_gcm(),
+OPENSSL_BOX_EVP_aria_192_gcm(),
+OPENSSL_BOX_EVP_aria_256_gcm(),
 
 ARIA for 128, 192 and 256 bit keys in CBC-MAC Mode (CCM) and Galois Counter
 Mode (GCM). These ciphers require additional control operations to function
@@ -102,14 +102,14 @@ See L<crypto(7)/Performance> for further information.
 =head1 RETURN VALUES
 
 These functions return an B<EVP_CIPHER> structure that contains the
-implementation of the symmetric cipher. See L<EVP_CIPHER_meth_new(3)> for
+implementation of the symmetric cipher. See L<OPENSSL_BOX_EVP_CIPHER_meth_new(3)> for
 details of the B<EVP_CIPHER> structure.
 
 =head1 SEE ALSO
 
 L<evp(7)>,
 L<EVP_EncryptInit(3)>,
-L<EVP_CIPHER_meth_new(3)>
+L<OPENSSL_BOX_EVP_CIPHER_meth_new(3)>
 
 =head1 COPYRIGHT
 

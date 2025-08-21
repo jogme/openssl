@@ -41,15 +41,15 @@ static int tls13_set_crypto_state(OSSL_RECORD_LAYER *rl, int level,
     memcpy(rl->iv, iv, ivlen);
 
     /* Integrity only */
-    if (EVP_CIPHER_is_a(ciph, "NULL") && mactype == NID_hmac && md != NULL) {
+    if (OPENSSL_BOX_EVP_CIPHER_is_a(ciph, "NULL") && mactype == NID_hmac && md != NULL) {
         mac = EVP_MAC_fetch(rl->libctx, "HMAC", rl->propq);
         if (mac == NULL
-            || (mac_ctx = rl->mac_ctx = EVP_MAC_CTX_new(mac)) == NULL) {
-            EVP_MAC_free(mac);
+            || (mac_ctx = rl->mac_ctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac)) == NULL) {
+            OPENSSL_BOX_EVP_MAC_free(mac);
             ERR_raise(ERR_LIB_SSL, ERR_R_INTERNAL_ERROR);
             return OSSL_RECORD_RETURN_FATAL;
         }
-        EVP_MAC_free(mac);
+        OPENSSL_BOX_EVP_MAC_free(mac);
         *p++ = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_DIGEST,
                                                 (char *)EVP_MD_name(md), 0);
         *p = OSSL_PARAM_construct_end();
@@ -60,19 +60,19 @@ static int tls13_set_crypto_state(OSSL_RECORD_LAYER *rl, int level,
         goto end;
     }
 
-    ciph_ctx = rl->enc_ctx = EVP_CIPHER_CTX_new();
+    ciph_ctx = rl->enc_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ciph_ctx == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_INTERNAL_ERROR);
         return OSSL_RECORD_RETURN_FATAL;
     }
 
-    mode = EVP_CIPHER_get_mode(ciph);
+    mode = OPENSSL_BOX_EVP_CIPHER_get_mode(ciph);
 
     if (EVP_CipherInit_ex(ciph_ctx, ciph, NULL, NULL, NULL, enc) <= 0
-        || EVP_CIPHER_CTX_ctrl(ciph_ctx, EVP_CTRL_AEAD_SET_IVLEN, (int)ivlen,
+        || OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ciph_ctx, EVP_CTRL_AEAD_SET_IVLEN, (int)ivlen,
                                NULL) <= 0
         || (mode == EVP_CIPH_CCM_MODE
-            && EVP_CIPHER_CTX_ctrl(ciph_ctx, EVP_CTRL_AEAD_SET_TAG, (int)taglen,
+            && OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ciph_ctx, EVP_CTRL_AEAD_SET_TAG, (int)taglen,
                                    NULL) <= 0)
         || EVP_CipherInit_ex(ciph_ctx, NULL, NULL, key, NULL, enc) <= 0) {
         ERR_raise(ERR_LIB_SSL, ERR_R_INTERNAL_ERROR);
@@ -129,9 +129,9 @@ static int tls13_cipher(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *recs,
 
     /* For integrity-only ciphers, nonce_len is same as MAC size */
     if (rl->mac_ctx != NULL) {
-        nonce_len = EVP_MAC_CTX_get_mac_size(rl->mac_ctx);
+        nonce_len = OPENSSL_BOX_EVP_MAC_CTX_get_mac_size(rl->mac_ctx);
     } else {
-        int ivlen = EVP_CIPHER_CTX_get_iv_length(enc_ctx);
+        int ivlen = OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(enc_ctx);
 
         if (ivlen < 0) {
             /* Should not happen */
@@ -183,10 +183,10 @@ static int tls13_cipher(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *recs,
     if (rl->mac_ctx != NULL) {
         int ret = 0;
 
-        if ((mac_ctx = EVP_MAC_CTX_dup(rl->mac_ctx)) == NULL
-            || !EVP_MAC_update(mac_ctx, nonce, nonce_len)
-            || !EVP_MAC_update(mac_ctx, recheader, sizeof(recheader))
-            || !EVP_MAC_update(mac_ctx, rec->input, rec->length)
+        if ((mac_ctx = OPENSSL_BOX_EVP_MAC_CTX_dup(rl->mac_ctx)) == NULL
+            || !OPENSSL_BOX_EVP_MAC_update(mac_ctx, nonce, nonce_len)
+            || !OPENSSL_BOX_EVP_MAC_update(mac_ctx, recheader, sizeof(recheader))
+            || !OPENSSL_BOX_EVP_MAC_update(mac_ctx, rec->input, rec->length)
             || !EVP_MAC_final(mac_ctx, tag, &taglen, rl->taglen)) {
             RLAYERfatal(rl, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
             goto end_mac;
@@ -201,19 +201,19 @@ static int tls13_cipher(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *recs,
         }
         ret = 1;
     end_mac:
-        EVP_MAC_CTX_free(mac_ctx);
+        OPENSSL_BOX_EVP_MAC_CTX_free(mac_ctx);
         return ret;
     }
 
-    cipher = EVP_CIPHER_CTX_get0_cipher(enc_ctx);
+    cipher = OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(enc_ctx);
     if (cipher == NULL) {
         RLAYERfatal(rl, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         return 0;
     }
-    mode = EVP_CIPHER_get_mode(cipher);
+    mode = OPENSSL_BOX_EVP_CIPHER_get_mode(cipher);
 
     if (EVP_CipherInit_ex(enc_ctx, NULL, NULL, NULL, nonce, sending) <= 0
-        || (!sending && EVP_CIPHER_CTX_ctrl(enc_ctx, EVP_CTRL_AEAD_SET_TAG,
+        || (!sending && OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(enc_ctx, EVP_CTRL_AEAD_SET_TAG,
                                             (int)rl->taglen,
                                             rec->data + rec->length) <= 0)) {
         RLAYERfatal(rl, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
@@ -237,7 +237,7 @@ static int tls13_cipher(OSSL_RECORD_LAYER *rl, TLS_RL_RECORD *recs,
     }
     if (sending) {
         /* Add the tag */
-        if (EVP_CIPHER_CTX_ctrl(enc_ctx, EVP_CTRL_AEAD_GET_TAG, (int)rl->taglen,
+        if (OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(enc_ctx, EVP_CTRL_AEAD_GET_TAG, (int)rl->taglen,
                                 rec->data + rec->length) <= 0) {
             RLAYERfatal(rl, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
             return 0;

@@ -294,7 +294,7 @@ static DH *ffc_params_generate(OSSL_LIB_CTX *libctx, DH_PKEY_CTX *dctx,
     }
 
     if (dctx->md != NULL)
-        ossl_ffc_set_digest(&ret->params, EVP_MD_get0_name(dctx->md), NULL);
+        ossl_ffc_set_digest(&ret->params, OPENSSL_BOX_EVP_MD_get0_name(dctx->md), NULL);
 
 # ifndef FIPS_MODULE
     if (dctx->paramgen_type == DH_PARAMGEN_TYPE_FIPS_186_2)
@@ -335,7 +335,7 @@ static int pkey_dh_paramgen(EVP_PKEY_CTX *ctx,
 
         if ((dh = DH_new_by_nid(dctx->param_nid)) == NULL)
             return 0;
-        EVP_PKEY_assign(pkey, type, dh);
+        OPENSSL_BOX_EVP_PKEY_assign(pkey, type, dh);
         return 1;
     }
 
@@ -353,7 +353,7 @@ static int pkey_dh_paramgen(EVP_PKEY_CTX *ctx,
         BN_GENCB_free(pcb);
         if (dh == NULL)
             return 0;
-        EVP_PKEY_assign(pkey, EVP_PKEY_DHX, dh);
+        OPENSSL_BOX_EVP_PKEY_assign(pkey, EVP_PKEY_DHX, dh);
         return 1;
     }
     dh = DH_new();
@@ -386,11 +386,11 @@ static int pkey_dh_keygen(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
         dh = DH_new();
     if (dh == NULL)
         return 0;
-    EVP_PKEY_assign(pkey, ctx->pmeth->pkey_id, dh);
+    OPENSSL_BOX_EVP_PKEY_assign(pkey, ctx->pmeth->pkey_id, dh);
     /* Note: if error return, pkey is freed by parent routine */
-    if (ctx->pkey != NULL && !EVP_PKEY_copy_parameters(pkey, ctx->pkey))
+    if (ctx->pkey != NULL && !OPENSSL_BOX_EVP_PKEY_copy_parameters(pkey, ctx->pkey))
         return 0;
-    return DH_generate_key((DH *)EVP_PKEY_get0_DH(pkey));
+    return DH_generate_key((DH *)OPENSSL_BOX_EVP_PKEY_get0_DH(pkey));
 }
 
 static int pkey_dh_derive(EVP_PKEY_CTX *ctx, unsigned char *key,
@@ -406,8 +406,8 @@ static int pkey_dh_derive(EVP_PKEY_CTX *ctx, unsigned char *key,
         ERR_raise(ERR_LIB_DH, DH_R_KEYS_NOT_SET);
         return 0;
     }
-    dh = (DH *)EVP_PKEY_get0_DH(ctx->pkey);
-    dhpub = EVP_PKEY_get0_DH(ctx->peerkey);
+    dh = (DH *)OPENSSL_BOX_EVP_PKEY_get0_DH(ctx->pkey);
+    dhpub = OPENSSL_BOX_EVP_PKEY_get0_DH(ctx->peerkey);
     if (dhpub == NULL) {
         ERR_raise(ERR_LIB_DH, DH_R_KEYS_NOT_SET);
         return 0;

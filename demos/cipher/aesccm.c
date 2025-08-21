@@ -87,7 +87,7 @@ static int aes_ccm_encrypt(void)
     BIO_dump_fp(stdout, ccm_pt, sizeof(ccm_pt));
 
     /* Create a context for the encrypt operation */
-    if ((ctx = EVP_CIPHER_CTX_new()) == NULL)
+    if ((ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto err;
 
     /* Fetch the cipher implementation */
@@ -137,7 +137,7 @@ static int aes_ccm_encrypt(void)
                                                   outtag, ccm_tag_len);
     params[1] = OSSL_PARAM_construct_end();
 
-    if (!EVP_CIPHER_CTX_get_params(ctx, params))
+    if (!OPENSSL_BOX_EVP_CIPHER_CTX_get_params(ctx, params))
         goto err;
 
     /* Output tag */
@@ -149,8 +149,8 @@ err:
     if (!ret)
         ERR_print_errors_fp(stderr);
 
-    EVP_CIPHER_free(cipher);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
 
     return ret;
 }
@@ -171,7 +171,7 @@ static int aes_ccm_decrypt(void)
     printf("Ciphertext:\n");
     BIO_dump_fp(stdout, ccm_ct, sizeof(ccm_ct));
 
-    if ((ctx = EVP_CIPHER_CTX_new()) == NULL)
+    if ((ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto err;
 
     /* Fetch the cipher implementation */
@@ -220,8 +220,8 @@ err:
     if (!ret)
         ERR_print_errors_fp(stderr);
 
-    EVP_CIPHER_free(cipher);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
 
     return ret;
 }

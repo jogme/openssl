@@ -44,7 +44,7 @@ evp_keymgmt_newdata() calls the method's new() function.
 evp_keymgmt_freedata() calls the method's free() function.
 
 (the name evp_keymgmt_freedata() was chosen to avoid a clash with
-EVP_KEYMGMT_free() on case insensitive systems, the name
+OPENSSL_BOX_EVP_KEYMGMT_free() on case insensitive systems, the name
 evp_keymgmt_newdata() was chosen for consistency)
 
 evp_keymgmt_get_params() calls the method's get_params() function.

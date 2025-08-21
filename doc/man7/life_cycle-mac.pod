@@ -51,7 +51,7 @@ The usual life-cycle of a MAC is illustrated:
                  |       start       |
                  +-------------------+
                    |
-                   | EVP_MAC_CTX_new
+                   | OPENSSL_BOX_EVP_MAC_CTX_new
                    v
                  +-------------------+
                  |       newed       |
@@ -63,19 +63,19 @@ The usual life-cycle of a MAC is illustrated:
               +> |    initialised    | <+
               |  +-------------------+  |
               |    |                    |
-              |    | EVP_MAC_update     | EVP_MAC_init
+              |    | OPENSSL_BOX_EVP_MAC_update     | EVP_MAC_init
               |    v                    |
  EVP_MAC_init |  +-------------------+  |
               |  |      updated      | -+
               |  +-------------------+
               |    |               |
-              |    | EVP_MAC_final | EVP_MAC_finalXOF
+              |    | EVP_MAC_final | OPENSSL_BOX_EVP_MAC_finalXOF
               |    v               v
               |  +-------------------+
               +- |      finaled      |
                  +-------------------+
                    |
-                   | EVP_MAC_CTX_free
+                   | OPENSSL_BOX_EVP_MAC_CTX_free
                    v
                  +-------------------+
                  |       freed       |
@@ -94,16 +94,16 @@ This is the canonical list.
 
  Function Call                   --------------------- Current State ----------------------
                                  start   newed    initialised   updated     finaled   freed
- EVP_MAC_CTX_new                 newed
+ OPENSSL_BOX_EVP_MAC_CTX_new                 newed
  EVP_MAC_init                         initialised initialised initialised initialised
- EVP_MAC_update                                     updated     updated
+ OPENSSL_BOX_EVP_MAC_update                                     updated     updated
  EVP_MAC_final                                                  finaled
- EVP_MAC_finalXOF                                               finaled
- EVP_MAC_CTX_free                freed   freed       freed       freed       freed
- EVP_MAC_CTX_get_params                  newed    initialised   updated
- EVP_MAC_CTX_set_params                  newed    initialised   updated
- EVP_MAC_CTX_gettable_params             newed    initialised   updated
- EVP_MAC_CTX_settable_params             newed    initialised   updated
+ OPENSSL_BOX_EVP_MAC_finalXOF                                               finaled
+ OPENSSL_BOX_EVP_MAC_CTX_free                freed   freed       freed       freed       freed
+ OPENSSL_BOX_EVP_MAC_CTX_get_params                  newed    initialised   updated
+ OPENSSL_BOX_EVP_MAC_CTX_set_params                  newed    initialised   updated
+ OPENSSL_BOX_EVP_MAC_CTX_gettable_params             newed    initialised   updated
+ OPENSSL_BOX_EVP_MAC_CTX_settable_params             newed    initialised   updated
 
 =end man
 
@@ -119,7 +119,7 @@ This is the canonical list.
     <th style="border:1px solid" align="center">updated</th>
     <th style="border:1px solid" align="center">finaled</th>
     <th style="border:1px solid" align="center">freed</th></tr>
-<tr><th style="border:1px solid" align="left">EVP_MAC_CTX_new</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MAC_CTX_new</th>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -133,7 +133,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">initialised</td>
     <td style="border:1px solid" align="center">initialised</td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MAC_update</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MAC_update</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">updated</td>
@@ -147,42 +147,42 @@ This is the canonical list.
     <td style="border:1px solid" align="center">finaled</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MAC_finalXOF</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MAC_finalXOF</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">finaled</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MAC_CTX_free</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MAC_CTX_free</th>
     <td style="border:1px solid" align="center">freed</td>
     <td style="border:1px solid" align="center">freed</td>
     <td style="border:1px solid" align="center">freed</td>
     <td style="border:1px solid" align="center">freed</td>
     <td style="border:1px solid" align="center">freed</td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MAC_CTX_get_params</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MAC_CTX_get_params</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>
     <td style="border:1px solid" align="center">updated</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MAC_CTX_set_params</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MAC_CTX_set_params</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>
     <td style="border:1px solid" align="center">updated</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MAC_CTX_gettable_params</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MAC_CTX_gettable_params</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>
     <td style="border:1px solid" align="center">updated</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_MAC_CTX_settable_params</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_MAC_CTX_settable_params</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>

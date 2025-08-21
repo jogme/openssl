@@ -222,11 +222,11 @@ int spkac_main(int argc, char **argv)
     ret = 0;
 
  end:
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     NCONF_free(conf);
     NETSCAPE_SPKI_free(spki);
     BIO_free_all(out);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     release_engine(e);
     OPENSSL_free(passin);
     return ret;

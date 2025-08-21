@@ -224,7 +224,7 @@ static int sm2_crypt_test(void)
 
     if (!test_sm2_crypt(
             test_group,
-            EVP_sm3(),
+            OPENSSL_BOX_EVP_sm3(),
             "1649AB77A00637BD5E2EFE283FBF353534AA7F7CB89463F208DDBC2920BB0DA0",
             "encryption standard",
             "004C62EEFD6ECFC2B95B92FD6C3D9575148AFA17425546D49018E5388D49DD7B4F"
@@ -239,7 +239,7 @@ static int sm2_crypt_test(void)
     /* Same test as above except using SHA-256 instead of SM3 */
     if (!test_sm2_crypt(
             test_group,
-            EVP_sha256(),
+            OPENSSL_BOX_EVP_sha256(),
             "1649AB77A00637BD5E2EFE283FBF353534AA7F7CB89463F208DDBC2920BB0DA0",
             "encryption standard",
             "004C62EEFD6ECFC2B95B92FD6C3D9575148AFA17425546D49018E5388D49DD7B4F"
@@ -266,7 +266,7 @@ static int sm2_crypt_test(void)
 
     if (!test_sm2_crypt(
             gm_group,
-            EVP_sm3(),
+            OPENSSL_BOX_EVP_sm3(),
             /* privkey (from which the encrypting public key is derived) */
             "3945208F7B2144B13F36E38AC6D39F95889393692860B51A42FB81EF4DF7C5B8",
             /* plaintext message */
@@ -336,7 +336,7 @@ static int test_sm2_sign(const EC_GROUP *group,
     }
 
     start_fake_rand(k_hex);
-    sig = ossl_sm2_do_sign(key, EVP_sm3(), (const uint8_t *)userid,
+    sig = ossl_sm2_do_sign(key, OPENSSL_BOX_EVP_sm3(), (const uint8_t *)userid,
                            strlen(userid), (const uint8_t *)message, msg_len);
     if (!TEST_ptr(sig)) {
         restore_rand();
@@ -352,7 +352,7 @@ static int test_sm2_sign(const EC_GROUP *group,
             || !TEST_BN_eq(s, sig_s))
         goto done;
 
-    ok = ossl_sm2_do_verify(key, EVP_sm3(), sig, (const uint8_t *)userid,
+    ok = ossl_sm2_do_verify(key, OPENSSL_BOX_EVP_sm3(), sig, (const uint8_t *)userid,
                             strlen(userid), (const uint8_t *)message, msg_len);
 
     /* We goto done whether this passes or fails */

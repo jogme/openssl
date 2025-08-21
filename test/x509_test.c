@@ -142,10 +142,10 @@ static int test_asn1_item_verify(void)
 
 #ifndef OPENSSL_NO_DEPRECATED_3_0
     /* Issue #24575 requires legacy key but the test is useful anyway */
-    if (!TEST_ptr(rsa = EVP_PKEY_get1_RSA(pkey)))
+    if (!TEST_ptr(rsa = OPENSSL_BOX_EVP_PKEY_get1_RSA(pkey)))
         goto err;
 
-    if (!TEST_int_gt(EVP_PKEY_set1_RSA(pkey, rsa), 0))
+    if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_set1_RSA(pkey, rsa), 0))
         goto err;
 #endif
 
@@ -215,7 +215,7 @@ int setup_tests(void)
 
 void cleanup_tests(void)
 {
-    EVP_MD_free(signmd);
-    EVP_PKEY_free(pubkey);
-    EVP_PKEY_free(privkey);
+    OPENSSL_BOX_EVP_MD_free(signmd);
+    OPENSSL_BOX_EVP_PKEY_free(pubkey);
+    OPENSSL_BOX_EVP_PKEY_free(privkey);
 }

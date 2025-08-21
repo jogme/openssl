@@ -58,7 +58,7 @@ static int t_fromb64(unsigned char *a, size_t alen, const char *src)
     if (size > INT_MAX || ((size + padsize) / 4) * 3 > alen)
         return -1;
 
-    ctx = EVP_ENCODE_CTX_new();
+    ctx = OPENSSL_BOX_EVP_ENCODE_CTX_new();
     if (ctx == NULL)
         return -1;
 
@@ -79,7 +79,7 @@ static int t_fromb64(unsigned char *a, size_t alen, const char *src)
 
     /* Valid padsize values are now 0, 1 or 2 */
 
-    EVP_DecodeInit(ctx);
+    OPENSSL_BOX_EVP_DecodeInit(ctx);
     evp_encode_ctx_set_flags(ctx, EVP_ENCODE_CTX_USE_SRP_ALPHABET);
 
     /* Add any encoded padding that is required */
@@ -121,7 +121,7 @@ static int t_fromb64(unsigned char *a, size_t alen, const char *src)
     }
 
  err:
-    EVP_ENCODE_CTX_free(ctx);
+    OPENSSL_BOX_EVP_ENCODE_CTX_free(ctx);
 
     return outl;
 }
@@ -132,7 +132,7 @@ static int t_fromb64(unsigned char *a, size_t alen, const char *src)
  */
 static int t_tob64(char *dst, const unsigned char *src, int size)
 {
-    EVP_ENCODE_CTX *ctx = EVP_ENCODE_CTX_new();
+    EVP_ENCODE_CTX *ctx = OPENSSL_BOX_EVP_ENCODE_CTX_new();
     int outl = 0, outl2 = 0;
     unsigned char pad[2] = {0, 0};
     int leadz = 0;
@@ -140,30 +140,30 @@ static int t_tob64(char *dst, const unsigned char *src, int size)
     if (ctx == NULL)
         return 0;
 
-    EVP_EncodeInit(ctx);
+    OPENSSL_BOX_EVP_EncodeInit(ctx);
     evp_encode_ctx_set_flags(ctx, EVP_ENCODE_CTX_NO_NEWLINES
                                   | EVP_ENCODE_CTX_USE_SRP_ALPHABET);
 
     /*
      * We pad at the front with zero bytes until the length is a multiple of 3
-     * so that EVP_EncodeUpdate/EVP_EncodeFinal does not add any of its own "="
+     * so that EVP_EncodeUpdate/OPENSSL_BOX_EVP_EncodeFinal does not add any of its own "="
      * padding
      */
     leadz = 3 - (size % 3);
     if (leadz != 3
             && !EVP_EncodeUpdate(ctx, (unsigned char *)dst, &outl, pad,
                                  leadz)) {
-        EVP_ENCODE_CTX_free(ctx);
+        OPENSSL_BOX_EVP_ENCODE_CTX_free(ctx);
         return 0;
     }
 
     if (!EVP_EncodeUpdate(ctx, (unsigned char *)dst + outl, &outl2, src,
                           size)) {
-        EVP_ENCODE_CTX_free(ctx);
+        OPENSSL_BOX_EVP_ENCODE_CTX_free(ctx);
         return 0;
     }
     outl += outl2;
-    EVP_EncodeFinal(ctx, (unsigned char *)dst + outl, &outl2);
+    OPENSSL_BOX_EVP_EncodeFinal(ctx, (unsigned char *)dst + outl, &outl2);
     outl += outl2;
 
     /* Strip the encoded padding at the front */
@@ -172,7 +172,7 @@ static int t_tob64(char *dst, const unsigned char *src, int size)
         dst[outl - leadz] = '\0';
     }
 
-    EVP_ENCODE_CTX_free(ctx);
+    OPENSSL_BOX_EVP_ENCODE_CTX_free(ctx);
     return 1;
 }
 
@@ -587,16 +587,16 @@ SRP_user_pwd *SRP_VBASE_get1_by_user(SRP_VBASE *vb, char *username)
     md = EVP_MD_fetch(NULL, SN_sha1, NULL);
     if (md == NULL)
         goto err;
-    ctxt = EVP_MD_CTX_new();
+    ctxt = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctxt == NULL
         || !EVP_DigestInit_ex(ctxt, md, NULL)
         || !EVP_DigestUpdate(ctxt, vb->seed_key, strlen(vb->seed_key))
         || !EVP_DigestUpdate(ctxt, username, strlen(username))
         || !EVP_DigestFinal_ex(ctxt, digs, NULL))
         goto err;
-    EVP_MD_CTX_free(ctxt);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctxt);
     ctxt = NULL;
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     md = NULL;
     if (SRP_user_pwd_set0_sv(user,
                              BN_bin2bn(digs, SHA_DIGEST_LENGTH, NULL),
@@ -604,8 +604,8 @@ SRP_user_pwd *SRP_VBASE_get1_by_user(SRP_VBASE *vb, char *username)
         return user;
 
  err:
-    EVP_MD_free(md);
-    EVP_MD_CTX_free(ctxt);
+    OPENSSL_BOX_EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctxt);
     SRP_user_pwd_free(user);
     return NULL;
 }

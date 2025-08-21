@@ -305,7 +305,7 @@ Within the algorithm properties section, the following names have meaning:
 =item B<default_properties>
 
 The value may be anything that is acceptable as a property query
-string for EVP_set_default_properties().
+string for OPENSSL_BOX_EVP_set_default_properties().
 
 =item B<fips_mode> (deprecated)
 
@@ -584,7 +584,7 @@ configuration files using that syntax will have to be modified.
 L<openssl-x509(1)>, L<openssl-req(1)>, L<openssl-ca(1)>,
 L<openssl-fipsinstall(1)>,
 L<ASN1_generate_nconf(3)>,
-L<EVP_set_default_properties(3)>,
+L<OPENSSL_BOX_EVP_set_default_properties(3)>,
 L<CONF_modules_load(3)>,
 L<CONF_modules_load_file(3)>,
 L<RAND_bytes(3)>,

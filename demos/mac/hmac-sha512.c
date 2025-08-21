@@ -99,9 +99,9 @@ int main(void)
     }
 
     /* Create a context for the HMAC operation */
-    mctx = EVP_MAC_CTX_new(mac);
+    mctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac);
     if (mctx == NULL) {
-        fprintf(stderr, "EVP_MAC_CTX_new() returned NULL\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_CTX_new() returned NULL\n");
         goto end;
     }
 
@@ -117,8 +117,8 @@ int main(void)
     }
 
     /* Make one or more calls to process the data to be authenticated */
-    if (!EVP_MAC_update(mctx, data, sizeof(data))) {
-        fprintf(stderr, "EVP_MAC_update() failed\n");
+    if (!OPENSSL_BOX_EVP_MAC_update(mctx, data, sizeof(data))) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_MAC_update() failed\n");
         goto end;
     }
 
@@ -158,9 +158,9 @@ end:
         ERR_print_errors_fp(stderr);
     /* OpenSSL free functions will ignore NULL arguments */
     OPENSSL_free(out);
-    EVP_MD_CTX_free(digest_context);
-    EVP_MAC_CTX_free(mctx);
-    EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_MD_CTX_free(digest_context);
+    OPENSSL_BOX_EVP_MAC_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MAC_free(mac);
     OSSL_LIB_CTX_free(library_context);
     return ret;
 }

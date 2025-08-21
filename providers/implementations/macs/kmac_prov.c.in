@@ -159,7 +159,7 @@ static void kmac_free(void *vmacctx)
     struct kmac_data_st *kctx = vmacctx;
 
     if (kctx != NULL) {
-        EVP_MD_CTX_free(kctx->ctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(kctx->ctx);
         ossl_prov_digest_reset(&kctx->digest);
         OPENSSL_cleanse(kctx->key, kctx->key_len);
         OPENSSL_cleanse(kctx->custom, kctx->custom_len);
@@ -180,7 +180,7 @@ static struct kmac_data_st *kmac_new(void *provctx)
         return NULL;
 
     if ((kctx = OPENSSL_zalloc(sizeof(*kctx))) == NULL
-            || (kctx->ctx = EVP_MD_CTX_new()) == NULL) {
+            || (kctx->ctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL) {
         kmac_free(kctx);
         return NULL;
     }
@@ -202,7 +202,7 @@ static void *kmac_fetch_new(void *provctx, const OSSL_PARAM *params)
         return 0;
     }
 
-    md_size = EVP_MD_get_size(ossl_prov_digest_md(&kctx->digest));
+    md_size = OPENSSL_BOX_EVP_MD_get_size(ossl_prov_digest_md(&kctx->digest));
     if (md_size <= 0) {
         kmac_free(kctx);
         return 0;
@@ -243,7 +243,7 @@ static void *kmac_dup(void *vsrc)
     if (dst == NULL)
         return NULL;
 
-    if (!EVP_MD_CTX_copy(dst->ctx, src->ctx)
+    if (!OPENSSL_BOX_EVP_MD_CTX_copy(dst->ctx, src->ctx)
         || !ossl_prov_digest_copy(&dst->digest, &src->digest)) {
         kmac_free(dst);
         return NULL;
@@ -266,7 +266,7 @@ static int kmac_setkey(struct kmac_data_st *kctx, const unsigned char *key,
                        size_t keylen)
 {
     const EVP_MD *digest = ossl_prov_digest_md(&kctx->digest);
-    int w = EVP_MD_get_block_size(digest);
+    int w = OPENSSL_BOX_EVP_MD_get_block_size(digest);
 
     if (keylen < KMAC_MIN_KEY || keylen > KMAC_MAX_KEY) {
         ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_KEY_LENGTH);
@@ -330,7 +330,7 @@ static int kmac_init(void *vmacctx, const unsigned char *key,
                            NULL))
         return 0;
 
-    t = EVP_MD_get_block_size(ossl_prov_digest_md(&kctx->digest));
+    t = OPENSSL_BOX_EVP_MD_get_block_size(ossl_prov_digest_md(&kctx->digest));
     if (t <= 0) {
         ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_DIGEST_LENGTH);
         return 0;

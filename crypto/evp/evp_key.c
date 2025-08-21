@@ -21,7 +21,7 @@
 /* should be init to zeros. */
 static char prompt_string[80];
 
-void EVP_set_pw_prompt(const char *prompt)
+void OPENSSL_BOX_EVP_set_pw_prompt(const char *prompt)
 {
     if (prompt == NULL)
         prompt_string[0] = '\0';
@@ -31,7 +31,7 @@ void EVP_set_pw_prompt(const char *prompt)
     }
 }
 
-char *EVP_get_pw_prompt(void)
+char *OPENSSL_BOX_EVP_get_pw_prompt(void)
 {
     if (prompt_string[0] == '\0')
         return NULL;
@@ -44,7 +44,7 @@ char *EVP_get_pw_prompt(void)
  * the DES library -- if someone ever wants to disable DES, this function
  * will fail
  */
-int EVP_read_pw_string(char *buf, int len, const char *prompt, int verify)
+int OPENSSL_BOX_EVP_read_pw_string(char *buf, int len, const char *prompt, int verify)
 {
     return EVP_read_pw_string_min(buf, 0, len, prompt, verify);
 }
@@ -85,15 +85,15 @@ int EVP_BytesToKey(const EVP_CIPHER *type, const EVP_MD *md,
     int niv, nkey, addmd = 0;
     unsigned int mds = 0, i;
     int rv = 0;
-    nkey = EVP_CIPHER_get_key_length(type);
-    niv = EVP_CIPHER_get_iv_length(type);
+    nkey = OPENSSL_BOX_EVP_CIPHER_get_key_length(type);
+    niv = OPENSSL_BOX_EVP_CIPHER_get_iv_length(type);
     OPENSSL_assert(nkey <= EVP_MAX_KEY_LENGTH);
     OPENSSL_assert(niv >= 0 && niv <= EVP_MAX_IV_LENGTH);
 
     if (data == NULL)
         return nkey;
 
-    c = EVP_MD_CTX_new();
+    c = OPENSSL_BOX_EVP_MD_CTX_new();
     if (c == NULL)
         goto err;
     for (;;) {
@@ -146,9 +146,9 @@ int EVP_BytesToKey(const EVP_CIPHER *type, const EVP_MD *md,
         if ((nkey == 0) && (niv == 0))
             break;
     }
-    rv = EVP_CIPHER_get_key_length(type);
+    rv = OPENSSL_BOX_EVP_CIPHER_get_key_length(type);
  err:
-    EVP_MD_CTX_free(c);
+    OPENSSL_BOX_EVP_MD_CTX_free(c);
     OPENSSL_cleanse(md_buf, sizeof(md_buf));
     return rv;
 }

@@ -75,7 +75,7 @@ EVP_MD_CTX *ossl_ml_dsa_mu_init(const ML_DSA_KEY *key, int encode,
     if (key == NULL)
         return NULL;
 
-    md_ctx = EVP_MD_CTX_new();
+    md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md_ctx == NULL)
         return NULL;
 
@@ -104,7 +104,7 @@ EVP_MD_CTX *ossl_ml_dsa_mu_init(const ML_DSA_KEY *key, int encode,
     return md_ctx;
 
 err:
-    EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     return NULL;
 }
 
@@ -193,7 +193,7 @@ static int ml_dsa_sign_internal(const ML_DSA_KEY *priv,
     alloc = OPENSSL_malloc(alloc_len);
     if (alloc == NULL)
         return 0;
-    md_ctx = EVP_MD_CTX_new();
+    md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md_ctx == NULL)
         goto err;
 
@@ -295,7 +295,7 @@ static int ml_dsa_sign_internal(const ML_DSA_KEY *priv,
         break;
     }
 err:
-    EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     OPENSSL_clear_free(alloc, alloc_len);
     OPENSSL_cleanse(rho_prime, sizeof(rho_prime));
     return ret;
@@ -355,7 +355,7 @@ static int ml_dsa_verify_internal(const ML_DSA_KEY *pub,
                                            + num_polys_sig));
     if (alloc == NULL)
         return 0;
-    md_ctx = EVP_MD_CTX_new();
+    md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md_ctx == NULL)
         goto err;
 
@@ -407,7 +407,7 @@ static int ml_dsa_verify_internal(const ML_DSA_KEY *pub,
         && memcmp(c_tilde, sig.c_tilde, c_tilde_len) == 0;
 err:
     OPENSSL_free(alloc);
-    EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     return ret;
 }
 
@@ -458,7 +458,7 @@ int ossl_ml_dsa_sign(const ML_DSA_KEY *priv, int msg_is_mu,
     ret = ml_dsa_sign_internal(priv, mu_ptr, mu_len, rand, rand_len, sig);
 
 err:
-    EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     return ret;
 }
 
@@ -497,6 +497,6 @@ int ossl_ml_dsa_verify(const ML_DSA_KEY *pub, int msg_is_mu,
 
     ret = ml_dsa_verify_internal(pub, mu_ptr, mu_len, sig, sig_len);
 err:
-    EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     return ret;
 }

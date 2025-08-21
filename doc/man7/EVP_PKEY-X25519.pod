@@ -16,7 +16,7 @@ private key I<priv>.
 =head2 Common Keygen Parameters for X25519, X448, ED25519 and ED448
 
 The following parameters can be used during key generation by calling
-EVP_PKEY_CTX_set_params() after calling EVP_PKEY_keygen_init().
+OPENSSL_BOX_EVP_PKEY_CTX_set_params() after calling OPENSSL_BOX_EVP_PKEY_keygen_init().
 
 =over 4
 

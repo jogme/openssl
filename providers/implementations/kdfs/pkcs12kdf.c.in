@@ -62,13 +62,13 @@ static int pkcs12kdf_derive(const unsigned char *pass, size_t passlen,
     int ret = 0, ui, vi;
     EVP_MD_CTX *ctx = NULL;
 
-    ctx = EVP_MD_CTX_new();
+    ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx == NULL) {
         ERR_raise(ERR_LIB_PROV, ERR_R_EVP_LIB);
         goto end;
     }
-    vi = EVP_MD_get_block_size(md_type);
-    ui = EVP_MD_get_size(md_type);
+    vi = OPENSSL_BOX_EVP_MD_get_block_size(md_type);
+    ui = OPENSSL_BOX_EVP_MD_get_size(md_type);
     if (ui <= 0 || vi <= 0) {
         ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_DIGEST_SIZE);
         goto end;
@@ -134,7 +134,7 @@ static int pkcs12kdf_derive(const unsigned char *pass, size_t passlen,
     OPENSSL_free(B);
     OPENSSL_free(D);
     OPENSSL_free(I);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 

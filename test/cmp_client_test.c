@@ -277,7 +277,7 @@ static int test_exec_KUR_ses(int transfer_error, int pubkey, int raverified)
     if (pubkey) {
         EVP_PKEY *key = raverified /* wrong key */ ? server_key : client_key;
 
-        if (!EVP_PKEY_up_ref(key))
+        if (!OPENSSL_BOX_EVP_PKEY_up_ref(key))
             return 0;
 
         OSSL_CMP_CTX_set0_newPkey(fixture->cmp_ctx, 0 /* not priv */, key);
@@ -513,9 +513,9 @@ static int test_exchange_error(void)
 void cleanup_tests(void)
 {
     X509_free(server_cert);
-    EVP_PKEY_free(server_key);
+    OPENSSL_BOX_EVP_PKEY_free(server_key);
     X509_free(client_cert);
-    EVP_PKEY_free(client_key);
+    OPENSSL_BOX_EVP_PKEY_free(client_key);
     OSSL_PROVIDER_unload(default_null_provider);
     OSSL_PROVIDER_unload(provider);
     OSSL_LIB_CTX_free(libctx);

@@ -10,21 +10,21 @@
 /*-
         From: Arne Ansper
 
-        Why BIO_f_reliable?
+        Why OPENSSL_BOX_BIO_f_reliable?
 
         I wrote function which took BIO* as argument, read data from it
         and processed it. Then I wanted to store the input file in
-        encrypted form. OK I pushed BIO_f_cipher to the BIO stack
+        encrypted form. OK I pushed OPENSSL_BOX_BIO_f_cipher to the BIO stack
         and everything was OK. BUT if user types wrong password
-        BIO_f_cipher outputs only garbage and my function crashes. Yes
-        I can and I should fix my function, but BIO_f_cipher is
+        OPENSSL_BOX_BIO_f_cipher outputs only garbage and my function crashes. Yes
+        I can and I should fix my function, but OPENSSL_BOX_BIO_f_cipher is
         easy way to add encryption support to many existing applications
         and it's hard to debug and fix them all.
 
         So I wanted another BIO which would catch the incorrect passwords and
-        file damages which cause garbage on BIO_f_cipher's output.
+        file damages which cause garbage on OPENSSL_BOX_BIO_f_cipher's output.
 
-        The easy way is to push the BIO_f_md and save the checksum at
+        The easy way is to push the OPENSSL_BOX_BIO_f_md and save the checksum at
         the end of the file. However there are several problems with this
         approach:
 
@@ -33,21 +33,21 @@
         must read to the end of the file and verify the checksum before
         letting the application to read the data.
 
-        BIO_f_reliable tries to solve both problems, so that you can
+        OPENSSL_BOX_BIO_f_reliable tries to solve both problems, so that you can
         read and write arbitrary long streams using only fixed amount
         of memory.
 
-        BIO_f_reliable splits data stream into blocks. Each block is prefixed
+        OPENSSL_BOX_BIO_f_reliable splits data stream into blocks. Each block is prefixed
         with its length and suffixed with its digest. So you need only
         several Kbytes of memory to buffer single block before verifying
         its digest.
 
-        BIO_f_reliable goes further and adds several important capabilities:
+        OPENSSL_BOX_BIO_f_reliable goes further and adds several important capabilities:
 
         1) the digest of the block is computed over the whole stream
         -- so nobody can rearrange the blocks or remove or replace them.
 
-        2) to detect invalid passwords right at the start BIO_f_reliable
+        2) to detect invalid passwords right at the start OPENSSL_BOX_BIO_f_reliable
         adds special prefix to the stream. In order to avoid known plain-text
         attacks this prefix is generated as follows:
 
@@ -60,7 +60,7 @@
         reader can now read the seed from stream, hash the same string
         and then compare the digest output.
 
-        Bad things: BIO_f_reliable knows what's going on in EVP_Digest. I
+        Bad things: OPENSSL_BOX_BIO_f_reliable knows what's going on in EVP_Digest. I
         initially wrote and tested this code on x86 machine and wrote the
         digests out in machine-dependent order :( There are people using
         this code and I cannot change this easily without making existing
@@ -123,7 +123,7 @@ static const BIO_METHOD methods_ok = {
     ok_callback_ctrl,
 };
 
-const BIO_METHOD *BIO_f_reliable(void)
+const BIO_METHOD *OPENSSL_BOX_BIO_f_reliable(void)
 {
     return &methods_ok;
 }
@@ -137,7 +137,7 @@ static int ok_new(BIO *bi)
 
     ctx->cont = 1;
     ctx->sigio = 1;
-    ctx->md = EVP_MD_CTX_new();
+    ctx->md = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx->md == NULL) {
         OPENSSL_free(ctx);
         return 0;
@@ -157,7 +157,7 @@ static int ok_free(BIO *a)
 
     ctx = BIO_get_data(a);
 
-    EVP_MD_CTX_free(ctx->md);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx->md);
     OPENSSL_clear_free(ctx, sizeof(BIO_OK_CTX));
     BIO_set_data(a, NULL);
     BIO_set_init(a, 0);
@@ -391,7 +391,7 @@ static long ok_ctrl(BIO *b, int cmd, long num, void *ptr)
     case BIO_C_GET_MD:
         if (BIO_get_init(b)) {
             ppmd = ptr;
-            *ppmd = EVP_MD_CTX_get0_md(ctx->md);
+            *ppmd = OPENSSL_BOX_EVP_MD_CTX_get0_md(ctx->md);
         } else
             ret = 0;
         break;
@@ -439,9 +439,9 @@ static int sig_out(BIO *b)
 
     ctx = BIO_get_data(b);
     md = ctx->md;
-    digest = EVP_MD_CTX_get0_md(md);
-    md_size = EVP_MD_get_size(digest);
-    md_data = EVP_MD_CTX_get0_md_data(md);
+    digest = OPENSSL_BOX_EVP_MD_CTX_get0_md(md);
+    md_size = OPENSSL_BOX_EVP_MD_get_size(digest);
+    md_data = OPENSSL_BOX_EVP_MD_CTX_get0_md_data(md);
 
     if (md_size <= 0)
         goto berr;
@@ -486,10 +486,10 @@ static int sig_in(BIO *b)
     ctx = BIO_get_data(b);
     if ((md = ctx->md) == NULL)
         goto berr;
-    digest = EVP_MD_CTX_get0_md(md);
-    if ((md_size = EVP_MD_get_size(digest)) <= 0)
+    digest = OPENSSL_BOX_EVP_MD_CTX_get0_md(md);
+    if ((md_size = OPENSSL_BOX_EVP_MD_get_size(digest)) <= 0)
         goto berr;
-    md_data = EVP_MD_CTX_get0_md_data(md);
+    md_data = OPENSSL_BOX_EVP_MD_CTX_get0_md_data(md);
 
     if ((int)(ctx->buf_len - ctx->buf_off) < 2 * md_size)
         return 1;
@@ -533,8 +533,8 @@ static int block_out(BIO *b)
 
     ctx = BIO_get_data(b);
     md = ctx->md;
-    digest = EVP_MD_CTX_get0_md(md);
-    md_size = EVP_MD_get_size(digest);
+    digest = OPENSSL_BOX_EVP_MD_CTX_get0_md(md);
+    md_size = OPENSSL_BOX_EVP_MD_get_size(digest);
     if (md_size <= 0)
         goto berr;
 
@@ -566,7 +566,7 @@ static int block_in(BIO *b)
 
     ctx = BIO_get_data(b);
     md = ctx->md;
-    md_size = EVP_MD_get_size(EVP_MD_CTX_get0_md(md));
+    md_size = OPENSSL_BOX_EVP_MD_get_size(OPENSSL_BOX_EVP_MD_CTX_get0_md(md));
     if (md_size <= 0)
         goto berr;
 

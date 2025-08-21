@@ -1215,7 +1215,7 @@ static void *s390x_ecd_keygen25519(struct ecx_gen_ctx *gctx)
     if (sha == NULL)
         goto err;
     j = EVP_Digest(privkey, 32, buff, &sz, sha, NULL);
-    EVP_MD_free(sha);
+    OPENSSL_BOX_EVP_MD_free(sha);
     if (!j)
         goto err;
 
@@ -1281,7 +1281,7 @@ static void *s390x_ecd_keygen448(struct ecx_gen_ctx *gctx)
     if (RAND_priv_bytes_ex(gctx->libctx, privkey, ED448_KEYLEN, 0) <= 0)
         goto err;
 
-    hashctx = EVP_MD_CTX_new();
+    hashctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (hashctx == NULL)
         goto err;
     if (EVP_DigestInit_ex(hashctx, shake, NULL) != 1)
@@ -1300,14 +1300,14 @@ static void *s390x_ecd_keygen448(struct ecx_gen_ctx *gctx)
         goto err;
 
     pubkey[56] |= ((x_dst[0] & 0x01) << 7);
-    EVP_MD_CTX_free(hashctx);
-    EVP_MD_free(shake);
+    OPENSSL_BOX_EVP_MD_CTX_free(hashctx);
+    OPENSSL_BOX_EVP_MD_free(shake);
     key->haspubkey = 1;
     return key;
  err:
     ossl_ecx_key_free(key);
-    EVP_MD_CTX_free(hashctx);
-    EVP_MD_free(shake);
+    OPENSSL_BOX_EVP_MD_CTX_free(hashctx);
+    OPENSSL_BOX_EVP_MD_free(shake);
     return NULL;
 }
 #endif

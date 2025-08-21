@@ -63,7 +63,7 @@ does not.
 A context for CTR DRBG can be obtained by calling:
 
  EVP_RAND *rand = EVP_RAND_fetch(NULL, "CTR-DRBG", NULL);
- EVP_RAND_CTX *rctx = EVP_RAND_CTX_new(rand, NULL);
+ EVP_RAND_CTX *rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
 
 The default CTR-DRBG implementation attempts to fetch the required internal
 algorithms from the provider they are built into (eg the default provider)
@@ -80,8 +80,8 @@ implementation.
  unsigned int strength = 128;
 
  rand = EVP_RAND_fetch(NULL, "CTR-DRBG", NULL);
- rctx = EVP_RAND_CTX_new(rand, NULL);
- EVP_RAND_free(rand);
+ rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
+ OPENSSL_BOX_EVP_RAND_free(rand);
 
  *p++ = OSSL_PARAM_construct_utf8_string(OSSL_DRBG_PARAM_CIPHER,
                                          SN_aes_256_ctr, 0);
@@ -90,7 +90,7 @@ implementation.
 
  EVP_RAND_generate(rctx, bytes, sizeof(bytes), strength, 0, NULL, 0);
 
- EVP_RAND_CTX_free(rctx);
+ OPENSSL_BOX_EVP_RAND_CTX_free(rctx);
 
 =head1 CONFORMING TO
 

@@ -72,7 +72,7 @@ static int rc5_ctrl(EVP_CIPHER_CTX *c, int type, int arg, void *ptr)
 static int r_32_12_16_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
                                const unsigned char *iv, int enc)
 {
-    const int key_len = EVP_CIPHER_CTX_get_key_length(ctx);
+    const int key_len = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx);
 
     if (key_len > 255 || key_len < 0) {
         ERR_raise(ERR_LIB_EVP, EVP_R_BAD_KEY_LENGTH);

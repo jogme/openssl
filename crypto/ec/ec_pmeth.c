@@ -112,7 +112,7 @@ static int pkey_ec_sign(EVP_PKEY_CTX *ctx, unsigned char *sig, size_t *siglen,
      * the "real" key. These calls don't make any modifications that need to
      * be reflected back in the "original" key.
      */
-    EC_KEY *ec = (EC_KEY *)EVP_PKEY_get0_EC_KEY(ctx->pkey);
+    EC_KEY *ec = (EC_KEY *)OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(ctx->pkey);
     const int sig_sz = ECDSA_size(ec);
 
     /* ensure cast to size_t is safe */
@@ -129,7 +129,7 @@ static int pkey_ec_sign(EVP_PKEY_CTX *ctx, unsigned char *sig, size_t *siglen,
         return 0;
     }
 
-    type = (dctx->md != NULL) ? EVP_MD_get_type(dctx->md) : NID_sha1;
+    type = (dctx->md != NULL) ? OPENSSL_BOX_EVP_MD_get_type(dctx->md) : NID_sha1;
 
     ret = ECDSA_sign(type, tbs, (int)tbslen, sig, &sltmp, ec);
 
@@ -150,10 +150,10 @@ static int pkey_ec_verify(EVP_PKEY_CTX *ctx,
      * the "real" key. These calls don't make any modifications that need to
      * be reflected back in the "original" key.
      */
-    EC_KEY *ec = (EC_KEY *)EVP_PKEY_get0_EC_KEY(ctx->pkey);
+    EC_KEY *ec = (EC_KEY *)OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(ctx->pkey);
 
     if (dctx->md)
-        type = EVP_MD_get_type(dctx->md);
+        type = OPENSSL_BOX_EVP_MD_get_type(dctx->md);
     else
         type = NID_sha1;
 
@@ -176,14 +176,14 @@ static int pkey_ec_derive(EVP_PKEY_CTX *ctx, unsigned char *key, size_t *keylen)
         ERR_raise(ERR_LIB_EC, EC_R_KEYS_NOT_SET);
         return 0;
     }
-    eckeypub = EVP_PKEY_get0_EC_KEY(ctx->peerkey);
+    eckeypub = OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(ctx->peerkey);
     if (eckeypub == NULL) {
         ERR_raise(ERR_LIB_EC, EC_R_KEYS_NOT_SET);
         return 0;
     }
 
     eckey = dctx->co_key ? dctx->co_key
-                         : (EC_KEY *)EVP_PKEY_get0_EC_KEY(ctx->pkey);
+                         : (EC_KEY *)OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(ctx->pkey);
 
     if (!key) {
         const EC_GROUP *group;
@@ -273,14 +273,14 @@ static int pkey_ec_ctrl(EVP_PKEY_CTX *ctx, int type, int p1, void *p2)
             if (dctx->cofactor_mode != -1)
                 return dctx->cofactor_mode;
             else {
-                const EC_KEY *ec_key = EVP_PKEY_get0_EC_KEY(ctx->pkey);
+                const EC_KEY *ec_key = OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(ctx->pkey);
                 return EC_KEY_get_flags(ec_key) & EC_FLAG_COFACTOR_ECDH ? 1 : 0;
             }
         } else if (p1 < -1 || p1 > 1)
             return -2;
         dctx->cofactor_mode = p1;
         if (p1 != -1) {
-            EC_KEY *ec_key = (EC_KEY *)EVP_PKEY_get0_EC_KEY(ctx->pkey);
+            EC_KEY *ec_key = (EC_KEY *)OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(ctx->pkey);
 
             /*
              * We discarded the "const" above. This will only work if the key is
@@ -351,17 +351,17 @@ static int pkey_ec_ctrl(EVP_PKEY_CTX *ctx, int type, int p1, void *p2)
         return (int)dctx->kdf_ukmlen;
 
     case EVP_PKEY_CTRL_MD:
-        if (EVP_MD_get_type((const EVP_MD *)p2) != NID_sha1 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_ecdsa_with_SHA1 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha224 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha256 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha384 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha512 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_224 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_256 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_384 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_512 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sm3) {
+        if (OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha1 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_ecdsa_with_SHA1 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha224 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha256 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha384 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha512 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_224 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_256 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_384 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_512 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sm3) {
             ERR_raise(ERR_LIB_EC, EC_R_INVALID_DIGEST_TYPE);
             return 0;
         }
@@ -411,7 +411,7 @@ static int pkey_ec_ctrl_str(EVP_PKEY_CTX *ctx,
         return EVP_PKEY_CTX_set_ec_param_enc(ctx, param_enc);
     } else if (strcmp(type, "ecdh_kdf_md") == 0) {
         const EVP_MD *md;
-        if ((md = EVP_get_digestbyname(value)) == NULL) {
+        if ((md = OPENSSL_BOX_EVP_get_digestbyname(value)) == NULL) {
             ERR_raise(ERR_LIB_EC, EC_R_INVALID_DIGEST);
             return 0;
         }
@@ -463,7 +463,7 @@ static int pkey_ec_keygen(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
     }
     /* Note: if error is returned, we count on caller to free pkey->pkey.ec */
     if (ctx->pkey != NULL)
-        ret = EVP_PKEY_copy_parameters(pkey, ctx->pkey);
+        ret = OPENSSL_BOX_EVP_PKEY_copy_parameters(pkey, ctx->pkey);
     else
         ret = EC_KEY_set_group(ec, dctx->gen_group);
 

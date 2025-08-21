@@ -168,7 +168,7 @@ static int rsa_get_md_size(const PROV_RSA_CTX *prsactx)
     int md_size;
 
     if (prsactx->md != NULL) {
-        md_size = EVP_MD_get_size(prsactx->md);
+        md_size = OPENSSL_BOX_EVP_MD_get_size(prsactx->md);
         if (md_size <= 0)
             return 0;
         return md_size;
@@ -195,9 +195,9 @@ static int rsa_check_padding(const PROV_RSA_CTX *prsactx,
         break;
     case RSA_PKCS1_PSS_PADDING:
         if (rsa_pss_restricted(prsactx))
-            if ((mdname != NULL && !EVP_MD_is_a(prsactx->md, mdname))
+            if ((mdname != NULL && !OPENSSL_BOX_EVP_MD_is_a(prsactx->md, mdname))
                 || (mgf1_mdname != NULL
-                    && !EVP_MD_is_a(prsactx->mgf1_md, mgf1_mdname))) {
+                    && !OPENSSL_BOX_EVP_MD_is_a(prsactx->mgf1_md, mgf1_mdname))) {
                 ERR_raise(ERR_LIB_PROV, PROV_R_DIGEST_NOT_ALLOWED);
                 return 0;
             }
@@ -215,7 +215,7 @@ static int rsa_check_parameters(PROV_RSA_CTX *prsactx, int min_saltlen)
         int max_saltlen;
 
         /* See if minimum salt length exceeds maximum possible */
-        max_saltlen = RSA_size(prsactx->rsa) - EVP_MD_get_size(prsactx->md);
+        max_saltlen = RSA_size(prsactx->rsa) - OPENSSL_BOX_EVP_MD_get_size(prsactx->md);
         if ((RSA_bits(prsactx->rsa) & 0x7) == 1)
             max_saltlen--;
         if (min_saltlen < 0 || min_saltlen > max_saltlen) {
@@ -268,13 +268,13 @@ static int rsa_pss_compute_saltlen(PROV_RSA_CTX *ctx)
      * Provide a way to use at most the digest length, so that the default does
      * not violate FIPS 186-4. */
     if (saltlen == RSA_PSS_SALTLEN_DIGEST) {
-        if ((saltlen = EVP_MD_get_size(ctx->md)) <= 0) {
+        if ((saltlen = OPENSSL_BOX_EVP_MD_get_size(ctx->md)) <= 0) {
             ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_DIGEST);
             return -1;
         }
     } else if (saltlen == RSA_PSS_SALTLEN_AUTO_DIGEST_MAX) {
         saltlen = RSA_PSS_SALTLEN_MAX;
-        if ((saltlenMax = EVP_MD_get_size(ctx->md)) <= 0) {
+        if ((saltlenMax = OPENSSL_BOX_EVP_MD_get_size(ctx->md)) <= 0) {
             ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_DIGEST);
             return -1;
         }
@@ -282,7 +282,7 @@ static int rsa_pss_compute_saltlen(PROV_RSA_CTX *ctx)
     if (saltlen == RSA_PSS_SALTLEN_MAX || saltlen == RSA_PSS_SALTLEN_AUTO) {
         int mdsize, rsasize;
 
-        if ((mdsize = EVP_MD_get_size(ctx->md)) <= 0) {
+        if ((mdsize = OPENSSL_BOX_EVP_MD_get_size(ctx->md)) <= 0) {
             ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_DIGEST);
             return -1;
         }
@@ -400,7 +400,7 @@ static int rsa_setup_md(PROV_RSA_CTX *ctx, const char *mdname,
          * We don't support XOF digests with RSA PSS (yet), so just fail.
          * When we do support them, uncomment the second clause.
          */
-        if (EVP_MD_xof(md)
+        if (OPENSSL_BOX_EVP_MD_xof(md)
                 /* && ctx->pad_mode != RSA_PKCS1_PSS_PADDING */) {
             ERR_raise(ERR_LIB_PROV, PROV_R_XOF_DIGESTS_NOT_ALLOWED);
             goto err;
@@ -429,27 +429,27 @@ static int rsa_setup_md(PROV_RSA_CTX *ctx, const char *mdname,
         }
 
         if (!ctx->flag_allow_md) {
-            if (ctx->mdname[0] != '\0' && !EVP_MD_is_a(md, ctx->mdname)) {
+            if (ctx->mdname[0] != '\0' && !OPENSSL_BOX_EVP_MD_is_a(md, ctx->mdname)) {
                 ERR_raise_data(ERR_LIB_PROV, PROV_R_DIGEST_NOT_ALLOWED,
                                "digest %s != %s", mdname, ctx->mdname);
                 goto err;
             }
-            EVP_MD_free(md);
+            OPENSSL_BOX_EVP_MD_free(md);
             return 1;
         }
 
         if (!ctx->mgf1_md_set) {
-            if (!EVP_MD_up_ref(md)) {
+            if (!OPENSSL_BOX_EVP_MD_up_ref(md)) {
                 goto err;
             }
-            EVP_MD_free(ctx->mgf1_md);
+            OPENSSL_BOX_EVP_MD_free(ctx->mgf1_md);
             ctx->mgf1_md = md;
             ctx->mgf1_mdnid = md_nid;
             OPENSSL_strlcpy(ctx->mgf1_mdname, mdname, sizeof(ctx->mgf1_mdname));
         }
 
-        EVP_MD_CTX_free(ctx->mdctx);
-        EVP_MD_free(ctx->md);
+        OPENSSL_BOX_EVP_MD_CTX_free(ctx->mdctx);
+        OPENSSL_BOX_EVP_MD_free(ctx->md);
 
         ctx->mdctx = NULL;
         ctx->md = md;
@@ -459,7 +459,7 @@ static int rsa_setup_md(PROV_RSA_CTX *ctx, const char *mdname,
 
     return 1;
 err:
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     return 0;
 }
 
@@ -484,18 +484,18 @@ static int rsa_setup_mgf1_md(PROV_RSA_CTX *ctx, const char *mdname,
         if (mdnid <= 0)
             ERR_raise_data(ERR_LIB_PROV, PROV_R_DIGEST_NOT_ALLOWED,
                            "digest=%s", mdname);
-        EVP_MD_free(md);
+        OPENSSL_BOX_EVP_MD_free(md);
         return 0;
     }
     len = OPENSSL_strlcpy(ctx->mgf1_mdname, mdname, sizeof(ctx->mgf1_mdname));
     if (len >= sizeof(ctx->mgf1_mdname)) {
         ERR_raise_data(ERR_LIB_PROV, PROV_R_INVALID_DIGEST,
                        "%s exceeds name buffer length", mdname);
-        EVP_MD_free(md);
+        OPENSSL_BOX_EVP_MD_free(md);
         return 0;
     }
 
-    EVP_MD_free(ctx->mgf1_md);
+    OPENSSL_BOX_EVP_MD_free(ctx->mgf1_md);
     ctx->mgf1_md = md;
     ctx->mgf1_mdnid = mdnid;
     ctx->mgf1_md_set = 1;
@@ -705,7 +705,7 @@ static int rsa_sign_directly(PROV_RSA_CTX *prsactx,
         }
 
 #ifndef FIPS_MODULE
-        if (EVP_MD_is_a(prsactx->md, OSSL_DIGEST_NAME_MDC2)) {
+        if (OPENSSL_BOX_EVP_MD_is_a(prsactx->md, OSSL_DIGEST_NAME_MDC2)) {
             unsigned int sltmp;
 
             if (prsactx->pad_mode != RSA_PKCS1_PADDING) {
@@ -764,13 +764,13 @@ static int rsa_sign_directly(PROV_RSA_CTX *prsactx,
                 if (rsa_pss_restricted(prsactx)) {
                     switch (prsactx->saltlen) {
                     case RSA_PSS_SALTLEN_DIGEST:
-                        if (prsactx->min_saltlen > EVP_MD_get_size(prsactx->md)) {
+                        if (prsactx->min_saltlen > OPENSSL_BOX_EVP_MD_get_size(prsactx->md)) {
                             ERR_raise_data(ERR_LIB_PROV,
                                            PROV_R_PSS_SALTLEN_TOO_SMALL,
                                            "minimum salt length set to %d, "
                                            "but the digest only gives %d",
                                            prsactx->min_saltlen,
-                                           EVP_MD_get_size(prsactx->md));
+                                           OPENSSL_BOX_EVP_MD_get_size(prsactx->md));
                             return 0;
                         }
                         /* FALLTHRU */
@@ -964,10 +964,10 @@ static int rsa_verify_recover(void *vprsactx,
                 ERR_raise(ERR_LIB_PROV, PROV_R_ALGORITHM_MISMATCH);
                 return 0;
             }
-            if (ret != EVP_MD_get_size(prsactx->md)) {
+            if (ret != OPENSSL_BOX_EVP_MD_get_size(prsactx->md)) {
                 ERR_raise_data(ERR_LIB_PROV, PROV_R_INVALID_DIGEST_LENGTH,
                                "Should be %d, but got %d",
-                               EVP_MD_get_size(prsactx->md), ret);
+                               OPENSSL_BOX_EVP_MD_get_size(prsactx->md), ret);
                 return 0;
             }
 
@@ -1211,7 +1211,7 @@ static int rsa_digest_signverify_init(void *vprsactx, const char *mdname,
     prsactx->flag_allow_md = 0;
 
     if (prsactx->mdctx == NULL) {
-        prsactx->mdctx = EVP_MD_CTX_new();
+        prsactx->mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (prsactx->mdctx == NULL)
             goto error;
     }
@@ -1222,7 +1222,7 @@ static int rsa_digest_signverify_init(void *vprsactx, const char *mdname,
     return 1;
 
  error:
-    EVP_MD_CTX_free(prsactx->mdctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(prsactx->mdctx);
     prsactx->mdctx = NULL;
     return 0;
 }
@@ -1323,9 +1323,9 @@ static void rsa_freectx(void *vprsactx)
     if (prsactx == NULL)
         return;
 
-    EVP_MD_CTX_free(prsactx->mdctx);
-    EVP_MD_free(prsactx->md);
-    EVP_MD_free(prsactx->mgf1_md);
+    OPENSSL_BOX_EVP_MD_CTX_free(prsactx->mdctx);
+    OPENSSL_BOX_EVP_MD_free(prsactx->md);
+    OPENSSL_BOX_EVP_MD_free(prsactx->mgf1_md);
     OPENSSL_free(prsactx->sig);
     OPENSSL_free(prsactx->propq);
     free_tbuf(prsactx);
@@ -1358,18 +1358,18 @@ static void *rsa_dupctx(void *vprsactx)
         goto err;
     dstctx->rsa = srcctx->rsa;
 
-    if (srcctx->md != NULL && !EVP_MD_up_ref(srcctx->md))
+    if (srcctx->md != NULL && !OPENSSL_BOX_EVP_MD_up_ref(srcctx->md))
         goto err;
     dstctx->md = srcctx->md;
 
-    if (srcctx->mgf1_md != NULL && !EVP_MD_up_ref(srcctx->mgf1_md))
+    if (srcctx->mgf1_md != NULL && !OPENSSL_BOX_EVP_MD_up_ref(srcctx->mgf1_md))
         goto err;
     dstctx->mgf1_md = srcctx->mgf1_md;
 
     if (srcctx->mdctx != NULL) {
-        dstctx->mdctx = EVP_MD_CTX_new();
+        dstctx->mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (dstctx->mdctx == NULL
-                || !EVP_MD_CTX_copy_ex(dstctx->mdctx, srcctx->mdctx))
+                || !OPENSSL_BOX_EVP_MD_CTX_copy_ex(dstctx->mdctx, srcctx->mdctx))
             goto err;
     }
 
@@ -1727,13 +1727,13 @@ static int rsa_set_ctx_params(void *vprsactx, const OSSL_PARAM params[])
                 }
                 break;
             case RSA_PSS_SALTLEN_DIGEST:
-                if (prsactx->min_saltlen > EVP_MD_get_size(prsactx->md)) {
+                if (prsactx->min_saltlen > OPENSSL_BOX_EVP_MD_get_size(prsactx->md)) {
                     ERR_raise_data(ERR_LIB_PROV,
                                    PROV_R_PSS_SALTLEN_TOO_SMALL,
                                    "Should be more than %d, but would be "
                                    "set to match digest size (%d)",
                                    prsactx->min_saltlen,
-                                   EVP_MD_get_size(prsactx->md));
+                                   OPENSSL_BOX_EVP_MD_get_size(prsactx->md));
                     return 0;
                 }
                 break;
@@ -1806,7 +1806,7 @@ static int rsa_get_ctx_md_params(void *vprsactx, OSSL_PARAM *params)
     if (prsactx->mdctx == NULL)
         return 0;
 
-    return EVP_MD_CTX_get_params(prsactx->mdctx, params);
+    return OPENSSL_BOX_EVP_MD_CTX_get_params(prsactx->mdctx, params);
 }
 
 static const OSSL_PARAM *rsa_gettable_ctx_md_params(void *vprsactx)
@@ -1816,7 +1816,7 @@ static const OSSL_PARAM *rsa_gettable_ctx_md_params(void *vprsactx)
     if (prsactx->md == NULL)
         return 0;
 
-    return EVP_MD_gettable_ctx_params(prsactx->md);
+    return OPENSSL_BOX_EVP_MD_gettable_ctx_params(prsactx->md);
 }
 
 static int rsa_set_ctx_md_params(void *vprsactx, const OSSL_PARAM params[])
@@ -1826,7 +1826,7 @@ static int rsa_set_ctx_md_params(void *vprsactx, const OSSL_PARAM params[])
     if (prsactx->mdctx == NULL)
         return 0;
 
-    return EVP_MD_CTX_set_params(prsactx->mdctx, params);
+    return OPENSSL_BOX_EVP_MD_CTX_set_params(prsactx->mdctx, params);
 }
 
 static const OSSL_PARAM *rsa_settable_ctx_md_params(void *vprsactx)
@@ -1836,7 +1836,7 @@ static const OSSL_PARAM *rsa_settable_ctx_md_params(void *vprsactx)
     if (prsactx->md == NULL)
         return 0;
 
-    return EVP_MD_settable_ctx_params(prsactx->md);
+    return OPENSSL_BOX_EVP_MD_settable_ctx_params(prsactx->md);
 }
 
 const OSSL_DISPATCH ossl_rsa_signature_functions[] = {
@@ -1926,7 +1926,7 @@ static int rsa_sigalg_signverify_init(void *vprsactx, void *vrsa,
     prsactx->flag_allow_md = 0;
 
     if (prsactx->mdctx == NULL) {
-        prsactx->mdctx = EVP_MD_CTX_new();
+        prsactx->mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (prsactx->mdctx == NULL)
             goto error;
     }
@@ -1937,7 +1937,7 @@ static int rsa_sigalg_signverify_init(void *vprsactx, void *vrsa,
     return 1;
 
  error:
-    EVP_MD_CTX_free(prsactx->mdctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(prsactx->mdctx);
     prsactx->mdctx = NULL;
     return 0;
 }

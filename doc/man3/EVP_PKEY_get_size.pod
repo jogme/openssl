@@ -2,8 +2,8 @@
 
 =head1 NAME
 
-EVP_PKEY_get_size, EVP_PKEY_get_bits, EVP_PKEY_get_security_bits,
-EVP_PKEY_bits, EVP_PKEY_security_bits, EVP_PKEY_get_security_category,
+OPENSSL_BOX_EVP_PKEY_get_size, OPENSSL_BOX_EVP_PKEY_get_bits, OPENSSL_BOX_EVP_PKEY_get_security_bits,
+EVP_PKEY_bits, EVP_PKEY_security_bits, OPENSSL_BOX_EVP_PKEY_get_security_category,
 EVP_PKEY_size
 - EVP_PKEY information functions
 
@@ -11,43 +11,43 @@ EVP_PKEY_size
 
  #include <openssl/evp.h>
 
- int EVP_PKEY_get_size(const EVP_PKEY *pkey);
- int EVP_PKEY_get_bits(const EVP_PKEY *pkey);
- int EVP_PKEY_get_security_bits(const EVP_PKEY *pkey);
- int EVP_PKEY_get_security_category(const EVP_PKEY *pkey);
+ int OPENSSL_BOX_EVP_PKEY_get_size(const EVP_PKEY *pkey);
+ int OPENSSL_BOX_EVP_PKEY_get_bits(const EVP_PKEY *pkey);
+ int OPENSSL_BOX_EVP_PKEY_get_security_bits(const EVP_PKEY *pkey);
+ int OPENSSL_BOX_EVP_PKEY_get_security_category(const EVP_PKEY *pkey);
 
- #define EVP_PKEY_bits EVP_PKEY_get_bits
- #define EVP_PKEY_security_bits EVP_PKEY_get_security_bits
- #define EVP_PKEY_size EVP_PKEY_get_size
+ #define EVP_PKEY_bits OPENSSL_BOX_EVP_PKEY_get_bits
+ #define EVP_PKEY_security_bits OPENSSL_BOX_EVP_PKEY_get_security_bits
+ #define EVP_PKEY_size OPENSSL_BOX_EVP_PKEY_get_size
 
 =head1 DESCRIPTION
 
-EVP_PKEY_get_size() returns the maximum suitable size for the output
+OPENSSL_BOX_EVP_PKEY_get_size() returns the maximum suitable size for the output
 buffers for almost all operations that can be done with I<pkey>.
 This corresponds to the provider parameter B<OSSL_PKEY_PARAM_MAX_SIZE>.
 The primary documented use is with L<EVP_SignFinal(3)> and
 L<EVP_SealInit(3)>, but it isn't limited there.  The returned size is
 also large enough for the output buffer of L<EVP_PKEY_sign(3)>,
-L<EVP_PKEY_encrypt(3)>, L<EVP_PKEY_decrypt(3)>, L<EVP_PKEY_derive(3)>.
+L<EVP_PKEY_encrypt(3)>, L<EVP_PKEY_decrypt(3)>, L<OPENSSL_BOX_EVP_PKEY_derive(3)>.
 
 It must be stressed that, unless the documentation for the operation
 that's being performed says otherwise, the size returned by
-EVP_PKEY_get_size() is only preliminary and not exact, so the final
+OPENSSL_BOX_EVP_PKEY_get_size() is only preliminary and not exact, so the final
 contents of the target buffer may be smaller.  It is therefore crucial
 to take note of the size given back by the function that performs the
 operation, such as L<EVP_PKEY_sign(3)> (the I<siglen> argument will
 receive that length), to avoid bugs.
 
-EVP_PKEY_get_bits() returns the cryptographic length of the cryptosystem
+OPENSSL_BOX_EVP_PKEY_get_bits() returns the cryptographic length of the cryptosystem
 to which the key in I<pkey> belongs, in bits.  Note that the definition
 of cryptographic length is specific to the key cryptosystem.
 This length corresponds to the provider parameter B<OSSL_PKEY_PARAM_BITS>.
 
-EVP_PKEY_get_security_bits() returns the number of security bits of the given
+OPENSSL_BOX_EVP_PKEY_get_security_bits() returns the number of security bits of the given
 I<pkey>, bits of security is defined in NIST SP800-57.
 This corresponds to the provider parameter B<OSSL_PKEY_PARAM_SECURITY_BITS>.
 
-EVP_PKEY_get_security_category() returns the
+OPENSSL_BOX_EVP_PKEY_get_security_category() returns the
 L<post-quantum security category|https://nvlpubs.nist.gov/nistpubs/ir/2024/NIST.IR.8547.ipd.pdf>
 as defined by NIST.
 The post-quantum security category is an integer value from 0 to 5 that
@@ -84,10 +84,10 @@ offered by the existing standards in symmetric cryptography:
 
 =head1 RETURN VALUES
 
-EVP_PKEY_get_size(), EVP_PKEY_get_bits() and EVP_PKEY_get_security_bits()
+OPENSSL_BOX_EVP_PKEY_get_size(), OPENSSL_BOX_EVP_PKEY_get_bits() and OPENSSL_BOX_EVP_PKEY_get_security_bits()
 return a positive number, or 0 if this size isn't available.
 
-EVP_PKEY_get_security_category() returns the post-quantum security category
+OPENSSL_BOX_EVP_PKEY_get_security_category() returns the post-quantum security category
 which is an integer in the range zero to five inclusive.  It returns -1 if
 the security category information isn't available.
 For all classical algorithms, 0 is returned meaning that they are not
@@ -96,17 +96,17 @@ considered to be quantum safe.
 =head1 NOTES
 
 Most functions that have an output buffer and are mentioned with
-EVP_PKEY_get_size() have a functionality where you can pass NULL for the
+OPENSSL_BOX_EVP_PKEY_get_size() have a functionality where you can pass NULL for the
 buffer and still pass a pointer to an integer and get the exact size
 that this function call delivers in the context that it's called in.
 This allows those functions to be called twice, once to find out the
 exact buffer size, then allocate the buffer in between, and call that
 function again actually output the data.  For those functions, it
-isn't strictly necessary to call EVP_PKEY_get_size() to find out the
+isn't strictly necessary to call OPENSSL_BOX_EVP_PKEY_get_size() to find out the
 buffer size, but may be useful in cases where it's desirable to know
 the upper limit in advance.
 
-It should also be especially noted that EVP_PKEY_get_size() shouldn't be
+It should also be especially noted that OPENSSL_BOX_EVP_PKEY_get_size() shouldn't be
 used to get the output size for EVP_DigestSignFinal(), according to
 L<EVP_DigestSignFinal(3)/NOTES>.
 
@@ -118,7 +118,7 @@ L<EVP_SealInit(3)>,
 L<EVP_PKEY_sign(3)>,
 L<EVP_PKEY_encrypt(3)>,
 L<EVP_PKEY_decrypt(3)>,
-L<EVP_PKEY_derive(3)>
+L<OPENSSL_BOX_EVP_PKEY_derive(3)>
 
 =head1 HISTORY
 
@@ -126,7 +126,7 @@ The EVP_PKEY_bits(), EVP_PKEY_security_bits(), and EVP_PKEY_size() functions
 were renamed to include C<get> in their names in OpenSSL 3.0, respectively.
 The old names are kept as non-deprecated alias macros.
 
-EVP_PKEY_get_security_category() was added in OpenSSL 3.6.
+OPENSSL_BOX_EVP_PKEY_get_security_category() was added in OpenSSL 3.6.
 
 =head1 COPYRIGHT
 

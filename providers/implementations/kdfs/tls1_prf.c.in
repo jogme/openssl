@@ -145,8 +145,8 @@ static void kdf_tls1_prf_reset(void *vctx)
     TLS1_PRF *ctx = (TLS1_PRF *)vctx;
     void *provctx = ctx->provctx;
 
-    EVP_MAC_CTX_free(ctx->P_hash);
-    EVP_MAC_CTX_free(ctx->P_sha1);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx->P_hash);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx->P_sha1);
     OPENSSL_clear_free(ctx->sec, ctx->seclen);
     OPENSSL_clear_free(ctx->seed, ctx->seedlen);
     memset(ctx, 0, sizeof(*ctx));
@@ -161,10 +161,10 @@ static void *kdf_tls1_prf_dup(void *vctx)
     dest = kdf_tls1_prf_new(src->provctx);
     if (dest != NULL) {
         if (src->P_hash != NULL
-                    && (dest->P_hash = EVP_MAC_CTX_dup(src->P_hash)) == NULL)
+                    && (dest->P_hash = OPENSSL_BOX_EVP_MAC_CTX_dup(src->P_hash)) == NULL)
             goto err;
         if (src->P_sha1 != NULL
-                    && (dest->P_sha1 = EVP_MAC_CTX_dup(src->P_sha1)) == NULL)
+                    && (dest->P_sha1 = OPENSSL_BOX_EVP_MAC_CTX_dup(src->P_sha1)) == NULL)
             goto err;
         if (!ossl_prov_memdup(src->sec, src->seclen, &dest->sec, &dest->seclen))
             goto err;
@@ -218,9 +218,9 @@ static int fips_digest_check_passed(TLS1_PRF *ctx, const EVP_MD *md)
      * specified in FIPS 180-3. ACVP also only lists the same set of hash
      * functions.
      */
-    int digest_unapproved = !EVP_MD_is_a(md, SN_sha256)
-        && !EVP_MD_is_a(md, SN_sha384)
-        && !EVP_MD_is_a(md, SN_sha512);
+    int digest_unapproved = !OPENSSL_BOX_EVP_MD_is_a(md, SN_sha256)
+        && !OPENSSL_BOX_EVP_MD_is_a(md, SN_sha384)
+        && !OPENSSL_BOX_EVP_MD_is_a(md, SN_sha512);
 
     if (digest_unapproved) {
         if (!OSSL_FIPS_IND_ON_UNAPPROVED(ctx, OSSL_FIPS_IND_SETTABLE1,
@@ -335,7 +335,7 @@ static int kdf_tls1_prf_set_ctx_params(void *vctx, const OSSL_PARAM params[])
                                        OSSL_DIGEST_NAME_SHA1, libctx))
                 return 0;
         } else {
-            EVP_MAC_CTX_free(ctx->P_sha1);
+            OPENSSL_BOX_EVP_MAC_CTX_free(ctx->P_sha1);
             if (!ossl_prov_macctx_load(&ctx->P_hash, NULL, NULL, p.digest,
                                        p.propq, p.engine,
                                        OSSL_MAC_NAME_HMAC, NULL, NULL, libctx))
@@ -347,7 +347,7 @@ static int kdf_tls1_prf_set_ctx_params(void *vctx, const OSSL_PARAM params[])
             return 0;
 
         md = ossl_prov_digest_md(&digest);
-        if (EVP_MD_xof(md)) {
+        if (OPENSSL_BOX_EVP_MD_xof(md)) {
             ERR_raise(ERR_LIB_PROV, PROV_R_XOF_DIGESTS_NOT_ALLOWED);
             ossl_prov_digest_reset(&digest);
             return 0;
@@ -505,36 +505,36 @@ static int tls1_prf_P_hash(EVP_MAC_CTX *ctx_init,
 
     if (!EVP_MAC_init(ctx_init, sec, sec_len, NULL))
         goto err;
-    chunk = EVP_MAC_CTX_get_mac_size(ctx_init);
+    chunk = OPENSSL_BOX_EVP_MAC_CTX_get_mac_size(ctx_init);
     if (chunk == 0)
         goto err;
     /* A(0) = seed */
-    ctx_Ai = EVP_MAC_CTX_dup(ctx_init);
+    ctx_Ai = OPENSSL_BOX_EVP_MAC_CTX_dup(ctx_init);
     if (ctx_Ai == NULL)
         goto err;
-    if (seed != NULL && !EVP_MAC_update(ctx_Ai, seed, seed_len))
+    if (seed != NULL && !OPENSSL_BOX_EVP_MAC_update(ctx_Ai, seed, seed_len))
         goto err;
 
     for (;;) {
         /* calc: A(i) = HMAC_<hash>(secret, A(i-1)) */
         if (!EVP_MAC_final(ctx_Ai, Ai, &Ai_len, sizeof(Ai)))
             goto err;
-        EVP_MAC_CTX_free(ctx_Ai);
+        OPENSSL_BOX_EVP_MAC_CTX_free(ctx_Ai);
         ctx_Ai = NULL;
 
         /* calc next chunk: HMAC_<hash>(secret, A(i) + seed) */
-        ctx = EVP_MAC_CTX_dup(ctx_init);
+        ctx = OPENSSL_BOX_EVP_MAC_CTX_dup(ctx_init);
         if (ctx == NULL)
             goto err;
-        if (!EVP_MAC_update(ctx, Ai, Ai_len))
+        if (!OPENSSL_BOX_EVP_MAC_update(ctx, Ai, Ai_len))
             goto err;
         /* save state for calculating next A(i) value */
         if (olen > chunk) {
-            ctx_Ai = EVP_MAC_CTX_dup(ctx);
+            ctx_Ai = OPENSSL_BOX_EVP_MAC_CTX_dup(ctx);
             if (ctx_Ai == NULL)
                 goto err;
         }
-        if (seed != NULL && !EVP_MAC_update(ctx, seed, seed_len))
+        if (seed != NULL && !OPENSSL_BOX_EVP_MAC_update(ctx, seed, seed_len))
             goto err;
         if (olen <= chunk) {
             /* last chunk - use Ai as temp bounce buffer */
@@ -545,15 +545,15 @@ static int tls1_prf_P_hash(EVP_MAC_CTX *ctx_init,
         }
         if (!EVP_MAC_final(ctx, out, NULL, olen))
             goto err;
-        EVP_MAC_CTX_free(ctx);
+        OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
         ctx = NULL;
         out += chunk;
         olen -= chunk;
     }
     ret = 1;
  err:
-    EVP_MAC_CTX_free(ctx);
-    EVP_MAC_CTX_free(ctx_Ai);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx_Ai);
     OPENSSL_cleanse(Ai, sizeof(Ai));
     return ret;
 }

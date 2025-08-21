@@ -65,7 +65,7 @@ is done before generating the signature value and setting it into I<signature>.
 The B<OSSL_LIB_CTX> specified in I<libctx> and the property query string
 specified in I<props> are used when searching for algorithms in providers.
 The optional parameter I<id> can be NULL, but can be set for special key types.
-See EVP_PKEY_CTX_set1_id() for further info.
+See OPENSSL_BOX_EVP_PKEY_CTX_set1_id() for further info.
 
 ASN1_item_sign() is similar to ASN1_item_sign_ex() but uses default values of
 NULL for the I<id>, I<libctx> and I<propq>.
@@ -80,7 +80,7 @@ converting it to der format using the ASN.1 structure I<it>.
 The B<OSSL_LIB_CTX> specified in I<libctx> and the property query string
 specified in I<props> are used when searching for algorithms in providers.
 The optional parameter I<id> can be NULL, but can be set for special key types.
-See EVP_PKEY_CTX_set1_id() for further info.
+See OPENSSL_BOX_EVP_PKEY_CTX_set1_id() for further info.
 
 ASN1_item_verify() is similar to ASN1_item_verify_ex() but uses default values of
 NULL for the I<id>, I<libctx> and I<propq>.
@@ -165,7 +165,7 @@ then output in DER format and then loaded back in and verified.
         goto err;
 
     /* Set the key and digest used for signing */
-    sctx = EVP_MD_CTX_new();
+    sctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (sctx == NULL
         || !EVP_DigestSignInit_ex(sctx, NULL, mdname, NULL, NULL, pkey))
         goto err;
@@ -191,7 +191,7 @@ then output in DER format and then loaded back in and verified.
         goto err;
 
     /* Set the key and digest used for verifying */
-    vctx = EVP_MD_CTX_new();
+    vctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (vctx == NULL
         || !EVP_DigestVerifyInit_ex(vctx, NULL, mdname, NULL, NULL, pkey))
         goto err;
@@ -208,8 +208,8 @@ err:
     OPENSSL_free(obj_der);
     MyObject_free(loaded_obj);
     MyObject_free(obj);
-    EVP_MD_CTX_free(sctx);
-    EVP_MD_CTX_free(vctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(sctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(vctx);
     return ret;
  }
 

@@ -164,16 +164,16 @@ static int test_provider_status(void)
         goto err;
     if (!TEST_ptr(fetch = EVP_MD_fetch(libctx, "SHA256", NULL)))
         goto err;
-    EVP_MD_free(fetch);
+    OPENSSL_BOX_EVP_MD_free(fetch);
     fetch = NULL;
     /* Use RNG before triggering on-demand self tests */
     if (!TEST_ptr((pctx = EVP_PKEY_CTX_new_from_name(libctx, "RSA", NULL)))
-        || !TEST_int_gt(EVP_PKEY_keygen_init(pctx), 0)
+        || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_keygen_init(pctx), 0)
         || !TEST_int_gt(EVP_PKEY_CTX_set_rsa_keygen_bits(pctx, 2048), 0)
-        || !TEST_int_gt(EVP_PKEY_keygen(pctx, &pkey), 0))
+        || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_keygen(pctx, &pkey), 0))
         goto err;
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     pkey = NULL;
     pctx = NULL;
 
@@ -196,7 +196,7 @@ static int test_provider_status(void)
 
     ret = 1;
 err:
-    EVP_MD_free(fetch);
+    OPENSSL_BOX_EVP_MD_free(fetch);
     OSSL_PROVIDER_unload(prov);
     return ret;
 }

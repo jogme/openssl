@@ -50,7 +50,7 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
     }
 
     /* Create MD context used for signing. */
-    mctx = EVP_MD_CTX_new();
+    mctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (mctx == NULL) {
         fprintf(stderr, "Failed to create MD context\n");
         goto end;
@@ -71,7 +71,7 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
      * Feed data to be signed into the algorithm. This may
      * be called multiple times.
      */
-    if (EVP_DigestSignUpdate(mctx, test_message, sizeof(test_message)) == 0) {
+    if (OPENSSL_BOX_EVP_DigestSignUpdate(mctx, test_message, sizeof(test_message)) == 0) {
         fprintf(stderr, "Failed to hash message into signing context\n");
         goto end;
     }
@@ -97,8 +97,8 @@ static int sign(OSSL_LIB_CTX *libctx, unsigned char **sig, size_t *sig_len)
 
     ret = 1;
 end:
-    EVP_MD_CTX_free(mctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
 
     if (ret == 0)
         OPENSSL_free(*sig);
@@ -128,7 +128,7 @@ static int verify(OSSL_LIB_CTX *libctx, const unsigned char *sig, size_t sig_len
     }
 
     /* Create MD context used for verification. */
-    mctx = EVP_MD_CTX_new();
+    mctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (mctx == NULL) {
         fprintf(stderr, "Failed to create MD context\n");
         goto end;
@@ -149,7 +149,7 @@ static int verify(OSSL_LIB_CTX *libctx, const unsigned char *sig, size_t sig_len
      * Feed data to be signed into the algorithm. This may
      * be called multiple times.
      */
-    if (EVP_DigestVerifyUpdate(mctx, test_message, sizeof(test_message)) == 0) {
+    if (OPENSSL_BOX_EVP_DigestVerifyUpdate(mctx, test_message, sizeof(test_message)) == 0) {
         fprintf(stderr, "Failed to hash message into signing context\n");
         goto end;
     }
@@ -163,8 +163,8 @@ static int verify(OSSL_LIB_CTX *libctx, const unsigned char *sig, size_t sig_len
 
     ret = 1;
 end:
-    EVP_MD_CTX_free(mctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 

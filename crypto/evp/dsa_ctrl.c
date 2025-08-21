@@ -39,7 +39,7 @@ int EVP_PKEY_CTX_set_dsa_paramgen_type(EVP_PKEY_CTX *ctx, const char *name)
                                             (char *)name, 0);
     *p++ = OSSL_PARAM_construct_end();
 
-    return EVP_PKEY_CTX_set_params(ctx, params);
+    return OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, params);
 }
 
 int EVP_PKEY_CTX_set_dsa_paramgen_gindex(EVP_PKEY_CTX *ctx, int gindex)
@@ -53,7 +53,7 @@ int EVP_PKEY_CTX_set_dsa_paramgen_gindex(EVP_PKEY_CTX *ctx, int gindex)
     *p++ = OSSL_PARAM_construct_int(OSSL_PKEY_PARAM_FFC_GINDEX, &gindex);
     *p++ = OSSL_PARAM_construct_end();
 
-    return EVP_PKEY_CTX_set_params(ctx, params);
+    return OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, params);
 }
 
 int EVP_PKEY_CTX_set_dsa_paramgen_seed(EVP_PKEY_CTX *ctx,
@@ -70,7 +70,7 @@ int EVP_PKEY_CTX_set_dsa_paramgen_seed(EVP_PKEY_CTX *ctx,
                                              (void *)seed, seedlen);
     *p++ = OSSL_PARAM_construct_end();
 
-    return EVP_PKEY_CTX_set_params(ctx, params);
+    return OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, params);
 }
 
 int EVP_PKEY_CTX_set_dsa_paramgen_bits(EVP_PKEY_CTX *ctx, int nbits)
@@ -85,7 +85,7 @@ int EVP_PKEY_CTX_set_dsa_paramgen_bits(EVP_PKEY_CTX *ctx, int nbits)
     *p++ = OSSL_PARAM_construct_size_t(OSSL_PKEY_PARAM_FFC_PBITS, &bits);
     *p++ = OSSL_PARAM_construct_end();
 
-    return EVP_PKEY_CTX_set_params(ctx, params);
+    return OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, params);
 }
 
 int EVP_PKEY_CTX_set_dsa_paramgen_q_bits(EVP_PKEY_CTX *ctx, int qbits)
@@ -100,7 +100,7 @@ int EVP_PKEY_CTX_set_dsa_paramgen_q_bits(EVP_PKEY_CTX *ctx, int qbits)
     *p++ = OSSL_PARAM_construct_size_t(OSSL_PKEY_PARAM_FFC_QBITS, &bits2);
     *p++ = OSSL_PARAM_construct_end();
 
-    return EVP_PKEY_CTX_set_params(ctx, params);
+    return OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, params);
 }
 
 int EVP_PKEY_CTX_set_dsa_paramgen_md_props(EVP_PKEY_CTX *ctx,
@@ -120,7 +120,7 @@ int EVP_PKEY_CTX_set_dsa_paramgen_md_props(EVP_PKEY_CTX *ctx,
                                                 (char *)md_properties, 0);
     *p++ = OSSL_PARAM_construct_end();
 
-    return EVP_PKEY_CTX_set_params(ctx, params);
+    return OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, params);
 }
 
 #if !defined(FIPS_MODULE)

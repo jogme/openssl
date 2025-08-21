@@ -61,18 +61,18 @@ static int calculate_digest(const EVP_MD *md, const char *msg, size_t len,
     EVP_MD_CTX *ctx;
     int ret = 0;
 
-    if (!TEST_ptr(ctx = EVP_MD_CTX_new())
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_MD_CTX_new())
             || !TEST_true(EVP_DigestInit_ex(ctx, md, NULL))
             || !TEST_true(EVP_DigestUpdate(ctx, msg, len))
             || !TEST_true(EVP_DigestFinal_ex(ctx, out, NULL))
             || !TEST_mem_eq(out, SHA256_DIGEST_LENGTH, exptd,
                             SHA256_DIGEST_LENGTH)
-            || !TEST_true(md == EVP_MD_CTX_get0_md(ctx)))
+            || !TEST_true(md == OPENSSL_BOX_EVP_MD_CTX_get0_md(ctx)))
         goto err;
 
     ret = 1;
  err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -168,10 +168,10 @@ static int test_md(const EVP_MD *md)
     };
 
     return TEST_ptr(md)
-        && TEST_true(EVP_MD_is_a(md, "SHA256"))
+        && TEST_true(OPENSSL_BOX_EVP_MD_is_a(md, "SHA256"))
         && TEST_true(calculate_digest(md, testmsg, sizeof(testmsg), exptd))
-        && TEST_int_eq(EVP_MD_get_size(md), SHA256_DIGEST_LENGTH)
-        && TEST_int_eq(EVP_MD_get_block_size(md), SHA256_CBLOCK);
+        && TEST_int_eq(OPENSSL_BOX_EVP_MD_get_size(md), SHA256_DIGEST_LENGTH)
+        && TEST_int_eq(OPENSSL_BOX_EVP_MD_get_block_size(md), SHA256_CBLOCK);
 }
 
 static int test_implicit_EVP_MD_fetch(void)
@@ -181,7 +181,7 @@ static int test_implicit_EVP_MD_fetch(void)
     int ret = 0;
 
     ret = (use_default_ctx == 0 || load_providers(&ctx, prov))
-        && test_md(EVP_sha256());
+        && test_md(OPENSSL_BOX_EVP_sha256());
 
     unload_providers(&ctx, prov);
     return ret;
@@ -202,11 +202,11 @@ static int test_explicit_EVP_MD_fetch(const char *id)
         if (!test_md(md))
             goto err;
 
-        /* Also test EVP_MD_up_ref() while we're doing this */
-        if (!TEST_true(EVP_MD_up_ref(md)))
+        /* Also test OPENSSL_BOX_EVP_MD_up_ref() while we're doing this */
+        if (!TEST_true(OPENSSL_BOX_EVP_MD_up_ref(md)))
             goto err;
         /* Ref count should now be 2. Release first one here */
-        EVP_MD_free(md);
+        OPENSSL_BOX_EVP_MD_free(md);
     } else {
         if (!TEST_ptr_null(md))
             goto err;
@@ -214,7 +214,7 @@ static int test_explicit_EVP_MD_fetch(const char *id)
     ret = 1;
 
  err:
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     unload_providers(&ctx, prov);
     return ret;
 }
@@ -268,7 +268,7 @@ static int encrypt_decrypt(const EVP_CIPHER *cipher, const unsigned char *msg,
     unsigned char ct[64], pt[64];
 
     memset(key, 0, sizeof(key));
-    if (!TEST_ptr(ctx = EVP_CIPHER_CTX_new())
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
             || !TEST_true(EVP_CipherInit_ex(ctx, cipher, NULL, key, NULL, 1))
             || !TEST_true(EVP_CipherUpdate(ctx, ct, &ctlen, msg, (int)len))
             || !TEST_true(EVP_CipherFinal_ex(ctx, ct, &ctlen))
@@ -280,7 +280,7 @@ static int encrypt_decrypt(const EVP_CIPHER *cipher, const unsigned char *msg,
 
     ret = 1;
 err:
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     return ret;
 }
 
@@ -299,7 +299,7 @@ static int test_implicit_EVP_CIPHER_fetch(void)
     int ret = 0;
 
     ret = (use_default_ctx == 0 || load_providers(&ctx, prov))
-        && test_cipher(EVP_aes_128_cbc());
+        && test_cipher(OPENSSL_BOX_EVP_aes_128_cbc());
 
     unload_providers(&ctx, prov);
     return ret;
@@ -320,17 +320,17 @@ static int test_explicit_EVP_CIPHER_fetch(const char *id)
         if (!test_cipher(cipher))
             goto err;
 
-        if (!TEST_true(EVP_CIPHER_up_ref(cipher)))
+        if (!TEST_true(OPENSSL_BOX_EVP_CIPHER_up_ref(cipher)))
             goto err;
         /* Ref count should now be 2. Release first one here */
-        EVP_CIPHER_free(cipher);
+        OPENSSL_BOX_EVP_CIPHER_free(cipher);
     } else {
         if (!TEST_ptr_null(cipher))
             goto err;
     }
     ret = 1;
 err:
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     unload_providers(&ctx, prov);
     return ret;
 }

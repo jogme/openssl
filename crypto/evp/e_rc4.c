@@ -28,7 +28,7 @@ typedef struct {
     RC4_KEY ks;                 /* working key */
 } EVP_RC4_KEY;
 
-# define data(ctx) ((EVP_RC4_KEY *)EVP_CIPHER_CTX_get_cipher_data(ctx))
+# define data(ctx) ((EVP_RC4_KEY *)OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx))
 
 static int rc4_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
                         const unsigned char *iv, int enc);
@@ -64,12 +64,12 @@ static const EVP_CIPHER r4_40_cipher = {
     NULL
 };
 
-const EVP_CIPHER *EVP_rc4(void)
+const EVP_CIPHER *OPENSSL_BOX_EVP_rc4(void)
 {
     return &r4_cipher;
 }
 
-const EVP_CIPHER *EVP_rc4_40(void)
+const EVP_CIPHER *OPENSSL_BOX_EVP_rc4_40(void)
 {
     return &r4_40_cipher;
 }
@@ -79,7 +79,7 @@ static int rc4_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
 {
     int keylen;
 
-    if ((keylen = EVP_CIPHER_CTX_get_key_length(ctx)) <= 0)
+    if ((keylen = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx)) <= 0)
         return 0;
     RC4_set_key(&data(ctx)->ks, keylen, key);
     return 1;

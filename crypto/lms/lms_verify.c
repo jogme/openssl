@@ -68,7 +68,7 @@ int lms_sig_compute_tc_from_path(const unsigned char *paths, uint32_t n,
          *   Tc(parent) = H(I || node_q || 0x8383 || paths[i][n] || Tc(right) OR
          *   Tc(parent) = H(I || node_q || 0x8383 || Tc(left) || paths[i][n])
          */
-        if (!EVP_MD_CTX_copy_ex(ctx, ctxI)
+        if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx, ctxI)
                 || !EVP_DigestUpdate(ctx, qbuf, sizeof(qbuf))
                 || !EVP_DigestUpdate(ctx, d_intr, sizeof(d_intr)))
             goto err;
@@ -157,7 +157,7 @@ int ossl_lms_sig_verify(const LMS_SIG *lms_sig, const LMS_KEY *pub,
      */
     if (!EVP_DigestInit_ex2(ctx, NULL, NULL)
             || !EVP_DigestUpdate(ctx, pub->Id, LMS_SIZE_I)
-            || !EVP_MD_CTX_copy_ex(ctxI, ctx)
+            || !OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctxI, ctx)
             || !EVP_DigestUpdate(ctx, qbuf, sizeof(qbuf))
             || !EVP_DigestUpdate(ctx, d_leaf, sizeof(d_leaf))
             || !EVP_DigestUpdate(ctx, Kc, n)
@@ -168,7 +168,7 @@ int ossl_lms_sig_verify(const LMS_SIG *lms_sig, const LMS_KEY *pub,
     /* Algorithm 6: Step 4 */
     ret = (memcmp(pub->pub.K, Tc, n) == 0);
 err:
-    EVP_MD_CTX_free(ctxIq);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctxIq);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }

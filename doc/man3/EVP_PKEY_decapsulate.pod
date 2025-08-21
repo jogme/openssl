@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-EVP_PKEY_decapsulate_init, EVP_PKEY_auth_decapsulate_init, EVP_PKEY_decapsulate
+OPENSSL_BOX_EVP_PKEY_decapsulate_init, EVP_PKEY_auth_decapsulate_init, EVP_PKEY_decapsulate
 - Key decapsulation using a KEM algorithm with a private key
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- int EVP_PKEY_decapsulate_init(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[]);
+ int OPENSSL_BOX_EVP_PKEY_decapsulate_init(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[]);
  int EVP_PKEY_auth_decapsulate_init(EVP_PKEY_CTX *ctx, EVP_PKEY *authpub,
                                    const OSSL_PARAM params[]);
  int EVP_PKEY_decapsulate(EVP_PKEY_CTX *ctx,
@@ -18,14 +18,14 @@ EVP_PKEY_decapsulate_init, EVP_PKEY_auth_decapsulate_init, EVP_PKEY_decapsulate
 
 =head1 DESCRIPTION
 
-The EVP_PKEY_decapsulate_init() function initializes a private key algorithm
+The OPENSSL_BOX_EVP_PKEY_decapsulate_init() function initializes a private key algorithm
 context I<ctx> for a decapsulation operation and then sets the I<params>
-on the context in the same way as calling L<EVP_PKEY_CTX_set_params(3)>.
+on the context in the same way as calling L<OPENSSL_BOX_EVP_PKEY_CTX_set_params(3)>.
 Note that I<ctx> usually is produced using L<EVP_PKEY_CTX_new_from_pkey(3)>,
 specifying the private key to use.
 
 The EVP_PKEY_auth_decapsulate_init() function is similar to
-EVP_PKEY_decapsulate_init() but also passes an I<authpub> authentication public
+OPENSSL_BOX_EVP_PKEY_decapsulate_init() but also passes an I<authpub> authentication public
 key that is used during decapsulation.
 
 The EVP_PKEY_decapsulate() function performs a private key decapsulation
@@ -56,12 +56,12 @@ length of the output.
 
 =head1 NOTES
 
-After the call to EVP_PKEY_decapsulate_init() algorithm-specific parameters
-for the operation may be set or modified using L<EVP_PKEY_CTX_set_params(3)>.
+After the call to OPENSSL_BOX_EVP_PKEY_decapsulate_init() algorithm-specific parameters
+for the operation may be set or modified using L<OPENSSL_BOX_EVP_PKEY_CTX_set_params(3)>.
 
 =head1 RETURN VALUES
 
-EVP_PKEY_decapsulate_init(), EVP_PKEY_auth_decapsulate_init() and
+OPENSSL_BOX_EVP_PKEY_decapsulate_init(), EVP_PKEY_auth_decapsulate_init() and
 EVP_PKEY_decapsulate() return 1 for success and 0 or a negative value for
 failure. In particular a return value of -2 indicates the operation is not
 supported by the private key algorithm.
@@ -84,11 +84,11 @@ Decapsulate data using RSA:
  ctx = EVP_PKEY_CTX_new_from_pkey(libctx, rsa_priv_key, NULL);
  if (ctx == NULL)
      /* Error */
- if (EVP_PKEY_decapsulate_init(ctx, NULL) <= 0)
+ if (OPENSSL_BOX_EVP_PKEY_decapsulate_init(ctx, NULL) <= 0)
      /* Error */
 
  /* Set the mode - only 'RSASVE' is currently supported */
- if (EVP_PKEY_CTX_set_kem_op(ctx, "RSASVE") <= 0)
+ if (OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op(ctx, "RSASVE") <= 0)
      /* Error */
 
  /* Determine buffer length */
@@ -117,7 +117,7 @@ L<EVP_KEM-ML-KEM-1024(7)>
 
 =head1 HISTORY
 
-The functions EVP_PKEY_decapsulate_init() and EVP_PKEY_decapsulate() were added
+The functions OPENSSL_BOX_EVP_PKEY_decapsulate_init() and EVP_PKEY_decapsulate() were added
 in OpenSSL 3.0.
 
 The function EVP_PKEY_auth_decapsulate_init() was added in OpenSSL 3.2.

@@ -85,7 +85,7 @@ This can be added later if required.
 Key generation API
 ------------------
 
-Keys can be generated via the usual **EVP_PKEY_generate()** and
+Keys can be generated via the usual **OPENSSL_BOX_EVP_PKEY_generate()** and
 **EVP_PKEY_Q_keygen()** functions.
 
 An explicit seed can be specified by setting the key generation
@@ -98,9 +98,9 @@ KEM API
 **ML-KEM** is meant to be a drop-in replacement for existing KEM algorithms.
 Accessed in the usual way via:
 
-- **EVP_PKEY_encapsulate_init()**,
+- **OPENSSL_BOX_EVP_PKEY_encapsulate_init()**,
 - **EVP_PKEY_encapsulate()**,
-- **EVP_PKEY_decapsulate_init()**, and
+- **OPENSSL_BOX_EVP_PKEY_decapsulate_init()**, and
 - **EVP_PKEY_decapsulate()**.
 
 For the encapsulation operation, a test-only option exists to bypass the random

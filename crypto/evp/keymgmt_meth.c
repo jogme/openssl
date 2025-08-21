@@ -19,12 +19,12 @@
 
 static void evp_keymgmt_free(void *data)
 {
-    EVP_KEYMGMT_free(data);
+    OPENSSL_BOX_EVP_KEYMGMT_free(data);
 }
 
 static int evp_keymgmt_up_ref(void *data)
 {
-    return EVP_KEYMGMT_up_ref(data);
+    return OPENSSL_BOX_EVP_KEYMGMT_up_ref(data);
 }
 
 static void *keymgmt_new(void)
@@ -34,7 +34,7 @@ static void *keymgmt_new(void)
     if ((keymgmt = OPENSSL_zalloc(sizeof(*keymgmt))) == NULL)
         return NULL;
     if (!CRYPTO_NEW_REF(&keymgmt->refcnt, 1)) {
-        EVP_KEYMGMT_free(keymgmt);
+        OPENSSL_BOX_EVP_KEYMGMT_free(keymgmt);
         return NULL;
     }
     return keymgmt;
@@ -77,7 +77,7 @@ static void *keymgmt_from_algorithm(int name_id,
 
     keymgmt->name_id = name_id;
     if ((keymgmt->type_name = ossl_algorithm_get1_first_name(algodef)) == NULL) {
-        EVP_KEYMGMT_free(keymgmt);
+        OPENSSL_BOX_EVP_KEYMGMT_free(keymgmt);
         return NULL;
     }
     keymgmt->description = algodef->algorithm_description;
@@ -256,7 +256,7 @@ static void *keymgmt_from_algorithm(int name_id,
         || (keymgmt->gen != NULL
             && (keymgmt->gen_init == NULL
                 || keymgmt->gen_cleanup == NULL))) {
-        EVP_KEYMGMT_free(keymgmt);
+        OPENSSL_BOX_EVP_KEYMGMT_free(keymgmt);
         ERR_raise(ERR_LIB_EVP, EVP_R_INVALID_PROVIDER_FUNCTIONS);
         return NULL;
     }
@@ -291,7 +291,7 @@ EVP_KEYMGMT *EVP_KEYMGMT_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
                              evp_keymgmt_free);
 }
 
-int EVP_KEYMGMT_up_ref(EVP_KEYMGMT *keymgmt)
+int OPENSSL_BOX_EVP_KEYMGMT_up_ref(EVP_KEYMGMT *keymgmt)
 {
     int ref = 0;
 
@@ -299,7 +299,7 @@ int EVP_KEYMGMT_up_ref(EVP_KEYMGMT *keymgmt)
     return 1;
 }
 
-void EVP_KEYMGMT_free(EVP_KEYMGMT *keymgmt)
+void OPENSSL_BOX_EVP_KEYMGMT_free(EVP_KEYMGMT *keymgmt)
 {
     int ref = 0;
 
@@ -315,7 +315,7 @@ void EVP_KEYMGMT_free(EVP_KEYMGMT *keymgmt)
     OPENSSL_free(keymgmt);
 }
 
-const OSSL_PROVIDER *EVP_KEYMGMT_get0_provider(const EVP_KEYMGMT *keymgmt)
+const OSSL_PROVIDER *OPENSSL_BOX_EVP_KEYMGMT_get0_provider(const EVP_KEYMGMT *keymgmt)
 {
     return keymgmt->prov;
 }
@@ -330,17 +330,17 @@ int evp_keymgmt_get_legacy_alg(const EVP_KEYMGMT *keymgmt)
     return keymgmt->legacy_alg;
 }
 
-const char *EVP_KEYMGMT_get0_description(const EVP_KEYMGMT *keymgmt)
+const char *OPENSSL_BOX_EVP_KEYMGMT_get0_description(const EVP_KEYMGMT *keymgmt)
 {
     return keymgmt->description;
 }
 
-const char *EVP_KEYMGMT_get0_name(const EVP_KEYMGMT *keymgmt)
+const char *OPENSSL_BOX_EVP_KEYMGMT_get0_name(const EVP_KEYMGMT *keymgmt)
 {
     return keymgmt->type_name;
 }
 
-int EVP_KEYMGMT_is_a(const EVP_KEYMGMT *keymgmt, const char *name)
+int OPENSSL_BOX_EVP_KEYMGMT_is_a(const EVP_KEYMGMT *keymgmt, const char *name)
 {
     return keymgmt != NULL
            && evp_is_a(keymgmt->prov, keymgmt->name_id, NULL, name);
@@ -372,7 +372,7 @@ int EVP_KEYMGMT_names_do_all(const EVP_KEYMGMT *keymgmt,
  */
 void *evp_keymgmt_newdata(const EVP_KEYMGMT *keymgmt)
 {
-    void *provctx = ossl_provider_ctx(EVP_KEYMGMT_get0_provider(keymgmt));
+    void *provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt));
 
     /*
      * 'new' is currently mandatory on its own, but when new
@@ -393,7 +393,7 @@ void evp_keymgmt_freedata(const EVP_KEYMGMT *keymgmt, void *keydata)
 void *evp_keymgmt_gen_init(const EVP_KEYMGMT *keymgmt, int selection,
                            const OSSL_PARAM params[])
 {
-    void *provctx = ossl_provider_ctx(EVP_KEYMGMT_get0_provider(keymgmt));
+    void *provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt));
 
     if (keymgmt->gen_init == NULL)
         return NULL;
@@ -422,9 +422,9 @@ int evp_keymgmt_gen_set_params(const EVP_KEYMGMT *keymgmt, void *genctx,
     return keymgmt->gen_set_params(genctx, params);
 }
 
-const OSSL_PARAM *EVP_KEYMGMT_gen_settable_params(const EVP_KEYMGMT *keymgmt)
+const OSSL_PARAM *OPENSSL_BOX_EVP_KEYMGMT_gen_settable_params(const EVP_KEYMGMT *keymgmt)
 {
-    void *provctx = ossl_provider_ctx(EVP_KEYMGMT_get0_provider(keymgmt));
+    void *provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt));
 
     if (keymgmt->gen_settable_params == NULL)
         return NULL;
@@ -439,9 +439,9 @@ int evp_keymgmt_gen_get_params(const EVP_KEYMGMT *keymgmt, void *genctx,
     return keymgmt->gen_get_params(genctx, params);
 }
 
-const OSSL_PARAM *EVP_KEYMGMT_gen_gettable_params(const EVP_KEYMGMT *keymgmt)
+const OSSL_PARAM *OPENSSL_BOX_EVP_KEYMGMT_gen_gettable_params(const EVP_KEYMGMT *keymgmt)
 {
-    void *provctx = ossl_provider_ctx(EVP_KEYMGMT_get0_provider(keymgmt));
+    void *provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt));
 
     if (keymgmt->gen_gettable_params == NULL)
         return NULL;
@@ -496,9 +496,9 @@ int evp_keymgmt_get_params(const EVP_KEYMGMT *keymgmt, void *keydata,
     return keymgmt->get_params(keydata, params);
 }
 
-const OSSL_PARAM *EVP_KEYMGMT_gettable_params(const EVP_KEYMGMT *keymgmt)
+const OSSL_PARAM *OPENSSL_BOX_EVP_KEYMGMT_gettable_params(const EVP_KEYMGMT *keymgmt)
 {
-    void *provctx = ossl_provider_ctx(EVP_KEYMGMT_get0_provider(keymgmt));
+    void *provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt));
 
     if (keymgmt->gettable_params == NULL)
         return NULL;
@@ -513,9 +513,9 @@ int evp_keymgmt_set_params(const EVP_KEYMGMT *keymgmt, void *keydata,
     return keymgmt->set_params(keydata, params);
 }
 
-const OSSL_PARAM *EVP_KEYMGMT_settable_params(const EVP_KEYMGMT *keymgmt)
+const OSSL_PARAM *OPENSSL_BOX_EVP_KEYMGMT_settable_params(const EVP_KEYMGMT *keymgmt)
 {
-    void *provctx = ossl_provider_ctx(EVP_KEYMGMT_get0_provider(keymgmt));
+    void *provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt));
 
     if (keymgmt->settable_params == NULL)
         return NULL;
@@ -558,7 +558,7 @@ int evp_keymgmt_import(const EVP_KEYMGMT *keymgmt, void *keydata,
 const OSSL_PARAM *evp_keymgmt_import_types(const EVP_KEYMGMT *keymgmt,
                                            int selection)
 {
-    void *provctx = ossl_provider_ctx(EVP_KEYMGMT_get0_provider(keymgmt));
+    void *provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt));
 
     if (keymgmt->import_types_ex != NULL)
         return keymgmt->import_types_ex(provctx, selection);
@@ -578,7 +578,7 @@ int evp_keymgmt_export(const EVP_KEYMGMT *keymgmt, void *keydata,
 const OSSL_PARAM *evp_keymgmt_export_types(const EVP_KEYMGMT *keymgmt,
                                            int selection)
 {
-    void *provctx = ossl_provider_ctx(EVP_KEYMGMT_get0_provider(keymgmt));
+    void *provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt));
 
     if (keymgmt->export_types_ex != NULL)
         return keymgmt->export_types_ex(provctx, selection);

@@ -315,7 +315,7 @@ int storeutl_main(int argc, char *argv[])
                   text, noout, recursive, 0, outfile, prog, libctx);
 
  end:
-    EVP_MD_free(digest);
+    OPENSSL_BOX_EVP_MD_free(digest);
     OPENSSL_free(fingerprint);
     OPENSSL_free(alias);
     ASN1_INTEGER_free(serial);

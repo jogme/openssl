@@ -240,9 +240,9 @@ static int do_testhpke(const TEST_BASEDATA *base,
 end:
     OSSL_HPKE_CTX_free(sealctx);
     OSSL_HPKE_CTX_free(openctx);
-    EVP_PKEY_free(privE);
-    EVP_PKEY_free(privR);
-    EVP_PKEY_free(authpriv);
+    OPENSSL_BOX_EVP_PKEY_free(privE);
+    OPENSSL_BOX_EVP_PKEY_free(privR);
+    OPENSSL_BOX_EVP_PKEY_free(authpriv);
     return ret;
 }
 
@@ -1084,7 +1084,7 @@ static int test_hpke_modes_suites(void)
                                                   cipherlen)))
                         overallresult = 0;
                     OSSL_HPKE_CTX_free(rctx);
-                    EVP_PKEY_free(privp);
+                    OPENSSL_BOX_EVP_PKEY_free(privp);
                     privp = NULL;
                     /* check output */
                     if (!TEST_mem_eq(clear, clearlen, plain, plainlen)) {
@@ -1104,7 +1104,7 @@ static int test_hpke_modes_suites(void)
                     }
                 }
             }
-            EVP_PKEY_free(authpriv);
+            OPENSSL_BOX_EVP_PKEY_free(authpriv);
         }
     }
     return overallresult;
@@ -1192,7 +1192,7 @@ static int test_hpke_export(void)
 end:
     OSSL_HPKE_CTX_free(ctx);
     OSSL_HPKE_CTX_free(rctx);
-    EVP_PKEY_free(privp);
+    OPENSSL_BOX_EVP_PKEY_free(privp);
     return erv;
 }
 
@@ -1547,7 +1547,7 @@ static int test_hpke_oddcalls(void)
 end:
     OSSL_HPKE_CTX_free(ctx);
     OSSL_HPKE_CTX_free(rctx);
-    EVP_PKEY_free(privp);
+    OPENSSL_BOX_EVP_PKEY_free(privp);
     return erv;
 }
 
@@ -1744,7 +1744,7 @@ static int test_hpke_one_ikm_gen(uint16_t kem_id,
         return 0;
     if (!TEST_ptr(sk))
         return 0;
-    EVP_PKEY_free(sk);
+    OPENSSL_BOX_EVP_PKEY_free(sk);
     if (!TEST_mem_eq(pub, publen, lpub, lpublen))
         return 0;
     return 1;
@@ -1862,8 +1862,8 @@ static int test_hpke_compressed(void)
     erv = 1;
 
 end:
-    EVP_PKEY_free(privp);
-    EVP_PKEY_free(authpriv);
+    OPENSSL_BOX_EVP_PKEY_free(privp);
+    OPENSSL_BOX_EVP_PKEY_free(authpriv);
     OSSL_HPKE_CTX_free(ctx);
     OSSL_HPKE_CTX_free(rctx);
     return erv;
@@ -1938,7 +1938,7 @@ static int test_hpke_noncereuse(void)
     erv = 1;
 
 end:
-    EVP_PKEY_free(privp);
+    OPENSSL_BOX_EVP_PKEY_free(privp);
     OSSL_HPKE_CTX_free(ctx);
     OSSL_HPKE_CTX_free(rctx);
     return erv;

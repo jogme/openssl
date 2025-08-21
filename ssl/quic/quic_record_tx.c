@@ -524,7 +524,7 @@ static int qtx_encrypt_into_txe(OSSL_QTX *qtx, struct iovec_cur *cur, TXE *txe,
     }
 
     /* Construct nonce (nonce=IV ^ PN). */
-    nonce_len = EVP_CIPHER_CTX_get_iv_length(cctx);
+    nonce_len = OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(cctx);
     if (!ossl_assert(nonce_len >= (int)sizeof(QUIC_PN))) {
         ERR_raise(ERR_LIB_SSL, ERR_R_INTERNAL_ERROR);
         return 0;
@@ -576,7 +576,7 @@ static int qtx_encrypt_into_txe(OSSL_QTX *qtx, struct iovec_cur *cur, TXE *txe,
         return 0;
     }
 
-    if (EVP_CIPHER_CTX_ctrl(cctx, EVP_CTRL_AEAD_GET_TAG,
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(cctx, EVP_CTRL_AEAD_GET_TAG,
                             el->tag_len, txe_data(txe) + txe->data_len) != 1) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         return 0;

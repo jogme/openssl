@@ -110,7 +110,7 @@ void engine_pkey_meths_free(ENGINE *e)
         npknids = e->pkey_meths(e, NULL, &pknids, 0);
         for (i = 0; i < npknids; i++) {
             if (e->pkey_meths(e, &pkm, NULL, pknids[i])) {
-                EVP_PKEY_meth_free(pkm);
+                OPENSSL_BOX_EVP_PKEY_meth_free(pkm);
             }
         }
     }

@@ -2,25 +2,25 @@
 
 =head1 NAME
 
-EVP_sha3_224,
-EVP_sha3_256,
-EVP_sha3_384,
-EVP_sha3_512,
-EVP_shake128,
-EVP_shake256
+OPENSSL_BOX_EVP_sha3_224,
+OPENSSL_BOX_EVP_sha3_256,
+OPENSSL_BOX_EVP_sha3_384,
+OPENSSL_BOX_EVP_sha3_512,
+OPENSSL_BOX_EVP_shake128,
+OPENSSL_BOX_EVP_shake256
 - SHA-3 For EVP
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_MD *EVP_sha3_224(void);
- const EVP_MD *EVP_sha3_256(void);
- const EVP_MD *EVP_sha3_384(void);
- const EVP_MD *EVP_sha3_512(void);
+ const EVP_MD *OPENSSL_BOX_EVP_sha3_224(void);
+ const EVP_MD *OPENSSL_BOX_EVP_sha3_256(void);
+ const EVP_MD *OPENSSL_BOX_EVP_sha3_384(void);
+ const EVP_MD *OPENSSL_BOX_EVP_sha3_512(void);
 
- const EVP_MD *EVP_shake128(void);
- const EVP_MD *EVP_shake256(void);
+ const EVP_MD *OPENSSL_BOX_EVP_shake128(void);
+ const EVP_MD *OPENSSL_BOX_EVP_shake256(void);
 
 =head1 DESCRIPTION
 
@@ -30,23 +30,23 @@ Keccak algorithm.
 
 =over 4
 
-=item EVP_sha3_224(),
-EVP_sha3_256(),
-EVP_sha3_384(),
-EVP_sha3_512()
+=item OPENSSL_BOX_EVP_sha3_224(),
+OPENSSL_BOX_EVP_sha3_256(),
+OPENSSL_BOX_EVP_sha3_384(),
+OPENSSL_BOX_EVP_sha3_512()
 
 The SHA-3 SHA-3-224, SHA-3-256, SHA-3-384, and SHA-3-512 algorithms
 respectively. They produce 224, 256, 384 and 512 bits of output from a given
 input.
 
-=item EVP_shake128(),
-EVP_shake256()
+=item OPENSSL_BOX_EVP_shake128(),
+OPENSSL_BOX_EVP_shake256()
 
 The SHAKE-128 and SHAKE-256 Extendable Output Functions (XOF) that can generate
 a variable hash length.
 
-Specifically, B<EVP_shake128> provides an overall security of 128 bits, while
-B<EVP_shake256> provides that of 256 bits.
+Specifically, B<OPENSSL_BOX_EVP_shake128> provides an overall security of 128 bits, while
+B<OPENSSL_BOX_EVP_shake256> provides that of 256 bits.
 
 =back
 
@@ -60,7 +60,7 @@ See L<crypto(7)/Performance> for further information.
 =head1 RETURN VALUES
 
 These functions return a B<EVP_MD> structure that contains the
-implementation of the message digest. See L<EVP_MD_meth_new(3)> for
+implementation of the message digest. See L<OPENSSL_BOX_EVP_MD_meth_new(3)> for
 details of the B<EVP_MD> structure.
 
 =head1 CONFORMING TO
@@ -70,7 +70,7 @@ NIST FIPS 202.
 =head1 SEE ALSO
 
 L<evp(7)>,
-L<EVP_DigestInit(3)>
+L<OPENSSL_BOX_EVP_DigestInit(3)>
 
 =head1 COPYRIGHT
 

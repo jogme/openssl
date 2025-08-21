@@ -3,10 +3,10 @@
 =head1 NAME
 
 EVP_PKEY,
-EVP_PKEY_new,
-EVP_PKEY_up_ref,
-EVP_PKEY_dup,
-EVP_PKEY_free,
+OPENSSL_BOX_EVP_PKEY_new,
+OPENSSL_BOX_EVP_PKEY_up_ref,
+OPENSSL_BOX_EVP_PKEY_dup,
+OPENSSL_BOX_EVP_PKEY_free,
 EVP_PKEY_new_raw_private_key_ex,
 EVP_PKEY_new_raw_private_key,
 EVP_PKEY_new_raw_public_key_ex,
@@ -23,10 +23,10 @@ EVP_PKEY_get_raw_public_key
 
  typedef evp_pkey_st EVP_PKEY;
 
- EVP_PKEY *EVP_PKEY_new(void);
- int EVP_PKEY_up_ref(EVP_PKEY *key);
- EVP_PKEY *EVP_PKEY_dup(EVP_PKEY *key);
- void EVP_PKEY_free(EVP_PKEY *key);
+ EVP_PKEY *OPENSSL_BOX_EVP_PKEY_new(void);
+ int OPENSSL_BOX_EVP_PKEY_up_ref(EVP_PKEY *key);
+ EVP_PKEY *OPENSSL_BOX_EVP_PKEY_dup(EVP_PKEY *key);
+ void OPENSSL_BOX_EVP_PKEY_free(EVP_PKEY *key);
 
  EVP_PKEY *EVP_PKEY_new_raw_private_key_ex(OSSL_LIB_CTX *libctx,
                                            const char *keytype,
@@ -78,16 +78,16 @@ producing signatures, although not being public key algorithms; "POLY1305",
 "SIPHASH", "HMAC", "CMAC".  This usage is considered legacy and is discouraged
 in favor of the L<EVP_MAC(3)> API.
 
-The EVP_PKEY_new() function allocates an empty B<EVP_PKEY> structure which is
+The OPENSSL_BOX_EVP_PKEY_new() function allocates an empty B<EVP_PKEY> structure which is
 used by OpenSSL to store public and private keys. The reference count is set to
 B<1>.
 
-EVP_PKEY_up_ref() increments the reference count of I<key>.
+OPENSSL_BOX_EVP_PKEY_up_ref() increments the reference count of I<key>.
 
-EVP_PKEY_dup() duplicates the I<key>. The I<key> must not be ENGINE based or
+OPENSSL_BOX_EVP_PKEY_dup() duplicates the I<key>. The I<key> must not be ENGINE based or
 a raw key, otherwise the duplication will fail.
 
-EVP_PKEY_free() decrements the reference count of I<key> and, if the reference
+OPENSSL_BOX_EVP_PKEY_free() decrements the reference count of I<key> and, if the reference
 count is zero, frees it up. If I<key> is NULL, nothing is done.
 
 EVP_PKEY_new_raw_private_key_ex() allocates a new B<EVP_PKEY>. Unless an
@@ -216,10 +216,10 @@ with the name of the cipher being used.
 The B<EVP_PKEY> structure is used by various OpenSSL functions which require a
 general private key without reference to any particular algorithm.
 
-The structure returned by EVP_PKEY_new() is empty. To add a private or public
+The structure returned by OPENSSL_BOX_EVP_PKEY_new() is empty. To add a private or public
 key to this empty structure use the appropriate functions described in
-L<EVP_PKEY_set1_RSA(3)>, L<EVP_PKEY_set1_DSA(3)>, L<EVP_PKEY_set1_DH(3)> or
-L<EVP_PKEY_set1_EC_KEY(3)> for legacy key types implemented in internal
+L<OPENSSL_BOX_EVP_PKEY_set1_RSA(3)>, L<OPENSSL_BOX_EVP_PKEY_set1_DSA(3)>, L<OPENSSL_BOX_EVP_PKEY_set1_DH(3)> or
+L<OPENSSL_BOX_EVP_PKEY_set1_EC_KEY(3)> for legacy key types implemented in internal
 OpenSSL providers.
 
 For fully provider-managed key types (see L<provider-keymgmt(7)>),
@@ -235,21 +235,21 @@ OSSL_FUNC_keymgmt_import() and OSSL_FUNC_keymgmt_export() functions.
 
 =head1 RETURN VALUES
 
-EVP_PKEY_new(), EVP_PKEY_new_raw_private_key(), EVP_PKEY_new_raw_public_key(),
+OPENSSL_BOX_EVP_PKEY_new(), EVP_PKEY_new_raw_private_key(), EVP_PKEY_new_raw_public_key(),
 EVP_PKEY_new_CMAC_key() and EVP_PKEY_new_mac_key() return either the newly
 allocated B<EVP_PKEY> structure or NULL if an error occurred.
 
-EVP_PKEY_dup() returns the key duplicate or NULL if an error occurred.
+OPENSSL_BOX_EVP_PKEY_dup() returns the key duplicate or NULL if an error occurred.
 
-EVP_PKEY_up_ref(), EVP_PKEY_get_raw_private_key() and
+OPENSSL_BOX_EVP_PKEY_up_ref(), EVP_PKEY_get_raw_private_key() and
 EVP_PKEY_get_raw_public_key() return 1 for success and 0 for failure.
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_set1_RSA(3)>,
-L<EVP_PKEY_set1_DSA(3)>,
-L<EVP_PKEY_set1_DH(3)>,
-L<EVP_PKEY_set1_EC_KEY(3)>,
+L<OPENSSL_BOX_EVP_PKEY_set1_RSA(3)>,
+L<OPENSSL_BOX_EVP_PKEY_set1_DSA(3)>,
+L<OPENSSL_BOX_EVP_PKEY_set1_DH(3)>,
+L<OPENSSL_BOX_EVP_PKEY_set1_EC_KEY(3)>,
 L<EVP_PKEY-ED25519(7)>,
 L<EVP_PKEY-ED448(7)>.
 L<EVP_PKEY-HMAC(7)>,
@@ -263,16 +263,16 @@ L<EVP_PKEY-ML-KEM(7)>.
 =head1 HISTORY
 
 The
-EVP_PKEY_new() and EVP_PKEY_free() functions exist in all versions of OpenSSL.
+OPENSSL_BOX_EVP_PKEY_new() and OPENSSL_BOX_EVP_PKEY_free() functions exist in all versions of OpenSSL.
 
-The EVP_PKEY_up_ref() function was added in OpenSSL 1.1.0.
+The OPENSSL_BOX_EVP_PKEY_up_ref() function was added in OpenSSL 1.1.0.
 
 The
 EVP_PKEY_new_raw_private_key(), EVP_PKEY_new_raw_public_key(),
 EVP_PKEY_new_CMAC_key(), EVP_PKEY_new_raw_private_key() and
 EVP_PKEY_get_raw_public_key() functions were added in OpenSSL 1.1.1.
 
-The EVP_PKEY_dup(), EVP_PKEY_new_raw_private_key_ex(), and
+The OPENSSL_BOX_EVP_PKEY_dup(), EVP_PKEY_new_raw_private_key_ex(), and
 EVP_PKEY_new_raw_public_key_ex()
 functions were added in OpenSSL 3.0.
 

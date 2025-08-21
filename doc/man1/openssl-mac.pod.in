@@ -63,7 +63,7 @@ To see the list of supported digests, use C<openssl list -digest-commands>.
 Passes options to the MAC algorithm.
 A comprehensive list of controls can be found in the EVP_MAC implementation
 documentation.
-Common parameter names used by EVP_MAC_CTX_get_params() are:
+Common parameter names used by OPENSSL_BOX_EVP_MAC_CTX_get_params() are:
 
 =over 4
 

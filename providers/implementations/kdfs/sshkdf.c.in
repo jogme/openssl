@@ -138,11 +138,11 @@ static int fips_digest_check_passed(KDF_SSHKDF *ctx, const EVP_MD *md)
      * specified in FIPS 180-3. ACVP also only lists the same set of hash
      * functions.
      */
-    int digest_unapproved = !EVP_MD_is_a(md, SN_sha1)
-        && !EVP_MD_is_a(md, SN_sha224)
-        && !EVP_MD_is_a(md, SN_sha256)
-        && !EVP_MD_is_a(md, SN_sha384)
-        && !EVP_MD_is_a(md, SN_sha512);
+    int digest_unapproved = !OPENSSL_BOX_EVP_MD_is_a(md, SN_sha1)
+        && !OPENSSL_BOX_EVP_MD_is_a(md, SN_sha224)
+        && !OPENSSL_BOX_EVP_MD_is_a(md, SN_sha256)
+        && !OPENSSL_BOX_EVP_MD_is_a(md, SN_sha384)
+        && !OPENSSL_BOX_EVP_MD_is_a(md, SN_sha512);
 
     if (digest_unapproved) {
         if (!OSSL_FIPS_IND_ON_UNAPPROVED(ctx, OSSL_FIPS_IND_SETTABLE0,
@@ -245,7 +245,7 @@ static int kdf_sshkdf_set_ctx_params(void *vctx, const OSSL_PARAM params[])
             return 0;
 
         md = ossl_prov_digest_md(&ctx->digest);
-        if (EVP_MD_xof(md)) {
+        if (OPENSSL_BOX_EVP_MD_xof(md)) {
             ERR_raise(ERR_LIB_PROV, PROV_R_XOF_DIGESTS_NOT_ALLOWED);
             return 0;
         }
@@ -351,7 +351,7 @@ static int SSHKDF(const EVP_MD *evp_md,
     size_t cursize = 0;
     int ret = 0;
 
-    md = EVP_MD_CTX_new();
+    md = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md == NULL)
         return 0;
 
@@ -410,7 +410,7 @@ static int SSHKDF(const EVP_MD *evp_md,
     ret = 1;
 
 out:
-    EVP_MD_CTX_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(md);
     OPENSSL_cleanse(digest, EVP_MAX_MD_SIZE);
     return ret;
 }

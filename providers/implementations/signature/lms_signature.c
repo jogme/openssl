@@ -58,7 +58,7 @@ static void lms_freectx(void *vctx)
     if (ctx == NULL)
         return;
     OPENSSL_free(ctx->propq);
-    EVP_MD_free(ctx->md);
+    OPENSSL_BOX_EVP_MD_free(ctx->md);
     OPENSSL_free(ctx);
 }
 
@@ -74,15 +74,15 @@ static int setdigest(PROV_LMS_CTX *ctx, const char *digestname)
     const char *pub_digestname = key->ots_params->digestname;
 
     if (ctx->md != NULL) {
-        if (EVP_MD_is_a(ctx->md, pub_digestname))
+        if (OPENSSL_BOX_EVP_MD_is_a(ctx->md, pub_digestname))
             goto end;
-        EVP_MD_free(ctx->md);
+        OPENSSL_BOX_EVP_MD_free(ctx->md);
     }
     ctx->md = EVP_MD_fetch(ctx->libctx, pub_digestname, ctx->propq);
     if (ctx->md == NULL)
         return 0;
 end:
-    return digestname == NULL || EVP_MD_is_a(ctx->md, digestname);
+    return digestname == NULL || OPENSSL_BOX_EVP_MD_is_a(ctx->md, digestname);
 }
 
 static int lms_verify_msg_init(void *vctx, void *vkey, const OSSL_PARAM params[])

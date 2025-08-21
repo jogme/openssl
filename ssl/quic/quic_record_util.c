@@ -34,7 +34,7 @@ int ossl_quic_hkdf_extract(OSSL_LIB_CTX *libctx,
     int mode = EVP_PKEY_HKDEF_MODE_EXTRACT_ONLY;
     const char *md_name;
 
-    if ((md_name = EVP_MD_get0_name(md)) == NULL
+    if ((md_name = OPENSSL_BOX_EVP_MD_get0_name(md)) == NULL
         || (kdf = EVP_KDF_fetch(libctx, OSSL_KDF_NAME_HKDF, propq)) == NULL
         || (kctx = EVP_KDF_CTX_new(kdf)) == NULL)
         goto err;
@@ -157,7 +157,7 @@ int ossl_quic_provide_initial_secret(OSSL_LIB_CTX *libctx,
      * are initialising both sides, get a new ref for the following call for the
      * TX side.
      */
-    if (qrx != NULL && qtx != NULL && !EVP_MD_up_ref(sha256)) {
+    if (qrx != NULL && qtx != NULL && !OPENSSL_BOX_EVP_MD_up_ref(sha256)) {
         sha256 = NULL;
         goto err;
     }
@@ -174,7 +174,7 @@ int ossl_quic_provide_initial_secret(OSSL_LIB_CTX *libctx,
     return 1;
 
 err:
-    EVP_MD_free(sha256);
+    OPENSSL_BOX_EVP_MD_free(sha256);
     return 0;
 }
 

@@ -39,7 +39,7 @@ Error checking has been omitted from the following examples
  sig = EVP_SIGNATURE_fetch(libctx, "LMS", propq);
  EVP_PKEY_verify_message_init(ctx, sig, NULL);
  /*
-  * EVP_PKEY_verify_message_update() and EVP_PKEY_verify_message_final()
+  * EVP_PKEY_verify_message_update() and OPENSSL_BOX_EVP_PKEY_verify_message_final()
   * are not supported
   */
  ret = EVP_PKEY_verify(ctx, sigdata, sigdata_len, msg, msglen);

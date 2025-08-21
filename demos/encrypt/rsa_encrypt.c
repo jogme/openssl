@@ -118,8 +118,8 @@ static int do_encrypt(OSSL_LIB_CTX *libctx,
     }
     set_optional_params(params, propq);
     /* If no optional parameters are required then NULL can be passed */
-    if (EVP_PKEY_encrypt_init_ex(ctx, params) <= 0) {
-        fprintf(stderr, "EVP_PKEY_encrypt_init_ex() failed.\n");
+    if (OPENSSL_BOX_EVP_PKEY_encrypt_init_ex(ctx, params) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_encrypt_init_ex() failed.\n");
         goto cleanup;
     }
     /* Calculate the size required to hold the encrypted data */
@@ -146,8 +146,8 @@ static int do_encrypt(OSSL_LIB_CTX *libctx,
 cleanup:
     if (!ret)
         OPENSSL_free(buf);
-    EVP_PKEY_free(pub_key);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pub_key);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 
@@ -177,8 +177,8 @@ static int do_decrypt(OSSL_LIB_CTX *libctx, const unsigned char *in, size_t in_l
     /* The parameters used for encryption must also be used for decryption */
     set_optional_params(params, propq);
     /* If no optional parameters are required then NULL can be passed */
-    if (EVP_PKEY_decrypt_init_ex(ctx, params) <= 0) {
-        fprintf(stderr, "EVP_PKEY_decrypt_init_ex() failed.\n");
+    if (OPENSSL_BOX_EVP_PKEY_decrypt_init_ex(ctx, params) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_decrypt_init_ex() failed.\n");
         goto cleanup;
     }
     /* Calculate the size required to hold the decrypted data */
@@ -205,8 +205,8 @@ static int do_decrypt(OSSL_LIB_CTX *libctx, const unsigned char *in, size_t in_l
 cleanup:
     if (!ret)
         OPENSSL_free(buf);
-    EVP_PKEY_free(priv_key);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(priv_key);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 

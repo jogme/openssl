@@ -201,11 +201,11 @@ typedef struct {
     unsigned char key[TEST_RC4_KEY_SIZE];
     RC4_KEY ks;
 } TEST_RC4_KEY;
-# define test(ctx) ((TEST_RC4_KEY *)EVP_CIPHER_CTX_get_cipher_data(ctx))
+# define test(ctx) ((TEST_RC4_KEY *)OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx))
 static int test_rc4_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
                              const unsigned char *iv, int enc)
 {
-    const int n = EVP_CIPHER_CTX_get_key_length(ctx);
+    const int n = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx);
 
 # ifdef TEST_ENG_OPENSSL_RC4_P_INIT
     fprintf(stderr, "(TEST_ENG_OPENSSL_RC4) test_init_key() called\n");
@@ -233,13 +233,13 @@ static const EVP_CIPHER *test_r4_cipher(void)
     if (r4_cipher == NULL) {
         EVP_CIPHER *cipher;
 
-        if ((cipher = EVP_CIPHER_meth_new(NID_rc4, 1, TEST_RC4_KEY_SIZE)) == NULL
-            || !EVP_CIPHER_meth_set_iv_length(cipher, 0)
-            || !EVP_CIPHER_meth_set_flags(cipher, EVP_CIPH_VARIABLE_LENGTH)
+        if ((cipher = OPENSSL_BOX_EVP_CIPHER_meth_new(NID_rc4, 1, TEST_RC4_KEY_SIZE)) == NULL
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_iv_length(cipher, 0)
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_flags(cipher, EVP_CIPH_VARIABLE_LENGTH)
             || !EVP_CIPHER_meth_set_init(cipher, test_rc4_init_key)
             || !EVP_CIPHER_meth_set_do_cipher(cipher, test_rc4_cipher)
-            || !EVP_CIPHER_meth_set_impl_ctx_size(cipher, sizeof(TEST_RC4_KEY))) {
-            EVP_CIPHER_meth_free(cipher);
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(cipher, sizeof(TEST_RC4_KEY))) {
+            OPENSSL_BOX_EVP_CIPHER_meth_free(cipher);
             cipher = NULL;
         }
         r4_cipher = cipher;
@@ -248,7 +248,7 @@ static const EVP_CIPHER *test_r4_cipher(void)
 }
 static void test_r4_cipher_destroy(void)
 {
-    EVP_CIPHER_meth_free(r4_cipher);
+    OPENSSL_BOX_EVP_CIPHER_meth_free(r4_cipher);
     r4_cipher = NULL;
 }
 
@@ -258,13 +258,13 @@ static const EVP_CIPHER *test_r4_40_cipher(void)
     if (r4_40_cipher == NULL) {
         EVP_CIPHER *cipher;
 
-        if ((cipher = EVP_CIPHER_meth_new(NID_rc4, 1, 5 /* 40 bits */)) == NULL
-            || !EVP_CIPHER_meth_set_iv_length(cipher, 0)
-            || !EVP_CIPHER_meth_set_flags(cipher, EVP_CIPH_VARIABLE_LENGTH)
+        if ((cipher = OPENSSL_BOX_EVP_CIPHER_meth_new(NID_rc4, 1, 5 /* 40 bits */)) == NULL
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_iv_length(cipher, 0)
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_flags(cipher, EVP_CIPH_VARIABLE_LENGTH)
             || !EVP_CIPHER_meth_set_init(cipher, test_rc4_init_key)
             || !EVP_CIPHER_meth_set_do_cipher(cipher, test_rc4_cipher)
-            || !EVP_CIPHER_meth_set_impl_ctx_size(cipher, sizeof(TEST_RC4_KEY))) {
-            EVP_CIPHER_meth_free(cipher);
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(cipher, sizeof(TEST_RC4_KEY))) {
+            OPENSSL_BOX_EVP_CIPHER_meth_free(cipher);
             cipher = NULL;
         }
         r4_40_cipher = cipher;
@@ -273,7 +273,7 @@ static const EVP_CIPHER *test_r4_40_cipher(void)
 }
 static void test_r4_40_cipher_destroy(void)
 {
-    EVP_CIPHER_meth_free(r4_40_cipher);
+    OPENSSL_BOX_EVP_CIPHER_meth_free(r4_40_cipher);
     r4_40_cipher = NULL;
 }
 static int test_cipher_nids(const int **nids)
@@ -285,9 +285,9 @@ static int test_cipher_nids(const int **nids)
     if (!init) {
         const EVP_CIPHER *cipher;
         if ((cipher = test_r4_cipher()) != NULL)
-            cipher_nids[pos++] = EVP_CIPHER_get_nid(cipher);
+            cipher_nids[pos++] = OPENSSL_BOX_EVP_CIPHER_get_nid(cipher);
         if ((cipher = test_r4_40_cipher()) != NULL)
-            cipher_nids[pos++] = EVP_CIPHER_get_nid(cipher);
+            cipher_nids[pos++] = OPENSSL_BOX_EVP_CIPHER_get_nid(cipher);
         cipher_nids[pos] = 0;
         init = 1;
     }
@@ -328,7 +328,7 @@ static int test_sha1_init(EVP_MD_CTX *ctx)
 # ifdef TEST_ENG_OPENSSL_SHA_P_INIT
     fprintf(stderr, "(TEST_ENG_OPENSSL_SHA) test_sha1_init() called\n");
 # endif
-    return SHA1_Init(EVP_MD_CTX_get0_md_data(ctx));
+    return SHA1_Init(OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx));
 }
 
 static int test_sha1_update(EVP_MD_CTX *ctx, const void *data, size_t count)
@@ -336,7 +336,7 @@ static int test_sha1_update(EVP_MD_CTX *ctx, const void *data, size_t count)
 # ifdef TEST_ENG_OPENSSL_SHA_P_UPDATE
     fprintf(stderr, "(TEST_ENG_OPENSSL_SHA) test_sha1_update() called\n");
 # endif
-    return SHA1_Update(EVP_MD_CTX_get0_md_data(ctx), data, count);
+    return SHA1_Update(OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx), data, count);
 }
 
 static int test_sha1_final(EVP_MD_CTX *ctx, unsigned char *md)
@@ -344,7 +344,7 @@ static int test_sha1_final(EVP_MD_CTX *ctx, unsigned char *md)
 # ifdef TEST_ENG_OPENSSL_SHA_P_FINAL
     fprintf(stderr, "(TEST_ENG_OPENSSL_SHA) test_sha1_final() called\n");
 # endif
-    return SHA1_Final(md, EVP_MD_CTX_get0_md_data(ctx));
+    return SHA1_Final(md, OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx));
 }
 
 static EVP_MD *sha1_md = NULL;
@@ -353,16 +353,16 @@ static const EVP_MD *test_sha_md(void)
     if (sha1_md == NULL) {
         EVP_MD *md;
 
-        if ((md = EVP_MD_meth_new(NID_sha1, NID_sha1WithRSAEncryption)) == NULL
-            || !EVP_MD_meth_set_result_size(md, SHA_DIGEST_LENGTH)
-            || !EVP_MD_meth_set_input_blocksize(md, SHA_CBLOCK)
-            || !EVP_MD_meth_set_app_datasize(md,
+        if ((md = OPENSSL_BOX_EVP_MD_meth_new(NID_sha1, NID_sha1WithRSAEncryption)) == NULL
+            || !OPENSSL_BOX_EVP_MD_meth_set_result_size(md, SHA_DIGEST_LENGTH)
+            || !OPENSSL_BOX_EVP_MD_meth_set_input_blocksize(md, SHA_CBLOCK)
+            || !OPENSSL_BOX_EVP_MD_meth_set_app_datasize(md,
                                              sizeof(EVP_MD *) + sizeof(SHA_CTX))
-            || !EVP_MD_meth_set_flags(md, 0)
-            || !EVP_MD_meth_set_init(md, test_sha1_init)
+            || !OPENSSL_BOX_EVP_MD_meth_set_flags(md, 0)
+            || !OPENSSL_BOX_EVP_MD_meth_set_init(md, test_sha1_init)
             || !EVP_MD_meth_set_update(md, test_sha1_update)
             || !EVP_MD_meth_set_final(md, test_sha1_final)) {
-            EVP_MD_meth_free(md);
+            OPENSSL_BOX_EVP_MD_meth_free(md);
             md = NULL;
         }
         sha1_md = md;
@@ -371,7 +371,7 @@ static const EVP_MD *test_sha_md(void)
 }
 static void test_sha_md_destroy(void)
 {
-    EVP_MD_meth_free(sha1_md);
+    OPENSSL_BOX_EVP_MD_meth_free(sha1_md);
     sha1_md = NULL;
 }
 static int test_digest_nids(const int **nids)
@@ -383,7 +383,7 @@ static int test_digest_nids(const int **nids)
     if (!init) {
         const EVP_MD *md;
         if ((md = test_sha_md()) != NULL)
-            digest_nids[pos++] = EVP_MD_get_type(md);
+            digest_nids[pos++] = OPENSSL_BOX_EVP_MD_get_type(md);
         digest_nids[pos] = 0;
         init = 1;
     }
@@ -462,8 +462,8 @@ static int ossl_hmac_init(EVP_PKEY_CTX *ctx)
         OPENSSL_free(hctx);
         return 0;
     }
-    EVP_PKEY_CTX_set_data(ctx, hctx);
-    EVP_PKEY_CTX_set0_keygen_info(ctx, NULL, 0);
+    OPENSSL_BOX_EVP_PKEY_CTX_set_data(ctx, hctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_set0_keygen_info(ctx, NULL, 0);
 # ifdef TEST_ENG_OPENSSL_HMAC_INIT
     fprintf(stderr, "(TEST_ENG_OPENSSL_HMAC) ossl_hmac_init() called\n");
 # endif
@@ -479,8 +479,8 @@ static int ossl_hmac_copy(EVP_PKEY_CTX *dst, EVP_PKEY_CTX *src)
     /* allocate memory for dst->data and a new HMAC_CTX in dst->data->ctx */
     if (!ossl_hmac_init(dst))
         return 0;
-    sctx = EVP_PKEY_CTX_get_data(src);
-    dctx = EVP_PKEY_CTX_get_data(dst);
+    sctx = OPENSSL_BOX_EVP_PKEY_CTX_get_data(src);
+    dctx = OPENSSL_BOX_EVP_PKEY_CTX_get_data(dst);
     dctx->md = sctx->md;
     if (!HMAC_CTX_copy(dctx->ctx, sctx->ctx))
         goto err;
@@ -498,33 +498,33 @@ err:
 
 static void ossl_hmac_cleanup(EVP_PKEY_CTX *ctx)
 {
-    OSSL_HMAC_PKEY_CTX *hctx = EVP_PKEY_CTX_get_data(ctx);
+    OSSL_HMAC_PKEY_CTX *hctx = OPENSSL_BOX_EVP_PKEY_CTX_get_data(ctx);
 
     if (hctx) {
         HMAC_CTX_free(hctx->ctx);
         OPENSSL_clear_free(hctx->ktmp.data, hctx->ktmp.length);
         OPENSSL_free(hctx);
-        EVP_PKEY_CTX_set_data(ctx, NULL);
+        OPENSSL_BOX_EVP_PKEY_CTX_set_data(ctx, NULL);
     }
 }
 
 static int ossl_hmac_keygen(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
 {
     ASN1_OCTET_STRING *hkey = NULL;
-    OSSL_HMAC_PKEY_CTX *hctx = EVP_PKEY_CTX_get_data(ctx);
+    OSSL_HMAC_PKEY_CTX *hctx = OPENSSL_BOX_EVP_PKEY_CTX_get_data(ctx);
     if (!hctx->ktmp.data)
         return 0;
     hkey = ASN1_OCTET_STRING_dup(&hctx->ktmp);
     if (!hkey)
         return 0;
-    EVP_PKEY_assign(pkey, EVP_PKEY_HMAC, hkey);
+    OPENSSL_BOX_EVP_PKEY_assign(pkey, EVP_PKEY_HMAC, hkey);
 
     return 1;
 }
 
 static int ossl_int_update(EVP_MD_CTX *ctx, const void *data, size_t count)
 {
-    OSSL_HMAC_PKEY_CTX *hctx = EVP_PKEY_CTX_get_data(EVP_MD_CTX_get_pkey_ctx(ctx));
+    OSSL_HMAC_PKEY_CTX *hctx = OPENSSL_BOX_EVP_PKEY_CTX_get_data(OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx));
     if (!HMAC_Update(hctx->ctx, data, count))
         return 0;
     return 1;
@@ -532,7 +532,7 @@ static int ossl_int_update(EVP_MD_CTX *ctx, const void *data, size_t count)
 
 static int ossl_hmac_signctx_init(EVP_PKEY_CTX *ctx, EVP_MD_CTX *mctx)
 {
-    EVP_MD_CTX_set_flags(mctx, EVP_MD_CTX_FLAG_NO_INIT);
+    OPENSSL_BOX_EVP_MD_CTX_set_flags(mctx, EVP_MD_CTX_FLAG_NO_INIT);
     EVP_MD_CTX_set_update_fn(mctx, ossl_int_update);
     return 1;
 }
@@ -541,7 +541,7 @@ static int ossl_hmac_signctx(EVP_PKEY_CTX *ctx, unsigned char *sig,
                              size_t *siglen, EVP_MD_CTX *mctx)
 {
     unsigned int hlen;
-    OSSL_HMAC_PKEY_CTX *hctx = EVP_PKEY_CTX_get_data(ctx);
+    OSSL_HMAC_PKEY_CTX *hctx = OPENSSL_BOX_EVP_PKEY_CTX_get_data(ctx);
     int l = EVP_MD_CTX_get_size(mctx);
 
     if (l < 0)
@@ -558,7 +558,7 @@ static int ossl_hmac_signctx(EVP_PKEY_CTX *ctx, unsigned char *sig,
 
 static int ossl_hmac_ctrl(EVP_PKEY_CTX *ctx, int type, int p1, void *p2)
 {
-    OSSL_HMAC_PKEY_CTX *hctx = EVP_PKEY_CTX_get_data(ctx);
+    OSSL_HMAC_PKEY_CTX *hctx = OPENSSL_BOX_EVP_PKEY_CTX_get_data(ctx);
     EVP_PKEY *pk;
     ASN1_OCTET_STRING *key;
     switch (type) {
@@ -575,8 +575,8 @@ static int ossl_hmac_ctrl(EVP_PKEY_CTX *ctx, int type, int p1, void *p2)
         break;
 
     case EVP_PKEY_CTRL_DIGESTINIT:
-        pk = EVP_PKEY_CTX_get0_pkey(ctx);
-        key = EVP_PKEY_get0(pk);
+        pk = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(ctx);
+        key = OPENSSL_BOX_EVP_PKEY_get0(pk);
         if (!HMAC_Init_ex(hctx->ctx, key->data, key->length, hctx->md, NULL))
             return 0;
         break;
@@ -617,7 +617,7 @@ static EVP_PKEY_METHOD *ossl_hmac_meth;
 static int ossl_register_hmac_meth(void)
 {
     EVP_PKEY_METHOD *meth;
-    meth = EVP_PKEY_meth_new(EVP_PKEY_HMAC, 0);
+    meth = OPENSSL_BOX_EVP_PKEY_meth_new(EVP_PKEY_HMAC, 0);
     if (meth == NULL)
         return 0;
     EVP_PKEY_meth_set_init(meth, ossl_hmac_init);

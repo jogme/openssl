@@ -231,9 +231,9 @@ int ecparam_main(int argc, char **argv)
             gctx_params = EVP_PKEY_CTX_new_from_name(app_get0_libctx(), "ec",
                                                      app_get0_propq());
         if (gctx_params == NULL
-            || EVP_PKEY_keygen_init(gctx_params) <= 0
-            || EVP_PKEY_CTX_set_params(gctx_params, params) <= 0
-            || EVP_PKEY_keygen(gctx_params, &params_key) <= 0) {
+            || OPENSSL_BOX_EVP_PKEY_keygen_init(gctx_params) <= 0
+            || OPENSSL_BOX_EVP_PKEY_CTX_set_params(gctx_params, params) <= 0
+            || OPENSSL_BOX_EVP_PKEY_keygen(gctx_params, &params_key) <= 0) {
             BIO_printf(bio_err, "unable to generate key\n");
             goto end;
         }
@@ -294,7 +294,7 @@ int ecparam_main(int argc, char **argv)
         }
         pctx = EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), params_key,
                                           app_get0_propq());
-        if (pctx == NULL || EVP_PKEY_param_check(pctx) <= 0) {
+        if (pctx == NULL || OPENSSL_BOX_EVP_PKEY_param_check(pctx) <= 0) {
             BIO_printf(bio_err, "failed\n");
             goto end;
         }
@@ -319,14 +319,14 @@ int ecparam_main(int argc, char **argv)
          * NOTE: EC keygen does not normally need to pass in the param_key
          * for named curves. This can be achieved using:
          *    gctx = EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
-         *    EVP_PKEY_keygen_init(gctx);
-         *    EVP_PKEY_CTX_set_group_name(gctx, curvename);
-         *    EVP_PKEY_keygen(gctx, &key) <= 0)
+         *    OPENSSL_BOX_EVP_PKEY_keygen_init(gctx);
+         *    OPENSSL_BOX_EVP_PKEY_CTX_set_group_name(gctx, curvename);
+         *    OPENSSL_BOX_EVP_PKEY_keygen(gctx, &key) <= 0)
          */
         gctx_key = EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), params_key,
                                               app_get0_propq());
-        if (EVP_PKEY_keygen_init(gctx_key) <= 0
-            || EVP_PKEY_keygen(gctx_key, &key) <= 0) {
+        if (OPENSSL_BOX_EVP_PKEY_keygen_init(gctx_key) <= 0
+            || OPENSSL_BOX_EVP_PKEY_keygen(gctx_key, &key) <= 0) {
             BIO_printf(bio_err, "unable to generate key\n");
             goto end;
         }
@@ -346,11 +346,11 @@ end:
     if (ret != 0)
         ERR_print_errors(bio_err);
     release_engine(e);
-    EVP_PKEY_free(params_key);
-    EVP_PKEY_free(key);
-    EVP_PKEY_CTX_free(pctx);
-    EVP_PKEY_CTX_free(gctx_params);
-    EVP_PKEY_CTX_free(gctx_key);
+    OPENSSL_BOX_EVP_PKEY_free(params_key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(gctx_params);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(gctx_key);
     OSSL_DECODER_CTX_free(dctx_params);
     OSSL_ENCODER_CTX_free(ectx_params);
     OSSL_ENCODER_CTX_free(ectx_key);

@@ -431,7 +431,7 @@ err:
  * Do an ecxdh key exchange.
  * dhkm = DH(sender, peer)
  *
- * NOTE: Instead of using EVP_PKEY_derive() API's, we use ECX_KEY operations
+ * NOTE: Instead of using OPENSSL_BOX_EVP_PKEY_derive() API's, we use ECX_KEY operations
  *       to avoid messy conversions back to EVP_PKEY.
  *
  * Returns the size of the secret if successful, or 0 otherwise,

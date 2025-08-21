@@ -29,7 +29,7 @@ static const EVP_MD mdc2_md = {
                              MDC2_BLOCK),
 };
 
-const EVP_MD *EVP_mdc2(void)
+const EVP_MD *OPENSSL_BOX_EVP_mdc2(void)
 {
     return &mdc2_md;
 }

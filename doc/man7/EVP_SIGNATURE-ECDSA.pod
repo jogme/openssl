@@ -53,8 +53,8 @@ L<EVP_PKEY_sign_message_init(3)>.
 
 =head2 ECDSA Signature Parameters
 
-The following signature parameters can be set using EVP_PKEY_CTX_set_params().
-This may be called after EVP_PKEY_sign_init() or EVP_PKEY_verify_init(),
+The following signature parameters can be set using OPENSSL_BOX_EVP_PKEY_CTX_set_params().
+This may be called after OPENSSL_BOX_EVP_PKEY_sign_init() or OPENSSL_BOX_EVP_PKEY_verify_init(),
 and before calling EVP_PKEY_sign() or EVP_PKEY_verify().
 
 =over 4
@@ -77,7 +77,7 @@ These parameters are described in L<provider-signature(7)>.
 =back
 
 The following signature parameters can be retrieved using
-EVP_PKEY_CTX_get_params().
+OPENSSL_BOX_EVP_PKEY_CTX_get_params().
 
 =over 4
 
@@ -97,7 +97,7 @@ The parameters are described in L<provider-signature(7)>.
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_CTX_set_params(3)>,
+L<OPENSSL_BOX_EVP_PKEY_CTX_set_params(3)>,
 L<EVP_PKEY_sign(3)>,
 L<EVP_PKEY_verify(3)>,
 L<provider-signature(7)>,

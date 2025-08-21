@@ -375,7 +375,7 @@ static OSSL_STORE_INFO *try_decode_PKCS12(const char *pem_name,
                             ok = 0;
                     }
                 }
-                EVP_PKEY_free(pkey);
+                OPENSSL_BOX_EVP_PKEY_free(pkey);
                 X509_free(cert);
                 OSSL_STACK_OF_X509_free(chain);
                 store_info_free(osi_pkey);
@@ -576,7 +576,7 @@ static OSSL_STORE_INFO *try_decode_PrivateKey(const char *pem_name,
                                                  libctx, propq);
                     if (tmp_pkey != NULL) {
                         if (pkey != NULL)
-                            EVP_PKEY_free(tmp_pkey);
+                            OPENSSL_BOX_EVP_PKEY_free(tmp_pkey);
                         else
                             pkey = tmp_pkey;
                         (*matchcount)++;
@@ -588,12 +588,12 @@ static OSSL_STORE_INFO *try_decode_PrivateKey(const char *pem_name,
         }
 #endif
 
-        for (i = 0; i < EVP_PKEY_asn1_get_count(); i++) {
+        for (i = 0; i < OPENSSL_BOX_EVP_PKEY_asn1_get_count(); i++) {
             EVP_PKEY *tmp_pkey = NULL;
             const unsigned char *tmp_blob = blob;
             int pkey_id, pkey_flags;
 
-            ameth = EVP_PKEY_asn1_get0(i);
+            ameth = OPENSSL_BOX_EVP_PKEY_asn1_get0(i);
             if (!EVP_PKEY_asn1_get0_info(&pkey_id, NULL, &pkey_flags, NULL,
                                          NULL, ameth)
                 || (pkey_flags & ASN1_PKEY_ALIAS) != 0)
@@ -604,7 +604,7 @@ static OSSL_STORE_INFO *try_decode_PrivateKey(const char *pem_name,
                                          libctx, propq);
             if (tmp_pkey != NULL) {
                 if (pkey != NULL)
-                    EVP_PKEY_free(tmp_pkey);
+                    OPENSSL_BOX_EVP_PKEY_free(tmp_pkey);
                 else
                     pkey = tmp_pkey;
                 (*matchcount)++;
@@ -613,7 +613,7 @@ static OSSL_STORE_INFO *try_decode_PrivateKey(const char *pem_name,
         }
 
         if (*matchcount > 1) {
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             pkey = NULL;
         }
     }
@@ -623,7 +623,7 @@ static OSSL_STORE_INFO *try_decode_PrivateKey(const char *pem_name,
 
     store_info = OSSL_STORE_INFO_new_PKEY(pkey);
     if (store_info == NULL)
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
 
     return store_info;
 }
@@ -702,12 +702,12 @@ static OSSL_STORE_INFO *try_decode_params(const char *pem_name,
     } else {
         int i;
 
-        for (i = 0; i < EVP_PKEY_asn1_get_count(); i++) {
+        for (i = 0; i < OPENSSL_BOX_EVP_PKEY_asn1_get_count(); i++) {
             EVP_PKEY *tmp_pkey = NULL;
             const unsigned char *tmp_blob = blob;
             int pkey_id, pkey_flags;
 
-            ameth = EVP_PKEY_asn1_get0(i);
+            ameth = OPENSSL_BOX_EVP_PKEY_asn1_get0(i);
             if (!EVP_PKEY_asn1_get0_info(&pkey_id, NULL, &pkey_flags, NULL,
                                          NULL, ameth)
                 || (pkey_flags & ASN1_PKEY_ALIAS) != 0)
@@ -719,7 +719,7 @@ static OSSL_STORE_INFO *try_decode_params(const char *pem_name,
 
             if (tmp_pkey != NULL) {
                 if (pkey != NULL)
-                    EVP_PKEY_free(tmp_pkey);
+                    OPENSSL_BOX_EVP_PKEY_free(tmp_pkey);
                 else
                     pkey = tmp_pkey;
                 (*matchcount)++;
@@ -728,7 +728,7 @@ static OSSL_STORE_INFO *try_decode_params(const char *pem_name,
         }
 
         if (*matchcount > 1) {
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             pkey = NULL;
         }
     }
@@ -738,7 +738,7 @@ static OSSL_STORE_INFO *try_decode_params(const char *pem_name,
 
     store_info = OSSL_STORE_INFO_new_PARAMS(pkey);
     if (store_info == NULL)
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
 
     return store_info;
 }
@@ -1350,7 +1350,7 @@ static OSSL_STORE_INFO *file_try_read_msblob(BIO *bp, int *matchcount)
 
         if (tmp == NULL
             || (result = OSSL_STORE_INFO_new_PKEY(tmp)) == NULL) {
-            EVP_PKEY_free(tmp);
+            OPENSSL_BOX_EVP_PKEY_free(tmp);
             return 0;
         }
     }
@@ -1386,7 +1386,7 @@ static OSSL_STORE_INFO *file_try_read_PVK(BIO *bp, const UI_METHOD *ui_method,
                                      ui_method, ui_data)
             || (tmp = b2i_PVK_bio(bp, file_get_pem_pass, &pass_data)) == NULL
             || (result = OSSL_STORE_INFO_new_PKEY(tmp)) == NULL) {
-            EVP_PKEY_free(tmp);
+            OPENSSL_BOX_EVP_PKEY_free(tmp);
             return 0;
         }
     }

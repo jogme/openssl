@@ -52,7 +52,7 @@ int main(int argc, char **argv)
         goto cleanup;
     }
 
-    if (EVP_PKEY_fromdata_init(ctx) <= 0
+    if (OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0
             || EVP_PKEY_fromdata(ctx, &dsaparamkey, EVP_PKEY_KEY_PARAMETERS, params) <= 0) {
         fprintf(stderr, "EVP_PKEY_fromdata() failed\n");
         goto cleanup;
@@ -63,8 +63,8 @@ int main(int argc, char **argv)
 
     ret = EXIT_SUCCESS;
 cleanup:
-    EVP_PKEY_free(dsaparamkey);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(dsaparamkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     OSSL_PARAM_free(params);
     OSSL_PARAM_BLD_free(bld);
     BN_free(g);

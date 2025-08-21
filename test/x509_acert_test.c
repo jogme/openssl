@@ -65,7 +65,7 @@ static int test_acert_sign(void)
     if (!TEST_ptr(acert = PEM_read_bio_X509_ACERT(bp, NULL, NULL, NULL)))
         goto err;
 
-    if (!TEST_int_gt(X509_ACERT_sign(acert, pkey, EVP_sha256()), 0) ||
+    if (!TEST_int_gt(X509_ACERT_sign(acert, pkey, OPENSSL_BOX_EVP_sha256()), 0) ||
         !TEST_int_eq(X509_ACERT_verify(acert, pkey), 1))
         goto err;
 
@@ -74,7 +74,7 @@ static int test_acert_sign(void)
 err:
     BIO_free(bp);
     X509_ACERT_free(acert);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 

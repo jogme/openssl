@@ -79,7 +79,7 @@ static EVP_SKEY *evp_skey_alloc_fetch(OSSL_LIB_CTX *libctx,
 
     skey = evp_skey_alloc(skeymgmt);
     if (skey == NULL)
-        EVP_SKEYMGMT_free(skeymgmt);
+        OPENSSL_BOX_EVP_SKEYMGMT_free(skeymgmt);
 
     return skey;
 }
@@ -99,7 +99,7 @@ EVP_SKEY *EVP_SKEY_import(OSSL_LIB_CTX *libctx, const char *skeymgmtname, const 
     return skey;
 
  err:
-    EVP_SKEY_free(skey);
+    OPENSSL_BOX_EVP_SKEY_free(skey);
     return NULL;
 }
 
@@ -118,7 +118,7 @@ EVP_SKEY *EVP_SKEY_generate(OSSL_LIB_CTX *libctx, const char *skeymgmtname,
     return skey;
 
  err:
-    EVP_SKEY_free(skey);
+    OPENSSL_BOX_EVP_SKEY_free(skey);
     return NULL;
 }
 
@@ -170,7 +170,7 @@ EVP_SKEY *EVP_SKEY_import_raw_key(OSSL_LIB_CTX *libctx, const char *skeymgmtname
                            OSSL_SKEYMGMT_SELECT_SECRET_KEY, params);
 }
 
-int EVP_SKEY_up_ref(EVP_SKEY *skey)
+int OPENSSL_BOX_EVP_SKEY_up_ref(EVP_SKEY *skey)
 {
     int i;
 
@@ -182,7 +182,7 @@ int EVP_SKEY_up_ref(EVP_SKEY *skey)
     return i > 1 ? 1 : 0;
 }
 
-void EVP_SKEY_free(EVP_SKEY *skey)
+void OPENSSL_BOX_EVP_SKEY_free(EVP_SKEY *skey)
 {
     int i;
 
@@ -196,14 +196,14 @@ void EVP_SKEY_free(EVP_SKEY *skey)
     REF_ASSERT_ISNT(i < 0);
     evp_skeymgmt_freedata(skey->skeymgmt, skey->keydata);
 
-    EVP_SKEYMGMT_free(skey->skeymgmt);
+    OPENSSL_BOX_EVP_SKEYMGMT_free(skey->skeymgmt);
 
     CRYPTO_THREAD_lock_free(skey->lock);
     CRYPTO_FREE_REF(&skey->references);
     OPENSSL_free(skey);
 }
 
-const char *EVP_SKEY_get0_key_id(const EVP_SKEY *skey)
+const char *OPENSSL_BOX_EVP_SKEY_get0_key_id(const EVP_SKEY *skey)
 {
     if (skey == NULL)
         return NULL;
@@ -214,7 +214,7 @@ const char *EVP_SKEY_get0_key_id(const EVP_SKEY *skey)
     return NULL;
 }
 
-const char *EVP_SKEY_get0_skeymgmt_name(const EVP_SKEY *skey)
+const char *OPENSSL_BOX_EVP_SKEY_get0_skeymgmt_name(const EVP_SKEY *skey)
 {
     if (skey == NULL)
         return NULL;
@@ -223,7 +223,7 @@ const char *EVP_SKEY_get0_skeymgmt_name(const EVP_SKEY *skey)
 
 }
 
-const char *EVP_SKEY_get0_provider_name(const EVP_SKEY *skey)
+const char *OPENSSL_BOX_EVP_SKEY_get0_provider_name(const EVP_SKEY *skey)
 {
     if (skey == NULL)
         return NULL;
@@ -231,12 +231,12 @@ const char *EVP_SKEY_get0_provider_name(const EVP_SKEY *skey)
     return ossl_provider_name(skey->skeymgmt->prov);
 }
 
-int EVP_SKEY_is_a(const EVP_SKEY *skey, const char *name)
+int OPENSSL_BOX_EVP_SKEY_is_a(const EVP_SKEY *skey, const char *name)
 {
     if (skey == NULL)
         return 0;
 
-    return EVP_SKEYMGMT_is_a(skey->skeymgmt, name);
+    return OPENSSL_BOX_EVP_SKEYMGMT_is_a(skey->skeymgmt, name);
 }
 
 struct transfer_cb_ctx {
@@ -284,9 +284,9 @@ EVP_SKEY *EVP_SKEY_to_provider(EVP_SKEY *skey, OSSL_LIB_CTX *libctx,
     /* Short-circuit if destination provider is the same as origin */
     if (skey->skeymgmt->name_id == skeymgmt->name_id
         && skey->skeymgmt->prov == skeymgmt->prov) {
-        if (!EVP_SKEY_up_ref(skey))
+        if (!OPENSSL_BOX_EVP_SKEY_up_ref(skey))
             goto err;
-        EVP_SKEYMGMT_free(skeymgmt);
+        OPENSSL_BOX_EVP_SKEYMGMT_free(skeymgmt);
         return skey;
     }
 
@@ -308,7 +308,7 @@ EVP_SKEY *EVP_SKEY_to_provider(EVP_SKEY *skey, OSSL_LIB_CTX *libctx,
     return ret;
 
  err:
-    EVP_SKEYMGMT_free(skeymgmt);
-    EVP_SKEY_free(ret);
+    OPENSSL_BOX_EVP_SKEYMGMT_free(skeymgmt);
+    OPENSSL_BOX_EVP_SKEY_free(ret);
     return NULL;
 }

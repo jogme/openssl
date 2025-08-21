@@ -120,7 +120,7 @@ static size_t dsa_get_md_size(const PROV_DSA_CTX *pdsactx)
     int md_size;
 
     if (pdsactx->md != NULL) {
-        md_size = EVP_MD_get_size(pdsactx->md);
+        md_size = OPENSSL_BOX_EVP_MD_get_size(pdsactx->md);
         if (md_size <= 0)
             return 0;
         return (size_t)md_size;
@@ -183,7 +183,7 @@ static int dsa_setup_md(PROV_DSA_CTX *ctx,
             goto err;
         }
         /* XOF digests don't work */
-        if (EVP_MD_xof(md)) {
+        if (OPENSSL_BOX_EVP_MD_xof(md)) {
             ERR_raise(ERR_LIB_PROV, PROV_R_XOF_DIGESTS_NOT_ALLOWED);
             goto err;
         }
@@ -204,17 +204,17 @@ static int dsa_setup_md(PROV_DSA_CTX *ctx,
 
         if (!ctx->flag_allow_md) {
             if (ctx->mdname[0] != '\0'
-                && !EVP_MD_is_a(md, ctx->mdname)) {
+                && !OPENSSL_BOX_EVP_MD_is_a(md, ctx->mdname)) {
                 ERR_raise_data(ERR_LIB_PROV, PROV_R_DIGEST_NOT_ALLOWED,
                                "digest %s != %s", mdname, ctx->mdname);
                 goto err;
             }
-            EVP_MD_free(md);
+            OPENSSL_BOX_EVP_MD_free(md);
             return 1;
         }
 
-        EVP_MD_CTX_free(ctx->mdctx);
-        EVP_MD_free(ctx->md);
+        OPENSSL_BOX_EVP_MD_CTX_free(ctx->mdctx);
+        OPENSSL_BOX_EVP_MD_free(ctx->md);
 
         /*
          * We do not care about DER writing errors.
@@ -242,7 +242,7 @@ static int dsa_setup_md(PROV_DSA_CTX *ctx,
 
     return 1;
  err:
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     return 0;
 }
 
@@ -532,7 +532,7 @@ static int dsa_digest_signverify_init(void *vpdsactx, const char *mdname,
     pdsactx->flag_allow_md = 0;
 
     if (pdsactx->mdctx == NULL) {
-        pdsactx->mdctx = EVP_MD_CTX_new();
+        pdsactx->mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (pdsactx->mdctx == NULL)
             goto error;
     }
@@ -543,7 +543,7 @@ static int dsa_digest_signverify_init(void *vpdsactx, const char *mdname,
     return 1;
 
  error:
-    EVP_MD_CTX_free(pdsactx->mdctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(pdsactx->mdctx);
     pdsactx->mdctx = NULL;
     return 0;
 }
@@ -621,8 +621,8 @@ static void dsa_freectx(void *vpdsactx)
 {
     PROV_DSA_CTX *ctx = (PROV_DSA_CTX *)vpdsactx;
 
-    EVP_MD_CTX_free(ctx->mdctx);
-    EVP_MD_free(ctx->md);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx->mdctx);
+    OPENSSL_BOX_EVP_MD_free(ctx->md);
     OPENSSL_free(ctx->sig);
     OPENSSL_free(ctx->propq);
     DSA_free(ctx->dsa);
@@ -649,14 +649,14 @@ static void *dsa_dupctx(void *vpdsactx)
         goto err;
     dstctx->dsa = srcctx->dsa;
 
-    if (srcctx->md != NULL && !EVP_MD_up_ref(srcctx->md))
+    if (srcctx->md != NULL && !OPENSSL_BOX_EVP_MD_up_ref(srcctx->md))
         goto err;
     dstctx->md = srcctx->md;
 
     if (srcctx->mdctx != NULL) {
-        dstctx->mdctx = EVP_MD_CTX_new();
+        dstctx->mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (dstctx->mdctx == NULL
-                || !EVP_MD_CTX_copy_ex(dstctx->mdctx, srcctx->mdctx))
+                || !OPENSSL_BOX_EVP_MD_CTX_copy_ex(dstctx->mdctx, srcctx->mdctx))
             goto err;
     }
 
@@ -806,7 +806,7 @@ static int dsa_get_ctx_md_params(void *vpdsactx, OSSL_PARAM *params)
     if (pdsactx->mdctx == NULL)
         return 0;
 
-    return EVP_MD_CTX_get_params(pdsactx->mdctx, params);
+    return OPENSSL_BOX_EVP_MD_CTX_get_params(pdsactx->mdctx, params);
 }
 
 static const OSSL_PARAM *dsa_gettable_ctx_md_params(void *vpdsactx)
@@ -816,7 +816,7 @@ static const OSSL_PARAM *dsa_gettable_ctx_md_params(void *vpdsactx)
     if (pdsactx->md == NULL)
         return 0;
 
-    return EVP_MD_gettable_ctx_params(pdsactx->md);
+    return OPENSSL_BOX_EVP_MD_gettable_ctx_params(pdsactx->md);
 }
 
 static int dsa_set_ctx_md_params(void *vpdsactx, const OSSL_PARAM params[])
@@ -826,7 +826,7 @@ static int dsa_set_ctx_md_params(void *vpdsactx, const OSSL_PARAM params[])
     if (pdsactx->mdctx == NULL)
         return 0;
 
-    return EVP_MD_CTX_set_params(pdsactx->mdctx, params);
+    return OPENSSL_BOX_EVP_MD_CTX_set_params(pdsactx->mdctx, params);
 }
 
 static const OSSL_PARAM *dsa_settable_ctx_md_params(void *vpdsactx)
@@ -836,7 +836,7 @@ static const OSSL_PARAM *dsa_settable_ctx_md_params(void *vpdsactx)
     if (pdsactx->md == NULL)
         return 0;
 
-    return EVP_MD_settable_ctx_params(pdsactx->md);
+    return OPENSSL_BOX_EVP_MD_settable_ctx_params(pdsactx->md);
 }
 
 const OSSL_DISPATCH ossl_dsa_signature_functions[] = {
@@ -913,7 +913,7 @@ static int dsa_sigalg_signverify_init(void *vpdsactx, void *vdsa,
     pdsactx->flag_allow_md = 0;
 
     if (pdsactx->mdctx == NULL) {
-        pdsactx->mdctx = EVP_MD_CTX_new();
+        pdsactx->mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (pdsactx->mdctx == NULL)
             goto error;
     }
@@ -924,7 +924,7 @@ static int dsa_sigalg_signverify_init(void *vpdsactx, void *vdsa,
     return 1;
 
  error:
-    EVP_MD_CTX_free(pdsactx->mdctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(pdsactx->mdctx);
     pdsactx->mdctx = NULL;
     return 0;
 }

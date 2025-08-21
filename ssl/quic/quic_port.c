@@ -168,11 +168,11 @@ static int port_init(QUIC_PORT *port)
     port->bio_changed       = 1;
 
     /* Generate random key for token encryption */
-    if ((port->token_ctx = EVP_CIPHER_CTX_new()) == NULL
+    if ((port->token_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL
         || (cipher = EVP_CIPHER_fetch(port->engine->libctx,
                                       "AES-256-GCM", NULL)) == NULL
         || !EVP_EncryptInit_ex(port->token_ctx, cipher, NULL, NULL, NULL)
-        || (key_len = EVP_CIPHER_CTX_get_key_length(port->token_ctx)) <= 0
+        || (key_len = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(port->token_ctx)) <= 0
         || (token_key = OPENSSL_malloc(key_len)) == NULL
         || !RAND_priv_bytes_ex(port->engine->libctx, token_key, key_len, 0)
         || !EVP_EncryptInit_ex(port->token_ctx, NULL, NULL, token_key, NULL))
@@ -180,7 +180,7 @@ static int port_init(QUIC_PORT *port)
 
     ret = 1;
 err:
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     if (key_len >= 1)
         OPENSSL_clear_free(token_key, key_len);
     else
@@ -211,7 +211,7 @@ static void port_cleanup(QUIC_PORT *port)
         port->on_engine_list = 0;
     }
 
-    EVP_CIPHER_CTX_free(port->token_ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(port->token_ctx);
     port->token_ctx = NULL;
 }
 
@@ -949,8 +949,8 @@ static int encrypt_validation_token(const QUIC_PORT *port,
     int tag_len;
     unsigned char *iv = ciphertext, *data, *tag;
 
-    if ((tag_len = EVP_CIPHER_CTX_get_tag_length(port->token_ctx)) <= 0
-        || (iv_len = EVP_CIPHER_CTX_get_iv_length(port->token_ctx)) <= 0)
+    if ((tag_len = OPENSSL_BOX_EVP_CIPHER_CTX_get_tag_length(port->token_ctx)) <= 0
+        || (iv_len = OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(port->token_ctx)) <= 0)
         goto err;
 
     *ct_len = iv_len + pt_len + tag_len + QUIC_RETRY_INTEGRITY_TAG_LEN;
@@ -966,7 +966,7 @@ static int encrypt_validation_token(const QUIC_PORT *port,
         || !EVP_EncryptInit_ex(port->token_ctx, NULL, NULL, NULL, iv)
         || !EVP_EncryptUpdate(port->token_ctx, data, &len, plaintext, (int)pt_len)
         || !EVP_EncryptFinal_ex(port->token_ctx, data + pt_len, &len)
-        || !EVP_CIPHER_CTX_ctrl(port->token_ctx, EVP_CTRL_GCM_GET_TAG, tag_len, tag))
+        || !OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(port->token_ctx, EVP_CTRL_GCM_GET_TAG, tag_len, tag))
         goto err;
 
     ret = 1;
@@ -999,8 +999,8 @@ static int decrypt_validation_token(const QUIC_PORT *port,
     int tag_len;
     const unsigned char *iv = ciphertext, *data, *tag;
 
-    if ((tag_len = EVP_CIPHER_CTX_get_tag_length(port->token_ctx)) <= 0
-        || (iv_len = EVP_CIPHER_CTX_get_iv_length(port->token_ctx)) <= 0)
+    if ((tag_len = OPENSSL_BOX_EVP_CIPHER_CTX_get_tag_length(port->token_ctx)) <= 0
+        || (iv_len = OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(port->token_ctx)) <= 0)
         goto err;
 
     /* Prevent decryption of a buffer that is not within reasonable bounds */
@@ -1019,7 +1019,7 @@ static int decrypt_validation_token(const QUIC_PORT *port,
     if (!EVP_DecryptInit_ex(port->token_ctx, NULL, NULL, NULL, iv)
         || !EVP_DecryptUpdate(port->token_ctx, plaintext, &len, data,
                               (int)(ct_len - iv_len - tag_len))
-        || !EVP_CIPHER_CTX_ctrl(port->token_ctx, EVP_CTRL_GCM_SET_TAG, tag_len,
+        || !OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(port->token_ctx, EVP_CTRL_GCM_SET_TAG, tag_len,
                                 (void *)tag)
         || !EVP_DecryptFinal_ex(port->token_ctx, plaintext + len, &len))
         goto err;

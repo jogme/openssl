@@ -2,25 +2,25 @@
 
 =head1 NAME
 
-EVP_PKEY_get_field_type, EVP_PKEY_get_ec_point_conv_form - get field type
+OPENSSL_BOX_EVP_PKEY_get_field_type, OPENSSL_BOX_EVP_PKEY_get_ec_point_conv_form - get field type
 or point conversion form of a key
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- int EVP_PKEY_get_field_type(const EVP_PKEY *pkey);
- int EVP_PKEY_get_ec_point_conv_form(const EVP_PKEY *pkey);
+ int OPENSSL_BOX_EVP_PKEY_get_field_type(const EVP_PKEY *pkey);
+ int OPENSSL_BOX_EVP_PKEY_get_ec_point_conv_form(const EVP_PKEY *pkey);
 
 =head1 DESCRIPTION
 
-EVP_PKEY_get_field_type() returns the field type NID of the I<pkey>, if
+OPENSSL_BOX_EVP_PKEY_get_field_type() returns the field type NID of the I<pkey>, if
 I<pkey>'s key type supports it. The types currently supported
 by the built-in OpenSSL providers are either B<NID_X9_62_prime_field>
 for prime curves or B<NID_X9_62_characteristic_two_field> for binary curves;
 these values are defined in the F<< <openssl/obj_mac.h> >> header file.
 
-EVP_PKEY_get_ec_point_conv_form() returns the point conversion format
+OPENSSL_BOX_EVP_PKEY_get_ec_point_conv_form() returns the point conversion format
 of the I<pkey>, if I<pkey>'s key type supports it.
 
 =head1 NOTES
@@ -30,9 +30,9 @@ SM2 keys.  Other providers may support this for additional key types.
 
 =head1 RETURN VALUES
 
-EVP_PKEY_get_field_type() returns the field type NID or 0 on error.
+OPENSSL_BOX_EVP_PKEY_get_field_type() returns the field type NID or 0 on error.
 
-EVP_PKEY_get_ec_point_conv_form() returns the point conversion format number
+OPENSSL_BOX_EVP_PKEY_get_ec_point_conv_form() returns the point conversion format number
 (see L<EC_GROUP_copy(3)>) or 0 on error.
 
 =head1 SEE ALSO

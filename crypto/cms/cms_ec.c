@@ -47,16 +47,16 @@ static EVP_PKEY *pkey_type2param(int ptype, const void *pval,
 
         /* type == V_ASN1_OBJECT => the parameters are given by an asn1 OID */
         pctx = EVP_PKEY_CTX_new_from_name(libctx, "EC", propq);
-        if (pctx == NULL || EVP_PKEY_paramgen_init(pctx) <= 0)
+        if (pctx == NULL || OPENSSL_BOX_EVP_PKEY_paramgen_init(pctx) <= 0)
             goto err;
         if (OBJ_obj2txt(groupname, sizeof(groupname), poid, 0) <= 0
-                || EVP_PKEY_CTX_set_group_name(pctx, groupname) <= 0) {
+                || OPENSSL_BOX_EVP_PKEY_CTX_set_group_name(pctx, groupname) <= 0) {
             ERR_raise(ERR_LIB_CMS, CMS_R_DECODE_ERROR);
             goto err;
         }
-        if (EVP_PKEY_paramgen(pctx, &pkey) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_paramgen(pctx, &pkey) <= 0)
             goto err;
-        EVP_PKEY_CTX_free(pctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
         return pkey;
     }
 
@@ -64,8 +64,8 @@ static EVP_PKEY *pkey_type2param(int ptype, const void *pval,
     return NULL;
 
  err:
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     OSSL_DECODER_CTX_free(ctx);
     return NULL;
 }
@@ -89,19 +89,19 @@ static int ecdh_cms_set_peerkey(EVP_PKEY_CTX *pctx,
     if (atype == V_ASN1_UNDEF || atype == V_ASN1_NULL) {
         EVP_PKEY *pk;
 
-        pk = EVP_PKEY_CTX_get0_pkey(pctx);
+        pk = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(pctx);
         if (pk == NULL)
             goto err;
 
-        pkpeer = EVP_PKEY_new();
+        pkpeer = OPENSSL_BOX_EVP_PKEY_new();
         if (pkpeer == NULL)
             goto err;
-        if (!EVP_PKEY_copy_parameters(pkpeer, pk))
+        if (!OPENSSL_BOX_EVP_PKEY_copy_parameters(pkpeer, pk))
             goto err;
     } else {
         pkpeer = pkey_type2param(atype, aval,
-                                 EVP_PKEY_CTX_get0_libctx(pctx),
-                                 EVP_PKEY_CTX_get0_propq(pctx));
+                                 OPENSSL_BOX_EVP_PKEY_CTX_get0_libctx(pctx),
+                                 OPENSSL_BOX_EVP_PKEY_CTX_get0_propq(pctx));
         if (pkpeer == NULL)
             goto err;
     }
@@ -114,10 +114,10 @@ static int ecdh_cms_set_peerkey(EVP_PKEY_CTX *pctx,
     if (EVP_PKEY_set1_encoded_public_key(pkpeer, p, plen) <= 0)
         goto err;
 
-    if (EVP_PKEY_derive_set_peer(pctx, pkpeer) > 0)
+    if (OPENSSL_BOX_EVP_PKEY_derive_set_peer(pctx, pkpeer) > 0)
         rv = 1;
  err:
-    EVP_PKEY_free(pkpeer);
+    OPENSSL_BOX_EVP_PKEY_free(pkpeer);
     return rv;
 }
 
@@ -189,14 +189,14 @@ static int ecdh_cms_set_shared_info(EVP_PKEY_CTX *pctx, CMS_RecipientInfo *ri)
         goto err;
     OBJ_obj2txt(name, sizeof(name), kekalg->algorithm, 0);
     kekcipher = EVP_CIPHER_fetch(pctx->libctx, name, pctx->propquery);
-    if (kekcipher == NULL || EVP_CIPHER_get_mode(kekcipher) != EVP_CIPH_WRAP_MODE)
+    if (kekcipher == NULL || OPENSSL_BOX_EVP_CIPHER_get_mode(kekcipher) != EVP_CIPH_WRAP_MODE)
         goto err;
     if (!EVP_EncryptInit_ex(kekctx, kekcipher, NULL, NULL, NULL))
         goto err;
-    if (EVP_CIPHER_asn1_to_param(kekctx, kekalg->parameter) <= 0)
+    if (OPENSSL_BOX_EVP_CIPHER_asn1_to_param(kekctx, kekalg->parameter) <= 0)
         goto err;
 
-    keylen = EVP_CIPHER_CTX_get_key_length(kekctx);
+    keylen = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(kekctx);
     if (EVP_PKEY_CTX_set_ecdh_kdf_outlen(pctx, keylen) <= 0)
         goto err;
 
@@ -211,7 +211,7 @@ static int ecdh_cms_set_shared_info(EVP_PKEY_CTX *pctx, CMS_RecipientInfo *ri)
 
     rv = 1;
  err:
-    EVP_CIPHER_free(kekcipher);
+    OPENSSL_BOX_EVP_CIPHER_free(kekcipher);
     X509_ALGOR_free(kekalg);
     OPENSSL_free(der);
     return rv;
@@ -225,7 +225,7 @@ static int ecdh_cms_decrypt(CMS_RecipientInfo *ri)
     if (pctx == NULL)
         return 0;
     /* See if we need to set peer key */
-    if (!EVP_PKEY_CTX_get0_peerkey(pctx)) {
+    if (!OPENSSL_BOX_EVP_PKEY_CTX_get0_peerkey(pctx)) {
         X509_ALGOR *alg;
         ASN1_BIT_STRING *pubkey;
 
@@ -268,7 +268,7 @@ static int ecdh_cms_encrypt(CMS_RecipientInfo *ri)
     if (pctx == NULL)
         return 0;
     /* Get ephemeral key */
-    pkey = EVP_PKEY_CTX_get0_pkey(pctx);
+    pkey = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(pctx);
     if (!CMS_RecipientInfo_kari_get0_orig_id(ri, &talg, &pubkey,
                                              NULL, NULL, NULL))
         goto err;
@@ -278,7 +278,7 @@ static int ecdh_cms_encrypt(CMS_RecipientInfo *ri)
         /* Set the key */
         size_t enckeylen;
 
-        enckeylen = EVP_PKEY_get1_encoded_public_key(pkey, &penc);
+        enckeylen = OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(pkey, &penc);
         if (enckeylen > INT_MAX || enckeylen == 0)
             goto err;
         ASN1_STRING_set0(pubkey, penc, (int)enckeylen);
@@ -312,7 +312,7 @@ static int ecdh_cms_encrypt(CMS_RecipientInfo *ri)
         goto err;
     if (kdf_md == NULL) {
         /* Fixme later for better MD */
-        kdf_md = EVP_sha1();
+        kdf_md = OPENSSL_BOX_EVP_sha1();
         if (EVP_PKEY_CTX_set_ecdh_kdf_md(pctx, kdf_md) <= 0)
             goto err;
     }
@@ -322,12 +322,12 @@ static int ecdh_cms_encrypt(CMS_RecipientInfo *ri)
 
     /* Lookup NID for KDF+cofactor+digest */
 
-    if (!OBJ_find_sigid_by_algs(&kdf_nid, EVP_MD_get_type(kdf_md), ecdh_nid))
+    if (!OBJ_find_sigid_by_algs(&kdf_nid, OPENSSL_BOX_EVP_MD_get_type(kdf_md), ecdh_nid))
         goto err;
     /* Get wrap NID */
     ctx = CMS_RecipientInfo_kari_get0_ctx(ri);
     wrap_nid = EVP_CIPHER_CTX_get_type(ctx);
-    keylen = EVP_CIPHER_CTX_get_key_length(ctx);
+    keylen = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx);
 
     /* Package wrap algorithm in an AlgorithmIdentifier */
 
@@ -338,7 +338,7 @@ static int ecdh_cms_encrypt(CMS_RecipientInfo *ri)
     wrap_alg->parameter = ASN1_TYPE_new();
     if (wrap_alg->parameter == NULL)
         goto err;
-    if (EVP_CIPHER_param_to_asn1(ctx, wrap_alg->parameter) <= 0)
+    if (OPENSSL_BOX_EVP_CIPHER_param_to_asn1(ctx, wrap_alg->parameter) <= 0)
         goto err;
     if (ASN1_TYPE_get(wrap_alg->parameter) == NID_undef) {
         ASN1_TYPE_free(wrap_alg->parameter);

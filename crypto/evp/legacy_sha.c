@@ -29,21 +29,21 @@
 #define IMPLEMENT_LEGACY_EVP_MD_METH_SHA3(nm, fn, tag)                         \
 static int nm##_init(EVP_MD_CTX *ctx)                                          \
 {                                                                              \
-    return fn##_init(EVP_MD_CTX_get0_md_data(ctx), tag, ctx->digest->md_size * 8); \
+    return fn##_init(OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx), tag, ctx->digest->md_size * 8); \
 }                                                                              \
 static int nm##_update(EVP_MD_CTX *ctx, const void *data, size_t count)        \
 {                                                                              \
-    return fn##_update(EVP_MD_CTX_get0_md_data(ctx), data, count);             \
+    return fn##_update(OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx), data, count);             \
 }                                                                              \
 static int nm##_final(EVP_MD_CTX *ctx, unsigned char *md)                      \
 {                                                                              \
-    KECCAK1600_CTX *kctx = EVP_MD_CTX_get0_md_data(ctx);                       \
+    KECCAK1600_CTX *kctx = OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx);                       \
     return fn##_final(kctx, md, kctx->md_size);                                \
 }
 #define IMPLEMENT_LEGACY_EVP_MD_METH_SHAKE(nm, fn, tag)                        \
 static int nm##_init(EVP_MD_CTX *ctx)                                          \
 {                                                                              \
-    return fn##_init(EVP_MD_CTX_get0_md_data(ctx), tag, ctx->digest->md_size * 8); \
+    return fn##_init(OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx), tag, ctx->digest->md_size * 8); \
 }                                                                              \
 
 #define sha512_224_Init    sha512_224_init
@@ -66,7 +66,7 @@ IMPLEMENT_LEGACY_EVP_MD_METH_SHAKE(shake, ossl_sha3, '\x1f')
 
 static int sha1_int_ctrl(EVP_MD_CTX *ctx, int cmd, int p1, void *p2)
 {
-    return ossl_sha1_ctrl(ctx != NULL ? EVP_MD_CTX_get0_md_data(ctx) : NULL,
+    return ossl_sha1_ctrl(ctx != NULL ? OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx) : NULL,
                           cmd, p1, p2);
 }
 
@@ -99,7 +99,7 @@ static const EVP_MD sha1_md = {
                              SHA_CBLOCK),
 };
 
-const EVP_MD *EVP_sha1(void)
+const EVP_MD *OPENSSL_BOX_EVP_sha1(void)
 {
     return &sha1_md;
 }
@@ -114,7 +114,7 @@ static const EVP_MD sha224_md = {
                              SHA256_CBLOCK),
 };
 
-const EVP_MD *EVP_sha224(void)
+const EVP_MD *OPENSSL_BOX_EVP_sha224(void)
 {
     return &sha224_md;
 }
@@ -129,7 +129,7 @@ static const EVP_MD sha256_md = {
                              SHA256_CBLOCK),
 };
 
-const EVP_MD *EVP_sha256(void)
+const EVP_MD *OPENSSL_BOX_EVP_sha256(void)
 {
     return &sha256_md;
 }
@@ -144,7 +144,7 @@ static const EVP_MD sha512_224_md = {
                              sha512_224_int_final, NULL, SHA512_CBLOCK),
 };
 
-const EVP_MD *EVP_sha512_224(void)
+const EVP_MD *OPENSSL_BOX_EVP_sha512_224(void)
 {
     return &sha512_224_md;
 }
@@ -159,7 +159,7 @@ static const EVP_MD sha512_256_md = {
                              sha512_256_int_final, NULL, SHA512_CBLOCK),
 };
 
-const EVP_MD *EVP_sha512_256(void)
+const EVP_MD *OPENSSL_BOX_EVP_sha512_256(void)
 {
     return &sha512_256_md;
 }
@@ -174,7 +174,7 @@ static const EVP_MD sha384_md = {
                              SHA512_CBLOCK),
 };
 
-const EVP_MD *EVP_sha384(void)
+const EVP_MD *OPENSSL_BOX_EVP_sha384(void)
 {
     return &sha384_md;
 }
@@ -189,7 +189,7 @@ static const EVP_MD sha512_md = {
                              SHA512_CBLOCK),
 };
 
-const EVP_MD *EVP_sha512(void)
+const EVP_MD *OPENSSL_BOX_EVP_sha512(void)
 {
     return &sha512_md;
 }

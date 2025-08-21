@@ -225,7 +225,7 @@ static EVP_PKEY *try_key_ref(struct extracted_param_data_st *data,
          * 2.  The keymgmt is from another provider, then we must
          *     do the export/import dance.
          */
-        if (EVP_KEYMGMT_get0_provider(keymgmt) == provider) {
+        if (OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt) == provider) {
             /* no point trying fallback here */
             try_fallback = 0;
             keydata = evp_keymgmt_load(keymgmt, data->ref, data->ref_size);
@@ -253,7 +253,7 @@ static EVP_PKEY *try_key_ref(struct extracted_param_data_st *data,
         }
 
         if (keydata == NULL && try_fallback > 0) {
-            EVP_KEYMGMT_free(keymgmt);
+            OPENSSL_BOX_EVP_KEYMGMT_free(keymgmt);
             keymgmt = evp_keymgmt_fetch_from_prov((OSSL_PROVIDER *)provider,
                                                   data->data_type, propq);
             if (keymgmt != NULL) {
@@ -268,7 +268,7 @@ static EVP_PKEY *try_key_ref(struct extracted_param_data_st *data,
     } else {
         ERR_clear_last_mark();
     }
-    EVP_KEYMGMT_free(keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(keymgmt);
 
     return pk;
 }
@@ -468,7 +468,7 @@ static int try_key(struct extracted_param_data_st *data, OSSL_STORE_INFO **v,
         }
 
         if (*v == NULL)
-            EVP_PKEY_free(pk);
+            OPENSSL_BOX_EVP_PKEY_free(pk);
     }
 
     return harderr == 0;
@@ -648,7 +648,7 @@ static int try_pkcs12(struct extracted_param_data_st *data, OSSL_STORE_INFO **v,
                             ok = 0;
                     }
                 }
-                EVP_PKEY_free(pkey);
+                OPENSSL_BOX_EVP_PKEY_free(pkey);
                 X509_free(cert);
                 OSSL_STACK_OF_X509_free(chain);
                 OSSL_STORE_INFO_free(osi_pkey);

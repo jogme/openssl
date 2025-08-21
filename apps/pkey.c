@@ -223,7 +223,7 @@ int pkey_main(int argc, char **argv)
     if (asn1_encoding != NULL || point_format != NULL) {
         OSSL_PARAM params[3], *p = params;
 
-        if (!EVP_PKEY_is_a(pkey, "EC"))
+        if (!OPENSSL_BOX_EVP_PKEY_is_a(pkey, "EC"))
             goto end;
 
         if (asn1_encoding != NULL)
@@ -234,7 +234,7 @@ int pkey_main(int argc, char **argv)
                        OSSL_PKEY_PARAM_EC_POINT_CONVERSION_FORMAT,
                        point_format, 0);
         *p = OSSL_PARAM_construct_end();
-        if (EVP_PKEY_set_params(pkey, params) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_set_params(pkey, params) <= 0)
             goto end;
     }
 #endif
@@ -242,16 +242,16 @@ int pkey_main(int argc, char **argv)
     if (check || pub_check) {
         int r;
 
-        ctx = EVP_PKEY_CTX_new(pkey, e);
+        ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, e);
         if (ctx == NULL) {
             ERR_print_errors(bio_err);
             goto end;
         }
 
         if (check && !pubin)
-            r = EVP_PKEY_check(ctx);
+            r = OPENSSL_BOX_EVP_PKEY_check(ctx);
         else
-            r = EVP_PKEY_public_check(ctx);
+            r = OPENSSL_BOX_EVP_PKEY_public_check(ctx);
 
         if (r == 1) {
             BIO_printf(out, "Key is valid\n");
@@ -324,9 +324,9 @@ int pkey_main(int argc, char **argv)
  end:
     if (ret != 0)
         ERR_print_errors(bio_err);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     release_engine(e);
     BIO_free_all(out);
     OPENSSL_free(passin);

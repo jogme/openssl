@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-EVP_mdc2
+OPENSSL_BOX_EVP_mdc2
 - MDC-2 For EVP
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_MD *EVP_mdc2(void);
+ const EVP_MD *OPENSSL_BOX_EVP_mdc2(void);
 
 =head1 DESCRIPTION
 
@@ -19,7 +19,7 @@ with the legacy provider.
 
 =over 4
 
-=item EVP_mdc2()
+=item OPENSSL_BOX_EVP_mdc2()
 
 The MDC-2DES algorithm of using MDC-2 with the DES block cipher. It produces a
 128-bit output from a given input.
@@ -36,7 +36,7 @@ See L<crypto(7)/Performance> for further information.
 =head1 RETURN VALUES
 
 These functions return a B<EVP_MD> structure that contains the
-implementation of the message digest. See L<EVP_MD_meth_new(3)> for
+implementation of the message digest. See L<OPENSSL_BOX_EVP_MD_meth_new(3)> for
 details of the B<EVP_MD> structure.
 
 =head1 CONFORMING TO
@@ -47,7 +47,7 @@ ISO/IEC 10118-2:2000 Hash-Function 2, with DES as the underlying block cipher.
 
 L<evp(7)>,
 L<provider(7)>,
-L<EVP_DigestInit(3)>
+L<OPENSSL_BOX_EVP_DigestInit(3)>
 
 =head1 COPYRIGHT
 

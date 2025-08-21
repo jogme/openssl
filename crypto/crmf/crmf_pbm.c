@@ -148,7 +148,7 @@ int OSSL_CRMF_pbm_new(OSSL_LIB_CTX *libctx, const char *propq,
         goto err;
     }
 
-    if ((ctx = EVP_MD_CTX_new()) == NULL)
+    if ((ctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL)
         goto err;
 
     /* compute the basekey of the salted secret */
@@ -201,8 +201,8 @@ int OSSL_CRMF_pbm_new(OSSL_LIB_CTX *libctx, const char *propq,
 
  err:
     OPENSSL_cleanse(basekey, bklen);
-    EVP_MD_free(owf);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_free(owf);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
 
     if (ok == 1) {
         *out = mac_res;

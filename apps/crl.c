@@ -83,7 +83,7 @@ int crl_main(int argc, char **argv)
     X509_LOOKUP *lookup = NULL;
     X509_OBJECT *xobj = NULL;
     EVP_PKEY *pkey;
-    EVP_MD *digest = (EVP_MD *)EVP_sha1();
+    EVP_MD *digest = (EVP_MD *)OPENSSL_BOX_EVP_sha1();
     char *infile = NULL, *outfile = NULL, *crldiff = NULL, *keyfile = NULL;
     char *digestname = NULL;
     const char *CAfile = NULL, *CApath = NULL, *CAstore = NULL, *prog;
@@ -245,7 +245,7 @@ int crl_main(int argc, char **argv)
             goto end;
         }
         i = X509_CRL_verify(x, pkey);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         if (i < 0)
             goto end;
         if (i == 0) {
@@ -272,7 +272,7 @@ int crl_main(int argc, char **argv)
         }
         delta = X509_CRL_diff(x, newcrl, pkey, digest, 0);
         X509_CRL_free(newcrl);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         if (delta) {
             X509_CRL_free(x);
             x = delta;
@@ -354,7 +354,7 @@ int crl_main(int argc, char **argv)
                     goto end;
                 }
                 BIO_printf(bio_out, "%s Fingerprint=",
-                           EVP_MD_get0_name(digest));
+                           OPENSSL_BOX_EVP_MD_get0_name(digest));
                 for (j = 0; j < (int)n; j++) {
                     BIO_printf(bio_out, "%02X%c", md[j], (j + 1 == (int)n)
                                ? '\n' : ':');
@@ -388,7 +388,7 @@ int crl_main(int argc, char **argv)
     if (ret != 0)
         ERR_print_errors(bio_err);
     BIO_free_all(out);
-    EVP_MD_free(digest);
+    OPENSSL_BOX_EVP_MD_free(digest);
     X509_CRL_free(x);
     X509_STORE_CTX_free(ctx);
     X509_STORE_free(store);

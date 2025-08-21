@@ -240,7 +240,7 @@ int passwd_main(int argc, char **argv)
 
             passwds = passwds_static;
             if (in == NULL) {
-                if (EVP_read_pw_string
+                if (OPENSSL_BOX_EVP_read_pw_string
                     (passwd_malloc, (int)passwd_malloc_size, "Password: ",
                      !(passed_salt || in_noverify)) != 0)
                     goto end;
@@ -371,9 +371,9 @@ static char *md5crypt(const char *passwd, const char *magic, const char *salt)
 
     assert(salt_len <= 8);
 
-    md = EVP_MD_CTX_new();
+    md = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md == NULL
-        || !EVP_DigestInit_ex(md, EVP_md5(), NULL)
+        || !EVP_DigestInit_ex(md, OPENSSL_BOX_EVP_md5(), NULL)
         || !EVP_DigestUpdate(md, passwd, passwd_len))
         goto err;
 
@@ -386,9 +386,9 @@ static char *md5crypt(const char *passwd, const char *magic, const char *salt)
     if (!EVP_DigestUpdate(md, ascii_salt, salt_len))
         goto err;
 
-    md2 = EVP_MD_CTX_new();
+    md2 = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md2 == NULL
-        || !EVP_DigestInit_ex(md2, EVP_md5(), NULL)
+        || !EVP_DigestInit_ex(md2, OPENSSL_BOX_EVP_md5(), NULL)
         || !EVP_DigestUpdate(md2, passwd, passwd_len)
         || !EVP_DigestUpdate(md2, ascii_salt, salt_len)
         || !EVP_DigestUpdate(md2, passwd, passwd_len)
@@ -412,7 +412,7 @@ static char *md5crypt(const char *passwd, const char *magic, const char *salt)
         goto err;
 
     for (i = 0; i < 1000; i++) {
-        if (!EVP_DigestInit_ex(md2, EVP_md5(), NULL))
+        if (!EVP_DigestInit_ex(md2, OPENSSL_BOX_EVP_md5(), NULL))
             goto err;
         if (!EVP_DigestUpdate(md2,
                               (i & 1) ? (const unsigned char *)passwd : buf,
@@ -433,8 +433,8 @@ static char *md5crypt(const char *passwd, const char *magic, const char *salt)
         if (!EVP_DigestFinal_ex(md2, buf, NULL))
                 goto err;
     }
-    EVP_MD_CTX_free(md2);
-    EVP_MD_CTX_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(md2);
+    OPENSSL_BOX_EVP_MD_CTX_free(md);
     md2 = NULL;
     md = NULL;
 
@@ -482,8 +482,8 @@ static char *md5crypt(const char *passwd, const char *magic, const char *salt)
 
  err:
     OPENSSL_free(ascii_passwd);
-    EVP_MD_CTX_free(md2);
-    EVP_MD_CTX_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(md2);
+    OPENSSL_BOX_EVP_MD_CTX_free(md);
     return NULL;
 }
 
@@ -532,11 +532,11 @@ static char *shacrypt(const char *passwd, const char *magic, const char *salt)
 
     switch (magic[0]) {
     case '5':
-        sha = EVP_sha256();
+        sha = OPENSSL_BOX_EVP_sha256();
         buf_size = 32;
         break;
     case '6':
-        sha = EVP_sha512();
+        sha = OPENSSL_BOX_EVP_sha512();
         buf_size = 64;
         break;
     default:
@@ -604,14 +604,14 @@ static char *shacrypt(const char *passwd, const char *magic, const char *salt)
     if (strlen(out_buf) > 3 + 17 * rounds_custom + salt_len)
         goto err;
 
-    md = EVP_MD_CTX_new();
+    md = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md == NULL
         || !EVP_DigestInit_ex(md, sha, NULL)
         || !EVP_DigestUpdate(md, passwd, passwd_len)
         || !EVP_DigestUpdate(md, ascii_salt, salt_len))
         goto err;
 
-    md2 = EVP_MD_CTX_new();
+    md2 = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md2 == NULL
         || !EVP_DigestInit_ex(md2, sha, NULL)
         || !EVP_DigestUpdate(md2, passwd, passwd_len)
@@ -694,8 +694,8 @@ static char *shacrypt(const char *passwd, const char *magic, const char *salt)
         if (!EVP_DigestFinal_ex(md2, buf, NULL))
                 goto err;
     }
-    EVP_MD_CTX_free(md2);
-    EVP_MD_CTX_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(md2);
+    OPENSSL_BOX_EVP_MD_CTX_free(md);
     md2 = NULL;
     md = NULL;
     OPENSSL_free(p_bytes);
@@ -765,8 +765,8 @@ static char *shacrypt(const char *passwd, const char *magic, const char *salt)
     return out_buf;
 
  err:
-    EVP_MD_CTX_free(md2);
-    EVP_MD_CTX_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(md2);
+    OPENSSL_BOX_EVP_MD_CTX_free(md);
     OPENSSL_free(p_bytes);
     OPENSSL_free(s_bytes);
     OPENSSL_free(ascii_passwd);

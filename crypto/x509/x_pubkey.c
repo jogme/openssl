@@ -90,7 +90,7 @@ static void x509_pubkey_ex_free(ASN1_VALUE **pval, const ASN1_ITEM *it)
     if (pval != NULL && (pubkey = (X509_PUBKEY *)*pval) != NULL) {
         X509_ALGOR_free(pubkey->algor);
         ASN1_BIT_STRING_free(pubkey->public_key);
-        EVP_PKEY_free(pubkey->pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pubkey->pkey);
         OPENSSL_free(pubkey->propq);
         OPENSSL_free(pubkey);
         *pval = NULL;
@@ -160,7 +160,7 @@ static int x509_pubkey_ex_d2i_ex(ASN1_VALUE **pval,
     }
 
     pubkey = (X509_PUBKEY *)*pval;
-    EVP_PKEY_free(pubkey->pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pubkey->pkey);
     pubkey->pkey = NULL;
 
     /*
@@ -305,7 +305,7 @@ X509_PUBKEY *X509_PUBKEY_dup(const X509_PUBKEY *a)
 
     if (a->pkey != NULL) {
         ERR_set_mark();
-        pubkey->pkey = EVP_PKEY_dup(a->pkey);
+        pubkey->pkey = OPENSSL_BOX_EVP_PKEY_dup(a->pkey);
         if (pubkey->pkey == NULL) {
             pubkey->flag_force_legacy = 1;
             if (x509_pubkey_decode(&pubkey->pkey, pubkey) <= 0) {
@@ -367,7 +367,7 @@ int X509_PUBKEY_set(X509_PUBKEY **x, EVP_PKEY *pkey)
     }
 
     X509_PUBKEY_free(*x);
-    if (!EVP_PKEY_up_ref(pkey)) {
+    if (!OPENSSL_BOX_EVP_PKEY_up_ref(pkey)) {
         ERR_raise(ERR_LIB_X509, ERR_R_INTERNAL_ERROR);
         goto error;
     }
@@ -384,7 +384,7 @@ int X509_PUBKEY_set(X509_PUBKEY **x, EVP_PKEY *pkey)
      * |pkey|.
      */
     if (pk->pkey != NULL)
-        EVP_PKEY_free(pk->pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pk->pkey);
 
     pk->pkey = pkey;
     return 1;
@@ -420,13 +420,13 @@ static int x509_pubkey_decode(EVP_PKEY **ppkey, const X509_PUBKEY *key)
 #endif
     }
 
-    pkey = EVP_PKEY_new();
+    pkey = OPENSSL_BOX_EVP_PKEY_new();
     if (pkey == NULL) {
         ERR_raise(ERR_LIB_X509, ERR_R_EVP_LIB);
         return -1;
     }
 
-    if (!EVP_PKEY_set_type(pkey, nid)) {
+    if (!OPENSSL_BOX_EVP_PKEY_set_type(pkey, nid)) {
         ERR_raise(ERR_LIB_X509, X509_R_UNSUPPORTED_ALGORITHM);
         goto error;
     }
@@ -448,7 +448,7 @@ static int x509_pubkey_decode(EVP_PKEY **ppkey, const X509_PUBKEY *key)
     return 1;
 
  error:
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return 0;
 }
 
@@ -472,7 +472,7 @@ EVP_PKEY *X509_PUBKEY_get(const X509_PUBKEY *key)
 {
     EVP_PKEY *ret = X509_PUBKEY_get0(key);
 
-    if (ret != NULL && !EVP_PKEY_up_ref(ret)) {
+    if (ret != NULL && !OPENSSL_BOX_EVP_PKEY_up_ref(ret)) {
         ERR_raise(ERR_LIB_X509, ERR_R_INTERNAL_ERROR);
         ret = NULL;
     }
@@ -522,7 +522,7 @@ static EVP_PKEY *d2i_PUBKEY_int(EVP_PKEY **a,
         goto end;
     *pp = q;
     if (a != NULL) {
-        EVP_PKEY_free(*a);
+        OPENSSL_BOX_EVP_PKEY_free(*a);
         *a = pktmp;
     }
  end:
@@ -612,8 +612,8 @@ RSA *d2i_RSA_PUBKEY(RSA **a, const unsigned char **pp, long length)
     pkey = ossl_d2i_PUBKEY_legacy(NULL, &q, length);
     if (pkey == NULL)
         return NULL;
-    key = EVP_PKEY_get1_RSA(pkey);
-    EVP_PKEY_free(pkey);
+    key = OPENSSL_BOX_EVP_PKEY_get1_RSA(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     if (key == NULL)
         return NULL;
     *pp = q;
@@ -630,7 +630,7 @@ int i2d_RSA_PUBKEY(const RSA *a, unsigned char **pp)
     int ret;
     if (!a)
         return 0;
-    pktmp = EVP_PKEY_new();
+    pktmp = OPENSSL_BOX_EVP_PKEY_new();
     if (pktmp == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         return -1;
@@ -638,7 +638,7 @@ int i2d_RSA_PUBKEY(const RSA *a, unsigned char **pp)
     (void)EVP_PKEY_assign_RSA(pktmp, (RSA *)a);
     ret = i2d_PUBKEY(pktmp, pp);
     pktmp->pkey.ptr = NULL;
-    EVP_PKEY_free(pktmp);
+    OPENSSL_BOX_EVP_PKEY_free(pktmp);
     return ret;
 }
 
@@ -653,9 +653,9 @@ DH *ossl_d2i_DH_PUBKEY(DH **a, const unsigned char **pp, long length)
     pkey = ossl_d2i_PUBKEY_legacy(NULL, &q, length);
     if (pkey == NULL)
         return NULL;
-    if (EVP_PKEY_get_id(pkey) == EVP_PKEY_DH)
-        key = EVP_PKEY_get1_DH(pkey);
-    EVP_PKEY_free(pkey);
+    if (OPENSSL_BOX_EVP_PKEY_get_id(pkey) == EVP_PKEY_DH)
+        key = OPENSSL_BOX_EVP_PKEY_get1_DH(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     if (key == NULL)
         return NULL;
     *pp = q;
@@ -672,7 +672,7 @@ int ossl_i2d_DH_PUBKEY(const DH *a, unsigned char **pp)
     int ret;
     if (!a)
         return 0;
-    pktmp = EVP_PKEY_new();
+    pktmp = OPENSSL_BOX_EVP_PKEY_new();
     if (pktmp == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         return -1;
@@ -680,7 +680,7 @@ int ossl_i2d_DH_PUBKEY(const DH *a, unsigned char **pp)
     (void)EVP_PKEY_assign_DH(pktmp, (DH *)a);
     ret = i2d_PUBKEY(pktmp, pp);
     pktmp->pkey.ptr = NULL;
-    EVP_PKEY_free(pktmp);
+    OPENSSL_BOX_EVP_PKEY_free(pktmp);
     return ret;
 }
 
@@ -694,9 +694,9 @@ DH *ossl_d2i_DHx_PUBKEY(DH **a, const unsigned char **pp, long length)
     pkey = ossl_d2i_PUBKEY_legacy(NULL, &q, length);
     if (pkey == NULL)
         return NULL;
-    if (EVP_PKEY_get_id(pkey) == EVP_PKEY_DHX)
-        key = EVP_PKEY_get1_DH(pkey);
-    EVP_PKEY_free(pkey);
+    if (OPENSSL_BOX_EVP_PKEY_get_id(pkey) == EVP_PKEY_DHX)
+        key = OPENSSL_BOX_EVP_PKEY_get1_DH(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     if (key == NULL)
         return NULL;
     *pp = q;
@@ -713,15 +713,15 @@ int ossl_i2d_DHx_PUBKEY(const DH *a, unsigned char **pp)
     int ret;
     if (!a)
         return 0;
-    pktmp = EVP_PKEY_new();
+    pktmp = OPENSSL_BOX_EVP_PKEY_new();
     if (pktmp == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         return -1;
     }
-    (void)EVP_PKEY_assign(pktmp, EVP_PKEY_DHX, (DH *)a);
+    (void)OPENSSL_BOX_EVP_PKEY_assign(pktmp, EVP_PKEY_DHX, (DH *)a);
     ret = i2d_PUBKEY(pktmp, pp);
     pktmp->pkey.ptr = NULL;
-    EVP_PKEY_free(pktmp);
+    OPENSSL_BOX_EVP_PKEY_free(pktmp);
     return ret;
 }
 #endif
@@ -737,8 +737,8 @@ DSA *d2i_DSA_PUBKEY(DSA **a, const unsigned char **pp, long length)
     pkey = ossl_d2i_PUBKEY_legacy(NULL, &q, length);
     if (pkey == NULL)
         return NULL;
-    key = EVP_PKEY_get1_DSA(pkey);
-    EVP_PKEY_free(pkey);
+    key = OPENSSL_BOX_EVP_PKEY_get1_DSA(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     if (key == NULL)
         return NULL;
     *pp = q;
@@ -779,7 +779,7 @@ int i2d_DSA_PUBKEY(const DSA *a, unsigned char **pp)
     int ret;
     if (!a)
         return 0;
-    pktmp = EVP_PKEY_new();
+    pktmp = OPENSSL_BOX_EVP_PKEY_new();
     if (pktmp == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         return -1;
@@ -787,7 +787,7 @@ int i2d_DSA_PUBKEY(const DSA *a, unsigned char **pp)
     (void)EVP_PKEY_assign_DSA(pktmp, (DSA *)a);
     ret = i2d_PUBKEY(pktmp, pp);
     pktmp->pkey.ptr = NULL;
-    EVP_PKEY_free(pktmp);
+    OPENSSL_BOX_EVP_PKEY_free(pktmp);
     return ret;
 }
 #endif
@@ -804,10 +804,10 @@ EC_KEY *d2i_EC_PUBKEY(EC_KEY **a, const unsigned char **pp, long length)
     pkey = ossl_d2i_PUBKEY_legacy(NULL, &q, length);
     if (pkey == NULL)
         return NULL;
-    type = EVP_PKEY_get_id(pkey);
+    type = OPENSSL_BOX_EVP_PKEY_get_id(pkey);
     if (type == EVP_PKEY_EC || type == EVP_PKEY_SM2)
-        key = EVP_PKEY_get1_EC_KEY(pkey);
-    EVP_PKEY_free(pkey);
+        key = OPENSSL_BOX_EVP_PKEY_get1_EC_KEY(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     if (key == NULL)
         return NULL;
     *pp = q;
@@ -825,14 +825,14 @@ int i2d_EC_PUBKEY(const EC_KEY *a, unsigned char **pp)
 
     if (a == NULL)
         return 0;
-    if ((pktmp = EVP_PKEY_new()) == NULL) {
+    if ((pktmp = OPENSSL_BOX_EVP_PKEY_new()) == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         return -1;
     }
     (void)EVP_PKEY_assign_EC_KEY(pktmp, (EC_KEY *)a);
     ret = i2d_PUBKEY(pktmp, pp);
     pktmp->pkey.ptr = NULL;
-    EVP_PKEY_free(pktmp);
+    OPENSSL_BOX_EVP_PKEY_free(pktmp);
     return ret;
 }
 
@@ -849,7 +849,7 @@ ECX_KEY *ossl_d2i_ED25519_PUBKEY(ECX_KEY **a,
     if (pkey == NULL)
         return NULL;
     key = ossl_evp_pkey_get1_ED25519(pkey);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     if (key == NULL)
         return NULL;
     *pp = q;
@@ -867,14 +867,14 @@ int ossl_i2d_ED25519_PUBKEY(const ECX_KEY *a, unsigned char **pp)
 
     if (a == NULL)
         return 0;
-    if ((pktmp = EVP_PKEY_new()) == NULL) {
+    if ((pktmp = OPENSSL_BOX_EVP_PKEY_new()) == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         return -1;
     }
-    (void)EVP_PKEY_assign(pktmp, EVP_PKEY_ED25519, (ECX_KEY *)a);
+    (void)OPENSSL_BOX_EVP_PKEY_assign(pktmp, EVP_PKEY_ED25519, (ECX_KEY *)a);
     ret = i2d_PUBKEY(pktmp, pp);
     pktmp->pkey.ptr = NULL;
-    EVP_PKEY_free(pktmp);
+    OPENSSL_BOX_EVP_PKEY_free(pktmp);
     return ret;
 }
 
@@ -889,9 +889,9 @@ ECX_KEY *ossl_d2i_ED448_PUBKEY(ECX_KEY **a,
     pkey = ossl_d2i_PUBKEY_legacy(NULL, &q, length);
     if (pkey == NULL)
         return NULL;
-    if (EVP_PKEY_get_id(pkey) == EVP_PKEY_ED448)
+    if (OPENSSL_BOX_EVP_PKEY_get_id(pkey) == EVP_PKEY_ED448)
         key = ossl_evp_pkey_get1_ED448(pkey);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     if (key == NULL)
         return NULL;
     *pp = q;
@@ -909,14 +909,14 @@ int ossl_i2d_ED448_PUBKEY(const ECX_KEY *a, unsigned char **pp)
 
     if (a == NULL)
         return 0;
-    if ((pktmp = EVP_PKEY_new()) == NULL) {
+    if ((pktmp = OPENSSL_BOX_EVP_PKEY_new()) == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         return -1;
     }
-    (void)EVP_PKEY_assign(pktmp, EVP_PKEY_ED448, (ECX_KEY *)a);
+    (void)OPENSSL_BOX_EVP_PKEY_assign(pktmp, EVP_PKEY_ED448, (ECX_KEY *)a);
     ret = i2d_PUBKEY(pktmp, pp);
     pktmp->pkey.ptr = NULL;
-    EVP_PKEY_free(pktmp);
+    OPENSSL_BOX_EVP_PKEY_free(pktmp);
     return ret;
 }
 
@@ -931,9 +931,9 @@ ECX_KEY *ossl_d2i_X25519_PUBKEY(ECX_KEY **a,
     pkey = ossl_d2i_PUBKEY_legacy(NULL, &q, length);
     if (pkey == NULL)
         return NULL;
-    if (EVP_PKEY_get_id(pkey) == EVP_PKEY_X25519)
+    if (OPENSSL_BOX_EVP_PKEY_get_id(pkey) == EVP_PKEY_X25519)
         key = ossl_evp_pkey_get1_X25519(pkey);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     if (key == NULL)
         return NULL;
     *pp = q;
@@ -951,14 +951,14 @@ int ossl_i2d_X25519_PUBKEY(const ECX_KEY *a, unsigned char **pp)
 
     if (a == NULL)
         return 0;
-    if ((pktmp = EVP_PKEY_new()) == NULL) {
+    if ((pktmp = OPENSSL_BOX_EVP_PKEY_new()) == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         return -1;
     }
-    (void)EVP_PKEY_assign(pktmp, EVP_PKEY_X25519, (ECX_KEY *)a);
+    (void)OPENSSL_BOX_EVP_PKEY_assign(pktmp, EVP_PKEY_X25519, (ECX_KEY *)a);
     ret = i2d_PUBKEY(pktmp, pp);
     pktmp->pkey.ptr = NULL;
-    EVP_PKEY_free(pktmp);
+    OPENSSL_BOX_EVP_PKEY_free(pktmp);
     return ret;
 }
 
@@ -973,9 +973,9 @@ ECX_KEY *ossl_d2i_X448_PUBKEY(ECX_KEY **a,
     pkey = ossl_d2i_PUBKEY_legacy(NULL, &q, length);
     if (pkey == NULL)
         return NULL;
-    if (EVP_PKEY_get_id(pkey) == EVP_PKEY_X448)
+    if (OPENSSL_BOX_EVP_PKEY_get_id(pkey) == EVP_PKEY_X448)
         key = ossl_evp_pkey_get1_X448(pkey);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     if (key == NULL)
         return NULL;
     *pp = q;
@@ -993,14 +993,14 @@ int ossl_i2d_X448_PUBKEY(const ECX_KEY *a, unsigned char **pp)
 
     if (a == NULL)
         return 0;
-    if ((pktmp = EVP_PKEY_new()) == NULL) {
+    if ((pktmp = OPENSSL_BOX_EVP_PKEY_new()) == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         return -1;
     }
-    (void)EVP_PKEY_assign(pktmp, EVP_PKEY_X448, (ECX_KEY *)a);
+    (void)OPENSSL_BOX_EVP_PKEY_assign(pktmp, EVP_PKEY_X448, (ECX_KEY *)a);
     ret = i2d_PUBKEY(pktmp, pp);
     pktmp->pkey.ptr = NULL;
-    EVP_PKEY_free(pktmp);
+    OPENSSL_BOX_EVP_PKEY_free(pktmp);
     return ret;
 }
 
@@ -1065,7 +1065,7 @@ int X509_PUBKEY_eq(const X509_PUBKEY *a, const X509_PUBKEY *b)
     if ((pA = X509_PUBKEY_get0(a)) == NULL
         || (pB = X509_PUBKEY_get0(b)) == NULL)
         return -2;
-    return EVP_PKEY_eq(pA, pB);
+    return OPENSSL_BOX_EVP_PKEY_eq(pA, pB);
 }
 
 int ossl_x509_PUBKEY_get0_libctx(OSSL_LIB_CTX **plibctx, const char **ppropq,

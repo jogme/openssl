@@ -103,7 +103,7 @@ length of the secret exponent (private key) in bits. For safe prime groups the o
 set to a value greater or equal to 2 * maximum_target_security_strength(BN_num_bits(I<p>))
 as listed in SP800-56Ar3 Table(s) 25 & 26.
 These functions are deprecated and should be replaced with
-EVP_PKEY_CTX_set_params() and EVP_PKEY_get_int_param() using the parameter key
+OPENSSL_BOX_EVP_PKEY_CTX_set_params() and EVP_PKEY_get_int_param() using the parameter key
 B<OSSL_PKEY_PARAM_DH_PRIV_LEN> as described in L<EVP_PKEY-DH(7)>.
 
 =head1 NOTES

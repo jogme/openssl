@@ -185,7 +185,7 @@ static void generate_p12(PKCS12_BUILDER *pb, const PKCS12_ENC *mac)
         write_p12(p12, pb->filename);
 err:
     if (!legacy && md != NULL)
-        EVP_MD_free(md);
+        OPENSSL_BOX_EVP_MD_free(md);
     PKCS12_free(p12);
 }
 
@@ -443,7 +443,7 @@ void add_keybag(PKCS12_BUILDER *pb, const unsigned char *bytes, int len,
     if (!add_attributes(bag, attrs))
         pb->success = 0;
 err:
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
 }
 
 void add_secretbag(PKCS12_BUILDER *pb, int secret_nid, const char *secret,
@@ -638,11 +638,11 @@ void check_keybag(PKCS12_BUILDER *pb, const unsigned char *bytes, int len,
 
     /* PKEY compare returns 1 for match */
     ref_pkey = load_pkey_asn1(bytes, len);
-    if (!TEST_true(EVP_PKEY_eq(pkey, ref_pkey)))
+    if (!TEST_true(OPENSSL_BOX_EVP_PKEY_eq(pkey, ref_pkey)))
         pb->success = 0;
 err:
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_free(ref_pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(ref_pkey);
 }
 
 void check_secretbag(PKCS12_BUILDER *pb, int secret_nid, const char *secret, const PKCS12_ATTR *attrs)

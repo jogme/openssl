@@ -37,7 +37,7 @@ static int ameth_cmp(const EVP_PKEY_ASN1_METHOD *const *a,
 IMPLEMENT_OBJ_BSEARCH_CMP_FN(const EVP_PKEY_ASN1_METHOD *,
                              const EVP_PKEY_ASN1_METHOD *, ameth);
 
-int EVP_PKEY_asn1_get_count(void)
+int OPENSSL_BOX_EVP_PKEY_asn1_get_count(void)
 {
     int num = OSSL_NELEM(standard_methods);
     if (app_methods)
@@ -45,7 +45,7 @@ int EVP_PKEY_asn1_get_count(void)
     return num;
 }
 
-const EVP_PKEY_ASN1_METHOD *EVP_PKEY_asn1_get0(int idx)
+const EVP_PKEY_ASN1_METHOD *OPENSSL_BOX_EVP_PKEY_asn1_get0(int idx)
 {
     int num = OSSL_NELEM(standard_methods);
     if (idx < 0)
@@ -80,7 +80,7 @@ static const EVP_PKEY_ASN1_METHOD *pkey_asn1_find(int type)
  * implementing 'type' or NULL if no engine implements it.
  */
 
-const EVP_PKEY_ASN1_METHOD *EVP_PKEY_asn1_find(ENGINE **pe, int type)
+const EVP_PKEY_ASN1_METHOD *OPENSSL_BOX_EVP_PKEY_asn1_find(ENGINE **pe, int type)
 {
     const EVP_PKEY_ASN1_METHOD *t;
 
@@ -130,8 +130,8 @@ const EVP_PKEY_ASN1_METHOD *EVP_PKEY_asn1_find_str(ENGINE **pe,
 #endif
         *pe = NULL;
     }
-    for (i = EVP_PKEY_asn1_get_count(); i-- > 0; ) {
-        ameth = EVP_PKEY_asn1_get0(i);
+    for (i = OPENSSL_BOX_EVP_PKEY_asn1_get_count(); i-- > 0; ) {
+        ameth = OPENSSL_BOX_EVP_PKEY_asn1_get0(i);
         if (ameth->pkey_flags & ASN1_PKEY_ALIAS)
             continue;
         if ((int)strlen(ameth->pem_str) == len
@@ -141,7 +141,7 @@ const EVP_PKEY_ASN1_METHOD *EVP_PKEY_asn1_find_str(ENGINE **pe,
     return NULL;
 }
 
-int EVP_PKEY_asn1_add0(const EVP_PKEY_ASN1_METHOD *ameth)
+int OPENSSL_BOX_EVP_PKEY_asn1_add0(const EVP_PKEY_ASN1_METHOD *ameth)
 {
     EVP_PKEY_ASN1_METHOD tmp = { 0, };
 
@@ -180,15 +180,15 @@ int EVP_PKEY_asn1_add0(const EVP_PKEY_ASN1_METHOD *ameth)
     return 1;
 }
 
-int EVP_PKEY_asn1_add_alias(int to, int from)
+int OPENSSL_BOX_EVP_PKEY_asn1_add_alias(int to, int from)
 {
     EVP_PKEY_ASN1_METHOD *ameth;
     ameth = EVP_PKEY_asn1_new(from, ASN1_PKEY_ALIAS, NULL, NULL);
     if (ameth == NULL)
         return 0;
     ameth->pkey_base_id = to;
-    if (!EVP_PKEY_asn1_add0(ameth)) {
-        EVP_PKEY_asn1_free(ameth);
+    if (!OPENSSL_BOX_EVP_PKEY_asn1_add0(ameth)) {
+        OPENSSL_BOX_EVP_PKEY_asn1_free(ameth);
         return 0;
     }
     return 1;
@@ -214,7 +214,7 @@ int EVP_PKEY_asn1_get0_info(int *ppkey_id, int *ppkey_base_id,
     return 1;
 }
 
-const EVP_PKEY_ASN1_METHOD *EVP_PKEY_get0_asn1(const EVP_PKEY *pkey)
+const EVP_PKEY_ASN1_METHOD *OPENSSL_BOX_EVP_PKEY_get0_asn1(const EVP_PKEY *pkey)
 {
     return pkey->ameth;
 }
@@ -246,7 +246,7 @@ EVP_PKEY_ASN1_METHOD *EVP_PKEY_asn1_new(int id, int flags,
     return ameth;
 
  err:
-    EVP_PKEY_asn1_free(ameth);
+    OPENSSL_BOX_EVP_PKEY_asn1_free(ameth);
     return NULL;
 }
 
@@ -269,7 +269,7 @@ void EVP_PKEY_asn1_copy(EVP_PKEY_ASN1_METHOD *dst,
     dst->info = info;
 }
 
-void EVP_PKEY_asn1_free(EVP_PKEY_ASN1_METHOD *ameth)
+void OPENSSL_BOX_EVP_PKEY_asn1_free(EVP_PKEY_ASN1_METHOD *ameth)
 {
     if (ameth && (ameth->pkey_flags & ASN1_PKEY_DYNAMIC)) {
         OPENSSL_free(ameth->pem_str);

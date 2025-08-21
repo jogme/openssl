@@ -56,13 +56,13 @@ int CMS_RecipientInfo_kemri_set0_pkey(CMS_RecipientInfo *ri, EVP_PKEY *pk)
 
     kemri = ri->d.ori->d.kemri;
 
-    EVP_PKEY_CTX_free(kemri->pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(kemri->pctx);
     kemri->pctx = NULL;
 
     if (pk != NULL) {
         pctx = EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(kemri->cms_ctx), pk,
                                           ossl_cms_ctx_get0_propq(kemri->cms_ctx));
-        if (pctx == NULL || EVP_PKEY_decapsulate_init(pctx, NULL) <= 0)
+        if (pctx == NULL || OPENSSL_BOX_EVP_PKEY_decapsulate_init(pctx, NULL) <= 0)
             goto err;
 
         kemri->pctx = pctx;
@@ -70,7 +70,7 @@ int CMS_RecipientInfo_kemri_set0_pkey(CMS_RecipientInfo *ri, EVP_PKEY *pk)
 
     return 1;
 err:
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return 0;
 }
 
@@ -126,7 +126,7 @@ int ossl_cms_RecipientInfo_kemri_init(CMS_RecipientInfo *ri, X509 *recip,
                                              ossl_cms_ctx_get0_propq(ctx));
     if (kemri->pctx == NULL)
         return 0;
-    if (EVP_PKEY_encapsulate_init(kemri->pctx, NULL) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_encapsulate_init(kemri->pctx, NULL) <= 0)
         return 0;
 
     return 1;
@@ -290,8 +290,8 @@ static int cms_kek_cipher(unsigned char **pout, size_t *poutlen,
 err:
     OPENSSL_free(out);
     OPENSSL_cleanse(kek, sizeof(kek));
-    EVP_CIPHER_CTX_reset(kemri->ctx);
-    EVP_PKEY_CTX_free(kemri->pctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_reset(kemri->ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(kemri->pctx);
     kemri->pctx = NULL;
     return rv;
 }

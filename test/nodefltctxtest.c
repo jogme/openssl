@@ -48,7 +48,7 @@ static int test_no_deflt_ctx_init(void)
 
     testresult = 1;
  err:
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     OSSL_LIB_CTX_free(ctx);
     return testresult;
 }

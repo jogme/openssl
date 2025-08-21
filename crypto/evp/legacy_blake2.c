@@ -47,7 +47,7 @@ static const EVP_MD blake2b_md = {
                              blake2b_int_final, NULL, BLAKE2B_BLOCKBYTES),
 };
 
-const EVP_MD *EVP_blake2b512(void)
+const EVP_MD *OPENSSL_BOX_EVP_blake2b512(void)
 {
     return &blake2b_md;
 }
@@ -62,7 +62,7 @@ static const EVP_MD blake2s_md = {
                              blake2s_int_final, NULL, BLAKE2S_BLOCKBYTES),
 };
 
-const EVP_MD *EVP_blake2s256(void)
+const EVP_MD *OPENSSL_BOX_EVP_blake2s256(void)
 {
     return &blake2s_md;
 }

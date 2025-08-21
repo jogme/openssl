@@ -67,7 +67,7 @@ static int alg_module_init(CONF_IMODULE *md, const CONF *cnf)
     return 1;
 }
 
-void EVP_add_alg_module(void)
+void OPENSSL_BOX_EVP_add_alg_module(void)
 {
     OSSL_TRACE(CONF, "Adding config module 'alg_section'\n");
     CONF_module_add("alg_section", alg_module_init, 0);

@@ -80,7 +80,7 @@ EVP_PKEY *load_pkey_pem(const char *file, OSSL_LIB_CTX *libctx)
                                                       libctx, NULL))
             && err != ERR_peek_error()) {
             TEST_info("Spurious error from reading PEM");
-            EVP_PKEY_free(key);
+            OPENSSL_BOX_EVP_PKEY_free(key);
             key = NULL;
         }
     }

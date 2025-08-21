@@ -334,7 +334,7 @@ to reuse the structure at I<*x> (but see BUGS and EXAMPLES sections).
 Irrespective of the value of I<x> a pointer to the structure is always
 returned (or NULL if an error occurred). The caller retains ownership of the
 returned object and needs to free it when it is no longer needed, e.g.
-using X509_free() for X509 objects or EVP_PKEY_free() for EVP_PKEY objects.
+using X509_free() for X509 objects or OPENSSL_BOX_EVP_PKEY_free() for EVP_PKEY objects.
 
 The PEM functions which write private keys take an I<enc> parameter
 which specifies the encryption algorithm to use, encryption is done
@@ -424,7 +424,7 @@ The private key (or other data) takes the following form:
 The line beginning with I<Proc-Type> contains the version and the
 protection on the encapsulated data. The line beginning I<DEK-Info>
 contains two comma separated values: the encryption algorithm name as
-used by EVP_get_cipherbyname() and an initialization vector used by the
+used by OPENSSL_BOX_EVP_get_cipherbyname() and an initialization vector used by the
 cipher encoded as a set of hexadecimal digits. After those two lines is
 the base64-encoded encrypted data.
 
@@ -443,11 +443,11 @@ the function.
 
 The pseudo code to derive the key would look similar to:
 
- EVP_CIPHER* cipher = EVP_des_ede3_cbc();
- EVP_MD* md = EVP_md5();
+ EVP_CIPHER* cipher = OPENSSL_BOX_EVP_des_ede3_cbc();
+ EVP_MD* md = OPENSSL_BOX_EVP_md5();
 
- unsigned int nkey = EVP_CIPHER_get_key_length(cipher);
- unsigned int niv = EVP_CIPHER_get_iv_length(cipher);
+ unsigned int nkey = OPENSSL_BOX_EVP_CIPHER_get_key_length(cipher);
+ unsigned int niv = OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher);
  unsigned char key[nkey];
  unsigned char iv[niv];
 
@@ -518,13 +518,13 @@ Write a certificate to a BIO:
 Write a private key (using traditional format) to a BIO using
 triple DES encryption, the pass phrase is prompted for:
 
- if (!PEM_write_bio_PrivateKey(bp, key, EVP_des_ede3_cbc(), NULL, 0, 0, NULL))
+ if (!PEM_write_bio_PrivateKey(bp, key, OPENSSL_BOX_EVP_des_ede3_cbc(), NULL, 0, 0, NULL))
      /* Error */
 
 Write a private key (using PKCS#8 format) to a BIO using triple
 DES encryption, using the pass phrase "hello":
 
- if (!PEM_write_bio_PKCS8PrivateKey(bp, key, EVP_des_ede3_cbc(),
+ if (!PEM_write_bio_PKCS8PrivateKey(bp, key, OPENSSL_BOX_EVP_des_ede3_cbc(),
                                     NULL, 0, 0, "hello"))
      /* Error */
 

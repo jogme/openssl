@@ -67,18 +67,18 @@ static int do_PRF(const void *seed1, int seed1_len,
                   const void *seed3, int seed3_len,
                   unsigned char *out, int olen)
 {
-    EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_TLS1_PRF, NULL);
+    EVP_PKEY_CTX *pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_TLS1_PRF, NULL);
     size_t outlen = olen;
 
     /* No error handling. If it all screws up, the test will fail anyway */
-    EVP_PKEY_derive_init(pctx);
-    EVP_PKEY_CTX_set_tls1_prf_md(pctx, EVP_md5_sha1());
+    OPENSSL_BOX_EVP_PKEY_derive_init(pctx);
+    EVP_PKEY_CTX_set_tls1_prf_md(pctx, OPENSSL_BOX_EVP_md5_sha1());
     EVP_PKEY_CTX_set1_tls1_prf_secret(pctx, master_secret, sizeof(master_secret));
     EVP_PKEY_CTX_add1_tls1_prf_seed(pctx, seed1, seed1_len);
     EVP_PKEY_CTX_add1_tls1_prf_seed(pctx, seed2, seed2_len);
     EVP_PKEY_CTX_add1_tls1_prf_seed(pctx, seed3, seed3_len);
-    EVP_PKEY_derive(pctx, out, &outlen);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_derive(pctx, out, &outlen);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return 1;
 }
 
@@ -307,7 +307,7 @@ static int send_record(BIO *rbio, unsigned char type, uint64_t seqnr,
 
     /* Append HMAC to data */
     if (!TEST_ptr(hmac = EVP_MAC_fetch(NULL, "HMAC", NULL))
-            || !TEST_ptr(ctx = EVP_MAC_CTX_new(hmac)))
+            || !TEST_ptr(ctx = OPENSSL_BOX_EVP_MAC_CTX_new(hmac)))
         goto end;
     params[0] = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_DIGEST,
                                                  "SHA1", 0);
@@ -315,12 +315,12 @@ static int send_record(BIO *rbio, unsigned char type, uint64_t seqnr,
     lenbytes[0] = (unsigned char)(len >> 8);
     lenbytes[1] = (unsigned char)(len);
     if (!EVP_MAC_init(ctx, mac_key, 20, params)
-            || !EVP_MAC_update(ctx, epoch, 2)
-            || !EVP_MAC_update(ctx, seq, 6)
-            || !EVP_MAC_update(ctx, &type, 1)
-            || !EVP_MAC_update(ctx, ver, 2)      /* Version */
-            || !EVP_MAC_update(ctx, lenbytes, 2) /* Length */
-            || !EVP_MAC_update(ctx, enc, len)    /* Finally the data itself */
+            || !OPENSSL_BOX_EVP_MAC_update(ctx, epoch, 2)
+            || !OPENSSL_BOX_EVP_MAC_update(ctx, seq, 6)
+            || !OPENSSL_BOX_EVP_MAC_update(ctx, &type, 1)
+            || !OPENSSL_BOX_EVP_MAC_update(ctx, ver, 2)      /* Version */
+            || !OPENSSL_BOX_EVP_MAC_update(ctx, lenbytes, 2) /* Length */
+            || !OPENSSL_BOX_EVP_MAC_update(ctx, enc, len)    /* Finally the data itself */
             || !EVP_MAC_final(ctx, enc + len, NULL, SHA_DIGEST_LENGTH))
         goto end;
 
@@ -332,8 +332,8 @@ static int send_record(BIO *rbio, unsigned char type, uint64_t seqnr,
 
     /* Generate IV, and encrypt */
     if (!TEST_int_gt(RAND_bytes(iv, sizeof(iv)), 0)
-            || !TEST_ptr(enc_ctx = EVP_CIPHER_CTX_new())
-            || !TEST_true(EVP_CipherInit_ex(enc_ctx, EVP_aes_128_cbc(), NULL,
+            || !TEST_ptr(enc_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
+            || !TEST_true(EVP_CipherInit_ex(enc_ctx, OPENSSL_BOX_EVP_aes_128_cbc(), NULL,
                                             enc_key, iv, 1))
             || !TEST_int_ge(EVP_Cipher(enc_ctx, enc, enc, (unsigned int)len), 0))
         goto end;
@@ -351,9 +351,9 @@ static int send_record(BIO *rbio, unsigned char type, uint64_t seqnr,
     BIO_write(rbio, enc, (int)len);
     ret = 1;
  end:
-    EVP_MAC_free(hmac);
-    EVP_MAC_CTX_free(ctx);
-    EVP_CIPHER_CTX_free(enc_ctx);
+    OPENSSL_BOX_EVP_MAC_free(hmac);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(enc_ctx);
     OPENSSL_free(enc);
     return ret;
 }
@@ -488,9 +488,9 @@ static int test_bad_dtls(void)
     if (!TEST_ptr(sess))
         goto end;
 
-    handshake_md = EVP_MD_CTX_new();
+    handshake_md = OPENSSL_BOX_EVP_MD_CTX_new();
     if (!TEST_ptr(handshake_md)
-            || !TEST_true(EVP_DigestInit_ex(handshake_md, EVP_md5_sha1(),
+            || !TEST_true(EVP_DigestInit_ex(handshake_md, OPENSSL_BOX_EVP_md5_sha1(),
                                             NULL)))
         goto end;
 
@@ -600,7 +600,7 @@ static int test_bad_dtls(void)
     BIO_free(wbio);
     SSL_free(con);
     SSL_CTX_free(ctx);
-    EVP_MD_CTX_free(handshake_md);
+    OPENSSL_BOX_EVP_MD_CTX_free(handshake_md);
 
     return testresult;
 }

@@ -156,11 +156,11 @@ quic_new_record_layer(OSSL_LIB_CTX *libctx, const char *propq, int vers,
          * figure this out by itself (e.g. so that they could add new
          * ciphersuites at a different pace to us)
          */
-        if (EVP_CIPHER_is_a(ciph, "AES-128-GCM")) {
+        if (OPENSSL_BOX_EVP_CIPHER_is_a(ciph, "AES-128-GCM")) {
             suite_id = QRL_SUITE_AES128GCM;
-        } else if (EVP_CIPHER_is_a(ciph, "AES-256-GCM")) {
+        } else if (OPENSSL_BOX_EVP_CIPHER_is_a(ciph, "AES-256-GCM")) {
             suite_id = QRL_SUITE_AES256GCM;
-        } else if (EVP_CIPHER_is_a(ciph, "CHACHA20-POLY1305")) {
+        } else if (OPENSSL_BOX_EVP_CIPHER_is_a(ciph, "CHACHA20-POLY1305")) {
             suite_id = QRL_SUITE_CHACHA20POLY1305;
         } else {
             QUIC_TLS_FATAL(rl, SSL_AD_INTERNAL_ERROR, SSL_R_UNKNOWN_CIPHER_TYPE);
@@ -169,7 +169,7 @@ quic_new_record_layer(OSSL_LIB_CTX *libctx, const char *propq, int vers,
 
         /* We pass a ref to the md in a successful yield_secret_cb call */
         /* TODO(QUIC FUTURE): This cast is horrible. We should try and remove it */
-        if (!EVP_MD_up_ref((EVP_MD *)kdfdigest)) {
+        if (!OPENSSL_BOX_EVP_MD_up_ref((EVP_MD *)kdfdigest)) {
             QUIC_TLS_FATAL(rl, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
             goto err;
         }
@@ -185,7 +185,7 @@ quic_new_record_layer(OSSL_LIB_CTX *libctx, const char *propq, int vers,
                                         (EVP_MD *)kdfdigest, secret, secretlen,
                                         rl->qtls->args.yield_secret_cb_arg)) {
         QUIC_TLS_FATAL(rl, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
-        EVP_MD_free((EVP_MD *)kdfdigest);
+        OPENSSL_BOX_EVP_MD_free((EVP_MD *)kdfdigest);
         goto err;
     }
 

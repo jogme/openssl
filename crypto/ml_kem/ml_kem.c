@@ -341,7 +341,7 @@ int single_keccak(uint8_t *out, size_t outlen, const uint8_t *in, size_t inlen,
 
     if (!EVP_DigestUpdate(mdctx, in, inlen))
         return 0;
-    if (EVP_MD_xof(EVP_MD_CTX_get0_md(mdctx)))
+    if (OPENSSL_BOX_EVP_MD_xof(OPENSSL_BOX_EVP_MD_CTX_get0_md(mdctx)))
         return EVP_DigestFinalXOF(mdctx, out, outlen);
     return EVP_DigestFinal_ex(mdctx, out, &sz)
         && ossl_assert((size_t) sz == outlen);
@@ -1728,10 +1728,10 @@ ML_KEM_KEY *ossl_ml_kem_key_dup(const ML_KEM_KEY *key, int selection)
         return NULL;
     }
 
-    EVP_MD_up_ref(ret->shake128_md);
-    EVP_MD_up_ref(ret->shake256_md);
-    EVP_MD_up_ref(ret->sha3_256_md);
-    EVP_MD_up_ref(ret->sha3_512_md);
+    OPENSSL_BOX_EVP_MD_up_ref(ret->shake128_md);
+    OPENSSL_BOX_EVP_MD_up_ref(ret->shake256_md);
+    OPENSSL_BOX_EVP_MD_up_ref(ret->sha3_256_md);
+    OPENSSL_BOX_EVP_MD_up_ref(ret->sha3_512_md);
 
     return ret;
 }
@@ -1741,10 +1741,10 @@ void ossl_ml_kem_key_free(ML_KEM_KEY *key)
     if (key == NULL)
         return;
 
-    EVP_MD_free(key->shake128_md);
-    EVP_MD_free(key->shake256_md);
-    EVP_MD_free(key->sha3_256_md);
-    EVP_MD_free(key->sha3_512_md);
+    OPENSSL_BOX_EVP_MD_free(key->shake128_md);
+    OPENSSL_BOX_EVP_MD_free(key->shake256_md);
+    OPENSSL_BOX_EVP_MD_free(key->sha3_256_md);
+    OPENSSL_BOX_EVP_MD_free(key->sha3_512_md);
 
     ossl_ml_kem_key_reset(key);
     OPENSSL_free(key);
@@ -1829,7 +1829,7 @@ int ossl_ml_kem_parse_public_key(const uint8_t *in, size_t len, ML_KEM_KEY *key)
     vinfo = key->vinfo;
 
     if (len != vinfo->pubkey_bytes
-        || (mdctx = EVP_MD_CTX_new()) == NULL)
+        || (mdctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL)
         return 0;
 
     if (add_storage(OPENSSL_malloc(vinfo->puballoc), NULL, 0, key))
@@ -1837,7 +1837,7 @@ int ossl_ml_kem_parse_public_key(const uint8_t *in, size_t len, ML_KEM_KEY *key)
 
     if (!ret)
         ossl_ml_kem_key_reset(key);
-    EVP_MD_CTX_free(mdctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mdctx);
     return ret;
 }
 
@@ -1857,7 +1857,7 @@ int ossl_ml_kem_parse_private_key(const uint8_t *in, size_t len,
     vinfo = key->vinfo;
 
     if (len != vinfo->prvkey_bytes
-        || (mdctx = EVP_MD_CTX_new()) == NULL)
+        || (mdctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL)
         return 0;
 
     if (add_storage(OPENSSL_malloc(vinfo->puballoc),
@@ -1866,7 +1866,7 @@ int ossl_ml_kem_parse_private_key(const uint8_t *in, size_t len,
 
     if (!ret)
         ossl_ml_kem_key_reset(key);
-    EVP_MD_CTX_free(mdctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mdctx);
     return ret;
 }
 
@@ -1899,7 +1899,7 @@ int ossl_ml_kem_genkey(uint8_t *pubenc, size_t publen, ML_KEM_KEY *key)
         return 0;
     }
 
-    if ((mdctx = EVP_MD_CTX_new()) == NULL)
+    if ((mdctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL)
         return 0;
 
     /*
@@ -1916,7 +1916,7 @@ int ossl_ml_kem_genkey(uint8_t *pubenc, size_t publen, ML_KEM_KEY *key)
     /* Declassify secret inputs and derived outputs before returning control */
     CONSTTIME_DECLASSIFY(seed, ML_KEM_SEED_BYTES);
 
-    EVP_MD_CTX_free(mdctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mdctx);
     if (!ret) {
         ossl_ml_kem_key_reset(key);
         return 0;
@@ -1948,7 +1948,7 @@ int ossl_ml_kem_encap_seed(uint8_t *ctext, size_t clen,
     if (ctext == NULL || clen != vinfo->ctext_bytes
         || shared_secret == NULL || slen != ML_KEM_SHARED_SECRET_BYTES
         || entropy == NULL || elen != ML_KEM_RANDOM_BYTES
-        || (mdctx = EVP_MD_CTX_new()) == NULL)
+        || (mdctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL)
         return 0;
     /*
      * Data derived from the encap entropy defaults secret, and to avoid
@@ -1982,7 +1982,7 @@ int ossl_ml_kem_encap_seed(uint8_t *ctext, size_t clen,
     CONSTTIME_DECLASSIFY(ctext, clen);
     CONSTTIME_DECLASSIFY(shared_secret, slen);
 
-    EVP_MD_CTX_free(mdctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mdctx);
     return ret;
 }
 
@@ -2021,7 +2021,7 @@ int ossl_ml_kem_decap(uint8_t *shared_secret, size_t slen,
 
     if (shared_secret == NULL || slen != ML_KEM_SHARED_SECRET_BYTES
         || ctext == NULL || clen != vinfo->ctext_bytes
-        || (mdctx = EVP_MD_CTX_new()) == NULL) {
+        || (mdctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL) {
         (void)RAND_bytes_ex(key->libctx, shared_secret,
                             ML_KEM_SHARED_SECRET_BYTES, vinfo->secbits);
         return 0;
@@ -2060,7 +2060,7 @@ int ossl_ml_kem_decap(uint8_t *shared_secret, size_t slen,
     /* Declassify secret inputs and derived outputs before returning control */
     CONSTTIME_DECLASSIFY(key->s, classify_bytes);
     CONSTTIME_DECLASSIFY(shared_secret, slen);
-    EVP_MD_CTX_free(mdctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mdctx);
 
     return ret;
 #   undef case_decap

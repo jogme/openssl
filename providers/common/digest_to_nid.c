@@ -18,7 +18,7 @@
 
 /*
  * Internal library code deals with NIDs, so we need to translate from a name.
- * We do so using EVP_MD_is_a(), and therefore need a name to NID map.
+ * We do so using OPENSSL_BOX_EVP_MD_is_a(), and therefore need a name to NID map.
  */
 int ossl_digest_md_to_nid(const EVP_MD *md, const OSSL_ITEM *it, size_t it_len)
 {
@@ -28,7 +28,7 @@ int ossl_digest_md_to_nid(const EVP_MD *md, const OSSL_ITEM *it, size_t it_len)
         return NID_undef;
 
     for (i = 0; i < it_len; i++)
-        if (EVP_MD_is_a(md, it[i].ptr))
+        if (OPENSSL_BOX_EVP_MD_is_a(md, it[i].ptr))
             return (int)it[i].id;
     return NID_undef;
 }

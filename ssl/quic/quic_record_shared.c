@@ -91,7 +91,7 @@ static void el_teardown_keyslot(OSSL_QRL_ENC_LEVEL_SET *els,
         return;
 
     if (el->cctx[keyslot] != NULL) {
-        EVP_CIPHER_CTX_free(el->cctx[keyslot]);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(el->cctx[keyslot]);
         el->cctx[keyslot] = NULL;
     }
 
@@ -161,13 +161,13 @@ static int el_setup_keyslot(OSSL_QRL_ENC_LEVEL_SET *els,
         goto err;
     }
 
-    if ((cctx = EVP_CIPHER_CTX_new()) == NULL) {
+    if ((cctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         goto err;
     }
 
-    if (!ossl_assert(iv_len == (size_t)EVP_CIPHER_get_iv_length(cipher))
-        || !ossl_assert(key_len == (size_t)EVP_CIPHER_get_key_length(cipher))) {
+    if (!ossl_assert(iv_len == (size_t)OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher))
+        || !ossl_assert(key_len == (size_t)OPENSSL_BOX_EVP_CIPHER_get_key_length(cipher))) {
         ERR_raise(ERR_LIB_SSL, ERR_R_INTERNAL_ERROR);
         goto err;
     }
@@ -182,12 +182,12 @@ static int el_setup_keyslot(OSSL_QRL_ENC_LEVEL_SET *els,
 
     /* Zeroize intermediate keys. */
     OPENSSL_cleanse(key, sizeof(key));
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     return 1;
 
  err:
-    EVP_CIPHER_CTX_free(cctx);
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(cctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     OPENSSL_cleanse(el->iv[keyslot], sizeof(el->iv[keyslot]));
     OPENSSL_cleanse(key, sizeof(key));
     return 0;
@@ -338,7 +338,7 @@ int ossl_qrl_enc_level_set_provide_secret(OSSL_QRL_ENC_LEVEL_SET *els,
     if (have_ks1)
         el_teardown_keyslot(els, enc_level, !init_keyslot);
     if (own_md)
-        EVP_MD_free(md);
+        OPENSSL_BOX_EVP_MD_free(md);
     return 0;
 }
 
@@ -483,7 +483,7 @@ void ossl_qrl_enc_level_set_discard(OSSL_QRL_ENC_LEVEL_SET *els,
         el_teardown_keyslot(els, enc_level, 1);
     }
 
-    EVP_MD_free(el->md);
+    OPENSSL_BOX_EVP_MD_free(el->md);
     el->md      = NULL;
     el->state   = QRL_EL_STATE_DISCARDED;
 }

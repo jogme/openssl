@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-EVP_DigestVerifyInit_ex, EVP_DigestVerifyInit, EVP_DigestVerifyUpdate,
+EVP_DigestVerifyInit_ex, EVP_DigestVerifyInit, OPENSSL_BOX_EVP_DigestVerifyUpdate,
 EVP_DigestVerifyFinal, EVP_DigestVerify - EVP signature verification functions
 
 =head1 SYNOPSIS
@@ -15,7 +15,7 @@ EVP_DigestVerifyFinal, EVP_DigestVerify - EVP signature verification functions
                              const OSSL_PARAM params[]);
  int EVP_DigestVerifyInit(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
                           const EVP_MD *type, ENGINE *e, EVP_PKEY *pkey);
- int EVP_DigestVerifyUpdate(EVP_MD_CTX *ctx, const void *d, size_t cnt);
+ int OPENSSL_BOX_EVP_DigestVerifyUpdate(EVP_MD_CTX *ctx, const void *d, size_t cnt);
  int EVP_DigestVerifyFinal(EVP_MD_CTX *ctx, const unsigned char *sig,
                            size_t siglen);
  int EVP_DigestVerify(EVP_MD_CTX *ctx, const unsigned char *sig,
@@ -45,7 +45,7 @@ those digests from any available provider. The OpenSSL FIPS provider also
 supports fetching digests but will only fetch digests that are themselves
 implemented inside the FIPS provider.
 
-B<ctx> must be created with EVP_MD_CTX_new() before calling this function. If
+B<ctx> must be created with OPENSSL_BOX_EVP_MD_CTX_new() before calling this function. If
 B<pctx> is not NULL, the EVP_PKEY_CTX of the verification operation will be
 written to B<*pctx>: this can be used to set alternative verification options.
 Note that any existing value in B<*pctx> is overwritten. The EVP_PKEY_CTX value
@@ -58,7 +58,7 @@ EVP_DigestVerifyInit_ex then it will use the B<OSSL_LIB_CTX> specified
 in I<libctx> and the property query string specified in I<props>.
 
 No B<EVP_PKEY_CTX> will be created by EVP_DigestVerifyInit_ex() if the
-passed B<ctx> has already been assigned one via L<EVP_MD_CTX_set_pkey_ctx(3)>.
+passed B<ctx> has already been assigned one via L<OPENSSL_BOX_EVP_MD_CTX_set_pkey_ctx(3)>.
 See also L<SM2(7)>.
 
 Not all digests can be used for all key types. The following combinations apply.
@@ -108,7 +108,7 @@ inferred from the supplied digest B<type>, and B<props> will be NULL. Where
 supplied the ENGINE B<e> will be used for the signature verification and digest
 algorithm implementations. B<e> may be NULL.
 
-EVP_DigestVerifyUpdate() hashes B<cnt> bytes of data at B<d> into the
+OPENSSL_BOX_EVP_DigestVerifyUpdate() hashes B<cnt> bytes of data at B<d> into the
 verification context B<ctx>. This function can be called several times on the
 same B<ctx> to include additional data.
 
@@ -120,7 +120,7 @@ in B<sig> of length B<siglen>.
 
 =head1 RETURN VALUES
 
-EVP_DigestVerifyInit() and EVP_DigestVerifyUpdate() return 1 for success and 0
+EVP_DigestVerifyInit() and OPENSSL_BOX_EVP_DigestVerifyUpdate() return 1 for success and 0
 for failure.
 
 EVP_DigestVerifyFinal() and EVP_DigestVerify() return 1 for success; any other
@@ -139,7 +139,7 @@ transparent to the algorithm used and much more flexible.
 
 EVP_DigestVerify() is a one shot operation which verifies a single block of
 data in one function. For algorithms that support streaming it is equivalent
-to calling EVP_DigestVerifyUpdate() and EVP_DigestVerifyFinal(). For
+to calling OPENSSL_BOX_EVP_DigestVerifyUpdate() and EVP_DigestVerifyFinal(). For
 algorithms which do not support streaming (e.g. PureEdDSA) it is the only way
 to verify data.
 
@@ -156,12 +156,12 @@ The call to EVP_DigestVerifyFinal() internally finalizes a copy of the digest
 context. This means that EVP_VerifyUpdate() and EVP_VerifyFinal() can
 be called later to digest and verify additional data. Applications may disable
 this behavior by setting the EVP_MD_CTX_FLAG_FINALISE context flag via
-L<EVP_MD_CTX_set_flags(3)>.
+L<OPENSSL_BOX_EVP_MD_CTX_set_flags(3)>.
 
 Note that not all providers support continuation, in case the selected
 provider does not allow to duplicate contexts EVP_DigestVerifyFinal() will
 finalize the digest context and attempting to process additional data via
-EVP_DigestVerifyUpdate() will result in an error.
+OPENSSL_BOX_EVP_DigestVerifyUpdate() will result in an error.
 
 EVP_DigestVerifyInit() and EVP_DigestVerifyInit_ex() functions can be called
 multiple times on a context and the parameters set by previous calls should be
@@ -173,12 +173,12 @@ reinitialising the B<EVP_MD_CTX> by calling EVP_DigestVerifyInit_ex().
 
 Ignoring failure returns of EVP_DigestVerifyInit() and EVP_DigestVerifyInit_ex()
 functions can lead to subsequent undefined behavior when calling
-EVP_DigestVerifyUpdate(), EVP_DigestVerifyFinal(), or EVP_DigestVerify().
+OPENSSL_BOX_EVP_DigestVerifyUpdate(), EVP_DigestVerifyFinal(), or EVP_DigestVerify().
 
 =head1 SEE ALSO
 
 L<EVP_DigestSignInit(3)>,
-L<EVP_DigestInit(3)>,
+L<OPENSSL_BOX_EVP_DigestInit(3)>,
 L<evp(7)>, L<HMAC(3)>, L<MD2(3)>,
 L<MD5(3)>, L<MDC2(3)>, L<RIPEMD160(3)>,
 L<SHA1(3)>, L<openssl-dgst(1)>,
@@ -186,12 +186,12 @@ L<RAND(7)>
 
 =head1 HISTORY
 
-EVP_DigestVerifyInit(), EVP_DigestVerifyUpdate() and EVP_DigestVerifyFinal()
+EVP_DigestVerifyInit(), OPENSSL_BOX_EVP_DigestVerifyUpdate() and EVP_DigestVerifyFinal()
 were added in OpenSSL 1.0.0.
 
 EVP_DigestVerifyInit_ex() was added in OpenSSL 3.0.
 
-EVP_DigestVerifyUpdate() was converted from a macro to a function in OpenSSL
+OPENSSL_BOX_EVP_DigestVerifyUpdate() was converted from a macro to a function in OpenSSL
 3.0.
 
 =head1 COPYRIGHT

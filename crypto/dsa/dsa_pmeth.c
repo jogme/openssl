@@ -86,10 +86,10 @@ static int pkey_dsa_sign(EVP_PKEY_CTX *ctx, unsigned char *sig,
      * the "real" key. These calls don't make any modifications that need to
      * be reflected back in the "original" key.
      */
-    DSA *dsa = (DSA *)EVP_PKEY_get0_DSA(ctx->pkey);
+    DSA *dsa = (DSA *)OPENSSL_BOX_EVP_PKEY_get0_DSA(ctx->pkey);
 
     if (dctx->md != NULL) {
-        md_size = EVP_MD_get_size(dctx->md);
+        md_size = OPENSSL_BOX_EVP_MD_get_size(dctx->md);
         if (md_size <= 0)
             return 0;
         if (tbslen != (size_t)md_size)
@@ -115,10 +115,10 @@ static int pkey_dsa_verify(EVP_PKEY_CTX *ctx,
      * the "real" key. These calls don't make any modifications that need to
      * be reflected back in the "original" key.
      */
-    DSA *dsa = (DSA *)EVP_PKEY_get0_DSA(ctx->pkey);
+    DSA *dsa = (DSA *)OPENSSL_BOX_EVP_PKEY_get0_DSA(ctx->pkey);
 
     if (dctx->md != NULL) {
-        md_size = EVP_MD_get_size(dctx->md);
+        md_size = OPENSSL_BOX_EVP_MD_get_size(dctx->md);
         if (md_size <= 0)
             return 0;
         if (tbslen != (size_t)md_size)
@@ -148,9 +148,9 @@ static int pkey_dsa_ctrl(EVP_PKEY_CTX *ctx, int type, int p1, void *p2)
         return 1;
 
     case EVP_PKEY_CTRL_DSA_PARAMGEN_MD:
-        if (EVP_MD_get_type((const EVP_MD *)p2) != NID_sha1 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha224 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha256) {
+        if (OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha1 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha224 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha256) {
             ERR_raise(ERR_LIB_DSA, DSA_R_INVALID_DIGEST_TYPE);
             return 0;
         }
@@ -158,17 +158,17 @@ static int pkey_dsa_ctrl(EVP_PKEY_CTX *ctx, int type, int p1, void *p2)
         return 1;
 
     case EVP_PKEY_CTRL_MD:
-        if (EVP_MD_get_type((const EVP_MD *)p2) != NID_sha1 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_dsa &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_dsaWithSHA &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha224 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha256 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha384 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha512 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_224 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_256 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_384 &&
-            EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_512) {
+        if (OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha1 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_dsa &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_dsaWithSHA &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha224 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha256 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha384 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha512 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_224 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_256 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_384 &&
+            OPENSSL_BOX_EVP_MD_get_type((const EVP_MD *)p2) != NID_sha3_512) {
             ERR_raise(ERR_LIB_DSA, DSA_R_INVALID_DIGEST_TYPE);
             return 0;
         }
@@ -206,7 +206,7 @@ static int pkey_dsa_ctrl_str(EVP_PKEY_CTX *ctx,
         return EVP_PKEY_CTX_set_dsa_paramgen_q_bits(ctx, qbits);
     }
     if (strcmp(type, "dsa_paramgen_md") == 0) {
-        const EVP_MD *md = EVP_get_digestbyname(value);
+        const EVP_MD *md = OPENSSL_BOX_EVP_get_digestbyname(value);
 
         if (md == NULL) {
             ERR_raise(ERR_LIB_DSA, DSA_R_INVALID_DIGEST_TYPE);
@@ -237,7 +237,7 @@ static int pkey_dsa_paramgen(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
         return 0;
     }
     if (dctx->md != NULL)
-        ossl_ffc_set_digest(&dsa->params, EVP_MD_get0_name(dctx->md), NULL);
+        ossl_ffc_set_digest(&dsa->params, OPENSSL_BOX_EVP_MD_get0_name(dctx->md), NULL);
 
     ret = ossl_ffc_params_FIPS186_4_generate(NULL, &dsa->params,
                                              FFC_PARAM_TYPE_DSA, dctx->nbits,
@@ -263,9 +263,9 @@ static int pkey_dsa_keygen(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
         return 0;
     EVP_PKEY_assign_DSA(pkey, dsa);
     /* Note: if error return, pkey is freed by parent routine */
-    if (!EVP_PKEY_copy_parameters(pkey, ctx->pkey))
+    if (!OPENSSL_BOX_EVP_PKEY_copy_parameters(pkey, ctx->pkey))
         return 0;
-    return DSA_generate_key((DSA *)EVP_PKEY_get0_DSA(pkey));
+    return DSA_generate_key((DSA *)OPENSSL_BOX_EVP_PKEY_get0_DSA(pkey));
 }
 
 static const EVP_PKEY_METHOD dsa_pkey_meth = {

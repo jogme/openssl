@@ -7,11 +7,11 @@ strict digraph rand {
     uninstantiated [fontcolor="#c94c4c"];
     end [label="freed", color="#deeaee", style="filled"];
 
-    begin -> newed [label="EVP_RAND_CTX_new"];
+    begin -> newed [label="OPENSSL_BOX_EVP_RAND_CTX_new"];
     newed -> instantiated [label="EVP_RAND_instantiate"];
     instantiated -> instantiated [label="EVP_RAND_generate"];
-    instantiated -> uninstantiated [label="EVP_RAND_uninstantiate"];
-    uninstantiated -> end [label="EVP_RAND_CTX_free"];
+    instantiated -> uninstantiated [label="OPENSSL_BOX_EVP_RAND_uninstantiate"];
+    uninstantiated -> end [label="OPENSSL_BOX_EVP_RAND_CTX_free"];
     uninstantiated -> instantiated [label="EVP_RAND_instantiate", style=dashed, color="#034f84", fontcolor="#034f84"];
 }
 

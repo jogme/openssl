@@ -33,13 +33,13 @@ static EVP_PKEY *dsa_genparams(OSSL_LIB_CTX *libctx, const char *propq)
         return NULL;
     }
 
-    if (EVP_PKEY_paramgen_init(ctx) <= 0
-            || EVP_PKEY_paramgen(ctx, &dsaparamkey) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_paramgen_init(ctx) <= 0
+            || OPENSSL_BOX_EVP_PKEY_paramgen(ctx, &dsaparamkey) <= 0) {
         fprintf(stderr, "DSA paramgen failed\n");
         goto cleanup;
     }
 cleanup:
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return dsaparamkey;
 }
 
@@ -65,8 +65,8 @@ int main(int argc, char **argv)
     }
 
     /* Generate a key using the dsa params */
-    if (EVP_PKEY_keygen_init(ctx) <= 0
-            || EVP_PKEY_keygen(ctx, &dsakey) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) <= 0
+            || OPENSSL_BOX_EVP_PKEY_keygen(ctx, &dsakey) <= 0) {
         fprintf(stderr, "DSA keygen failed\n");
         goto cleanup;
     }
@@ -76,8 +76,8 @@ int main(int argc, char **argv)
 
     ret = EXIT_SUCCESS;
 cleanup:
-    EVP_PKEY_free(dsakey);
-    EVP_PKEY_free(dsaparamskey);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(dsakey);
+    OPENSSL_BOX_EVP_PKEY_free(dsaparamskey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }

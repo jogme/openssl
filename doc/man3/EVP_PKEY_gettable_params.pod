@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-EVP_PKEY_gettable_params, EVP_PKEY_get_params,
+OPENSSL_BOX_EVP_PKEY_gettable_params, OPENSSL_BOX_EVP_PKEY_get_params,
 EVP_PKEY_get_int_param, EVP_PKEY_get_size_t_param,
 EVP_PKEY_get_bn_param, EVP_PKEY_get_utf8_string_param,
 EVP_PKEY_get_octet_string_param
@@ -12,8 +12,8 @@ EVP_PKEY_get_octet_string_param
 
  #include <openssl/evp.h>
 
- const OSSL_PARAM *EVP_PKEY_gettable_params(EVP_PKEY *pkey);
- int EVP_PKEY_get_params(const EVP_PKEY *pkey, OSSL_PARAM params[]);
+ const OSSL_PARAM *OPENSSL_BOX_EVP_PKEY_gettable_params(EVP_PKEY *pkey);
+ int OPENSSL_BOX_EVP_PKEY_get_params(const EVP_PKEY *pkey, OSSL_PARAM params[]);
  int EVP_PKEY_get_int_param(const EVP_PKEY *pkey, const char *key_name,
                             int *out);
  int EVP_PKEY_get_size_t_param(const EVP_PKEY *pkey, const char *key_name,
@@ -31,10 +31,10 @@ EVP_PKEY_get_octet_string_param
 
 See L<OSSL_PARAM(3)> for information about parameters.
 
-EVP_PKEY_get_params() retrieves parameters from the key I<pkey>, according to
+OPENSSL_BOX_EVP_PKEY_get_params() retrieves parameters from the key I<pkey>, according to
 the contents of I<params>.
 
-EVP_PKEY_gettable_params() returns a constant list of I<params> indicating
+OPENSSL_BOX_EVP_PKEY_gettable_params() returns a constant list of I<params> indicating
 the names and types of key parameters that can be retrieved.
 
 An L<OSSL_PARAM(3)> of type B<OSSL_PARAM_INTEGER> or
@@ -79,7 +79,7 @@ These functions only work for B<EVP_PKEY>s that contain a provider side key.
 
 =head1 RETURN VALUES
 
-EVP_PKEY_gettable_params() returns NULL on error or if it is not supported.
+OPENSSL_BOX_EVP_PKEY_gettable_params() returns NULL on error or if it is not supported.
 
 All other methods return 1 if a value associated with the key's I<key_name> was
 successfully returned, or 0 if there was an error.
@@ -117,7 +117,7 @@ buffer size to hold the value.
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_CTX_new(3)>, L<provider-keymgmt(7)>, L<OSSL_PARAM(3)>
+L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>, L<provider-keymgmt(7)>, L<OSSL_PARAM(3)>
 
 =head1 HISTORY
 

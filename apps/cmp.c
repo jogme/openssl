@@ -1183,10 +1183,10 @@ static OSSL_CMP_SRV_CTX *setup_srv_ctx(ENGINE *engine)
                                       engine, "private key for mock server cert");
 
         if (pkey == NULL || !OSSL_CMP_CTX_set1_pkey(ctx, pkey)) {
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             goto err;
         }
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
     }
     cleanse(opt_srv_keypass);
 
@@ -1225,10 +1225,10 @@ static OSSL_CMP_SRV_CTX *setup_srv_ctx(ENGINE *engine)
 
         if (pkey == NULL
             || !ossl_cmp_mock_srv_set1_keyOut(srv_ctx, pkey)) {
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             goto err;
         }
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
     }
     cleanse(opt_rsp_keypass);
 
@@ -1490,17 +1490,17 @@ static SSL_CTX *setup_ssl_ctx(OSSL_CMP_CTX *ctx, const char *host,
                                     pkey)) {
             CMP_err2("TLS private key '%s' does not match the TLS certificate '%s'\n",
                      opt_tls_key, opt_tls_cert);
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             pkey = NULL; /* otherwise, for some reason double free! */
             goto err;
         }
         if (SSL_CTX_use_PrivateKey(ssl_ctx, pkey) <= 0) {
             CMP_err1("unable to use TLS client private key '%s'", opt_tls_key);
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             pkey = NULL; /* otherwise, for some reason double free! */
             goto err;
         }
-        EVP_PKEY_free(pkey); /* we do not need the handle any more */
+        OPENSSL_BOX_EVP_PKEY_free(pkey); /* we do not need the handle any more */
     } else {
         CMP_warn("-tls_used given without -tls_key; cannot authenticate to the TLS server");
     }
@@ -1568,10 +1568,10 @@ static int setup_protection_ctx(OSSL_CMP_CTX *ctx, ENGINE *engine)
                                       "private key for CMP client certificate");
 
         if (pkey == NULL || !OSSL_CMP_CTX_set1_pkey(ctx, pkey)) {
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             return 0;
         }
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
     }
     if (opt_secret == NULL && opt_srvcert == NULL && opt_trusted == NULL)
         CMP_warn("will not authenticate server due to missing -secret, -trusted, or -srvcert");
@@ -1669,9 +1669,9 @@ static int set_fallback_pubkey(OSSL_CMP_CTX *ctx)
                  file);
         goto err;
     }
-    pkey1 = EVP_PKEY_dup(pkey);
+    pkey1 = OPENSSL_BOX_EVP_PKEY_dup(pkey);
     if (pkey == NULL || !OSSL_CMP_CTX_set0_newPkey(ctx, 0 /* priv */, pkey1)) {
-        EVP_PKEY_free(pkey1);
+        OPENSSL_BOX_EVP_PKEY_free(pkey1);
         CMP_err1("failed to get fallback public key obtained from ir/cr/kur file '%s'",
                  file);
         goto err;
@@ -1882,7 +1882,7 @@ static int setup_request_ctx(OSSL_CMP_CTX *ctx, ENGINE *engine)
         }
 
         if (pkey == NULL || !OSSL_CMP_CTX_set0_newPkey(ctx, priv, pkey)) {
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             return 0;
         }
     } else if (opt_reqin != NULL
@@ -3883,7 +3883,7 @@ int cmp_main(int argc, char **argv)
 
                 BIO_free(out);
                 clear_free(pass_string);
-                EVP_CIPHER_free(cipher);
+                OPENSSL_BOX_EVP_CIPHER_free(cipher);
                 if (!result)
                     goto err;
             }

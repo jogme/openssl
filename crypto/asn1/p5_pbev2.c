@@ -59,7 +59,7 @@ X509_ALGOR *PKCS5_pbe2_set_iv_ex(const EVP_CIPHER *cipher, int iter,
     unsigned char iv[EVP_MAX_IV_LENGTH];
     PBE2PARAM *pbe2 = NULL;
 
-    alg_nid = EVP_CIPHER_get_type(cipher);
+    alg_nid = OPENSSL_BOX_EVP_CIPHER_get_type(cipher);
     if (alg_nid == NID_undef) {
         ERR_raise(ERR_LIB_ASN1, ASN1_R_CIPHER_HAS_NO_OBJECT_IDENTIFIER);
         goto err;
@@ -79,7 +79,7 @@ X509_ALGOR *PKCS5_pbe2_set_iv_ex(const EVP_CIPHER *cipher, int iter,
     }
 
     /* Create random IV */
-    ivlen = EVP_CIPHER_get_iv_length(cipher);
+    ivlen = OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher);
     if (ivlen > 0) {
         if (aiv)
             memcpy(iv, aiv, ivlen);
@@ -87,7 +87,7 @@ X509_ALGOR *PKCS5_pbe2_set_iv_ex(const EVP_CIPHER *cipher, int iter,
             goto err;
     }
 
-    ctx = EVP_CIPHER_CTX_new();
+    ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ctx == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         goto err;
@@ -96,7 +96,7 @@ X509_ALGOR *PKCS5_pbe2_set_iv_ex(const EVP_CIPHER *cipher, int iter,
     /* Dummy cipherinit to just setup the IV, and PRF */
     if (!EVP_CipherInit_ex(ctx, cipher, NULL, NULL, iv, 0))
         goto err;
-    if (EVP_CIPHER_param_to_asn1(ctx, scheme->parameter) <= 0) {
+    if (OPENSSL_BOX_EVP_CIPHER_param_to_asn1(ctx, scheme->parameter) <= 0) {
         ERR_raise(ERR_LIB_ASN1, ASN1_R_ERROR_SETTING_CIPHER_PARAMS);
         goto err;
     }
@@ -106,17 +106,17 @@ X509_ALGOR *PKCS5_pbe2_set_iv_ex(const EVP_CIPHER *cipher, int iter,
      */
     ERR_set_mark();
     if ((prf_nid == -1) &&
-        EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_PBE_PRF_NID, 0, &prf_nid) <= 0) {
+        OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_PBE_PRF_NID, 0, &prf_nid) <= 0) {
         prf_nid = NID_hmacWithSHA256;
     }
     ERR_pop_to_mark();
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     ctx = NULL;
 
     /* If its RC2 then we'd better setup the key length */
 
     if (alg_nid == NID_rc2_cbc)
-        keylen = EVP_CIPHER_get_key_length(cipher);
+        keylen = OPENSSL_BOX_EVP_CIPHER_get_key_length(cipher);
     else
         keylen = -1;
 
@@ -155,7 +155,7 @@ X509_ALGOR *PKCS5_pbe2_set_iv_ex(const EVP_CIPHER *cipher, int iter,
     return ret;
 
  err:
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     PBE2PARAM_free(pbe2);
     /* Note 'scheme' is freed as part of pbe2 */
     X509_ALGOR_free(ret);

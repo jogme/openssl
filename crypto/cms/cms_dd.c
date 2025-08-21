@@ -59,7 +59,7 @@ BIO *ossl_cms_DigestedData_init_bio(const CMS_ContentInfo *cms)
 int ossl_cms_DigestedData_do_final(const CMS_ContentInfo *cms, BIO *chain,
                                    int verify)
 {
-    EVP_MD_CTX *mctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *mctx = OPENSSL_BOX_EVP_MD_CTX_new();
     unsigned char md[EVP_MAX_MD_SIZE];
     unsigned int mdlen;
     int r = 0;
@@ -95,7 +95,7 @@ int ossl_cms_DigestedData_do_final(const CMS_ContentInfo *cms, BIO *chain,
     }
 
  err:
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
 
     return r;
 

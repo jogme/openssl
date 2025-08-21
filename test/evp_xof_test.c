@@ -163,15 +163,15 @@ static EVP_MD_CTX *shake_setup(const char *name)
     if (!TEST_ptr(md = EVP_MD_fetch(NULL, name, NULL)))
         return NULL;
 
-    if (!TEST_ptr(ctx = EVP_MD_CTX_new()))
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_MD_CTX_new()))
         goto err;
     if (!TEST_true(EVP_DigestInit_ex2(ctx, md, NULL)))
         goto err;
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     return ctx;
 err:
-    EVP_MD_free(md);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return NULL;
 }
 
@@ -195,7 +195,7 @@ static int shake_kat_test(void)
         goto err;
     ret = 1;
 err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -218,7 +218,7 @@ static int shake_kat_digestfinal_test(void)
         return 0;
     }
     ERR_pop_to_mark();
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
 
     /* However EVP_DigestFinalXOF must work */
     if (!TEST_ptr(ctx = shake_setup("SHAKE256")))
@@ -233,7 +233,7 @@ static int shake_kat_digestfinal_test(void)
         goto err;
     ret = 1;
 err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -253,17 +253,17 @@ static int shake_kat_digestfinal_xoflen_test(void)
 
     if (!TEST_ptr(ctx = shake_setup("SHAKE256")))
         return 0;
-    md = EVP_MD_CTX_get0_md(ctx);
+    md = OPENSSL_BOX_EVP_MD_CTX_get0_md(ctx);
 
     memset(out, 0, sizeof(out));
     params[0] = OSSL_PARAM_construct_size_t(OSSL_DIGEST_PARAM_XOFLEN, &sz);
     params[1] = OSSL_PARAM_construct_end();
 
     if (!TEST_int_eq(EVP_MD_CTX_size(ctx), -1)
-        || !TEST_int_eq(EVP_MD_CTX_set_params(ctx, params), 1)
+        || !TEST_int_eq(OPENSSL_BOX_EVP_MD_CTX_set_params(ctx, params), 1)
         || !TEST_int_eq(EVP_MD_CTX_size(ctx), (int)sz)
-        || !TEST_int_eq(EVP_MD_get_size(md), 0)
-        || !TEST_true(EVP_MD_xof(md))
+        || !TEST_int_eq(OPENSSL_BOX_EVP_MD_get_size(md), 0)
+        || !TEST_true(OPENSSL_BOX_EVP_MD_xof(md))
         || !TEST_true(EVP_DigestUpdate(ctx, shake256_input,
                                        sizeof(shake256_input)))
         || !TEST_true(EVP_DigestFinal(ctx, out, &digest_length))
@@ -274,7 +274,7 @@ static int shake_kat_digestfinal_xoflen_test(void)
         goto err;
     ret = 1;
 err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -313,7 +313,7 @@ static int shake_absorb_test(void)
     }
     ret = 1;
 err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -396,7 +396,7 @@ static int do_shake_squeeze_test(int tst,
     ret = 1;
 err:
     OPENSSL_free(out);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -427,7 +427,7 @@ static int shake_squeeze_large_test(int tst)
 
     ret = do_shake_squeeze_test(tst, msg, sizeof(msg), out, sizeof(out));
 err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -435,7 +435,7 @@ static const size_t dupoffset_tests[] = {
     1, 135, 136, 137, 136*3-1, 136*3, 136*3+1
 };
 
-/* Helper function to test that EVP_MD_CTX_dup() copies the internal state */
+/* Helper function to test that OPENSSL_BOX_EVP_MD_CTX_dup() copies the internal state */
 static int do_shake_squeeze_dup_test(int tst, const char *alg,
                                      const unsigned char *in, size_t inlen,
                                      const unsigned char *expected_out,
@@ -463,7 +463,7 @@ static int do_shake_squeeze_dup_test(int tst, const char *alg,
         i += sz;
         /* At a certain offset we swap to a new ctx that copies the state */
         if (dupctx == NULL && i >= dupoffset) {
-            if (!TEST_ptr(dupctx = EVP_MD_CTX_dup(ctx)))
+            if (!TEST_ptr(dupctx = OPENSSL_BOX_EVP_MD_CTX_dup(ctx)))
                 goto err;
             cur = dupctx;
         }
@@ -473,8 +473,8 @@ static int do_shake_squeeze_dup_test(int tst, const char *alg,
     ret = 1;
 err:
     OPENSSL_free(out);
-    EVP_MD_CTX_free(ctx);
-    EVP_MD_CTX_free(dupctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(dupctx);
     return ret;
 }
 
@@ -496,7 +496,7 @@ static int shake_squeeze_dup_test(int tst)
     ret = do_shake_squeeze_dup_test(tst, alg, msg, sizeof(msg),
                                     out, sizeof(out));
 err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -524,7 +524,7 @@ static int shake_squeeze_no_absorb_test(void)
     ret = 1;
 
 err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -534,8 +534,8 @@ static int xof_fail_test(void)
     EVP_MD *md = NULL;
 
     ret = TEST_ptr(md = EVP_MD_fetch(NULL, "SHA256", NULL))
-            && TEST_false(EVP_MD_xof(md));
-    EVP_MD_free(md);
+            && TEST_false(OPENSSL_BOX_EVP_MD_xof(md));
+    OPENSSL_BOX_EVP_MD_free(md);
     return ret;
 }
 

@@ -22,7 +22,7 @@
 #include "crypto/evp.h"
 #include "evp_local.h"
 
-int EVP_PKEY_set1_RSA(EVP_PKEY *pkey, RSA *key)
+int OPENSSL_BOX_EVP_PKEY_set1_RSA(EVP_PKEY *pkey, RSA *key)
 {
     int ret;
 
@@ -46,12 +46,12 @@ RSA *evp_pkey_get0_RSA_int(const EVP_PKEY *pkey)
     return evp_pkey_get_legacy((EVP_PKEY *)pkey);
 }
 
-const RSA *EVP_PKEY_get0_RSA(const EVP_PKEY *pkey)
+const RSA *OPENSSL_BOX_EVP_PKEY_get0_RSA(const EVP_PKEY *pkey)
 {
     return evp_pkey_get0_RSA_int(pkey);
 }
 
-RSA *EVP_PKEY_get1_RSA(EVP_PKEY *pkey)
+RSA *OPENSSL_BOX_EVP_PKEY_get1_RSA(EVP_PKEY *pkey)
 {
     RSA *ret = evp_pkey_get0_RSA_int(pkey);
 
@@ -62,7 +62,7 @@ RSA *EVP_PKEY_get1_RSA(EVP_PKEY *pkey)
 }
 
 #ifndef OPENSSL_NO_EC
-int EVP_PKEY_set1_EC_KEY(EVP_PKEY *pkey, EC_KEY *key)
+int OPENSSL_BOX_EVP_PKEY_set1_EC_KEY(EVP_PKEY *pkey, EC_KEY *key)
 {
     if (!EC_KEY_up_ref(key))
         return 0;
@@ -75,19 +75,19 @@ int EVP_PKEY_set1_EC_KEY(EVP_PKEY *pkey, EC_KEY *key)
 
 EC_KEY *evp_pkey_get0_EC_KEY_int(const EVP_PKEY *pkey)
 {
-    if (EVP_PKEY_get_base_id(pkey) != EVP_PKEY_EC) {
+    if (OPENSSL_BOX_EVP_PKEY_get_base_id(pkey) != EVP_PKEY_EC) {
         ERR_raise(ERR_LIB_EVP, EVP_R_EXPECTING_A_EC_KEY);
         return NULL;
     }
     return evp_pkey_get_legacy((EVP_PKEY *)pkey);
 }
 
-const EC_KEY *EVP_PKEY_get0_EC_KEY(const EVP_PKEY *pkey)
+const EC_KEY *OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(const EVP_PKEY *pkey)
 {
     return evp_pkey_get0_EC_KEY_int(pkey);
 }
 
-EC_KEY *EVP_PKEY_get1_EC_KEY(EVP_PKEY *pkey)
+EC_KEY *OPENSSL_BOX_EVP_PKEY_get1_EC_KEY(EVP_PKEY *pkey)
 {
     EC_KEY *ret = evp_pkey_get0_EC_KEY_int(pkey);
 

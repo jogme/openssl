@@ -1049,8 +1049,8 @@ int tls_parse_ctos_cookie(SSL_CONNECTION *s, PACKET *pkt, unsigned int context,
                                            s->session_ctx->ext.cookie_hmac_key,
                                            sizeof(s->session_ctx->ext.cookie_hmac_key));
     if (hctx == NULL || pkey == NULL) {
-        EVP_MD_CTX_free(hctx);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_MD_CTX_free(hctx);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         return 0;
     }
@@ -1061,14 +1061,14 @@ int tls_parse_ctos_cookie(SSL_CONNECTION *s, PACKET *pkt, unsigned int context,
             || EVP_DigestSign(hctx, hmac, &hmaclen, data,
                               rawlen - SHA256_DIGEST_LENGTH) <= 0
             || hmaclen != SHA256_DIGEST_LENGTH) {
-        EVP_MD_CTX_free(hctx);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_MD_CTX_free(hctx);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         return 0;
     }
 
-    EVP_MD_CTX_free(hctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_MD_CTX_free(hctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
 
     if (CRYPTO_memcmp(hmac, mdin, SHA256_DIGEST_LENGTH) != 0) {
         SSLfatal(s, SSL_AD_ILLEGAL_PARAMETER, SSL_R_COOKIE_MISMATCH);
@@ -1495,8 +1495,8 @@ int tls_parse_ctos_psk(SSL_CONNECTION *s, PACKET *pkt, unsigned int context,
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
             goto err;
         }
-        if (!EVP_MD_is_a(md,
-                EVP_MD_get0_name(ssl_md(sctx,
+        if (!OPENSSL_BOX_EVP_MD_is_a(md,
+                OPENSSL_BOX_EVP_MD_get0_name(ssl_md(sctx,
                                         s->s3.tmp.new_cipher->algorithm2)))) {
             /* The ciphersuite is not compatible with this session. */
             SSL_SESSION_free(sess);
@@ -1512,7 +1512,7 @@ int tls_parse_ctos_psk(SSL_CONNECTION *s, PACKET *pkt, unsigned int context,
         return 1;
 
     binderoffset = PACKET_data(pkt) - (const unsigned char *)s->init_buf->data;
-    hashsize = EVP_MD_get_size(md);
+    hashsize = OPENSSL_BOX_EVP_MD_get_size(md);
     if (hashsize <= 0)
         goto err;
 
@@ -1986,17 +1986,17 @@ EXT_RETURN tls_construct_stoc_key_share(SSL_CONNECTION *s, WPACKET *pkt,
         }
 
         /* Generate encoding of server key */
-        encoded_pubkey_len = EVP_PKEY_get1_encoded_public_key(skey, &encoded_pubkey);
+        encoded_pubkey_len = OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(skey, &encoded_pubkey);
         if (encoded_pubkey_len == 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EC_LIB);
-            EVP_PKEY_free(skey);
+            OPENSSL_BOX_EVP_PKEY_free(skey);
             return EXT_RETURN_FAIL;
         }
 
         if (!WPACKET_sub_memcpy_u16(pkt, encoded_pubkey, encoded_pubkey_len)
                 || !WPACKET_close(pkt)) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
-            EVP_PKEY_free(skey);
+            OPENSSL_BOX_EVP_PKEY_free(skey);
             OPENSSL_free(encoded_pubkey);
             return EXT_RETURN_FAIL;
         }
@@ -2176,8 +2176,8 @@ EXT_RETURN tls_construct_stoc_cookie(SSL_CONNECTION *s, WPACKET *pkt,
     ret = EXT_RETURN_SENT;
 
  err:
-    EVP_MD_CTX_free(hctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_MD_CTX_free(hctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 #else
     return EXT_RETURN_FAIL;

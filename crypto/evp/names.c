@@ -16,7 +16,7 @@
 #include "crypto/objects.h"
 #include "crypto/evp.h"
 
-int EVP_add_cipher(const EVP_CIPHER *c)
+int OPENSSL_BOX_EVP_add_cipher(const EVP_CIPHER *c)
 {
     int r;
 
@@ -32,7 +32,7 @@ int EVP_add_cipher(const EVP_CIPHER *c)
     return r;
 }
 
-int EVP_add_digest(const EVP_MD *md)
+int OPENSSL_BOX_EVP_add_digest(const EVP_MD *md)
 {
     int r;
     const char *name;
@@ -67,7 +67,7 @@ static void cipher_from_name(const char *name, void *data)
     *cipher = (const EVP_CIPHER *)OBJ_NAME_get(name, OBJ_NAME_TYPE_CIPHER_METH);
 }
 
-const EVP_CIPHER *EVP_get_cipherbyname(const char *name)
+const EVP_CIPHER *OPENSSL_BOX_EVP_get_cipherbyname(const char *name)
 {
     return evp_get_cipherbyname_ex(NULL, name);
 }
@@ -106,7 +106,7 @@ const EVP_CIPHER *evp_get_cipherbyname_ex(OSSL_LIB_CTX *libctx,
         do_retry = 0;
         ERR_set_mark();
         fetched_cipher = EVP_CIPHER_fetch(libctx, name, NULL);
-        EVP_CIPHER_free(fetched_cipher);
+        OPENSSL_BOX_EVP_CIPHER_free(fetched_cipher);
         ERR_pop_to_mark();
         goto retry;
     }
@@ -127,7 +127,7 @@ static void digest_from_name(const char *name, void *data)
     *md = (const EVP_MD *)OBJ_NAME_get(name, OBJ_NAME_TYPE_MD_METH);
 }
 
-const EVP_MD *EVP_get_digestbyname(const char *name)
+const EVP_MD *OPENSSL_BOX_EVP_get_digestbyname(const char *name)
 {
     return evp_get_digestbyname_ex(NULL, name);
 }
@@ -165,7 +165,7 @@ const EVP_MD *evp_get_digestbyname_ex(OSSL_LIB_CTX *libctx, const char *name)
         do_retry = 0;
         ERR_set_mark();
         fetched_md = EVP_MD_fetch(libctx, name, NULL);
-        EVP_MD_free(fetched_md);
+        OPENSSL_BOX_EVP_MD_free(fetched_md);
         ERR_pop_to_mark();
         goto retry;
     }
@@ -188,7 +188,7 @@ void evp_cleanup_int(void)
      */
     OBJ_NAME_cleanup(-1);
 
-    EVP_PBE_cleanup();
+    OPENSSL_BOX_EVP_PBE_cleanup();
     OBJ_sigid_free();
 
     evp_app_cleanup_int();

@@ -133,7 +133,7 @@ static int test_store_search_by_key_fingerprint_fail(void)
     OSSL_STORE_SEARCH *search = NULL;
 
     ret = TEST_ptr_null(search = OSSL_STORE_SEARCH_by_key_fingerprint(
-                                     EVP_sha256(), NULL, 0));
+                                     OPENSSL_BOX_EVP_sha256(), NULL, 0));
     OSSL_STORE_SEARCH_free(search);
     return ret;
 }
@@ -160,8 +160,8 @@ static int get_params(const char *uri, const char *type)
     }
 
     if (pkey != NULL)
-        ret = EVP_PKEY_is_a(pkey, type);
-    EVP_PKEY_free(pkey);
+        ret = OPENSSL_BOX_EVP_PKEY_is_a(pkey, type);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
 
  err:
     OSSL_STORE_close(ctx);

@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-BIO_f_md, BIO_set_md, BIO_get_md, BIO_get_md_ctx - message digest BIO filter
+OPENSSL_BOX_BIO_f_md, OPENSSL_BOX_BIO_set_md, BIO_get_md, BIO_get_md_ctx - message digest BIO filter
 
 =head1 SYNOPSIS
 
@@ -11,16 +11,16 @@ BIO_f_md, BIO_set_md, BIO_get_md, BIO_get_md_ctx - message digest BIO filter
  #include <openssl/bio.h>
  #include <openssl/evp.h>
 
- const BIO_METHOD *BIO_f_md(void);
- int BIO_set_md(BIO *b, EVP_MD *md);
+ const BIO_METHOD *OPENSSL_BOX_BIO_f_md(void);
+ int OPENSSL_BOX_BIO_set_md(BIO *b, EVP_MD *md);
  int BIO_get_md(BIO *b, EVP_MD **mdp);
  int BIO_get_md_ctx(BIO *b, EVP_MD_CTX **mdcp);
 
 =head1 DESCRIPTION
 
-BIO_f_md() returns the message digest BIO method. This is a filter
+OPENSSL_BOX_BIO_f_md() returns the message digest BIO method. This is a filter
 BIO that digests any data passed through it.  It is a BIO wrapper
-for the digest routines EVP_DigestInit(), EVP_DigestUpdate()
+for the digest routines OPENSSL_BOX_EVP_DigestInit(), EVP_DigestUpdate()
 and EVP_DigestFinal().
 
 Any data written or read through a digest BIO using BIO_read_ex() and
@@ -32,7 +32,7 @@ not supported.
 
 BIO_reset() reinitialises a digest BIO.
 
-BIO_set_md() sets the message digest of BIO B<b> to B<md>: this
+OPENSSL_BOX_BIO_set_md() sets the message digest of BIO B<b> to B<md>: this
 must be called to initialize a digest BIO before any data is
 passed through it. It is a BIO_ctrl() macro.
 
@@ -53,7 +53,7 @@ BIO itself and the context pointer will become invalid when the digest
 BIO is freed.
 
 After the digest has been retrieved from a digest BIO it must be
-reinitialized by calling BIO_reset(), or BIO_set_md() before any more
+reinitialized by calling BIO_reset(), or OPENSSL_BOX_BIO_set_md() before any more
 data is passed through it.
 
 If an application needs to call BIO_gets() or BIO_puts() through
@@ -62,13 +62,13 @@ a buffering BIO.
 
 Calling BIO_get_md_ctx() will return the context and initialize the BIO
 state. This allows applications to initialize the context externally
-if the standard calls such as BIO_set_md() are not sufficiently flexible.
+if the standard calls such as OPENSSL_BOX_BIO_set_md() are not sufficiently flexible.
 
 =head1 RETURN VALUES
 
-BIO_f_md() returns the digest BIO method.
+OPENSSL_BOX_BIO_f_md() returns the digest BIO method.
 
-BIO_set_md(), BIO_get_md() and BIO_md_ctx() return 1 for success and
+OPENSSL_BOX_BIO_set_md(), BIO_get_md() and BIO_md_ctx() return 1 for success and
 <=0 for failure.
 
 =head1 EXAMPLES
@@ -81,15 +81,15 @@ checking has been omitted for clarity.
  char message[] = "Hello World";
 
  bio = BIO_new(BIO_s_null());
- mdtmp = BIO_new(BIO_f_md());
- BIO_set_md(mdtmp, EVP_sha1());
+ mdtmp = BIO_new(OPENSSL_BOX_BIO_f_md());
+ OPENSSL_BOX_BIO_set_md(mdtmp, OPENSSL_BOX_EVP_sha1());
  /*
   * For BIO_push() we want to append the sink BIO and keep a note of
   * the start of the chain.
   */
  bio = BIO_push(mdtmp, bio);
- mdtmp = BIO_new(BIO_f_md());
- BIO_set_md(mdtmp, EVP_md5());
+ mdtmp = BIO_new(OPENSSL_BOX_BIO_f_md());
+ OPENSSL_BOX_BIO_set_md(mdtmp, OPENSSL_BOX_EVP_md5());
  bio = BIO_push(mdtmp, bio);
  /* Note: mdtmp can now be discarded */
  BIO_write(bio, message, strlen(message));
@@ -101,11 +101,11 @@ The next example digests data by reading through a chain instead:
  int rdlen;
 
  bio = BIO_new_file(file, "rb");
- mdtmp = BIO_new(BIO_f_md());
- BIO_set_md(mdtmp, EVP_sha1());
+ mdtmp = BIO_new(OPENSSL_BOX_BIO_f_md());
+ OPENSSL_BOX_BIO_set_md(mdtmp, OPENSSL_BOX_EVP_sha1());
  bio = BIO_push(mdtmp, bio);
- mdtmp = BIO_new(BIO_f_md());
- BIO_set_md(mdtmp, EVP_md5());
+ mdtmp = BIO_new(OPENSSL_BOX_BIO_f_md());
+ OPENSSL_BOX_BIO_set_md(mdtmp, OPENSSL_BOX_EVP_md5());
  bio = BIO_push(mdtmp, bio);
  do {
      rdlen = BIO_read(bio, buf, sizeof(buf));
@@ -128,7 +128,7 @@ outputs them. This could be used with the examples above.
      if (!mdtmp)
          break;
      BIO_get_md(mdtmp, &md);
-     printf("%s digest", OBJ_nid2sn(EVP_MD_get_type(md)));
+     printf("%s digest", OBJ_nid2sn(OPENSSL_BOX_EVP_MD_get_type(md)));
      mdlen = BIO_gets(mdtmp, mdbuf, EVP_MAX_MD_SIZE);
      for (i = 0; i < mdlen; i++) printf(":%02X", mdbuf[i]);
      printf("\n");

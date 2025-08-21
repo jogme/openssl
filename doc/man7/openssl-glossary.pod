@@ -96,7 +96,7 @@ L<OSSL_PROVIDER-FIPS(7)>
 
 Implicit Fetching is a type of Fetching (see Fetching). Implicit Fetching is
 where an algorithm object with no associated implementation is used such as the
-return value from L<EVP_sha256(3)> or L<EVP_aes_128_cbc(3)>. With implicit
+return value from L<OPENSSL_BOX_EVP_sha256(3)> or L<OPENSSL_BOX_EVP_aes_128_cbc(3)>. With implicit
 fetching an implementation is fetched automatically using default selection
 criteria the first time the algorithm is used.
 

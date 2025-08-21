@@ -18,7 +18,7 @@ static int test_evp_get_digestbyname(void)
 {
     const EVP_MD *md;
 
-    if (!TEST_ptr(md = EVP_get_digestbyname("SHA2-256")))
+    if (!TEST_ptr(md = OPENSSL_BOX_EVP_get_digestbyname("SHA2-256")))
         return 0;
     return 1;
 }
@@ -27,7 +27,7 @@ static int test_evp_get_cipherbyname(void)
 {
     const EVP_CIPHER *cipher;
 
-    if (!TEST_ptr(cipher = EVP_get_cipherbyname("AES-256-WRAP")))
+    if (!TEST_ptr(cipher = OPENSSL_BOX_EVP_get_cipherbyname("AES-256-WRAP")))
         return 0;
     return 1;
 }

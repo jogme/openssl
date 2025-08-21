@@ -21,7 +21,7 @@
 IMPLEMENT_LEGACY_EVP_MD_METH_LC(md5_sha1_int, ossl_md5_sha1)
 static int md5_sha1_int_ctrl(EVP_MD_CTX *ctx, int cmd, int mslen, void *ms)
 {
-    return ossl_md5_sha1_ctrl(EVP_MD_CTX_get0_md_data(ctx), cmd, mslen, ms);
+    return ossl_md5_sha1_ctrl(OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx), cmd, mslen, ms);
 }
 
 static const EVP_MD md5_sha1_md = {
@@ -35,7 +35,7 @@ static const EVP_MD md5_sha1_md = {
                              MD5_SHA1_CBLOCK),
 };
 
-const EVP_MD *EVP_md5_sha1(void)
+const EVP_MD *OPENSSL_BOX_EVP_md5_sha1(void)
 {
     return &md5_sha1_md;
 }

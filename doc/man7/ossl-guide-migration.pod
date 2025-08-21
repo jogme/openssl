@@ -21,7 +21,7 @@ L<crypto(7)>.
 
 =head2 Main Changes from OpenSSL 3.5
 
-The functions EVP_PKEY_asn1_*() and L<EVP_PKEY_get0_asn1(3)> were deprecated in
+The functions EVP_PKEY_asn1_*() and L<OPENSSL_BOX_EVP_PKEY_get0_asn1(3)> were deprecated in
 favour of the provider API. EVP_PKEY_assign_[DSA|SIPHASH]() were also deprecated.
 Please use the new high level and provider API.
 
@@ -92,7 +92,7 @@ OpenSSL installation.
 Not all algorithms may be available for the application at a particular moment.
 If the application code uses any digest or cipher algorithm via the EVP interface,
 the application should verify the result of the L<EVP_EncryptInit(3)>,
-L<EVP_EncryptInit_ex(3)>, and L<EVP_DigestInit(3)> functions. In case when
+L<EVP_EncryptInit_ex(3)>, and L<OPENSSL_BOX_EVP_DigestInit(3)> functions. In case when
 the requested algorithm is not available, these functions will fail.
 
 See also L</Legacy Algorithms> for information on the legacy provider.
@@ -140,8 +140,8 @@ more information about providers.
 
 The refactoring to support Providers conflicts internally with the APIs used to
 support engines, including the ENGINE API and any function that creates or
-modifies custom "METHODS" (for example L<EVP_MD_meth_new(3)>,
-L<EVP_CIPHER_meth_new(3)>, L<EVP_PKEY_meth_new(3)>, L<RSA_meth_new(3)>,
+modifies custom "METHODS" (for example L<OPENSSL_BOX_EVP_MD_meth_new(3)>,
+L<OPENSSL_BOX_EVP_CIPHER_meth_new(3)>, L<OPENSSL_BOX_EVP_PKEY_meth_new(3)>, L<RSA_meth_new(3)>,
 L<EC_KEY_METHOD_new(3)>, etc.). These functions are being deprecated in
 OpenSSL 3.0, and users of these APIs should know that their use can likely
 bypass provider selection and configuration, with unintended consequences.
@@ -170,7 +170,7 @@ as B<RSA_METHOD> or B<EC_KEY_METHOD> is still possible and keys inside the
 default provider will use the engine-based implementation for the crypto
 operations. However B<EVP_PKEY>s created by decoding by using B<OSSL_DECODER>,
 B<PEM_> or B<d2i_> APIs will be provider-based. To create a fully legacy
-B<EVP_PKEY>s L<EVP_PKEY_set1_RSA(3)>, L<EVP_PKEY_set1_EC_KEY(3)> or similar
+B<EVP_PKEY>s L<OPENSSL_BOX_EVP_PKEY_set1_RSA(3)>, L<OPENSSL_BOX_EVP_PKEY_set1_EC_KEY(3)> or similar
 functions must be used.
 
 =head3 Versioning Scheme
@@ -228,7 +228,7 @@ and L<OSSL_PROVIDER-FIPS(7)/Message Authentication Code (MAC)>.
 
 =head4 Algorithm Fetching
 
-Using calls to convenience functions such as EVP_sha256() and EVP_aes_256_gcm() may
+Using calls to convenience functions such as OPENSSL_BOX_EVP_sha256() and OPENSSL_BOX_EVP_aes_256_gcm() may
 incur a performance penalty when using providers.
 Retrieving algorithms from providers involves searching for an algorithm by name.
 This is much slower than directly accessing a method table.
@@ -370,10 +370,10 @@ categories. See L<OSSL_trace_enabled(3)>.
 
 =head4 Key validation updates
 
-L<EVP_PKEY_public_check(3)> and L<EVP_PKEY_param_check(3)> now work for
+L<OPENSSL_BOX_EVP_PKEY_public_check(3)> and L<OPENSSL_BOX_EVP_PKEY_param_check(3)> now work for
 more key types. This includes RSA, DSA, ED25519, X25519, ED448 and X448.
 Previously (in 1.1.1) they would return -2. For key types that do not have
-parameters L<EVP_PKEY_param_check(3)> will always return 1.
+parameters L<OPENSSL_BOX_EVP_PKEY_param_check(3)> will always return 1.
 
 =head3 Other notable deprecations and changes
 
@@ -396,8 +396,8 @@ implemented by EVP_RAND and EVP_RAND_CTX.
 
 These functions are legacy APIs that are not applicable to the new provider
 model. Applications should instead use
-L<EVP_default_properties_is_fips_enabled(3)> and
-L<EVP_default_properties_enable_fips(3)>.
+L<OPENSSL_BOX_EVP_default_properties_is_fips_enabled(3)> and
+L<OPENSSL_BOX_EVP_default_properties_enable_fips(3)>.
 
 =head4 Key generation is slower
 
@@ -451,13 +451,13 @@ type, so this function has been removed.
 
 =head4 Functions that return an internal key should be treated as read only
 
-Functions such as L<EVP_PKEY_get0_RSA(3)> behave slightly differently in
+Functions such as L<OPENSSL_BOX_EVP_PKEY_get0_RSA(3)> behave slightly differently in
 OpenSSL 3.0. Previously they returned a pointer to the low-level key used
 internally by libcrypto. From OpenSSL 3.0 this key may now be held in a
 provider. Calling these functions will only return a handle on the internal key
 where the EVP_PKEY was constructed using this key in the first place, for
 example using a function or macro such as L<EVP_PKEY_assign_RSA(3)>,
-L<EVP_PKEY_set1_RSA(3)>, etc.
+L<OPENSSL_BOX_EVP_PKEY_set1_RSA(3)>, etc.
 Where the EVP_PKEY holds a provider managed key, then these functions now return
 a cached copy of the key. Changes to the internal provider key that take place
 after the first time the cached key is accessed will not be reflected back in
@@ -466,19 +466,19 @@ code will not be reflected back in the internal provider key.
 
 For the above reasons the keys returned from these functions should typically be
 treated as read-only. To emphasise this the value returned from
-L<EVP_PKEY_get0_RSA(3)>, L<EVP_PKEY_get0_DSA(3)>, L<EVP_PKEY_get0_EC_KEY(3)> and
-L<EVP_PKEY_get0_DH(3)> have been made const. This may break some existing code.
+L<OPENSSL_BOX_EVP_PKEY_get0_RSA(3)>, L<OPENSSL_BOX_EVP_PKEY_get0_DSA(3)>, L<OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(3)> and
+L<OPENSSL_BOX_EVP_PKEY_get0_DH(3)> have been made const. This may break some existing code.
 Applications broken by this change should be modified. The preferred solution is
 to refactor the code to avoid the use of these deprecated functions. Failing
 this the code should be modified to use a const pointer instead.
-The L<EVP_PKEY_get1_RSA(3)>, L<EVP_PKEY_get1_DSA(3)>, L<EVP_PKEY_get1_EC_KEY(3)>
-and L<EVP_PKEY_get1_DH(3)> functions continue to return a non-const pointer to
+The L<OPENSSL_BOX_EVP_PKEY_get1_RSA(3)>, L<OPENSSL_BOX_EVP_PKEY_get1_DSA(3)>, L<OPENSSL_BOX_EVP_PKEY_get1_EC_KEY(3)>
+and L<OPENSSL_BOX_EVP_PKEY_get1_DH(3)> functions continue to return a non-const pointer to
 enable them to be "freed". However they should also be treated as read-only.
 
-=head4 The public key check has moved from EVP_PKEY_derive() to EVP_PKEY_derive_set_peer()
+=head4 The public key check has moved from OPENSSL_BOX_EVP_PKEY_derive() to OPENSSL_BOX_EVP_PKEY_derive_set_peer()
 
-This may mean result in an error in L<EVP_PKEY_derive_set_peer(3)> rather than
-during L<EVP_PKEY_derive(3)>.
+This may mean result in an error in L<OPENSSL_BOX_EVP_PKEY_derive_set_peer(3)> rather than
+during L<OPENSSL_BOX_EVP_PKEY_derive(3)>.
 To disable this check use EVP_PKEY_derive_set_peer_ex(dh, peer, 0).
 
 =head4 The print format has cosmetic changes for some functions
@@ -504,7 +504,7 @@ Previously (in 1.1.1) these conflicting parameters were allowed, but will now
 result in errors. See L<EVP_PKEY-DH(7)> for further details. This affects the
 behaviour of L<openssl-genpkey(1)> for DH parameter generation.
 
-=head4 EVP_CIPHER_CTX_set_flags() ordering change
+=head4 OPENSSL_BOX_EVP_CIPHER_CTX_set_flags() ordering change
 
 If using a cipher from a provider the B<EVP_CIPH_FLAG_LENGTH_BITS> flag can only
 be set B<after> the cipher has been assigned to the cipher context.
@@ -532,7 +532,7 @@ the error codes only using the library number and the reason code.
 In OpenSSL 3.0 setting the IV length to any value other than 12 will result in an
 error.
 Prior to OpenSSL 3.0 the ivlen could be smaller that the required 12 byte length,
-using EVP_CIPHER_CTX_ctrl(ctx, EVP_CRTL_AEAD_SET_IVLEN, ivlen, NULL). This resulted
+using OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CRTL_AEAD_SET_IVLEN, ivlen, NULL). This resulted
 in an IV that had leading zero padding.
 
 =head2 Installation and Compilation
@@ -615,10 +615,10 @@ The code needs to be amended to look like this:
 
  EVP_MD_CTX *md_ctx;
 
- md_ctx = EVP_MD_CTX_new();
+ md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
  ...
  ...
- EVP_MD_CTX_free(md_ctx);
+ OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
 
 =item 3.
 
@@ -673,11 +673,11 @@ library context.
 =head4 Using a Library Context - Old functions that should be changed
 
 If a library context is needed then all EVP_* digest functions that return a
-B<const EVP_MD *> such as EVP_sha256() should be replaced with a call to
+B<const EVP_MD *> such as OPENSSL_BOX_EVP_sha256() should be replaced with a call to
 L<EVP_MD_fetch(3)>. See L<crypto(7)/ALGORITHM FETCHING>.
 
 If a library context is needed then all EVP_* cipher functions that return a
-B<const EVP_CIPHER *> such as EVP_aes_128_cbc() should be replaced vith a call to
+B<const EVP_CIPHER *> such as OPENSSL_BOX_EVP_aes_128_cbc() should be replaced vith a call to
 L<EVP_CIPHER_fetch(3)>. See L<crypto(7)/ALGORITHM FETCHING>.
 
 Some functions can be passed an object that has already been set up with a library
@@ -762,13 +762,13 @@ L<EVP_PKCS82PKEY(3)>
 
 =item *
 
-L<EVP_PKEY_CTX_new_id(3)>
+L<OPENSSL_BOX_EVP_PKEY_CTX_new_id(3)>
 
 Use L<EVP_PKEY_CTX_new_from_name(3)>
 
 =item *
 
-L<EVP_PKEY_derive_set_peer(3)>, L<EVP_PKEY_new_raw_private_key(3)>
+L<OPENSSL_BOX_EVP_PKEY_derive_set_peer(3)>, L<EVP_PKEY_new_raw_private_key(3)>
 and L<EVP_PKEY_new_raw_public_key(3)>
 
 =item *
@@ -898,8 +898,8 @@ L<EVP_CIPHER_fetch(3)> and L<EVP_CIPHER_do_all_provided(3)>
 
 =item *
 
-L<EVP_default_properties_enable_fips(3)> and
-L<EVP_default_properties_is_fips_enabled(3)>
+L<OPENSSL_BOX_EVP_default_properties_enable_fips(3)> and
+L<OPENSSL_BOX_EVP_default_properties_is_fips_enabled(3)>
 
 =item *
 
@@ -943,7 +943,7 @@ L<EVP_RAND(3)> and L<EVP_RAND_do_all_provided(3)>
 
 =item *
 
-L<EVP_set_default_properties(3)>
+L<OPENSSL_BOX_EVP_set_default_properties(3)>
 
 =item *
 
@@ -1022,16 +1022,16 @@ L<crypto(7)/ALGORITHM FETCHING>.
 
 =head3 Mapping EVP controls and flags to provider L<OSSL_PARAM(3)> parameters
 
-The existing functions for controls (such as L<EVP_CIPHER_CTX_ctrl(3)>) and
-manipulating flags (such as L<EVP_MD_CTX_set_flags(3)>)internally use
+The existing functions for controls (such as L<OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(3)>) and
+manipulating flags (such as L<OPENSSL_BOX_EVP_MD_CTX_set_flags(3)>)internally use
 B<OSSL_PARAMS> to pass information to/from provider objects.
 See L<OSSL_PARAM(3)> for additional information related to parameters.
 
 For ciphers see L<EVP_EncryptInit(3)/CONTROLS>, L<EVP_EncryptInit(3)/FLAGS> and
 L<EVP_EncryptInit(3)/PARAMETERS>.
 
-For digests see L<EVP_DigestInit(3)/CONTROLS>, L<EVP_DigestInit(3)/FLAGS> and
-L<EVP_DigestInit(3)/PARAMETERS>.
+For digests see L<OPENSSL_BOX_EVP_DigestInit(3)/CONTROLS>, L<OPENSSL_BOX_EVP_DigestInit(3)/FLAGS> and
+L<OPENSSL_BOX_EVP_DigestInit(3)/PARAMETERS>.
 
 =head3 Deprecation of Low Level Functions
 
@@ -1042,7 +1042,7 @@ that refer to these categories.
 
 =head4 Providers are a replacement for engines and low-level method overrides
 
-Any accessor that uses an ENGINE is deprecated (such as EVP_PKEY_set1_engine()).
+Any accessor that uses an ENGINE is deprecated (such as OPENSSL_BOX_EVP_PKEY_set1_engine()).
 Applications using engines should instead use providers.
 
 Before providers were added algorithms were overridden by changing the methods
@@ -1058,10 +1058,10 @@ See L<d2i_RSAPrivateKey(3)/Migration> for further details.
 
 =head4 Deprecated low-level key object getters and setters
 
-Applications that set or get low-level key objects (such as EVP_PKEY_set1_DH()
-or EVP_PKEY_get0()) should instead use the OSSL_ENCODER
+Applications that set or get low-level key objects (such as OPENSSL_BOX_EVP_PKEY_set1_DH()
+or OPENSSL_BOX_EVP_PKEY_get0()) should instead use the OSSL_ENCODER
 (See L<OSSL_ENCODER_to_bio(3)>) or OSSL_DECODER (See L<OSSL_DECODER_from_bio(3)>)
-APIs, or alternatively use L<EVP_PKEY_fromdata(3)> or L<EVP_PKEY_todata(3)>.
+APIs, or alternatively use L<EVP_PKEY_fromdata(3)> or L<OPENSSL_BOX_EVP_PKEY_todata(3)>.
 
 =head4 Deprecated low-level key parameter getters
 
@@ -1072,7 +1072,7 @@ L<EVP_PKEY_get_int_param(3)>,
 L<EVP_PKEY_get_size_t_param(3)>,
 L<EVP_PKEY_get_utf8_string_param(3)>,
 L<EVP_PKEY_get_octet_string_param(3)>, or
-L<EVP_PKEY_get_params(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_params(3)>,
 to access fields from an EVP_PKEY.
 Gettable parameters are listed in:
 L<EVP_PKEY-RSA(7)/Common RSA parameters>,
@@ -1084,14 +1084,14 @@ L<EVP_PKEY-X25519(7)/Common X25519, X448, ED25519 and ED448 parameters>,
 L<EVP_PKEY-ML-DSA(7)/Common parameters>,
 and
 L<EVP_PKEY-ML-KEM(7)/Common parameters>.
-Applications may also use L<EVP_PKEY_todata(3)> to return all fields.
+Applications may also use L<OPENSSL_BOX_EVP_PKEY_todata(3)> to return all fields.
 
 =head4 Deprecated low-level key parameter setters
 
 Functions that access low-level objects directly such as L<RSA_set0_crt_params(3)>
 are now deprecated. Applications should use L<EVP_PKEY_fromdata(3)> to create
 new keys from user provided key data. Keys should be immutable once they are
-created, so if required the user may use L<EVP_PKEY_todata(3)>, L<OSSL_PARAM_merge(3)>,
+created, so if required the user may use L<OPENSSL_BOX_EVP_PKEY_todata(3)>, L<OSSL_PARAM_merge(3)>,
 and L<EVP_PKEY_fromdata(3)> to create a modified key.
 See L<EVP_PKEY-DH(7)/Examples> for more information.
 See L</Deprecated low-level key generation functions> for information on
@@ -1101,8 +1101,8 @@ generating a key using parameters.
 
 Low-level objects were created using methods such as L<RSA_new(3)>,
 L<RSA_up_ref(3)> and L<RSA_free(3)>. Applications should instead use the
-high-level EVP_PKEY APIs, e.g. L<EVP_PKEY_new(3)>, L<EVP_PKEY_up_ref(3)> and
-L<EVP_PKEY_free(3)>.
+high-level EVP_PKEY APIs, e.g. L<OPENSSL_BOX_EVP_PKEY_new(3)>, L<OPENSSL_BOX_EVP_PKEY_up_ref(3)> and
+L<OPENSSL_BOX_EVP_PKEY_free(3)>.
 See also L<EVP_PKEY_CTX_new_from_name(3)> and L<EVP_PKEY_CTX_new_from_pkey(3)>.
 
 EVP_PKEYs may be created in a variety of ways:
@@ -1140,8 +1140,8 @@ L<EVP_SIGNATURE-ECDSA(7)> and L<EVP_SIGNATURE-ED25519(7)>.
 
 Low-level mac functions such as L<CMAC_Init(3)> are deprecated.
 Applications should instead use the new L<EVP_MAC(3)> interface, using
-L<EVP_MAC_CTX_new(3)>, L<EVP_MAC_CTX_free(3)>, L<EVP_MAC_init(3)>,
-L<EVP_MAC_update(3)> and L<EVP_MAC_final(3)> or the single-shot MAC function
+L<OPENSSL_BOX_EVP_MAC_CTX_new(3)>, L<OPENSSL_BOX_EVP_MAC_CTX_free(3)>, L<EVP_MAC_init(3)>,
+L<OPENSSL_BOX_EVP_MAC_update(3)> and L<EVP_MAC_final(3)> or the single-shot MAC function
 L<EVP_Q_mac(3)>.
 See L<EVP_MAC(3)>, L<EVP_MAC-HMAC(7)>, L<EVP_MAC-CMAC(7)>, L<EVP_MAC-GMAC(7)>,
 L<EVP_MAC-KMAC(7)>, L<EVP_MAC-BLAKE2(7)>, L<EVP_MAC-Poly1305(7)> and
@@ -1154,22 +1154,22 @@ but this can also be replaced by using EVP_Q_MAC if a library context is require
 
 Low-level validation functions such as L<DH_check(3)> have been informally
 discouraged from use for a long time. Applications should instead use the high-level
-EVP_PKEY APIs such as L<EVP_PKEY_check(3)>, L<EVP_PKEY_param_check(3)>,
-L<EVP_PKEY_param_check_quick(3)>, L<EVP_PKEY_public_check(3)>,
-L<EVP_PKEY_public_check_quick(3)>, L<EVP_PKEY_private_check(3)>,
-and L<EVP_PKEY_pairwise_check(3)>.
+EVP_PKEY APIs such as L<OPENSSL_BOX_EVP_PKEY_check(3)>, L<OPENSSL_BOX_EVP_PKEY_param_check(3)>,
+L<OPENSSL_BOX_EVP_PKEY_param_check_quick(3)>, L<OPENSSL_BOX_EVP_PKEY_public_check(3)>,
+L<OPENSSL_BOX_EVP_PKEY_public_check_quick(3)>, L<OPENSSL_BOX_EVP_PKEY_private_check(3)>,
+and L<OPENSSL_BOX_EVP_PKEY_pairwise_check(3)>.
 
 =head4 Deprecated low-level key exchange functions
 
 Many low-level functions have been informally discouraged from use for a long
-time. Applications should instead use L<EVP_PKEY_derive(3)>.
+time. Applications should instead use L<OPENSSL_BOX_EVP_PKEY_derive(3)>.
 See L<EVP_KEYEXCH-DH(7)>, L<EVP_KEYEXCH-ECDH(7)> and L<EVP_KEYEXCH-X25519(7)>.
 
 =head4 Deprecated low-level key generation functions
 
 Many low-level functions have been informally discouraged from use for a long
-time. Applications should instead use L<EVP_PKEY_keygen_init(3)> and
-L<EVP_PKEY_generate(3)> as described in L<EVP_PKEY-DSA(7)>, L<EVP_PKEY-DH(7)>,
+time. Applications should instead use L<OPENSSL_BOX_EVP_PKEY_keygen_init(3)> and
+L<OPENSSL_BOX_EVP_PKEY_generate(3)> as described in L<EVP_PKEY-DSA(7)>, L<EVP_PKEY-DH(7)>,
 L<EVP_PKEY-RSA(7)>, L<EVP_PKEY-EC(7)> and L<EVP_PKEY-X25519(7)>.
 The 'quick' one-shot function L<EVP_PKEY_Q_keygen(3)> and macros for the most
 common cases: <EVP_RSA_gen(3)> and L<EVP_EC_gen(3)> may also be used.
@@ -1283,7 +1283,7 @@ BN_X931_derive_prime_ex(), BN_X931_generate_prime_ex(), BN_X931_generate_Xpq()
 
 There are no replacements for these low-level functions. They were used internally
 by RSA_X931_derive_ex() and RSA_X931_generate_key_ex() which are also deprecated.
-Use L<EVP_PKEY_keygen(3)> instead.
+Use L<OPENSSL_BOX_EVP_PKEY_keygen(3)> instead.
 
 =item *
 
@@ -1379,8 +1379,8 @@ Algorithms for "DESX-CBC", "DES-ECB", "DES-CBC", "DES-OFB", "DES-CFB",
 
 DH_bits(), DH_security_bits(), DH_size()
 
-Use L<EVP_PKEY_get_bits(3)>, L<EVP_PKEY_get_security_bits(3)> and
-L<EVP_PKEY_get_size(3)>.
+Use L<OPENSSL_BOX_EVP_PKEY_get_bits(3)>, L<OPENSSL_BOX_EVP_PKEY_get_security_bits(3)> and
+L<OPENSSL_BOX_EVP_PKEY_get_size(3)>.
 
 =item *
 
@@ -1395,7 +1395,7 @@ DH_clear_flags(), DH_test_flags(), DH_set_flags()
 
 The B<DH_FLAG_CACHE_MONT_P> flag has been deprecated without replacement.
 The B<DH_FLAG_TYPE_DH> and B<DH_FLAG_TYPE_DHX> have been deprecated.
-Use EVP_PKEY_is_a() to determine the type of a key.
+Use OPENSSL_BOX_EVP_PKEY_is_a() to determine the type of a key.
 There is no replacement for setting these flags.
 
 =item *
@@ -1461,15 +1461,15 @@ See L</Deprecated low-level key parameter setters>
 
 DSA_bits(), DSA_security_bits(), DSA_size()
 
-Use L<EVP_PKEY_get_bits(3)>, L<EVP_PKEY_get_security_bits(3)> and
-L<EVP_PKEY_get_size(3)>.
+Use L<OPENSSL_BOX_EVP_PKEY_get_bits(3)>, L<OPENSSL_BOX_EVP_PKEY_get_security_bits(3)> and
+L<OPENSSL_BOX_EVP_PKEY_get_size(3)>.
 
 =item *
 
 DHparams_dup(), DSA_dup_DH()
 
-There is no direct replacement. Applications may use L<EVP_PKEY_copy_parameters(3)>
-and L<EVP_PKEY_dup(3)> instead.
+There is no direct replacement. Applications may use L<OPENSSL_BOX_EVP_PKEY_copy_parameters(3)>
+and L<OPENSSL_BOX_EVP_PKEY_dup(3)> instead.
 
 =item *
 
@@ -1502,8 +1502,8 @@ See L</Deprecated low-level object creation>
 
 DSAparams_dup()
 
-There is no direct replacement. Applications may use L<EVP_PKEY_copy_parameters(3)>
-and L<EVP_PKEY_dup(3)> instead.
+There is no direct replacement. Applications may use L<OPENSSL_BOX_EVP_PKEY_copy_parameters(3)>
+and L<OPENSSL_BOX_EVP_PKEY_dup(3)> instead.
 
 =item *
 
@@ -1554,7 +1554,7 @@ See L</Deprecated low-level signing functions>.
 
 ECDSA_size()
 
-Applications should use L<EVP_PKEY_get_size(3)>.
+Applications should use L<OPENSSL_BOX_EVP_PKEY_get_size(3)>.
 
 =item *
 
@@ -1599,7 +1599,7 @@ Users of EC_GROUP_new() should switch to a different suitable constructor.
 
 EC_KEY_can_sign()
 
-Applications should use L<EVP_PKEY_can_sign(3)> instead.
+Applications should use L<OPENSSL_BOX_EVP_PKEY_can_sign(3)> instead.
 
 =item *
 
@@ -1622,8 +1622,8 @@ See also L<EVP_PKEY-EC(7)/EXAMPLES>
 
 EC_KEY_dup(), EC_KEY_copy()
 
-There is no direct replacement. Applications may use L<EVP_PKEY_copy_parameters(3)>
-and L<EVP_PKEY_dup(3)> instead.
+There is no direct replacement. Applications may use L<OPENSSL_BOX_EVP_PKEY_copy_parameters(3)>
+and L<OPENSSL_BOX_EVP_PKEY_dup(3)> instead.
 
 =item *
 
@@ -1769,12 +1769,12 @@ L<ERR_get_error(3)>.
 
 =item *
 
-EVP_CIPHER_CTX_iv(), EVP_CIPHER_CTX_iv_noconst(), EVP_CIPHER_CTX_original_iv()
+OPENSSL_BOX_EVP_CIPHER_CTX_iv(), OPENSSL_BOX_EVP_CIPHER_CTX_iv_noconst(), OPENSSL_BOX_EVP_CIPHER_CTX_original_iv()
 
-Applications should instead use L<EVP_CIPHER_CTX_get_updated_iv(3)>,
-L<EVP_CIPHER_CTX_get_updated_iv(3)> and L<EVP_CIPHER_CTX_get_original_iv(3)>
+Applications should instead use L<OPENSSL_BOX_EVP_CIPHER_CTX_get_updated_iv(3)>,
+L<OPENSSL_BOX_EVP_CIPHER_CTX_get_updated_iv(3)> and L<OPENSSL_BOX_EVP_CIPHER_CTX_get_original_iv(3)>
 respectively.
-See L<EVP_CIPHER_CTX_get_original_iv(3)> for further information.
+See L<OPENSSL_BOX_EVP_CIPHER_CTX_get_original_iv(3)> for further information.
 
 =item *
 
@@ -1809,29 +1809,29 @@ Applications should use L<EVP_PKEY_CTX_set1_rsa_keygen_pubexp(3)> instead.
 
 =item *
 
-EVP_PKEY_cmp(), EVP_PKEY_cmp_parameters()
+OPENSSL_BOX_EVP_PKEY_cmp(), OPENSSL_BOX_EVP_PKEY_cmp_parameters()
 
-Applications should use L<EVP_PKEY_eq(3)> and L<EVP_PKEY_parameters_eq(3)> instead.
-See L<EVP_PKEY_copy_parameters(3)> for further details.
+Applications should use L<OPENSSL_BOX_EVP_PKEY_eq(3)> and L<OPENSSL_BOX_EVP_PKEY_parameters_eq(3)> instead.
+See L<OPENSSL_BOX_EVP_PKEY_copy_parameters(3)> for further details.
 
 =item *
 
 EVP_PKEY_encrypt_old(), EVP_PKEY_decrypt_old(),
 
-Applications should use L<EVP_PKEY_encrypt_init(3)> and L<EVP_PKEY_encrypt(3)> or
-L<EVP_PKEY_decrypt_init(3)> and L<EVP_PKEY_decrypt(3)> instead.
+Applications should use L<OPENSSL_BOX_EVP_PKEY_encrypt_init(3)> and L<EVP_PKEY_encrypt(3)> or
+L<OPENSSL_BOX_EVP_PKEY_decrypt_init(3)> and L<EVP_PKEY_decrypt(3)> instead.
 
 =item *
 
-EVP_PKEY_get0()
+OPENSSL_BOX_EVP_PKEY_get0()
 
 This function returns NULL if the key comes from a provider.
 
 =item *
 
-EVP_PKEY_get0_DH(), EVP_PKEY_get0_DSA(), EVP_PKEY_get0_EC_KEY(), EVP_PKEY_get0_RSA(),
-EVP_PKEY_get1_DH(), EVP_PKEY_get1_DSA(), EVP_PKEY_get1_EC_KEY and EVP_PKEY_get1_RSA(),
-EVP_PKEY_get0_hmac(), EVP_PKEY_get0_poly1305(), EVP_PKEY_get0_siphash()
+OPENSSL_BOX_EVP_PKEY_get0_DH(), OPENSSL_BOX_EVP_PKEY_get0_DSA(), OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(), OPENSSL_BOX_EVP_PKEY_get0_RSA(),
+OPENSSL_BOX_EVP_PKEY_get1_DH(), OPENSSL_BOX_EVP_PKEY_get1_DSA(), OPENSSL_BOX_EVP_PKEY_get1_EC_KEY and OPENSSL_BOX_EVP_PKEY_get1_RSA(),
+OPENSSL_BOX_EVP_PKEY_get0_hmac(), OPENSSL_BOX_EVP_PKEY_get0_poly1305(), OPENSSL_BOX_EVP_PKEY_get0_siphash()
 
 See L</Functions that return an internal key should be treated as read only>.
 
@@ -1849,8 +1849,8 @@ See L</Deprecated low-level MAC functions>.
 
 =item *
 
-EVP_PKEY_assign(), EVP_PKEY_set1_DH(), EVP_PKEY_set1_DSA(),
-EVP_PKEY_set1_EC_KEY(), EVP_PKEY_set1_RSA()
+OPENSSL_BOX_EVP_PKEY_assign(), OPENSSL_BOX_EVP_PKEY_set1_DH(), OPENSSL_BOX_EVP_PKEY_set1_DSA(),
+OPENSSL_BOX_EVP_PKEY_set1_EC_KEY(), OPENSSL_BOX_EVP_PKEY_set1_RSA()
 
 See L</Deprecated low-level key object getters and setters>
 
@@ -1861,13 +1861,13 @@ EVP_PKEY_set1_tls_encodedpoint() EVP_PKEY_get1_tls_encodedpoint()
 These functions were previously used by libssl to set or get an encoded public
 key into/from an EVP_PKEY object. With OpenSSL 3.0 these are replaced by the more
 generic functions L<EVP_PKEY_set1_encoded_public_key(3)> and
-L<EVP_PKEY_get1_encoded_public_key(3)>.
+L<OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(3)>.
 The old versions have been converted to deprecated macros that just call the
 new functions.
 
 =item *
 
-EVP_PKEY_set1_engine(), EVP_PKEY_get0_engine()
+OPENSSL_BOX_EVP_PKEY_set1_engine(), OPENSSL_BOX_EVP_PKEY_get0_engine()
 
 See L</Providers are a replacement for engines and low-level method overrides>.
 
@@ -1920,7 +1920,7 @@ and L<d2i_RSAPrivateKey(3)/Migration>
 
 i2o_ECPublicKey()
 
-Use L<EVP_PKEY_get1_encoded_public_key(3)>.
+Use L<OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(3)>.
 See L</Deprecated low-level key parameter getters>
 
 =item *
@@ -2085,8 +2085,8 @@ The RIPE algorithm has been moved to the L<Legacy Provider|/Legacy Algorithms>.
 
 RSA_bits(), RSA_security_bits(), RSA_size()
 
-Use L<EVP_PKEY_get_bits(3)>, L<EVP_PKEY_get_security_bits(3)> and
-L<EVP_PKEY_get_size(3)>.
+Use L<OPENSSL_BOX_EVP_PKEY_get_bits(3)>, L<OPENSSL_BOX_EVP_PKEY_get_security_bits(3)> and
+L<OPENSSL_BOX_EVP_PKEY_get_size(3)>.
 
 =item *
 
@@ -2181,7 +2181,7 @@ mode of none). See L</Deprecated low-level signing functions>.
 
 RSAPrivateKey_dup(), RSAPublicKey_dup()
 
-There is no direct replacement. Applications may use L<EVP_PKEY_dup(3)>.
+There is no direct replacement. Applications may use L<OPENSSL_BOX_EVP_PKEY_dup(3)>.
 
 =item *
 
@@ -2300,16 +2300,16 @@ The following functions for NID (numeric id) handling have changed semantics.
 
 =item *
 
-EVP_PKEY_id(), EVP_PKEY_get_id()
+EVP_PKEY_id(), OPENSSL_BOX_EVP_PKEY_get_id()
 
 This function was previously used to reliably return the NID of
 an EVP_PKEY object, e.g., to look up the name of the algorithm of
 such EVP_PKEY by calling L<OBJ_nid2sn(3)>. With the introduction
 of L<provider(7)>s EVP_PKEY_id() or its new equivalent
-L<EVP_PKEY_get_id(3)> might now also return the value -1
+L<OPENSSL_BOX_EVP_PKEY_get_id(3)> might now also return the value -1
 (B<EVP_PKEY_KEYMGMT>) indicating the use of a provider to
 implement the EVP_PKEY object. Therefore, the use of
-L<EVP_PKEY_get0_type_name(3)> is recommended for retrieving
+L<OPENSSL_BOX_EVP_PKEY_get0_type_name(3)> is recommended for retrieving
 the name of the EVP_PKEY algorithm.
 
 =back

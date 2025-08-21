@@ -72,17 +72,17 @@ static int req_cb(int operation, ASN1_VALUE **pval, const ASN1_ITEM *it,
                 EVP_PKEY *pkey = X509_PUBKEY_get0(old->req_info.pubkey);
 
                 if (pkey != NULL) {
-                    pkey = EVP_PKEY_dup(pkey);
+                    pkey = OPENSSL_BOX_EVP_PKEY_dup(pkey);
                     if (pkey == NULL) {
                         ERR_raise(ERR_LIB_X509, ERR_R_EVP_LIB);
                         return 0;
                     }
                     if (!X509_PUBKEY_set(&ret->req_info.pubkey, pkey)) {
-                        EVP_PKEY_free(pkey);
+                        OPENSSL_BOX_EVP_PKEY_free(pkey);
                         ERR_raise(ERR_LIB_X509, ERR_R_INTERNAL_ERROR);
                         return 0;
                     }
-                    EVP_PKEY_free(pkey);
+                    OPENSSL_BOX_EVP_PKEY_free(pkey);
                 }
             }
         }

@@ -1878,7 +1878,7 @@ static OCSP_RESPONSE *create_ocsp_resp(X509 *ssl_cert, X509 *issuer, int status,
             goto end;
         signer_cert_file = test_mk_file_path(certsdir, signer_cert_files);
         if (!TEST_ptr(signer_cert = load_cert_pem(signer_cert_file, libctx))
-            || !TEST_true(OCSP_basic_sign(bs, signer_cert, signer_key, EVP_sha256(),
+            || !TEST_true(OCSP_basic_sign(bs, signer_cert, signer_key, OPENSSL_BOX_EVP_sha256(),
                                           NULL, OCSP_NOCERTS)))
             goto end;
         ocsp_resp = OCSP_response_create(OCSP_RESPONSE_STATUS_SUCCESSFUL, bs);
@@ -1890,12 +1890,12 @@ end:
     OPENSSL_free(signer_key_file);
     OPENSSL_free(signer_cert_file);
     X509_free(signer_cert);
-    EVP_PKEY_free(signer_key);
+    OPENSSL_BOX_EVP_PKEY_free(signer_key);
     ASN1_UTCTIME_free(thisupd);
     ASN1_TIME_free(nextupd);
     OCSP_BASICRESP_free(bs);
     OCSP_CERTID_free(cert_id);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
 
     return ocsp_resp;
 }
@@ -8782,7 +8782,7 @@ static int tick_key_cb(SSL *s, unsigned char key_name[16],
         return 0;
     sha256 = EVP_MD_fetch(libctx, "SHA-256", NULL);
     if (!TEST_ptr(sha256)) {
-        EVP_CIPHER_free(aes128cbc);
+        OPENSSL_BOX_EVP_CIPHER_free(aes128cbc);
         return 0;
     }
 
@@ -8797,8 +8797,8 @@ static int tick_key_cb(SSL *s, unsigned char key_name[16],
     else
         ret = tick_key_renew ? 2 : 1;
 
-    EVP_CIPHER_free(aes128cbc);
-    EVP_MD_free(sha256);
+    OPENSSL_BOX_EVP_CIPHER_free(aes128cbc);
+    OPENSSL_BOX_EVP_MD_free(sha256);
 
     return ret;
 }
@@ -8836,7 +8836,7 @@ static int tick_key_evp_cb(SSL *s, unsigned char key_name[16],
     else
         ret = tick_key_renew ? 2 : 1;
 
-    EVP_CIPHER_free(aes128cbc);
+    OPENSSL_BOX_EVP_CIPHER_free(aes128cbc);
 
     return ret;
 }
@@ -9403,7 +9403,7 @@ static int cert_cb(SSL *s, void *arg)
 
     /* Abort the handshake */
  out:
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     X509_free(x509);
     X509_free(x);
     OSSL_STACK_OF_X509_free(chain);
@@ -9778,7 +9778,7 @@ static int test_multiblock_write(int test_index)
         TEST_skip("Multiblock cipher is not available for %s", cipherlist);
         return 1;
     }
-    EVP_CIPHER_free(ciph);
+    OPENSSL_BOX_EVP_CIPHER_free(ciph);
 
     /* Set up a buffer with some data that will be sent to the client */
     RAND_bytes(msg, sizeof(msg));
@@ -10577,8 +10577,8 @@ static int create_cert_key(int idx, char *certfilename, char *privkeyfilename)
     int ret = 1;
 
     if (!TEST_ptr(evpctx)
-        || !TEST_int_gt(EVP_PKEY_keygen_init(evpctx), 0)
-        || !TEST_true(EVP_PKEY_generate(evpctx, &pkey))
+        || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_keygen_init(evpctx), 0)
+        || !TEST_true(OPENSSL_BOX_EVP_PKEY_generate(evpctx, &pkey))
         || !TEST_ptr(pkey)
         || !TEST_ptr(x509)
         || !TEST_true(ASN1_INTEGER_set(X509_get_serialNumber(x509), 1))
@@ -10593,16 +10593,16 @@ static int create_cert_key(int idx, char *certfilename, char *privkeyfilename)
         || !TEST_true(X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC,
                            (unsigned char *)"localhost", -1, -1, 0))
         || !TEST_true(X509_set_issuer_name(x509, name))
-        || !TEST_true(X509_sign(x509, pkey, EVP_sha1()))
+        || !TEST_true(X509_sign(x509, pkey, OPENSSL_BOX_EVP_sha1()))
         || !TEST_ptr(keybio = BIO_new_file(privkeyfilename, "wb"))
         || !TEST_true(PEM_write_bio_PrivateKey(keybio, pkey, NULL, NULL, 0, NULL, NULL))
         || !TEST_ptr(certbio = BIO_new_file(certfilename, "wb"))
         || !TEST_true(PEM_write_bio_X509(certbio, x509)))
         ret = 0;
 
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     X509_free(x509);
-    EVP_PKEY_CTX_free(evpctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(evpctx);
     BIO_free(keybio);
     BIO_free(certbio);
     return ret;
@@ -10905,7 +10905,7 @@ static EVP_PKEY *get_tmp_dh_params(void)
 
         pctx = EVP_PKEY_CTX_new_from_name(libctx, "DH", NULL);
         if (!TEST_ptr(pctx)
-                || !TEST_int_eq(EVP_PKEY_fromdata_init(pctx), 1))
+                || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(pctx), 1))
             goto end;
 
         tmpl = OSSL_PARAM_BLD_new();
@@ -10928,12 +10928,12 @@ static EVP_PKEY *get_tmp_dh_params(void)
         tmp_dh_params = dhpkey;
     end:
         BN_free(p);
-        EVP_PKEY_CTX_free(pctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
         OSSL_PARAM_BLD_free(tmpl);
         OSSL_PARAM_free(params);
     }
 
-    if (tmp_dh_params != NULL && !EVP_PKEY_up_ref(tmp_dh_params))
+    if (tmp_dh_params != NULL && !OPENSSL_BOX_EVP_PKEY_up_ref(tmp_dh_params))
         return NULL;
 
     return tmp_dh_params;
@@ -10955,10 +10955,10 @@ static DH *tmp_dh_callback(SSL *s, int is_export, int keylen)
      * EVP_PKEY in tmp_dh_params, and so the DH object will live for the length
      * of time we need it for.
      */
-    ret = EVP_PKEY_get1_DH(dhpkey);
+    ret = OPENSSL_BOX_EVP_PKEY_get1_DH(dhpkey);
     DH_free(ret);
 
-    EVP_PKEY_free(dhpkey);
+    OPENSSL_BOX_EVP_PKEY_free(dhpkey);
 
     return ret;
 }
@@ -11004,7 +11004,7 @@ static int test_set_tmp_dh(int idx)
     }
 #  ifndef OPENSSL_NO_DEPRECATED_3_0
     if (idx == 7 || idx == 8) {
-        dh = EVP_PKEY_get1_DH(dhpkey);
+        dh = OPENSSL_BOX_EVP_PKEY_get1_DH(dhpkey);
         if (!TEST_ptr(dh))
             goto end;
     }
@@ -11081,7 +11081,7 @@ static int test_set_tmp_dh(int idx)
     SSL_free(clientssl);
     SSL_CTX_free(sctx);
     SSL_CTX_free(cctx);
-    EVP_PKEY_free(dhpkey);
+    OPENSSL_BOX_EVP_PKEY_free(dhpkey);
 
     return testresult;
 }
@@ -11185,7 +11185,7 @@ static int test_dh_auto(int idx)
 
     if (!TEST_int_gt(SSL_get_tmp_key(serverssl, &tmpkey), 0))
         goto end;
-    if (!TEST_size_t_eq(EVP_PKEY_get_bits(tmpkey), expdhsize))
+    if (!TEST_size_t_eq(OPENSSL_BOX_EVP_PKEY_get_bits(tmpkey), expdhsize))
         goto end;
 
     if (!TEST_true(create_ssl_connection(serverssl, clientssl, SSL_ERROR_NONE)))
@@ -11198,7 +11198,7 @@ static int test_dh_auto(int idx)
     SSL_free(clientssl);
     SSL_CTX_free(sctx);
     SSL_CTX_free(cctx);
-    EVP_PKEY_free(tmpkey);
+    OPENSSL_BOX_EVP_PKEY_free(tmpkey);
 
     return testresult;
 
@@ -14078,7 +14078,7 @@ int setup_tests(void)
 void cleanup_tests(void)
 {
 # if !defined(OPENSSL_NO_TLS1_2) && !defined(OPENSSL_NO_DH)
-    EVP_PKEY_free(tmp_dh_params);
+    OPENSSL_BOX_EVP_PKEY_free(tmp_dh_params);
 #endif
     OPENSSL_free(cert);
     OPENSSL_free(privkey);

@@ -20,10 +20,10 @@ TLS PRF key derivation algorithm
 
 The B<EVP_PKEY_TLS1_PRF> algorithm implements the PRF key derivation function for
 TLS. It has no associated private key and only implements key derivation
-using L<EVP_PKEY_derive(3)>.
+using L<OPENSSL_BOX_EVP_PKEY_derive(3)>.
 
 EVP_PKEY_set_tls1_prf_md() sets the message digest associated with the
-TLS PRF. EVP_md5_sha1() is treated as a special case which uses the PRF
+TLS PRF. OPENSSL_BOX_EVP_md5_sha1() is treated as a special case which uses the PRF
 algorithm using both B<MD5> and B<SHA1> as used in TLS 1.0 and 1.1.
 
 EVP_PKEY_CTX_set_tls1_prf_secret() sets the secret value of the TLS PRF
@@ -48,7 +48,7 @@ which is converted to binary.
 
 A context for the TLS PRF can be obtained by calling:
 
- EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_TLS1_PRF, NULL);
+ EVP_PKEY_CTX *pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_TLS1_PRF, NULL);
 
 The digest, secret value and seed must be set before a key is derived or an
 error occurs.
@@ -57,7 +57,7 @@ The total length of all seeds cannot exceed 1024 bytes in length: this should
 be more than enough for any normal use of the TLS PRF.
 
 The output length of the PRF is specified by the length parameter in the
-EVP_PKEY_derive() function. Since the output length is variable, setting
+OPENSSL_BOX_EVP_PKEY_derive() function. Since the output length is variable, setting
 the buffer to B<NULL> is not meaningful for the TLS PRF.
 
 Optimised versions of the TLS PRF can be implemented in an ENGINE.
@@ -77,23 +77,23 @@ and seed value "seed":
  unsigned char out[10];
  size_t outlen = sizeof(out);
 
- pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_TLS1_PRF, NULL);
- if (EVP_PKEY_derive_init(pctx) <= 0)
+ pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_TLS1_PRF, NULL);
+ if (OPENSSL_BOX_EVP_PKEY_derive_init(pctx) <= 0)
      /* Error */
- if (EVP_PKEY_CTX_set_tls1_prf_md(pctx, EVP_sha256()) <= 0)
+ if (EVP_PKEY_CTX_set_tls1_prf_md(pctx, OPENSSL_BOX_EVP_sha256()) <= 0)
      /* Error */
  if (EVP_PKEY_CTX_set1_tls1_prf_secret(pctx, "secret", 6) <= 0)
      /* Error */
  if (EVP_PKEY_CTX_add1_tls1_prf_seed(pctx, "seed", 4) <= 0)
      /* Error */
- if (EVP_PKEY_derive(pctx, out, &outlen) <= 0)
+ if (OPENSSL_BOX_EVP_PKEY_derive(pctx, out, &outlen) <= 0)
      /* Error */
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_CTX_new(3)>,
+L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
 L<EVP_PKEY_CTX_ctrl_str(3)>,
-L<EVP_PKEY_derive(3)>
+L<OPENSSL_BOX_EVP_PKEY_derive(3)>
 
 =head1 HISTORY
 

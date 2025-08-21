@@ -27,7 +27,7 @@ in L<EVP_MD-common(7)>.
 
 =head1 SEE ALSO
 
-L<EVP_MD_CTX_set_params(3)>, L<provider-digest(7)>,
+L<OPENSSL_BOX_EVP_MD_CTX_set_params(3)>, L<provider-digest(7)>,
 L<OSSL_PROVIDER-default(7)>
 
 =head1 COPYRIGHT

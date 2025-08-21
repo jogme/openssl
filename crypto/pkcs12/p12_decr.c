@@ -24,7 +24,7 @@ unsigned char *PKCS12_pbe_crypt_ex(const X509_ALGOR *algor,
 {
     unsigned char *out = NULL;
     int outlen, i;
-    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+    EVP_CIPHER_CTX *ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     int max_out_len, mac_len = 0;
     int block_size;
 
@@ -44,7 +44,7 @@ unsigned char *PKCS12_pbe_crypt_ex(const X509_ALGOR *algor,
      * It's appended to encrypted text on encrypting
      * MAC should be processed on decrypting separately from plain text
      */
-    block_size = EVP_CIPHER_CTX_get_block_size(ctx);
+    block_size = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx);
 
     if (block_size == 0) {
         ERR_raise(ERR_LIB_PKCS12, ERR_R_PASSED_NULL_PARAMETER);
@@ -52,14 +52,14 @@ unsigned char *PKCS12_pbe_crypt_ex(const X509_ALGOR *algor,
     }
 
     max_out_len = inlen + block_size;
-    if ((EVP_CIPHER_get_flags(EVP_CIPHER_CTX_get0_cipher(ctx))
+    if ((OPENSSL_BOX_EVP_CIPHER_get_flags(OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(ctx))
                 & EVP_CIPH_FLAG_CIPHER_WITH_MAC) != 0) {
-        if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_TLS1_AAD, 0, &mac_len) < 0) {
+        if (OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_TLS1_AAD, 0, &mac_len) < 0) {
             ERR_raise(ERR_LIB_PKCS12, ERR_R_INTERNAL_ERROR);
             goto err;
         }
 
-        if (EVP_CIPHER_CTX_is_encrypting(ctx)) {
+        if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx)) {
             max_out_len += mac_len;
         } else {
             if (inlen < mac_len) {
@@ -67,7 +67,7 @@ unsigned char *PKCS12_pbe_crypt_ex(const X509_ALGOR *algor,
                 goto err;
             }
             inlen -= mac_len;
-            if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
+            if (OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
                                     (int)mac_len, (unsigned char *)in+inlen) < 0) {
                 ERR_raise(ERR_LIB_PKCS12, ERR_R_INTERNAL_ERROR);
                 goto err;
@@ -95,10 +95,10 @@ unsigned char *PKCS12_pbe_crypt_ex(const X509_ALGOR *algor,
         goto err;
     }
     outlen += i;
-    if ((EVP_CIPHER_get_flags(EVP_CIPHER_CTX_get0_cipher(ctx))
+    if ((OPENSSL_BOX_EVP_CIPHER_get_flags(OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(ctx))
                 & EVP_CIPH_FLAG_CIPHER_WITH_MAC) != 0) {
-        if (EVP_CIPHER_CTX_is_encrypting(ctx)) {
-            if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG,
+        if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx)) {
+            if (OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG,
                 (int)mac_len, out+outlen) < 0) {
                 OPENSSL_free(out);
                 out = NULL;
@@ -113,7 +113,7 @@ unsigned char *PKCS12_pbe_crypt_ex(const X509_ALGOR *algor,
     if (data)
         *data = out;
  err:
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     return out;
 
 }

@@ -434,19 +434,19 @@ int ssl_print_tmp_key(BIO *out, SSL *s)
     }
 
     BIO_puts(out, "Peer Temp Key: ");
-    switch (EVP_PKEY_get_id(key)) {
+    switch (OPENSSL_BOX_EVP_PKEY_get_id(key)) {
     case EVP_PKEY_RSA:
-        BIO_printf(out, "RSA, %d bits\n", EVP_PKEY_get_bits(key));
+        BIO_printf(out, "RSA, %d bits\n", OPENSSL_BOX_EVP_PKEY_get_bits(key));
         break;
 
     case EVP_PKEY_KEYMGMT:
-        if ((keyname = EVP_PKEY_get0_type_name(key)) == NULL)
+        if ((keyname = OPENSSL_BOX_EVP_PKEY_get0_type_name(key)) == NULL)
             keyname = "?";
         BIO_printf(out, "%s\n", keyname);
         break;
 
     case EVP_PKEY_DH:
-        BIO_printf(out, "DH, %d bits\n", EVP_PKEY_get_bits(key));
+        BIO_printf(out, "DH, %d bits\n", OPENSSL_BOX_EVP_PKEY_get_bits(key));
         break;
 #ifndef OPENSSL_NO_EC
     case EVP_PKEY_EC:
@@ -457,15 +457,15 @@ int ssl_print_tmp_key(BIO *out, SSL *s)
             if (!EVP_PKEY_get_utf8_string_param(key, OSSL_PKEY_PARAM_GROUP_NAME,
                                                 name, sizeof(name), &name_len))
                 strcpy(name, "?");
-            BIO_printf(out, "ECDH, %s, %d bits\n", name, EVP_PKEY_get_bits(key));
+            BIO_printf(out, "ECDH, %s, %d bits\n", name, OPENSSL_BOX_EVP_PKEY_get_bits(key));
         }
     break;
 #endif
     default:
-        BIO_printf(out, "%s, %d bits\n", OBJ_nid2sn(EVP_PKEY_get_id(key)),
-                   EVP_PKEY_get_bits(key));
+        BIO_printf(out, "%s, %d bits\n", OBJ_nid2sn(OPENSSL_BOX_EVP_PKEY_get_id(key)),
+                   OPENSSL_BOX_EVP_PKEY_get_bits(key));
     }
-    EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     return 1;
 }
 
@@ -1094,7 +1094,7 @@ void ssl_excert_free(SSL_EXCERT *exc)
         return;
     while (exc) {
         X509_free(exc->cert);
-        EVP_PKEY_free(exc->key);
+        OPENSSL_BOX_EVP_PKEY_free(exc->key);
         OSSL_STACK_OF_X509_free(exc->chain);
         curr = exc;
         exc = exc->next;
@@ -1552,8 +1552,8 @@ static int security_callback_debug(const SSL *s, const SSL_CTX *ctx,
                     BIO_printf(sdb->out, "Public key missing");
                 } else {
                     BIO_printf(sdb->out, "%s, bits=%d",
-                               EVP_PKEY_get0_type_name(pkey),
-                               EVP_PKEY_get_bits(pkey));
+                               OPENSSL_BOX_EVP_PKEY_get0_type_name(pkey),
+                               OPENSSL_BOX_EVP_PKEY_get_bits(pkey));
                 }
             }
             break;
@@ -1683,8 +1683,8 @@ void ssl_print_secure_renegotiation_notes(BIO *bio, SSL *s)
 
 int progress_cb(EVP_PKEY_CTX *ctx)
 {
-    BIO *b = EVP_PKEY_CTX_get_app_data(ctx);
-    int p = EVP_PKEY_CTX_get_keygen_info(ctx, 0);
+    BIO *b = OPENSSL_BOX_EVP_PKEY_CTX_get_app_data(ctx);
+    int p = OPENSSL_BOX_EVP_PKEY_CTX_get_keygen_info(ctx, 0);
     static const char symbols[] = ".+*\n";
     char c = (p >= 0 && (size_t)p <= sizeof(symbols) - 1) ? symbols[p] : '?';
 

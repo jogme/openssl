@@ -253,10 +253,10 @@ static int params_bio_test(int id)
     ret = TEST_ptr(in = BIO_new_mem_buf(pkey_params[id].param_bin,
                                         (int)pkey_params[id].param_bin_len))
         /* Load in pkey params from binary */
-        && TEST_ptr(d2i_KeyParams_bio(type, &in_key, in))
+        && TEST_ptr(OPENSSL_BOX_d2i_KeyParams_bio(type, &in_key, in))
         && TEST_ptr(out = BIO_new(BIO_s_mem()))
         /* Save pkey params to binary */
-        && TEST_int_gt(i2d_KeyParams_bio(out, in_key), 0)
+        && TEST_int_gt(OPENSSL_BOX_i2d_KeyParams_bio(out, in_key), 0)
         /* test the output binary is the expected value */
         && TEST_int_gt(out_len = BIO_get_mem_data(out, &out_bin), 0)
         && TEST_mem_eq(pkey_params[id].param_bin,
@@ -265,8 +265,8 @@ static int params_bio_test(int id)
 
     BIO_free(in);
     BIO_free(out);
-    EVP_PKEY_free(in_key);
-    EVP_PKEY_free(out_key);
+    OPENSSL_BOX_EVP_PKEY_free(in_key);
+    OPENSSL_BOX_EVP_PKEY_free(out_key);
     return ret;
 }
 
@@ -284,7 +284,7 @@ static int set_enc_pubkey_test(int id)
     ret = TEST_ptr(in = BIO_new_mem_buf(pkey_params[id].param_bin,
                                         (int)pkey_params[id].param_bin_len))
         /* Load in pkey params from binary */
-        && TEST_ptr(d2i_KeyParams_bio(type, &in_key, in));
+        && TEST_ptr(OPENSSL_BOX_d2i_KeyParams_bio(type, &in_key, in));
 
     for (i = 0; ret && i < NUM_KEYS && keys[i].key_bin != NULL; i++) {
         if (keys[i].bad) {
@@ -307,7 +307,7 @@ static int set_enc_pubkey_test(int id)
     }
 
     BIO_free(in);
-    EVP_PKEY_free(in_key);
+    OPENSSL_BOX_EVP_PKEY_free(in_key);
     return ret;
 }
 #endif

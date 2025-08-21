@@ -915,7 +915,7 @@ int cms_main(int argc, char **argv)
 
     if (operation == SMIME_ENCRYPT) {
         if (!cipher)
-            cipher = (EVP_CIPHER *)EVP_aes_256_cbc();
+            cipher = (EVP_CIPHER *)OPENSSL_BOX_EVP_aes_256_cbc();
         if (secret_key && !secret_keyid) {
             BIO_printf(bio_err, "No secret key id\n");
             goto end;
@@ -1091,7 +1091,7 @@ int cms_main(int argc, char **argv)
 
             res = EVP_PKEY_CTX_ctrl(pctx, -1, -1,
                                     EVP_PKEY_CTRL_CIPHER,
-                                    EVP_CIPHER_get_nid(cipher), NULL);
+                                    OPENSSL_BOX_EVP_CIPHER_get_nid(cipher), NULL);
             if (res <= 0 && res != -2)
                 goto end;
 
@@ -1250,7 +1250,7 @@ int cms_main(int argc, char **argv)
             }
             X509_free(signer);
             signer = NULL;
-            EVP_PKEY_free(key);
+            OPENSSL_BOX_EVP_PKEY_free(key);
             key = NULL;
         }
         /* If not streaming or resigning finalize structure */
@@ -1432,11 +1432,11 @@ int cms_main(int argc, char **argv)
     X509_free(recip);
     X509_free(signer);
     X509_free(originator);
-    EVP_PKEY_free(key);
-    EVP_CIPHER_free(cipher);
-    EVP_CIPHER_free(kekcipher);
-    EVP_CIPHER_free(wrap_cipher);
-    EVP_MD_free(sign_md);
+    OPENSSL_BOX_EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(kekcipher);
+    OPENSSL_BOX_EVP_CIPHER_free(wrap_cipher);
+    OPENSSL_BOX_EVP_MD_free(sign_md);
     CMS_ContentInfo_free(cms);
     CMS_ContentInfo_free(rcms);
     release_engine(e);

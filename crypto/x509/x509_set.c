@@ -8,7 +8,7 @@
  */
 
 /*
- * because of EVP_PKEY_asn1_find deprecation
+ * because of OPENSSL_BOX_EVP_PKEY_asn1_find deprecation
  */
 #include "internal/deprecated.h"
 
@@ -156,7 +156,7 @@ ASN1_TIME *X509_getm_notAfter(const X509 *x)
 
 int X509_get_signature_type(const X509 *x)
 {
-    return EVP_PKEY_type(OBJ_obj2nid(x->sig_alg.algorithm));
+    return OPENSSL_BOX_EVP_PKEY_type(OBJ_obj2nid(x->sig_alg.algorithm));
 }
 
 X509_PUBKEY *X509_get_X509_PUBKEY(const X509 *x)
@@ -236,14 +236,14 @@ static int x509_sig_info_init(X509_SIG_INFO *siginf, const X509_ALGOR *alg,
     switch (mdnid) {
     case NID_undef:
         /* If we have one, use a custom handler for this algorithm */
-        ameth = EVP_PKEY_asn1_find(NULL, pknid);
+        ameth = OPENSSL_BOX_EVP_PKEY_asn1_find(NULL, pknid);
         if (ameth != NULL && ameth->siginf_set != NULL
                 && ameth->siginf_set(siginf, alg, sig))
            break;
         if (pubkey != NULL) {
             int secbits;
 
-            secbits = EVP_PKEY_get_security_bits(pubkey);
+            secbits = OPENSSL_BOX_EVP_PKEY_get_security_bits(pubkey);
             if (secbits != 0) {
                 siginf->secbits = secbits;
                 break;
@@ -284,7 +284,7 @@ static int x509_sig_info_init(X509_SIG_INFO *siginf, const X509_ALGOR *alg,
             ERR_raise(ERR_LIB_X509, X509_R_ERROR_GETTING_MD_BY_NID);
             return 0;
         }
-        md_size = EVP_MD_get_size(md);
+        md_size = OPENSSL_BOX_EVP_MD_get_size(md);
         if (md_size <= 0)
             return 0;
         siginf->secbits = md_size * 4;

@@ -876,7 +876,7 @@ static int pkcs12_create_test(void)
     ret = 1;
 err:
     PKCS12_free(p12);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 #endif
@@ -938,8 +938,8 @@ err:
     PKCS12_free(p12);
     PKCS12_free(p12_parsed);
     PKCS12_free(p12_recreated);
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_free(pkey_parsed);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey_parsed);
     X509_free(cert);
     X509_free(cert_parsed);
     return ret;

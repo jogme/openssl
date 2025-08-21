@@ -40,7 +40,7 @@ are three modes that are currently defined:
 
 =item EVP_PKEY_HKDEF_MODE_EXTRACT_AND_EXPAND
 
-This is the default mode. Calling L<EVP_PKEY_derive(3)> on an EVP_PKEY_CTX set
+This is the default mode. Calling L<OPENSSL_BOX_EVP_PKEY_derive(3)> on an EVP_PKEY_CTX set
 up for HKDF will perform an extract followed by an expand operation in one go.
 The derived key returned will be the result after the expand operation. The
 intermediate fixed-length pseudorandom key K is not returned.
@@ -50,7 +50,7 @@ derived or an error occurs.
 
 =item EVP_PKEY_HKDEF_MODE_EXTRACT_ONLY
 
-In this mode calling L<EVP_PKEY_derive(3)> will just perform the extract
+In this mode calling L<OPENSSL_BOX_EVP_PKEY_derive(3)> will just perform the extract
 operation. The value returned will be the intermediate fixed-length pseudorandom
 key K.
 
@@ -59,7 +59,7 @@ error occurs.
 
 =item EVP_PKEY_HKDEF_MODE_EXPAND_ONLY
 
-In this mode calling L<EVP_PKEY_derive(3)> will just perform the expand
+In this mode calling L<OPENSSL_BOX_EVP_PKEY_derive(3)> will just perform the expand
 operation. The input key should be set to the intermediate fixed-length
 pseudorandom key K returned from a previous extract operation.
 
@@ -97,17 +97,17 @@ string which is converted to binary.
 
 A context for HKDF can be obtained by calling:
 
- EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_HKDF, NULL);
+ EVP_PKEY_CTX *pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_HKDF, NULL);
 
 The total length of the info buffer cannot exceed 2048 bytes in length: this
 should be more than enough for any normal use of HKDF.
 
 The output length of an HKDF expand operation is specified via the length
-parameter to the L<EVP_PKEY_derive(3)> function.
+parameter to the L<OPENSSL_BOX_EVP_PKEY_derive(3)> function.
 Since the HKDF output length is variable, passing a B<NULL> buffer as a means
 to obtain the requisite length is not meaningful with HKDF in any mode that
 performs an expand operation. Instead, the caller must allocate a buffer of the
-desired length, and pass that buffer to L<EVP_PKEY_derive(3)> along with (a
+desired length, and pass that buffer to L<OPENSSL_BOX_EVP_PKEY_derive(3)> along with (a
 pointer initialized to) the desired length. Passing a B<NULL> buffer to obtain
 the length is allowed when using EVP_PKEY_HKDEF_MODE_EXTRACT_ONLY.
 
@@ -127,11 +127,11 @@ salt value "salt" and info value "label":
  EVP_PKEY_CTX *pctx;
  unsigned char out[10];
  size_t outlen = sizeof(out);
- pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_HKDF, NULL);
+ pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_HKDF, NULL);
 
- if (EVP_PKEY_derive_init(pctx) <= 0)
+ if (OPENSSL_BOX_EVP_PKEY_derive_init(pctx) <= 0)
      /* Error */
- if (EVP_PKEY_CTX_set_hkdf_md(pctx, EVP_sha256()) <= 0)
+ if (EVP_PKEY_CTX_set_hkdf_md(pctx, OPENSSL_BOX_EVP_sha256()) <= 0)
      /* Error */
  if (EVP_PKEY_CTX_set1_hkdf_salt(pctx, "salt", 4) <= 0)
      /* Error */
@@ -139,7 +139,7 @@ salt value "salt" and info value "label":
      /* Error */
  if (EVP_PKEY_CTX_add1_hkdf_info(pctx, "label", 5) <= 0)
      /* Error */
- if (EVP_PKEY_derive(pctx, out, &outlen) <= 0)
+ if (OPENSSL_BOX_EVP_PKEY_derive(pctx, out, &outlen) <= 0)
      /* Error */
 
 =head1 CONFORMING TO
@@ -148,9 +148,9 @@ RFC 5869
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_CTX_new(3)>,
+L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
 L<EVP_PKEY_CTX_ctrl_str(3)>,
-L<EVP_PKEY_derive(3)>
+L<OPENSSL_BOX_EVP_PKEY_derive(3)>
 
 =head1 HISTORY
 

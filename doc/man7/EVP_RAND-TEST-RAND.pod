@@ -76,7 +76,7 @@ to zero.
 A context for a test generator can be obtained by calling:
 
  EVP_RAND *rand = EVP_RAND_fetch(NULL, "TEST-RAND", NULL);
- EVP_RAND_CTX *rctx = EVP_RAND_CTX_new(rand, NULL);
+ EVP_RAND_CTX *rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
 
 =head1 EXAMPLES
 
@@ -89,8 +89,8 @@ A context for a test generator can be obtained by calling:
  unsigned int strength = 48;
 
  rand = EVP_RAND_fetch(NULL, "TEST-RAND", NULL);
- rctx = EVP_RAND_CTX_new(rand, NULL);
- EVP_RAND_free(rand);
+ rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
+ OPENSSL_BOX_EVP_RAND_free(rand);
 
  *p++ = OSSL_PARAM_construct_uint(OSSL_RAND_PARAM_STRENGTH, &strength);
  *p++ = OSSL_PARAM_construct_octet_string(OSSL_RAND_PARAM_TEST_ENTROPY,
@@ -102,7 +102,7 @@ A context for a test generator can be obtained by calling:
 
  EVP_RAND_generate(rctx, bytes, sizeof(bytes), strength, 0, NULL, 0);
 
- EVP_RAND_CTX_free(rctx);
+ OPENSSL_BOX_EVP_RAND_CTX_free(rctx);
 
 =head1 SEE ALSO
 

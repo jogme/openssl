@@ -55,7 +55,7 @@ static int test_decode_nonfipsalg(void)
      * Apply the "fips=true" property to all fetches for the libctx.
      * We do this to test that we are using the propq override
      */
-    EVP_default_properties_enable_fips(libctx, 1);
+    OPENSSL_BOX_EVP_default_properties_enable_fips(libctx, 1);
 
     if (!TEST_ptr(bio = BIO_new_file(filename, "r")))
         goto err;
@@ -77,7 +77,7 @@ static int test_decode_nonfipsalg(void)
     ret = 1;
 err:
     BIO_free(bio);
-    EVP_PKEY_free(privkey);
+    OPENSSL_BOX_EVP_PKEY_free(privkey);
     return ret;
 }
 

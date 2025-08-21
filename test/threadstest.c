@@ -845,9 +845,9 @@ static int thread_run_test(void (*main_func)(void),
 
 static void thread_general_worker(void)
 {
-    EVP_MD_CTX *mdctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
     EVP_MD *md = EVP_MD_fetch(multi_libctx, "SHA2-256", NULL);
-    EVP_CIPHER_CTX *cipherctx = EVP_CIPHER_CTX_new();
+    EVP_CIPHER_CTX *cipherctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     EVP_CIPHER *ciph = EVP_CIPHER_fetch(multi_libctx, "AES-128-CBC", NULL);
     const char *message = "Hello World";
     size_t messlen = strlen(message);
@@ -902,11 +902,11 @@ static void thread_general_worker(void)
 
     testresult = 1;
  err:
-    EVP_MD_CTX_free(mdctx);
-    EVP_MD_free(md);
-    EVP_CIPHER_CTX_free(cipherctx);
-    EVP_CIPHER_free(ciph);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_MD_CTX_free(mdctx);
+    OPENSSL_BOX_EVP_MD_free(md);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(cipherctx);
+    OPENSSL_BOX_EVP_CIPHER_free(ciph);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     if (!testresult)
         multi_set_success(0);
 }
@@ -916,7 +916,7 @@ static void thread_multi_simple_fetch(void)
     EVP_MD *md = EVP_MD_fetch(multi_libctx, "SHA2-256", NULL);
 
     if (md != NULL)
-        EVP_MD_free(md);
+        OPENSSL_BOX_EVP_MD_free(md);
     else
         multi_set_success(0);
 }
@@ -935,27 +935,27 @@ static void thread_shared_evp_pkey(void)
 
     for (i = 0; i < 1 + do_fips; i++) {
         if (i > 0)
-            EVP_PKEY_CTX_free(ctx);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
         ctx = EVP_PKEY_CTX_new_from_pkey(multi_libctx, shared_evp_pkey,
                                          i == 0 ? "provider=default"
                                                 : "provider=fips");
         if (!TEST_ptr(ctx))
             goto err;
 
-        if (!TEST_int_ge(EVP_PKEY_encrypt_init(ctx), 0)
+        if (!TEST_int_ge(OPENSSL_BOX_EVP_PKEY_encrypt_init(ctx), 0)
                 || !TEST_int_ge(EVP_PKEY_encrypt(ctx, ctbuf, &ctlen,
                                                 (unsigned char *)msg, strlen(msg)),
                                                 0))
             goto err;
 
-        EVP_PKEY_CTX_free(ctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
         ctx = EVP_PKEY_CTX_new_from_pkey(multi_libctx, shared_evp_pkey, NULL);
 
         if (!TEST_ptr(ctx))
             goto err;
 
         ptlen = sizeof(ptbuf);
-        if (!TEST_int_ge(EVP_PKEY_decrypt_init(ctx), 0)
+        if (!TEST_int_ge(OPENSSL_BOX_EVP_PKEY_decrypt_init(ctx), 0)
                 || !TEST_int_gt(EVP_PKEY_decrypt(ctx, ptbuf, &ptlen, ctbuf, ctlen),
                                                 0)
                 || !TEST_mem_eq(msg, strlen(msg), ptbuf, ptlen))
@@ -965,7 +965,7 @@ static void thread_shared_evp_pkey(void)
     success = 1;
 
  err:
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     if (!success)
         multi_set_success(0);
 }
@@ -1020,7 +1020,7 @@ static int test_multi_shared_pkey_common(void (*worker)(void))
         goto err;
     testresult = 1;
  err:
-    EVP_PKEY_free(shared_evp_pkey);
+    OPENSSL_BOX_EVP_PKEY_free(shared_evp_pkey);
     thead_teardown_libctx();
     return testresult;
 }
@@ -1032,7 +1032,7 @@ static void thread_downgrade_shared_evp_pkey(void)
      * This test is only relevant for deprecated functions that perform
      * downgrading
      */
-    if (EVP_PKEY_get0_RSA(shared_evp_pkey) == NULL)
+    if (OPENSSL_BOX_EVP_PKEY_get0_RSA(shared_evp_pkey) == NULL)
         multi_set_success(0);
 }
 
@@ -1050,7 +1050,7 @@ static int test_multi_shared_pkey(void)
 static void thread_release_shared_pkey(void)
 {
     OSSL_sleep(0);
-    EVP_PKEY_free(shared_evp_pkey);
+    OPENSSL_BOX_EVP_PKEY_free(shared_evp_pkey);
 }
 
 static int test_multi_shared_pkey_release(void)
@@ -1065,7 +1065,7 @@ static int test_multi_shared_pkey_release(void)
             || !TEST_ptr(shared_evp_pkey = load_pkey_pem(privkey, multi_libctx)))
         goto err;
     for (; i < 10; ++i) {
-        if (!TEST_true(EVP_PKEY_up_ref(shared_evp_pkey)))
+        if (!TEST_true(OPENSSL_BOX_EVP_PKEY_up_ref(shared_evp_pkey)))
             goto err;
     }
 
@@ -1079,7 +1079,7 @@ static int test_multi_shared_pkey_release(void)
     testresult = 1;
  err:
     while (i > 0) {
-        EVP_PKEY_free(shared_evp_pkey);
+        OPENSSL_BOX_EVP_PKEY_free(shared_evp_pkey);
         --i;
     }
     thead_teardown_libctx();
@@ -1111,7 +1111,7 @@ static int test_multi_load_unload_provider(void)
     testresult = 1;
  err:
     OSSL_PROVIDER_unload(prov);
-    EVP_MD_free(sha256);
+    OPENSSL_BOX_EVP_MD_free(sha256);
     thead_teardown_libctx();
     return testresult;
 }
@@ -1289,7 +1289,7 @@ static void test_pem_read_one(void)
         multi_set_success(0);
 
  err:
-    EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     BIO_free(pem);
     OPENSSL_free(pemdata);
 }

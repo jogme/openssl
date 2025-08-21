@@ -208,7 +208,7 @@ static int integrity_self_test(OSSL_SELF_TEST *ev, OSSL_LIB_CTX *libctx)
 
     OSSL_PARAM   params[2];
     EVP_MAC     *mac = EVP_MAC_fetch(libctx, MAC_NAME, NULL);
-    EVP_MAC_CTX *ctx = EVP_MAC_CTX_new(mac);
+    EVP_MAC_CTX *ctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac);
 
     OSSL_SELF_TEST_onbegin(ev, OSSL_SELF_TEST_TYPE_KAT_INTEGRITY,
                                OSSL_SELF_TEST_DESC_INTEGRITY_HMAC);
@@ -219,7 +219,7 @@ static int integrity_self_test(OSSL_SELF_TEST *ev, OSSL_LIB_CTX *libctx)
     if (ctx == NULL
             || mac == NULL
             || !EVP_MAC_init(ctx, hmac_kat_key, sizeof(hmac_kat_key), params)
-            || !EVP_MAC_update(ctx, hmac_kat_pt, sizeof(hmac_kat_pt))
+            || !OPENSSL_BOX_EVP_MAC_update(ctx, hmac_kat_pt, sizeof(hmac_kat_pt))
             || !EVP_MAC_final(ctx, out, &out_len, MAX_MD_SIZE))
         goto err;
 
@@ -232,8 +232,8 @@ static int integrity_self_test(OSSL_SELF_TEST *ev, OSSL_LIB_CTX *libctx)
     ok = 1;
 err:
     OSSL_SELF_TEST_onend(ev, ok);
-    EVP_MAC_free(mac);
-    EVP_MAC_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
     return ok;
 }
 
@@ -263,7 +263,7 @@ static int verify_integrity(OSSL_CORE_BIO *bio, OSSL_FUNC_BIO_read_ex_fn read_ex
     mac = EVP_MAC_fetch(libctx, MAC_NAME, NULL);
     if (mac == NULL)
         goto err;
-    ctx = EVP_MAC_CTX_new(mac);
+    ctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac);
     if (ctx == NULL)
         goto err;
 
@@ -277,7 +277,7 @@ static int verify_integrity(OSSL_CORE_BIO *bio, OSSL_FUNC_BIO_read_ex_fn read_ex
         status = read_ex_cb(bio, buf, sizeof(buf), &bytes_read);
         if (status != 1)
             break;
-        if (!EVP_MAC_update(ctx, buf, bytes_read))
+        if (!OPENSSL_BOX_EVP_MAC_update(ctx, buf, bytes_read))
             goto err;
     }
     if (!EVP_MAC_final(ctx, out, &out_len, sizeof(out)))
@@ -290,8 +290,8 @@ static int verify_integrity(OSSL_CORE_BIO *bio, OSSL_FUNC_BIO_read_ex_fn read_ex
     ret = 1;
 err:
     OSSL_SELF_TEST_onend(ev, ret);
-    EVP_MAC_CTX_free(ctx);
-    EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MAC_free(mac);
 # ifdef OPENSSL_PEDANTIC_ZEROIZATION
     OPENSSL_cleanse(out, sizeof(out));
 # endif
@@ -390,15 +390,15 @@ int SELF_TEST_post(SELF_TEST_POST_PARAMS *st, int on_demand_test)
     rng = ossl_rand_get0_private_noncreating(st->libctx);
     if (rng != NULL)
         if ((testrand = EVP_RAND_fetch(st->libctx, "TEST-RAND", NULL)) == NULL
-                || strcmp(EVP_RAND_get0_name(EVP_RAND_CTX_get0_rand(rng)),
-                          EVP_RAND_get0_name(testrand)) == 0) {
+                || strcmp(OPENSSL_BOX_EVP_RAND_get0_name(OPENSSL_BOX_EVP_RAND_CTX_get0_rand(rng)),
+                          OPENSSL_BOX_EVP_RAND_get0_name(testrand)) == 0) {
             ERR_raise(ERR_LIB_PROV, PROV_R_SELF_TEST_KAT_FAILURE);
             goto end;
         }
 
     ok = 1;
 end:
-    EVP_RAND_free(testrand);
+    OPENSSL_BOX_EVP_RAND_free(testrand);
     OSSL_SELF_TEST_free(ev);
     OPENSSL_free(module_checksum);
 

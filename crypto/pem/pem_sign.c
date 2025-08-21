@@ -32,14 +32,14 @@ int PEM_SignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
     int i, ret = 0;
     unsigned int m_len;
 
-    m = OPENSSL_malloc(EVP_PKEY_get_size(pkey));
+    m = OPENSSL_malloc(OPENSSL_BOX_EVP_PKEY_get_size(pkey));
     if (m == NULL)
         goto err;
 
     if (EVP_SignFinal(ctx, m, &m_len, pkey) <= 0)
         goto err;
 
-    i = EVP_EncodeBlock(sigret, m, m_len);
+    i = OPENSSL_BOX_EVP_EncodeBlock(sigret, m, m_len);
     *siglen = i;
     ret = 1;
  err:

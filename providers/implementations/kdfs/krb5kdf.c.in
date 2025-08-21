@@ -209,7 +209,7 @@ static int krb5kdf_get_ctx_params(void *vctx, OSSL_PARAM params[])
         size_t len;
 
         if (cipher != NULL)
-            len = EVP_CIPHER_get_key_length(cipher);
+            len = OPENSSL_BOX_EVP_CIPHER_get_key_length(cipher);
         else
             len = EVP_MAX_KEY_LENGTH;
 
@@ -363,9 +363,9 @@ static int cipher_init(EVP_CIPHER_CTX *ctx,
     if (!ret)
         goto out;
     /* set the key len for the odd variable key len cipher */
-    klen = EVP_CIPHER_CTX_get_key_length(ctx);
+    klen = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx);
     if (key_len != (size_t)klen) {
-        ret = EVP_CIPHER_CTX_set_key_length(ctx, (int)key_len);
+        ret = OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length(ctx, (int)key_len);
         if (ret <= 0) {
             ret = 0;
             goto out;
@@ -374,7 +374,7 @@ static int cipher_init(EVP_CIPHER_CTX *ctx,
     /* we never want padding, either the length requested is a multiple of
      * the cipher block size or we are passed a cipher that can cope with
      * partial blocks via techniques like cipher text stealing */
-    ret = EVP_CIPHER_CTX_set_padding(ctx, 0);
+    ret = OPENSSL_BOX_EVP_CIPHER_CTX_set_padding(ctx, 0);
     if (!ret)
         goto out;
 
@@ -402,7 +402,7 @@ static int KRB5KDF(const EVP_CIPHER *cipher, ENGINE *engine,
 #ifndef OPENSSL_NO_DES
         /* special case for 3des, where the caller may be requesting
          * the random raw key, instead of the fixed up key  */
-        if (EVP_CIPHER_get_nid(cipher) == NID_des_ede3_cbc &&
+        if (OPENSSL_BOX_EVP_CIPHER_get_nid(cipher) == NID_des_ede3_cbc &&
             key_len == 24 && okey_len == 21) {
                 des3_no_fixup = 1;
         } else {
@@ -414,7 +414,7 @@ static int KRB5KDF(const EVP_CIPHER *cipher, ENGINE *engine,
 #endif
     }
 
-    ctx = EVP_CIPHER_CTX_new();
+    ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ctx == NULL)
         return 0;
 
@@ -423,7 +423,7 @@ static int KRB5KDF(const EVP_CIPHER *cipher, ENGINE *engine,
         goto out;
 
     /* Initialize input block */
-    blocksize = EVP_CIPHER_CTX_get_block_size(ctx);
+    blocksize = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx);
 
     if (blocksize == 0) {
         ERR_raise(ERR_LIB_PROV, PROV_R_MISSING_CIPHER);
@@ -465,7 +465,7 @@ static int KRB5KDF(const EVP_CIPHER *cipher, ENGINE *engine,
 
         if (okey_len > osize + cipherlen) {
             /* we need to reinitialize cipher context per spec */
-            ret = EVP_CIPHER_CTX_reset(ctx);
+            ret = OPENSSL_BOX_EVP_CIPHER_CTX_reset(ctx);
             if (!ret)
                 goto out;
             ret = cipher_init(ctx, cipher, engine, key, key_len);
@@ -484,7 +484,7 @@ static int KRB5KDF(const EVP_CIPHER *cipher, ENGINE *engine,
     }
 
 #ifndef OPENSSL_NO_DES
-    if (EVP_CIPHER_get_nid(cipher) == NID_des_ede3_cbc && !des3_no_fixup) {
+    if (OPENSSL_BOX_EVP_CIPHER_get_nid(cipher) == NID_des_ede3_cbc && !des3_no_fixup) {
         ret = fixup_des3_key(okey);
         if (!ret) {
             ERR_raise(ERR_LIB_PROV, PROV_R_FAILED_TO_GENERATE_KEY);
@@ -496,7 +496,7 @@ static int KRB5KDF(const EVP_CIPHER *cipher, ENGINE *engine,
     ret = 1;
 
 out:
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     OPENSSL_cleanse(block, EVP_MAX_BLOCK_LENGTH * 2);
     return ret;
 }

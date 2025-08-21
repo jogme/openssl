@@ -78,12 +78,12 @@ static int evp_pkey_public_check_combined(EVP_PKEY_CTX *ctx, int checktype)
     return -2;
 }
 
-int EVP_PKEY_public_check(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_public_check(EVP_PKEY_CTX *ctx)
 {
     return evp_pkey_public_check_combined(ctx, OSSL_KEYMGMT_VALIDATE_FULL_CHECK);
 }
 
-int EVP_PKEY_public_check_quick(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_public_check_quick(EVP_PKEY_CTX *ctx)
 {
     return evp_pkey_public_check_combined(ctx, OSSL_KEYMGMT_VALIDATE_QUICK_CHECK);
 }
@@ -123,17 +123,17 @@ static int evp_pkey_param_check_combined(EVP_PKEY_CTX *ctx, int checktype)
     return -2;
 }
 
-int EVP_PKEY_param_check(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_param_check(EVP_PKEY_CTX *ctx)
 {
     return evp_pkey_param_check_combined(ctx, OSSL_KEYMGMT_VALIDATE_FULL_CHECK);
 }
 
-int EVP_PKEY_param_check_quick(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_param_check_quick(EVP_PKEY_CTX *ctx)
 {
     return evp_pkey_param_check_combined(ctx, OSSL_KEYMGMT_VALIDATE_QUICK_CHECK);
 }
 
-int EVP_PKEY_private_check(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_private_check(EVP_PKEY_CTX *ctx)
 {
     EVP_PKEY *pkey = ctx->pkey;
     int ok;
@@ -152,12 +152,12 @@ int EVP_PKEY_private_check(EVP_PKEY_CTX *ctx)
     return -2;
 }
 
-int EVP_PKEY_check(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_check(EVP_PKEY_CTX *ctx)
 {
-    return EVP_PKEY_pairwise_check(ctx);
+    return OPENSSL_BOX_EVP_PKEY_pairwise_check(ctx);
 }
 
-int EVP_PKEY_pairwise_check(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_pairwise_check(EVP_PKEY_CTX *ctx)
 {
     EVP_PKEY *pkey = ctx->pkey;
     int ok;

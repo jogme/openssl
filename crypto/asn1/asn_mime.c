@@ -107,7 +107,7 @@ static int B64_write_ASN1(BIO *out, ASN1_VALUE *val, BIO *in, int flags,
 {
     BIO *b64;
     int r;
-    b64 = BIO_new(BIO_f_base64());
+    b64 = BIO_new(OPENSSL_BOX_BIO_f_base64());
     if (b64 == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_BIO_LIB);
         return 0;
@@ -139,7 +139,7 @@ static ASN1_VALUE *b64_read_asn1(BIO *bio, const ASN1_ITEM *it, ASN1_VALUE **x,
     BIO *b64;
     ASN1_VALUE *val;
 
-    if ((b64 = BIO_new(BIO_f_base64())) == NULL) {
+    if ((b64 = BIO_new(OPENSSL_BOX_BIO_f_base64())) == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_BIO_LIB);
         return 0;
     }

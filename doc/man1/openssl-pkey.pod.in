@@ -119,7 +119,7 @@ See L<openssl-format-options(1)> for details.
 =item B<-I<cipher>>
 
 Encrypt the PEM encoded private key with the supplied cipher. Any algorithm
-name accepted by EVP_get_cipherbyname() is acceptable such as B<aes128>.
+name accepted by OPENSSL_BOX_EVP_get_cipherbyname() is acceptable such as B<aes128>.
 Encryption is not supported for DER output.
 
 =item B<-passout> I<arg>

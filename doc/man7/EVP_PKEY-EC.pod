@@ -96,7 +96,7 @@ point_conversion_forms please see L<EC_POINT_new(3)>. Valid values are
 
 =item "group-check" (B<OSSL_PKEY_PARAM_EC_GROUP_CHECK_TYPE>) <UTF8 string>
 
-Sets or Gets the type of group check done when EVP_PKEY_param_check() is called.
+Sets or Gets the type of group check done when OPENSSL_BOX_EVP_PKEY_param_check() is called.
 Valid values are "default", "named" and "named-nist".
 The "named" type checks that the domain parameters match the inbuilt curve parameters,
 "named-nist" is similar but also checks that the named curve is a nist curve.
@@ -113,10 +113,10 @@ encoding the private key. The default value of 1 will include the public key.
 The public key value in encoded EC point format conforming to Sec. 2.3.3 and
 2.3.4 of the SECG SEC 1 ("Elliptic Curve Cryptography") standard.
 This parameter is used when importing or exporting the public key value with the
-EVP_PKEY_fromdata() and EVP_PKEY_todata() functions.
+EVP_PKEY_fromdata() and OPENSSL_BOX_EVP_PKEY_todata() functions.
 
 Note, in particular, that the choice of point compression format used for
-encoding the exported value via EVP_PKEY_todata() depends on the underlying
+encoding the exported value via OPENSSL_BOX_EVP_PKEY_todata() depends on the underlying
 provider implementation.
 Before OpenSSL 3.0.8, the implementation of providers included with OpenSSL always
 opted for an encoding in compressed format, unconditionally.
@@ -211,21 +211,21 @@ See L<provider-keymgmt(7)/Common Information Parameters> for further information
 
 =head2 EC key validation
 
-For EC keys, L<EVP_PKEY_param_check(3)> behaves in the following way:
+For EC keys, L<OPENSSL_BOX_EVP_PKEY_param_check(3)> behaves in the following way:
 For the OpenSSL default provider it uses either
 L<EC_GROUP_check(3)> or L<EC_GROUP_check_named_curve(3)> depending on the flag
 EC_FLAG_CHECK_NAMED_GROUP.
 The OpenSSL FIPS provider uses L<EC_GROUP_check_named_curve(3)> in order to
 conform to SP800-56Ar3 I<Assurances of Domain-Parameter Validity>.
 
-For EC keys, L<EVP_PKEY_param_check_quick(3)> is equivalent to
-L<EVP_PKEY_param_check(3)>.
+For EC keys, L<OPENSSL_BOX_EVP_PKEY_param_check_quick(3)> is equivalent to
+L<OPENSSL_BOX_EVP_PKEY_param_check(3)>.
 
-For EC keys, L<EVP_PKEY_public_check(3)> and L<EVP_PKEY_public_check_quick(3)>
+For EC keys, L<OPENSSL_BOX_EVP_PKEY_public_check(3)> and L<OPENSSL_BOX_EVP_PKEY_public_check_quick(3)>
 conform to SP800-56Ar3 I<ECC Full Public-Key Validation> and
 I<ECC Partial Public-Key Validation> respectively.
 
-For EC Keys, L<EVP_PKEY_private_check(3)> and L<EVP_PKEY_pairwise_check(3)>
+For EC Keys, L<OPENSSL_BOX_EVP_PKEY_private_check(3)> and L<OPENSSL_BOX_EVP_PKEY_pairwise_check(3)>
 conform to SP800-56Ar3 I<Private key validity> and
 I<Owner Assurance of Pair-wise Consistency> respectively.
 
@@ -248,19 +248,19 @@ or like this:
     EVP_PKEY_CTX *gctx =
         EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
 
-    EVP_PKEY_keygen_init(gctx);
+    OPENSSL_BOX_EVP_PKEY_keygen_init(gctx);
 
     params[0] = OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME,
                                                  "P-256", 0);
     params[1] = OSSL_PARAM_construct_end();
-    EVP_PKEY_CTX_set_params(gctx, params);
+    OPENSSL_BOX_EVP_PKEY_CTX_set_params(gctx, params);
 
-    EVP_PKEY_generate(gctx, &key);
+    OPENSSL_BOX_EVP_PKEY_generate(gctx, &key);
 
     EVP_PKEY_print_private(bio_out, key, 0, NULL);
     ...
-    EVP_PKEY_free(key);
-    EVP_PKEY_CTX_free(gctx);
+    OPENSSL_BOX_EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(gctx);
 
 An B<EVP_PKEY> EC CDH (Cofactor Diffie-Hellman) key can be generated with a
 "K-571" named group by calling:
@@ -271,7 +271,7 @@ An B<EVP_PKEY> EC CDH (Cofactor Diffie-Hellman) key can be generated with a
     EVP_PKEY_CTX *gctx =
         EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
 
-    EVP_PKEY_keygen_init(gctx);
+    OPENSSL_BOX_EVP_PKEY_keygen_init(gctx);
 
     params[0] = OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME,
                                                  "K-571", 0);
@@ -283,13 +283,13 @@ An B<EVP_PKEY> EC CDH (Cofactor Diffie-Hellman) key can be generated with a
     params[1] = OSSL_PARAM_construct_int(OSSL_PKEY_PARAM_USE_COFACTOR_ECDH,
                                          &use_cdh);
     params[2] = OSSL_PARAM_construct_end();
-    EVP_PKEY_CTX_set_params(gctx, params);
+    OPENSSL_BOX_EVP_PKEY_CTX_set_params(gctx, params);
 
-    EVP_PKEY_generate(gctx, &key);
+    OPENSSL_BOX_EVP_PKEY_generate(gctx, &key);
     EVP_PKEY_print_private(bio_out, key, 0, NULL);
     ...
-    EVP_PKEY_free(key);
-    EVP_PKEY_CTX_free(gctx);
+    OPENSSL_BOX_EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(gctx);
 
 =head1 SEE ALSO
 

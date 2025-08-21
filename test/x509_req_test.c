@@ -46,7 +46,7 @@ static int test_x509_req_detect_invalid_version(void)
         goto err;
     ret = 1; /* success */
 err:
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     X509_REQ_free(req);
     BIO_free(bio);
     OPENSSL_free(certFilePath);

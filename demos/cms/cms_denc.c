@@ -61,7 +61,7 @@ int main(int argc, char **argv)
         goto err;
 
     /* encrypt content */
-    cms = CMS_encrypt(recips, in, EVP_des_ede3_cbc(), flags);
+    cms = CMS_encrypt(recips, in, OPENSSL_BOX_EVP_des_ede3_cbc(), flags);
 
     if (!cms)
         goto err;

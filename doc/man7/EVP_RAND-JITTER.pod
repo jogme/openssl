@@ -42,7 +42,7 @@ These parameters work as described in L<EVP_RAND(3)/PARAMETERS>.
 A context for the seed source can be obtained by calling:
 
  EVP_RAND *rand = EVP_RAND_fetch(NULL, "JITTER", NULL);
- EVP_RAND_CTX *rctx = EVP_RAND_CTX_new(rand, NULL);
+ EVP_RAND_CTX *rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
 
 The B<enable-jitter> option was added in OpenSSL 3.4.
 
@@ -65,14 +65,14 @@ are additionally conducted.  This option was added in OpenSSL 3.5.
 
  /* Create and instantiate a seed source */
  rand = EVP_RAND_fetch(NULL, "JITTER", NULL);
- seed = EVP_RAND_CTX_new(rand, NULL);
+ seed = OPENSSL_BOX_EVP_RAND_CTX_new(rand, NULL);
  EVP_RAND_instantiate(seed, strength, 0, NULL, 0, NULL);
- EVP_RAND_free(rand);
+ OPENSSL_BOX_EVP_RAND_free(rand);
 
  /* Feed this into a DRBG */
  rand = EVP_RAND_fetch(NULL, "CTR-DRBG", NULL);
- rctx = EVP_RAND_CTX_new(rand, seed);
- EVP_RAND_free(rand);
+ rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, seed);
+ OPENSSL_BOX_EVP_RAND_free(rand);
 
  /* Configure the DRBG */
  *p++ = OSSL_PARAM_construct_utf8_string(OSSL_DRBG_PARAM_CIPHER,
@@ -82,8 +82,8 @@ are additionally conducted.  This option was added in OpenSSL 3.5.
 
  EVP_RAND_generate(rctx, bytes, sizeof(bytes), strength, 0, NULL, 0);
 
- EVP_RAND_CTX_free(rctx);
- EVP_RAND_CTX_free(seed);
+ OPENSSL_BOX_EVP_RAND_CTX_free(rctx);
+ OPENSSL_BOX_EVP_RAND_CTX_free(seed);
 
 =head1 SEE ALSO
 

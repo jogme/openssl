@@ -66,7 +66,7 @@ static int test_skey_cipher(void)
         goto end;
 
     /* Init cipher */
-    if (!TEST_ptr(ctx = EVP_CIPHER_CTX_new())
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
         || !TEST_int_gt(EVP_CipherInit_SKEY(ctx, fake_cipher, key, NULL, 0, 1, NULL), 0))
         goto end;
 
@@ -84,9 +84,9 @@ static int test_skey_cipher(void)
 
 end:
     OSSL_PARAM_free(export_params);
-    EVP_SKEY_free(key);
-    EVP_CIPHER_free(fake_cipher);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_SKEY_free(key);
+    OPENSSL_BOX_EVP_CIPHER_free(fake_cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     fake_cipher_finish(fake_prov);
 
     return ret;
@@ -118,7 +118,7 @@ static int test_skey_skeymgmt(void)
         goto end;
 
     /* Check the parameter we need is available */
-    if (!TEST_ptr(imp_params = EVP_SKEYMGMT_get0_imp_settable_params(skeymgmt))
+    if (!TEST_ptr(imp_params = OPENSSL_BOX_EVP_SKEYMGMT_get0_imp_settable_params(skeymgmt))
         || !TEST_ptr(p = OSSL_PARAM_locate_const(imp_params,
                                                  OSSL_SKEY_PARAM_RAW_BYTES)))
         goto end;
@@ -129,7 +129,7 @@ static int test_skey_skeymgmt(void)
     params[1] = OSSL_PARAM_construct_end();
 
     if (!TEST_ptr(key = EVP_SKEY_import(libctx,
-                                        EVP_SKEYMGMT_get0_name(skeymgmt), NULL,
+                                        OPENSSL_BOX_EVP_SKEYMGMT_get0_name(skeymgmt), NULL,
                                         OSSL_SKEYMGMT_SELECT_ALL, params)))
         goto end;
 
@@ -146,8 +146,8 @@ static int test_skey_skeymgmt(void)
     ret = 1;
 end:
     OSSL_PARAM_free(exp_params);
-    EVP_SKEYMGMT_free(skeymgmt);
-    EVP_SKEY_free(key);
+    OPENSSL_BOX_EVP_SKEYMGMT_free(skeymgmt);
+    OPENSSL_BOX_EVP_SKEY_free(key);
 
     return ret;
 }
@@ -200,14 +200,14 @@ static int test_aes_raw_skey(void)
 
     enc_len = sizeof(encrypted_skey);
     fin_len = 0;
-    if (!TEST_ptr(ctx = EVP_CIPHER_CTX_new())
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
         || !TEST_int_gt(EVP_CipherInit_SKEY(ctx, aes_cbc, skey, aes_iv, IV_SIZE, 1, NULL), 0)
         || !TEST_int_gt(EVP_CipherUpdate(ctx, encrypted_skey, &enc_len, data, DATA_SIZE), 0)
         || !TEST_int_gt(EVP_CipherFinal(ctx, encrypted_skey + enc_len, &fin_len), 0))
         goto end;
 
-    EVP_CIPHER_CTX_free(ctx);
-    ctx = EVP_CIPHER_CTX_new();
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
+    ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
 
     enc_len = sizeof(encrypted_raw);
     fin_len = 0;
@@ -221,9 +221,9 @@ static int test_aes_raw_skey(void)
 end:
     OSSL_PARAM_free(params);
     OSSL_PARAM_BLD_free(tmpl);
-    EVP_SKEY_free(skey);
-    EVP_CIPHER_free(aes_cbc);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_SKEY_free(skey);
+    OPENSSL_BOX_EVP_CIPHER_free(aes_cbc);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     OSSL_PROVIDER_unload(deflprov);
     return ret;
 }
@@ -277,14 +277,14 @@ static int test_des_raw_skey(void)
 
     enc_len = sizeof(encrypted_skey);
     fin_len = 0;
-    if (!TEST_ptr(ctx = EVP_CIPHER_CTX_new())
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
         || !TEST_int_gt(EVP_CipherInit_SKEY(ctx, des_cbc, skey, des_iv, DES_IV_SIZE, 1, NULL), 0)
         || !TEST_int_gt(EVP_CipherUpdate(ctx, encrypted_skey, &enc_len, data, DATA_SIZE), 0)
         || !TEST_int_gt(EVP_CipherFinal(ctx, encrypted_skey + enc_len, &fin_len), 0))
         goto end;
 
-    EVP_CIPHER_CTX_free(ctx);
-    ctx = EVP_CIPHER_CTX_new();
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
+    ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
 
     enc_len = sizeof(encrypted_raw);
     fin_len = 0;
@@ -297,9 +297,9 @@ static int test_des_raw_skey(void)
 
     ret = 1;
 end:
-    EVP_SKEY_free(skey);
-    EVP_CIPHER_free(des_cbc);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_SKEY_free(skey);
+    OPENSSL_BOX_EVP_CIPHER_free(des_cbc);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     OSSL_PROVIDER_unload(deflprov);
     return ret;
 }

@@ -125,11 +125,11 @@ void TS_RESP_CTX_free(TS_RESP_CTX *ctx)
 
     OPENSSL_free(ctx->propq);
     X509_free(ctx->signer_cert);
-    EVP_PKEY_free(ctx->signer_key);
+    OPENSSL_BOX_EVP_PKEY_free(ctx->signer_key);
     OSSL_STACK_OF_X509_free(ctx->certs);
     sk_ASN1_OBJECT_pop_free(ctx->policies, ASN1_OBJECT_free);
     ASN1_OBJECT_free(ctx->default_policy);
-    sk_EVP_MD_free(ctx->mds);   /* No EVP_MD_free method exists. */
+    sk_EVP_MD_free(ctx->mds);   /* No OPENSSL_BOX_EVP_MD_free method exists. */
     ASN1_INTEGER_free(ctx->seconds);
     ASN1_INTEGER_free(ctx->millis);
     ASN1_INTEGER_free(ctx->micros);
@@ -153,10 +153,10 @@ int TS_RESP_CTX_set_signer_cert(TS_RESP_CTX *ctx, X509 *signer)
 
 int TS_RESP_CTX_set_signer_key(TS_RESP_CTX *ctx, EVP_PKEY *key)
 {
-    if (!EVP_PKEY_up_ref(key))
+    if (!OPENSSL_BOX_EVP_PKEY_up_ref(key))
         return 0;
 
-    EVP_PKEY_free(ctx->signer_key);
+    OPENSSL_BOX_EVP_PKEY_free(ctx->signer_key);
     ctx->signer_key = key;
 
     return 1;
@@ -464,7 +464,7 @@ static int ts_RESP_check_request(TS_RESP_CTX *ctx)
     OBJ_obj2txt(md_alg_name, sizeof(md_alg_name), md_alg->algorithm, 0);
     for (i = 0; !md && i < sk_EVP_MD_num(ctx->mds); ++i) {
         const EVP_MD *current_md = sk_EVP_MD_value(ctx->mds, i);
-        if (EVP_MD_is_a(current_md, md_alg_name))
+        if (OPENSSL_BOX_EVP_MD_is_a(current_md, md_alg_name))
             md = current_md;
     }
     if (!md) {
@@ -475,7 +475,7 @@ static int ts_RESP_check_request(TS_RESP_CTX *ctx)
         return 0;
     }
 
-    md_size = EVP_MD_get_size(md);
+    md_size = OPENSSL_BOX_EVP_MD_get_size(md);
     if (md_size <= 0)
         return 0;
 
@@ -722,8 +722,8 @@ static int ts_RESP_sign(TS_RESP_CTX *ctx)
 
     if (ctx->signer_md == NULL)
         signer_md = EVP_MD_fetch(ctx->libctx, "SHA256", ctx->propq);
-    else if (EVP_MD_get0_provider(ctx->signer_md) == NULL)
-        signer_md = EVP_MD_fetch(ctx->libctx, EVP_MD_get0_name(ctx->signer_md),
+    else if (OPENSSL_BOX_EVP_MD_get0_provider(ctx->signer_md) == NULL)
+        signer_md = EVP_MD_fetch(ctx->libctx, OPENSSL_BOX_EVP_MD_get0_name(ctx->signer_md),
                                  ctx->propq);
     else
         signer_md = (EVP_MD *)ctx->signer_md;
@@ -743,7 +743,7 @@ static int ts_RESP_sign(TS_RESP_CTX *ctx)
 
     certs = ctx->flags & TS_ESS_CERT_ID_CHAIN ? ctx->certs : NULL;
     if (ctx->ess_cert_id_digest == NULL
-        || EVP_MD_is_a(ctx->ess_cert_id_digest, SN_sha1)) {
+        || OPENSSL_BOX_EVP_MD_is_a(ctx->ess_cert_id_digest, SN_sha1)) {
         if ((sc = OSSL_ESS_signing_cert_new_init(ctx->signer_cert,
                                                  certs, 0)) == NULL)
             goto err;
@@ -785,7 +785,7 @@ static int ts_RESP_sign(TS_RESP_CTX *ctx)
     ret = 1;
  err:
     if (signer_md != ctx->signer_md)
-        EVP_MD_free(signer_md);
+        OPENSSL_BOX_EVP_MD_free(signer_md);
 
     if (!ret)
         TS_RESP_CTX_set_status_info_cond(ctx, TS_STATUS_REJECTION,

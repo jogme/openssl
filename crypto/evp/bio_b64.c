@@ -58,7 +58,7 @@ static const BIO_METHOD methods_b64 = {
     b64_callback_ctrl,
 };
 
-const BIO_METHOD *BIO_f_base64(void)
+const BIO_METHOD *OPENSSL_BOX_BIO_f_base64(void)
 {
     return &methods_b64;
 }
@@ -72,7 +72,7 @@ static int b64_new(BIO *bi)
 
     ctx->cont = 1;
     ctx->start = 1;
-    ctx->base64 = EVP_ENCODE_CTX_new();
+    ctx->base64 = OPENSSL_BOX_EVP_ENCODE_CTX_new();
     if (ctx->base64 == NULL) {
         OPENSSL_free(ctx);
         return 0;
@@ -95,7 +95,7 @@ static int b64_free(BIO *a)
     if (ctx == NULL)
         return 0;
 
-    EVP_ENCODE_CTX_free(ctx->base64);
+    OPENSSL_BOX_EVP_ENCODE_CTX_free(ctx->base64);
     OPENSSL_free(ctx);
     BIO_set_data(a, NULL);
     BIO_set_init(a, 0);
@@ -133,7 +133,7 @@ static int b64_read(BIO *b, char *out, int outl)
         ctx->buf_len = 0;
         ctx->buf_off = 0;
         ctx->tmp_len = 0;
-        EVP_DecodeInit(ctx->base64);
+        OPENSSL_BOX_EVP_DecodeInit(ctx->base64);
     }
 
     /* First check if there are buffered bytes already decoded */
@@ -185,7 +185,7 @@ static int b64_read(BIO *b, char *out, int outl)
                 if (ctx->tmp_len == 0) {
                     if (EVP_DecodeFinal(ctx->base64, NULL, &num) < 0)
                         ret_code = -1;
-                    EVP_DecodeInit(ctx->base64);
+                    OPENSSL_BOX_EVP_DecodeInit(ctx->base64);
                 }
                 ctx->cont = ret_code;
             }
@@ -225,7 +225,7 @@ static int b64_read(BIO *b, char *out, int outl)
                 }
 
                 k = EVP_DecodeUpdate(ctx->base64, ctx->buf, &num, p, (int)(q - p));
-                EVP_DecodeInit(ctx->base64);
+                OPENSSL_BOX_EVP_DecodeInit(ctx->base64);
                 if (k <= 0 && num == 0) {
                     p = q;
                     continue;
@@ -340,7 +340,7 @@ static int b64_write(BIO *b, const char *in, int inl)
         ctx->buf_len = 0;
         ctx->buf_off = 0;
         ctx->tmp_len = 0;
-        EVP_EncodeInit(ctx->base64);
+        OPENSSL_BOX_EVP_EncodeInit(ctx->base64);
     }
     if (!ossl_assert(ctx->buf_off < (int)sizeof(ctx->buf))) {
         ERR_raise(ERR_LIB_BIO, ERR_R_INTERNAL_ERROR);
@@ -400,7 +400,7 @@ static int b64_write(BIO *b, const char *in, int inl)
                 if (ctx->tmp_len < 3)
                     break;
                 ctx->buf_len =
-                    EVP_EncodeBlock(ctx->buf, ctx->tmp, ctx->tmp_len);
+                    OPENSSL_BOX_EVP_EncodeBlock(ctx->buf, ctx->tmp, ctx->tmp_len);
                 if (!ossl_assert(ctx->buf_len <= (int)sizeof(ctx->buf))) {
                     ERR_raise(ERR_LIB_BIO, ERR_R_INTERNAL_ERROR);
                     return ret == 0 ? -1 : ret;
@@ -423,7 +423,7 @@ static int b64_write(BIO *b, const char *in, int inl)
                 }
                 n -= n % 3;
                 ctx->buf_len =
-                    EVP_EncodeBlock(ctx->buf, (unsigned char *)in, n);
+                    OPENSSL_BOX_EVP_EncodeBlock(ctx->buf, (unsigned char *)in, n);
                 if (!ossl_assert(ctx->buf_len <= (int)sizeof(ctx->buf))) {
                     ERR_raise(ERR_LIB_BIO, ERR_R_INTERNAL_ERROR);
                     return ret == 0 ? -1 : ret;
@@ -508,7 +508,7 @@ static long b64_ctrl(BIO *b, int cmd, long num, void *ptr)
         }
         ret = ctx->buf_len - ctx->buf_off;
         if (ret == 0 && ctx->encode != B64_NONE
-            && EVP_ENCODE_CTX_num(ctx->base64) != 0)
+            && OPENSSL_BOX_EVP_ENCODE_CTX_num(ctx->base64) != 0)
             ret = 1;
         else if (ret <= 0)
             ret = BIO_ctrl(next, cmd, num, ptr);
@@ -532,16 +532,16 @@ static long b64_ctrl(BIO *b, int cmd, long num, void *ptr)
         }
         if (BIO_get_flags(b) & BIO_FLAGS_BASE64_NO_NL) {
             if (ctx->tmp_len != 0) {
-                ctx->buf_len = EVP_EncodeBlock(ctx->buf,
+                ctx->buf_len = OPENSSL_BOX_EVP_EncodeBlock(ctx->buf,
                                                ctx->tmp, ctx->tmp_len);
                 ctx->buf_off = 0;
                 ctx->tmp_len = 0;
                 goto again;
             }
         } else if (ctx->encode != B64_NONE
-                   && EVP_ENCODE_CTX_num(ctx->base64) != 0) {
+                   && OPENSSL_BOX_EVP_ENCODE_CTX_num(ctx->base64) != 0) {
             ctx->buf_off = 0;
-            EVP_EncodeFinal(ctx->base64, ctx->buf, &(ctx->buf_len));
+            OPENSSL_BOX_EVP_EncodeFinal(ctx->base64, ctx->buf, &(ctx->buf_len));
             /* push out the bytes */
             goto again;
         }

@@ -183,65 +183,65 @@ EVP_MAC *EVP_MAC_fetch(OSSL_LIB_CTX *libctx, const char *algorithm,
                              evp_mac_free);
 }
 
-int EVP_MAC_up_ref(EVP_MAC *mac)
+int OPENSSL_BOX_EVP_MAC_up_ref(EVP_MAC *mac)
 {
     return evp_mac_up_ref(mac);
 }
 
-void EVP_MAC_free(EVP_MAC *mac)
+void OPENSSL_BOX_EVP_MAC_free(EVP_MAC *mac)
 {
     evp_mac_free(mac);
 }
 
-const OSSL_PROVIDER *EVP_MAC_get0_provider(const EVP_MAC *mac)
+const OSSL_PROVIDER *OPENSSL_BOX_EVP_MAC_get0_provider(const EVP_MAC *mac)
 {
     return mac->prov;
 }
 
-const OSSL_PARAM *EVP_MAC_gettable_params(const EVP_MAC *mac)
+const OSSL_PARAM *OPENSSL_BOX_EVP_MAC_gettable_params(const EVP_MAC *mac)
 {
     if (mac->gettable_params == NULL)
         return NULL;
-    return mac->gettable_params(ossl_provider_ctx(EVP_MAC_get0_provider(mac)));
+    return mac->gettable_params(ossl_provider_ctx(OPENSSL_BOX_EVP_MAC_get0_provider(mac)));
 }
 
-const OSSL_PARAM *EVP_MAC_gettable_ctx_params(const EVP_MAC *mac)
+const OSSL_PARAM *OPENSSL_BOX_EVP_MAC_gettable_ctx_params(const EVP_MAC *mac)
 {
     void *alg;
 
     if (mac->gettable_ctx_params == NULL)
         return NULL;
-    alg = ossl_provider_ctx(EVP_MAC_get0_provider(mac));
+    alg = ossl_provider_ctx(OPENSSL_BOX_EVP_MAC_get0_provider(mac));
     return mac->gettable_ctx_params(NULL, alg);
 }
 
-const OSSL_PARAM *EVP_MAC_settable_ctx_params(const EVP_MAC *mac)
+const OSSL_PARAM *OPENSSL_BOX_EVP_MAC_settable_ctx_params(const EVP_MAC *mac)
 {
     void *alg;
 
     if (mac->settable_ctx_params == NULL)
         return NULL;
-    alg = ossl_provider_ctx(EVP_MAC_get0_provider(mac));
+    alg = ossl_provider_ctx(OPENSSL_BOX_EVP_MAC_get0_provider(mac));
     return mac->settable_ctx_params(NULL, alg);
 }
 
-const OSSL_PARAM *EVP_MAC_CTX_gettable_params(EVP_MAC_CTX *ctx)
+const OSSL_PARAM *OPENSSL_BOX_EVP_MAC_CTX_gettable_params(EVP_MAC_CTX *ctx)
 {
     void *alg;
 
     if (ctx->meth->gettable_ctx_params == NULL)
         return NULL;
-    alg = ossl_provider_ctx(EVP_MAC_get0_provider(ctx->meth));
+    alg = ossl_provider_ctx(OPENSSL_BOX_EVP_MAC_get0_provider(ctx->meth));
     return ctx->meth->gettable_ctx_params(ctx->algctx, alg);
 }
 
-const OSSL_PARAM *EVP_MAC_CTX_settable_params(EVP_MAC_CTX *ctx)
+const OSSL_PARAM *OPENSSL_BOX_EVP_MAC_CTX_settable_params(EVP_MAC_CTX *ctx)
 {
     void *alg;
 
     if (ctx->meth->settable_ctx_params == NULL)
         return NULL;
-    alg = ossl_provider_ctx(EVP_MAC_get0_provider(ctx->meth));
+    alg = ossl_provider_ctx(OPENSSL_BOX_EVP_MAC_get0_provider(ctx->meth));
     return ctx->meth->settable_ctx_params(ctx->algctx, alg);
 }
 

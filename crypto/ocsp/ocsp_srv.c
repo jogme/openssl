@@ -171,12 +171,12 @@ int OCSP_basic_sign_ctx(OCSP_BASICRESP *brsp,
     OCSP_RESPID *rid;
     EVP_PKEY *pkey;
 
-    if (ctx == NULL || EVP_MD_CTX_get_pkey_ctx(ctx) == NULL) {
+    if (ctx == NULL || OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx) == NULL) {
         ERR_raise(ERR_LIB_OCSP, OCSP_R_NO_SIGNER_KEY);
         goto err;
     }
 
-    pkey = EVP_PKEY_CTX_get0_pkey(EVP_MD_CTX_get_pkey_ctx(ctx));
+    pkey = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx));
     if (pkey == NULL || !X509_check_private_key(signer, pkey)) {
         ERR_raise(ERR_LIB_OCSP, OCSP_R_PRIVATE_KEY_DOES_NOT_MATCH_CERTIFICATE);
         goto err;
@@ -216,20 +216,20 @@ int OCSP_basic_sign(OCSP_BASICRESP *brsp,
                     X509 *signer, EVP_PKEY *key, const EVP_MD *dgst,
                     STACK_OF(X509) *certs, unsigned long flags)
 {
-    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     EVP_PKEY_CTX *pkctx = NULL;
     int i;
 
     if (ctx == NULL)
         return 0;
 
-    if (!EVP_DigestSignInit_ex(ctx, &pkctx, EVP_MD_get0_name(dgst),
+    if (!EVP_DigestSignInit_ex(ctx, &pkctx, OPENSSL_BOX_EVP_MD_get0_name(dgst),
                                signer->libctx, signer->propq, key, NULL)) {
-        EVP_MD_CTX_free(ctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(ctx);
         return 0;
     }
     i = OCSP_basic_sign_ctx(brsp, signer, ctx, certs, flags);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return i;
 }
 
@@ -272,7 +272,7 @@ int OCSP_RESPID_set_by_key_ex(OCSP_RESPID *respid, X509 *cert,
 
     ret = 1;
  err:
-    EVP_MD_free(sha1);
+    OPENSSL_BOX_EVP_MD_free(sha1);
     return ret;
 }
 
@@ -315,7 +315,7 @@ int OCSP_RESPID_match_ex(OCSP_RESPID *respid, X509 *cert, OSSL_LIB_CTX *libctx,
     }
 
  err:
-    EVP_MD_free(sha1);
+    OPENSSL_BOX_EVP_MD_free(sha1);
     return ret;
 }
 

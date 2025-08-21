@@ -200,12 +200,12 @@ int ec_main(int argc, char **argv)
     }
 
     if (no_public) {
-        if (!EVP_PKEY_set_int_param(eckey, OSSL_PKEY_PARAM_EC_INCLUDE_PUBLIC, 0)) {
+        if (!OPENSSL_BOX_EVP_PKEY_set_int_param(eckey, OSSL_PKEY_PARAM_EC_INCLUDE_PUBLIC, 0)) {
             BIO_printf(bio_err, "unable to disable public key encoding\n");
             goto end;
         }
     } else {
-        if (!EVP_PKEY_set_int_param(eckey, OSSL_PKEY_PARAM_EC_INCLUDE_PUBLIC, 1)) {
+        if (!OPENSSL_BOX_EVP_PKEY_set_int_param(eckey, OSSL_PKEY_PARAM_EC_INCLUDE_PUBLIC, 1)) {
             BIO_printf(bio_err, "unable to enable public key encoding\n");
             goto end;
         }
@@ -226,7 +226,7 @@ int ec_main(int argc, char **argv)
             BIO_printf(bio_err, "unable to check EC key\n");
             goto end;
         }
-        if (EVP_PKEY_check(pctx) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_check(pctx) <= 0)
             BIO_printf(bio_err, "EC Key Invalid!\n");
         else
             BIO_printf(bio_err, "EC Key valid.\n");
@@ -253,7 +253,7 @@ int ec_main(int argc, char **argv)
                                              output_type, output_structure,
                                              NULL);
         if (enc != NULL) {
-            OSSL_ENCODER_CTX_set_cipher(ectx, EVP_CIPHER_get0_name(enc), NULL);
+            OSSL_ENCODER_CTX_set_cipher(ectx, OPENSSL_BOX_EVP_CIPHER_get0_name(enc), NULL);
             /* Default passphrase prompter */
             OSSL_ENCODER_CTX_set_passphrase_ui(ectx, get_ui_method(), NULL);
             if (passout != NULL)
@@ -273,11 +273,11 @@ end:
     if (ret != 0)
         ERR_print_errors(bio_err);
     BIO_free_all(out);
-    EVP_PKEY_free(eckey);
-    EVP_CIPHER_free(enc);
+    OPENSSL_BOX_EVP_PKEY_free(eckey);
+    OPENSSL_BOX_EVP_CIPHER_free(enc);
     OSSL_ENCODER_CTX_free(ectx);
     OSSL_DECODER_CTX_free(dctx);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     release_engine(e);
     if (passin != NULL)
         OPENSSL_clear_free(passin, strlen(passin));

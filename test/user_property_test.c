@@ -96,30 +96,30 @@ static int test_default_props_and_providers(int propsorder)
         goto err;
 
     if (propsorder == DEFAULT_PROPS_FIRST
-            && !TEST_true(EVP_set_default_properties(libctx, MYPROPERTIES)))
+            && !TEST_true(OPENSSL_BOX_EVP_set_default_properties(libctx, MYPROPERTIES)))
         goto err;
 
     if (!TEST_ptr(testprov = OSSL_PROVIDER_load(libctx, "testprov")))
         goto err;
 
     if (propsorder == DEFAULT_PROPS_AFTER_LOAD
-            && !TEST_true(EVP_set_default_properties(libctx, MYPROPERTIES)))
+            && !TEST_true(OPENSSL_BOX_EVP_set_default_properties(libctx, MYPROPERTIES)))
         goto err;
 
     if (!TEST_ptr(testprovmd = EVP_MD_fetch(libctx, "testprovmd", NULL)))
         goto err;
 
     if (propsorder == DEFAULT_PROPS_AFTER_FETCH) {
-        if (!TEST_true(EVP_set_default_properties(libctx, MYPROPERTIES)))
+        if (!TEST_true(OPENSSL_BOX_EVP_set_default_properties(libctx, MYPROPERTIES)))
             goto err;
-        EVP_MD_free(testprovmd);
+        OPENSSL_BOX_EVP_MD_free(testprovmd);
         if (!TEST_ptr(testprovmd = EVP_MD_fetch(libctx, "testprovmd", NULL)))
             goto err;
     }
 
     res = 1;
  err:
-    EVP_MD_free(testprovmd);
+    OPENSSL_BOX_EVP_MD_free(testprovmd);
     OSSL_PROVIDER_unload(testprov);
     OSSL_LIB_CTX_free(libctx);
     return res;

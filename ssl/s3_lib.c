@@ -3412,7 +3412,7 @@ void ssl3_free(SSL *s)
 
     ssl3_cleanup_key_block(sc);
 
-    EVP_PKEY_free(sc->s3.peer_tmp);
+    OPENSSL_BOX_EVP_PKEY_free(sc->s3.peer_tmp);
     sc->s3.peer_tmp = NULL;
 
     for (i = 0; i < sc->s3.tmp.num_ks_pkey; i++)
@@ -3420,13 +3420,13 @@ void ssl3_free(SSL *s)
             if (sc->s3.tmp.pkey == sc->s3.tmp.ks_pkey[i])
                 sc->s3.tmp.pkey = NULL;
 
-            EVP_PKEY_free(sc->s3.tmp.ks_pkey[i]);
+            OPENSSL_BOX_EVP_PKEY_free(sc->s3.tmp.ks_pkey[i]);
             sc->s3.tmp.ks_pkey[i] = NULL;
         }
     sc->s3.tmp.num_ks_pkey = 0;
 
     if (sc->s3.tmp.pkey != NULL) {
-        EVP_PKEY_free(sc->s3.tmp.pkey);
+        OPENSSL_BOX_EVP_PKEY_free(sc->s3.tmp.pkey);
         sc->s3.tmp.pkey = NULL;
     }
 
@@ -3473,20 +3473,20 @@ int ssl3_clear(SSL *s)
     OPENSSL_free(sc->s3.tmp.peer_cert_sigalgs);
     OPENSSL_free(sc->s3.tmp.valid_flags);
 
-    EVP_PKEY_free(sc->s3.peer_tmp);
+    OPENSSL_BOX_EVP_PKEY_free(sc->s3.peer_tmp);
 
     for (i = 0; i < sc->s3.tmp.num_ks_pkey; i++)
         if (sc->s3.tmp.ks_pkey[i] != NULL) {
             if (sc->s3.tmp.pkey == sc->s3.tmp.ks_pkey[i])
                 sc->s3.tmp.pkey = NULL;
 
-            EVP_PKEY_free(sc->s3.tmp.ks_pkey[i]);
+            OPENSSL_BOX_EVP_PKEY_free(sc->s3.tmp.ks_pkey[i]);
             sc->s3.tmp.ks_pkey[i] = NULL;
         }
     sc->s3.tmp.num_ks_pkey = 0;
 
     if (sc->s3.tmp.pkey != NULL) {
-        EVP_PKEY_free(sc->s3.tmp.pkey);
+        OPENSSL_BOX_EVP_PKEY_free(sc->s3.tmp.pkey);
         sc->s3.tmp.pkey = NULL;
     }
 
@@ -3573,7 +3573,7 @@ long ssl3_ctrl(SSL *s, int cmd, long larg, void *parg)
                 return 0;
             }
             if (!SSL_set0_tmp_dh_pkey(s, pkdh)) {
-                EVP_PKEY_free(pkdh);
+                OPENSSL_BOX_EVP_PKEY_free(pkdh);
                 return 0;
             }
             return 1;
@@ -3922,7 +3922,7 @@ long ssl3_ctrl(SSL *s, int cmd, long larg, void *parg)
         if (sc->session == NULL || sc->s3.peer_tmp == NULL) {
             return 0;
         } else {
-            if (!EVP_PKEY_up_ref(sc->s3.peer_tmp))
+            if (!OPENSSL_BOX_EVP_PKEY_up_ref(sc->s3.peer_tmp))
                 return 0;
 
             *(EVP_PKEY **)parg = sc->s3.peer_tmp;
@@ -3933,7 +3933,7 @@ long ssl3_ctrl(SSL *s, int cmd, long larg, void *parg)
         if (sc->session == NULL || sc->s3.tmp.pkey == NULL) {
             return 0;
         } else {
-            if (!EVP_PKEY_up_ref(sc->s3.tmp.pkey))
+            if (!OPENSSL_BOX_EVP_PKEY_up_ref(sc->s3.tmp.pkey))
                 return 0;
 
             *(EVP_PKEY **)parg = sc->s3.tmp.pkey;
@@ -4020,7 +4020,7 @@ long ssl3_ctx_ctrl(SSL_CTX *ctx, int cmd, long larg, void *parg)
                 return 0;
             }
             if (!SSL_CTX_set0_tmp_dh_pkey(ctx, pkdh)) {
-                EVP_PKEY_free(pkdh);
+                OPENSSL_BOX_EVP_PKEY_free(pkdh);
                 return 0;
             }
             return 1;
@@ -4562,7 +4562,7 @@ const SSL_CIPHER *ssl3_choose_cipher(SSL_CONNECTION *s, STACK_OF(SSL_CIPHER) *cl
                                           tmp->algorithm2);
 
                 if (md != NULL
-                        && EVP_MD_is_a(md, OSSL_DIGEST_NAME_SHA2_256)) {
+                        && OPENSSL_BOX_EVP_MD_is_a(md, OSSL_DIGEST_NAME_SHA2_256)) {
                     ret = tmp;
                     break;
                 }
@@ -4960,15 +4960,15 @@ EVP_PKEY *ssl_generate_pkey(SSL_CONNECTION *s, EVP_PKEY *pm)
     pctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx, pm, sctx->propq);
     if (pctx == NULL)
         goto err;
-    if (EVP_PKEY_keygen_init(pctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_keygen_init(pctx) <= 0)
         goto err;
-    if (EVP_PKEY_keygen(pctx, &pkey) <= 0) {
-        EVP_PKEY_free(pkey);
+    if (OPENSSL_BOX_EVP_PKEY_keygen(pctx, &pkey) <= 0) {
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         pkey = NULL;
     }
 
     err:
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return pkey;
 }
 
@@ -4992,22 +4992,22 @@ EVP_PKEY *ssl_generate_pkey_group(SSL_CONNECTION *s, uint16_t id)
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
     }
-    if (EVP_PKEY_keygen_init(pctx) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_keygen_init(pctx) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
     }
-    if (EVP_PKEY_CTX_set_group_name(pctx, ginf->realname) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_CTX_set_group_name(pctx, ginf->realname) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
     }
-    if (EVP_PKEY_keygen(pctx, &pkey) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_keygen(pctx, &pkey) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         pkey = NULL;
     }
 
  err:
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return pkey;
 }
 
@@ -5029,19 +5029,19 @@ EVP_PKEY *ssl_generate_param_group(SSL_CONNECTION *s, uint16_t id)
 
     if (pctx == NULL)
         goto err;
-    if (EVP_PKEY_paramgen_init(pctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_paramgen_init(pctx) <= 0)
         goto err;
-    if (EVP_PKEY_CTX_set_group_name(pctx, ginf->realname) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_CTX_set_group_name(pctx, ginf->realname) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
     }
-    if (EVP_PKEY_paramgen(pctx, &pkey) <= 0) {
-        EVP_PKEY_free(pkey);
+    if (OPENSSL_BOX_EVP_PKEY_paramgen(pctx, &pkey) <= 0) {
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         pkey = NULL;
     }
 
  err:
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return pkey;
 }
 
@@ -5087,14 +5087,14 @@ int ssl_derive(SSL_CONNECTION *s, EVP_PKEY *privkey, EVP_PKEY *pubkey, int gense
 
     pctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx, privkey, sctx->propq);
 
-    if (EVP_PKEY_derive_init(pctx) <= 0
-        || EVP_PKEY_derive_set_peer(pctx, pubkey) <= 0
-        || EVP_PKEY_derive(pctx, NULL, &pmslen) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_derive_init(pctx) <= 0
+        || OPENSSL_BOX_EVP_PKEY_derive_set_peer(pctx, pubkey) <= 0
+        || OPENSSL_BOX_EVP_PKEY_derive(pctx, NULL, &pmslen) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
 
-    if (SSL_CONNECTION_IS_TLS13(s) &&  EVP_PKEY_is_a(privkey, "DH"))
+    if (SSL_CONNECTION_IS_TLS13(s) &&  OPENSSL_BOX_EVP_PKEY_is_a(privkey, "DH"))
         EVP_PKEY_CTX_set_dh_pad(pctx, 1);
 
     pms = OPENSSL_malloc(pmslen);
@@ -5103,7 +5103,7 @@ int ssl_derive(SSL_CONNECTION *s, EVP_PKEY *privkey, EVP_PKEY *pubkey, int gense
         goto err;
     }
 
-    if (EVP_PKEY_derive(pctx, pms, &pmslen) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_derive(pctx, pms, &pmslen) <= 0) {
         /*
          * the public key was probably a weak key
          */
@@ -5124,7 +5124,7 @@ int ssl_derive(SSL_CONNECTION *s, EVP_PKEY *privkey, EVP_PKEY *pubkey, int gense
 
  err:
     OPENSSL_clear_free(pms, pmslen);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return rv;
 }
 
@@ -5146,7 +5146,7 @@ int ssl_decapsulate(SSL_CONNECTION *s, EVP_PKEY *privkey,
 
     pctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx, privkey, sctx->propq);
 
-    if (EVP_PKEY_decapsulate_init(pctx, NULL) <= 0
+    if (OPENSSL_BOX_EVP_PKEY_decapsulate_init(pctx, NULL) <= 0
             || EVP_PKEY_decapsulate(pctx, NULL, &pmslen, ct, ctlen) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
@@ -5176,7 +5176,7 @@ int ssl_decapsulate(SSL_CONNECTION *s, EVP_PKEY *privkey,
 
  err:
     OPENSSL_clear_free(pms, pmslen);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return rv;
 }
 
@@ -5197,7 +5197,7 @@ int ssl_encapsulate(SSL_CONNECTION *s, EVP_PKEY *pubkey,
 
     pctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx, pubkey, sctx->propq);
 
-    if (EVP_PKEY_encapsulate_init(pctx, NULL) <= 0
+    if (OPENSSL_BOX_EVP_PKEY_encapsulate_init(pctx, NULL) <= 0
             || EVP_PKEY_encapsulate(pctx, NULL, &ctlen, NULL, &pmslen) <= 0
             || pmslen == 0 || ctlen == 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
@@ -5237,7 +5237,7 @@ int ssl_encapsulate(SSL_CONNECTION *s, EVP_PKEY *pubkey,
  err:
     OPENSSL_clear_free(pms, pmslen);
     OPENSSL_free(ct);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return rv;
 }
 

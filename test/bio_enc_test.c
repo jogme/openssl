@@ -50,7 +50,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
     /* Encrypt tests */
 
     /* reference output for single-chunk operation */
-    b = BIO_new(BIO_f_cipher());
+    b = BIO_new(OPENSSL_BOX_BIO_f_cipher());
     if (!TEST_ptr(b))
         return 0;
     if (!TEST_true(BIO_set_cipher(b, cipher, key, iv, ENCRYPT)))
@@ -64,7 +64,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
 
     /* perform split operations and compare to reference */
     for (i = 1; i < lref; i++) {
-        b = BIO_new(BIO_f_cipher());
+        b = BIO_new(OPENSSL_BOX_BIO_f_cipher());
         if (!TEST_ptr(b))
             return 0;
         if (!TEST_true(BIO_set_cipher(b, cipher, key, iv, ENCRYPT))) {
@@ -103,7 +103,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
     for (i = 1; i < lref / 2; i++) {
         int delta;
 
-        b = BIO_new(BIO_f_cipher());
+        b = BIO_new(OPENSSL_BOX_BIO_f_cipher());
         if (!TEST_ptr(b))
             return 0;
         if (!TEST_true(BIO_set_cipher(b, cipher, key, iv, ENCRYPT))) {
@@ -129,7 +129,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
     /* Decrypt tests */
 
     /* reference output for single-chunk operation */
-    b = BIO_new(BIO_f_cipher());
+    b = BIO_new(OPENSSL_BOX_BIO_f_cipher());
     if (!TEST_ptr(b))
         return 0;
     if (!TEST_true(BIO_set_cipher(b, cipher, key, iv, DECRYPT)))
@@ -159,7 +159,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
 
     /* perform split operations and compare to reference */
     for (i = 1; i < lref; i++) {
-        b = BIO_new(BIO_f_cipher());
+        b = BIO_new(OPENSSL_BOX_BIO_f_cipher());
         if (!TEST_ptr(b))
             return 0;
         if (!TEST_true(BIO_set_cipher(b, cipher, key, iv, DECRYPT))) {
@@ -191,7 +191,7 @@ static int do_bio_cipher(const EVP_CIPHER* cipher, const unsigned char* key,
     for (i = 1; i < lref / 2; i++) {
         int delta;
 
-        b = BIO_new(BIO_f_cipher());
+        b = BIO_new(OPENSSL_BOX_BIO_f_cipher());
         if (!TEST_ptr(b))
             return 0;
         if (!TEST_true(BIO_set_cipher(b, cipher, key, iv, DECRYPT))) {
@@ -234,12 +234,12 @@ static int do_test_bio_cipher(const EVP_CIPHER* cipher, int idx)
 
 static int test_bio_enc_aes_128_cbc(int idx)
 {
-    return do_test_bio_cipher(EVP_aes_128_cbc(), idx);
+    return do_test_bio_cipher(OPENSSL_BOX_EVP_aes_128_cbc(), idx);
 }
 
 static int test_bio_enc_aes_128_ctr(int idx)
 {
-    return do_test_bio_cipher(EVP_aes_128_ctr(), idx);
+    return do_test_bio_cipher(OPENSSL_BOX_EVP_aes_128_ctr(), idx);
 }
 
 static int test_bio_enc_aes_256_cfb(int idx)
@@ -249,19 +249,19 @@ static int test_bio_enc_aes_256_cfb(int idx)
 
 static int test_bio_enc_aes_256_ofb(int idx)
 {
-    return do_test_bio_cipher(EVP_aes_256_ofb(), idx);
+    return do_test_bio_cipher(OPENSSL_BOX_EVP_aes_256_ofb(), idx);
 }
 
 # ifndef OPENSSL_NO_CHACHA
 static int test_bio_enc_chacha20(int idx)
 {
-    return do_test_bio_cipher(EVP_chacha20(), idx);
+    return do_test_bio_cipher(OPENSSL_BOX_EVP_chacha20(), idx);
 }
 
 #  ifndef OPENSSL_NO_POLY1305
 static int test_bio_enc_chacha20_poly1305(int idx)
 {
-    return do_test_bio_cipher(EVP_chacha20_poly1305(), idx);
+    return do_test_bio_cipher(OPENSSL_BOX_EVP_chacha20_poly1305(), idx);
 }
 #  endif
 # endif
@@ -271,7 +271,7 @@ static int test_bio_enc_eof_read_flush(void)
     /* Length chosen to ensure base64 encoding employs padding */
     const unsigned char pbuf[] = "Attack at dawn";
     unsigned char cbuf[16];     /* At least as long as pbuf */
-    const EVP_CIPHER *cipher = EVP_aes_256_gcm();
+    const EVP_CIPHER *cipher = OPENSSL_BOX_EVP_aes_256_gcm();
     EVP_CIPHER_CTX *ctx = NULL;
     BIO *mem = NULL, *b64 = NULL, *cbio = NULL;
     unsigned char tag[16];
@@ -283,15 +283,15 @@ static int test_bio_enc_eof_read_flush(void)
         || !TEST_int_gt((key_size = EVP_CIPHER_key_length(cipher)), 0)
         || !TEST_int_gt((iv_size = EVP_CIPHER_iv_length(cipher)), 0)
         || !TEST_ptr(mem = BIO_new(BIO_s_mem()))
-        || !TEST_ptr(b64 = BIO_new(BIO_f_base64()))
-        || !TEST_ptr(cbio = BIO_new(BIO_f_cipher()))
+        || !TEST_ptr(b64 = BIO_new(OPENSSL_BOX_BIO_f_base64()))
+        || !TEST_ptr(cbio = BIO_new(OPENSSL_BOX_BIO_f_cipher()))
         || !TEST_ptr(BIO_push(b64, mem))
         || !TEST_ptr(BIO_push(cbio, b64))
         || !TEST_int_gt(BIO_get_cipher_ctx(cbio, &ctx), 0)
         || !TEST_true(EVP_CipherInit_ex(ctx, cipher, NULL, KEY, IV, ENCRYPT))
         || !TEST_int_gt(BIO_write(cbio, pbuf, sizeof(pbuf) - 1), 0)
         || !TEST_int_gt(BIO_flush(cbio), 0)
-        || !TEST_int_gt(EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG,
+        || !TEST_int_gt(OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG,
                                             sizeof(tag), tag), 0))
         goto end;
     BIO_free(cbio);
@@ -301,13 +301,13 @@ static int test_bio_enc_eof_read_flush(void)
     BIO_set_mem_eof_return(mem, 0);
     BIO_set_flags(mem, BIO_FLAGS_NONCLEAR_RST);
     if (!TEST_int_gt(BIO_reset(mem), 0)
-        || !TEST_ptr(b64 = BIO_new(BIO_f_base64()))
-        || !TEST_ptr(cbio = BIO_new(BIO_f_cipher()))
+        || !TEST_ptr(b64 = BIO_new(OPENSSL_BOX_BIO_f_base64()))
+        || !TEST_ptr(cbio = BIO_new(OPENSSL_BOX_BIO_f_cipher()))
         || !TEST_ptr(BIO_push(b64, mem))
         || !TEST_ptr(BIO_push(cbio, b64))
         || !TEST_int_gt(BIO_get_cipher_ctx(cbio, &ctx), 0)
         || !TEST_true(EVP_CipherInit_ex(ctx, cipher, NULL, KEY, IV, DECRYPT))
-        || !TEST_int_gt(EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG,
+        || !TEST_int_gt(OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG,
                                             sizeof(tag), tag), 0)
         || !TEST_int_gt((n = BIO_read(cbio, cbuf, sizeof(cbuf))), 0)
         || !TEST_true(BIO_get_cipher_status(cbio))

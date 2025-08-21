@@ -23,15 +23,15 @@ static int test_kdf_tls1_prf(int index)
     unsigned char out[16];
     size_t outlen = sizeof(out);
 
-    if ((pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_TLS1_PRF, NULL)) == NULL) {
+    if ((pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_TLS1_PRF, NULL)) == NULL) {
         TEST_error("EVP_PKEY_TLS1_PRF");
         goto err;
     }
-    if (EVP_PKEY_derive_init(pctx) <= 0) {
-        TEST_error("EVP_PKEY_derive_init");
+    if (OPENSSL_BOX_EVP_PKEY_derive_init(pctx) <= 0) {
+        TEST_error("OPENSSL_BOX_EVP_PKEY_derive_init");
         goto err;
     }
-    if (EVP_PKEY_CTX_set_tls1_prf_md(pctx, EVP_sha256()) <= 0) {
+    if (EVP_PKEY_CTX_set_tls1_prf_md(pctx, OPENSSL_BOX_EVP_sha256()) <= 0) {
         TEST_error("EVP_PKEY_CTX_set_tls1_prf_md");
         goto err;
     }
@@ -58,8 +58,8 @@ static int test_kdf_tls1_prf(int index)
             goto err;
         }
     }
-    if (EVP_PKEY_derive(pctx, out, &outlen) <= 0) {
-        TEST_error("EVP_PKEY_derive");
+    if (OPENSSL_BOX_EVP_PKEY_derive(pctx, out, &outlen) <= 0) {
+        TEST_error("OPENSSL_BOX_EVP_PKEY_derive");
         goto err;
     }
 
@@ -74,7 +74,7 @@ static int test_kdf_tls1_prf(int index)
     }
     ret = 1;
 err:
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return ret;
 }
 
@@ -85,15 +85,15 @@ static int test_kdf_hkdf(int index)
     unsigned char out[10];
     size_t outlen = sizeof(out);
 
-    if ((pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_HKDF, NULL)) == NULL) {
+    if ((pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_HKDF, NULL)) == NULL) {
         TEST_error("EVP_PKEY_HKDF");
         goto err;
     }
-    if (EVP_PKEY_derive_init(pctx) <= 0) {
-        TEST_error("EVP_PKEY_derive_init");
+    if (OPENSSL_BOX_EVP_PKEY_derive_init(pctx) <= 0) {
+        TEST_error("OPENSSL_BOX_EVP_PKEY_derive_init");
         goto err;
     }
-    if (EVP_PKEY_CTX_set_hkdf_md(pctx, EVP_sha256()) <= 0) {
+    if (EVP_PKEY_CTX_set_hkdf_md(pctx, OPENSSL_BOX_EVP_sha256()) <= 0) {
         TEST_error("EVP_PKEY_CTX_set_hkdf_md");
         goto err;
     }
@@ -125,8 +125,8 @@ static int test_kdf_hkdf(int index)
             goto err;
         }
     }
-    if (EVP_PKEY_derive(pctx, out, &outlen) <= 0) {
-        TEST_error("EVP_PKEY_derive");
+    if (OPENSSL_BOX_EVP_PKEY_derive(pctx, out, &outlen) <= 0) {
+        TEST_error("OPENSSL_BOX_EVP_PKEY_derive");
         goto err;
     }
 
@@ -140,7 +140,7 @@ static int test_kdf_hkdf(int index)
     }
     ret = 1;
 err:
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return ret;
 }
 
@@ -152,12 +152,12 @@ static int test_kdf_scrypt(void)
     unsigned char out[64];
     size_t outlen = sizeof(out);
 
-    if ((pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_SCRYPT, NULL)) == NULL) {
+    if ((pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_SCRYPT, NULL)) == NULL) {
         TEST_error("EVP_PKEY_SCRYPT");
         goto err;
     }
-    if (EVP_PKEY_derive_init(pctx) <= 0) {
-        TEST_error("EVP_PKEY_derive_init");
+    if (OPENSSL_BOX_EVP_PKEY_derive_init(pctx) <= 0) {
+        TEST_error("OPENSSL_BOX_EVP_PKEY_derive_init");
         goto err;
     }
     if (EVP_PKEY_CTX_set1_pbe_pass(pctx, "password", 8) <= 0) {
@@ -184,16 +184,16 @@ static int test_kdf_scrypt(void)
         TEST_error("EVP_PKEY_CTX_set_maxmem_bytes");
         goto err;
     }
-    if (EVP_PKEY_derive(pctx, out, &outlen) > 0) {
-        TEST_error("EVP_PKEY_derive should have failed");
+    if (OPENSSL_BOX_EVP_PKEY_derive(pctx, out, &outlen) > 0) {
+        TEST_error("OPENSSL_BOX_EVP_PKEY_derive should have failed");
         goto err;
     }
     if (EVP_PKEY_CTX_set_scrypt_maxmem_bytes(pctx, 10 * 1024 * 1024) <= 0) {
         TEST_error("EVP_PKEY_CTX_set_maxmem_bytes");
         goto err;
     }
-    if (EVP_PKEY_derive(pctx, out, &outlen) <= 0) {
-        TEST_error("EVP_PKEY_derive");
+    if (OPENSSL_BOX_EVP_PKEY_derive(pctx, out, &outlen) <= 0) {
+        TEST_error("OPENSSL_BOX_EVP_PKEY_derive");
         goto err;
     }
 
@@ -214,7 +214,7 @@ static int test_kdf_scrypt(void)
     }
     ret = 1;
 err:
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return ret;
 }
 #endif

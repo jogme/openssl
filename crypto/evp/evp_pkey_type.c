@@ -60,14 +60,14 @@ static const struct pkid2bid base_id_conversion[] = {
 };
 #endif
 
-int EVP_PKEY_type(int type)
+int OPENSSL_BOX_EVP_PKEY_type(int type)
 {
 #ifndef OPENSSL_NO_DEPRECATED_3_6
     int ret;
     const EVP_PKEY_ASN1_METHOD *ameth;
     ENGINE *e;
 
-    ameth = EVP_PKEY_asn1_find(&e, type);
+    ameth = OPENSSL_BOX_EVP_PKEY_asn1_find(&e, type);
     if (ameth)
         ret = ameth->pkey_id;
     else

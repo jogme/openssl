@@ -75,7 +75,7 @@ static int rand_priv_bytes(unsigned char *buf, int num)
  */
 static int state(EVP_RAND_CTX *drbg)
 {
-    return EVP_RAND_get_state(drbg);
+    return OPENSSL_BOX_EVP_RAND_get_state(drbg);
 }
 
 static unsigned int query_rand_uint(EVP_RAND_CTX *drbg, const char *name)
@@ -84,7 +84,7 @@ static unsigned int query_rand_uint(EVP_RAND_CTX *drbg, const char *name)
     unsigned int n;
 
     *params = OSSL_PARAM_construct_uint(name, &n);
-    if (EVP_RAND_CTX_get_params(drbg, params))
+    if (OPENSSL_BOX_EVP_RAND_CTX_get_params(drbg, params))
         return n;
     return 0;
 }
@@ -119,7 +119,7 @@ static time_t reseed_time(EVP_RAND_CTX *drbg)
     time_t t;
 
     *params = OSSL_PARAM_construct_time_t(OSSL_DRBG_PARAM_RESEED_TIME, &t);
-    if (EVP_RAND_CTX_get_params(drbg, params))
+    if (OPENSSL_BOX_EVP_RAND_CTX_get_params(drbg, params))
         return t;
     return 0;
 }
@@ -138,7 +138,7 @@ static int using_fips_rng(void)
     if (!TEST_ptr(primary))
         return 0;
 
-    prov = EVP_RAND_get0_provider(EVP_RAND_CTX_get0_rand(primary));
+    prov = OPENSSL_BOX_EVP_RAND_get0_provider(OPENSSL_BOX_EVP_RAND_CTX_get0_rand(primary));
     if (!TEST_ptr(prov))
         return 0;
     name = OSSL_PROVIDER_get0_name(prov);
@@ -580,9 +580,9 @@ static int test_rand_reseed(void)
         return 0;
 
     /* uninstantiate the three global DRBGs */
-    EVP_RAND_uninstantiate(primary);
-    EVP_RAND_uninstantiate(private);
-    EVP_RAND_uninstantiate(public);
+    OPENSSL_BOX_EVP_RAND_uninstantiate(primary);
+    OPENSSL_BOX_EVP_RAND_uninstantiate(private);
+    OPENSSL_BOX_EVP_RAND_uninstantiate(public);
 
     /*
      * Test initial seeding of shared DRBGs
@@ -674,7 +674,7 @@ static int set_reseed_time_interval(EVP_RAND_CTX *drbg, int t)
     params[0] = OSSL_PARAM_construct_int(OSSL_DRBG_PARAM_RESEED_TIME_INTERVAL,
                                          &t);
     params[1] = OSSL_PARAM_construct_end();
-    return EVP_RAND_CTX_set_params(drbg, params);
+    return OPENSSL_BOX_EVP_RAND_CTX_set_params(drbg, params);
 }
 
 static void run_multi_thread_test(void)
@@ -790,12 +790,12 @@ static EVP_RAND_CTX *new_drbg(EVP_RAND_CTX *parent)
     params[1] = OSSL_PARAM_construct_end();
 
     if (!TEST_ptr(rand = EVP_RAND_fetch(NULL, "CTR-DRBG", NULL))
-            || !TEST_ptr(drbg = EVP_RAND_CTX_new(rand, parent))
-            || !TEST_true(EVP_RAND_CTX_set_params(drbg, params))) {
-        EVP_RAND_CTX_free(drbg);
+            || !TEST_ptr(drbg = OPENSSL_BOX_EVP_RAND_CTX_new(rand, parent))
+            || !TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(drbg, params))) {
+        OPENSSL_BOX_EVP_RAND_CTX_free(drbg);
         drbg = NULL;
     }
-    EVP_RAND_free(rand);
+    OPENSSL_BOX_EVP_RAND_free(rand);
     return drbg;
 }
 
@@ -880,9 +880,9 @@ static int test_rand_prediction_resistance(void)
 
     ret = 1;
 err:
-    EVP_RAND_CTX_free(z);
-    EVP_RAND_CTX_free(y);
-    EVP_RAND_CTX_free(x);
+    OPENSSL_BOX_EVP_RAND_CTX_free(z);
+    OPENSSL_BOX_EVP_RAND_CTX_free(y);
+    OPENSSL_BOX_EVP_RAND_CTX_free(x);
     return ret;
 }
 

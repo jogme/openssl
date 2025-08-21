@@ -206,9 +206,9 @@ static int cipher_init(EVP_CIPHER_CTX *ctx, const unsigned char *key,
                        const unsigned char *iv, int enc)
 {
     struct cipher_ctx *cipher_ctx =
-        (struct cipher_ctx *)EVP_CIPHER_CTX_get_cipher_data(ctx);
+        (struct cipher_ctx *)OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx);
     const struct cipher_data_st *cipher_d =
-        get_cipher_data(EVP_CIPHER_CTX_get_nid(ctx));
+        get_cipher_data(OPENSSL_BOX_EVP_CIPHER_CTX_get_nid(ctx));
     int ret;
 
     /* cleanup a previous session */
@@ -242,9 +242,9 @@ static int cipher_do_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                             const unsigned char *in, size_t inl)
 {
     struct cipher_ctx *cipher_ctx =
-        (struct cipher_ctx *)EVP_CIPHER_CTX_get_cipher_data(ctx);
+        (struct cipher_ctx *)OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx);
     struct crypt_op cryp;
-    unsigned char *iv = EVP_CIPHER_CTX_iv_noconst(ctx);
+    unsigned char *iv = OPENSSL_BOX_EVP_CIPHER_CTX_iv_noconst(ctx);
 #if !defined(COP_FLAG_WRITE_IV)
     unsigned char saved_iv[EVP_MAX_IV_LENGTH];
     const unsigned char *ivptr;
@@ -261,12 +261,12 @@ static int cipher_do_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
 #if !defined(COP_FLAG_WRITE_IV)
     cryp.flags = 0;
 
-    ivlen = EVP_CIPHER_CTX_get_iv_length(ctx);
+    ivlen = OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(ctx);
     if (ivlen > 0)
         switch (cipher_ctx->mode) {
         case EVP_CIPH_CBC_MODE:
             assert(inl >= ivlen);
-            if (!EVP_CIPHER_CTX_is_encrypting(ctx)) {
+            if (!OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx)) {
                 ivptr = in + inl - ivlen;
                 memcpy(saved_iv, ivptr, ivlen);
             }
@@ -292,7 +292,7 @@ static int cipher_do_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         switch (cipher_ctx->mode) {
         case EVP_CIPH_CBC_MODE:
             assert(inl >= ivlen);
-            if (EVP_CIPHER_CTX_is_encrypting(ctx))
+            if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx))
                 ivptr = out + inl - ivlen;
             else
                 ivptr = saved_iv;
@@ -323,7 +323,7 @@ static int ctr_do_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                          const unsigned char *in, size_t inl)
 {
     struct cipher_ctx *cipher_ctx =
-        (struct cipher_ctx *)EVP_CIPHER_CTX_get_cipher_data(ctx);
+        (struct cipher_ctx *)OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx);
     size_t nblocks, len;
 
     /* initial partial block */
@@ -363,7 +363,7 @@ static int ctr_do_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
 static int cipher_ctrl(EVP_CIPHER_CTX *ctx, int type, int p1, void* p2)
 {
     struct cipher_ctx *cipher_ctx =
-        (struct cipher_ctx *)EVP_CIPHER_CTX_get_cipher_data(ctx);
+        (struct cipher_ctx *)OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx);
     EVP_CIPHER_CTX *to_ctx = (EVP_CIPHER_CTX *)p2;
     struct cipher_ctx *to_cipher_ctx;
 
@@ -374,9 +374,9 @@ static int cipher_ctrl(EVP_CIPHER_CTX *ctx, int type, int p1, void* p2)
             return 1;
         /* when copying the context, a new session needs to be initialized */
         to_cipher_ctx =
-            (struct cipher_ctx *)EVP_CIPHER_CTX_get_cipher_data(to_ctx);
+            (struct cipher_ctx *)OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(to_ctx);
         memset(&to_cipher_ctx->sess, 0, sizeof(to_cipher_ctx->sess));
-        return cipher_init(to_ctx, (void *)cipher_ctx->sess.key, EVP_CIPHER_CTX_iv(ctx),
+        return cipher_init(to_ctx, (void *)cipher_ctx->sess.key, OPENSSL_BOX_EVP_CIPHER_CTX_iv(ctx),
                            (cipher_ctx->op == COP_ENCRYPT));
 
     case EVP_CTRL_INIT:
@@ -393,7 +393,7 @@ static int cipher_ctrl(EVP_CIPHER_CTX *ctx, int type, int p1, void* p2)
 static int cipher_cleanup(EVP_CIPHER_CTX *ctx)
 {
     struct cipher_ctx *cipher_ctx =
-        (struct cipher_ctx *)EVP_CIPHER_CTX_get_cipher_data(ctx);
+        (struct cipher_ctx *)OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx);
 
     return clean_devcrypto_session(&cipher_ctx->sess);
 }
@@ -476,13 +476,13 @@ static void prepare_cipher_methods(void)
         cipher_mode = cipher_data[i].flags & EVP_CIPH_MODE;
 
         if ((known_cipher_methods[i] =
-                 EVP_CIPHER_meth_new(cipher_data[i].nid,
+                 OPENSSL_BOX_EVP_CIPHER_meth_new(cipher_data[i].nid,
                                      cipher_mode == EVP_CIPH_CTR_MODE ? 1 :
                                                     cipher_data[i].blocksize,
                                      cipher_data[i].keylen)) == NULL
-            || !EVP_CIPHER_meth_set_iv_length(known_cipher_methods[i],
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_iv_length(known_cipher_methods[i],
                                               cipher_data[i].ivlen)
-            || !EVP_CIPHER_meth_set_flags(known_cipher_methods[i],
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_flags(known_cipher_methods[i],
                                           cipher_data[i].flags
                                           | EVP_CIPH_CUSTOM_COPY
                                           | EVP_CIPH_CTRL_INIT
@@ -495,10 +495,10 @@ static void prepare_cipher_methods(void)
             || !EVP_CIPHER_meth_set_ctrl(known_cipher_methods[i], cipher_ctrl)
             || !EVP_CIPHER_meth_set_cleanup(known_cipher_methods[i],
                                             cipher_cleanup)
-            || !EVP_CIPHER_meth_set_impl_ctx_size(known_cipher_methods[i],
+            || !OPENSSL_BOX_EVP_CIPHER_meth_set_impl_ctx_size(known_cipher_methods[i],
                                                   sizeof(struct cipher_ctx))) {
             cipher_driver_info[i].status = DEVCRYPTO_STATUS_FAILURE;
-            EVP_CIPHER_meth_free(known_cipher_methods[i]);
+            OPENSSL_BOX_EVP_CIPHER_meth_free(known_cipher_methods[i]);
             known_cipher_methods[i] = NULL;
         } else {
             cipher_driver_info[i].status = DEVCRYPTO_STATUS_USABLE;
@@ -563,7 +563,7 @@ static void destroy_cipher_method(int nid)
 {
     size_t i = get_cipher_data_index(nid);
 
-    EVP_CIPHER_meth_free(known_cipher_methods[i]);
+    OPENSSL_BOX_EVP_CIPHER_meth_free(known_cipher_methods[i]);
     known_cipher_methods[i] = NULL;
 }
 
@@ -608,10 +608,10 @@ static int cryptodev_select_cipher_cb(const char *str, int len, void *usr)
         return 1;
     if (usr == NULL || (name = OPENSSL_strndup(str, len)) == NULL)
         return 0;
-    EVP = EVP_get_cipherbyname(name);
+    EVP = OPENSSL_BOX_EVP_get_cipherbyname(name);
     if (EVP == NULL)
         fprintf(stderr, "devcrypto: unknown cipher %s\n", name);
-    else if ((i = find_cipher_data_index(EVP_CIPHER_get_nid(EVP))) != (size_t)-1)
+    else if ((i = find_cipher_data_index(OPENSSL_BOX_EVP_CIPHER_get_nid(EVP))) != (size_t)-1)
         cipher_list[i] = 1;
     else
         fprintf(stderr, "devcrypto: cipher %s not available\n", name);
@@ -747,7 +747,7 @@ static const struct digest_data_st *get_digest_data(int nid)
 static int digest_init(EVP_MD_CTX *ctx)
 {
     struct digest_ctx *digest_ctx =
-        (struct digest_ctx *)EVP_MD_CTX_get0_md_data(ctx);
+        (struct digest_ctx *)OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx);
     const struct digest_data_st *digest_d =
         get_digest_data(EVP_MD_CTX_get_type(ctx));
 
@@ -780,7 +780,7 @@ static int digest_op(struct digest_ctx *ctx, const void *src, size_t srclen,
 static int digest_update(EVP_MD_CTX *ctx, const void *data, size_t count)
 {
     struct digest_ctx *digest_ctx =
-        (struct digest_ctx *)EVP_MD_CTX_get0_md_data(ctx);
+        (struct digest_ctx *)OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx);
 
     if (count == 0)
         return 1;
@@ -788,7 +788,7 @@ static int digest_update(EVP_MD_CTX *ctx, const void *data, size_t count)
     if (digest_ctx == NULL)
         return 0;
 
-    if (EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_ONESHOT)) {
+    if (OPENSSL_BOX_EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_ONESHOT)) {
         if (digest_op(digest_ctx, data, count, digest_ctx->digest_res, 0) >= 0)
             return 1;
     } else if (digest_op(digest_ctx, data, count, NULL, COP_FLAG_UPDATE) >= 0) {
@@ -802,12 +802,12 @@ static int digest_update(EVP_MD_CTX *ctx, const void *data, size_t count)
 static int digest_final(EVP_MD_CTX *ctx, unsigned char *md)
 {
     struct digest_ctx *digest_ctx =
-        (struct digest_ctx *)EVP_MD_CTX_get0_md_data(ctx);
+        (struct digest_ctx *)OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx);
 
     if (md == NULL || digest_ctx == NULL)
         return 0;
 
-    if (EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_ONESHOT)) {
+    if (OPENSSL_BOX_EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_ONESHOT)) {
         memcpy(md, digest_ctx->digest_res, EVP_MD_CTX_get_size(ctx));
     } else if (digest_op(digest_ctx, NULL, 0, md, COP_FLAG_FINAL) < 0) {
         ERR_raise_data(ERR_LIB_SYS, errno, "calling ioctl()");
@@ -820,9 +820,9 @@ static int digest_final(EVP_MD_CTX *ctx, unsigned char *md)
 static int digest_copy(EVP_MD_CTX *to, const EVP_MD_CTX *from)
 {
     struct digest_ctx *digest_from =
-        (struct digest_ctx *)EVP_MD_CTX_get0_md_data(from);
+        (struct digest_ctx *)OPENSSL_BOX_EVP_MD_CTX_get0_md_data(from);
     struct digest_ctx *digest_to =
-        (struct digest_ctx *)EVP_MD_CTX_get0_md_data(to);
+        (struct digest_ctx *)OPENSSL_BOX_EVP_MD_CTX_get0_md_data(to);
     struct cphash_op cphash;
 
     if (digest_from == NULL || digest_from->init_called != 1)
@@ -845,7 +845,7 @@ static int digest_copy(EVP_MD_CTX *to, const EVP_MD_CTX *from)
 static int digest_cleanup(EVP_MD_CTX *ctx)
 {
     struct digest_ctx *digest_ctx =
-        (struct digest_ctx *)EVP_MD_CTX_get0_md_data(ctx);
+        (struct digest_ctx *)OPENSSL_BOX_EVP_MD_CTX_get0_md_data(ctx);
 
     if (digest_ctx == NULL)
         return 1;
@@ -946,21 +946,21 @@ static void prepare_digest_methods(void)
             digest_driver_info[i].status = DEVCRYPTO_STATUS_NO_CIOCCPHASH;
             goto finish;
         }
-        if ((known_digest_methods[i] = EVP_MD_meth_new(digest_data[i].nid,
+        if ((known_digest_methods[i] = OPENSSL_BOX_EVP_MD_meth_new(digest_data[i].nid,
                                                        NID_undef)) == NULL
-            || !EVP_MD_meth_set_input_blocksize(known_digest_methods[i],
+            || !OPENSSL_BOX_EVP_MD_meth_set_input_blocksize(known_digest_methods[i],
                                                 digest_data[i].blocksize)
-            || !EVP_MD_meth_set_result_size(known_digest_methods[i],
+            || !OPENSSL_BOX_EVP_MD_meth_set_result_size(known_digest_methods[i],
                                             digest_data[i].digestlen)
-            || !EVP_MD_meth_set_init(known_digest_methods[i], digest_init)
+            || !OPENSSL_BOX_EVP_MD_meth_set_init(known_digest_methods[i], digest_init)
             || !EVP_MD_meth_set_update(known_digest_methods[i], digest_update)
             || !EVP_MD_meth_set_final(known_digest_methods[i], digest_final)
             || !EVP_MD_meth_set_copy(known_digest_methods[i], digest_copy)
-            || !EVP_MD_meth_set_cleanup(known_digest_methods[i], digest_cleanup)
-            || !EVP_MD_meth_set_app_datasize(known_digest_methods[i],
+            || !OPENSSL_BOX_EVP_MD_meth_set_cleanup(known_digest_methods[i], digest_cleanup)
+            || !OPENSSL_BOX_EVP_MD_meth_set_app_datasize(known_digest_methods[i],
                                              sizeof(struct digest_ctx))) {
             digest_driver_info[i].status = DEVCRYPTO_STATUS_FAILURE;
-            EVP_MD_meth_free(known_digest_methods[i]);
+            OPENSSL_BOX_EVP_MD_meth_free(known_digest_methods[i]);
             known_digest_methods[i] = NULL;
             goto finish;
         }
@@ -993,7 +993,7 @@ static void destroy_digest_method(int nid)
 {
     size_t i = get_digest_data_index(nid);
 
-    EVP_MD_meth_free(known_digest_methods[i]);
+    OPENSSL_BOX_EVP_MD_meth_free(known_digest_methods[i]);
     known_digest_methods[i] = NULL;
 }
 
@@ -1038,10 +1038,10 @@ static int cryptodev_select_digest_cb(const char *str, int len, void *usr)
         return 1;
     if (usr == NULL || (name = OPENSSL_strndup(str, len)) == NULL)
         return 0;
-    EVP = EVP_get_digestbyname(name);
+    EVP = OPENSSL_BOX_EVP_get_digestbyname(name);
     if (EVP == NULL)
         fprintf(stderr, "devcrypto: unknown digest %s\n", name);
-    else if ((i = find_digest_data_index(EVP_MD_get_type(EVP))) != (size_t)-1)
+    else if ((i = find_digest_data_index(OPENSSL_BOX_EVP_MD_get_type(EVP))) != (size_t)-1)
         digest_list[i] = 1;
     else
         fprintf(stderr, "devcrypto: digest %s not available\n", name);

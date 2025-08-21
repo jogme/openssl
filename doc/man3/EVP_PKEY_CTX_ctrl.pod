@@ -5,12 +5,12 @@
 EVP_PKEY_CTX_ctrl,
 EVP_PKEY_CTX_ctrl_str,
 EVP_PKEY_CTX_ctrl_uint64,
-EVP_PKEY_CTX_md,
-EVP_PKEY_CTX_set_signature_md,
-EVP_PKEY_CTX_get_signature_md,
+OPENSSL_BOX_EVP_PKEY_CTX_md,
+OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md,
+OPENSSL_BOX_EVP_PKEY_CTX_get_signature_md,
 EVP_PKEY_CTX_set_mac_key,
-EVP_PKEY_CTX_set_group_name,
-EVP_PKEY_CTX_get_group_name,
+OPENSSL_BOX_EVP_PKEY_CTX_set_group_name,
+OPENSSL_BOX_EVP_PKEY_CTX_get_group_name,
 EVP_PKEY_CTX_set_rsa_padding,
 EVP_PKEY_CTX_get_rsa_padding,
 EVP_PKEY_CTX_set_rsa_pss_saltlen,
@@ -68,8 +68,8 @@ EVP_PKEY_CTX_set_ecdh_kdf_outlen,
 EVP_PKEY_CTX_get_ecdh_kdf_outlen,
 EVP_PKEY_CTX_set0_ecdh_kdf_ukm,
 EVP_PKEY_CTX_get0_ecdh_kdf_ukm,
-EVP_PKEY_CTX_set1_id, EVP_PKEY_CTX_get1_id, EVP_PKEY_CTX_get1_id_len,
-EVP_PKEY_CTX_set_kem_op
+OPENSSL_BOX_EVP_PKEY_CTX_set1_id, OPENSSL_BOX_EVP_PKEY_CTX_get1_id, OPENSSL_BOX_EVP_PKEY_CTX_get1_id_len,
+OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op
 - algorithm specific control operations
 
 =head1 SYNOPSIS
@@ -83,17 +83,17 @@ EVP_PKEY_CTX_set_kem_op
  int EVP_PKEY_CTX_ctrl_str(EVP_PKEY_CTX *ctx, const char *type,
                            const char *value);
 
- int EVP_PKEY_CTX_md(EVP_PKEY_CTX *ctx, int optype, int cmd, const char *md);
+ int OPENSSL_BOX_EVP_PKEY_CTX_md(EVP_PKEY_CTX *ctx, int optype, int cmd, const char *md);
 
- int EVP_PKEY_CTX_set_signature_md(EVP_PKEY_CTX *ctx, const EVP_MD *md);
- int EVP_PKEY_CTX_get_signature_md(EVP_PKEY_CTX *ctx, const EVP_MD **pmd);
+ int OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md(EVP_PKEY_CTX *ctx, const EVP_MD *md);
+ int OPENSSL_BOX_EVP_PKEY_CTX_get_signature_md(EVP_PKEY_CTX *ctx, const EVP_MD **pmd);
 
  int EVP_PKEY_CTX_set_mac_key(EVP_PKEY_CTX *ctx, const unsigned char *key,
                               int len);
- int EVP_PKEY_CTX_set_group_name(EVP_PKEY_CTX *ctx, const char *name);
- int EVP_PKEY_CTX_get_group_name(EVP_PKEY_CTX *ctx, char *name, size_t namelen);
+ int OPENSSL_BOX_EVP_PKEY_CTX_set_group_name(EVP_PKEY_CTX *ctx, const char *name);
+ int OPENSSL_BOX_EVP_PKEY_CTX_get_group_name(EVP_PKEY_CTX *ctx, char *name, size_t namelen);
 
- int EVP_PKEY_CTX_set_kem_op(EVP_PKEY_CTX *ctx, const char *op);
+ int OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op(EVP_PKEY_CTX *ctx, const char *op);
 
  #include <openssl/rsa.h>
 
@@ -172,9 +172,9 @@ EVP_PKEY_CTX_set_kem_op
  int EVP_PKEY_CTX_get_ecdh_kdf_outlen(EVP_PKEY_CTX *ctx, int *len);
  int EVP_PKEY_CTX_set0_ecdh_kdf_ukm(EVP_PKEY_CTX *ctx, unsigned char *ukm, int len);
 
- int EVP_PKEY_CTX_set1_id(EVP_PKEY_CTX *ctx, void *id, size_t id_len);
- int EVP_PKEY_CTX_get1_id(EVP_PKEY_CTX *ctx, void *id);
- int EVP_PKEY_CTX_get1_id_len(EVP_PKEY_CTX *ctx, size_t *id_len);
+ int OPENSSL_BOX_EVP_PKEY_CTX_set1_id(EVP_PKEY_CTX *ctx, void *id, size_t id_len);
+ int OPENSSL_BOX_EVP_PKEY_CTX_get1_id(EVP_PKEY_CTX *ctx, void *id);
+ int OPENSSL_BOX_EVP_PKEY_CTX_get1_id_len(EVP_PKEY_CTX *ctx, size_t *id_len);
 
 The following functions have been deprecated since OpenSSL 3.0, and can be
 hidden entirely by defining B<OPENSSL_API_COMPAT> with a suitable version value,
@@ -216,13 +216,13 @@ files. The commands supported are documented in the openssl utility
 command line pages for the option I<-pkeyopt> which is supported by the
 I<pkeyutl>, I<genpkey> and I<req> commands.
 
-EVP_PKEY_CTX_md() sends a message digest control operation to the context
+OPENSSL_BOX_EVP_PKEY_CTX_md() sends a message digest control operation to the context
 I<ctx>. The message digest is specified by its name I<md>.
 
-EVP_PKEY_CTX_set_signature_md() sets the message digest type used
+OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md() sets the message digest type used
 in a signature. It can be used in the RSA, DSA and ECDSA algorithms.
 
-EVP_PKEY_CTX_get_signature_md()gets the message digest type used
+OPENSSL_BOX_EVP_PKEY_CTX_get_signature_md()gets the message digest type used
 in a signature. It can be used in the RSA, DSA and ECDSA algorithms.
 
 Key generation typically involves setting up parameters to be used and
@@ -236,11 +236,11 @@ functions instead.
 EVP_PKEY_CTX_set_mac_key() can be used with any of the algorithms supported by
 the L<EVP_PKEY_new_raw_private_key(3)> function.
 
-EVP_PKEY_CTX_set_group_name() sets the group name to I<name> for parameter and
+OPENSSL_BOX_EVP_PKEY_CTX_set_group_name() sets the group name to I<name> for parameter and
 key generation. For example for EC keys this will set the curve name and for
 DH keys it will set the name of the finite field group.
 
-EVP_PKEY_CTX_get_group_name() finds the group name that's currently
+OPENSSL_BOX_EVP_PKEY_CTX_get_group_name() finds the group name that's currently
 set with I<ctx>, and writes it to the location that I<name> points at, as long
 as its size I<namelen> is large enough to store that name, including a
 terminating NUL byte.
@@ -256,7 +256,7 @@ only), B<RSA_PKCS1_PSS_PADDING> (sign and verify only) and
 B<RSA_PKCS1_WITH_TLS_PADDING> for TLS RSA ClientKeyExchange message padding
 (decryption only).
 
-Two RSA padding modes behave differently if EVP_PKEY_CTX_set_signature_md()
+Two RSA padding modes behave differently if OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md()
 is used. If this function is called for PKCS#1 padding the plaintext buffer is
 an actual digest value and is encapsulated in a DigestInfo structure according
 to PKCS#1 when signing and this structure is expected (and stripped off) when
@@ -382,7 +382,7 @@ requested by the client. If the encrypted content is publicly invalid then the
 decryption will fail. However, if the padding checks fail then decryption will
 still appear to succeed but a random TLS premaster secret will be returned
 instead. This padding mode accepts two parameters which can be set using the
-L<EVP_PKEY_CTX_set_params(3)> function. These are
+L<OPENSSL_BOX_EVP_PKEY_CTX_set_params(3)> function. These are
 OSSL_ASYM_CIPHER_PARAM_TLS_CLIENT_VERSION and
 OSSL_ASYM_CIPHER_PARAM_TLS_NEGOTIATED_VERSION, both of which are expected to be
 unsigned integers. Normally only the first of these will be set and represents
@@ -518,7 +518,7 @@ The rfc5114 parameter and the nid parameter are mutually exclusive.
 
 Note that all of the following functions require that the I<ctx> parameter has
 a private key type of B<EVP_PKEY_DHX>. When using key derivation, the output of
-EVP_PKEY_derive() is the output of the KDF instead of the DH shared secret.
+OPENSSL_BOX_EVP_PKEY_derive() is the output of the KDF instead of the DH shared secret.
 The KDF output is typically used as a Key Encryption Key (KEK) that in turn
 encrypts a Content Encryption Key (CEK).
 
@@ -568,20 +568,20 @@ by the library and should not be freed by the caller.
 
 =head2 EC parameters
 
-Use EVP_PKEY_CTX_set_group_name() (described above) to set the curve name to
+Use OPENSSL_BOX_EVP_PKEY_CTX_set_group_name() (described above) to set the curve name to
 I<name> for parameter and key generation.
 
 EVP_PKEY_CTX_set_ec_paramgen_curve_nid() does the same as
-EVP_PKEY_CTX_set_group_name(), but is specific to EC and uses a I<nid> rather
+OPENSSL_BOX_EVP_PKEY_CTX_set_group_name(), but is specific to EC and uses a I<nid> rather
 than a name string.
 
-For EC parameter generation, one of EVP_PKEY_CTX_set_group_name()
+For EC parameter generation, one of OPENSSL_BOX_EVP_PKEY_CTX_set_group_name()
 or EVP_PKEY_CTX_set_ec_paramgen_curve_nid() must be called or an error occurs
 because there is no default curve.
 These function can also be called to set the curve explicitly when
 generating an EC key.
 
-EVP_PKEY_CTX_get_group_name() (described above) can be used to obtain the curve
+OPENSSL_BOX_EVP_PKEY_CTX_get_group_name() (described above) can be used to obtain the curve
 name that's currently set with I<ctx>.
 
 EVP_PKEY_CTX_set_ec_param_enc() sets the EC parameter encoding to I<param_enc>
@@ -639,19 +639,19 @@ by the library and should not be freed by the caller.
 
 =head2 Other parameters
 
-EVP_PKEY_CTX_set1_id(), EVP_PKEY_CTX_get1_id() and EVP_PKEY_CTX_get1_id_len()
+OPENSSL_BOX_EVP_PKEY_CTX_set1_id(), OPENSSL_BOX_EVP_PKEY_CTX_get1_id() and OPENSSL_BOX_EVP_PKEY_CTX_get1_id_len()
 are used to manipulate the special identifier field for specific signature
-algorithms such as SM2. The EVP_PKEY_CTX_set1_id() sets an ID pointed by I<id> with
+algorithms such as SM2. The OPENSSL_BOX_EVP_PKEY_CTX_set1_id() sets an ID pointed by I<id> with
 the length I<id_len> to the library. The library takes a copy of the id so that
 the caller can safely free the original memory pointed to by I<id>.
-EVP_PKEY_CTX_get1_id_len() returns the length of the ID set via a previous call
-to EVP_PKEY_CTX_set1_id(). The length is usually used to allocate adequate
-memory for further calls to EVP_PKEY_CTX_get1_id(). EVP_PKEY_CTX_get1_id()
+OPENSSL_BOX_EVP_PKEY_CTX_get1_id_len() returns the length of the ID set via a previous call
+to OPENSSL_BOX_EVP_PKEY_CTX_set1_id(). The length is usually used to allocate adequate
+memory for further calls to OPENSSL_BOX_EVP_PKEY_CTX_get1_id(). OPENSSL_BOX_EVP_PKEY_CTX_get1_id()
 returns the previously set ID value to caller in I<id>. The caller should
-allocate adequate memory space for the I<id> before calling EVP_PKEY_CTX_get1_id().
+allocate adequate memory space for the I<id> before calling OPENSSL_BOX_EVP_PKEY_CTX_get1_id().
 
-EVP_PKEY_CTX_set_kem_op() sets the KEM operation to run. This can be set after
-EVP_PKEY_encapsulate_init() or EVP_PKEY_decapsulate_init() to select the kem
+OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op() sets the KEM operation to run. This can be set after
+OPENSSL_BOX_EVP_PKEY_encapsulate_init() or OPENSSL_BOX_EVP_PKEY_decapsulate_init() to select the kem
 operation. For the key types that support encapsulation and don't have the
 default operation, e.g. RSA, this function must be called before
 EVP_PKEY_encapsulate() or EVP_PKEY_decapsulate().
@@ -668,15 +668,15 @@ indicates the operation is not supported by the public key algorithm.
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_CTX_set_params(3)>,
-L<EVP_PKEY_CTX_new(3)>,
+L<OPENSSL_BOX_EVP_PKEY_CTX_set_params(3)>,
+L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
 L<EVP_PKEY_encrypt(3)>,
 L<EVP_PKEY_decrypt(3)>,
 L<EVP_PKEY_sign(3)>,
 L<EVP_PKEY_verify(3)>,
 L<EVP_PKEY_verify_recover(3)>,
-L<EVP_PKEY_derive(3)>,
-L<EVP_PKEY_keygen(3)>
+L<OPENSSL_BOX_EVP_PKEY_derive(3)>,
+L<OPENSSL_BOX_EVP_PKEY_keygen(3)>
 L<EVP_PKEY_encapsulate(3)>
 L<EVP_PKEY_decapsulate(3)>
 
@@ -686,11 +686,11 @@ EVP_PKEY_CTX_get_rsa_oaep_md_name(), EVP_PKEY_CTX_get_rsa_mgf1_md_name(),
 EVP_PKEY_CTX_set_rsa_mgf1_md_name(), EVP_PKEY_CTX_set_rsa_oaep_md_name(),
 EVP_PKEY_CTX_set_dsa_paramgen_md_props(), EVP_PKEY_CTX_set_dsa_paramgen_gindex(),
 EVP_PKEY_CTX_set_dsa_paramgen_type(), EVP_PKEY_CTX_set_dsa_paramgen_seed(),
-EVP_PKEY_CTX_set_group_name() and EVP_PKEY_CTX_get_group_name()
+OPENSSL_BOX_EVP_PKEY_CTX_set_group_name() and OPENSSL_BOX_EVP_PKEY_CTX_get_group_name()
 were added in OpenSSL 3.0.
 
-The EVP_PKEY_CTX_set1_id(), EVP_PKEY_CTX_get1_id() and
-EVP_PKEY_CTX_get1_id_len() macros were added in 1.1.1, other functions were
+The OPENSSL_BOX_EVP_PKEY_CTX_set1_id(), OPENSSL_BOX_EVP_PKEY_CTX_get1_id() and
+OPENSSL_BOX_EVP_PKEY_CTX_get1_id_len() macros were added in 1.1.1, other functions were
 added in OpenSSL 1.0.0.
 
 In OpenSSL 1.1.1 and below the functions were mostly macros.

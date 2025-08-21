@@ -25,8 +25,8 @@ static int aes_siv_initkey(void *vctx, const unsigned char *key, size_t keylen)
     OSSL_LIB_CTX *libctx = ctx->libctx;
     const char *propq = NULL;
 
-    EVP_CIPHER_free(ctx->cbc);
-    EVP_CIPHER_free(ctx->ctr);
+    OPENSSL_BOX_EVP_CIPHER_free(ctx->cbc);
+    OPENSSL_BOX_EVP_CIPHER_free(ctx->ctr);
     ctx->cbc = NULL;
     ctx->ctr = NULL;
 
@@ -61,10 +61,10 @@ static int aes_siv_dupctx(void *in_vctx, void *out_vctx)
     PROV_AES_SIV_CTX *in = (PROV_AES_SIV_CTX *)in_vctx;
     PROV_AES_SIV_CTX *out = (PROV_AES_SIV_CTX *)out_vctx;
 
-    if (in->cbc != NULL && !EVP_CIPHER_up_ref(in->cbc))
+    if (in->cbc != NULL && !OPENSSL_BOX_EVP_CIPHER_up_ref(in->cbc))
         return 0;
-    if (in->ctr != NULL && !EVP_CIPHER_up_ref(in->ctr)) {
-        EVP_CIPHER_free(in->cbc);
+    if (in->ctr != NULL && !OPENSSL_BOX_EVP_CIPHER_up_ref(in->ctr)) {
+        OPENSSL_BOX_EVP_CIPHER_free(in->cbc);
         return 0;
     }
 
@@ -100,8 +100,8 @@ static void aes_siv_cleanup(void *vctx)
     SIV128_CONTEXT *sctx = &ctx->siv;
 
     ossl_siv128_cleanup(sctx);
-    EVP_CIPHER_free(ctx->cbc);
-    EVP_CIPHER_free(ctx->ctr);
+    OPENSSL_BOX_EVP_CIPHER_free(ctx->cbc);
+    OPENSSL_BOX_EVP_CIPHER_free(ctx->ctr);
 }
 
 static int aes_siv_cipher(void *vctx, unsigned char *out,

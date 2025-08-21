@@ -102,7 +102,7 @@ failed:
     BIO_free(bio);
     X509_free(x509);
     X509_REQ_free(x509_req);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 

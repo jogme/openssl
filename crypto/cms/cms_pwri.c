@@ -71,7 +71,7 @@ CMS_RecipientInfo *CMS_add0_recipient_password(CMS_ContentInfo *cms,
         ERR_raise(ERR_LIB_CMS, CMS_R_NO_CIPHER);
         return NULL;
     }
-    if ((EVP_CIPHER_get_flags(kekciph) & EVP_CIPH_FLAG_AEAD_CIPHER) != 0) {
+    if ((OPENSSL_BOX_EVP_CIPHER_get_flags(kekciph) & EVP_CIPH_FLAG_AEAD_CIPHER) != 0) {
         ERR_raise(ERR_LIB_CMS, CMS_R_UNSUPPORTED_KEK_ALGORITHM);
         return NULL;
     }
@@ -86,7 +86,7 @@ CMS_RecipientInfo *CMS_add0_recipient_password(CMS_ContentInfo *cms,
         ERR_raise(ERR_LIB_CMS, ERR_R_ASN1_LIB);
         goto err;
     }
-    ctx = EVP_CIPHER_CTX_new();
+    ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ctx == NULL) {
         ERR_raise(ERR_LIB_CMS, ERR_R_EVP_LIB);
         goto err;
@@ -97,7 +97,7 @@ CMS_RecipientInfo *CMS_add0_recipient_password(CMS_ContentInfo *cms,
         goto err;
     }
 
-    ivlen = EVP_CIPHER_CTX_get_iv_length(ctx);
+    ivlen = OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(ctx);
     if (ivlen < 0) {
         ERR_raise(ERR_LIB_CMS, ERR_R_EVP_LIB);
         goto err;
@@ -115,7 +115,7 @@ CMS_RecipientInfo *CMS_add0_recipient_password(CMS_ContentInfo *cms,
             ERR_raise(ERR_LIB_CMS, ERR_R_ASN1_LIB);
             goto err;
         }
-        if (EVP_CIPHER_param_to_asn1(ctx, encalg->parameter) <= 0) {
+        if (OPENSSL_BOX_EVP_CIPHER_param_to_asn1(ctx, encalg->parameter) <= 0) {
             ERR_raise(ERR_LIB_CMS, CMS_R_CIPHER_PARAMETER_INITIALISATION_ERROR);
             goto err;
         }
@@ -123,7 +123,7 @@ CMS_RecipientInfo *CMS_add0_recipient_password(CMS_ContentInfo *cms,
 
     encalg->algorithm = OBJ_nid2obj(EVP_CIPHER_CTX_get_type(ctx));
 
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     ctx = NULL;
 
     /* Initialize recipient info */
@@ -186,7 +186,7 @@ CMS_RecipientInfo *CMS_add0_recipient_password(CMS_ContentInfo *cms,
     return ri;
 
  err:
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     if (ri)
         M_ASN1_free_of(ri, CMS_RecipientInfo);
     X509_ALGOR_free(encalg);
@@ -203,7 +203,7 @@ static int kek_unwrap_key(unsigned char *out, size_t *outlen,
                           const unsigned char *in, size_t inlen,
                           EVP_CIPHER_CTX *ctx)
 {
-    int blocklen = EVP_CIPHER_CTX_get_block_size(ctx);
+    int blocklen = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx);
     unsigned char *tmp;
     int outl, rv = 0;
 
@@ -260,7 +260,7 @@ static int kek_wrap_key(unsigned char *out, size_t *outlen,
                         const unsigned char *in, size_t inlen,
                         EVP_CIPHER_CTX *ctx, const CMS_CTX *cms_ctx)
 {
-    size_t blocklen = EVP_CIPHER_CTX_get_block_size(ctx);
+    size_t blocklen = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx);
     size_t olen;
     int dummy;
 
@@ -352,7 +352,7 @@ int ossl_cms_RecipientInfo_pwri_crypt(const CMS_ContentInfo *cms,
         goto err;
     }
 
-    kekctx = EVP_CIPHER_CTX_new();
+    kekctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (kekctx == NULL) {
         ERR_raise(ERR_LIB_CMS, ERR_R_EVP_LIB);
         goto err;
@@ -360,8 +360,8 @@ int ossl_cms_RecipientInfo_pwri_crypt(const CMS_ContentInfo *cms,
     /* Fixup cipher based on AlgorithmIdentifier to set IV etc */
     if (!EVP_CipherInit_ex(kekctx, kekcipher, NULL, NULL, NULL, en_de))
         goto err;
-    EVP_CIPHER_CTX_set_padding(kekctx, 0);
-    if (EVP_CIPHER_asn1_to_param(kekctx, kekalg->parameter) <= 0) {
+    OPENSSL_BOX_EVP_CIPHER_CTX_set_padding(kekctx, 0);
+    if (OPENSSL_BOX_EVP_CIPHER_asn1_to_param(kekctx, kekalg->parameter) <= 0) {
         ERR_raise(ERR_LIB_CMS, CMS_R_CIPHER_PARAMETER_INITIALISATION_ERROR);
         goto err;
     }
@@ -414,8 +414,8 @@ int ossl_cms_RecipientInfo_pwri_crypt(const CMS_ContentInfo *cms,
     r = 1;
 
  err:
-    EVP_CIPHER_free(kekcipher);
-    EVP_CIPHER_CTX_free(kekctx);
+    OPENSSL_BOX_EVP_CIPHER_free(kekcipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(kekctx);
 
     if (!r)
         OPENSSL_free(key);

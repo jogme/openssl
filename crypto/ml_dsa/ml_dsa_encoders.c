@@ -675,7 +675,7 @@ int ossl_ml_dsa_pk_decode(ML_DSA_KEY *key, const uint8_t *in, size_t in_len)
 
     if (!ossl_ml_dsa_key_pub_alloc(key))
         return 0;
-    ctx = EVP_MD_CTX_new();
+    ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx == NULL)
         goto err;
     if (!PACKET_buf_init(&pkt, in, in_len)
@@ -692,7 +692,7 @@ int ossl_ml_dsa_pk_decode(ML_DSA_KEY *key, const uint8_t *in, size_t in_len)
     key->pub_encoding = OPENSSL_memdup(in, in_len);
     ret = (key->pub_encoding != NULL);
 err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 

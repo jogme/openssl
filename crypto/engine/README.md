@@ -22,13 +22,13 @@ searched in various ways, ie. two ways of encrypting with the "des_cbc"
 algorithm/mode pair are;
 
     (i) directly;
-         const EVP_CIPHER *cipher = EVP_des_cbc();
+         const EVP_CIPHER *cipher = OPENSSL_BOX_EVP_des_cbc();
          EVP_EncryptInit(&ctx, cipher, key, iv);
          [ ... use EVP_EncryptUpdate() and EVP_EncryptFinal() ...]
 
     (ii) indirectly;
          OpenSSL_add_all_ciphers();
-         cipher = EVP_get_cipherbyname("des_cbc");
+         cipher = OPENSSL_BOX_EVP_get_cipherbyname("des_cbc");
          EVP_EncryptInit(&ctx, cipher, key, iv);
          [ ... etc ... ]
 

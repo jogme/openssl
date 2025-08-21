@@ -40,7 +40,7 @@ static const BIO_METHOD methods_md = {
     md_callback_ctrl,
 };
 
-const BIO_METHOD *BIO_f_md(void)
+const BIO_METHOD *OPENSSL_BOX_BIO_f_md(void)
 {
     return &methods_md;
 }
@@ -49,7 +49,7 @@ static int md_new(BIO *bi)
 {
     EVP_MD_CTX *ctx;
 
-    ctx = EVP_MD_CTX_new();
+    ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx == NULL)
         return 0;
 
@@ -63,7 +63,7 @@ static int md_free(BIO *a)
 {
     if (a == NULL)
         return 0;
-    EVP_MD_CTX_free(BIO_get_data(a));
+    OPENSSL_BOX_EVP_MD_CTX_free(BIO_get_data(a));
     BIO_set_data(a, NULL);
     BIO_set_init(a, 0);
 
@@ -143,7 +143,7 @@ static long md_ctrl(BIO *b, int cmd, long num, void *ptr)
     switch (cmd) {
     case BIO_CTRL_RESET:
         if (BIO_get_init(b))
-            ret = EVP_DigestInit_ex(ctx, EVP_MD_CTX_get0_md(ctx), NULL);
+            ret = EVP_DigestInit_ex(ctx, OPENSSL_BOX_EVP_MD_CTX_get0_md(ctx), NULL);
         else
             ret = 0;
         if (ret > 0)
@@ -152,7 +152,7 @@ static long md_ctrl(BIO *b, int cmd, long num, void *ptr)
     case BIO_C_GET_MD:
         if (BIO_get_init(b)) {
             ppmd = ptr;
-            *ppmd = EVP_MD_CTX_get0_md(ctx);
+            *ppmd = OPENSSL_BOX_EVP_MD_CTX_get0_md(ctx);
         } else
             ret = 0;
         break;
@@ -182,7 +182,7 @@ static long md_ctrl(BIO *b, int cmd, long num, void *ptr)
     case BIO_CTRL_DUP:
         dbio = ptr;
         dctx = BIO_get_data(dbio);
-        if (!EVP_MD_CTX_copy_ex(dctx, ctx))
+        if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(dctx, ctx))
             return 0;
         BIO_set_init(b, 1);
         break;

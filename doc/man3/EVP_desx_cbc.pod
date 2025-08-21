@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-EVP_desx_cbc
+OPENSSL_BOX_EVP_desx_cbc
 - EVP DES-X cipher
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_CIPHER *EVP_desx_cbc(void);
+ const EVP_CIPHER *OPENSSL_BOX_EVP_desx_cbc(void);
 
 =head1 DESCRIPTION
 
@@ -19,7 +19,7 @@ All modes below use a key length of 128 bits and acts on blocks of 128-bits.
 
 =over 4
 
-=item EVP_desx_cbc()
+=item OPENSSL_BOX_EVP_desx_cbc()
 
 The DES-X algorithm in CBC mode.
 
@@ -37,14 +37,14 @@ See L<crypto(7)/Performance> for further information.
 =head1 RETURN VALUES
 
 These functions return an B<EVP_CIPHER> structure that contains the
-implementation of the symmetric cipher. See L<EVP_CIPHER_meth_new(3)> for
+implementation of the symmetric cipher. See L<OPENSSL_BOX_EVP_CIPHER_meth_new(3)> for
 details of the B<EVP_CIPHER> structure.
 
 =head1 SEE ALSO
 
 L<evp(7)>,
 L<EVP_EncryptInit(3)>,
-L<EVP_CIPHER_meth_new(3)>
+L<OPENSSL_BOX_EVP_CIPHER_meth_new(3)>
 
 =head1 COPYRIGHT
 

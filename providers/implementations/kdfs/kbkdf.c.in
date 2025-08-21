@@ -148,7 +148,7 @@ static void kbkdf_reset(void *vctx)
     KBKDF *ctx = (KBKDF *)vctx;
     void *provctx = ctx->provctx;
 
-    EVP_MAC_CTX_free(ctx->ctx_init);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx->ctx_init);
     OPENSSL_clear_free(ctx->context, ctx->context_len);
     OPENSSL_clear_free(ctx->label, ctx->label_len);
     OPENSSL_clear_free(ctx->ki, ctx->ki_len);
@@ -165,7 +165,7 @@ static void *kbkdf_dup(void *vctx)
 
     dest = kbkdf_new(src->provctx);
     if (dest != NULL) {
-        dest->ctx_init = EVP_MAC_CTX_dup(src->ctx_init);
+        dest->ctx_init = OPENSSL_BOX_EVP_MAC_CTX_dup(src->ctx_init);
         if (dest->ctx_init == NULL
                 || !ossl_prov_memdup(src->ki, src->ki_len,
                                      &dest->ki, &dest->ki_len)
@@ -239,19 +239,19 @@ static int derive(EVP_MAC_CTX *ctx_init, kbkdf_mode mode, unsigned char *iv,
     for (counter = 1; written < ko_len; counter++) {
         i = be32(counter);
 
-        ctx = EVP_MAC_CTX_dup(ctx_init);
+        ctx = OPENSSL_BOX_EVP_MAC_CTX_dup(ctx_init);
         if (ctx == NULL)
             goto done;
 
         /* Perform feedback, if appropriate. */
-        if (mode == FEEDBACK && !EVP_MAC_update(ctx, k_i, k_i_len))
+        if (mode == FEEDBACK && !OPENSSL_BOX_EVP_MAC_update(ctx, k_i, k_i_len))
             goto done;
 
-        if (!EVP_MAC_update(ctx, 4 - (r / 8) + (unsigned char *)&i, r / 8)
-            || !EVP_MAC_update(ctx, label, label_len)
-            || (has_separator && !EVP_MAC_update(ctx, &zero, 1))
-            || !EVP_MAC_update(ctx, context, context_len)
-            || (has_l && !EVP_MAC_update(ctx, (unsigned char *)&l, 4))
+        if (!OPENSSL_BOX_EVP_MAC_update(ctx, 4 - (r / 8) + (unsigned char *)&i, r / 8)
+            || !OPENSSL_BOX_EVP_MAC_update(ctx, label, label_len)
+            || (has_separator && !OPENSSL_BOX_EVP_MAC_update(ctx, &zero, 1))
+            || !OPENSSL_BOX_EVP_MAC_update(ctx, context, context_len)
+            || (has_l && !OPENSSL_BOX_EVP_MAC_update(ctx, (unsigned char *)&l, 4))
             || !EVP_MAC_final(ctx, k_i, NULL, h))
             goto done;
 
@@ -260,13 +260,13 @@ static int derive(EVP_MAC_CTX *ctx_init, kbkdf_mode mode, unsigned char *iv,
         written += h;
 
         k_i_len = h;
-        EVP_MAC_CTX_free(ctx);
+        OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
         ctx = NULL;
     }
 
     ret = 1;
 done:
-    EVP_MAC_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
     return ret;
 }
 
@@ -280,7 +280,7 @@ static int kmac_init(EVP_MAC_CTX *ctx, const unsigned char *custom, size_t custo
     params[0] = OSSL_PARAM_construct_octet_string(OSSL_MAC_PARAM_CUSTOM,
                                                   (void *)custom, customlen);
     params[1] = OSSL_PARAM_construct_end();
-    return EVP_MAC_CTX_set_params(ctx, params) > 0;
+    return OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, params) > 0;
 }
 
 static int kmac_derive(EVP_MAC_CTX *ctx, unsigned char *out, size_t outlen,
@@ -290,8 +290,8 @@ static int kmac_derive(EVP_MAC_CTX *ctx, unsigned char *out, size_t outlen,
 
     params[0] = OSSL_PARAM_construct_size_t(OSSL_MAC_PARAM_SIZE, &outlen);
     params[1] = OSSL_PARAM_construct_end();
-    return EVP_MAC_CTX_set_params(ctx, params) > 0
-           && EVP_MAC_update(ctx, context, contextlen)
+    return OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, params) > 0
+           && OPENSSL_BOX_EVP_MAC_update(ctx, context, contextlen)
            && EVP_MAC_final(ctx, out, NULL, outlen);
 }
 
@@ -333,7 +333,7 @@ static int kbkdf_derive(void *vctx, unsigned char *key, size_t keylen,
         goto done;
     }
 
-    h = EVP_MAC_CTX_get_mac_size(ctx->ctx_init);
+    h = OPENSSL_BOX_EVP_MAC_CTX_get_mac_size(ctx->ctx_init);
     if (h == 0)
         goto done;
 
@@ -407,14 +407,14 @@ static int kbkdf_set_ctx_params(void *vctx, const OSSL_PARAM params[])
 
     if (ctx->ctx_init != NULL) {
         ctx->is_kmac = 0;
-        if (EVP_MAC_is_a(EVP_MAC_CTX_get0_mac(ctx->ctx_init),
+        if (OPENSSL_BOX_EVP_MAC_is_a(OPENSSL_BOX_EVP_MAC_CTX_get0_mac(ctx->ctx_init),
                          OSSL_MAC_NAME_KMAC128)
-            || EVP_MAC_is_a(EVP_MAC_CTX_get0_mac(ctx->ctx_init),
+            || OPENSSL_BOX_EVP_MAC_is_a(OPENSSL_BOX_EVP_MAC_CTX_get0_mac(ctx->ctx_init),
                             OSSL_MAC_NAME_KMAC256)) {
             ctx->is_kmac = 1;
-        } else if (!EVP_MAC_is_a(EVP_MAC_CTX_get0_mac(ctx->ctx_init),
+        } else if (!OPENSSL_BOX_EVP_MAC_is_a(OPENSSL_BOX_EVP_MAC_CTX_get0_mac(ctx->ctx_init),
                                  OSSL_MAC_NAME_HMAC)
-                   && !EVP_MAC_is_a(EVP_MAC_CTX_get0_mac(ctx->ctx_init),
+                   && !OPENSSL_BOX_EVP_MAC_is_a(OPENSSL_BOX_EVP_MAC_CTX_get0_mac(ctx->ctx_init),
                                     OSSL_MAC_NAME_CMAC)) {
             ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_MAC);
             return 0;

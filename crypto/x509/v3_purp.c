@@ -415,8 +415,8 @@ static int check_sig_alg_match(const EVP_PKEY *issuer_key, const X509 *subject)
     if (OBJ_find_sigid_algs(OBJ_obj2nid(subject->cert_info.signature.algorithm),
                             NULL, &subj_sig_nid) == 0)
         return X509_V_ERR_UNSUPPORTED_SIGNATURE_ALGORITHM;
-    if (EVP_PKEY_is_a(issuer_key, OBJ_nid2sn(subj_sig_nid))
-        || (EVP_PKEY_is_a(issuer_key, "RSA") && subj_sig_nid == NID_rsassaPss))
+    if (OPENSSL_BOX_EVP_PKEY_is_a(issuer_key, OBJ_nid2sn(subj_sig_nid))
+        || (OPENSSL_BOX_EVP_PKEY_is_a(issuer_key, "RSA") && subj_sig_nid == NID_rsassaPss))
         return X509_V_OK;
     return X509_V_ERR_SIGNATURE_ALGORITHM_MISMATCH;
 }
@@ -462,7 +462,7 @@ int ossl_x509v3_cache_extensions(X509 *x)
     ERR_set_mark();
 
     /* Cache the SHA1 digest of the cert */
-    if (!X509_digest(x, EVP_sha1(), x->sha1_hash, NULL))
+    if (!X509_digest(x, OPENSSL_BOX_EVP_sha1(), x->sha1_hash, NULL))
         x->ex_flags |= EXFLAG_NO_FINGERPRINT;
 
     /* V1 should mean no extensions ... */

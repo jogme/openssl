@@ -2570,7 +2570,7 @@ static int do_test_custom_explicit_fromdata(EC_GROUP *group, BN_CTX *ctx,
 
     if (!TEST_ptr(params = OSSL_PARAM_BLD_to_param(bld))
         || !TEST_ptr(pctx = EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL))
-        || !TEST_int_gt(EVP_PKEY_fromdata_init(pctx), 0)
+        || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_fromdata_init(pctx), 0)
         || !TEST_int_gt(EVP_PKEY_fromdata(pctx, &pkeyparam,
                                           EVP_PKEY_KEY_PARAMETERS, params), 0))
         goto err;
@@ -2682,7 +2682,7 @@ static int do_test_custom_explicit_fromdata(EC_GROUP *group, BN_CTX *ctx,
         }
 #endif /* OPENSSL_NO_EC2M */
     }
-    if (!TEST_ptr(gettable = EVP_PKEY_gettable_params(pkeyparam))
+    if (!TEST_ptr(gettable = OPENSSL_BOX_EVP_PKEY_gettable_params(pkeyparam))
         || !TEST_ptr(OSSL_PARAM_locate_const(gettable, OSSL_PKEY_PARAM_GROUP_NAME))
         || !TEST_ptr(OSSL_PARAM_locate_const(gettable, OSSL_PKEY_PARAM_EC_ENCODING))
         || !TEST_ptr(OSSL_PARAM_locate_const(gettable, OSSL_PKEY_PARAM_EC_FIELD_TYPE))
@@ -2712,8 +2712,8 @@ err:
     BN_free(p_out);
     OSSL_PARAM_free(params);
     OSSL_PARAM_BLD_free(bld);
-    EVP_PKEY_free(pkeyparam);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkeyparam);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return ret;
 }
 
@@ -2974,30 +2974,30 @@ static int custom_params_test(int id)
         goto err;
 
     /* create two `EVP_PKEY`s from the `EC_KEY`s */
-    if (!TEST_ptr(pkey1 = EVP_PKEY_new())
+    if (!TEST_ptr(pkey1 = OPENSSL_BOX_EVP_PKEY_new())
             || !TEST_int_eq(EVP_PKEY_assign_EC_KEY(pkey1, eckey1), 1))
         goto err;
     eckey1 = NULL; /* ownership passed to pkey1 */
-    if (!TEST_ptr(pkey2 = EVP_PKEY_new())
+    if (!TEST_ptr(pkey2 = OPENSSL_BOX_EVP_PKEY_new())
             || !TEST_int_eq(EVP_PKEY_assign_EC_KEY(pkey2, eckey2), 1))
         goto err;
     eckey2 = NULL; /* ownership passed to pkey2 */
 
     /* Compute keyexchange in both directions */
-    if (!TEST_ptr(pctx1 = EVP_PKEY_CTX_new(pkey1, NULL))
-            || !TEST_int_eq(EVP_PKEY_derive_init(pctx1), 1)
-            || !TEST_int_eq(EVP_PKEY_derive_set_peer(pctx1, pkey2), 1)
-            || !TEST_int_eq(EVP_PKEY_derive(pctx1, NULL, &sslen), 1)
+    if (!TEST_ptr(pctx1 = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey1, NULL))
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_derive_init(pctx1), 1)
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_derive_set_peer(pctx1, pkey2), 1)
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_derive(pctx1, NULL, &sslen), 1)
             || !TEST_size_t_gt(bsize, sslen)
-            || !TEST_int_eq(EVP_PKEY_derive(pctx1, buf1, &sslen), 1))
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_derive(pctx1, buf1, &sslen), 1))
         goto err;
-    if (!TEST_ptr(pctx2 = EVP_PKEY_CTX_new(pkey2, NULL))
-            || !TEST_int_eq(EVP_PKEY_derive_init(pctx2), 1)
-            || !TEST_int_eq(EVP_PKEY_derive_set_peer(pctx2, pkey1), 1)
-            || !TEST_int_eq(EVP_PKEY_derive(pctx2, NULL, &t), 1)
+    if (!TEST_ptr(pctx2 = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey2, NULL))
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_derive_init(pctx2), 1)
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_derive_set_peer(pctx2, pkey1), 1)
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_derive(pctx2, NULL, &t), 1)
             || !TEST_size_t_gt(bsize, t)
             || !TEST_size_t_le(sslen, t)
-            || !TEST_int_eq(EVP_PKEY_derive(pctx2, buf2, &t), 1))
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_derive(pctx2, buf2, &t), 1))
         goto err;
 
     /* Both sides should expect the same shared secret */
@@ -3030,9 +3030,9 @@ static int custom_params_test(int id)
         goto err;
 
     /* create two new provider-native `EVP_PKEY`s */
-    EVP_PKEY_CTX_free(pctx2);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx2);
     if (!TEST_ptr(pctx2 = EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL))
-            || !TEST_int_eq(EVP_PKEY_fromdata_init(pctx2), 1)
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(pctx2), 1)
             || !TEST_int_eq(EVP_PKEY_fromdata(pctx2, &pkey1, EVP_PKEY_KEYPAIR,
                                               params1), 1)
             || !TEST_int_eq(EVP_PKEY_fromdata(pctx2, &pkey2, EVP_PKEY_PUBLIC_KEY,
@@ -3040,15 +3040,15 @@ static int custom_params_test(int id)
         goto err;
 
     /* compute keyexchange once more using the provider keys */
-    EVP_PKEY_CTX_free(pctx1);
-    if (!TEST_ptr(pctx1 = EVP_PKEY_CTX_new(pkey1, NULL))
-            || !TEST_int_eq(EVP_PKEY_derive_init(pctx1), 1)
-            || !TEST_ptr(dctx = EVP_PKEY_CTX_dup(pctx1))
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx1);
+    if (!TEST_ptr(pctx1 = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey1, NULL))
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_derive_init(pctx1), 1)
+            || !TEST_ptr(dctx = OPENSSL_BOX_EVP_PKEY_CTX_dup(pctx1))
             || !TEST_int_eq(EVP_PKEY_derive_set_peer_ex(dctx, pkey2, 1), 1)
-            || !TEST_int_eq(EVP_PKEY_derive(dctx, NULL, &t), 1)
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_derive(dctx, NULL, &t), 1)
             || !TEST_size_t_gt(bsize, t)
             || !TEST_size_t_le(sslen, t)
-            || !TEST_int_eq(EVP_PKEY_derive(dctx, buf1, &t), 1)
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_derive(dctx, buf1, &t), 1)
             /* compare with previous result */
             || !TEST_mem_eq(buf1, t, buf2, sslen))
         goto err;
@@ -3072,11 +3072,11 @@ static int custom_params_test(int id)
     OPENSSL_free(pub2);
     EC_KEY_free(eckey1);
     EC_KEY_free(eckey2);
-    EVP_PKEY_free(pkey1);
-    EVP_PKEY_free(pkey2);
-    EVP_PKEY_CTX_free(pctx1);
-    EVP_PKEY_CTX_free(pctx2);
-    EVP_PKEY_CTX_free(dctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey1);
+    OPENSSL_BOX_EVP_PKEY_free(pkey2);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx1);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx2);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(dctx);
 
     return ret;
 }
@@ -3094,7 +3094,7 @@ static int ec_d2i_publickey_test(void)
    if (!TEST_ptr(gen_key = EVP_EC_gen("P-256")))
        goto err;
 
-   if (!TEST_int_gt(pklen = i2d_PublicKey(gen_key, &pubkey_enc), 0))
+   if (!TEST_int_gt(pklen = OPENSSL_BOX_i2d_PublicKey(gen_key, &pubkey_enc), 0))
        goto err;
 
    params[0] = OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME,
@@ -3102,7 +3102,7 @@ static int ec_d2i_publickey_test(void)
    params[1] = OSSL_PARAM_construct_end();
 
    if (!TEST_ptr(pctx = EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL))
-       || !TEST_true(EVP_PKEY_fromdata_init(pctx))
+       || !TEST_true(OPENSSL_BOX_EVP_PKEY_fromdata_init(pctx))
        || !TEST_true(EVP_PKEY_fromdata(pctx, &decoded_key,
                                        OSSL_KEYMGMT_SELECT_DOMAIN_PARAMETERS,
                                        params))
@@ -3111,14 +3111,14 @@ static int ec_d2i_publickey_test(void)
                                                 &pk_enc, pklen)))
        goto err;
 
-   if (!TEST_true(EVP_PKEY_eq(gen_key, decoded_key)))
+   if (!TEST_true(OPENSSL_BOX_EVP_PKEY_eq(gen_key, decoded_key)))
        goto err;
    ret = 1;
 
  err:
-   EVP_PKEY_CTX_free(pctx);
-   EVP_PKEY_free(gen_key);
-   EVP_PKEY_free(decoded_key);
+   OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
+   OPENSSL_BOX_EVP_PKEY_free(gen_key);
+   OPENSSL_BOX_EVP_PKEY_free(decoded_key);
    return ret;
 }
 

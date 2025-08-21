@@ -82,7 +82,7 @@ EVP_CIPHER_CTX object associated with the same EVP_CIPHER object.
 
 The way to reuse the key with another provider is through an export/import
 process. As mentioned before, it may fail. The way to reuse it with a different
-cipher context is `EVP_SKEY_up_ref`.
+cipher context is `OPENSSL_BOX_EVP_SKEY_up_ref`.
 
 Key management
 --------------
@@ -105,8 +105,8 @@ EVP_SKEY *EVP_SKEY_import(OSSL_LIB_CTX *libctx, const char *skeymgmtname,
 EVP_SKEY *EVP_SKEY_import_raw(OSSL_LIB_CTX *libctx, const char *skeymgmtname,
                               const char *key, size_t keylen,
                               const char *propquery);
-int EVP_SKEY_up_ref(EVP_SKEY *skey);
-void EVP_SKEY_free(EVP_SKEY *skey);
+int OPENSSL_BOX_EVP_SKEY_up_ref(EVP_SKEY *skey);
+void OPENSSL_BOX_EVP_SKEY_free(EVP_SKEY *skey);
 ```
 
 Exporting the key object
@@ -135,7 +135,7 @@ Using EVP_SKEY with EVP_MAC
 ---------------------------
 
 ```C
-int EVP_MAC_init_SKEY(EVP_MAC_CTX *ctx, const EVP_SKEY *skey,
+int OPENSSL_BOX_EVP_MAC_init_SKEY(EVP_MAC_CTX *ctx, const EVP_SKEY *skey,
                       const OSSL_PARAM params[]);
 ```
 

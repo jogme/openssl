@@ -58,12 +58,12 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
         if (e == NULL)
             ctx->pctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, props);
         else
-            ctx->pctx = EVP_PKEY_CTX_new(pkey, e);
+            ctx->pctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, e);
     }
     if (ctx->pctx == NULL)
         return 0;
 
-    EVP_MD_CTX_clear_flags(ctx, EVP_MD_CTX_FLAG_FINALISED);
+    OPENSSL_BOX_EVP_MD_CTX_clear_flags(ctx, EVP_MD_CTX_FLAG_FINALISED);
 
     locpctx = ctx->pctx;
     ERR_set_mark();
@@ -93,7 +93,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
         evp_pkey_ctx_free_old_ops(locpctx);
     } else {
         if (mdname == NULL && type == NULL)
-            mdname = canon_mdname(EVP_MD_get0_name(ctx->reqdigest));
+            mdname = canon_mdname(OPENSSL_BOX_EVP_MD_get0_name(ctx->reqdigest));
         goto reinitialize;
     }
 
@@ -139,18 +139,18 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
          * They are NULL on the first iteration, so no need to check what
          * iteration we're on.
          */
-        EVP_SIGNATURE_free(signature);
-        EVP_KEYMGMT_free(tmp_keymgmt);
+        OPENSSL_BOX_EVP_SIGNATURE_free(signature);
+        OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
 
         switch (iter) {
         case 1:
             signature = EVP_SIGNATURE_fetch(locpctx->libctx, supported_sig,
                                             locpctx->propquery);
             if (signature != NULL)
-                tmp_prov = EVP_SIGNATURE_get0_provider(signature);
+                tmp_prov = OPENSSL_BOX_EVP_SIGNATURE_get0_provider(signature);
             break;
         case 2:
-            tmp_prov = EVP_KEYMGMT_get0_provider(locpctx->keymgmt);
+            tmp_prov = OPENSSL_BOX_EVP_KEYMGMT_get0_provider(locpctx->keymgmt);
             signature =
                 evp_signature_fetch_from_prov((OSSL_PROVIDER *)tmp_prov,
                                               supported_sig, locpctx->propquery);
@@ -173,17 +173,17 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
          */
         tmp_keymgmt_tofree = tmp_keymgmt =
             evp_keymgmt_fetch_from_prov((OSSL_PROVIDER *)tmp_prov,
-                                        EVP_KEYMGMT_get0_name(locpctx->keymgmt),
+                                        OPENSSL_BOX_EVP_KEYMGMT_get0_name(locpctx->keymgmt),
                                         locpctx->propquery);
         if (tmp_keymgmt != NULL)
             provkey = evp_pkey_export_to_provider(locpctx->pkey, locpctx->libctx,
                                                   &tmp_keymgmt, locpctx->propquery);
         if (tmp_keymgmt == NULL)
-            EVP_KEYMGMT_free(tmp_keymgmt_tofree);
+            OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt_tofree);
     }
 
     if (provkey == NULL) {
-        EVP_SIGNATURE_free(signature);
+        OPENSSL_BOX_EVP_SIGNATURE_free(signature);
         ERR_clear_last_mark();
         ERR_raise(ERR_LIB_EVP, EVP_R_INITIALIZATION_ERROR);
         goto err;
@@ -210,7 +210,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
     if (type != NULL) {
         ctx->reqdigest = type;
         if (mdname == NULL)
-            mdname = canon_mdname(EVP_MD_get0_name(type));
+            mdname = canon_mdname(OPENSSL_BOX_EVP_MD_get0_name(type));
     } else {
         if (mdname == NULL && !reinit) {
             if (evp_keymgmt_util_get_deflt_digest_name(tmp_keymgmt, provkey,
@@ -230,7 +230,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
             /* legacy code support for engines */
             ERR_set_mark();
             /*
-             * This might be requested by a later call to EVP_MD_CTX_get0_md().
+             * This might be requested by a later call to OPENSSL_BOX_EVP_MD_CTX_get0_md().
              * In that case the "explicit fetch" rules apply for that
              * function (as per man pages), i.e. the ref count is not updated
              * so the EVP_MD should not be used beyond the lifetime of the
@@ -241,7 +241,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
                 ctx->digest = ctx->reqdigest = ctx->fetched_digest;
             } else {
                 /* legacy engine support : remove the mark when this is deleted */
-                ctx->reqdigest = ctx->digest = EVP_get_digestbyname(mdname);
+                ctx->reqdigest = ctx->digest = OPENSSL_BOX_EVP_get_digestbyname(mdname);
                 if (ctx->digest == NULL) {
                     (void)ERR_clear_last_mark();
                     ERR_raise(ERR_LIB_EVP, EVP_R_INITIALIZATION_ERROR);
@@ -286,7 +286,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
  err:
     evp_pkey_ctx_free_old_ops(locpctx);
     locpctx->operation = EVP_PKEY_OP_UNDEFINED;
-    EVP_KEYMGMT_free(tmp_keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
     return 0;
 
  legacy:
@@ -295,7 +295,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
      * let's go see if legacy does.
      */
     ERR_pop_to_mark();
-    EVP_KEYMGMT_free(tmp_keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
     tmp_keymgmt = NULL;
 
     if (type == NULL && mdname != NULL)
@@ -310,7 +310,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
 
         if (type == NULL) {
             int def_nid;
-            if (EVP_PKEY_get_default_digest_nid(pkey, &def_nid) > 0)
+            if (OPENSSL_BOX_EVP_PKEY_get_default_digest_nid(pkey, &def_nid) > 0)
                 type = EVP_get_digestbynid(def_nid);
         }
 
@@ -328,7 +328,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
         } else if (ctx->pctx->pmeth->digestverify != 0) {
             ctx->pctx->operation = EVP_PKEY_OP_VERIFY;
             ctx->update = update;
-        } else if (EVP_PKEY_verify_init(ctx->pctx) <= 0) {
+        } else if (OPENSSL_BOX_EVP_PKEY_verify_init(ctx->pctx) <= 0) {
             return 0;
         }
     } else {
@@ -339,11 +339,11 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
         } else if (ctx->pctx->pmeth->digestsign != 0) {
             ctx->pctx->operation = EVP_PKEY_OP_SIGN;
             ctx->update = update;
-        } else if (EVP_PKEY_sign_init(ctx->pctx) <= 0) {
+        } else if (OPENSSL_BOX_EVP_PKEY_sign_init(ctx->pctx) <= 0) {
             return 0;
         }
     }
-    if (EVP_PKEY_CTX_set_signature_md(ctx->pctx, type) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md(ctx->pctx, type) <= 0)
         return 0;
     if (pctx)
         *pctx = ctx->pctx;
@@ -364,7 +364,7 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
     if (ret > 0)
         ret = evp_pkey_ctx_use_cached_data(locpctx);
 
-    EVP_KEYMGMT_free(tmp_keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
     return ret > 0 ? 1 : 0;
 }
 
@@ -400,7 +400,7 @@ int EVP_DigestVerifyInit(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
                           NULL);
 }
 
-int EVP_DigestSignUpdate(EVP_MD_CTX *ctx, const void *data, size_t dsize)
+int OPENSSL_BOX_EVP_DigestSignUpdate(EVP_MD_CTX *ctx, const void *data, size_t dsize)
 {
     EVP_SIGNATURE *signature;
     const char *desc;
@@ -450,7 +450,7 @@ int EVP_DigestSignUpdate(EVP_MD_CTX *ctx, const void *data, size_t dsize)
     return EVP_DigestUpdate(ctx, data, dsize);
 }
 
-int EVP_DigestVerifyUpdate(EVP_MD_CTX *ctx, const void *data, size_t dsize)
+int OPENSSL_BOX_EVP_DigestVerifyUpdate(EVP_MD_CTX *ctx, const void *data, size_t dsize)
 {
     EVP_SIGNATURE *signature;
     const char *desc;
@@ -526,7 +526,7 @@ int EVP_DigestSignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
 
     if (sigret != NULL && (ctx->flags & EVP_MD_CTX_FLAG_FINALISE) == 0) {
         /* try dup */
-        dctx = EVP_PKEY_CTX_dup(pctx);
+        dctx = OPENSSL_BOX_EVP_PKEY_CTX_dup(pctx);
         if (dctx != NULL)
             pctx = dctx;
     }
@@ -541,7 +541,7 @@ int EVP_DigestSignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
     if (dctx == NULL && sigret != NULL)
         ctx->flags |= EVP_MD_CTX_FLAG_FINALISED;
     else
-        EVP_PKEY_CTX_free(dctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(dctx);
     return r;
 
  legacy:
@@ -563,11 +563,11 @@ int EVP_DigestSignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
             r = pctx->pmeth->signctx(pctx, sigret, siglen, ctx);
             ctx->flags |= EVP_MD_CTX_FLAG_FINALISED;
         } else {
-            dctx = EVP_PKEY_CTX_dup(pctx);
+            dctx = OPENSSL_BOX_EVP_PKEY_CTX_dup(pctx);
             if (dctx == NULL)
                 return 0;
             r = dctx->pmeth->signctx(dctx, sigret, siglen, ctx);
-            EVP_PKEY_CTX_free(dctx);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(dctx);
         }
         return r;
     }
@@ -585,12 +585,12 @@ int EVP_DigestSignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
             else
                 r = EVP_DigestFinal_ex(ctx, md, &mdlen);
         } else {
-            EVP_MD_CTX *tmp_ctx = EVP_MD_CTX_new();
+            EVP_MD_CTX *tmp_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
 
             if (tmp_ctx == NULL)
                 return 0;
-            if (!EVP_MD_CTX_copy_ex(tmp_ctx, ctx)) {
-                EVP_MD_CTX_free(tmp_ctx);
+            if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(tmp_ctx, ctx)) {
+                OPENSSL_BOX_EVP_MD_CTX_free(tmp_ctx);
                 return 0;
             }
             if (sctx)
@@ -598,7 +598,7 @@ int EVP_DigestSignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
                                                   sigret, siglen, tmp_ctx);
             else
                 r = EVP_DigestFinal_ex(tmp_ctx, md, &mdlen);
-            EVP_MD_CTX_free(tmp_ctx);
+            OPENSSL_BOX_EVP_MD_CTX_free(tmp_ctx);
         }
         if (sctx || !r)
             return r;
@@ -609,7 +609,7 @@ int EVP_DigestSignFinal(EVP_MD_CTX *ctx, unsigned char *sigret,
             if (pctx->pmeth->signctx(pctx, sigret, siglen, ctx) <= 0)
                 return 0;
         } else {
-            int s = EVP_MD_get_size(ctx->digest);
+            int s = OPENSSL_BOX_EVP_MD_get_size(ctx->digest);
 
             if (s <= 0 || EVP_PKEY_sign(pctx, sigret, siglen, NULL, s) <= 0)
                 return 0;
@@ -659,7 +659,7 @@ int EVP_DigestSign(EVP_MD_CTX *ctx, unsigned char *sigret, size_t *siglen,
             return pctx->pmeth->digestsign(ctx, sigret, siglen, tbs, tbslen);
     }
 
-    if (sigret != NULL && EVP_DigestSignUpdate(ctx, tbs, tbslen) <= 0)
+    if (sigret != NULL && OPENSSL_BOX_EVP_DigestSignUpdate(ctx, tbs, tbslen) <= 0)
         return 0;
     return EVP_DigestSignFinal(ctx, sigret, siglen);
 }
@@ -696,7 +696,7 @@ int EVP_DigestVerifyFinal(EVP_MD_CTX *ctx, const unsigned char *sig,
 
     if ((ctx->flags & EVP_MD_CTX_FLAG_FINALISE) == 0) {
         /* try dup */
-        dctx = EVP_PKEY_CTX_dup(pctx);
+        dctx = OPENSSL_BOX_EVP_PKEY_CTX_dup(pctx);
         if (dctx != NULL)
             pctx = dctx;
     }
@@ -710,7 +710,7 @@ int EVP_DigestVerifyFinal(EVP_MD_CTX *ctx, const unsigned char *sig,
     if (dctx == NULL)
         ctx->flags |= EVP_MD_CTX_FLAG_FINALISED;
     else
-        EVP_PKEY_CTX_free(dctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(dctx);
     return r;
 
  legacy:
@@ -736,11 +736,11 @@ int EVP_DigestVerifyFinal(EVP_MD_CTX *ctx, const unsigned char *sig,
         } else
             r = EVP_DigestFinal_ex(ctx, md, &mdlen);
     } else {
-        EVP_MD_CTX *tmp_ctx = EVP_MD_CTX_new();
+        EVP_MD_CTX *tmp_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (tmp_ctx == NULL)
             return -1;
-        if (!EVP_MD_CTX_copy_ex(tmp_ctx, ctx)) {
-            EVP_MD_CTX_free(tmp_ctx);
+        if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(tmp_ctx, ctx)) {
+            OPENSSL_BOX_EVP_MD_CTX_free(tmp_ctx);
             return -1;
         }
         if (vctx)
@@ -748,7 +748,7 @@ int EVP_DigestVerifyFinal(EVP_MD_CTX *ctx, const unsigned char *sig,
                                                 sig, (int)siglen, tmp_ctx);
         else
             r = EVP_DigestFinal_ex(tmp_ctx, md, &mdlen);
-        EVP_MD_CTX_free(tmp_ctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(tmp_ctx);
     }
     if (vctx || !r)
         return r;
@@ -792,7 +792,7 @@ int EVP_DigestVerify(EVP_MD_CTX *ctx, const unsigned char *sigret,
         if (pctx->pmeth != NULL && pctx->pmeth->digestverify != NULL)
             return pctx->pmeth->digestverify(ctx, sigret, siglen, tbs, tbslen);
     }
-    if (EVP_DigestVerifyUpdate(ctx, tbs, tbslen) <= 0)
+    if (OPENSSL_BOX_EVP_DigestVerifyUpdate(ctx, tbs, tbslen) <= 0)
         return -1;
     return EVP_DigestVerifyFinal(ctx, sigret, siglen);
 }

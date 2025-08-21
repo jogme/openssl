@@ -23,23 +23,23 @@ int EVP_VerifyFinal_ex(EVP_MD_CTX *ctx, const unsigned char *sigbuf,
     int i = 0;
     EVP_PKEY_CTX *pkctx = NULL;
 
-    if (EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_FINALISE)) {
+    if (OPENSSL_BOX_EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_FINALISE)) {
         if (!EVP_DigestFinal_ex(ctx, m, &m_len))
             goto err;
     } else {
         int rv = 0;
-        EVP_MD_CTX *tmp_ctx = EVP_MD_CTX_new();
+        EVP_MD_CTX *tmp_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
 
         if (tmp_ctx == NULL) {
             ERR_raise(ERR_LIB_EVP, ERR_R_EVP_LIB);
             return 0;
         }
-        rv = EVP_MD_CTX_copy_ex(tmp_ctx, ctx);
+        rv = OPENSSL_BOX_EVP_MD_CTX_copy_ex(tmp_ctx, ctx);
         if (rv)
             rv = EVP_DigestFinal_ex(tmp_ctx, m, &m_len);
         else
             rv = EVP_DigestFinal_ex(ctx, m, &m_len);
-        EVP_MD_CTX_free(tmp_ctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(tmp_ctx);
         if (!rv)
             return 0;
     }
@@ -48,13 +48,13 @@ int EVP_VerifyFinal_ex(EVP_MD_CTX *ctx, const unsigned char *sigbuf,
     pkctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
     if (pkctx == NULL)
         goto err;
-    if (EVP_PKEY_verify_init(pkctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_verify_init(pkctx) <= 0)
         goto err;
-    if (EVP_PKEY_CTX_set_signature_md(pkctx, EVP_MD_CTX_get0_md(ctx)) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md(pkctx, OPENSSL_BOX_EVP_MD_CTX_get0_md(ctx)) <= 0)
         goto err;
     i = EVP_PKEY_verify(pkctx, sigbuf, siglen, m, m_len);
  err:
-    EVP_PKEY_CTX_free(pkctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pkctx);
     return i;
 }
 

@@ -68,12 +68,12 @@ static EVP_PKEY *slh_dsa_gen_key(const char *name, uint32_t keysize,
     ctx = EVP_PKEY_CTX_new_from_name(NULL, name, NULL);
     OPENSSL_assert(ctx != NULL);
     if (params != NULL) {
-        new = EVP_PKEY_new();
-        OPENSSL_assert(EVP_PKEY_fromdata_init(ctx));
+        new = OPENSSL_BOX_EVP_PKEY_new();
+        OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx));
         if (*param_broken) {
             rc = EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params);
             OPENSSL_assert(rc == 0);
-            EVP_PKEY_free(new);
+            OPENSSL_BOX_EVP_PKEY_free(new);
             new = NULL;
         } else {
             OPENSSL_assert(EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params) == 1);
@@ -81,11 +81,11 @@ static EVP_PKEY *slh_dsa_gen_key(const char *name, uint32_t keysize,
         goto out;
     }
 
-    OPENSSL_assert(EVP_PKEY_keygen_init(ctx));
-    OPENSSL_assert(EVP_PKEY_generate(ctx, &new));
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx));
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_generate(ctx, &new));
 
 out:
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return new;
 }
 
@@ -281,10 +281,10 @@ static void slh_dsa_gen_key_with_params(uint8_t **buf, size_t *len,
  */
 static void slh_dsa_clean_keys(void *in1, void *in2, void *out1, void *out2)
 {
-    EVP_PKEY_free((EVP_PKEY *)in1);
-    EVP_PKEY_free((EVP_PKEY *)in2);
-    EVP_PKEY_free((EVP_PKEY *)out1);
-    EVP_PKEY_free((EVP_PKEY *)out2);
+    OPENSSL_BOX_EVP_PKEY_free((EVP_PKEY *)in1);
+    OPENSSL_BOX_EVP_PKEY_free((EVP_PKEY *)in2);
+    OPENSSL_BOX_EVP_PKEY_free((EVP_PKEY *)out1);
+    OPENSSL_BOX_EVP_PKEY_free((EVP_PKEY *)out2);
 }
 
 /**
@@ -395,8 +395,8 @@ static void slh_dsa_sign_verify(uint8_t **buf, size_t *len, void *key1,
 
 out:
     OPENSSL_free(sig);
-    EVP_SIGNATURE_free(sig_alg);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig_alg);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
 }
 
 /**
@@ -424,14 +424,14 @@ static void slh_dsa_export_import(uint8_t **buf, size_t *len, void *key1,
     EVP_PKEY_CTX *ctx = NULL;
     OSSL_PARAM *params = NULL;
 
-    OPENSSL_assert(EVP_PKEY_todata(alice, EVP_PKEY_KEYPAIR, &params) == 1);
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_todata(alice, EVP_PKEY_KEYPAIR, &params) == 1);
 
     ctx = EVP_PKEY_CTX_new_from_pkey(NULL, alice, NULL);
     OPENSSL_assert(ctx != NULL);
 
-    OPENSSL_assert(EVP_PKEY_fromdata_init(ctx));
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx));
 
-    new = EVP_PKEY_new();
+    new = OPENSSL_BOX_EVP_PKEY_new();
     OPENSSL_assert(new != NULL);
     OPENSSL_assert(EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params) == 1);
 
@@ -442,36 +442,36 @@ static void slh_dsa_export_import(uint8_t **buf, size_t *len, void *key1,
      * -1 if the key types are differnt
      * -2 if the operation is not supported
      */
-    OPENSSL_assert(EVP_PKEY_eq(alice, new) == 1);
-    EVP_PKEY_free(new);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_eq(alice, new) == 1);
+    OPENSSL_BOX_EVP_PKEY_free(new);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     OSSL_PARAM_free(params);
     params = NULL;
     ctx = NULL;
     new = NULL;
 
-    OPENSSL_assert(EVP_PKEY_todata(bob, EVP_PKEY_KEYPAIR, &params) == 1);
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_todata(bob, EVP_PKEY_KEYPAIR, &params) == 1);
 
     ctx = EVP_PKEY_CTX_new_from_pkey(NULL, bob, NULL);
     OPENSSL_assert(ctx != NULL);
 
-    OPENSSL_assert(EVP_PKEY_fromdata_init(ctx));
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx));
 
-    new = EVP_PKEY_new();
+    new = OPENSSL_BOX_EVP_PKEY_new();
     OPENSSL_assert(new != NULL);
     OPENSSL_assert(EVP_PKEY_fromdata(ctx, &new, EVP_PKEY_KEYPAIR, params) == 1);
 
-    OPENSSL_assert(EVP_PKEY_eq(bob, new) == 1);
+    OPENSSL_assert(OPENSSL_BOX_EVP_PKEY_eq(bob, new) == 1);
 
     /*
      * Depending on the types of eys that get generated
      * we might get a simple non-equivalence or a type mismatch here
      */
-    rc = EVP_PKEY_eq(alice, new);
+    rc = OPENSSL_BOX_EVP_PKEY_eq(alice, new);
     OPENSSL_assert(rc == 0 || rc == -1);
 
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(new);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(new);
     OSSL_PARAM_free(params);
 }
 

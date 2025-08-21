@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 
     CMS_ContentInfo_free(cms);
     X509_free(rcert);
-    EVP_PKEY_free(rkey);
+    OPENSSL_BOX_EVP_PKEY_free(rkey);
     BIO_free(in);
     BIO_free(out);
     BIO_free(tbio);

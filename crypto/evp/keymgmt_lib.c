@@ -21,9 +21,9 @@
  */
 static int match_type(const EVP_KEYMGMT *keymgmt1, const EVP_KEYMGMT *keymgmt2)
 {
-    const char *name2 = EVP_KEYMGMT_get0_name(keymgmt2);
+    const char *name2 = OPENSSL_BOX_EVP_KEYMGMT_get0_name(keymgmt2);
 
-    return EVP_KEYMGMT_is_a(keymgmt1, name2);
+    return OPENSSL_BOX_EVP_KEYMGMT_is_a(keymgmt1, name2);
 }
 
 int evp_keymgmt_util_try_import(const OSSL_PARAM params[], void *arg)
@@ -61,7 +61,7 @@ int evp_keymgmt_util_assign_pkey(EVP_PKEY *pkey, EVP_KEYMGMT *keymgmt,
                                  void *keydata)
 {
     if (pkey == NULL || keymgmt == NULL || keydata == NULL
-        || !EVP_PKEY_set_type_by_keymgmt(pkey, keymgmt)) {
+        || !OPENSSL_BOX_EVP_PKEY_set_type_by_keymgmt(pkey, keymgmt)) {
         ERR_raise(ERR_LIB_EVP, ERR_R_INTERNAL_ERROR);
         return 0;
     }
@@ -76,9 +76,9 @@ EVP_PKEY *evp_keymgmt_util_make_pkey(EVP_KEYMGMT *keymgmt, void *keydata)
 
     if (keymgmt == NULL
         || keydata == NULL
-        || (pkey = EVP_PKEY_new()) == NULL
+        || (pkey = OPENSSL_BOX_EVP_PKEY_new()) == NULL
         || !evp_keymgmt_util_assign_pkey(pkey, keymgmt, keydata)) {
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         return NULL;
     }
     return pkey;
@@ -215,7 +215,7 @@ void *evp_keymgmt_util_export_to_provider(EVP_PKEY *pk, EVP_KEYMGMT *keymgmt,
 static void op_cache_free(OP_CACHE_ELEM *e)
 {
     evp_keymgmt_freedata(e->keymgmt, e->keydata);
-    EVP_KEYMGMT_free(e->keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(e->keymgmt);
     OPENSSL_free(e);
 }
 
@@ -272,13 +272,13 @@ int evp_keymgmt_util_cache_keydata(EVP_PKEY *pk, EVP_KEYMGMT *keymgmt,
         p->keymgmt = keymgmt;
         p->selection = selection;
 
-        if (!EVP_KEYMGMT_up_ref(keymgmt)) {
+        if (!OPENSSL_BOX_EVP_KEYMGMT_up_ref(keymgmt)) {
             OPENSSL_free(p);
             return 0;
         }
 
         if (!sk_OP_CACHE_ELEM_push(pk->operation_cache, p)) {
-            EVP_KEYMGMT_free(keymgmt);
+            OPENSSL_BOX_EVP_KEYMGMT_free(keymgmt);
             OPENSSL_free(p);
             return 0;
         }
@@ -291,7 +291,7 @@ void evp_keymgmt_util_cache_keyinfo(EVP_PKEY *pk)
     /*
      * Cache information about the provider "origin" key.
      *
-     * This services functions like EVP_PKEY_get_size, EVP_PKEY_get_bits, etc
+     * This services functions like OPENSSL_BOX_EVP_PKEY_get_size, OPENSSL_BOX_EVP_PKEY_get_bits, etc
      */
     if (pk->keydata != NULL) {
         int bits = 0;
@@ -344,8 +344,8 @@ int evp_keymgmt_util_has(EVP_PKEY *pk, int selection)
  * but also in the operation cache to see if there's any common keymgmt that
  * supplies OP_keymgmt_match.
  *
- * evp_keymgmt_util_match() adheres to the return values that EVP_PKEY_eq()
- * and EVP_PKEY_parameters_eq() return, i.e.:
+ * evp_keymgmt_util_match() adheres to the return values that OPENSSL_BOX_EVP_PKEY_eq()
+ * and OPENSSL_BOX_EVP_PKEY_parameters_eq() return, i.e.:
  *
  *  1   same key
  *  0   not same key
@@ -459,7 +459,7 @@ int evp_keymgmt_util_copy(EVP_PKEY *to, EVP_PKEY *from, int selection)
     /*
      * If |to| is unassigned, ensure it gets the same KEYMGMT as |from|,
      * Note that the final setting of KEYMGMT is done further down, with
-     * EVP_PKEY_set_type_by_keymgmt(); we don't want to do that prematurely.
+     * OPENSSL_BOX_EVP_PKEY_set_type_by_keymgmt(); we don't want to do that prematurely.
      */
     if (to_keymgmt == NULL)
         to_keymgmt = from->keymgmt;
@@ -504,7 +504,7 @@ int evp_keymgmt_util_copy(EVP_PKEY *to, EVP_PKEY *from, int selection)
      * why we don't use that one here.
      */
     if (to->keymgmt == NULL
-        && !EVP_PKEY_set_type_by_keymgmt(to, to_keymgmt)) {
+        && !OPENSSL_BOX_EVP_PKEY_set_type_by_keymgmt(to, to_keymgmt)) {
         evp_keymgmt_freedata(to_keymgmt, alloc_keydata);
         return 0;
     }
@@ -588,7 +588,7 @@ const char *evp_keymgmt_util_query_operation_name(EVP_KEYMGMT *keymgmt,
         if (keymgmt->query_operation_name != NULL)
             name = keymgmt->query_operation_name(op_id);
         if (name == NULL)
-            name = EVP_KEYMGMT_get0_name(keymgmt);
+            name = OPENSSL_BOX_EVP_KEYMGMT_get0_name(keymgmt);
     }
     return name;
 }

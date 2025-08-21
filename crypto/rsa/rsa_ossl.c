@@ -492,7 +492,7 @@ static int derive_kdk(int flen, const unsigned char *from, RSA *rsa,
 
  err:
     HMAC_CTX_free(hmac);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     return ret;
 }
 

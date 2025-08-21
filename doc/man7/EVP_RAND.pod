@@ -67,7 +67,7 @@ the other instance the I<child>.  Typically, the child will be a DRBG because
 it does not make sense for the child to be an entropy source.
 
 This is called chaining. A chained EVP_RAND instance is created by passing
-a pointer to the parent EVP_RAND_CTX as argument to the EVP_RAND_CTX_new() call.
+a pointer to the parent EVP_RAND_CTX as argument to the OPENSSL_BOX_EVP_RAND_CTX_new() call.
 It is possible to create chains of more than two DRBG in a row.
 It is also possible to use any EVP_RAND_CTX class as the parent, however, only
 a live entropy source may ignore and not use its parent.

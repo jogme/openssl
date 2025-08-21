@@ -759,10 +759,10 @@ static int dh_rfc5114_fix_nid_test(void)
     EVP_PKEY_CTX *paramgen_ctx;
 
     /* Run the test. Success is any time the test does not cause a SIGSEGV interrupt */
-    paramgen_ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_DHX, 0);
+    paramgen_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_DHX, 0);
     if (!TEST_ptr(paramgen_ctx))
         goto err;
-    if (!TEST_int_eq(EVP_PKEY_paramgen_init(paramgen_ctx), 1))
+    if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_paramgen_init(paramgen_ctx), 1))
         goto err;
     /* Tested function is called here */
     if (!TEST_int_eq(EVP_PKEY_CTX_set_dhx_rfc5114(paramgen_ctx, 3), 1))
@@ -773,7 +773,7 @@ static int dh_rfc5114_fix_nid_test(void)
     /* If we're still running then the test passed. */
     ok = 1;
 err:
-    EVP_PKEY_CTX_free(paramgen_ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(paramgen_ctx);
     return ok;
 }
 
@@ -783,10 +783,10 @@ static int dh_set_dh_nid_test(void)
     EVP_PKEY_CTX *paramgen_ctx;
 
     /* Run the test. Success is any time the test does not cause a SIGSEGV interrupt */
-    paramgen_ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_DH, 0);
+    paramgen_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_DH, 0);
     if (!TEST_ptr(paramgen_ctx))
         goto err;
-    if (!TEST_int_eq(EVP_PKEY_paramgen_init(paramgen_ctx), 1))
+    if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_paramgen_init(paramgen_ctx), 1))
         goto err;
     /* Tested function is called here */
     if (!TEST_int_eq(EVP_PKEY_CTX_set_dh_nid(paramgen_ctx, NID_ffdhe2048), 1))
@@ -797,7 +797,7 @@ static int dh_set_dh_nid_test(void)
     /* If we're still running then the test passed. */
     ok = 1;
 err:
-    EVP_PKEY_CTX_free(paramgen_ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(paramgen_ctx);
     return ok;
 }
 
@@ -929,7 +929,7 @@ static int dh_load_pkcs3_namedgroup_privlen_test(void)
                                               &privlen))
           && TEST_int_eq(privlen, 1024);
 
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 

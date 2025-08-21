@@ -55,7 +55,7 @@ static int tls1_PRF(SSL_CONNECTION *s,
     EVP_KDF_free(kdf);
     if (kctx == NULL)
         goto err;
-    mdname = EVP_MD_get0_name(md);
+    mdname = OPENSSL_BOX_EVP_MD_get0_name(md);
     *p++ = OSSL_PARAM_construct_utf8_string(OSSL_KDF_PARAM_DIGEST,
                                             (char *)mdname, 0);
     *p++ = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_SECRET,
@@ -105,12 +105,12 @@ static int tls1_generate_key_block(SSL_CONNECTION *s, unsigned char *km,
 static int tls_iv_length_within_key_block(const EVP_CIPHER *c)
 {
     /* If GCM/CCM mode only part of IV comes from PRF */
-    if (EVP_CIPHER_get_mode(c) == EVP_CIPH_GCM_MODE)
+    if (OPENSSL_BOX_EVP_CIPHER_get_mode(c) == EVP_CIPH_GCM_MODE)
         return EVP_GCM_TLS_FIXED_IV_LEN;
-    else if (EVP_CIPHER_get_mode(c) == EVP_CIPH_CCM_MODE)
+    else if (OPENSSL_BOX_EVP_CIPHER_get_mode(c) == EVP_CIPH_CCM_MODE)
         return EVP_CCM_TLS_FIXED_IV_LEN;
     else
-        return EVP_CIPHER_get_iv_length(c);
+        return OPENSSL_BOX_EVP_CIPHER_get_iv_length(c);
 }
 
 int tls1_change_cipher_state(SSL_CONNECTION *s, int which)
@@ -141,7 +141,7 @@ int tls1_change_cipher_state(SSL_CONNECTION *s, int which)
     p = s->s3.tmp.key_block;
     i = mac_secret_size = s->s3.tmp.new_mac_secret_size;
 
-    cl = EVP_CIPHER_get_key_length(c);
+    cl = OPENSSL_BOX_EVP_CIPHER_get_key_length(c);
     j = cl;
     iivlen = tls_iv_length_within_key_block(c);
     if (iivlen < 0) {
@@ -172,7 +172,7 @@ int tls1_change_cipher_state(SSL_CONNECTION *s, int which)
         goto err;
     }
 
-    switch (EVP_CIPHER_get_mode(c)) {
+    switch (OPENSSL_BOX_EVP_CIPHER_get_mode(c)) {
     case EVP_CIPH_GCM_MODE:
         taglen = EVP_GCM_TLS_TAG_LEN;
         break;
@@ -184,7 +184,7 @@ int tls1_change_cipher_state(SSL_CONNECTION *s, int which)
             taglen = EVP_CCM_TLS_TAG_LEN;
         break;
     default:
-        if (EVP_CIPHER_is_a(c, "CHACHA20-POLY1305")) {
+        if (OPENSSL_BOX_EVP_CIPHER_is_a(c, "CHACHA20-POLY1305")) {
             taglen = EVP_CHACHAPOLY_TLS_TAG_LEN;
         } else {
             /* MAC secret size corresponds to the MAC output size */
@@ -243,7 +243,7 @@ int tls1_change_cipher_state(SSL_CONNECTION *s, int which)
 
     OSSL_TRACE_BEGIN(TLS) {
         BIO_printf(trc_out, "which = %04X, key:\n", which);
-        BIO_dump_indent(trc_out, key, EVP_CIPHER_get_key_length(c), 4);
+        BIO_dump_indent(trc_out, key, OPENSSL_BOX_EVP_CIPHER_get_key_length(c), 4);
         BIO_printf(trc_out, "iv:\n");
         BIO_dump_indent(trc_out, iv, (int)k, 4);
     } OSSL_TRACE_END(TLS);
@@ -286,7 +286,7 @@ int tls1_setup_key_block(SSL_CONNECTION *s)
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         return 0;
     }
-    num = mac_secret_size + EVP_CIPHER_get_key_length(c) + ivlen;
+    num = mac_secret_size + OPENSSL_BOX_EVP_CIPHER_get_key_length(c) + ivlen;
     num *= 2;
 
     ssl3_cleanup_key_block(s);

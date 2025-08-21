@@ -3,13 +3,13 @@
 =head1 NAME
 
 EVP_CIPHER_fetch,
-EVP_CIPHER_up_ref,
-EVP_CIPHER_free,
-EVP_CIPHER_CTX_new,
-EVP_CIPHER_CTX_reset,
-EVP_CIPHER_CTX_free,
-EVP_CIPHER_CTX_dup,
-EVP_CIPHER_CTX_copy,
+OPENSSL_BOX_EVP_CIPHER_up_ref,
+OPENSSL_BOX_EVP_CIPHER_free,
+OPENSSL_BOX_EVP_CIPHER_CTX_new,
+OPENSSL_BOX_EVP_CIPHER_CTX_reset,
+OPENSSL_BOX_EVP_CIPHER_CTX_free,
+OPENSSL_BOX_EVP_CIPHER_CTX_dup,
+OPENSSL_BOX_EVP_CIPHER_CTX_copy,
 EVP_EncryptInit_ex,
 EVP_EncryptInit_ex2,
 EVP_EncryptUpdate,
@@ -23,8 +23,8 @@ EVP_CipherInit_ex2,
 EVP_CipherInit_SKEY,
 EVP_CipherUpdate,
 EVP_CipherFinal_ex,
-EVP_CIPHER_CTX_set_key_length,
-EVP_CIPHER_CTX_ctrl,
+OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length,
+OPENSSL_BOX_EVP_CIPHER_CTX_ctrl,
 EVP_EncryptInit,
 EVP_EncryptFinal,
 EVP_DecryptInit,
@@ -32,58 +32,58 @@ EVP_DecryptFinal,
 EVP_CipherInit,
 EVP_CipherFinal,
 EVP_Cipher,
-EVP_CIPHER_can_pipeline,
+OPENSSL_BOX_EVP_CIPHER_can_pipeline,
 EVP_CipherPipelineEncryptInit,
 EVP_CipherPipelineDecryptInit,
 EVP_CipherPipelineUpdate,
 EVP_CipherPipelineFinal,
-EVP_get_cipherbyname,
+OPENSSL_BOX_EVP_get_cipherbyname,
 EVP_get_cipherbynid,
 EVP_get_cipherbyobj,
-EVP_CIPHER_is_a,
-EVP_CIPHER_get0_name,
-EVP_CIPHER_get0_description,
+OPENSSL_BOX_EVP_CIPHER_is_a,
+OPENSSL_BOX_EVP_CIPHER_get0_name,
+OPENSSL_BOX_EVP_CIPHER_get0_description,
 EVP_CIPHER_names_do_all,
-EVP_CIPHER_get0_provider,
-EVP_CIPHER_get_nid,
-EVP_CIPHER_get_params,
-EVP_CIPHER_gettable_params,
-EVP_CIPHER_get_block_size,
-EVP_CIPHER_get_key_length,
-EVP_CIPHER_get_iv_length,
-EVP_CIPHER_get_flags,
-EVP_CIPHER_get_mode,
-EVP_CIPHER_get_type,
-EVP_CIPHER_CTX_cipher,
-EVP_CIPHER_CTX_get0_cipher,
-EVP_CIPHER_CTX_get1_cipher,
+OPENSSL_BOX_EVP_CIPHER_get0_provider,
+OPENSSL_BOX_EVP_CIPHER_get_nid,
+OPENSSL_BOX_EVP_CIPHER_get_params,
+OPENSSL_BOX_EVP_CIPHER_gettable_params,
+OPENSSL_BOX_EVP_CIPHER_get_block_size,
+OPENSSL_BOX_EVP_CIPHER_get_key_length,
+OPENSSL_BOX_EVP_CIPHER_get_iv_length,
+OPENSSL_BOX_EVP_CIPHER_get_flags,
+OPENSSL_BOX_EVP_CIPHER_get_mode,
+OPENSSL_BOX_EVP_CIPHER_get_type,
+OPENSSL_BOX_EVP_CIPHER_CTX_cipher,
+OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher,
+OPENSSL_BOX_EVP_CIPHER_CTX_get1_cipher,
 EVP_CIPHER_CTX_get0_name,
-EVP_CIPHER_CTX_get_nid,
-EVP_CIPHER_CTX_get_params,
-EVP_CIPHER_gettable_ctx_params,
-EVP_CIPHER_CTX_gettable_params,
-EVP_CIPHER_CTX_set_params,
-EVP_CIPHER_settable_ctx_params,
-EVP_CIPHER_CTX_settable_params,
-EVP_CIPHER_CTX_get_block_size,
-EVP_CIPHER_CTX_get_key_length,
-EVP_CIPHER_CTX_get_iv_length,
-EVP_CIPHER_CTX_get_tag_length,
-EVP_CIPHER_CTX_get_app_data,
-EVP_CIPHER_CTX_set_app_data,
+OPENSSL_BOX_EVP_CIPHER_CTX_get_nid,
+OPENSSL_BOX_EVP_CIPHER_CTX_get_params,
+OPENSSL_BOX_EVP_CIPHER_gettable_ctx_params,
+OPENSSL_BOX_EVP_CIPHER_CTX_gettable_params,
+OPENSSL_BOX_EVP_CIPHER_CTX_set_params,
+OPENSSL_BOX_EVP_CIPHER_settable_ctx_params,
+OPENSSL_BOX_EVP_CIPHER_CTX_settable_params,
+OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size,
+OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length,
+OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length,
+OPENSSL_BOX_EVP_CIPHER_CTX_get_tag_length,
+OPENSSL_BOX_EVP_CIPHER_CTX_get_app_data,
+OPENSSL_BOX_EVP_CIPHER_CTX_set_app_data,
 EVP_CIPHER_CTX_flags,
-EVP_CIPHER_CTX_set_flags,
-EVP_CIPHER_CTX_clear_flags,
-EVP_CIPHER_CTX_test_flags,
+OPENSSL_BOX_EVP_CIPHER_CTX_set_flags,
+OPENSSL_BOX_EVP_CIPHER_CTX_clear_flags,
+OPENSSL_BOX_EVP_CIPHER_CTX_test_flags,
 EVP_CIPHER_CTX_get_type,
 EVP_CIPHER_CTX_get_mode,
-EVP_CIPHER_CTX_get_num,
-EVP_CIPHER_CTX_set_num,
-EVP_CIPHER_CTX_is_encrypting,
-EVP_CIPHER_param_to_asn1,
-EVP_CIPHER_asn1_to_param,
-EVP_CIPHER_CTX_set_padding,
-EVP_enc_null,
+OPENSSL_BOX_EVP_CIPHER_CTX_get_num,
+OPENSSL_BOX_EVP_CIPHER_CTX_set_num,
+OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting,
+OPENSSL_BOX_EVP_CIPHER_param_to_asn1,
+OPENSSL_BOX_EVP_CIPHER_asn1_to_param,
+OPENSSL_BOX_EVP_CIPHER_CTX_set_padding,
+OPENSSL_BOX_EVP_enc_null,
 EVP_CIPHER_do_all_provided,
 EVP_CIPHER_nid,
 EVP_CIPHER_name,
@@ -112,13 +112,13 @@ EVP_CIPHER_CTX_mode
 
  EVP_CIPHER *EVP_CIPHER_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
                               const char *properties);
- int EVP_CIPHER_up_ref(EVP_CIPHER *cipher);
- void EVP_CIPHER_free(EVP_CIPHER *cipher);
- EVP_CIPHER_CTX *EVP_CIPHER_CTX_new(void);
- int EVP_CIPHER_CTX_reset(EVP_CIPHER_CTX *ctx);
- void EVP_CIPHER_CTX_free(EVP_CIPHER_CTX *ctx);
- EVP_CIPHER_CTX *EVP_CIPHER_CTX_dup(const EVP_CIPHER_CTX *in);
- int EVP_CIPHER_CTX_copy(EVP_CIPHER_CTX *out, const EVP_CIPHER_CTX *in);
+ int OPENSSL_BOX_EVP_CIPHER_up_ref(EVP_CIPHER *cipher);
+ void OPENSSL_BOX_EVP_CIPHER_free(EVP_CIPHER *cipher);
+ EVP_CIPHER_CTX *OPENSSL_BOX_EVP_CIPHER_CTX_new(void);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_reset(EVP_CIPHER_CTX *ctx);
+ void OPENSSL_BOX_EVP_CIPHER_CTX_free(EVP_CIPHER_CTX *ctx);
+ EVP_CIPHER_CTX *OPENSSL_BOX_EVP_CIPHER_CTX_dup(const EVP_CIPHER_CTX *in);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_copy(EVP_CIPHER_CTX *out, const EVP_CIPHER_CTX *in);
 
  int EVP_EncryptInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
                         ENGINE *impl, const unsigned char *key, const unsigned char *iv);
@@ -165,7 +165,7 @@ EVP_CIPHER_CTX_mode
  int EVP_Cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                 const unsigned char *in, unsigned int inl);
 
- int EVP_CIPHER_can_pipeline(const EVP_CIPHER *cipher, int enc);
+ int OPENSSL_BOX_EVP_CIPHER_can_pipeline(const EVP_CIPHER *cipher, int enc);
  int EVP_CipherPipelineEncryptInit(EVP_CIPHER_CTX *ctx,
                                    const EVP_CIPHER *cipher,
                                    const unsigned char *key, size_t keylen,
@@ -184,80 +184,80 @@ EVP_CIPHER_CTX_mode
                              unsigned char **outm, size_t *outl,
                              const size_t *outsize);
 
- int EVP_CIPHER_CTX_set_padding(EVP_CIPHER_CTX *x, int padding);
- int EVP_CIPHER_CTX_set_key_length(EVP_CIPHER_CTX *x, int keylen);
- int EVP_CIPHER_CTX_ctrl(EVP_CIPHER_CTX *ctx, int cmd, int p1, void *p2);
- int EVP_CIPHER_CTX_rand_key(EVP_CIPHER_CTX *ctx, unsigned char *key);
- void EVP_CIPHER_CTX_set_flags(EVP_CIPHER_CTX *ctx, int flags);
- void EVP_CIPHER_CTX_clear_flags(EVP_CIPHER_CTX *ctx, int flags);
- int EVP_CIPHER_CTX_test_flags(const EVP_CIPHER_CTX *ctx, int flags);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_set_padding(EVP_CIPHER_CTX *x, int padding);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length(EVP_CIPHER_CTX *x, int keylen);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(EVP_CIPHER_CTX *ctx, int cmd, int p1, void *p2);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_rand_key(EVP_CIPHER_CTX *ctx, unsigned char *key);
+ void OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(EVP_CIPHER_CTX *ctx, int flags);
+ void OPENSSL_BOX_EVP_CIPHER_CTX_clear_flags(EVP_CIPHER_CTX *ctx, int flags);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_test_flags(const EVP_CIPHER_CTX *ctx, int flags);
 
- const EVP_CIPHER *EVP_get_cipherbyname(const char *name);
+ const EVP_CIPHER *OPENSSL_BOX_EVP_get_cipherbyname(const char *name);
  const EVP_CIPHER *EVP_get_cipherbynid(int nid);
  const EVP_CIPHER *EVP_get_cipherbyobj(const ASN1_OBJECT *a);
 
- int EVP_CIPHER_get_nid(const EVP_CIPHER *e);
- int EVP_CIPHER_is_a(const EVP_CIPHER *cipher, const char *name);
+ int OPENSSL_BOX_EVP_CIPHER_get_nid(const EVP_CIPHER *e);
+ int OPENSSL_BOX_EVP_CIPHER_is_a(const EVP_CIPHER *cipher, const char *name);
  int EVP_CIPHER_names_do_all(const EVP_CIPHER *cipher,
                              void (*fn)(const char *name, void *data),
                              void *data);
- const char *EVP_CIPHER_get0_name(const EVP_CIPHER *cipher);
- const char *EVP_CIPHER_get0_description(const EVP_CIPHER *cipher);
- const OSSL_PROVIDER *EVP_CIPHER_get0_provider(const EVP_CIPHER *cipher);
- int EVP_CIPHER_get_block_size(const EVP_CIPHER *e);
- int EVP_CIPHER_get_key_length(const EVP_CIPHER *e);
- int EVP_CIPHER_get_iv_length(const EVP_CIPHER *e);
- unsigned long EVP_CIPHER_get_flags(const EVP_CIPHER *e);
- unsigned long EVP_CIPHER_get_mode(const EVP_CIPHER *e);
- int EVP_CIPHER_get_type(const EVP_CIPHER *cipher);
+ const char *OPENSSL_BOX_EVP_CIPHER_get0_name(const EVP_CIPHER *cipher);
+ const char *OPENSSL_BOX_EVP_CIPHER_get0_description(const EVP_CIPHER *cipher);
+ const OSSL_PROVIDER *OPENSSL_BOX_EVP_CIPHER_get0_provider(const EVP_CIPHER *cipher);
+ int OPENSSL_BOX_EVP_CIPHER_get_block_size(const EVP_CIPHER *e);
+ int OPENSSL_BOX_EVP_CIPHER_get_key_length(const EVP_CIPHER *e);
+ int OPENSSL_BOX_EVP_CIPHER_get_iv_length(const EVP_CIPHER *e);
+ unsigned long OPENSSL_BOX_EVP_CIPHER_get_flags(const EVP_CIPHER *e);
+ unsigned long OPENSSL_BOX_EVP_CIPHER_get_mode(const EVP_CIPHER *e);
+ int OPENSSL_BOX_EVP_CIPHER_get_type(const EVP_CIPHER *cipher);
 
- const EVP_CIPHER *EVP_CIPHER_CTX_get0_cipher(const EVP_CIPHER_CTX *ctx);
- EVP_CIPHER *EVP_CIPHER_CTX_get1_cipher(const EVP_CIPHER_CTX *ctx);
- int EVP_CIPHER_CTX_get_nid(const EVP_CIPHER_CTX *ctx);
+ const EVP_CIPHER *OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(const EVP_CIPHER_CTX *ctx);
+ EVP_CIPHER *OPENSSL_BOX_EVP_CIPHER_CTX_get1_cipher(const EVP_CIPHER_CTX *ctx);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_get_nid(const EVP_CIPHER_CTX *ctx);
  const char *EVP_CIPHER_CTX_get0_name(const EVP_CIPHER_CTX *ctx);
 
- int EVP_CIPHER_get_params(EVP_CIPHER *cipher, OSSL_PARAM params[]);
- int EVP_CIPHER_CTX_set_params(EVP_CIPHER_CTX *ctx, const OSSL_PARAM params[]);
- int EVP_CIPHER_CTX_get_params(EVP_CIPHER_CTX *ctx, OSSL_PARAM params[]);
- const OSSL_PARAM *EVP_CIPHER_gettable_params(const EVP_CIPHER *cipher);
- const OSSL_PARAM *EVP_CIPHER_settable_ctx_params(const EVP_CIPHER *cipher);
- const OSSL_PARAM *EVP_CIPHER_gettable_ctx_params(const EVP_CIPHER *cipher);
- const OSSL_PARAM *EVP_CIPHER_CTX_settable_params(EVP_CIPHER_CTX *ctx);
- const OSSL_PARAM *EVP_CIPHER_CTX_gettable_params(EVP_CIPHER_CTX *ctx);
- int EVP_CIPHER_CTX_get_block_size(const EVP_CIPHER_CTX *ctx);
- int EVP_CIPHER_CTX_get_key_length(const EVP_CIPHER_CTX *ctx);
- int EVP_CIPHER_CTX_get_iv_length(const EVP_CIPHER_CTX *ctx);
- int EVP_CIPHER_CTX_get_tag_length(const EVP_CIPHER_CTX *ctx);
- void *EVP_CIPHER_CTX_get_app_data(const EVP_CIPHER_CTX *ctx);
- void EVP_CIPHER_CTX_set_app_data(const EVP_CIPHER_CTX *ctx, void *data);
+ int OPENSSL_BOX_EVP_CIPHER_get_params(EVP_CIPHER *cipher, OSSL_PARAM params[]);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_set_params(EVP_CIPHER_CTX *ctx, const OSSL_PARAM params[]);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_get_params(EVP_CIPHER_CTX *ctx, OSSL_PARAM params[]);
+ const OSSL_PARAM *OPENSSL_BOX_EVP_CIPHER_gettable_params(const EVP_CIPHER *cipher);
+ const OSSL_PARAM *OPENSSL_BOX_EVP_CIPHER_settable_ctx_params(const EVP_CIPHER *cipher);
+ const OSSL_PARAM *OPENSSL_BOX_EVP_CIPHER_gettable_ctx_params(const EVP_CIPHER *cipher);
+ const OSSL_PARAM *OPENSSL_BOX_EVP_CIPHER_CTX_settable_params(EVP_CIPHER_CTX *ctx);
+ const OSSL_PARAM *OPENSSL_BOX_EVP_CIPHER_CTX_gettable_params(EVP_CIPHER_CTX *ctx);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(const EVP_CIPHER_CTX *ctx);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(const EVP_CIPHER_CTX *ctx);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(const EVP_CIPHER_CTX *ctx);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_get_tag_length(const EVP_CIPHER_CTX *ctx);
+ void *OPENSSL_BOX_EVP_CIPHER_CTX_get_app_data(const EVP_CIPHER_CTX *ctx);
+ void OPENSSL_BOX_EVP_CIPHER_CTX_set_app_data(const EVP_CIPHER_CTX *ctx, void *data);
  int EVP_CIPHER_CTX_get_type(const EVP_CIPHER_CTX *ctx);
  int EVP_CIPHER_CTX_get_mode(const EVP_CIPHER_CTX *ctx);
- int EVP_CIPHER_CTX_get_num(const EVP_CIPHER_CTX *ctx);
- int EVP_CIPHER_CTX_set_num(EVP_CIPHER_CTX *ctx, int num);
- int EVP_CIPHER_CTX_is_encrypting(const EVP_CIPHER_CTX *ctx);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_get_num(const EVP_CIPHER_CTX *ctx);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_set_num(EVP_CIPHER_CTX *ctx, int num);
+ int OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(const EVP_CIPHER_CTX *ctx);
 
- int EVP_CIPHER_param_to_asn1(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
- int EVP_CIPHER_asn1_to_param(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
+ int OPENSSL_BOX_EVP_CIPHER_param_to_asn1(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
+ int OPENSSL_BOX_EVP_CIPHER_asn1_to_param(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
 
  void EVP_CIPHER_do_all_provided(OSSL_LIB_CTX *libctx,
                                  void (*fn)(EVP_CIPHER *cipher, void *arg),
                                  void *arg);
 
- #define EVP_CIPHER_nid EVP_CIPHER_get_nid
- #define EVP_CIPHER_name EVP_CIPHER_get0_name
- #define EVP_CIPHER_block_size EVP_CIPHER_get_block_size
- #define EVP_CIPHER_key_length EVP_CIPHER_get_key_length
- #define EVP_CIPHER_iv_length EVP_CIPHER_get_iv_length
- #define EVP_CIPHER_flags EVP_CIPHER_get_flags
- #define EVP_CIPHER_mode EVP_CIPHER_get_mode
- #define EVP_CIPHER_type EVP_CIPHER_get_type
- #define EVP_CIPHER_CTX_encrypting EVP_CIPHER_CTX_is_encrypting
- #define EVP_CIPHER_CTX_nid EVP_CIPHER_CTX_get_nid
- #define EVP_CIPHER_CTX_block_size EVP_CIPHER_CTX_get_block_size
- #define EVP_CIPHER_CTX_key_length EVP_CIPHER_CTX_get_key_length
- #define EVP_CIPHER_CTX_iv_length EVP_CIPHER_CTX_get_iv_length
- #define EVP_CIPHER_CTX_tag_length EVP_CIPHER_CTX_get_tag_length
- #define EVP_CIPHER_CTX_num EVP_CIPHER_CTX_get_num
+ #define EVP_CIPHER_nid OPENSSL_BOX_EVP_CIPHER_get_nid
+ #define EVP_CIPHER_name OPENSSL_BOX_EVP_CIPHER_get0_name
+ #define EVP_CIPHER_block_size OPENSSL_BOX_EVP_CIPHER_get_block_size
+ #define EVP_CIPHER_key_length OPENSSL_BOX_EVP_CIPHER_get_key_length
+ #define EVP_CIPHER_iv_length OPENSSL_BOX_EVP_CIPHER_get_iv_length
+ #define EVP_CIPHER_flags OPENSSL_BOX_EVP_CIPHER_get_flags
+ #define EVP_CIPHER_mode OPENSSL_BOX_EVP_CIPHER_get_mode
+ #define EVP_CIPHER_type OPENSSL_BOX_EVP_CIPHER_get_type
+ #define EVP_CIPHER_CTX_encrypting OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting
+ #define EVP_CIPHER_CTX_nid OPENSSL_BOX_EVP_CIPHER_CTX_get_nid
+ #define EVP_CIPHER_CTX_block_size OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size
+ #define EVP_CIPHER_CTX_key_length OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length
+ #define EVP_CIPHER_CTX_iv_length OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length
+ #define EVP_CIPHER_CTX_tag_length OPENSSL_BOX_EVP_CIPHER_CTX_get_tag_length
+ #define EVP_CIPHER_CTX_num OPENSSL_BOX_EVP_CIPHER_CTX_get_num
  #define EVP_CIPHER_CTX_type EVP_CIPHER_CTX_get_type
  #define EVP_CIPHER_CTX_mode EVP_CIPHER_CTX_get_mode
 
@@ -265,7 +265,7 @@ The following function has been deprecated since OpenSSL 3.0, and can be
 hidden entirely by defining B<OPENSSL_API_COMPAT> with a suitable version value,
 see L<openssl_user_macros(7)>:
 
- const EVP_CIPHER *EVP_CIPHER_CTX_cipher(const EVP_CIPHER_CTX *ctx);
+ const EVP_CIPHER *OPENSSL_BOX_EVP_CIPHER_CTX_cipher(const EVP_CIPHER_CTX *ctx);
 
 The following function has been deprecated since OpenSSL 1.1.0, and can be
 hidden entirely by defining B<OPENSSL_API_COMPAT> with a suitable version value,
@@ -288,101 +288,101 @@ Fetches the cipher implementation for the given I<algorithm> from any provider
 offering it, within the criteria given by the I<properties>.
 See L<crypto(7)/ALGORITHM FETCHING> for further information.
 
-The returned value must eventually be freed with EVP_CIPHER_free().
+The returned value must eventually be freed with OPENSSL_BOX_EVP_CIPHER_free().
 
 Fetched B<EVP_CIPHER> structures are reference counted.
 
-=item EVP_CIPHER_up_ref()
+=item OPENSSL_BOX_EVP_CIPHER_up_ref()
 
 Increments the reference count for an B<EVP_CIPHER> structure.
 
-=item EVP_CIPHER_free()
+=item OPENSSL_BOX_EVP_CIPHER_free()
 
 Decrements the reference count for the fetched B<EVP_CIPHER> structure.
 If the reference count drops to 0 then the structure is freed.
 If the argument is NULL, nothing is done.
 
-=item EVP_CIPHER_CTX_new()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_new()
 
 Allocates and returns a cipher context.
 
-=item EVP_CIPHER_CTX_free()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_free()
 
 Clears all information from a cipher context and frees any allocated memory
 associated with it, including I<ctx> itself. This function should be called
 after all operations using a cipher are complete so sensitive information does
 not remain in memory. If the argument is NULL, nothing is done.
 
-=item EVP_CIPHER_CTX_dup()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_dup()
 
 Can be used to duplicate the cipher state from I<in>.  This is useful
 to avoid multiple EVP_CIPHER_fetch() calls or if large amounts of data are to be
 fed which only differ in the last few bytes.
 
-=item EVP_CIPHER_CTX_copy()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_copy()
 
 Can be used to copy the cipher state from I<in> to I<out>.
 
-=item EVP_CIPHER_CTX_ctrl()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl()
 
-I<This is a legacy method.> EVP_CIPHER_CTX_set_params() and
-EVP_CIPHER_CTX_get_params() is the mechanism that should be used to set and get
+I<This is a legacy method.> OPENSSL_BOX_EVP_CIPHER_CTX_set_params() and
+OPENSSL_BOX_EVP_CIPHER_CTX_get_params() is the mechanism that should be used to set and get
 parameters that are used by providers.
 
 Performs cipher-specific control actions on context I<ctx>. The control command
 is indicated in I<cmd> and any additional arguments in I<p1> and I<p2>.
-EVP_CIPHER_CTX_ctrl() must be called after EVP_CipherInit_ex2(). Other restrictions
+OPENSSL_BOX_EVP_CIPHER_CTX_ctrl() must be called after EVP_CipherInit_ex2(). Other restrictions
 may apply depending on the control type and cipher implementation.
 
 If this function happens to be used with a fetched B<EVP_CIPHER>, it will
 translate the controls that are known to OpenSSL into L<OSSL_PARAM(3)>
-parameters with keys defined by OpenSSL and call EVP_CIPHER_CTX_get_params() or
-EVP_CIPHER_CTX_set_params() as is appropriate for each control command.
+parameters with keys defined by OpenSSL and call OPENSSL_BOX_EVP_CIPHER_CTX_get_params() or
+OPENSSL_BOX_EVP_CIPHER_CTX_set_params() as is appropriate for each control command.
 
 See L</CONTROLS> below for more information, including what translations are
 being done.
 
-=item EVP_CIPHER_get_params()
+=item OPENSSL_BOX_EVP_CIPHER_get_params()
 
 Retrieves the requested list of algorithm I<params> from a CIPHER I<cipher>.
 See L</PARAMETERS> below for more information.
 
-=item EVP_CIPHER_CTX_get_params()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_get_params()
 
 Retrieves the requested list of I<params> from CIPHER context I<ctx>.
 See L</PARAMETERS> below for more information.
 
-=item EVP_CIPHER_CTX_set_params()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_set_params()
 
 Sets the list of I<params> into a CIPHER context I<ctx>.
 See L</PARAMETERS> below for more information.
 
-=item EVP_CIPHER_gettable_params()
+=item OPENSSL_BOX_EVP_CIPHER_gettable_params()
 
 Get a constant L<OSSL_PARAM(3)> array that describes the retrievable parameters
-that can be used with EVP_CIPHER_get_params().
+that can be used with OPENSSL_BOX_EVP_CIPHER_get_params().
 
-=item EVP_CIPHER_gettable_ctx_params() and EVP_CIPHER_CTX_gettable_params()
+=item OPENSSL_BOX_EVP_CIPHER_gettable_ctx_params() and OPENSSL_BOX_EVP_CIPHER_CTX_gettable_params()
 
 Get a constant L<OSSL_PARAM(3)> array that describes the retrievable parameters
-that can be used with EVP_CIPHER_CTX_get_params().
-EVP_CIPHER_gettable_ctx_params() returns the parameters that can be retrieved
-from the algorithm, whereas EVP_CIPHER_CTX_gettable_params() returns the
+that can be used with OPENSSL_BOX_EVP_CIPHER_CTX_get_params().
+OPENSSL_BOX_EVP_CIPHER_gettable_ctx_params() returns the parameters that can be retrieved
+from the algorithm, whereas OPENSSL_BOX_EVP_CIPHER_CTX_gettable_params() returns the
 parameters that can be retrieved in the context's current state.
 
-=item EVP_CIPHER_settable_ctx_params() and EVP_CIPHER_CTX_settable_params()
+=item OPENSSL_BOX_EVP_CIPHER_settable_ctx_params() and OPENSSL_BOX_EVP_CIPHER_CTX_settable_params()
 
 Get a constant L<OSSL_PARAM(3)> array that describes the settable parameters
-that can be used with EVP_CIPHER_CTX_set_params().
-EVP_CIPHER_settable_ctx_params() returns the parameters that can be set from the
-algorithm, whereas EVP_CIPHER_CTX_settable_params() returns the parameters that
+that can be used with OPENSSL_BOX_EVP_CIPHER_CTX_set_params().
+OPENSSL_BOX_EVP_CIPHER_settable_ctx_params() returns the parameters that can be set from the
+algorithm, whereas OPENSSL_BOX_EVP_CIPHER_CTX_settable_params() returns the parameters that
 can be set in the context's current state.
 
 =item EVP_EncryptInit_ex2()
 
 Sets up cipher context I<ctx> for encryption with cipher I<type>. I<ctx> B<MUST NOT> be NULL.
 I<type> is typically supplied by calling EVP_CIPHER_fetch(). I<type> may also be set
-using legacy functions such as EVP_aes_256_cbc(), but this is not recommended
+using legacy functions such as OPENSSL_BOX_EVP_aes_256_cbc(), but this is not recommended
 for new applications. I<key> is the symmetric key to use and I<iv> is the IV to
 use (if necessary), the actual number of bytes used for the key and IV depends
 on the cipher. The parameters I<params> will be set on the context after
@@ -458,7 +458,7 @@ for encryption, 0 for decryption and -1 to leave the value unchanged
 This function is similar to EVP_CipherInit_ex2() but accepts a
 symmetric key object of type I<EVP_SKEY> as a key.
 
-=item EVP_CIPHER_CTX_reset()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_reset()
 
 Clears all information from a cipher context and free up any allocated memory
 associated with it, except the I<ctx> itself. This function should be called
@@ -485,18 +485,18 @@ result in I<out>.
 
 For legacy ciphers - If the cipher doesn't have the flag
 B<EVP_CIPH_FLAG_CUSTOM_CIPHER> set, then I<inl> must be a multiple of
-EVP_CIPHER_get_block_size().  If it isn't, the result is undefined.  If the cipher
+OPENSSL_BOX_EVP_CIPHER_get_block_size().  If it isn't, the result is undefined.  If the cipher
 has that flag set, then I<inl> can be any size.
 
 Due to the constraints of the API contract of this function it shouldn't be used
 in applications, please consider using EVP_CipherUpdate() and
 EVP_CipherFinal_ex() instead.
 
-=item EVP_CIPHER_can_pipeline()
+=item OPENSSL_BOX_EVP_CIPHER_can_pipeline()
 
 This function checks if a B<EVP_CIPHER> fetched using EVP_CIPHER_fetch() supports
 cipher pipelining. If the cipher supports pipelining, it returns 1, otherwise 0.
-This function will return 0 for non-fetched ciphers such as EVP_aes_128_gcm().
+This function will return 0 for non-fetched ciphers such as OPENSSL_BOX_EVP_aes_128_gcm().
 There are currently no built-in ciphers that support pipelining.
 
 Cipher pipelining support allows an application to submit multiple chunks of
@@ -512,7 +512,7 @@ fetch and return an error if a pipeline supported implementation is not found.
 =item EVP_CipherPipelineEncryptInit(), EVP_CipherPipelineDecryptInit(), EVP_CipherPipelineUpdate() and EVP_CipherPipelineFinal()
 
 These functions can be used to perform multiple encryption or decryption
-operations in parallel. EVP_CIPHER_can_pipeline() may be called to check if the
+operations in parallel. OPENSSL_BOX_EVP_CIPHER_can_pipeline() may be called to check if the
 cipher supports pipelining. These functions are analogous to
 EVP_EncryptInit_ex2(), EVP_DecryptInit_ex2(), EVP_CipherUpdate() and
 EVP_CipherFinal() but take an array of pointers for iv, input and output buffers.
@@ -537,16 +537,16 @@ The EVP_CipherPipelineUpdate() function can be called multiple times to encrypt
 successive blocks of data. For AAD data, the I<out>, and I<outsize> parameter
 should be NULL, rather than an array of NULL pointers.
 
-=item EVP_get_cipherbyname(), EVP_get_cipherbynid() and EVP_get_cipherbyobj()
+=item OPENSSL_BOX_EVP_get_cipherbyname(), EVP_get_cipherbynid() and EVP_get_cipherbyobj()
 
 Returns an B<EVP_CIPHER> structure when passed a cipher name, a cipher B<NID> or
 an B<ASN1_OBJECT> structure respectively.
 
-EVP_get_cipherbyname() will return NULL for algorithms such as "AES-128-SIV",
+OPENSSL_BOX_EVP_get_cipherbyname() will return NULL for algorithms such as "AES-128-SIV",
 "AES-128-CBC-CTS" and "CAMELLIA-128-CBC-CTS" which were previously only
 accessible via low level interfaces.
 
-The EVP_get_cipherbyname() function is present for backwards compatibility with
+The OPENSSL_BOX_EVP_get_cipherbyname() function is present for backwards compatibility with
 OpenSSL prior to version 3 and is different to the EVP_CIPHER_fetch() function
 since it does not attempt to "fetch" an implementation of the cipher.
 Additionally, it only knows about ciphers that are built-in to OpenSSL and have
@@ -562,9 +562,9 @@ the algorithm and an associated implementation from a provider.
 See L<crypto(7)/ALGORITHM FETCHING> for more information about fetching.
 
 The cipher objects returned from these functions do not need to be freed with
-EVP_CIPHER_free().
+OPENSSL_BOX_EVP_CIPHER_free().
 
-=item EVP_CIPHER_get_nid() and EVP_CIPHER_CTX_get_nid()
+=item OPENSSL_BOX_EVP_CIPHER_get_nid() and OPENSSL_BOX_EVP_CIPHER_CTX_get_nid()
 
 Return the NID of a cipher when passed an B<EVP_CIPHER> or B<EVP_CIPHER_CTX>
 structure.  The actual NID value is an internal value which may not have a
@@ -572,15 +572,15 @@ corresponding OBJECT IDENTIFIER.  NID_undef is returned in the event that the
 nid is unknown or if the cipher has not been properly initialized via a call to
 B<EVP_CipherInit>.
 
-=item EVP_CIPHER_CTX_set_flags(), EVP_CIPHER_CTX_clear_flags() and EVP_CIPHER_CTX_test_flags()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(), OPENSSL_BOX_EVP_CIPHER_CTX_clear_flags() and OPENSSL_BOX_EVP_CIPHER_CTX_test_flags()
 
 Sets, clears and tests I<ctx> flags.  See L</FLAGS> below for more information.
 
-For provided ciphers EVP_CIPHER_CTX_set_flags() should be called only after the
+For provided ciphers OPENSSL_BOX_EVP_CIPHER_CTX_set_flags() should be called only after the
 fetched cipher has been assigned to the I<ctx>. It is recommended to use
 L</PARAMETERS> instead.
 
-=item EVP_CIPHER_CTX_set_padding()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_set_padding()
 
 Enables or disables padding. This function should be called after the context
 is set up for encryption or decryption with EVP_EncryptInit_ex2(),
@@ -591,21 +591,21 @@ then no padding is performed, the total amount of data encrypted or decrypted
 must then be a multiple of the block size or an error will occur. I<x> B<MUST
 NOT> be NULL.
 
-=item EVP_CIPHER_get_key_length() and EVP_CIPHER_CTX_get_key_length()
+=item OPENSSL_BOX_EVP_CIPHER_get_key_length() and OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length()
 
 Return the key length of a cipher when passed an B<EVP_CIPHER> or
 B<EVP_CIPHER_CTX> structure. The constant B<EVP_MAX_KEY_LENGTH> is the maximum
-key length for all ciphers. Note: although EVP_CIPHER_get_key_length() is fixed for
-a given cipher, the value of EVP_CIPHER_CTX_get_key_length() may be different for
+key length for all ciphers. Note: although OPENSSL_BOX_EVP_CIPHER_get_key_length() is fixed for
+a given cipher, the value of OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length() may be different for
 variable key length ciphers.
 
-=item EVP_CIPHER_CTX_set_key_length()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length()
 
 Sets the key length of the cipher context.
 If the cipher is a fixed length cipher then attempting to set the key
 length to any value other than the fixed value is an error.
 
-=item EVP_CIPHER_get_iv_length() and EVP_CIPHER_CTX_get_iv_length()
+=item OPENSSL_BOX_EVP_CIPHER_get_iv_length() and OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length()
 
 Return the IV length of a cipher when passed an B<EVP_CIPHER> or
 B<EVP_CIPHER_CTX>. It will return zero if the cipher does not use an IV, if
@@ -613,23 +613,23 @@ the cipher has not yet been initialized within the B<EVP_CIPHER_CTX>, or if the
 passed cipher is NULL.  The constant B<EVP_MAX_IV_LENGTH> is the maximum IV
 length for all ciphers.
 
-=item EVP_CIPHER_CTX_get_tag_length()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_get_tag_length()
 
 Returns the tag length of an AEAD cipher when passed a B<EVP_CIPHER_CTX>. It will
 return zero if the cipher does not support a tag. It returns a default value if
 the tag length has not been set.
 
-=item EVP_CIPHER_get_block_size() and EVP_CIPHER_CTX_get_block_size()
+=item OPENSSL_BOX_EVP_CIPHER_get_block_size() and OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size()
 
 Return the block size of a cipher when passed an B<EVP_CIPHER> or
 B<EVP_CIPHER_CTX> structure. The constant B<EVP_MAX_BLOCK_LENGTH> is also the
 maximum block length for all ciphers.
-A value of 0 is returned if, with B<EVP_CIPHER_get_block_size()>, the cipher
-I<e> is NULL, or, with B<EVP_CIPHER_CTX_get_block_size()>, the context
+A value of 0 is returned if, with B<OPENSSL_BOX_EVP_CIPHER_get_block_size()>, the cipher
+I<e> is NULL, or, with B<OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size()>, the context
 I<ctx> is NULL or has not been properly initialized with a call to
 B<EVP_CipherInit>.
 
-=item EVP_CIPHER_get_type() and EVP_CIPHER_CTX_get_type()
+=item OPENSSL_BOX_EVP_CIPHER_get_type() and EVP_CIPHER_CTX_get_type()
 
 Return the type of the passed cipher or context. This "type" is the actual NID
 of the cipher OBJECT IDENTIFIER and as such it ignores the cipher parameters
@@ -637,7 +637,7 @@ of the cipher OBJECT IDENTIFIER and as such it ignores the cipher parameters
 object identifier or does not have ASN1 support this function will return
 B<NID_undef>.
 
-=item EVP_CIPHER_is_a()
+=item OPENSSL_BOX_EVP_CIPHER_is_a()
 
 Returns 1 if I<cipher> is an implementation of an algorithm that's identifiable
 with I<name>, otherwise 0. If I<cipher> is a legacy cipher (it's the return
@@ -645,7 +645,7 @@ value from the likes of EVP_aes128() rather than the result of an
 EVP_CIPHER_fetch()), only cipher names registered with the default library
 context (see L<OSSL_LIB_CTX(3)>) will be considered.
 
-=item EVP_CIPHER_get0_name() and EVP_CIPHER_CTX_get0_name()
+=item OPENSSL_BOX_EVP_CIPHER_get0_name() and EVP_CIPHER_CTX_get0_name()
 
 Return the name of the passed cipher or context.  For fetched ciphers with
 multiple names, only one of them is returned. See also EVP_CIPHER_names_do_all().
@@ -656,23 +656,23 @@ I<cipher> B<MUST NOT> be NULL.
 Traverses all names for the I<cipher>, and calls I<fn> with each name and
 I<data>.  This is only useful with fetched B<EVP_CIPHER>s.
 
-=item EVP_CIPHER_get0_description()
+=item OPENSSL_BOX_EVP_CIPHER_get0_description()
 
 Returns a description of the cipher, meant for display and human consumption.
 The description is at the discretion of the cipher implementation.
 
-=item EVP_CIPHER_get0_provider()
+=item OPENSSL_BOX_EVP_CIPHER_get0_provider()
 
 Returns an B<OSSL_PROVIDER> pointer to the provider that implements the given
 B<EVP_CIPHER>.
 
-=item EVP_CIPHER_CTX_get0_cipher()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher()
 
 Returns the B<EVP_CIPHER> structure when passed an B<EVP_CIPHER_CTX> structure.
-EVP_CIPHER_CTX_get1_cipher() is the same except the ownership is passed to
+OPENSSL_BOX_EVP_CIPHER_CTX_get1_cipher() is the same except the ownership is passed to
 the caller. Both functions return NULL on error.
 
-=item EVP_CIPHER_get_mode() and EVP_CIPHER_CTX_get_mode()
+=item OPENSSL_BOX_EVP_CIPHER_get_mode() and EVP_CIPHER_CTX_get_mode()
 
 Return the block cipher mode:
 EVP_CIPH_ECB_MODE, EVP_CIPH_CBC_MODE, EVP_CIPH_CFB_MODE, EVP_CIPH_OFB_MODE,
@@ -680,27 +680,27 @@ EVP_CIPH_CTR_MODE, EVP_CIPH_GCM_MODE, EVP_CIPH_CCM_MODE, EVP_CIPH_XTS_MODE,
 EVP_CIPH_WRAP_MODE, EVP_CIPH_OCB_MODE or EVP_CIPH_SIV_MODE.
 If the cipher is a stream cipher then EVP_CIPH_STREAM_CIPHER is returned.
 
-=item EVP_CIPHER_get_flags()
+=item OPENSSL_BOX_EVP_CIPHER_get_flags()
 
 Returns any flags associated with the cipher. See L</FLAGS>
 for a list of currently defined flags.
 
-=item EVP_CIPHER_CTX_get_num() and EVP_CIPHER_CTX_set_num()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_get_num() and OPENSSL_BOX_EVP_CIPHER_CTX_set_num()
 
 Gets or sets the cipher specific "num" parameter for the associated I<ctx>.
 Built-in ciphers typically use this to track how much of the current underlying block
 has been "used" already.
 
-=item EVP_CIPHER_CTX_is_encrypting()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting()
 
 Reports whether the I<ctx> is being used for encryption or decryption.
 
 =item EVP_CIPHER_CTX_flags()
 
-A deprecated macro calling C<EVP_CIPHER_get_flags(EVP_CIPHER_CTX_get0_cipher(ctx))>.
+A deprecated macro calling C<OPENSSL_BOX_EVP_CIPHER_get_flags(OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(ctx))>.
 Do not use.
 
-=item EVP_CIPHER_param_to_asn1()
+=item OPENSSL_BOX_EVP_CIPHER_param_to_asn1()
 
 Sets the AlgorithmIdentifier "parameter" based on the passed cipher. This will
 typically include any parameters and an IV. The cipher IV (if any) must be set
@@ -709,25 +709,25 @@ when this call is made. This call should be made before the cipher is actually
 This function may fail if the cipher does not have any ASN1 support, or if an
 uninitialized cipher is passed to it.
 
-=item EVP_CIPHER_asn1_to_param()
+=item OPENSSL_BOX_EVP_CIPHER_asn1_to_param()
 
 Sets the cipher parameters based on an ASN1 AlgorithmIdentifier "parameter".
 The precise effect depends on the cipher. In the case of B<RC2>, for example,
 it will set the IV and effective key length.
 This function should be called after the base cipher type is set but before
 the key is set. For example EVP_CipherInit() will be called with the IV and
-key set to NULL, EVP_CIPHER_asn1_to_param() will be called and finally
+key set to NULL, OPENSSL_BOX_EVP_CIPHER_asn1_to_param() will be called and finally
 EVP_CipherInit() again with all parameters except the key set to NULL. It is
 possible for this function to fail if the cipher does not have any ASN1 support
 or the parameters cannot be set (for example the RC2 effective key length
 is not supported.
 
-=item EVP_CIPHER_CTX_rand_key()
+=item OPENSSL_BOX_EVP_CIPHER_CTX_rand_key()
 
 Generates a random key of the appropriate length based on the cipher context.
 The B<EVP_CIPHER> can provide its own random key generation routine to support
 keys of a specific form. I<key> must point to a buffer at least as big as the
-value returned by EVP_CIPHER_CTX_get_key_length().
+value returned by OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length().
 
 =item EVP_CIPHER_do_all_provided()
 
@@ -743,28 +743,28 @@ See L<OSSL_PARAM(3)> for information about passing parameters.
 
 =head2 Gettable EVP_CIPHER parameters
 
-When EVP_CIPHER_fetch() is called it internally calls EVP_CIPHER_get_params()
+When EVP_CIPHER_fetch() is called it internally calls OPENSSL_BOX_EVP_CIPHER_get_params()
 and caches the results.
 
-EVP_CIPHER_get_params() can be used with the following L<OSSL_PARAM(3)> keys:
+OPENSSL_BOX_EVP_CIPHER_get_params() can be used with the following L<OSSL_PARAM(3)> keys:
 
 =over 4
 
 =item "mode" (B<OSSL_CIPHER_PARAM_MODE>) <unsigned integer>
 
 Gets the mode for the associated cipher algorithm I<cipher>.
-See L</EVP_CIPHER_get_mode() and EVP_CIPHER_CTX_get_mode()> for a list of valid modes.
-Use EVP_CIPHER_get_mode() to retrieve the cached value.
+See L</OPENSSL_BOX_EVP_CIPHER_get_mode() and EVP_CIPHER_CTX_get_mode()> for a list of valid modes.
+Use OPENSSL_BOX_EVP_CIPHER_get_mode() to retrieve the cached value.
 
 =item "keylen" (B<OSSL_CIPHER_PARAM_KEYLEN>) <unsigned integer>
 
 Gets the key length for the associated cipher algorithm I<cipher>.
-Use EVP_CIPHER_get_key_length() to retrieve the cached value.
+Use OPENSSL_BOX_EVP_CIPHER_get_key_length() to retrieve the cached value.
 
 =item "ivlen" (B<OSSL_CIPHER_PARAM_IVLEN>) <unsigned integer>
 
 Gets the IV length for the associated cipher algorithm I<cipher>.
-Use EVP_CIPHER_get_iv_length() to retrieve the cached value.
+Use OPENSSL_BOX_EVP_CIPHER_get_iv_length() to retrieve the cached value.
 
 =item "blocksize" (B<OSSL_CIPHER_PARAM_BLOCK_SIZE>) <unsigned integer>
 
@@ -774,12 +774,12 @@ Note that the block size for a cipher may be different to the block size for
 the underlying encryption/decryption primitive.
 For example AES in CTR mode has a block size of 1 (because it operates like a
 stream cipher), even though AES has a block size of 16.
-Use EVP_CIPHER_get_block_size() to retrieve the cached value.
+Use OPENSSL_BOX_EVP_CIPHER_get_block_size() to retrieve the cached value.
 
 =item "aead" (B<OSSL_CIPHER_PARAM_AEAD>) <integer>
 
 Gets 1 if this is an AEAD cipher algorithm, otherwise it gets 0.
-Use (EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_AEAD_CIPHER) to retrieve the
+Use (OPENSSL_BOX_EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_AEAD_CIPHER) to retrieve the
 cached value.
 
 =item "custom-iv" (B<OSSL_CIPHER_PARAM_CUSTOM_IV>) <integer>
@@ -787,7 +787,7 @@ cached value.
 Gets 1 if the cipher algorithm I<cipher> has a custom IV, otherwise it gets 0.
 Storing and initializing the IV is left entirely to the implementation, if a
 custom IV is used.
-Use (EVP_CIPHER_get_flags(cipher) & EVP_CIPH_CUSTOM_IV) to retrieve the
+Use (OPENSSL_BOX_EVP_CIPHER_get_flags(cipher) & EVP_CIPH_CUSTOM_IV) to retrieve the
 cached value.
 
 =item "cts" (B<OSSL_CIPHER_PARAM_CTS>) <integer>
@@ -796,7 +796,7 @@ Gets 1 if the cipher algorithm I<cipher> uses ciphertext stealing,
 otherwise it gets 0.
 This is currently used to indicate that the cipher is a one shot that only
 allows a single call to EVP_CipherUpdate().
-Use (EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_CTS) to retrieve the
+Use (OPENSSL_BOX_EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_CTS) to retrieve the
 cached value.
 
 =item "tls-multi" (B<OSSL_CIPHER_PARAM_TLS1_MULTIBLOCK>) <integer>
@@ -804,7 +804,7 @@ cached value.
 Gets 1 if the cipher algorithm I<cipher> supports interleaving of crypto blocks,
 otherwise it gets 0. The interleaving is an optimization only applicable to certain
 TLS ciphers.
-Use (EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_TLS1_1_MULTIBLOCK) to retrieve the
+Use (OPENSSL_BOX_EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_TLS1_1_MULTIBLOCK) to retrieve the
 cached value.
 
 =item "has-randkey" (B<OSSL_CIPHER_PARAM_HAS_RANDKEY>) <integer>
@@ -823,8 +823,8 @@ Otherwise gets 0 or the parameter might not be present at all.
 
 =head2 Gettable and Settable EVP_CIPHER_CTX parameters
 
-The following L<OSSL_PARAM(3)> keys can be used with both EVP_CIPHER_CTX_get_params()
-and EVP_CIPHER_CTX_set_params().
+The following L<OSSL_PARAM(3)> keys can be used with both OPENSSL_BOX_EVP_CIPHER_CTX_get_params()
+and OPENSSL_BOX_EVP_CIPHER_CTX_set_params().
 
 =over 4
 
@@ -832,20 +832,20 @@ and EVP_CIPHER_CTX_set_params().
 
 Gets or sets the padding mode for the cipher context I<ctx>.
 Padding is enabled if the value is 1, and disabled if the value is 0.
-See also EVP_CIPHER_CTX_set_padding().
+See also OPENSSL_BOX_EVP_CIPHER_CTX_set_padding().
 
 =item "num" (B<OSSL_CIPHER_PARAM_NUM>) <unsigned integer>
 
 Gets or sets the cipher specific "num" parameter for the cipher context I<ctx>.
 Built-in ciphers typically use this to track how much of the current underlying
 block has been "used" already.
-See also EVP_CIPHER_CTX_get_num() and EVP_CIPHER_CTX_set_num().
+See also OPENSSL_BOX_EVP_CIPHER_CTX_get_num() and OPENSSL_BOX_EVP_CIPHER_CTX_set_num().
 
 =item "keylen" (B<OSSL_CIPHER_PARAM_KEYLEN>) <unsigned integer>
 
 Gets or sets the key length for the cipher context I<ctx>.
 The length of the "keylen" parameter should not exceed that of a B<size_t>.
-See also EVP_CIPHER_CTX_get_key_length() and EVP_CIPHER_CTX_set_key_length().
+See also OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length() and OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length().
 
 =item "tag" (B<OSSL_CIPHER_PARAM_AEAD_TAG>) <octet string>
 
@@ -872,20 +872,20 @@ This is used by the RC5 cipher.
 =item "algorithm-id" (B<OSSL_CIPHER_PARAM_ALGORITHM_ID>) <octet string>
 
 Used to get the DER encoded AlgorithmIdentifier from the cipher
-implementation.  Functions like L<EVP_PKEY_CTX_get_algor(3)> use this
+implementation.  Functions like L<OPENSSL_BOX_EVP_PKEY_CTX_get_algor(3)> use this
 parameter.
 
 =item "algorithm-id-params" (B<OSSL_CIPHER_PARAM_ALGORITHM_ID_PARAMS>) <octet string>
 
 Used to pass the DER encoded AlgorithmIdentifier parameter to or from
 the cipher implementation.
-Functions like L<EVP_CIPHER_CTX_set_algor_params(3)> and
-L<EVP_CIPHER_CTX_get_algor_params(3)> use this parameter.
+Functions like L<OPENSSL_BOX_EVP_CIPHER_CTX_set_algor_params(3)> and
+L<OPENSSL_BOX_EVP_CIPHER_CTX_get_algor_params(3)> use this parameter.
 
 =item "alg_id_params" (B<OSSL_CIPHER_PARAM_ALGORITHM_ID_PARAMS_OLD>) <octet string>
 
 An deprecated alias for "algorithm-id-params", only used by
-L<EVP_CIPHER_param_to_asn1(3)> and L<EVP_CIPHER_asn1_to_param(3)>.
+L<OPENSSL_BOX_EVP_CIPHER_param_to_asn1(3)> and L<OPENSSL_BOX_EVP_CIPHER_asn1_to_param(3)>.
 
 =item "cts_mode" (B<OSSL_CIPHER_PARAM_CTS_MODE>) <UTF8 string>
 
@@ -932,7 +932,7 @@ cipher operation (either 4 or 8 records).
 
 =head2 Gettable EVP_CIPHER_CTX parameters
 
-The following L<OSSL_PARAM(3)> keys can be used with EVP_CIPHER_CTX_get_params():
+The following L<OSSL_PARAM(3)> keys can be used with OPENSSL_BOX_EVP_CIPHER_CTX_get_params():
 
 =over 4
 
@@ -940,12 +940,12 @@ The following L<OSSL_PARAM(3)> keys can be used with EVP_CIPHER_CTX_get_params()
 
 Gets the IV length for the cipher context I<ctx>.
 The length of the "ivlen" parameter should not exceed that of a B<size_t>.
-See also EVP_CIPHER_CTX_get_iv_length().
+See also OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length().
 
 =item "iv" (B<OSSL_CIPHER_PARAM_IV>) <octet string OR octet ptr>
 
 Gets the IV used to initialize the associated cipher context I<ctx>.
-See also EVP_CIPHER_CTX_get_original_iv().
+See also OPENSSL_BOX_EVP_CIPHER_CTX_get_original_iv().
 
 =item "updated-iv" (B<OSSL_CIPHER_PARAM_UPDATED_IV>) <octet string OR octet ptr>
 
@@ -953,7 +953,7 @@ Gets the updated pseudo-IV state for the associated cipher context, e.g.,
 the previous ciphertext block for CBC mode or the iteratively encrypted IV
 value for OFB mode.  Note that octet pointer access is deprecated and is
 provided only for backwards compatibility with historical libcrypto APIs.
-See also EVP_CIPHER_CTX_get_updated_iv().
+See also OPENSSL_BOX_EVP_CIPHER_CTX_get_updated_iv().
 
 =item "randkey" (B<OSSL_CIPHER_PARAM_RANDOM_KEY>) <octet string>
 
@@ -966,7 +966,7 @@ the key to odd parity).
 Gets the tag length to be used for an AEAD cipher for the associated cipher
 context I<ctx>. It gets a default value if it has not been set.
 The length of the "taglen" parameter should not exceed that of a B<size_t>.
-See also EVP_CIPHER_CTX_get_tag_length().
+See also OPENSSL_BOX_EVP_CIPHER_CTX_get_tag_length().
 
 =item "tlsaadpad" (B<OSSL_CIPHER_PARAM_AEAD_TLS1_AAD_PAD>) <unsigned integer>
 
@@ -1019,7 +1019,7 @@ See FIPS 140-3 IG C.H for information related to IV requirements.
 
 =head2 Settable EVP_CIPHER_CTX parameters
 
-The following L<OSSL_PARAM(3)> keys can be used with EVP_CIPHER_CTX_set_params():
+The following L<OSSL_PARAM(3)> keys can be used with OPENSSL_BOX_EVP_CIPHER_CTX_set_params():
 
 =over 4
 
@@ -1041,7 +1041,7 @@ EVP_DecryptUpdate() and EVP_CipherUpdate() is the number of bits or number of by
 Setting "use-bits" to 1 uses bits. The default is in bytes.
 This is only used for B<CFB1> ciphers.
 
-This can be set using EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPH_FLAG_LENGTH_BITS).
+This can be set using OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPH_FLAG_LENGTH_BITS).
 
 =item "tls-version" (B<OSSL_CIPHER_PARAM_TLS_VERSION>) <integer>
 
@@ -1177,135 +1177,135 @@ to return 0.
 
 =head1 CONTROLS
 
-The Mappings from EVP_CIPHER_CTX_ctrl() identifiers to PARAMETERS are listed
+The Mappings from OPENSSL_BOX_EVP_CIPHER_CTX_ctrl() identifiers to PARAMETERS are listed
 in the following section. See the L</PARAMETERS> section for more details.
 
-EVP_CIPHER_CTX_ctrl() can be used to send the following standard controls:
+OPENSSL_BOX_EVP_CIPHER_CTX_ctrl() can be used to send the following standard controls:
 
 =over 4
 
 =item EVP_CTRL_AEAD_SET_IVLEN and EVP_CTRL_GET_IVLEN
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() and
-EVP_CIPHER_CTX_get_params() get called with an L<OSSL_PARAM(3)> item with the
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() and
+OPENSSL_BOX_EVP_CIPHER_CTX_get_params() get called with an L<OSSL_PARAM(3)> item with the
 key "ivlen" (B<OSSL_CIPHER_PARAM_IVLEN>).
 
 =item EVP_CTRL_AEAD_SET_IV_FIXED
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() gets called
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() gets called
 with an L<OSSL_PARAM(3)> item with the key "tlsivfixed"
 (B<OSSL_CIPHER_PARAM_AEAD_TLS1_IV_FIXED>).
 
 =item EVP_CTRL_AEAD_SET_MAC_KEY
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() gets called
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() gets called
 with an L<OSSL_PARAM(3)> item with the key "mackey"
 (B<OSSL_CIPHER_PARAM_AEAD_MAC_KEY>).
 
 =item EVP_CTRL_AEAD_SET_TAG and EVP_CTRL_AEAD_GET_TAG
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() and
-EVP_CIPHER_CTX_get_params() get called with an L<OSSL_PARAM(3)> item with the
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() and
+OPENSSL_BOX_EVP_CIPHER_CTX_get_params() get called with an L<OSSL_PARAM(3)> item with the
 key "tag" (B<OSSL_CIPHER_PARAM_AEAD_TAG>).
 
 =item EVP_CTRL_CCM_SET_L
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() gets called
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() gets called
 with an L<OSSL_PARAM(3)> item with the key "ivlen" (B<OSSL_CIPHER_PARAM_IVLEN>)
 with a value of (15 - L)
 
 =item EVP_CTRL_COPY
 
-There is no OSSL_PARAM mapping for this. Use EVP_CIPHER_CTX_copy() instead.
+There is no OSSL_PARAM mapping for this. Use OPENSSL_BOX_EVP_CIPHER_CTX_copy() instead.
 
 =item EVP_CTRL_GCM_SET_IV_INV
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() gets called
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() gets called
 with an L<OSSL_PARAM(3)> item with the key "tlsivinv"
 (B<OSSL_CIPHER_PARAM_AEAD_TLS1_SET_IV_INV>).
 
 =item EVP_CTRL_RAND_KEY
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() gets called
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() gets called
 with an L<OSSL_PARAM(3)> item with the key "randkey"
 (B<OSSL_CIPHER_PARAM_RANDOM_KEY>).
 
 =item EVP_CTRL_SET_KEY_LENGTH
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() gets called
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() gets called
 with an L<OSSL_PARAM(3)> item with the key "keylen" (B<OSSL_CIPHER_PARAM_KEYLEN>).
 
 =item EVP_CTRL_SET_RC2_KEY_BITS and EVP_CTRL_GET_RC2_KEY_BITS
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() and
-EVP_CIPHER_CTX_get_params() get called with an L<OSSL_PARAM(3)> item with the
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() and
+OPENSSL_BOX_EVP_CIPHER_CTX_get_params() get called with an L<OSSL_PARAM(3)> item with the
 key "keybits" (B<OSSL_CIPHER_PARAM_RC2_KEYBITS>).
 
 =item EVP_CTRL_SET_RC5_ROUNDS and EVP_CTRL_GET_RC5_ROUNDS
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() and
-EVP_CIPHER_CTX_get_params() get called with an L<OSSL_PARAM(3)> item with the
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() and
+OPENSSL_BOX_EVP_CIPHER_CTX_get_params() get called with an L<OSSL_PARAM(3)> item with the
 key "rounds" (B<OSSL_CIPHER_PARAM_ROUNDS>).
 
 =item EVP_CTRL_SET_SPEED
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() gets called
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() gets called
 with an L<OSSL_PARAM(3)> item with the key "speed" (B<OSSL_CIPHER_PARAM_SPEED>).
 
 =item EVP_CTRL_GCM_IV_GEN
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_get_params() gets called
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_get_params() gets called
 with an L<OSSL_PARAM(3)> item with the key
 "tlsivgen" (B<OSSL_CIPHER_PARAM_AEAD_TLS1_GET_IV_GEN>).
 
 =item EVP_CTRL_AEAD_TLS1_AAD
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() get called
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() get called
 with an L<OSSL_PARAM(3)> item with the key
 "tlsaad" (B<OSSL_CIPHER_PARAM_AEAD_TLS1_AAD>)
-followed by EVP_CIPHER_CTX_get_params() with a key of
+followed by OPENSSL_BOX_EVP_CIPHER_CTX_get_params() with a key of
 "tlsaadpad" (B<OSSL_CIPHER_PARAM_AEAD_TLS1_AAD_PAD>).
 
 =item EVP_CTRL_TLS1_1_MULTIBLOCK_MAX_BUFSIZE
 
 When used with a fetched B<EVP_CIPHER>,
-EVP_CIPHER_CTX_set_params() gets called with an L<OSSL_PARAM(3)> item with the
+OPENSSL_BOX_EVP_CIPHER_CTX_set_params() gets called with an L<OSSL_PARAM(3)> item with the
 key OSSL_CIPHER_PARAM_TLS1_MULTIBLOCK_MAX_SEND_FRAGMENT
-followed by EVP_CIPHER_CTX_get_params() with a key of
+followed by OPENSSL_BOX_EVP_CIPHER_CTX_get_params() with a key of
 "tls1multi_maxbufsz" (B<OSSL_CIPHER_PARAM_TLS1_MULTIBLOCK_MAX_BUFSIZE>).
 
 =item EVP_CTRL_TLS1_1_MULTIBLOCK_AAD
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() gets called
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() gets called
 with L<OSSL_PARAM(3)> items with the keys
 "tls1multi_aad" (B<OSSL_CIPHER_PARAM_TLS1_MULTIBLOCK_AAD>) and
 "tls1multi_interleave" (B<OSSL_CIPHER_PARAM_TLS1_MULTIBLOCK_INTERLEAVE>)
-followed by EVP_CIPHER_CTX_get_params() with keys of
+followed by OPENSSL_BOX_EVP_CIPHER_CTX_get_params() with keys of
 "tls1multi_aadpacklen" (B<OSSL_CIPHER_PARAM_TLS1_MULTIBLOCK_AAD_PACKLEN>) and
 "tls1multi_interleave" (B<OSSL_CIPHER_PARAM_TLS1_MULTIBLOCK_INTERLEAVE>).
 
 =item EVP_CTRL_TLS1_1_MULTIBLOCK_ENCRYPT
 
-When used with a fetched B<EVP_CIPHER>, EVP_CIPHER_CTX_set_params() gets called
+When used with a fetched B<EVP_CIPHER>, OPENSSL_BOX_EVP_CIPHER_CTX_set_params() gets called
 with L<OSSL_PARAM(3)> items with the keys
 "tls1multi_enc" (B<OSSL_CIPHER_PARAM_TLS1_MULTIBLOCK_ENC>),
 "tls1multi_encin" (B<OSSL_CIPHER_PARAM_TLS1_MULTIBLOCK_ENC_IN>) and
 "tls1multi_interleave" (B<OSSL_CIPHER_PARAM_TLS1_MULTIBLOCK_INTERLEAVE>),
-followed by EVP_CIPHER_CTX_get_params() with a key of
+followed by OPENSSL_BOX_EVP_CIPHER_CTX_get_params() with a key of
 "tls1multi_enclen" (B<OSSL_CIPHER_PARAM_TLS1_MULTIBLOCK_ENC_LEN>).
 
 =back
 
 =head1 FLAGS
 
-EVP_CIPHER_CTX_set_flags(), EVP_CIPHER_CTX_clear_flags() and EVP_CIPHER_CTX_test_flags().
+OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(), OPENSSL_BOX_EVP_CIPHER_CTX_clear_flags() and OPENSSL_BOX_EVP_CIPHER_CTX_test_flags().
 can be used to manipulate and test these B<EVP_CIPHER_CTX> flags:
 
 =over 4
 
 =item EVP_CIPH_NO_PADDING
 
-Used by EVP_CIPHER_CTX_set_padding().
+Used by OPENSSL_BOX_EVP_CIPHER_CTX_set_padding().
 
 See also L</Gettable and Settable EVP_CIPHER_CTX parameters> "padding"
 
@@ -1365,7 +1365,7 @@ EVP_CIPHER_flags() uses the following flags for legacy purposes only:
 
 =item EVP_CIPH_FLAG_DEFAULT_ASN1
 
-See L<EVP_CIPHER_meth_set_flags(3)> for further information related to the above
+See L<OPENSSL_BOX_EVP_CIPHER_meth_set_flags(3)> for further information related to the above
 flags.
 
 =back
@@ -1375,14 +1375,14 @@ flags.
 EVP_CIPHER_fetch() returns a pointer to a B<EVP_CIPHER> for success
 and NULL for failure.
 
-EVP_CIPHER_up_ref() returns 1 for success or 0 otherwise.
+OPENSSL_BOX_EVP_CIPHER_up_ref() returns 1 for success or 0 otherwise.
 
-EVP_CIPHER_CTX_new() returns a pointer to a newly created
+OPENSSL_BOX_EVP_CIPHER_CTX_new() returns a pointer to a newly created
 B<EVP_CIPHER_CTX> for success and NULL for failure.
 
-EVP_CIPHER_CTX_dup() returns a new EVP_CIPHER_CTX if successful or NULL on failure.
+OPENSSL_BOX_EVP_CIPHER_CTX_dup() returns a new EVP_CIPHER_CTX if successful or NULL on failure.
 
-EVP_CIPHER_CTX_copy() returns 1 if successful or 0 for failure.
+OPENSSL_BOX_EVP_CIPHER_CTX_copy() returns 1 if successful or 0 for failure.
 
 EVP_EncryptInit_ex2(), EVP_EncryptUpdate() and EVP_EncryptFinal_ex()
 return 1 for success and 0 for failure.
@@ -1403,7 +1403,7 @@ encryption/decryption, or the number of bytes authenticated in a call specifying
 AAD for an AEAD cipher, if the flag B<EVP_CIPH_FLAG_CUSTOM_CIPHER> is set for
 the cipher.
 
-EVP_CIPHER_can_pipeline() returns 1 if the cipher can be used in a pipeline, 0 otherwise.
+OPENSSL_BOX_EVP_CIPHER_can_pipeline() returns 1 if the cipher can be used in a pipeline, 0 otherwise.
 
 EVP_CipherPipelineEncryptInit() and EVP_CipherPipelineDecryptInit()
 return 1 for success and 0 for failure.
@@ -1411,47 +1411,47 @@ return 1 for success and 0 for failure.
 EVP_CipherPipelineUpdate() and EVP_CipherPipelineFinal()
 return 1 for success and 0 for failure.
 
-EVP_CIPHER_CTX_reset() returns 1 for success and 0 for failure.
+OPENSSL_BOX_EVP_CIPHER_CTX_reset() returns 1 for success and 0 for failure.
 
-EVP_get_cipherbyname(), EVP_get_cipherbynid() and EVP_get_cipherbyobj()
+OPENSSL_BOX_EVP_get_cipherbyname(), EVP_get_cipherbynid() and EVP_get_cipherbyobj()
 return an B<EVP_CIPHER> structure or NULL on error.
 
-EVP_CIPHER_get_nid() and EVP_CIPHER_CTX_get_nid() return a NID.
+OPENSSL_BOX_EVP_CIPHER_get_nid() and OPENSSL_BOX_EVP_CIPHER_CTX_get_nid() return a NID.
 
-EVP_CIPHER_get_block_size() and EVP_CIPHER_CTX_get_block_size() return the
+OPENSSL_BOX_EVP_CIPHER_get_block_size() and OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size() return the
 block size, or 0 on error.
 
-EVP_CIPHER_get_key_length() and EVP_CIPHER_CTX_get_key_length() return the key
+OPENSSL_BOX_EVP_CIPHER_get_key_length() and OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length() return the key
 length.
 
-EVP_CIPHER_CTX_set_padding() always returns 1.
+OPENSSL_BOX_EVP_CIPHER_CTX_set_padding() always returns 1.
 
-EVP_CIPHER_get_iv_length() and EVP_CIPHER_CTX_get_iv_length() return the IV
+OPENSSL_BOX_EVP_CIPHER_get_iv_length() and OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length() return the IV
 length, zero if the cipher does not use an IV and a negative value on error.
 
-EVP_CIPHER_CTX_get_tag_length() return the tag length or zero if the cipher
+OPENSSL_BOX_EVP_CIPHER_CTX_get_tag_length() return the tag length or zero if the cipher
 does not use a tag.
 
-EVP_CIPHER_get_type() and EVP_CIPHER_CTX_get_type() return the NID of the
+OPENSSL_BOX_EVP_CIPHER_get_type() and EVP_CIPHER_CTX_get_type() return the NID of the
 cipher's OBJECT IDENTIFIER or NID_undef if it has no defined
 OBJECT IDENTIFIER.
 
-EVP_CIPHER_CTX_cipher() returns an B<EVP_CIPHER> structure.
+OPENSSL_BOX_EVP_CIPHER_CTX_cipher() returns an B<EVP_CIPHER> structure.
 
-EVP_CIPHER_CTX_get_num() returns a nonnegative num value or
+OPENSSL_BOX_EVP_CIPHER_CTX_get_num() returns a nonnegative num value or
 B<EVP_CTRL_RET_UNSUPPORTED> if the implementation does not support the call
 or on any other error.
 
-EVP_CIPHER_CTX_set_num() returns 1 on success and 0 if the implementation
+OPENSSL_BOX_EVP_CIPHER_CTX_set_num() returns 1 on success and 0 if the implementation
 does not support the call or on any other error.
 
-EVP_CIPHER_CTX_is_encrypting() returns 1 if the I<ctx> is set up for encryption
+OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting() returns 1 if the I<ctx> is set up for encryption
 0 otherwise.
 
-EVP_CIPHER_param_to_asn1() and EVP_CIPHER_asn1_to_param() return greater
+OPENSSL_BOX_EVP_CIPHER_param_to_asn1() and OPENSSL_BOX_EVP_CIPHER_asn1_to_param() return greater
 than zero for success and zero or a negative number on failure.
 
-EVP_CIPHER_CTX_rand_key() returns 1 for success and zero or a negative number
+OPENSSL_BOX_EVP_CIPHER_CTX_rand_key() returns 1 for success and zero or a negative number
 for failure.
 
 EVP_CIPHER_names_do_all() returns 1 if the callback was called for all names.
@@ -1466,7 +1466,7 @@ interface.
 
 =over 4
 
-=item EVP_enc_null()
+=item OPENSSL_BOX_EVP_enc_null()
 
 Null cipher: does nothing.
 
@@ -1503,7 +1503,7 @@ The following I<ctrl>s are supported in GCM and OCB modes.
 
 =over 4
 
-=item EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, ivlen, NULL)
+=item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, ivlen, NULL)
 
 Sets the IV length. This call can only be made before specifying an IV. If
 not called a default IV length is used.
@@ -1511,7 +1511,7 @@ not called a default IV length is used.
 For GCM AES and OCB AES the default is 12 (i.e. 96 bits). For OCB mode the
 maximum is 15.
 
-=item EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, taglen, tag)
+=item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, taglen, tag)
 
 Writes C<taglen> bytes of the tag value to the buffer indicated by C<tag>.
 This call can only be made when encrypting data and B<after> all data has been
@@ -1520,7 +1520,7 @@ processed (e.g. after an EVP_EncryptFinal() call).
 For OCB, C<taglen> must either be 16 or the value previously set via
 B<EVP_CTRL_AEAD_SET_TAG>.
 
-=item EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, taglen, tag)
+=item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, taglen, tag)
 
 When decrypting, this call sets the expected tag to C<taglen> bytes from C<tag>.
 C<taglen> must be between 1 and 16 inclusive.
@@ -1555,7 +1555,7 @@ The following I<ctrl>s are supported in CCM mode.
 
 =over 4
 
-=item EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, taglen, tag)
+=item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, taglen, tag)
 
 This call is made to set the expected B<CCM> tag value when decrypting or
 the length of the tag (with the C<tag> parameter set to NULL) when encrypting.
@@ -1564,11 +1564,11 @@ used (12 for AES). When decrypting, the tag needs to be set before passing
 in data to be decrypted, but as in GCM and OCB mode, it can be set after
 passing additional authenticated data (see L</AEAD INTERFACE>).
 
-=item EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_CCM_SET_L, ivlen, NULL)
+=item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_CCM_SET_L, ivlen, NULL)
 
 Sets the CCM B<L> value. If not set a default is used (8 for AES).
 
-=item EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, ivlen, NULL)
+=item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, ivlen, NULL)
 
 Sets the CCM nonce (IV) length. This call can only be made before specifying a
 nonce value. The nonce length is given by B<15 - L> so it is 7 by default for
@@ -1610,14 +1610,14 @@ the Synthetic Initialization Vector:
 
 =over 4
 
-=item EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, taglen, tag);
+=item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, taglen, tag);
 
 Writes I<taglen> bytes of the tag value (the Synthetic Initialization Vector)
 to the buffer indicated by I<tag>. This call can only be made when encrypting
 data and B<after> all data has been processed (e.g. after an EVP_EncryptFinal()
 call). For SIV mode the taglen must be 16.
 
-=item EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, taglen, tag);
+=item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, taglen, tag);
 
 Sets the expected tag (the Synthetic Initialization Vector) to I<taglen>
 bytes from I<tag>. This call is only legal when decrypting data and must be
@@ -1638,14 +1638,14 @@ The following I<ctrl>s are supported for the ChaCha20-Poly1305 AEAD algorithm.
 
 =over 4
 
-=item EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, ivlen, NULL)
+=item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, ivlen, NULL)
 
 Sets the nonce length. This call is now redundant since the only valid value
 is the default length of 12 (i.e. 96 bits).
 Prior to OpenSSL 3.0 a nonce of less than 12 bytes could be used to automatically
 pad the iv with leading 0 bytes to make it 12 bytes in length.
 
-=item EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, taglen, tag)
+=item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, taglen, tag)
 
 Writes C<taglen> bytes of the tag value to the buffer indicated by C<tag>.
 This call can only be made when encrypting data and B<after> all data has been
@@ -1654,7 +1654,7 @@ processed (e.g. after an EVP_EncryptFinal() call).
 C<taglen> specified here must be 16 (B<POLY1305_BLOCK_SIZE>, i.e. 128-bits) or
 less.
 
-=item EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, taglen, tag)
+=item OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, taglen, tag)
 
 Sets the expected tag to C<taglen> bytes from C<tag>.
 The tag length can only be set before specifying an IV.
@@ -1743,16 +1743,16 @@ Encrypt a string using IDEA:
      EVP_CIPHER_CTX *ctx;
      FILE *out;
 
-     ctx = EVP_CIPHER_CTX_new();
-     if (!EVP_EncryptInit_ex2(ctx, EVP_idea_cbc(), key, iv, NULL)) {
+     ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
+     if (!EVP_EncryptInit_ex2(ctx, OPENSSL_BOX_EVP_idea_cbc(), key, iv, NULL)) {
          /* Error */
-         EVP_CIPHER_CTX_free(ctx);
+         OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
          return 0;
      }
 
      if (!EVP_EncryptUpdate(ctx, outbuf, &outlen, intext, strlen(intext))) {
          /* Error */
-         EVP_CIPHER_CTX_free(ctx);
+         OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
          return 0;
      }
      /*
@@ -1761,11 +1761,11 @@ Encrypt a string using IDEA:
       */
      if (!EVP_EncryptFinal_ex(ctx, outbuf + outlen, &tmplen)) {
          /* Error */
-         EVP_CIPHER_CTX_free(ctx);
+         OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
          return 0;
      }
      outlen += tmplen;
-     EVP_CIPHER_CTX_free(ctx);
+     OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
      /*
       * Need binary mode for fopen because encrypted data is
       * binary data. Also cannot use strlen() on it because
@@ -1805,20 +1805,20 @@ with a 128-bit key:
      unsigned char iv[] = "1234567887654321";
 
      /* Don't set key or IV right away; we want to check lengths */
-     ctx = EVP_CIPHER_CTX_new();
-     if (!EVP_CipherInit_ex2(ctx, EVP_aes_128_cbc(), NULL, NULL,
+     ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
+     if (!EVP_CipherInit_ex2(ctx, OPENSSL_BOX_EVP_aes_128_cbc(), NULL, NULL,
                              do_encrypt, NULL)) {
          /* Error */
-         EVP_CIPHER_CTX_free(ctx);
+         OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
          return 0;
      }
-     OPENSSL_assert(EVP_CIPHER_CTX_get_key_length(ctx) == 16);
-     OPENSSL_assert(EVP_CIPHER_CTX_get_iv_length(ctx) == 16);
+     OPENSSL_assert(OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx) == 16);
+     OPENSSL_assert(OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(ctx) == 16);
 
      /* Now we can set key and IV */
      if (!EVP_CipherInit_ex2(ctx, NULL, key, iv, do_encrypt, NULL)) {
          /* Error */
-         EVP_CIPHER_CTX_free(ctx);
+         OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
          return 0;
      }
 
@@ -1828,19 +1828,19 @@ with a 128-bit key:
              break;
          if (!EVP_CipherUpdate(ctx, outbuf, &outlen, inbuf, inlen)) {
              /* Error */
-             EVP_CIPHER_CTX_free(ctx);
+             OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
              return 0;
          }
          fwrite(outbuf, 1, outlen, out);
      }
      if (!EVP_CipherFinal_ex(ctx, outbuf, &outlen)) {
          /* Error */
-         EVP_CIPHER_CTX_free(ctx);
+         OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
          return 0;
      }
      fwrite(outbuf, 1, outlen, out);
 
-     EVP_CIPHER_CTX_free(ctx);
+     OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
      return 1;
  }
 
@@ -1860,7 +1860,7 @@ Encryption using AES-CBC with a 256-bit key with "CS1" ciphertext stealing.
      EVP_CIPHER *cipher = NULL;
      OSSL_PARAM params[2];
 
-     ctx = EVP_CIPHER_CTX_new();
+     ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
      cipher = EVP_CIPHER_fetch(NULL, "AES-256-CBC-CTS", NULL);
      if (ctx == NULL || cipher == NULL)
          goto err;
@@ -1883,8 +1883,8 @@ Encryption using AES-CBC with a 256-bit key with "CS1" ciphertext stealing.
          goto err;
      ret = 1;
  err:
-     EVP_CIPHER_free(cipher);
-     EVP_CIPHER_CTX_free(ctx);
+     OPENSSL_BOX_EVP_CIPHER_free(cipher);
+     OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
      return ret;
  }
 
@@ -1898,40 +1898,40 @@ L<life_cycle-cipher(7)>
 
 Supported ciphers are listed in:
 
-L<EVP_aes_128_gcm(3)>,
-L<EVP_aria_128_gcm(3)>,
-L<EVP_bf_cbc(3)>,
-L<EVP_camellia_128_ecb(3)>,
-L<EVP_cast5_cbc(3)>,
-L<EVP_chacha20(3)>,
-L<EVP_des_cbc(3)>,
-L<EVP_desx_cbc(3)>,
-L<EVP_idea_cbc(3)>,
-L<EVP_rc2_cbc(3)>,
-L<EVP_rc4(3)>,
-L<EVP_rc5_32_12_16_cbc(3)>,
-L<EVP_seed_cbc(3)>,
-L<EVP_sm4_cbc(3)>,
+L<OPENSSL_BOX_EVP_aes_128_gcm(3)>,
+L<OPENSSL_BOX_EVP_aria_128_gcm(3)>,
+L<OPENSSL_BOX_EVP_bf_cbc(3)>,
+L<OPENSSL_BOX_EVP_camellia_128_ecb(3)>,
+L<OPENSSL_BOX_EVP_cast5_cbc(3)>,
+L<OPENSSL_BOX_EVP_chacha20(3)>,
+L<OPENSSL_BOX_EVP_des_cbc(3)>,
+L<OPENSSL_BOX_EVP_desx_cbc(3)>,
+L<OPENSSL_BOX_EVP_idea_cbc(3)>,
+L<OPENSSL_BOX_EVP_rc2_cbc(3)>,
+L<OPENSSL_BOX_EVP_rc4(3)>,
+L<OPENSSL_BOX_EVP_rc5_32_12_16_cbc(3)>,
+L<OPENSSL_BOX_EVP_seed_cbc(3)>,
+L<OPENSSL_BOX_EVP_sm4_cbc(3)>,
 
 =head1 HISTORY
 
 Support for OCB mode was added in OpenSSL 1.1.0.
 
 B<EVP_CIPHER_CTX> was made opaque in OpenSSL 1.1.0.  As a result,
-EVP_CIPHER_CTX_reset() appeared and EVP_CIPHER_CTX_cleanup()
+OPENSSL_BOX_EVP_CIPHER_CTX_reset() appeared and EVP_CIPHER_CTX_cleanup()
 disappeared.  EVP_CIPHER_CTX_init() remains as an alias for
-EVP_CIPHER_CTX_reset().
+OPENSSL_BOX_EVP_CIPHER_CTX_reset().
 
-The EVP_CIPHER_CTX_cipher() function was deprecated in OpenSSL 3.0; use
-EVP_CIPHER_CTX_get0_cipher() instead.
+The OPENSSL_BOX_EVP_CIPHER_CTX_cipher() function was deprecated in OpenSSL 3.0; use
+OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher() instead.
 
 The EVP_EncryptInit_ex2(), EVP_DecryptInit_ex2(), EVP_CipherInit_ex2(),
-EVP_CIPHER_fetch(), EVP_CIPHER_free(), EVP_CIPHER_up_ref(),
-EVP_CIPHER_CTX_get0_cipher(), EVP_CIPHER_CTX_get1_cipher(),
-EVP_CIPHER_get_params(), EVP_CIPHER_CTX_set_params(),
-EVP_CIPHER_CTX_get_params(), EVP_CIPHER_gettable_params(),
-EVP_CIPHER_settable_ctx_params(), EVP_CIPHER_gettable_ctx_params(),
-EVP_CIPHER_CTX_settable_params() and EVP_CIPHER_CTX_gettable_params()
+EVP_CIPHER_fetch(), OPENSSL_BOX_EVP_CIPHER_free(), OPENSSL_BOX_EVP_CIPHER_up_ref(),
+OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(), OPENSSL_BOX_EVP_CIPHER_CTX_get1_cipher(),
+OPENSSL_BOX_EVP_CIPHER_get_params(), OPENSSL_BOX_EVP_CIPHER_CTX_set_params(),
+OPENSSL_BOX_EVP_CIPHER_CTX_get_params(), OPENSSL_BOX_EVP_CIPHER_gettable_params(),
+OPENSSL_BOX_EVP_CIPHER_settable_ctx_params(), OPENSSL_BOX_EVP_CIPHER_gettable_ctx_params(),
+OPENSSL_BOX_EVP_CIPHER_CTX_settable_params() and OPENSSL_BOX_EVP_CIPHER_CTX_gettable_params()
 functions were added in 3.0.
 
 The EVP_CIPHER_nid(), EVP_CIPHER_name(), EVP_CIPHER_block_size(),
@@ -1945,17 +1945,17 @@ OpenSSL 3.0, respectively. The old names are kept as non-deprecated
 alias macros.
 
 The EVP_CIPHER_CTX_encrypting() function was renamed to
-EVP_CIPHER_CTX_is_encrypting() in OpenSSL 3.0. The old name is kept as
+OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting() in OpenSSL 3.0. The old name is kept as
 non-deprecated alias macro.
 
 The EVP_CIPHER_CTX_flags() macro was deprecated in OpenSSL 1.1.0.
 
-EVP_CIPHER_CTX_dup() was added in OpenSSL 3.2.
+OPENSSL_BOX_EVP_CIPHER_CTX_dup() was added in OpenSSL 3.2.
 
 EVP_CipherInit_SKEY() was added in OpenSSL 3.5.
 
 Prior to OpenSSL 3.5, passing a NULL I<ctx> to
-B<EVP_CIPHER_CTX_get_block_size()> would result in a NULL pointer dereference,
+B<OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size()> would result in a NULL pointer dereference,
 rather than a 0 return value indicating an error.
 
 =head1 COPYRIGHT

@@ -113,13 +113,13 @@ int pkeyparam_main(int argc, char **argv)
             ctx = EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), pkey,
                                              app_get0_propq());
         else
-            ctx = EVP_PKEY_CTX_new(pkey, e);
+            ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, e);
         if (ctx == NULL) {
             ERR_print_errors(bio_err);
             goto end;
         }
 
-        r = EVP_PKEY_param_check(ctx);
+        r = OPENSSL_BOX_EVP_PKEY_param_check(ctx);
 
         if (r == 1) {
             BIO_printf(out, "Parameters are valid\n");
@@ -143,8 +143,8 @@ int pkeyparam_main(int argc, char **argv)
     ret = EXIT_SUCCESS;
 
  end:
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     release_engine(e);
     BIO_free_all(out);
     BIO_free(in);

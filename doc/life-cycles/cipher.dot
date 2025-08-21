@@ -14,16 +14,16 @@ digraph cipher {
     e_initialised [label="initialised\n(encryption)", fontcolor="#c94c4c"];
     e_updated [label="updated\n(encryption)", fontcolor="#c94c4c"];
 
-    begin -> newed [label="EVP_CIPHER_CTX_new"];
+    begin -> newed [label="OPENSSL_BOX_EVP_CIPHER_CTX_new"];
     newed -> initialised [label="EVP_CipherInit"];
     initialised -> initialised [label="EVP_CipherInit\n(not required but allowed)",
                                 style=dashed];
     initialised -> updated [label="EVP_CipherUpdate", weight=2];
     updated -> updated [label="EVP_CipherUpdate"];
     updated -> finaled [label="EVP_CipherFinal"];
-    finaled -> finaled [label="EVP_CIPHER_CTX_get_params\n(AEAD encryption)",
+    finaled -> finaled [label="OPENSSL_BOX_EVP_CIPHER_CTX_get_params\n(AEAD encryption)",
                         style=dashed];
-    finaled -> end [label="EVP_CIPHER_CTX_free"];
+    finaled -> end [label="OPENSSL_BOX_EVP_CIPHER_CTX_free"];
     newed -> d_initialised [label="EVP_DecryptInit"];
     d_initialised -> d_initialised [label="EVP_DecryptInit\n(not required but allowed)",
                                 style=dashed];
@@ -36,7 +36,7 @@ digraph cipher {
     e_initialised -> e_updated [label="EVP_EncryptUpdate", weight=2];
     e_updated -> e_updated [label="EVP_EncryptUpdate"];
     e_updated -> finaled [label="EVP_EncryptFinal"];
-    most -> newed [label="EVP_CIPHER_CTX_reset", style=dashed,
+    most -> newed [label="OPENSSL_BOX_EVP_CIPHER_CTX_reset", style=dashed,
                       color="#034f84", fontcolor="#034f84"];
     most [label="any of the initialised\nupdated or finaled states", style=dashed,
                       color="#034f84", fontcolor="#034f84"];
@@ -53,19 +53,19 @@ digraph cipher {
     finaled [fontcolor="#c94c4c"];
     end [label="freed", color="#deeaee", style="filled"];
 
-    begin -> newed [label="EVP_CIPHER_CTX_new"];
+    begin -> newed [label="OPENSSL_BOX_EVP_CIPHER_CTX_new"];
     newed -> initialised [label="EVP_CipherInit"];
     initialised -> initialised [label="EVP_CipherInit\n(not required but allowed)",
                                 style=dashed];
     initialised -> updated [label="EVP_CipherUpdate", weight=2];
     updated -> updated [label="EVP_CipherUpdate"];
     updated -> finaled [label="EVP_CipherFinal"];
-    finaled -> finaled [label="EVP_CIPHER_CTX_get_params\n(AEAD encryption)",
+    finaled -> finaled [label="OPENSSL_BOX_EVP_CIPHER_CTX_get_params\n(AEAD encryption)",
                         style=dashed];
-    finaled -> end [label="EVP_CIPHER_CTX_free"];
-    finaled -> newed [label="EVP_CIPHER_CTX_reset", style=dashed,
+    finaled -> end [label="OPENSSL_BOX_EVP_CIPHER_CTX_free"];
+    finaled -> newed [label="OPENSSL_BOX_EVP_CIPHER_CTX_reset", style=dashed,
                       color="#034f84", fontcolor="#034f84"];
-    updated -> newed [label="EVP_CIPHER_CTX_reset", style=dashed,
+    updated -> newed [label="OPENSSL_BOX_EVP_CIPHER_CTX_reset", style=dashed,
                       color="#034f84", fontcolor="#034f84"];
 }
 */

@@ -605,7 +605,7 @@ static int ml_kem_get_params(void *vkey, OSSL_PARAM params[])
     }
 
     if (p.encpubkey != NULL && ossl_ml_kem_have_pubkey(key)) {
-        /* Needed by EVP_PKEY_get1_encoded_public_key() */
+        /* Needed by OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key() */
         if (!ml_kem_get_key_param(key, p.encpubkey, v->pubkey_bytes,
                                   &ossl_ml_kem_encode_public_key))
             return 0;

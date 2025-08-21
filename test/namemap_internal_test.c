@@ -71,7 +71,7 @@ static int test_namemap_stored(void)
 }
 
 /*
- * Test that EVP_get_digestbyname() will use the namemap when it can't find
+ * Test that OPENSSL_BOX_EVP_get_digestbyname() will use the namemap when it can't find
  * entries in the legacy method database.
  */
 static int test_digestbyname(void)
@@ -88,10 +88,10 @@ static int test_digestbyname(void)
     if (!TEST_int_eq(ossl_namemap_add_name(nm, id, "foo"), id))
         return 0;
 
-    sha256 = EVP_get_digestbyname("SHA256");
+    sha256 = OPENSSL_BOX_EVP_get_digestbyname("SHA256");
     if (!TEST_ptr(sha256))
         return 0;
-    foo = EVP_get_digestbyname("foo");
+    foo = OPENSSL_BOX_EVP_get_digestbyname("foo");
     if (!TEST_ptr_eq(sha256, foo))
         return 0;
 
@@ -99,7 +99,7 @@ static int test_digestbyname(void)
 }
 
 /*
- * Test that EVP_get_cipherbyname() will use the namemap when it can't find
+ * Test that OPENSSL_BOX_EVP_get_cipherbyname() will use the namemap when it can't find
  * entries in the legacy method database.
  */
 static int test_cipherbyname(void)
@@ -116,10 +116,10 @@ static int test_cipherbyname(void)
     if (!TEST_int_eq(ossl_namemap_add_name(nm, id, "bar"), id))
         return 0;
 
-    aes128 = EVP_get_cipherbyname("AES-128-CBC");
+    aes128 = OPENSSL_BOX_EVP_get_cipherbyname("AES-128-CBC");
     if (!TEST_ptr(aes128))
         return 0;
-    bar = EVP_get_cipherbyname("bar");
+    bar = OPENSSL_BOX_EVP_get_cipherbyname("bar");
     if (!TEST_ptr_eq(aes128, bar))
         return 0;
 
@@ -127,7 +127,7 @@ static int test_cipherbyname(void)
 }
 
 /*
- * Test that EVP_CIPHER_is_a() responds appropriately, even for ciphers that
+ * Test that OPENSSL_BOX_EVP_CIPHER_is_a() responds appropriately, even for ciphers that
  * are entirely legacy.
  */
 static int test_cipher_is_a(void)
@@ -137,19 +137,19 @@ static int test_cipher_is_a(void)
 
     if (!TEST_ptr(fetched))
         return 0;
-    if (!TEST_true(EVP_CIPHER_is_a(fetched, "id-aes256-CCM"))
-        || !TEST_false(EVP_CIPHER_is_a(fetched, "AES-128-GCM")))
+    if (!TEST_true(OPENSSL_BOX_EVP_CIPHER_is_a(fetched, "id-aes256-CCM"))
+        || !TEST_false(OPENSSL_BOX_EVP_CIPHER_is_a(fetched, "AES-128-GCM")))
         rv = 0;
-    if (!TEST_true(EVP_CIPHER_is_a(EVP_aes_256_gcm(), "AES-256-GCM"))
-        || !TEST_false(EVP_CIPHER_is_a(EVP_aes_256_gcm(), "AES-128-CCM")))
+    if (!TEST_true(OPENSSL_BOX_EVP_CIPHER_is_a(OPENSSL_BOX_EVP_aes_256_gcm(), "AES-256-GCM"))
+        || !TEST_false(OPENSSL_BOX_EVP_CIPHER_is_a(OPENSSL_BOX_EVP_aes_256_gcm(), "AES-128-CCM")))
         rv = 0;
 
-    EVP_CIPHER_free(fetched);
+    OPENSSL_BOX_EVP_CIPHER_free(fetched);
     return rv;
 }
 
 /*
- * Test that EVP_MD_is_a() responds appropriately, even for MDs that are
+ * Test that OPENSSL_BOX_EVP_MD_is_a() responds appropriately, even for MDs that are
  * entirely legacy.
  */
 static int test_digest_is_a(void)
@@ -159,14 +159,14 @@ static int test_digest_is_a(void)
 
     if (!TEST_ptr(fetched))
         return 0;
-    if (!TEST_true(EVP_MD_is_a(fetched, "SHA512"))
-        || !TEST_false(EVP_MD_is_a(fetched, "SHA1")))
+    if (!TEST_true(OPENSSL_BOX_EVP_MD_is_a(fetched, "SHA512"))
+        || !TEST_false(OPENSSL_BOX_EVP_MD_is_a(fetched, "SHA1")))
         rv = 0;
-    if (!TEST_true(EVP_MD_is_a(EVP_sha256(), "SHA2-256"))
-        || !TEST_false(EVP_MD_is_a(EVP_sha256(), "SHA3-256")))
+    if (!TEST_true(OPENSSL_BOX_EVP_MD_is_a(OPENSSL_BOX_EVP_sha256(), "SHA2-256"))
+        || !TEST_false(OPENSSL_BOX_EVP_MD_is_a(OPENSSL_BOX_EVP_sha256(), "SHA3-256")))
         rv = 0;
 
-    EVP_MD_free(fetched);
+    OPENSSL_BOX_EVP_MD_free(fetched);
     return rv;
 }
 

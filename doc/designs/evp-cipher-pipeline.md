@@ -30,10 +30,10 @@ Flag to denote pipeline support
 cipher->flags & EVP_CIPH_FLAG_PIPELINE
 ```
 
-Input/output and aad buffers are set using `EVP_CIPHER_CTX_ctrl()`
+Input/output and aad buffers are set using `OPENSSL_BOX_EVP_CIPHER_CTX_ctrl()`
 
 ```c
-EVP_CIPHER_CTX_ctrl()
+OPENSSL_BOX_EVP_CIPHER_CTX_ctrl()
     - EVP_CTRL_AEAD_TLS1_AAD (loop: one aad at a time)
     - EVP_CTRL_SET_PIPELINE_OUTPUT_BUFS (array of buffer pointers)
     - EVP_CTRL_SET_PIPELINE_INPUT_BUFS (array of buffer pointers)
@@ -64,7 +64,7 @@ API to check for pipeline support in provided cipher.
  * @param enc   1 for encryption, 0 for decryption
  * @return 0 (pipeline not supported) or 1 (pipeline supported)
  */
-int EVP_CIPHER_can_pipeline(const EVP_CIPHER *cipher, int enc);
+int OPENSSL_BOX_EVP_CIPHER_can_pipeline(const EVP_CIPHER *cipher, int enc);
 ```
 
 Multi-call APIs for init, update and final. Associated data for AEAD ciphers
@@ -171,7 +171,7 @@ OSSL_CIPHER_PARAM_PIPELINE_AEAD_TAG (type OSSL_PARAM_OCTET_PTR)
     - [ ] a. A cipher flag `EVP_CIPH_FLAG_PROVIDED_PIPELINE` (this has to be
       different than EVP_CIPH_FLAG_PIPELINE, so that it doesn't break legacy
       applications).
-    - [x] b. A function `EVP_CIPHER_can_pipeline()` that checks if the provider
+    - [x] b. A function `OPENSSL_BOX_EVP_CIPHER_can_pipeline()` that checks if the provider
       exports pipeline functions.
     > **Justification:** flags variable is deprecated in EVP_CIPHER struct.
     > Moreover, EVP can check for presence of pipeline functions, rather than
@@ -183,7 +183,7 @@ pipelining available until the legacy code is phased out:
       `ctx->flags & EVP_CIPH_FLAG_PIPELINE`. If this flag is set, applications
       can continue to use the legacy API for pipelining.
     b. When a Provider that supports pipelining is fetched,
-      `EVP_CIPHER_can_pipeline()` will return true, allowing applications to
+      `OPENSSL_BOX_EVP_CIPHER_can_pipeline()` will return true, allowing applications to
       utilize the new API for pipelining.
 
 2. `numpipes` argument

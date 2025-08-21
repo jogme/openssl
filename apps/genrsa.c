@@ -184,8 +184,8 @@ opthelp:
         goto end;
 
     if (verbose)
-        EVP_PKEY_CTX_set_cb(ctx, progress_cb);
-    EVP_PKEY_CTX_set_app_data(ctx, bio_err);
+        OPENSSL_BOX_EVP_PKEY_CTX_set_cb(ctx, progress_cb);
+    OPENSSL_BOX_EVP_PKEY_CTX_set_app_data(ctx, bio_err);
 
     if (EVP_PKEY_CTX_set_rsa_keygen_bits(ctx, num) <= 0) {
         BIO_printf(bio_err, "Error setting RSA length\n");
@@ -238,9 +238,9 @@ opthelp:
  end:
     BN_free(bn);
     BN_GENCB_free(cb);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
-    EVP_CIPHER_free(enc);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_CIPHER_free(enc);
     BIO_free_all(out);
     release_engine(eng);
     OPENSSL_free(passout);

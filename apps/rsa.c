@@ -94,7 +94,7 @@ static int try_legacy_encoding(EVP_PKEY *pkey, int outformat, int pubout,
 {
     int ret = 0;
 #ifndef OPENSSL_NO_DEPRECATED_3_0
-    const RSA *rsa = EVP_PKEY_get0_RSA(pkey);
+    const RSA *rsa = OPENSSL_BOX_EVP_PKEY_get0_RSA(pkey);
 
     if (rsa == NULL)
         return 0;
@@ -255,7 +255,7 @@ int rsa_main(int argc, char **argv)
         ERR_print_errors(bio_err);
         goto end;
     }
-    if (!EVP_PKEY_is_a(pkey, "RSA") && !EVP_PKEY_is_a(pkey, "RSA-PSS")) {
+    if (!OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA") && !OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA-PSS")) {
         BIO_printf(bio_err, "Not an RSA key\n");
         goto end;
     }
@@ -294,8 +294,8 @@ int rsa_main(int argc, char **argv)
             ERR_print_errors(bio_err);
             goto end;
         }
-        r = EVP_PKEY_check(pctx);
-        EVP_PKEY_CTX_free(pctx);
+        r = OPENSSL_BOX_EVP_PKEY_check(pctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
 
         if (r == 1) {
             BIO_printf(out, "RSA key ok\n");
@@ -372,7 +372,7 @@ int rsa_main(int argc, char **argv)
 
     /* Passphrase setup */
     if (enc != NULL)
-        OSSL_ENCODER_CTX_set_cipher(ectx, EVP_CIPHER_get0_name(enc), NULL);
+        OSSL_ENCODER_CTX_set_cipher(ectx, OPENSSL_BOX_EVP_CIPHER_get0_name(enc), NULL);
 
     /* Default passphrase prompter */
     if (enc != NULL || outformat == FORMAT_PVK) {
@@ -405,8 +405,8 @@ int rsa_main(int argc, char **argv)
     OSSL_ENCODER_CTX_free(ectx);
     release_engine(e);
     BIO_free_all(out);
-    EVP_PKEY_free(pkey);
-    EVP_CIPHER_free(enc);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_CIPHER_free(enc);
     OPENSSL_free(passin);
     OPENSSL_free(passout);
     return ret;

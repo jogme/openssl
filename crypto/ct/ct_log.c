@@ -92,7 +92,7 @@ static int ct_v1_log_id_from_pkey(CTLOG *log, EVP_PKEY *pkey)
     ret = EVP_Digest(pkey_der, pkey_der_len, log->log_id, &len, sha256,
                      NULL);
 err:
-    EVP_MD_free(sha256);
+    OPENSSL_BOX_EVP_MD_free(sha256);
     OPENSSL_free(pkey_der);
     return ret;
 }
@@ -293,7 +293,7 @@ void CTLOG_free(CTLOG *log)
 {
     if (log != NULL) {
         OPENSSL_free(log->name);
-        EVP_PKEY_free(log->public_key);
+        OPENSSL_BOX_EVP_PKEY_free(log->public_key);
         OPENSSL_free(log->propq);
         OPENSSL_free(log);
     }

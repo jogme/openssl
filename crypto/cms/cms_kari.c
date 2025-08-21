@@ -159,7 +159,7 @@ int CMS_RecipientInfo_kari_set0_pkey_and_peer(CMS_RecipientInfo *ri,
     EVP_PKEY_CTX *pctx;
     CMS_KeyAgreeRecipientInfo *kari = ri->d.kari;
 
-    EVP_PKEY_CTX_free(kari->pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(kari->pctx);
     kari->pctx = NULL;
     if (pk == NULL)
         return 1;
@@ -167,20 +167,20 @@ int CMS_RecipientInfo_kari_set0_pkey_and_peer(CMS_RecipientInfo *ri,
     pctx = EVP_PKEY_CTX_new_from_pkey(ossl_cms_ctx_get0_libctx(kari->cms_ctx),
                                       pk,
                                       ossl_cms_ctx_get0_propq(kari->cms_ctx));
-    if (pctx == NULL || EVP_PKEY_derive_init(pctx) <= 0)
+    if (pctx == NULL || OPENSSL_BOX_EVP_PKEY_derive_init(pctx) <= 0)
         goto err;
 
     if (peer != NULL) {
         EVP_PKEY *pub_pkey = X509_get0_pubkey(peer);
 
-        if (EVP_PKEY_derive_set_peer(pctx, pub_pkey) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_derive_set_peer(pctx, pub_pkey) <= 0)
             goto err;
     }
 
     kari->pctx = pctx;
     return 1;
  err:
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return 0;
 }
 
@@ -212,11 +212,11 @@ static int cms_kek_cipher(unsigned char **pout, size_t *poutlen,
     unsigned char *out = NULL;
     int outlen;
 
-    keklen = EVP_CIPHER_CTX_get_key_length(kari->ctx);
+    keklen = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(kari->ctx);
     if (keklen > EVP_MAX_KEY_LENGTH || inlen > INT_MAX)
         return 0;
     /* Derive KEK */
-    if (EVP_PKEY_derive(kari->pctx, kek, &keklen) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_derive(kari->pctx, kek, &keklen) <= 0)
         goto err;
     /* Set KEK in context */
     if (!EVP_CipherInit_ex(kari->ctx, NULL, NULL, kek, NULL, enc))
@@ -237,9 +237,9 @@ static int cms_kek_cipher(unsigned char **pout, size_t *poutlen,
     OPENSSL_cleanse(kek, keklen);
     if (!rv)
         OPENSSL_free(out);
-    EVP_CIPHER_CTX_reset(kari->ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_reset(kari->ctx);
     /* FIXME: WHY IS kari->pctx freed here?  /RL */
-    EVP_PKEY_CTX_free(kari->pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(kari->pctx);
     kari->pctx = NULL;
     return rv;
 }
@@ -287,22 +287,22 @@ static int cms_kari_create_ephemeral_key(CMS_KeyAgreeRecipientInfo *kari,
     pctx = EVP_PKEY_CTX_new_from_pkey(libctx, pk, propq);
     if (pctx == NULL)
         goto err;
-    if (EVP_PKEY_keygen_init(pctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_keygen_init(pctx) <= 0)
         goto err;
-    if (EVP_PKEY_keygen(pctx, &ekey) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_keygen(pctx, &ekey) <= 0)
         goto err;
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     pctx = EVP_PKEY_CTX_new_from_pkey(libctx, ekey, propq);
     if (pctx == NULL)
         goto err;
-    if (EVP_PKEY_derive_init(pctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_derive_init(pctx) <= 0)
         goto err;
     kari->pctx = pctx;
     rv = 1;
  err:
     if (!rv)
-        EVP_PKEY_CTX_free(pctx);
-    EVP_PKEY_free(ekey);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_free(ekey);
     return rv;
 }
 
@@ -319,14 +319,14 @@ static int cms_kari_set_originator_private_key(CMS_KeyAgreeRecipientInfo *kari,
                                       ossl_cms_ctx_get0_propq(ctx));
     if (pctx == NULL)
         goto err;
-    if (EVP_PKEY_derive_init(pctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_derive_init(pctx) <= 0)
          goto err;
 
     kari->pctx = pctx;
     rv = 1;
  err:
     if (rv == 0)
-        EVP_PKEY_CTX_free(pctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return rv;
 }
 
@@ -399,7 +399,7 @@ int ossl_cms_RecipientInfo_kari_init(CMS_RecipientInfo *ri,  X509 *recip,
             return 0;
     }
 
-    if (!EVP_PKEY_up_ref(recipPubKey))
+    if (!OPENSSL_BOX_EVP_PKEY_up_ref(recipPubKey))
         return 0;
 
     rek->pkey = recipPubKey;
@@ -453,7 +453,7 @@ int ossl_cms_RecipientInfo_kari_encrypt(const CMS_ContentInfo *cms,
         unsigned char *enckey;
         size_t enckeylen;
         rek = sk_CMS_RecipientEncryptedKey_value(reks, i);
-        if (EVP_PKEY_derive_set_peer(kari->pctx, rek->pkey) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_derive_set_peer(kari->pctx, rek->pkey) <= 0)
             return 0;
         if (!cms_kek_cipher(&enckey, &enckeylen, ec->key, ec->keylen,
                             kari, 1))

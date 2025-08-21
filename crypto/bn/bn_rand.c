@@ -296,7 +296,7 @@ int ossl_bn_gen_dsa_nonce_fixed_top(BIGNUM *out, const BIGNUM *range,
                                     const unsigned char *message,
                                     size_t message_len, BN_CTX *ctx)
 {
-    EVP_MD_CTX *mdctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
     /*
      * We use 512 bits of random data per iteration to ensure that we have at
      * least |range| bits of randomness.
@@ -385,8 +385,8 @@ int ossl_bn_gen_dsa_nonce_fixed_top(BIGNUM *out, const BIGNUM *range,
     ERR_raise(ERR_LIB_BN, ERR_R_INTERNAL_ERROR);
 
  end:
-    EVP_MD_CTX_free(mdctx);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(mdctx);
+    OPENSSL_BOX_EVP_MD_free(md);
     OPENSSL_clear_free(k_bytes, num_k_bytes);
     OPENSSL_cleanse(digest, sizeof(digest));
     OPENSSL_cleanse(random_bytes, sizeof(random_bytes));

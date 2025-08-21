@@ -11,7 +11,7 @@ alg_section = evp_properties
 
 [evp_properties]
 # Ensure FIPS non-approved algorithms in the FIPS module are suppressed (e.g.
-# TEST-RAND). This also means that EVP_default_properties_is_fips_enabled()
+# TEST-RAND). This also means that OPENSSL_BOX_EVP_default_properties_is_fips_enabled()
 # returns the expected value
 default_properties = "fips=yes"
 

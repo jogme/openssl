@@ -22,7 +22,7 @@ static void thread_fips_rand_fetch(void)
 
     if (!TEST_true(md = EVP_MD_fetch(NULL, "SHA2-256", NULL)))
         success = 0;
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
 }
 
 static int test_fips_rand_leak(void)

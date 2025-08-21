@@ -227,7 +227,7 @@ DES_cbc_cksum() produces an 8 byte checksum based on the input stream
 (via CBC encryption).  The last 4 bytes of the checksum are returned
 and the complete 8 bytes are placed in I<output>. This function is
 used by Kerberos v4.  Other applications should use
-L<EVP_DigestInit(3)> etc. instead.
+L<OPENSSL_BOX_EVP_DigestInit(3)> etc. instead.
 
 DES_quad_cksum() is a Kerberos v4 function.  It returns a 4 byte
 checksum from the input bytes.  The algorithm can be iterated over the

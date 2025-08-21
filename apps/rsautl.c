@@ -213,7 +213,7 @@ int rsautl_main(int argc, char **argv)
     if (out == NULL)
         goto end;
 
-    keysize = EVP_PKEY_get_size(pkey);
+    keysize = OPENSSL_BOX_EVP_PKEY_get_size(pkey);
 
     rsa_in = app_malloc(keysize * 2, "hold rsa key");
     rsa_out = app_malloc(keysize, "output rsa key");
@@ -242,23 +242,23 @@ int rsautl_main(int argc, char **argv)
 
     switch (rsa_mode) {
     case RSA_VERIFY:
-        rv = EVP_PKEY_verify_recover_init(ctx) > 0
+        rv = OPENSSL_BOX_EVP_PKEY_verify_recover_init(ctx) > 0
             && EVP_PKEY_CTX_set_rsa_padding(ctx, pad) > 0
             && EVP_PKEY_verify_recover(ctx, rsa_out, &rsa_outlen,
                                        rsa_in, rsa_inlen) > 0;
         break;
     case RSA_SIGN:
-        rv = EVP_PKEY_sign_init(ctx) > 0
+        rv = OPENSSL_BOX_EVP_PKEY_sign_init(ctx) > 0
             && EVP_PKEY_CTX_set_rsa_padding(ctx, pad) > 0
             && EVP_PKEY_sign(ctx, rsa_out, &rsa_outlen, rsa_in, rsa_inlen) > 0;
         break;
     case RSA_ENCRYPT:
-        rv = EVP_PKEY_encrypt_init(ctx) > 0
+        rv = OPENSSL_BOX_EVP_PKEY_encrypt_init(ctx) > 0
             && EVP_PKEY_CTX_set_rsa_padding(ctx, pad) > 0
             && EVP_PKEY_encrypt(ctx, rsa_out, &rsa_outlen, rsa_in, rsa_inlen) > 0;
         break;
     case RSA_DECRYPT:
-        rv = EVP_PKEY_decrypt_init(ctx) > 0
+        rv = OPENSSL_BOX_EVP_PKEY_decrypt_init(ctx) > 0
             && EVP_PKEY_CTX_set_rsa_padding(ctx, pad) > 0
             && EVP_PKEY_decrypt(ctx, rsa_out, &rsa_outlen, rsa_in, rsa_inlen) > 0;
         break;
@@ -280,8 +280,8 @@ int rsautl_main(int argc, char **argv)
         BIO_write(out, rsa_out, (int)rsa_outlen);
     }
  end:
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     release_engine(e);
     BIO_free(in);
     BIO_free_all(out);

@@ -397,7 +397,7 @@ static int ec_pkey_ctrl(EVP_PKEY *pkey, int op, long arg1, void *arg2)
 {
     switch (op) {
     case ASN1_PKEY_CTRL_DEFAULT_MD_NID:
-        if (EVP_PKEY_get_id(pkey) == EVP_PKEY_SM2) {
+        if (OPENSSL_BOX_EVP_PKEY_get_id(pkey) == EVP_PKEY_SM2) {
             /* For SM2, the only valid digest-alg is SM3 */
             *(int *)arg2 = NID_sm3;
             return 2;            /* Make it mandatory */
@@ -412,7 +412,7 @@ static int ec_pkey_ctrl(EVP_PKEY *pkey, int op, long arg1, void *arg2)
         return EC_KEY_oct2key(evp_pkey_get0_EC_KEY_int(pkey), arg2, arg1, NULL);
 
     case ASN1_PKEY_CTRL_GET1_TLS_ENCPT:
-        return (int)EC_KEY_key2buf(EVP_PKEY_get0_EC_KEY(pkey),
+        return (int)EC_KEY_key2buf(OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(pkey),
                                    POINT_CONVERSION_UNCOMPRESSED, arg2, NULL);
 
     default:
@@ -424,7 +424,7 @@ static int ec_pkey_check(const EVP_PKEY *pkey)
 {
     EC_KEY *eckey = pkey->pkey.ec;
 
-    /* stay consistent to what EVP_PKEY_check demands */
+    /* stay consistent to what OPENSSL_BOX_EVP_PKEY_check demands */
     if (eckey->priv_key == NULL) {
         ERR_raise(ERR_LIB_EC, EC_R_MISSING_PRIVATE_KEY);
         return 0;
@@ -453,7 +453,7 @@ static int ec_pkey_param_check(const EVP_PKEY *pkey)
 {
     EC_KEY *eckey = pkey->pkey.ec;
 
-    /* stay consistent to what EVP_PKEY_check demands */
+    /* stay consistent to what OPENSSL_BOX_EVP_PKEY_check demands */
     if (eckey->group == NULL) {
         ERR_raise(ERR_LIB_EC, EC_R_MISSING_PARAMETERS);
         return 0;
@@ -609,7 +609,7 @@ int ec_pkey_export_to(const EVP_PKEY *from, void *to_keydata,
 static int ec_pkey_import_from(const OSSL_PARAM params[], void *vpctx)
 {
     EVP_PKEY_CTX *pctx = vpctx;
-    EVP_PKEY *pkey = EVP_PKEY_CTX_get0_pkey(pctx);
+    EVP_PKEY *pkey = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(pctx);
     EC_KEY *ec = EC_KEY_new_ex(pctx->libctx, pctx->propquery);
 
     if (ec == NULL) {
@@ -639,7 +639,7 @@ static int ec_pkey_copy(EVP_PKEY *to, EVP_PKEY *from)
             return 0;
     } else {
         /* necessary to properly copy empty SM2 keys */
-        return EVP_PKEY_set_type(to, from->type);
+        return OPENSSL_BOX_EVP_PKEY_set_type(to, from->type);
     }
 
     ret = EVP_PKEY_assign_EC_KEY(to, dupkey);

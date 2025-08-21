@@ -350,7 +350,7 @@ int ssl_load_ciphers(SSL_CTX *ctx)
         if (md == NULL) {
             ctx->disabled_mac_mask |= t->mask;
         } else {
-            int tmpsize = EVP_MD_get_size(md);
+            int tmpsize = OPENSSL_BOX_EVP_MD_get_size(md);
 
             if (!ossl_assert(tmpsize > 0))
                 return 0;
@@ -370,22 +370,22 @@ int ssl_load_ciphers(SSL_CTX *ctx)
     if (sig == NULL)
         ctx->disabled_auth_mask |= SSL_aDSS;
     else
-        EVP_SIGNATURE_free(sig);
+        OPENSSL_BOX_EVP_SIGNATURE_free(sig);
     kex = EVP_KEYEXCH_fetch(ctx->libctx, "DH", ctx->propq);
     if (kex == NULL)
         ctx->disabled_mkey_mask |= SSL_kDHE | SSL_kDHEPSK;
     else
-        EVP_KEYEXCH_free(kex);
+        OPENSSL_BOX_EVP_KEYEXCH_free(kex);
     kex = EVP_KEYEXCH_fetch(ctx->libctx, "ECDH", ctx->propq);
     if (kex == NULL)
         ctx->disabled_mkey_mask |= SSL_kECDHE | SSL_kECDHEPSK;
     else
-        EVP_KEYEXCH_free(kex);
+        OPENSSL_BOX_EVP_KEYEXCH_free(kex);
     sig = EVP_SIGNATURE_fetch(ctx->libctx, "ECDSA", ctx->propq);
     if (sig == NULL)
         ctx->disabled_auth_mask |= SSL_aECDSA;
     else
-        EVP_SIGNATURE_free(sig);
+        OPENSSL_BOX_EVP_SIGNATURE_free(sig);
     ERR_pop_to_mark();
 
 #ifdef OPENSSL_NO_PSK
@@ -549,7 +549,7 @@ int ssl_cipher_get_evp(SSL_CTX *ctx, const SSL_SESSION *s,
 
     if ((*enc != NULL)
         && (*md != NULL
-            || (EVP_CIPHER_get_flags(*enc) & EVP_CIPH_FLAG_AEAD_CIPHER))
+            || (OPENSSL_BOX_EVP_CIPHER_get_flags(*enc) & EVP_CIPH_FLAG_AEAD_CIPHER))
         && (c->algorithm_mac == SSL_AEAD
             || mac_pkey_type == NULL || *mac_pkey_type != NID_undef)) {
         const EVP_CIPHER *evp = NULL;
@@ -2196,7 +2196,7 @@ int ssl_cipher_get_overhead(const SSL_CIPHER *c, size_t *mac_overhead,
         if (e_md == NULL)
             return 0;
 
-        mac = EVP_MD_get_size(e_md);
+        mac = OPENSSL_BOX_EVP_MD_get_size(e_md);
         if (mac <= 0)
             return 0;
         if (c->algorithm_enc != SSL_eNULL) {
@@ -2206,14 +2206,14 @@ int ssl_cipher_get_overhead(const SSL_CIPHER *c, size_t *mac_overhead,
             /* If it wasn't AEAD or SSL_eNULL, we expect it to be a
                known CBC cipher. */
             if (e_ciph == NULL ||
-                EVP_CIPHER_get_mode(e_ciph) != EVP_CIPH_CBC_MODE)
+                OPENSSL_BOX_EVP_CIPHER_get_mode(e_ciph) != EVP_CIPH_CBC_MODE)
                 return 0;
 
             in = 1; /* padding length byte */
-            out = EVP_CIPHER_get_iv_length(e_ciph);
+            out = OPENSSL_BOX_EVP_CIPHER_get_iv_length(e_ciph);
             if (out < 0)
                 return 0;
-            blk = EVP_CIPHER_get_block_size(e_ciph);
+            blk = OPENSSL_BOX_EVP_CIPHER_get_block_size(e_ciph);
             if (blk <= 0)
                 return 0;
         }

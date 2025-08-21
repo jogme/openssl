@@ -47,7 +47,7 @@ static BIGNUM *srp_Calc_xy(const BIGNUM *x, const BIGNUM *y, const BIGNUM *N,
         goto err;
     res = BN_bin2bn(digest, sizeof(digest), NULL);
  err:
-    EVP_MD_free(sha1);
+    OPENSSL_BOX_EVP_MD_free(sha1);
     OPENSSL_free(tmp);
     return res;
 }
@@ -153,7 +153,7 @@ BIGNUM *SRP_Calc_x_ex(const BIGNUM *s, const char *user, const char *pass,
     if ((s == NULL) || (user == NULL) || (pass == NULL))
         return NULL;
 
-    ctxt = EVP_MD_CTX_new();
+    ctxt = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctxt == NULL)
         return NULL;
     if ((cs = OPENSSL_malloc(BN_num_bytes(s))) == NULL)
@@ -182,9 +182,9 @@ BIGNUM *SRP_Calc_x_ex(const BIGNUM *s, const char *user, const char *pass,
     res = BN_bin2bn(dig, sizeof(dig), NULL);
 
  err:
-    EVP_MD_free(sha1);
+    OPENSSL_BOX_EVP_MD_free(sha1);
     OPENSSL_free(cs);
-    EVP_MD_CTX_free(ctxt);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctxt);
     return res;
 }
 

@@ -70,7 +70,7 @@ An alias of "xoflen".
 
 =back
 
-See L<EVP_DigestInit(3)/PARAMETERS> for further information related to parameters
+See L<OPENSSL_BOX_EVP_DigestInit(3)/PARAMETERS> for further information related to parameters
 
 =head1 NOTES
 
@@ -82,7 +82,7 @@ length passed to EVP_DigestFinalXOF() should be at least 64.
 
 =head1 SEE ALSO
 
-L<EVP_MD_CTX_set_params(3)>, L<provider-digest(7)>, L<OSSL_PROVIDER-default(7)>
+L<OPENSSL_BOX_EVP_MD_CTX_set_params(3)>, L<provider-digest(7)>, L<OSSL_PROVIDER-default(7)>
 
 =head1 HISTORY
 

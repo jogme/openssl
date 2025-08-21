@@ -62,9 +62,9 @@ static void fake_pipeline_freectx(void *vctx)
     CIPHER_PIPELINE_CTX *ctx = (CIPHER_PIPELINE_CTX *)vctx;
     size_t i;
 
-    EVP_CIPHER_free(ctx->cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(ctx->cipher);
     for (i = 0; i < ctx->numpipes; i++)
-        EVP_CIPHER_CTX_free(ctx->cipher_ctxs[i]);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx->cipher_ctxs[i]);
     OPENSSL_clear_free(ctx, sizeof(*ctx));
 }
 
@@ -87,7 +87,7 @@ static int fake_pipeline_init(void *vctx,
 
     ctx->numpipes = numpipes;
     for (i = 0; i < numpipes; i++) {
-        ctx->cipher_ctxs[i] = EVP_CIPHER_CTX_new();
+        ctx->cipher_ctxs[i] = OPENSSL_BOX_EVP_CIPHER_CTX_new();
         if (ctx->cipher_ctxs[i] == NULL)
             return 0;
         if (!EVP_CipherInit(ctx->cipher_ctxs[i], ctx->cipher, key, iv[i], enc))
@@ -210,7 +210,7 @@ int fake_pipeline_aead_get_ctx_params(void *vctx, OSSL_PARAM params[])
             aead_params[0] = OSSL_PARAM_construct_octet_string(OSSL_CIPHER_PARAM_AEAD_TAG,
                                                                (void *)aead_tags[i],
                                                                taglen);
-            if (!EVP_CIPHER_CTX_get_params(ctx->cipher_ctxs[i], aead_params)) {
+            if (!OPENSSL_BOX_EVP_CIPHER_CTX_get_params(ctx->cipher_ctxs[i], aead_params)) {
                 ERR_raise(ERR_LIB_PROV, PROV_R_FAILED_TO_SET_PARAMETER);
                 return 0;
             }
@@ -238,7 +238,7 @@ int fake_pipeline_aead_set_ctx_params(void *vctx, const OSSL_PARAM params[])
             aead_params[0] = OSSL_PARAM_construct_octet_string(OSSL_CIPHER_PARAM_AEAD_TAG,
                                                                (void *)aead_tags[i],
                                                                taglen);
-            if (!EVP_CIPHER_CTX_set_params(ctx->cipher_ctxs[i], aead_params)) {
+            if (!OPENSSL_BOX_EVP_CIPHER_CTX_set_params(ctx->cipher_ctxs[i], aead_params)) {
                 ERR_raise(ERR_LIB_PROV, PROV_R_FAILED_TO_SET_PARAMETER);
                 return 0;
             }

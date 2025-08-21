@@ -246,9 +246,9 @@ static int dsa_keygen_test(void)
         || !TEST_ptr(g_in = BN_bin2bn(expected_g, sizeof(expected_g), NULL)))
         goto end;
     if (!TEST_ptr(pg_ctx = EVP_PKEY_CTX_new_from_name(NULL, "DSA", NULL))
-        || !TEST_int_gt(EVP_PKEY_paramgen_init(pg_ctx), 0)
-        || !TEST_ptr(EVP_PKEY_CTX_gettable_params(pg_ctx))
-        || !TEST_ptr(settables = EVP_PKEY_CTX_settable_params(pg_ctx))
+        || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_paramgen_init(pg_ctx), 0)
+        || !TEST_ptr(OPENSSL_BOX_EVP_PKEY_CTX_gettable_params(pg_ctx))
+        || !TEST_ptr(settables = OPENSSL_BOX_EVP_PKEY_CTX_settable_params(pg_ctx))
         || !TEST_ptr(OSSL_PARAM_locate_const(settables,
                                              OSSL_PKEY_PARAM_FFC_PBITS))
         || !TEST_true(EVP_PKEY_CTX_set_dsa_paramgen_type(pg_ctx, "fips186_4"))
@@ -258,10 +258,10 @@ static int dsa_keygen_test(void)
                                                          sizeof(seed_data)))
         || !TEST_true(EVP_PKEY_CTX_set_dsa_paramgen_md_props(pg_ctx, "SHA256",
                                                              ""))
-        || !TEST_int_gt(EVP_PKEY_generate(pg_ctx, &param_key), 0)
+        || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_generate(pg_ctx, &param_key), 0)
         || !TEST_ptr(kg_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, param_key, NULL))
-        || !TEST_int_gt(EVP_PKEY_keygen_init(kg_ctx), 0)
-        || !TEST_int_gt(EVP_PKEY_generate(kg_ctx, &key), 0))
+        || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_keygen_init(kg_ctx), 0)
+        || !TEST_int_gt(OPENSSL_BOX_EVP_PKEY_generate(kg_ctx, &key), 0))
         goto end;
 
     if (!TEST_true(EVP_PKEY_get_bn_param(key, OSSL_PKEY_PARAM_FFC_P, &p_out))
@@ -297,10 +297,10 @@ end:
     BN_free(p_out);
     BN_free(q_out);
     BN_free(g_out);
-    EVP_PKEY_free(param_key);
-    EVP_PKEY_free(key);
-    EVP_PKEY_CTX_free(kg_ctx);
-    EVP_PKEY_CTX_free(pg_ctx);
+    OPENSSL_BOX_EVP_PKEY_free(param_key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(kg_ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pg_ctx);
     return ret;
 }
 
@@ -312,16 +312,16 @@ static int test_dsa_default_paramgen_validate(int i)
     EVP_PKEY *params = NULL;
 
     ret = TEST_ptr(gen_ctx = EVP_PKEY_CTX_new_from_name(NULL, "DSA", NULL))
-          && TEST_int_gt(EVP_PKEY_paramgen_init(gen_ctx), 0)
+          && TEST_int_gt(OPENSSL_BOX_EVP_PKEY_paramgen_init(gen_ctx), 0)
           && (i == 0
               || TEST_true(EVP_PKEY_CTX_set_dsa_paramgen_bits(gen_ctx, 512)))
-          && TEST_int_gt(EVP_PKEY_generate(gen_ctx, &params), 0)
+          && TEST_int_gt(OPENSSL_BOX_EVP_PKEY_generate(gen_ctx, &params), 0)
           && TEST_ptr(check_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, params, NULL))
-          && TEST_int_gt(EVP_PKEY_param_check(check_ctx), 0);
+          && TEST_int_gt(OPENSSL_BOX_EVP_PKEY_param_check(check_ctx), 0);
 
-    EVP_PKEY_free(params);
-    EVP_PKEY_CTX_free(check_ctx);
-    EVP_PKEY_CTX_free(gen_ctx);
+    OPENSSL_BOX_EVP_PKEY_free(params);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(check_ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(gen_ctx);
     return ret;
 }
 

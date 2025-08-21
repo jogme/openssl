@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-EVP_PKEY_sign_init, EVP_PKEY_sign_init_ex, EVP_PKEY_sign_init_ex2,
+OPENSSL_BOX_EVP_PKEY_sign_init, OPENSSL_BOX_EVP_PKEY_sign_init_ex, EVP_PKEY_sign_init_ex2,
 EVP_PKEY_sign, EVP_PKEY_sign_message_init, EVP_PKEY_sign_message_update,
 EVP_PKEY_sign_message_final - sign using a public key algorithm
 
@@ -10,8 +10,8 @@ EVP_PKEY_sign_message_final - sign using a public key algorithm
 
  #include <openssl/evp.h>
 
- int EVP_PKEY_sign_init(EVP_PKEY_CTX *ctx);
- int EVP_PKEY_sign_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[]);
+ int OPENSSL_BOX_EVP_PKEY_sign_init(EVP_PKEY_CTX *ctx);
+ int OPENSSL_BOX_EVP_PKEY_sign_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[]);
  int EVP_PKEY_sign_init_ex2(EVP_PKEY_CTX *ctx, EVP_SIGNATURE *algo,
                             const OSSL_PARAM params[]);
  int EVP_PKEY_sign_message_init(EVP_PKEY_CTX *ctx, EVP_SIGNATURE *algo,
@@ -26,20 +26,20 @@ EVP_PKEY_sign_message_final - sign using a public key algorithm
 
 =head1 DESCRIPTION
 
-EVP_PKEY_sign_init() initializes a public key algorithm context I<ctx> for
+OPENSSL_BOX_EVP_PKEY_sign_init() initializes a public key algorithm context I<ctx> for
 signing using the algorithm given when the context was created
-using L<EVP_PKEY_CTX_new(3)> or variants thereof.  The algorithm is used to
+using L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)> or variants thereof.  The algorithm is used to
 fetch a B<EVP_SIGNATURE> method implicitly, see L<provider(7)/Implicit fetch>
 for more information about implicit fetches.
 
-EVP_PKEY_sign_init_ex() is the same as EVP_PKEY_sign_init() but additionally
+OPENSSL_BOX_EVP_PKEY_sign_init_ex() is the same as OPENSSL_BOX_EVP_PKEY_sign_init() but additionally
 sets the passed parameters I<params> on the context before returning.
 
 EVP_PKEY_sign_init_ex2() initializes a public key algorithm context I<ctx> for
 signing a pre-computed message digest using the algorithm given by I<algo> and
-the key given through L<EVP_PKEY_CTX_new(3)> or L<EVP_PKEY_CTX_new_from_pkey(3)>.
+the key given through L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)> or L<EVP_PKEY_CTX_new_from_pkey(3)>.
 A context I<ctx> without a pre-loaded key cannot be used with this function.
-This function provides almost the same functionality as EVP_PKEY_sign_init_ex(),
+This function provides almost the same functionality as OPENSSL_BOX_EVP_PKEY_sign_init_ex(),
 but is uniquely intended to be used with a pre-computed message digest, and
 allows pre-determining the exact conditions for that message digest, if a
 composite signature algorithm (such as RSA-SHA256) was fetched.
@@ -48,7 +48,7 @@ implementation or padding is not normally supported.
 
 EVP_PKEY_sign_message_init() initializes a public key algorithm context I<ctx>
 for signing an unlimited size message using the algorithm given by I<algo> and
-the key given through L<EVP_PKEY_CTX_new(3)> or L<EVP_PKEY_CTX_new_from_pkey(3)>.
+the key given through L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)> or L<EVP_PKEY_CTX_new_from_pkey(3)>.
 Passing the message is supported both in a one-shot fashion using
 EVP_PKEY_sign(), and through the combination of EVP_PKEY_sign_message_update()
 and EVP_PKEY_sign_message_final().
@@ -69,7 +69,7 @@ number of signature bytes.
 
 EVP_PKEY_sign() is a one-shot function that can be used with all the init
 functions above.
-When initialization was done with EVP_PKEY_sign_init(), EVP_PKEY_sign_init_ex()
+When initialization was done with OPENSSL_BOX_EVP_PKEY_sign_init(), OPENSSL_BOX_EVP_PKEY_sign_init_ex()
 or EVP_PKEY_sign_init_ex2(), the data specified by I<tbs> and I<tbslen> is
 signed after appropriate padding.
 When initialization was done with EVP_PKEY_sign_message_init(), the data
@@ -108,12 +108,12 @@ initialized with EVP_PKEY_sign_init_ex2() or with EVP_PKEY_sign_message_init().
 
 Similarly, an RSA implementation usually expects additional details to be set,
 like the message digest algorithm that the input is supposed to be digested
-with, as well as the padding mode (see L<EVP_PKEY_CTX_set_signature_md(3)> and
+with, as well as the padding mode (see L<OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md(3)> and
 L<EVP_PKEY_CTX_set_rsa_padding(3)> and similar others), while an RSA-SHA256
 implementation usually has these details pre-set and immutable.
 
 The functions described here can't be used to combine separate algorithms.  In
-particular, neither L<EVP_PKEY_CTX_set_signature_md(3)> nor the B<OSSL_PARAM>
+particular, neither L<OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md(3)> nor the B<OSSL_PARAM>
 parameter "digest" (B<OSSL_SIGNATURE_PARAM_DIGEST>) can be used to combine a
 signature algorithm with a hash algorithm to process the input.  In other
 words, it's not possible to specify a I<ctx> pre-loaded with an RSA pkey, or
@@ -123,7 +123,7 @@ desired, please use L<EVP_DigestSignInit(3)> and associated functions.
 
 =head2 Performing multiple signatures
 
-When initialized using EVP_PKEY_sign_init_ex() or  EVP_PKEY_sign_init_ex2(),
+When initialized using OPENSSL_BOX_EVP_PKEY_sign_init_ex() or  EVP_PKEY_sign_init_ex2(),
 EVP_PKEY_sign() can be called more than once on the same context to have
 several one-shot operations performed using the same parameters.
 
@@ -134,7 +134,7 @@ call EVP_PKEY_sign() multiple times.
 
 All functions return 1 for success and 0 or a negative value for failure.
 
-In particular, EVP_PKEY_sign_init() and its other variants may return -2 to
+In particular, OPENSSL_BOX_EVP_PKEY_sign_init() and its other variants may return -2 to
 indicate that the operation is not supported by the public key algorithm.
 
 =head1 EXAMPLES
@@ -164,14 +164,14 @@ Sign data using RSA with PKCS#1 padding and a SHA256 digest as input:
   * step. signing_key must be an RSA private key and md must
   * point to the SHA-256 digest to be signed.
   */
- ctx = EVP_PKEY_CTX_new(signing_key, NULL /* no engine */);
+ ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(signing_key, NULL /* no engine */);
  if (ctx == NULL)
      /* Error occurred */
- if (EVP_PKEY_sign_init(ctx) <= 0)
+ if (OPENSSL_BOX_EVP_PKEY_sign_init(ctx) <= 0)
      /* Error */
  if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) <= 0)
      /* Error */
- if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_sha256()) <= 0)
+ if (OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md(ctx, OPENSSL_BOX_EVP_sha256()) <= 0)
      /* Error */
 
  /* Determine buffer length */
@@ -209,7 +209,7 @@ input digest is assumed to have been computed using SHA256.
   * step. signing_key must be an RSA private key and md must
   * point to the SHA-256 digest to be signed.
   */
- ctx = EVP_PKEY_CTX_new(signing_key, NULL /* no engine */);
+ ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(signing_key, NULL /* no engine */);
  alg = EVP_SIGNATURE_fetch(NULL, "RSA-SHA256", NULL);
 
  if (ctx == NULL)
@@ -256,7 +256,7 @@ B<RSA_PKCS1_PADDING>.
   * in must point to data to be digested and signed, and
   * inlen must be the size of the data in bytes.
   */
- ctx = EVP_PKEY_CTX_new(signing_key, NULL /* no engine */);
+ ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(signing_key, NULL /* no engine */);
  alg = EVP_SIGNATURE_fetch(NULL, "RSA-SHA256", NULL);
 
  if (ctx == NULL || alg == NULL)
@@ -301,7 +301,7 @@ functionality.
   * in must point to data to be digested and signed, and
   * inlen must be the size of the data in bytes.
   */
- ctx = EVP_PKEY_CTX_new(signing_key, NULL /* no engine */);
+ ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(signing_key, NULL /* no engine */);
  alg = EVP_SIGNATURE_fetch(NULL, "RSA-SHA256", NULL);
 
  if (ctx == NULL || alg == NULL)
@@ -337,20 +337,20 @@ functionality.
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_CTX_new(3)>,
+L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
 L<EVP_PKEY_CTX_ctrl(3)>,
 L<EVP_PKEY_encrypt(3)>,
 L<EVP_PKEY_decrypt(3)>,
 L<EVP_PKEY_verify(3)>,
 L<EVP_PKEY_verify_recover(3)>,
-L<EVP_PKEY_derive(3)>
+L<OPENSSL_BOX_EVP_PKEY_derive(3)>
 
 =head1 HISTORY
 
-The EVP_PKEY_sign_init() and EVP_PKEY_sign() functions were added in
+The OPENSSL_BOX_EVP_PKEY_sign_init() and EVP_PKEY_sign() functions were added in
 OpenSSL 1.0.0.
 
-The EVP_PKEY_sign_init_ex() function was added in OpenSSL 3.0.
+The OPENSSL_BOX_EVP_PKEY_sign_init_ex() function was added in OpenSSL 3.0.
 
 The EVP_PKEY_sign_init_ex2(), EVP_PKEY_sign_message_init(),
 EVP_PKEY_sign_message_update() and EVP_PKEY_sign_message_final() functions

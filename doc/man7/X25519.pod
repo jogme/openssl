@@ -14,18 +14,18 @@ key formats compatible with RFC 8410.
 
 No additional parameters can be set during key generation.
 
-The peer public key must be set using EVP_PKEY_derive_set_peer() when
+The peer public key must be set using OPENSSL_BOX_EVP_PKEY_derive_set_peer() when
 performing key derivation.
 
 =head1 NOTES
 
 A context for the B<X25519> algorithm can be obtained by calling:
 
- EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_X25519, NULL);
+ EVP_PKEY_CTX *pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_X25519, NULL);
 
 For the B<X448> algorithm a context can be obtained by calling:
 
- EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_X448, NULL);
+ EVP_PKEY_CTX *pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_X448, NULL);
 
 X25519 or X448 private keys can be set directly using
 L<EVP_PKEY_new_raw_private_key(3)> or loaded from a PKCS#8 private key file
@@ -46,21 +46,21 @@ output in PEM format:
  #include <openssl/pem.h>
  ...
  EVP_PKEY *pkey = NULL;
- EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_X25519, NULL);
- EVP_PKEY_keygen_init(pctx);
- EVP_PKEY_keygen(pctx, &pkey);
- EVP_PKEY_CTX_free(pctx);
+ EVP_PKEY_CTX *pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_X25519, NULL);
+ OPENSSL_BOX_EVP_PKEY_keygen_init(pctx);
+ OPENSSL_BOX_EVP_PKEY_keygen(pctx, &pkey);
+ OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
  PEM_write_PrivateKey(stdout, pkey, NULL, NULL, 0, NULL, NULL);
 
-The key derivation example in L<EVP_PKEY_derive(3)> can be used with
+The key derivation example in L<OPENSSL_BOX_EVP_PKEY_derive(3)> can be used with
 B<X25519> and B<X448>.
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_CTX_new(3)>,
-L<EVP_PKEY_keygen(3)>,
-L<EVP_PKEY_derive(3)>,
-L<EVP_PKEY_derive_set_peer(3)>
+L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
+L<OPENSSL_BOX_EVP_PKEY_keygen(3)>,
+L<OPENSSL_BOX_EVP_PKEY_derive(3)>,
+L<OPENSSL_BOX_EVP_PKEY_derive_set_peer(3)>
 
 =head1 COPYRIGHT
 

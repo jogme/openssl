@@ -96,9 +96,9 @@ int ossl_cmp_mock_srv_set1_keyOut(OSSL_CMP_SRV_CTX *srv_ctx, EVP_PKEY *pkey)
         ERR_raise(ERR_LIB_CMP, CMP_R_NULL_ARGUMENT);
         return 0;
     }
-    if (pkey != NULL && !EVP_PKEY_up_ref(pkey))
+    if (pkey != NULL && !OPENSSL_BOX_EVP_PKEY_up_ref(pkey))
         return 0;
-    EVP_PKEY_free(ctx->keyOut);
+    OPENSSL_BOX_EVP_PKEY_free(ctx->keyOut);
     ctx->keyOut = pkey;
     return 1;
 }
@@ -381,10 +381,10 @@ static OSSL_CMP_PKISI *process_cert_request(OSSL_CMP_SRV_CTX *srv_ctx,
         goto err;
     if (central_keygen == 1
         && (ctx->keyOut == NULL
-            || (keyOut = EVP_PKEY_dup(ctx->keyOut)) == NULL
+            || (keyOut = OPENSSL_BOX_EVP_PKEY_dup(ctx->keyOut)) == NULL
             || !OSSL_CMP_CTX_set0_newPkey(OSSL_CMP_SRV_CTX_get0_cmp_ctx(srv_ctx),
                                           1 /* priv */, keyOut))) {
-        EVP_PKEY_free(keyOut);
+        OPENSSL_BOX_EVP_PKEY_free(keyOut);
         goto err;
     }
     /*

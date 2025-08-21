@@ -1314,7 +1314,7 @@ end_of_options:
     free_index(db);
     sk_OPENSSL_STRING_free(sigopts);
     sk_OPENSSL_STRING_free(vfyopts);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     X509_free(x509);
     X509_CRL_free(crl);
     NCONF_free(conf);
@@ -1895,9 +1895,9 @@ static int do_body(X509 **xret, EVP_PKEY *pkey, X509 *x509,
     }
 
     pktmp = X509_get0_pubkey(ret);
-    if (EVP_PKEY_missing_parameters(pktmp) &&
-        !EVP_PKEY_missing_parameters(pkey))
-        EVP_PKEY_copy_parameters(pktmp, pkey);
+    if (OPENSSL_BOX_EVP_PKEY_missing_parameters(pktmp) &&
+        !OPENSSL_BOX_EVP_PKEY_missing_parameters(pkey))
+        OPENSSL_BOX_EVP_PKEY_copy_parameters(pktmp, pkey);
 
     if (!do_X509_sign(ret, 0, pkey, dgst, sigopts, &ext_ctx))
         goto end;
@@ -2065,7 +2065,7 @@ static int certify_spkac(X509 **xret, const char *infile, EVP_PKEY *pkey,
 
     j = NETSCAPE_SPKI_verify(spki, pktmp);
     if (j <= 0) {
-        EVP_PKEY_free(pktmp);
+        OPENSSL_BOX_EVP_PKEY_free(pktmp);
         BIO_printf(bio_err,
                    "signature verification failed on SPKAC public key\n");
         goto end;
@@ -2073,7 +2073,7 @@ static int certify_spkac(X509 **xret, const char *infile, EVP_PKEY *pkey,
     BIO_printf(bio_err, "Signature ok\n");
 
     X509_REQ_set_pubkey(req, pktmp);
-    EVP_PKEY_free(pktmp);
+    OPENSSL_BOX_EVP_PKEY_free(pktmp);
     ok = do_body(xret, pkey, x509, dgst, sigopts, policy, db, serial, subj,
                  chtype, multirdn, email_dn, startdate, enddate, days, 1,
                  verbose, req, ext_sect, lconf, certopt, nameopt, default_op,

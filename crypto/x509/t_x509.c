@@ -8,7 +8,7 @@
  */
 
 /*
- * because of EVP_PKEY_asn1_find deprecation
+ * because of OPENSSL_BOX_EVP_PKEY_asn1_find deprecation
  */
 #define OPENSSL_SUPPRESS_DEPRECATED
 
@@ -257,12 +257,12 @@ int X509_ocspid_print(BIO *bp, X509 *x)
             goto err;
     }
     BIO_printf(bp, "\n");
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
 
     return 1;
  err:
     OPENSSL_free(der);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     return 0;
 }
 
@@ -309,7 +309,7 @@ int X509_signature_print(BIO *bp, const X509_ALGOR *sigalg,
         int pkey_nid, dig_nid;
         const EVP_PKEY_ASN1_METHOD *ameth;
         if (OBJ_find_sigid_algs(sig_nid, &dig_nid, &pkey_nid)) {
-            ameth = EVP_PKEY_asn1_find(NULL, pkey_nid);
+            ameth = OPENSSL_BOX_EVP_PKEY_asn1_find(NULL, pkey_nid);
             if (ameth && ameth->sig_print)
                 return ameth->sig_print(bp, sigalg, sig, indent + 4, 0);
         }

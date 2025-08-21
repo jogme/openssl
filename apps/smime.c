@@ -478,7 +478,7 @@ int smime_main(int argc, char **argv)
 
     if (operation == SMIME_ENCRYPT) {
         if (cipher == NULL)
-            cipher = (EVP_CIPHER *)EVP_aes_256_cbc();
+            cipher = (EVP_CIPHER *)OPENSSL_BOX_EVP_aes_256_cbc();
         encerts = sk_X509_new_null();
         if (encerts == NULL)
             goto end;
@@ -620,7 +620,7 @@ int smime_main(int argc, char **argv)
                 goto end;
             X509_free(signer);
             signer = NULL;
-            EVP_PKEY_free(key);
+            OPENSSL_BOX_EVP_PKEY_free(key);
             key = NULL;
         }
         /* If not streaming or resigning finalize structure */
@@ -697,9 +697,9 @@ int smime_main(int argc, char **argv)
     X509_free(cert);
     X509_free(recip);
     X509_free(signer);
-    EVP_PKEY_free(key);
-    EVP_MD_free(sign_md);
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_MD_free(sign_md);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     PKCS7_free(p7);
     release_engine(e);
     BIO_free(in);

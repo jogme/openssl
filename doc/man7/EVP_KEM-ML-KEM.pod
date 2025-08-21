@@ -30,7 +30,7 @@ This parameter is only settable.
 
 =back
 
-This can be set when using EVP_PKEY_encapsulate_init().
+This can be set when using OPENSSL_BOX_EVP_PKEY_encapsulate_init().
 
 =head1 CONFORMING TO
 

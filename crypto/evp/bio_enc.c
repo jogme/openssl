@@ -56,7 +56,7 @@ static const BIO_METHOD methods_enc = {
     enc_callback_ctrl,
 };
 
-const BIO_METHOD *BIO_f_cipher(void)
+const BIO_METHOD *OPENSSL_BOX_BIO_f_cipher(void)
 {
     return &methods_enc;
 }
@@ -68,7 +68,7 @@ static int enc_new(BIO *bi)
     if ((ctx = OPENSSL_zalloc(sizeof(*ctx))) == NULL)
         return 0;
 
-    ctx->cipher = EVP_CIPHER_CTX_new();
+    ctx->cipher = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ctx->cipher == NULL) {
         OPENSSL_free(ctx);
         return 0;
@@ -93,7 +93,7 @@ static int enc_free(BIO *a)
     if (b == NULL)
         return 0;
 
-    EVP_CIPHER_CTX_free(b->cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(b->cipher);
     OPENSSL_clear_free(b, sizeof(BIO_ENC_CTX));
     BIO_set_data(a, NULL);
     BIO_set_init(a, 0);
@@ -131,7 +131,7 @@ static int enc_read(BIO *b, char *out, int outl)
         }
     }
 
-    blocksize = EVP_CIPHER_CTX_get_block_size(ctx->cipher);
+    blocksize = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx->cipher);
 
     if (blocksize == 0)
         return 0;
@@ -314,7 +314,7 @@ static long enc_ctrl(BIO *b, int cmd, long num, void *ptr)
         ctx->ok = 1;
         ctx->finished = 0;
         if (!EVP_CipherInit_ex(ctx->cipher, NULL, NULL, NULL, NULL,
-                               EVP_CIPHER_CTX_is_encrypting(ctx->cipher)))
+                               OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx->cipher)))
             return 0;
         ret = BIO_ctrl(next, cmd, num, ptr);
         break;
@@ -383,10 +383,10 @@ static long enc_ctrl(BIO *b, int cmd, long num, void *ptr)
     case BIO_CTRL_DUP:
         dbio = (BIO *)ptr;
         dctx = BIO_get_data(dbio);
-        dctx->cipher = EVP_CIPHER_CTX_new();
+        dctx->cipher = OPENSSL_BOX_EVP_CIPHER_CTX_new();
         if (dctx->cipher == NULL)
             return 0;
-        ret = EVP_CIPHER_CTX_copy(dctx->cipher, ctx->cipher);
+        ret = OPENSSL_BOX_EVP_CIPHER_CTX_copy(dctx->cipher, ctx->cipher);
         if (ret)
             BIO_set_init(dbio, 1);
         break;

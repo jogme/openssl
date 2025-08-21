@@ -48,9 +48,9 @@ int main(int argc, char **argv)
     params[6] = OSSL_PARAM_construct_end();
 
     /* Generate a dsa param key using optional params */
-    if (EVP_PKEY_paramgen_init(ctx) <= 0
-            || EVP_PKEY_CTX_set_params(ctx, params) <= 0
-            || EVP_PKEY_paramgen(ctx, &dsaparamkey) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_paramgen_init(ctx) <= 0
+            || OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, params) <= 0
+            || OPENSSL_BOX_EVP_PKEY_paramgen(ctx, &dsaparamkey) <= 0) {
         fprintf(stderr, "DSA paramgen failed\n");
         goto cleanup;
     }
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 
     ret = EXIT_SUCCESS;
 cleanup:
-    EVP_PKEY_free(dsaparamkey);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(dsaparamkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }

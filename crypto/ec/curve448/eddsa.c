@@ -24,7 +24,7 @@ static c448_error_t oneshot_hash(OSSL_LIB_CTX *ctx, uint8_t *out, size_t outlen,
                                  const uint8_t *in, size_t inlen,
                                  const char *propq)
 {
-    EVP_MD_CTX *hashctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *hashctx = OPENSSL_BOX_EVP_MD_CTX_new();
     EVP_MD *shake256 = NULL;
     c448_error_t ret = C448_FAILURE;
 
@@ -42,8 +42,8 @@ static c448_error_t oneshot_hash(OSSL_LIB_CTX *ctx, uint8_t *out, size_t outlen,
 
     ret = C448_SUCCESS;
  err:
-    EVP_MD_CTX_free(hashctx);
-    EVP_MD_free(shake256);
+    OPENSSL_BOX_EVP_MD_CTX_free(hashctx);
+    OPENSSL_BOX_EVP_MD_free(shake256);
     return ret;
 }
 
@@ -81,11 +81,11 @@ static c448_error_t hash_init_with_dom(OSSL_LIB_CTX *ctx, EVP_MD_CTX *hashctx,
             || !EVP_DigestUpdate(hashctx, dom_s, sizeof(dom_s)-1)
             || !EVP_DigestUpdate(hashctx, dom, sizeof(dom))
             || !EVP_DigestUpdate(hashctx, context, context_len)) {
-        EVP_MD_free(shake256);
+        OPENSSL_BOX_EVP_MD_free(shake256);
         return C448_FAILURE;
     }
 
-    EVP_MD_free(shake256);
+    OPENSSL_BOX_EVP_MD_free(shake256);
     return C448_SUCCESS;
 }
 
@@ -161,7 +161,7 @@ ossl_c448_ed448_sign(OSSL_LIB_CTX *ctx,
                      size_t context_len, const char *propq)
 {
     curve448_scalar_t secret_scalar;
-    EVP_MD_CTX *hashctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *hashctx = OPENSSL_BOX_EVP_MD_CTX_new();
     c448_error_t ret = C448_FAILURE;
     curve448_scalar_t nonce_scalar;
     uint8_t nonce_point[EDDSA_448_PUBLIC_BYTES] = { 0 };
@@ -255,7 +255,7 @@ ossl_c448_ed448_sign(OSSL_LIB_CTX *ctx,
 
     ret = C448_SUCCESS;
  err:
-    EVP_MD_CTX_free(hashctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(hashctx);
     return ret;
 }
 
@@ -334,7 +334,7 @@ ossl_c448_ed448_verify(
 
     {
         /* Compute the challenge */
-        EVP_MD_CTX *hashctx = EVP_MD_CTX_new();
+        EVP_MD_CTX *hashctx = OPENSSL_BOX_EVP_MD_CTX_new();
         uint8_t challenge[2 * EDDSA_448_PRIVATE_BYTES];
 
         if (hashctx == NULL
@@ -344,11 +344,11 @@ ossl_c448_ed448_verify(
                 || !EVP_DigestUpdate(hashctx, pubkey, EDDSA_448_PUBLIC_BYTES)
                 || !EVP_DigestUpdate(hashctx, message, message_len)
                 || !EVP_DigestFinalXOF(hashctx, challenge, sizeof(challenge))) {
-            EVP_MD_CTX_free(hashctx);
+            OPENSSL_BOX_EVP_MD_CTX_free(hashctx);
             return C448_FAILURE;
         }
 
-        EVP_MD_CTX_free(hashctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(hashctx);
         ossl_curve448_scalar_decode_long(challenge_scalar, challenge,
                                          sizeof(challenge));
         OPENSSL_cleanse(challenge, sizeof(challenge));

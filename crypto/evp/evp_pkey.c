@@ -8,7 +8,7 @@
  */
 
 /*
- * Needed for EVP_PKEY_get0_asn1 and EVP_PKEY_asn1_get0_info
+ * Needed for OPENSSL_BOX_EVP_PKEY_get0_asn1 and EVP_PKEY_asn1_get0_info
  */
 #define OPENSSL_SUPPRESS_DEPRECATED
 
@@ -37,12 +37,12 @@ EVP_PKEY *evp_pkcs82pkey_legacy(const PKCS8_PRIV_KEY_INFO *p8, OSSL_LIB_CTX *lib
     if (!PKCS8_pkey_get0(&algoid, NULL, NULL, NULL, p8))
         return NULL;
 
-    if ((pkey = EVP_PKEY_new()) == NULL) {
+    if ((pkey = OPENSSL_BOX_EVP_PKEY_new()) == NULL) {
         ERR_raise(ERR_LIB_EVP, ERR_R_EVP_LIB);
         return NULL;
     }
 
-    if (!EVP_PKEY_set_type(pkey, OBJ_obj2nid(algoid))) {
+    if (!OPENSSL_BOX_EVP_PKEY_set_type(pkey, OBJ_obj2nid(algoid))) {
         i2t_ASN1_OBJECT(obj_tmp, 80, algoid);
         ERR_raise_data(ERR_LIB_EVP, EVP_R_UNSUPPORTED_PRIVATE_KEY_ALGORITHM,
                        "TYPE=%s", obj_tmp);
@@ -65,7 +65,7 @@ EVP_PKEY *evp_pkcs82pkey_legacy(const PKCS8_PRIV_KEY_INFO *p8, OSSL_LIB_CTX *lib
     return pkey;
 
  error:
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return NULL;
 }
 
@@ -247,7 +247,7 @@ int EVP_PKEY_add1_attr_by_txt(EVP_PKEY *key,
     return 0;
 }
 
-const char *EVP_PKEY_get0_type_name(const EVP_PKEY *key)
+const char *OPENSSL_BOX_EVP_PKEY_get0_type_name(const EVP_PKEY *key)
 {
 #ifndef OPENSSL_NO_DEPRECATED_3_6
     const EVP_PKEY_ASN1_METHOD *ameth;
@@ -255,11 +255,11 @@ const char *EVP_PKEY_get0_type_name(const EVP_PKEY *key)
     const char *name = NULL;
 
     if (key->keymgmt != NULL)
-        return EVP_KEYMGMT_get0_name(key->keymgmt);
+        return OPENSSL_BOX_EVP_KEYMGMT_get0_name(key->keymgmt);
 
 #ifndef OPENSSL_NO_DEPRECATED_3_6
     /* Otherwise fallback to legacy */
-    ameth = EVP_PKEY_get0_asn1(key);
+    ameth = OPENSSL_BOX_EVP_PKEY_get0_asn1(key);
     if (ameth != NULL)
         EVP_PKEY_asn1_get0_info(NULL, NULL,
                                 NULL, NULL, &name, ameth);
@@ -268,9 +268,9 @@ const char *EVP_PKEY_get0_type_name(const EVP_PKEY *key)
     return name;
 }
 
-const OSSL_PROVIDER *EVP_PKEY_get0_provider(const EVP_PKEY *key)
+const OSSL_PROVIDER *OPENSSL_BOX_EVP_PKEY_get0_provider(const EVP_PKEY *key)
 {
     if (evp_pkey_is_provided(key))
-        return EVP_KEYMGMT_get0_provider(key->keymgmt);
+        return OPENSSL_BOX_EVP_KEYMGMT_get0_provider(key->keymgmt);
     return NULL;
 }

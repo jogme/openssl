@@ -47,8 +47,8 @@ static EVP_PKEY *do_ec_keygen(void)
         goto cleanup;
     }
 
-    if (EVP_PKEY_keygen_init(genctx) <= 0) {
-        fprintf(stderr, "EVP_PKEY_keygen_init() failed\n");
+    if (OPENSSL_BOX_EVP_PKEY_keygen_init(genctx) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_keygen_init() failed\n");
         goto cleanup;
     }
 
@@ -61,18 +61,18 @@ static EVP_PKEY *do_ec_keygen(void)
     params[1] = OSSL_PARAM_construct_int(OSSL_PKEY_PARAM_USE_COFACTOR_ECDH,
                                          &use_cofactordh);
     params[2] = OSSL_PARAM_construct_end();
-    if (!EVP_PKEY_CTX_set_params(genctx, params)) {
-        fprintf(stderr, "EVP_PKEY_CTX_set_params() failed\n");
+    if (!OPENSSL_BOX_EVP_PKEY_CTX_set_params(genctx, params)) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_CTX_set_params() failed\n");
         goto cleanup;
     }
 
     fprintf(stdout, "Generating EC key\n\n");
-    if (EVP_PKEY_generate(genctx, &key) <= 0) {
-        fprintf(stderr, "EVP_PKEY_generate() failed\n");
+    if (OPENSSL_BOX_EVP_PKEY_generate(genctx, &key) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_generate() failed\n");
         goto cleanup;
     }
 cleanup:
-    EVP_PKEY_CTX_free(genctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(genctx);
     return key;
 }
 
@@ -143,13 +143,13 @@ int main(void)
 
     /*
      * At this point we can write out the generated key using
-     * i2d_PrivateKey() and i2d_PublicKey() if required.
+     * OPENSSL_BOX_i2d_PrivateKey() and OPENSSL_BOX_i2d_PublicKey() if required.
      */
     ret = EXIT_SUCCESS;
 cleanup:
     if (ret != EXIT_SUCCESS)
         ERR_print_errors_fp(stderr);
 
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }

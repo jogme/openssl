@@ -135,7 +135,7 @@ my %exclude_macro_history = map { $_ => 1 } qw(
         BIO_set_app_data BIO_set_bind_mode BIO_set_buffer_read_data
         BIO_set_buffer_size BIO_set_close BIO_set_conn_hostname
         BIO_set_conn_ip_family BIO_set_conn_port BIO_set_fd BIO_set_fp
-        BIO_set_info_callback BIO_set_md BIO_set_mem_buf BIO_set_mem_eof_return
+        BIO_set_info_callback OPENSSL_BOX_BIO_set_md BIO_set_mem_buf BIO_set_mem_eof_return
         BIO_set_nbio BIO_set_nbio_accept BIO_set_read_buffer_size BIO_set_ssl
         BIO_set_ssl_mode BIO_set_ssl_renegotiate_bytes
         BIO_set_ssl_renegotiate_timeout BIO_set_write_buf_size

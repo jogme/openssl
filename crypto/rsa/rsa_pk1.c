@@ -370,7 +370,7 @@ static int ossl_rsa_prf(OSSL_LIB_CTX *ctx,
 
 err:
     HMAC_CTX_free(hmac);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     return ret;
 }
 

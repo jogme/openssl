@@ -151,13 +151,13 @@ static int sign_and_verify(int len)
     else
         memcpy(paddedData + digestlen - len, dataToSign, len);
 
-    if (!TEST_ptr(pkey = EVP_PKEY_new()))
+    if (!TEST_ptr(pkey = OPENSSL_BOX_EVP_PKEY_new()))
         goto end;
-    EVP_PKEY_set1_DSA(pkey, dsakey);
+    OPENSSL_BOX_EVP_PKEY_set1_DSA(pkey, dsakey);
 
-    if (!TEST_ptr(ctx = EVP_PKEY_CTX_new(pkey, NULL)))
+    if (!TEST_ptr(ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey, NULL)))
         goto end;
-    if (!TEST_int_eq(EVP_PKEY_sign_init(ctx), 1))
+    if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_sign_init(ctx), 1))
         goto end;
 
     if (EVP_PKEY_sign(ctx, NULL, &sigLength, dataToSign, len) != 1) {
@@ -174,7 +174,7 @@ static int sign_and_verify(int len)
     }
 
     /* Check that the signature is okay via the EVP interface */
-    if (!TEST_int_eq(EVP_PKEY_verify_init(ctx), 1))
+    if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_verify_init(ctx), 1))
         goto end;
 
     /* ... using the same data we just signed */
@@ -202,8 +202,8 @@ static int sign_and_verify(int len)
 
     ok = 1;
 end:
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
 
     OPENSSL_free(signature);
     OPENSSL_free(paddedData);

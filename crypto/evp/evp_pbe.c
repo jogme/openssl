@@ -161,8 +161,8 @@ int EVP_PBE_CipherInit_ex(ASN1_OBJECT *pbe_obj, const char *pass, int passlen,
         ret = keygen(ctx, pass, passlen, param, cipher, md, en_de);
 
 err:
-    EVP_CIPHER_free(cipher_fetch);
-    EVP_MD_free(md_fetch);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher_fetch);
+    OPENSSL_BOX_EVP_MD_free(md_fetch);
 
     return ret;
 }
@@ -236,11 +236,11 @@ int EVP_PBE_alg_add(int nid, const EVP_CIPHER *cipher, const EVP_MD *md,
     int cipher_nid, md_nid;
 
     if (cipher)
-        cipher_nid = EVP_CIPHER_get_nid(cipher);
+        cipher_nid = OPENSSL_BOX_EVP_CIPHER_get_nid(cipher);
     else
         cipher_nid = -1;
     if (md)
-        md_nid = EVP_MD_get_type(md);
+        md_nid = OPENSSL_BOX_EVP_MD_get_type(md);
     else
         md_nid = -1;
 
@@ -292,13 +292,13 @@ static void free_evp_pbe_ctl(EVP_PBE_CTL *pbe)
     OPENSSL_free(pbe);
 }
 
-void EVP_PBE_cleanup(void)
+void OPENSSL_BOX_EVP_PBE_cleanup(void)
 {
     sk_EVP_PBE_CTL_pop_free(pbe_algs, free_evp_pbe_ctl);
     pbe_algs = NULL;
 }
 
-int EVP_PBE_get(int *ptype, int *ppbe_nid, size_t num)
+int OPENSSL_BOX_EVP_PBE_get(int *ptype, int *ppbe_nid, size_t num)
 {
     const EVP_PBE_CTL *tpbe;
 

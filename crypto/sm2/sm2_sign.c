@@ -49,7 +49,7 @@ int ossl_sm2_compute_z_digest(uint8_t *out,
         goto done;
     }
 
-    hash = EVP_MD_CTX_new();
+    hash = OPENSSL_BOX_EVP_MD_CTX_new();
     if (hash == NULL) {
         ERR_raise(ERR_LIB_SM2, ERR_R_EVP_LIB);
         goto done;
@@ -73,7 +73,7 @@ int ossl_sm2_compute_z_digest(uint8_t *out,
         goto done;
     }
 
-    if (!EVP_DigestInit(hash, digest)) {
+    if (!OPENSSL_BOX_EVP_DigestInit(hash, digest)) {
         ERR_raise(ERR_LIB_SM2, ERR_R_EVP_LIB);
         goto done;
     }
@@ -142,7 +142,7 @@ int ossl_sm2_compute_z_digest(uint8_t *out,
  done:
     OPENSSL_free(buf);
     BN_CTX_free(ctx);
-    EVP_MD_CTX_free(hash);
+    OPENSSL_BOX_EVP_MD_CTX_free(hash);
     return rc;
 }
 
@@ -152,8 +152,8 @@ static BIGNUM *sm2_compute_msg_hash(const EVP_MD *digest,
                                     const size_t id_len,
                                     const uint8_t *msg, size_t msg_len)
 {
-    EVP_MD_CTX *hash = EVP_MD_CTX_new();
-    const int md_size = EVP_MD_get_size(digest);
+    EVP_MD_CTX *hash = OPENSSL_BOX_EVP_MD_CTX_new();
+    const int md_size = OPENSSL_BOX_EVP_MD_get_size(digest);
     uint8_t *z = NULL;
     BIGNUM *e = NULL;
     EVP_MD *fetched_digest = NULL;
@@ -173,7 +173,7 @@ static BIGNUM *sm2_compute_msg_hash(const EVP_MD *digest,
     if (z == NULL)
         goto done;
 
-    fetched_digest = EVP_MD_fetch(libctx, EVP_MD_get0_name(digest), propq);
+    fetched_digest = EVP_MD_fetch(libctx, OPENSSL_BOX_EVP_MD_get0_name(digest), propq);
     if (fetched_digest == NULL) {
         ERR_raise(ERR_LIB_SM2, ERR_R_INTERNAL_ERROR);
         goto done;
@@ -184,7 +184,7 @@ static BIGNUM *sm2_compute_msg_hash(const EVP_MD *digest,
         goto done;
     }
 
-    if (!EVP_DigestInit(hash, fetched_digest)
+    if (!OPENSSL_BOX_EVP_DigestInit(hash, fetched_digest)
             || !EVP_DigestUpdate(hash, z, md_size)
             || !EVP_DigestUpdate(hash, msg, msg_len)
                /* reuse z buffer to hold H(Z || M) */
@@ -198,9 +198,9 @@ static BIGNUM *sm2_compute_msg_hash(const EVP_MD *digest,
         ERR_raise(ERR_LIB_SM2, ERR_R_INTERNAL_ERROR);
 
  done:
-    EVP_MD_free(fetched_digest);
+    OPENSSL_BOX_EVP_MD_free(fetched_digest);
     OPENSSL_free(z);
-    EVP_MD_CTX_free(hash);
+    OPENSSL_BOX_EVP_MD_CTX_free(hash);
     return e;
 }
 

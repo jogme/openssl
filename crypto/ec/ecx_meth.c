@@ -65,7 +65,7 @@ static int ecx_pub_decode(EVP_PKEY *pkey, const X509_PUBKEY *pubkey)
                           KEY_OP_PUBLIC, NULL, NULL);
     if (ecx != NULL) {
         ret = 1;
-        EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, ecx);
+        OPENSSL_BOX_EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, ecx);
     }
     return ret;
 }
@@ -89,7 +89,7 @@ static int ecx_priv_decode_ex(EVP_PKEY *pkey, const PKCS8_PRIV_KEY_INFO *p8,
 
     if (ecx != NULL) {
         ret = 1;
-        EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, ecx);
+        OPENSSL_BOX_EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, ecx);
     }
 
     return ret;
@@ -221,7 +221,7 @@ static int ecx_ctrl(EVP_PKEY *pkey, int op, long arg1, void *arg2)
                                        KEY_OP_PUBLIC, NULL, NULL);
 
         if (ecx != NULL) {
-            EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, ecx);
+            OPENSSL_BOX_EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, ecx);
             return 1;
         }
         return 0;
@@ -263,13 +263,13 @@ static int ecx_set_priv_key(EVP_PKEY *pkey, const unsigned char *priv,
     ECX_KEY *ecx = NULL;
 
     if (pkey->keymgmt != NULL)
-        libctx = ossl_provider_libctx(EVP_KEYMGMT_get0_provider(pkey->keymgmt));
+        libctx = ossl_provider_libctx(OPENSSL_BOX_EVP_KEYMGMT_get0_provider(pkey->keymgmt));
 
     ecx = ossl_ecx_key_op(NULL, priv, (int)len, pkey->ameth->pkey_id,
                           KEY_OP_PRIVATE, libctx, NULL);
 
     if (ecx != NULL) {
-        EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, ecx);
+        OPENSSL_BOX_EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, ecx);
         return 1;
     }
     return 0;
@@ -281,13 +281,13 @@ static int ecx_set_pub_key(EVP_PKEY *pkey, const unsigned char *pub, size_t len)
     ECX_KEY *ecx = NULL;
 
     if (pkey->keymgmt != NULL)
-        libctx = ossl_provider_libctx(EVP_KEYMGMT_get0_provider(pkey->keymgmt));
+        libctx = ossl_provider_libctx(OPENSSL_BOX_EVP_KEYMGMT_get0_provider(pkey->keymgmt));
 
     ecx = ossl_ecx_key_op(NULL, pub, (int)len, pkey->ameth->pkey_id,
                           KEY_OP_PUBLIC, libctx, NULL);
 
     if (ecx != NULL) {
-        EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, ecx);
+        OPENSSL_BOX_EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, ecx);
         return 1;
     }
     return 0;
@@ -385,7 +385,7 @@ static int ecx_generic_import_from(const OSSL_PARAM params[], void *vpctx,
                                    int keytype)
 {
     EVP_PKEY_CTX *pctx = vpctx;
-    EVP_PKEY *pkey = EVP_PKEY_CTX_get0_pkey(pctx);
+    EVP_PKEY *pkey = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(pctx);
     ECX_KEY *ecx = ossl_ecx_key_new(pctx->libctx, KEYNID2TYPE(keytype), 0,
                                     pctx->propquery);
 
@@ -395,7 +395,7 @@ static int ecx_generic_import_from(const OSSL_PARAM params[], void *vpctx,
     }
 
     if (!ossl_ecx_key_fromdata(ecx, params, 1)
-        || !EVP_PKEY_assign(pkey, keytype, ecx)) {
+        || !OPENSSL_BOX_EVP_PKEY_assign(pkey, keytype, ecx)) {
         ossl_ecx_key_free(ecx);
         return 0;
     }
@@ -413,7 +413,7 @@ static int ecx_pkey_copy(EVP_PKEY *to, EVP_PKEY *from)
             return 0;
     }
 
-    ret = EVP_PKEY_assign(to, from->type, dupkey);
+    ret = OPENSSL_BOX_EVP_PKEY_assign(to, from->type, dupkey);
     if (!ret)
         ossl_ecx_key_free(dupkey);
     return ret;
@@ -714,7 +714,7 @@ static int pkey_ecx_keygen(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
                                    KEY_OP_KEYGEN, NULL, NULL);
 
     if (ecx != NULL) {
-        EVP_PKEY_assign(pkey, ctx->pmeth->pkey_id, ecx);
+        OPENSSL_BOX_EVP_PKEY_assign(pkey, ctx->pmeth->pkey_id, ecx);
         return 1;
     }
     return 0;
@@ -805,7 +805,7 @@ static int pkey_ecd_digestsign25519(EVP_MD_CTX *ctx, unsigned char *sig,
                                     size_t *siglen, const unsigned char *tbs,
                                     size_t tbslen)
 {
-    const ECX_KEY *edkey = evp_pkey_get_legacy(EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
+    const ECX_KEY *edkey = evp_pkey_get_legacy(OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
 
     if (edkey == NULL) {
         ERR_raise(ERR_LIB_EC, EC_R_INVALID_KEY);
@@ -834,7 +834,7 @@ static int pkey_ecd_digestsign448(EVP_MD_CTX *ctx, unsigned char *sig,
                                   size_t *siglen, const unsigned char *tbs,
                                   size_t tbslen)
 {
-    const ECX_KEY *edkey = evp_pkey_get_legacy(EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
+    const ECX_KEY *edkey = evp_pkey_get_legacy(OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
 
     if (edkey == NULL) {
         ERR_raise(ERR_LIB_EC, EC_R_INVALID_KEY);
@@ -861,7 +861,7 @@ static int pkey_ecd_digestverify25519(EVP_MD_CTX *ctx, const unsigned char *sig,
                                       size_t siglen, const unsigned char *tbs,
                                       size_t tbslen)
 {
-    const ECX_KEY *edkey = evp_pkey_get_legacy(EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
+    const ECX_KEY *edkey = evp_pkey_get_legacy(OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
 
     if (edkey == NULL) {
         ERR_raise(ERR_LIB_EC, EC_R_INVALID_KEY);
@@ -881,7 +881,7 @@ static int pkey_ecd_digestverify448(EVP_MD_CTX *ctx, const unsigned char *sig,
                                     size_t siglen, const unsigned char *tbs,
                                     size_t tbslen)
 {
-    const ECX_KEY *edkey = evp_pkey_get_legacy(EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
+    const ECX_KEY *edkey = evp_pkey_get_legacy(OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
 
     if (edkey == NULL) {
         ERR_raise(ERR_LIB_EC, EC_R_INVALID_KEY);
@@ -900,7 +900,7 @@ static int pkey_ecd_ctrl(EVP_PKEY_CTX *ctx, int type, int p1, void *p2)
     switch (type) {
     case EVP_PKEY_CTRL_MD:
         /* Only NULL allowed as digest */
-        if (p2 == NULL || (const EVP_MD *)p2 == EVP_md_null())
+        if (p2 == NULL || (const EVP_MD *)p2 == OPENSSL_BOX_EVP_md_null())
             return 1;
         ERR_raise(ERR_LIB_EC, EC_R_INVALID_DIGEST_TYPE);
         return 0;
@@ -970,7 +970,7 @@ static int s390x_pkey_ecx_keygen25519(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
     if (s390x_x25519_mul(pubkey, generator, privkey) != 1)
         goto err;
 
-    EVP_PKEY_assign(pkey, ctx->pmeth->pkey_id, key);
+    OPENSSL_BOX_EVP_PKEY_assign(pkey, ctx->pmeth->pkey_id, key);
     return 1;
  err:
     ossl_ecx_key_free(key);
@@ -1012,7 +1012,7 @@ static int s390x_pkey_ecx_keygen448(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
     if (s390x_x448_mul(pubkey, generator, privkey) != 1)
         goto err;
 
-    EVP_PKEY_assign(pkey, ctx->pmeth->pkey_id, key);
+    OPENSSL_BOX_EVP_PKEY_assign(pkey, ctx->pmeth->pkey_id, key);
     return 1;
  err:
     ossl_ecx_key_free(key);
@@ -1060,7 +1060,7 @@ static int s390x_pkey_ecd_keygen25519(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
         goto err;
 
     rv = EVP_Digest(privkey, 32, buff, &sz, md, NULL);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     if (!rv)
         goto err;
 
@@ -1074,7 +1074,7 @@ static int s390x_pkey_ecd_keygen25519(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
 
     pubkey[31] |= ((x_dst[0] & 0x01) << 7);
 
-    EVP_PKEY_assign(pkey, ctx->pmeth->pkey_id, key);
+    OPENSSL_BOX_EVP_PKEY_assign(pkey, ctx->pmeth->pkey_id, key);
     return 1;
  err:
     ossl_ecx_key_free(key);
@@ -1121,7 +1121,7 @@ static int s390x_pkey_ecd_keygen448(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
     if (RAND_priv_bytes_ex(ctx->libctx, privkey, ED448_KEYLEN, 0) <= 0)
         goto err;
 
-    hashctx = EVP_MD_CTX_new();
+    hashctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (hashctx == NULL)
         goto err;
 
@@ -1130,7 +1130,7 @@ static int s390x_pkey_ecd_keygen448(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
         goto err;
 
     rv = EVP_DigestInit_ex(hashctx, md, NULL);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     if (rv != 1)
         goto err;
 
@@ -1149,12 +1149,12 @@ static int s390x_pkey_ecd_keygen448(EVP_PKEY_CTX *ctx, EVP_PKEY *pkey)
 
     pubkey[56] |= ((x_dst[0] & 0x01) << 7);
 
-    EVP_PKEY_assign(pkey, ctx->pmeth->pkey_id, key);
-    EVP_MD_CTX_free(hashctx);
+    OPENSSL_BOX_EVP_PKEY_assign(pkey, ctx->pmeth->pkey_id, key);
+    OPENSSL_BOX_EVP_MD_CTX_free(hashctx);
     return 1;
  err:
     ossl_ecx_key_free(key);
-    EVP_MD_CTX_free(hashctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(hashctx);
     return 0;
 }
 
@@ -1196,7 +1196,7 @@ static int s390x_pkey_ecd_digestsign25519(EVP_MD_CTX *ctx,
         } ed25519;
         unsigned long long buff[512];
     } param;
-    const ECX_KEY *edkey = evp_pkey_get_legacy(EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
+    const ECX_KEY *edkey = evp_pkey_get_legacy(OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
     int rc;
 
     if (edkey == NULL) {
@@ -1241,7 +1241,7 @@ static int s390x_pkey_ecd_digestsign448(EVP_MD_CTX *ctx,
         } ed448;
         unsigned long long buff[512];
     } param;
-    const ECX_KEY *edkey = evp_pkey_get_legacy(EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
+    const ECX_KEY *edkey = evp_pkey_get_legacy(OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
     int rc;
 
     if (edkey == NULL) {
@@ -1289,7 +1289,7 @@ static int s390x_pkey_ecd_digestverify25519(EVP_MD_CTX *ctx,
         } ed25519;
         unsigned long long buff[512];
     } param;
-    const ECX_KEY *edkey = evp_pkey_get_legacy(EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
+    const ECX_KEY *edkey = evp_pkey_get_legacy(OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
 
     if (edkey == NULL) {
         ERR_raise(ERR_LIB_EC, EC_R_INVALID_KEY);
@@ -1321,7 +1321,7 @@ static int s390x_pkey_ecd_digestverify448(EVP_MD_CTX *ctx,
         } ed448;
         unsigned long long buff[512];
     } param;
-    const ECX_KEY *edkey = evp_pkey_get_legacy(EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
+    const ECX_KEY *edkey = evp_pkey_get_legacy(OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx)->pkey);
 
     if (edkey == NULL) {
         ERR_raise(ERR_LIB_EC, EC_R_INVALID_KEY);

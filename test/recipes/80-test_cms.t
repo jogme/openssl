@@ -1269,7 +1269,7 @@ with({ exit_checker => sub { return shift == 4; } },
                     '-inform', 'PEM',
                     '-in', data_file("pkcs7-md4.pem"),
                    ])),
-            "Check failure of EVP_DigestInit in PKCS7 signed is handled");
+            "Check failure of OPENSSL_BOX_EVP_DigestInit in PKCS7 signed is handled");
 
         ok(run(app(['openssl', 'smime', '-decrypt',
                     '-inform', 'PEM',
@@ -1277,7 +1277,7 @@ with({ exit_checker => sub { return shift == 4; } },
                     '-recip', srctop_file("test", "certs", "ee-cert.pem"),
                     '-inkey', srctop_file("test", "certs", "ee-key.pem")
                    ])),
-            "Check failure of EVP_DigestInit in PKCS7 signedAndEnveloped is handled");
+            "Check failure of OPENSSL_BOX_EVP_DigestInit in PKCS7 signedAndEnveloped is handled");
     });
 
 sub check_availability {

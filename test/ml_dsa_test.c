@@ -40,12 +40,12 @@ static EVP_PKEY *do_gen_key(const char *alg,
     *p = OSSL_PARAM_construct_end();
 
     if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(lib_ctx, alg, NULL))
-            || !TEST_int_eq(EVP_PKEY_keygen_init(ctx), 1)
-            || !TEST_int_eq(EVP_PKEY_CTX_set_params(ctx, params), 1)
-            || !TEST_int_eq(EVP_PKEY_generate(ctx, &pkey), 1))
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx), 1)
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, params), 1)
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_generate(ctx, &pkey), 1))
         pkey = NULL;
 
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return pkey;
 }
 
@@ -71,14 +71,14 @@ static int ml_dsa_create_keypair(EVP_PKEY **pkey, const char *name,
     *p = OSSL_PARAM_construct_end();
 
     if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(lib_ctx, name, NULL))
-            || !TEST_int_eq(EVP_PKEY_fromdata_init(ctx), 1)
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
             || !TEST_int_eq(EVP_PKEY_fromdata(ctx, pkey, selection,
                                               params), expected))
         goto err;
 
     ret = 1;
 err:
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 
@@ -113,7 +113,7 @@ static int ml_dsa_keygen_test(int tst_id)
         goto err;
     ret = 1;
 err:
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 
@@ -162,9 +162,9 @@ static int ml_dsa_siggen_test(int tst_id)
         goto err;
     ret = 1;
 err:
-    EVP_SIGNATURE_free(sig_alg);
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_CTX_free(sctx);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig_alg);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(sctx);
     OPENSSL_free(psig);
     return ret;
 }
@@ -196,9 +196,9 @@ static int ml_dsa_sigver_test(int tst_id)
         goto err;
     ret = 1;
 err:
-    EVP_SIGNATURE_free(sig_alg);
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_CTX_free(vctx);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig_alg);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(vctx);
     return ret;
 }
 
@@ -248,9 +248,9 @@ static int ml_dsa_siggen_upd_test(int tst_id)
         goto err;
     ret = 1;
 err:
-    EVP_SIGNATURE_free(sig_alg);
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_CTX_free(sctx);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig_alg);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(sctx);
     OPENSSL_free(psig);
     return ret;
 }
@@ -281,13 +281,13 @@ static int ml_dsa_sigver_upd_test(int tst_id)
                                                        td->sig_len), 1)
             || !TEST_int_eq(EVP_PKEY_verify_message_update(vctx, td->msg,
                                                            td->msg_len), 1)
-            || !TEST_int_eq(EVP_PKEY_verify_message_final(vctx), td->expected))
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_verify_message_final(vctx), td->expected))
         goto err;
     ret = 1;
 err:
-    EVP_SIGNATURE_free(sig_alg);
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_CTX_free(vctx);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig_alg);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(vctx);
     return ret;
 }
 
@@ -299,16 +299,16 @@ static int ml_dsa_key_dup_test(void)
     EVP_PKEY_CTX *ctx = NULL;
 
     if (!TEST_ptr(pkey = do_gen_key(tst->name, tst->seed, tst->seed_len))
-            || !TEST_ptr(pkey_copy = EVP_PKEY_dup(pkey))
-            || !TEST_int_eq(EVP_PKEY_eq(pkey, pkey_copy), 1)
+            || !TEST_ptr(pkey_copy = OPENSSL_BOX_EVP_PKEY_dup(pkey))
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_eq(pkey, pkey_copy), 1)
             || !TEST_ptr(ctx = EVP_PKEY_CTX_new_from_pkey(lib_ctx, pkey_copy, NULL))
-            || !TEST_int_eq(EVP_PKEY_check(ctx), 1))
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_check(ctx), 1))
         goto err;
     ret = 1;
  err:
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_free(pkey_copy);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey_copy);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 
@@ -371,7 +371,7 @@ static int from_data_invalid_public_test(void)
     ret = 1;
  err:
     OPENSSL_free(pub);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 
@@ -384,9 +384,9 @@ static int from_data_bad_input_test(void)
     uint32_t i = 0;
 
     if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(lib_ctx, "ML-DSA-44", NULL))
-            || !TEST_int_eq(EVP_PKEY_fromdata_init(ctx), 1)
-            || !TEST_ptr(EVP_PKEY_fromdata_settable(ctx, OSSL_KEYMGMT_SELECT_KEYPAIR))
-            || !TEST_ptr_null(EVP_PKEY_fromdata_settable(ctx, 0)))
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx), 1)
+            || !TEST_ptr(OPENSSL_BOX_EVP_PKEY_fromdata_settable(ctx, OSSL_KEYMGMT_SELECT_KEYPAIR))
+            || !TEST_ptr_null(OPENSSL_BOX_EVP_PKEY_fromdata_settable(ctx, 0)))
         goto err;
 
     params[0] = OSSL_PARAM_construct_uint32(OSSL_PKEY_PARAM_PRIV_KEY, &i);
@@ -401,8 +401,8 @@ static int from_data_bad_input_test(void)
         goto err;
     ret = 1;
  err:
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 
@@ -416,8 +416,8 @@ static int ml_dsa_keygen_drbg_test(void)
     if (!TEST_ptr(pkey = do_gen_key("ML-DSA-44", NULL, 0))
             || !TEST_ptr(pkey2 = do_gen_key("ML-DSA-44", NULL, 0))
             || !TEST_ptr(pkey3 = do_gen_key("ML-DSA-65", NULL, 0))
-            || !TEST_int_eq(EVP_PKEY_eq(pkey, pkey2), 0)
-            || !TEST_int_eq(EVP_PKEY_eq(pkey, pkey3), -1)
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_eq(pkey, pkey2), 0)
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_eq(pkey, pkey3), -1)
             || !TEST_int_eq(EVP_PKEY_get_raw_private_key(pkey, NULL, &len), 1)
             || !TEST_size_t_gt(len, 0)
             || !TEST_ptr(priv = OPENSSL_malloc(len))
@@ -430,16 +430,16 @@ static int ml_dsa_keygen_drbg_test(void)
             || !TEST_true(ml_dsa_create_keypair(&pkey_pub, "ML-DSA-44", NULL, 0,
                                                 pub, len, 1))
             /* test that the KEY's are equal */
-            || !TEST_int_eq(EVP_PKEY_eq(pkey_pub, pkey), 1))
+            || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_eq(pkey_pub, pkey), 1))
         goto err;
     ret = 1;
  err:
     OPENSSL_free(pub);
     OPENSSL_free(priv);
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_free(pkey2);
-    EVP_PKEY_free(pkey3);
-    EVP_PKEY_free(pkey_pub);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey2);
+    OPENSSL_BOX_EVP_PKEY_free(pkey3);
+    OPENSSL_BOX_EVP_PKEY_free(pkey_pub);
     return ret;
 }
 
@@ -515,11 +515,11 @@ static int do_ml_dsa_sign_verify(const char *alg, int tstid)
         goto err;
     ret = 1;
 err:
-    EVP_PKEY_free(key);
-    EVP_SIGNATURE_free(sig_alg);
+    OPENSSL_BOX_EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig_alg);
     OPENSSL_free(sig);
-    EVP_PKEY_CTX_free(sctx);
-    EVP_PKEY_CTX_free(vctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(sctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(vctx);
     return ret;
 }
 static int ml_dsa_44_sign_verify_test(int tstid)
@@ -556,7 +556,7 @@ static int ml_dsa_digest_sign_verify_test(void)
                                                  sp->ctx, sp->ctx_len);
     *p++ = OSSL_PARAM_construct_end();
 
-    if (!TEST_ptr(mctx = EVP_MD_CTX_new())
+    if (!TEST_ptr(mctx = OPENSSL_BOX_EVP_MD_CTX_new())
             || !TEST_int_eq(EVP_DigestSignInit_ex(mctx, NULL, "SHA256",
                                                   lib_ctx, "?fips=true",
                                                   key, params), 0)
@@ -589,8 +589,8 @@ static int ml_dsa_digest_sign_verify_test(void)
         goto err;
     ret = 1;
 err:
-    EVP_PKEY_free(key);
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
     OPENSSL_free(sig);
     return ret;
 }
@@ -621,7 +621,7 @@ static int ml_dsa_priv_pub_bad_t0_test(void)
     ret = 1;
  err:
     OPENSSL_free(priv);
-    EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     return ret;
 }
 

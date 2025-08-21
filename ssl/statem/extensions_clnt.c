@@ -666,7 +666,7 @@ static int add_key_share(SSL_CONNECTION *s, WPACKET *pkt, unsigned int group_id,
     }
 
     /* Encode the public key. */
-    encodedlen = EVP_PKEY_get1_encoded_public_key(key_share_key,
+    encodedlen = OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(key_share_key,
                                                   &encoded_pubkey);
     if (encodedlen == 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EC_LIB);
@@ -696,7 +696,7 @@ static int add_key_share(SSL_CONNECTION *s, WPACKET *pkt, unsigned int group_id,
     return 1;
  err:
     if (key_share_key != s->s3.tmp.ks_pkey[loop_num])
-        EVP_PKEY_free(key_share_key);
+        OPENSSL_BOX_EVP_PKEY_free(key_share_key);
     OPENSSL_free(encoded_pubkey);
     return 0;
 }
@@ -1026,7 +1026,7 @@ EXT_RETURN tls_construct_ctos_padding(SSL_CONNECTION *s, WPACKET *pkt,
              * Add the fixed PSK overhead, the identity length and the binder
              * length.
              */
-            int md_size = EVP_MD_get_size(md);
+            int md_size = OPENSSL_BOX_EVP_MD_get_size(md);
 
             if (md_size <= 0)
                 return EXT_RETURN_FAIL;
@@ -1166,7 +1166,7 @@ EXT_RETURN tls_construct_ctos_psk(SSL_CONNECTION *s, WPACKET *pkt,
          */
         agems += s->session->ext.tick_age_add;
 
-        reshashsize = EVP_MD_get_size(mdres);
+        reshashsize = OPENSSL_BOX_EVP_MD_get_size(mdres);
         if (reshashsize <= 0)
             goto dopsksess;
         s->ext.tick_identity++;
@@ -1197,7 +1197,7 @@ EXT_RETURN tls_construct_ctos_psk(SSL_CONNECTION *s, WPACKET *pkt,
             return EXT_RETURN_FAIL;
         }
 
-        pskhashsize = EVP_MD_get_size(mdpsk);
+        pskhashsize = OPENSSL_BOX_EVP_MD_get_size(mdpsk);
         if (pskhashsize <= 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_BAD_PSK);
             return EXT_RETURN_FAIL;
@@ -1931,7 +1931,7 @@ int tls_parse_stoc_key_share(SSL_CONNECTION *s, PACKET *pkt,
         /* The initial keyshares are obsolete now, hence free memory */
         for (i = 0; i < s->s3.tmp.num_ks_pkey; i++) {
             if (s->s3.tmp.ks_pkey[i] != NULL) {
-                EVP_PKEY_free(s->s3.tmp.ks_pkey[i]);
+                OPENSSL_BOX_EVP_PKEY_free(s->s3.tmp.ks_pkey[i]);
                 s->s3.tmp.ks_pkey[i] = NULL;
             }
         }
@@ -1999,23 +1999,23 @@ int tls_parse_stoc_key_share(SSL_CONNECTION *s, PACKET *pkt,
 
     if (!ginf->is_kem) {
         /* Regular KEX */
-        skey = EVP_PKEY_new();
-        if (skey == NULL || EVP_PKEY_copy_parameters(skey, ckey) <= 0) {
+        skey = OPENSSL_BOX_EVP_PKEY_new();
+        if (skey == NULL || OPENSSL_BOX_EVP_PKEY_copy_parameters(skey, ckey) <= 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_COPY_PARAMETERS_FAILED);
-            EVP_PKEY_free(skey);
+            OPENSSL_BOX_EVP_PKEY_free(skey);
             return 0;
         }
 
         if (tls13_set_encoded_pub_key(skey, PACKET_data(&encoded_pt),
                                       PACKET_remaining(&encoded_pt)) <= 0) {
             SSLfatal(s, SSL_AD_ILLEGAL_PARAMETER, SSL_R_BAD_ECPOINT);
-            EVP_PKEY_free(skey);
+            OPENSSL_BOX_EVP_PKEY_free(skey);
             return 0;
         }
 
         if (ssl_derive(s, ckey, skey, 1) == 0) {
             /* SSLfatal() already called */
-            EVP_PKEY_free(skey);
+            OPENSSL_BOX_EVP_PKEY_free(skey);
             return 0;
         }
         s->s3.peer_tmp = skey;

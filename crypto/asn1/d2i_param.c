@@ -21,12 +21,12 @@ EVP_PKEY *d2i_KeyParams(int type, EVP_PKEY **a, const unsigned char **pp,
     EVP_PKEY *ret = NULL;
 
     if ((a == NULL) || (*a == NULL)) {
-        if ((ret = EVP_PKEY_new()) == NULL)
+        if ((ret = OPENSSL_BOX_EVP_PKEY_new()) == NULL)
             return NULL;
     } else
         ret = *a;
 
-    if (type != EVP_PKEY_get_id(ret) && !EVP_PKEY_set_type(ret, type))
+    if (type != OPENSSL_BOX_EVP_PKEY_get_id(ret) && !OPENSSL_BOX_EVP_PKEY_set_type(ret, type))
         goto err;
 
     if (ret->ameth == NULL || ret->ameth->param_decode == NULL) {
@@ -42,11 +42,11 @@ EVP_PKEY *d2i_KeyParams(int type, EVP_PKEY **a, const unsigned char **pp,
     return ret;
 err:
     if (a == NULL || *a != ret)
-        EVP_PKEY_free(ret);
+        OPENSSL_BOX_EVP_PKEY_free(ret);
     return NULL;
 }
 
-EVP_PKEY *d2i_KeyParams_bio(int type, EVP_PKEY **a, BIO *in)
+EVP_PKEY *OPENSSL_BOX_d2i_KeyParams_bio(int type, EVP_PKEY **a, BIO *in)
 {
     BUF_MEM *b = NULL;
     const unsigned char *p;

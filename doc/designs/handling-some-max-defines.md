@@ -69,7 +69,7 @@ than 512 bits will be used any time soon.
 EVP_KDF_CTX_get_kdf_size() returns EVP_MAX_KEY_LENGTH for KRB5KDF until
 the cipher is set.
 
-EVP_CIPHER_CTX_rand_key() - no way to specify the length of the output
+OPENSSL_BOX_EVP_CIPHER_CTX_rand_key() - no way to specify the length of the output
 buffer.
 
 #### Proposed solution:
@@ -130,7 +130,7 @@ APIs depending on this value.
 
 This macro is used in a single place in hpke to allocate a fixed buffer.
 The EVP_EncryptInit(3) manual page mentions the tag size being at most
-16 bytes for EVP_CIPHER_CTX_ctrl(EVP_CTRL_AEAD_SET_TAG). The value is
+16 bytes for OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(EVP_CTRL_AEAD_SET_TAG). The value is
 problematic as for HMAC/KMAC based AEAD ciphers the tag length can be
 larger than block size. Even in case we would have block ciphers with
 256 block size the maximum tag length value of 16 is limiting.
@@ -138,7 +138,7 @@ larger than block size. Even in case we would have block ciphers with
 #### API calls depending on this:
 
 None (except the documentation in
-EVP_CIPHER_CTX_ctrl(EVP_CTRL_AEAD_SET/GET_TAG))
+OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(EVP_CTRL_AEAD_SET/GET_TAG))
 
 #### Proposed solution:
 

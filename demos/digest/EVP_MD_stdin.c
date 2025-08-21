@@ -63,9 +63,9 @@ static int demonstrate_digest(BIO *input)
         return 0;
     }
     /* Determine the length of the fetched digest type */
-    digest_length = EVP_MD_get_size(message_digest);
+    digest_length = OPENSSL_BOX_EVP_MD_get_size(message_digest);
     if (digest_length <= 0) {
-        fprintf(stderr, "EVP_MD_get_size returned invalid size.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MD_get_size returned invalid size.\n");
         goto cleanup;
     }
 
@@ -78,9 +78,9 @@ static int demonstrate_digest(BIO *input)
      * Make a message digest context to hold temporary state
      * during digest creation
      */
-    digest_context = EVP_MD_CTX_new();
+    digest_context = OPENSSL_BOX_EVP_MD_CTX_new();
     if (digest_context == NULL) {
-        fprintf(stderr, "EVP_MD_CTX_new failed.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MD_CTX_new failed.\n");
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -88,8 +88,8 @@ static int demonstrate_digest(BIO *input)
      * Initialize the message digest context to use the fetched
      * digest provider
      */
-    if (EVP_DigestInit(digest_context, message_digest) != 1) {
-        fprintf(stderr, "EVP_DigestInit failed.\n");
+    if (OPENSSL_BOX_EVP_DigestInit(digest_context, message_digest) != 1) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_DigestInit failed.\n");
         ERR_print_errors_fp(stderr);
         goto cleanup;
     }
@@ -113,9 +113,9 @@ cleanup:
     if (ret != 1)
         ERR_print_errors_fp(stderr);
     /* OpenSSL free functions will ignore NULL arguments */
-    EVP_MD_CTX_free(digest_context);
+    OPENSSL_BOX_EVP_MD_CTX_free(digest_context);
     OPENSSL_free(digest_value);
-    EVP_MD_free(message_digest);
+    OPENSSL_BOX_EVP_MD_free(message_digest);
 
     OSSL_LIB_CTX_free(library_context);
     return ret;

@@ -55,8 +55,8 @@ static RSA *pkey_get_rsa(EVP_PKEY *key, RSA **rsa)
     RSA *rtmp;
     if (!key)
         return NULL;
-    rtmp = EVP_PKEY_get1_RSA(key);
-    EVP_PKEY_free(key);
+    rtmp = OPENSSL_BOX_EVP_PKEY_get1_RSA(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     if (!rtmp)
         return NULL;
     if (rsa) {
@@ -95,8 +95,8 @@ static DSA *pkey_get_dsa(EVP_PKEY *key, DSA **dsa)
     DSA *dtmp;
     if (!key)
         return NULL;
-    dtmp = EVP_PKEY_get1_DSA(key);
-    EVP_PKEY_free(key);
+    dtmp = OPENSSL_BOX_EVP_PKEY_get1_DSA(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     if (!dtmp)
         return NULL;
     if (dsa) {
@@ -136,8 +136,8 @@ static EC_KEY *pkey_get_eckey(EVP_PKEY *key, EC_KEY **eckey)
     EC_KEY *dtmp;
     if (!key)
         return NULL;
-    dtmp = EVP_PKEY_get1_EC_KEY(key);
-    EVP_PKEY_free(key);
+    dtmp = OPENSSL_BOX_EVP_PKEY_get1_EC_KEY(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     if (!dtmp)
         return NULL;
     if (eckey) {

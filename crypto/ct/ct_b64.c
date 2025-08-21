@@ -37,7 +37,7 @@ static int ct_base64_decode(const char *in, unsigned char **out)
     if (outbuf == NULL)
         goto err;
 
-    outlen = EVP_DecodeBlock(outbuf, (unsigned char *)in, (int)inlen);
+    outlen = OPENSSL_BOX_EVP_DecodeBlock(outbuf, (unsigned char *)in, (int)inlen);
     if (outlen < 0) {
         ERR_raise(ERR_LIB_CT, CT_R_BASE64_DECODE_ERROR);
         goto err;
@@ -160,7 +160,7 @@ int CTLOG_new_from_base64_ex(CTLOG **ct_log, const char *pkey_base64,
 
     *ct_log = CTLOG_new_ex(pkey, name, libctx, propq);
     if (*ct_log == NULL) {
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         return 0;
     }
 

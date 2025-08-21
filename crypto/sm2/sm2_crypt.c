@@ -88,7 +88,7 @@ int ossl_sm2_ciphertext_size(const EC_KEY *key, const EVP_MD *digest,
                              size_t msg_len, size_t *ct_size)
 {
     const int field_size = ec_field_size(EC_KEY_get0_group(key));
-    const int md_size = EVP_MD_get_size(digest);
+    const int md_size = OPENSSL_BOX_EVP_MD_get_size(digest);
     int sz;
 
     if (field_size == 0 || md_size <= 0 || msg_len > INT_MAX/2)
@@ -117,7 +117,7 @@ int ossl_sm2_encrypt(const EC_KEY *key,
     BIGNUM *y1 = NULL;
     BIGNUM *x2 = NULL;
     BIGNUM *y2 = NULL;
-    EVP_MD_CTX *hash = EVP_MD_CTX_new();
+    EVP_MD_CTX *hash = OPENSSL_BOX_EVP_MD_CTX_new();
     struct SM2_Ciphertext_st ctext_struct;
     const EC_GROUP *group = EC_KEY_get0_group(key);
     const BIGNUM *order = EC_GROUP_get0_order(group);
@@ -128,7 +128,7 @@ int ossl_sm2_encrypt(const EC_KEY *key,
     uint8_t *x2y2 = NULL;
     uint8_t *C3 = NULL;
     int field_size;
-    const int C3_size = EVP_MD_get_size(digest);
+    const int C3_size = OPENSSL_BOX_EVP_MD_get_size(digest);
     EVP_MD *fetched_digest = NULL;
     OSSL_LIB_CTX *libctx = ossl_ec_key_get_libctx(key);
     const char *propq = ossl_ec_key_get0_propq(key);
@@ -224,12 +224,12 @@ again:
     for (i = 0; i != msg_len; ++i)
         msg_mask[i] ^= msg[i];
 
-    fetched_digest = EVP_MD_fetch(libctx, EVP_MD_get0_name(digest), propq);
+    fetched_digest = EVP_MD_fetch(libctx, OPENSSL_BOX_EVP_MD_get0_name(digest), propq);
     if (fetched_digest == NULL) {
         ERR_raise(ERR_LIB_SM2, ERR_R_INTERNAL_ERROR);
         goto done;
     }
-    if (EVP_DigestInit(hash, fetched_digest) == 0
+    if (OPENSSL_BOX_EVP_DigestInit(hash, fetched_digest) == 0
             || EVP_DigestUpdate(hash, x2y2, field_size) == 0
             || EVP_DigestUpdate(hash, msg, msg_len) == 0
             || EVP_DigestUpdate(hash, x2y2 + field_size, field_size) == 0
@@ -264,13 +264,13 @@ again:
     rc = 1;
 
  done:
-    EVP_MD_free(fetched_digest);
+    OPENSSL_BOX_EVP_MD_free(fetched_digest);
     ASN1_OCTET_STRING_free(ctext_struct.C2);
     ASN1_OCTET_STRING_free(ctext_struct.C3);
     OPENSSL_free(msg_mask);
     OPENSSL_free(x2y2);
     OPENSSL_free(C3);
-    EVP_MD_CTX_free(hash);
+    OPENSSL_BOX_EVP_MD_CTX_free(hash);
     BN_CTX_free(ctx);
     EC_POINT_free(kG);
     EC_POINT_free(kP);
@@ -293,7 +293,7 @@ int ossl_sm2_decrypt(const EC_KEY *key,
     uint8_t *x2y2 = NULL;
     uint8_t *computed_C3 = NULL;
     const int field_size = ec_field_size(group);
-    const int hash_size = EVP_MD_get_size(digest);
+    const int hash_size = OPENSSL_BOX_EVP_MD_get_size(digest);
     uint8_t *msg_mask = NULL;
     const uint8_t *C2 = NULL;
     const uint8_t *C3 = NULL;
@@ -380,13 +380,13 @@ int ossl_sm2_decrypt(const EC_KEY *key,
     for (i = 0; i != msg_len; ++i)
         ptext_buf[i] = C2[i] ^ msg_mask[i];
 
-    hash = EVP_MD_CTX_new();
+    hash = OPENSSL_BOX_EVP_MD_CTX_new();
     if (hash == NULL) {
         ERR_raise(ERR_LIB_SM2, ERR_R_EVP_LIB);
         goto done;
     }
 
-    if (!EVP_DigestInit(hash, digest)
+    if (!OPENSSL_BOX_EVP_DigestInit(hash, digest)
             || !EVP_DigestUpdate(hash, x2y2, field_size)
             || !EVP_DigestUpdate(hash, ptext_buf, msg_len)
             || !EVP_DigestUpdate(hash, x2y2 + field_size, field_size)
@@ -413,7 +413,7 @@ int ossl_sm2_decrypt(const EC_KEY *key,
     EC_POINT_free(C1);
     BN_CTX_free(ctx);
     SM2_Ciphertext_free(sm2_ctext);
-    EVP_MD_CTX_free(hash);
+    OPENSSL_BOX_EVP_MD_CTX_free(hash);
 
     return rc;
 }

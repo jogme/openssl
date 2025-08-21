@@ -45,9 +45,9 @@ RFC 4055
 L<EVP_PKEY_CTX_set_rsa_pss_keygen_md(3)>,
 L<EVP_PKEY_CTX_set_rsa_pss_keygen_mgf1_md(3)>,
 L<EVP_PKEY_CTX_set_rsa_pss_keygen_saltlen(3)>,
-L<EVP_PKEY_CTX_new(3)>,
+L<OPENSSL_BOX_EVP_PKEY_CTX_new(3)>,
 L<EVP_PKEY_CTX_ctrl_str(3)>,
-L<EVP_PKEY_derive(3)>
+L<OPENSSL_BOX_EVP_PKEY_derive(3)>
 
 =head1 COPYRIGHT
 

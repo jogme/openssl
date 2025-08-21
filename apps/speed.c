@@ -603,12 +603,12 @@ static int have_md(const char *name)
     EVP_MD *md = NULL;
 
     if (opt_md_silent(name, &md)) {
-        EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+        EVP_MD_CTX *ctx = OPENSSL_BOX_EVP_MD_CTX_new();
 
-        if (ctx != NULL && EVP_DigestInit(ctx, md) > 0)
+        if (ctx != NULL && OPENSSL_BOX_EVP_DigestInit(ctx, md) > 0)
             ret = 1;
-        EVP_MD_CTX_free(ctx);
-        EVP_MD_free(md);
+        OPENSSL_BOX_EVP_MD_CTX_free(ctx);
+        OPENSSL_BOX_EVP_MD_free(md);
     }
     return ret;
 }
@@ -619,13 +619,13 @@ static int have_cipher(const char *name)
     EVP_CIPHER *cipher = NULL;
 
     if (opt_cipher_silent(name, &cipher)) {
-        EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+        EVP_CIPHER_CTX *ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
 
         if (ctx != NULL
             && EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, 1) > 0)
             ret = 1;
-        EVP_CIPHER_CTX_free(ctx);
-        EVP_CIPHER_free(cipher);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
+        OPENSSL_BOX_EVP_CIPHER_free(cipher);
     }
     return ret;
 }
@@ -641,8 +641,8 @@ static int EVP_Digest_loop(const char *mdname, ossl_unused int algindex, void *a
 
     if (!opt_md_silent(mdname, &md))
         return -1;
-    if (EVP_MD_xof(md)) {
-        ctx = EVP_MD_CTX_new();
+    if (OPENSSL_BOX_EVP_MD_xof(md)) {
+        ctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (ctx == NULL) {
             count = -1;
             goto out;
@@ -666,8 +666,8 @@ static int EVP_Digest_loop(const char *mdname, ossl_unused int algindex, void *a
         }
     }
 out:
-    EVP_MD_free(md);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return count;
 }
 
@@ -707,11 +707,11 @@ static int mac_setup(const char *name,
         return 0;
 
     for (i = 0; i < loopargs_len; i++) {
-        loopargs[i].mctx = EVP_MAC_CTX_new(*mac);
+        loopargs[i].mctx = OPENSSL_BOX_EVP_MAC_CTX_new(*mac);
         if (loopargs[i].mctx == NULL)
             return 0;
 
-        if (!EVP_MAC_CTX_set_params(loopargs[i].mctx, params))
+        if (!OPENSSL_BOX_EVP_MAC_CTX_set_params(loopargs[i].mctx, params))
             return 0;
     }
 
@@ -724,8 +724,8 @@ static void mac_teardown(EVP_MAC **mac,
     unsigned int i;
 
     for (i = 0; i < loopargs_len; i++)
-        EVP_MAC_CTX_free(loopargs[i].mctx);
-    EVP_MAC_free(*mac);
+        OPENSSL_BOX_EVP_MAC_CTX_free(loopargs[i].mctx);
+    OPENSSL_BOX_EVP_MAC_free(*mac);
     *mac = NULL;
 
     return;
@@ -743,7 +743,7 @@ static int EVP_MAC_loop(ossl_unused int algindex, void *args)
         size_t outl;
 
         if (!EVP_MAC_init(mctx, NULL, 0, NULL)
-            || !EVP_MAC_update(mctx, buf, lengths[testnum])
+            || !OPENSSL_BOX_EVP_MAC_update(mctx, buf, lengths[testnum])
             || !EVP_MAC_final(mctx, mac, &outl, sizeof(mac)))
             return -1;
     }
@@ -820,7 +820,7 @@ static int GHASH_loop(void *args)
 
     /* just do the update in the loop to be comparable with 1.1.1 */
     for (count = 0; COND(c[D_GHASH][testnum]); count++) {
-        if (!EVP_MAC_update(mctx, buf, lengths[testnum]))
+        if (!OPENSSL_BOX_EVP_MAC_update(mctx, buf, lengths[testnum]))
             return -1;
     }
     return count;
@@ -840,29 +840,29 @@ static EVP_CIPHER_CTX *init_evp_cipher_ctx(const char *ciphername,
     if (!opt_cipher_silent(ciphername, &cipher))
         return NULL;
 
-    if ((ctx = EVP_CIPHER_CTX_new()) == NULL)
+    if ((ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto end;
 
     if (!EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, 1)) {
-        EVP_CIPHER_CTX_free(ctx);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
         ctx = NULL;
         goto end;
     }
 
-    if (EVP_CIPHER_CTX_set_key_length(ctx, keylen) <= 0) {
-        EVP_CIPHER_CTX_free(ctx);
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length(ctx, keylen) <= 0) {
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
         ctx = NULL;
         goto end;
     }
 
     if (!EVP_CipherInit_ex(ctx, NULL, NULL, key, iv, 1)) {
-        EVP_CIPHER_CTX_free(ctx);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
         ctx = NULL;
         goto end;
     }
 
 end:
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     return ctx;
 }
 
@@ -931,7 +931,7 @@ static int EVP_Update_loop_aead_enc(void *args)
     for (count = 0; COND(c[D_EVP][testnum]); count++) {
         /* Set length of iv (Doesn't apply to SIV mode) */
         if (mode_op != EVP_CIPH_SIV_MODE) {
-            if (!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN,
+            if (!OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN,
                                      sizeof(aead_iv), NULL)) {
                 BIO_printf(bio_err, "\nFailed to set iv length\n");
                 dofail();
@@ -942,7 +942,7 @@ static int EVP_Update_loop_aead_enc(void *args)
         if (mode_op != EVP_CIPH_GCM_MODE
             && mode_op != EVP_CIPH_SIV_MODE
             && mode_op != EVP_CIPH_GCM_SIV_MODE) {
-            if (!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
+            if (!OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
                                      TAG_LEN, NULL)) {
                 BIO_printf(bio_err, "\nFailed to set tag length\n");
                 dofail();
@@ -1003,7 +1003,7 @@ static int EVP_Update_loop_aead_dec(void *args)
     for (count = 0; COND(c[D_EVP][testnum]); count++) {
         /* Set the length of iv (Doesn't apply to SIV mode) */
         if (mode_op != EVP_CIPH_SIV_MODE) {
-            if (!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN,
+            if (!OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN,
                                      sizeof(aead_iv), NULL)) {
                 BIO_printf(bio_err, "\nFailed to set iv length\n");
                 dofail();
@@ -1015,7 +1015,7 @@ static int EVP_Update_loop_aead_dec(void *args)
         if (mode_op != EVP_CIPH_SIV_MODE
             && mode_op != EVP_CIPH_GCM_MODE
             && mode_op != EVP_CIPH_GCM_SIV_MODE) {
-            if (!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
+            if (!OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
                                      TAG_LEN, NULL)) {
                 BIO_printf(bio_err, "\nFailed to set tag length\n");
                 dofail();
@@ -1037,7 +1037,7 @@ static int EVP_Update_loop_aead_dec(void *args)
         }
         memcpy(tag, tempargs->tag, TAG_LEN);
 
-        if (!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
+        if (!OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
                                  TAG_LEN, tag)) {
             BIO_printf(bio_err, "\nFailed to set tag\n");
             dofail();
@@ -1170,7 +1170,7 @@ static int FFDH_derive_key_loop(void *args)
         /* outlen can be overwritten with a too small value (no padding used) */
         size_t outlen = MAX_FFDH_SIZE;
 
-        EVP_PKEY_derive(ffdh_ctx, derived_secret, &outlen);
+        OPENSSL_BOX_EVP_PKEY_derive(ffdh_ctx, derived_secret, &outlen);
     }
     return count;
 }
@@ -1276,7 +1276,7 @@ static int ECDH_EVP_derive_key_loop(void *args)
     size_t *outlen = &(tempargs->outlen[testnum]);
 
     for (count = 0; COND(ecdh_c[testnum][0]); count++)
-        EVP_PKEY_derive(ctx, derived_secret, outlen);
+        OPENSSL_BOX_EVP_PKEY_derive(ctx, derived_secret, outlen);
 
     return count;
 }
@@ -1349,12 +1349,12 @@ static int SM2_sign_loop(void *args)
     size_t sm2sigsize;
     int ret, count;
     EVP_PKEY **sm2_pkey = tempargs->sm2_pkey;
-    const size_t max_size = EVP_PKEY_get_size(sm2_pkey[testnum]);
+    const size_t max_size = OPENSSL_BOX_EVP_PKEY_get_size(sm2_pkey[testnum]);
 
     for (count = 0; COND(sm2_c[testnum][0]); count++) {
         sm2sigsize = max_size;
 
-        if (!EVP_DigestSignInit(sm2ctx[testnum], NULL, EVP_sm3(),
+        if (!EVP_DigestSignInit(sm2ctx[testnum], NULL, OPENSSL_BOX_EVP_sm3(),
                                 NULL, sm2_pkey[testnum])) {
             BIO_printf(bio_err, "SM2 init sign failure\n");
             dofail();
@@ -1387,7 +1387,7 @@ static int SM2_verify_loop(void *args)
     EVP_PKEY **sm2_pkey = tempargs->sm2_pkey;
 
     for (count = 0; COND(sm2_c[testnum][1]); count++) {
-        if (!EVP_DigestVerifyInit(sm2ctx[testnum], NULL, EVP_sm3(),
+        if (!EVP_DigestVerifyInit(sm2ctx[testnum], NULL, OPENSSL_BOX_EVP_sm3(),
                                   NULL, sm2_pkey[testnum])) {
             BIO_printf(bio_err, "SM2 verify init failure\n");
             dofail();
@@ -1415,7 +1415,7 @@ static int KEM_keygen_loop(void *args)
     int count;
 
     for (count = 0; COND(kems_c[testnum][0]); count++) {
-        if (EVP_PKEY_keygen(ctx, &pkey) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_keygen(ctx, &pkey) <= 0)
             return -1;
         /*
          * runtime defined to quite some degree by randomness,
@@ -1424,7 +1424,7 @@ static int KEM_keygen_loop(void *args)
          * meant to permit relative algorithm performance
          * comparison.
          */
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         pkey = NULL;
     }
     return count;
@@ -1472,9 +1472,9 @@ static int SIG_keygen_loop(void *args)
     int count;
 
     for (count = 0; COND(kems_c[testnum][0]); count++) {
-        EVP_PKEY_keygen(ctx, &pkey);
+        OPENSSL_BOX_EVP_PKEY_keygen(ctx, &pkey);
         /* TBD: How much does free influence runtime? */
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         pkey = NULL;
     }
     return count;
@@ -1532,8 +1532,8 @@ static int SIG_verify_loop(void *args)
 
 static int check_block_size(EVP_CIPHER_CTX *ctx, int length)
 {
-    const EVP_CIPHER *ciph = EVP_CIPHER_CTX_get0_cipher(ctx);
-    int blocksize = EVP_CIPHER_CTX_get_block_size(ctx);
+    const EVP_CIPHER *ciph = OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(ctx);
+    int blocksize = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx);
 
     if (ciph == NULL || blocksize <= 0) {
         BIO_printf(bio_err, "\nInvalid cipher!\n");
@@ -1542,7 +1542,7 @@ static int check_block_size(EVP_CIPHER_CTX *ctx, int length)
     if (length % blocksize != 0) {
         BIO_printf(bio_err,
                    "\nRequested encryption length not a multiple of block size for %s!\n",
-                   EVP_CIPHER_get0_name(ciph));
+                   OPENSSL_BOX_EVP_CIPHER_get0_name(ciph));
         return 0;
     }
     return 1;
@@ -1726,12 +1726,12 @@ static EVP_PKEY *get_ecdsa(const EC_CURVE *curve)
      * then we set the curve by NID before deriving the actual keygen
      * ctx for that specific curve.
      */
-    kctx = EVP_PKEY_CTX_new_id(curve->nid, NULL);
+    kctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(curve->nid, NULL);
     if (kctx == NULL) {
         EVP_PKEY_CTX *pctx = NULL;
         EVP_PKEY *params = NULL;
         /*
-         * If we reach this code EVP_PKEY_CTX_new_id() failed and a
+         * If we reach this code OPENSSL_BOX_EVP_PKEY_CTX_new_id() failed and a
          * "int_ctx_new:unsupported algorithm" error was added to the
          * error queue.
          * We remove it from the error queue as we are handling it.
@@ -1753,29 +1753,29 @@ static EVP_PKEY *get_ecdsa(const EC_CURVE *curve)
 
         /* Create the context for parameter generation */
         if ((pctx = EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL)) == NULL
-            || EVP_PKEY_paramgen_init(pctx) <= 0
+            || OPENSSL_BOX_EVP_PKEY_paramgen_init(pctx) <= 0
             || EVP_PKEY_CTX_set_ec_paramgen_curve_nid(pctx,
                                                       curve->nid) <= 0
-            || EVP_PKEY_paramgen(pctx, &params) <= 0) {
+            || OPENSSL_BOX_EVP_PKEY_paramgen(pctx, &params) <= 0) {
             BIO_printf(bio_err, "EC params init failure.\n");
             dofail();
-            EVP_PKEY_CTX_free(pctx);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
             return NULL;
         }
-        EVP_PKEY_CTX_free(pctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
 
         /* Create the context for the key generation */
-        kctx = EVP_PKEY_CTX_new(params, NULL);
-        EVP_PKEY_free(params);
+        kctx = OPENSSL_BOX_EVP_PKEY_CTX_new(params, NULL);
+        OPENSSL_BOX_EVP_PKEY_free(params);
     }
     if (kctx == NULL
-        || EVP_PKEY_keygen_init(kctx) <= 0
-        || EVP_PKEY_keygen(kctx, &key) <= 0) {
+        || OPENSSL_BOX_EVP_PKEY_keygen_init(kctx) <= 0
+        || OPENSSL_BOX_EVP_PKEY_keygen(kctx, &key) <= 0) {
         BIO_printf(bio_err, "EC key generation failure.\n");
         dofail();
         key = NULL;
     }
-    EVP_PKEY_CTX_free(kctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(kctx);
     return key;
 }
 
@@ -1808,8 +1808,8 @@ DEFINE_STACK_OF(EVP_KEM)
 static int kems_cmp(const EVP_KEM * const *a,
                     const EVP_KEM * const *b)
 {
-    return strcmp(OSSL_PROVIDER_get0_name(EVP_KEM_get0_provider(*a)),
-                  OSSL_PROVIDER_get0_name(EVP_KEM_get0_provider(*b)));
+    return strcmp(OSSL_PROVIDER_get0_name(OPENSSL_BOX_EVP_KEM_get0_provider(*a)),
+                  OSSL_PROVIDER_get0_name(OPENSSL_BOX_EVP_KEM_get0_provider(*b)));
 }
 
 static void collect_kem(EVP_KEM *kem, void *stack)
@@ -1817,9 +1817,9 @@ static void collect_kem(EVP_KEM *kem, void *stack)
     STACK_OF(EVP_KEM) *kem_stack = stack;
 
     if (is_kem_fetchable(kem)
-            && EVP_KEM_up_ref(kem)
+            && OPENSSL_BOX_EVP_KEM_up_ref(kem)
             && sk_EVP_KEM_push(kem_stack, kem) <= 0)
-        EVP_KEM_free(kem); /* up-ref successful but push to stack failed */
+        OPENSSL_BOX_EVP_KEM_free(kem); /* up-ref successful but push to stack failed */
 }
 
 static int kem_locate(const char *algo, unsigned int *idx)
@@ -1840,8 +1840,8 @@ DEFINE_STACK_OF(EVP_SIGNATURE)
 static int signatures_cmp(const EVP_SIGNATURE * const *a,
                           const EVP_SIGNATURE * const *b)
 {
-    return strcmp(OSSL_PROVIDER_get0_name(EVP_SIGNATURE_get0_provider(*a)),
-                  OSSL_PROVIDER_get0_name(EVP_SIGNATURE_get0_provider(*b)));
+    return strcmp(OSSL_PROVIDER_get0_name(OPENSSL_BOX_EVP_SIGNATURE_get0_provider(*a)),
+                  OSSL_PROVIDER_get0_name(OPENSSL_BOX_EVP_SIGNATURE_get0_provider(*b)));
 }
 
 static void collect_signatures(EVP_SIGNATURE *sig, void *stack)
@@ -1849,9 +1849,9 @@ static void collect_signatures(EVP_SIGNATURE *sig, void *stack)
     STACK_OF(EVP_SIGNATURE) *sig_stack = stack;
 
     if (is_signature_fetchable(sig)
-            && EVP_SIGNATURE_up_ref(sig)
+            && OPENSSL_BOX_EVP_SIGNATURE_up_ref(sig)
             && sk_EVP_SIGNATURE_push(sig_stack, sig) <= 0)
-        EVP_SIGNATURE_free(sig); /* up-ref successful but push to stack failed */
+        OPENSSL_BOX_EVP_SIGNATURE_free(sig); /* up-ref successful but push to stack failed */
 }
 
 static int sig_locate(const char *algo, unsigned int *idx)
@@ -2211,7 +2211,7 @@ int speed_main(int argc, char **argv)
     for (idx = 0; idx < (unsigned int)sk_EVP_KEM_num(kem_stack); idx++) {
         EVP_KEM *kem = sk_EVP_KEM_value(kem_stack, idx);
 
-        if (strcmp(EVP_KEM_get0_name(kem), "RSA") == 0) {
+        if (strcmp(OPENSSL_BOX_EVP_KEM_get0_name(kem), "RSA") == 0) {
             if (kems_algs_len + OSSL_NELEM(rsa_choices) >= MAX_KEM_NUM) {
                 BIO_printf(bio_err,
                            "Too many KEMs registered. Change MAX_KEM_NUM.\n");
@@ -2221,7 +2221,7 @@ int speed_main(int argc, char **argv)
                 kems_doit[kems_algs_len] = 1;
                 kems_algname[kems_algs_len++] = OPENSSL_strdup(rsa_choices[i].name);
             }
-        } else if (strcmp(EVP_KEM_get0_name(kem), "EC") == 0) {
+        } else if (strcmp(OPENSSL_BOX_EVP_KEM_get0_name(kem), "EC") == 0) {
             if (kems_algs_len + 3 >= MAX_KEM_NUM) {
                 BIO_printf(bio_err,
                            "Too many KEMs registered. Change MAX_KEM_NUM.\n");
@@ -2240,10 +2240,10 @@ int speed_main(int argc, char **argv)
                 goto end;
             }
             kems_doit[kems_algs_len] = 1;
-            kems_algname[kems_algs_len++] = OPENSSL_strdup(EVP_KEM_get0_name(kem));
+            kems_algname[kems_algs_len++] = OPENSSL_strdup(OPENSSL_BOX_EVP_KEM_get0_name(kem));
         }
     }
-    sk_EVP_KEM_pop_free(kem_stack, EVP_KEM_free);
+    sk_EVP_KEM_pop_free(kem_stack, OPENSSL_BOX_EVP_KEM_free);
     kem_stack = NULL;
 
     /* find all SIGNATUREs currently available */
@@ -2254,7 +2254,7 @@ int speed_main(int argc, char **argv)
 
     for (idx = 0; idx < (unsigned int)sk_EVP_SIGNATURE_num(sig_stack); idx++) {
         EVP_SIGNATURE *s = sk_EVP_SIGNATURE_value(sig_stack, idx);
-        const char *sig_name = EVP_SIGNATURE_get0_name(s);
+        const char *sig_name = OPENSSL_BOX_EVP_SIGNATURE_get0_name(s);
 
         if (strcmp(sig_name, "RSA") == 0) {
             if (sigs_algs_len + OSSL_NELEM(rsa_choices) >= MAX_SIG_NUM) {
@@ -2301,7 +2301,7 @@ int speed_main(int argc, char **argv)
             sigs_algname[sigs_algs_len++] = OPENSSL_strdup(sig_name);
         }
     }
-    sk_EVP_SIGNATURE_pop_free(sig_stack, EVP_SIGNATURE_free);
+    sk_EVP_SIGNATURE_pop_free(sig_stack, OPENSSL_BOX_EVP_SIGNATURE_free);
     sig_stack = NULL;
 
     /* Remaining arguments are algorithms. */
@@ -2443,10 +2443,10 @@ int speed_main(int argc, char **argv)
         if (evp_cipher == NULL) {
             BIO_printf(bio_err, "-aead can be used only with an AEAD cipher\n");
             goto end;
-        } else if (!(EVP_CIPHER_get_flags(evp_cipher) &
+        } else if (!(OPENSSL_BOX_EVP_CIPHER_get_flags(evp_cipher) &
                      EVP_CIPH_FLAG_AEAD_CIPHER)) {
             BIO_printf(bio_err, "%s is not an AEAD cipher\n",
-                       EVP_CIPHER_get0_name(evp_cipher));
+                       OPENSSL_BOX_EVP_CIPHER_get0_name(evp_cipher));
             goto end;
         }
     }
@@ -2477,10 +2477,10 @@ int speed_main(int argc, char **argv)
             BIO_printf(bio_err, "-mb can be used only with a multi-block"
                                 " capable cipher\n");
             goto end;
-        } else if (!(EVP_CIPHER_get_flags(evp_cipher) &
+        } else if (!(OPENSSL_BOX_EVP_CIPHER_get_flags(evp_cipher) &
                      EVP_CIPH_FLAG_TLS1_1_MULTIBLOCK)) {
             BIO_printf(bio_err, "%s is not a multi-block capable\n",
-                       EVP_CIPHER_get0_name(evp_cipher));
+                       OPENSSL_BOX_EVP_CIPHER_get0_name(evp_cipher));
             goto end;
         } else if (async_jobs > 0) {
             BIO_printf(bio_err, "Async mode is not supported with -mb");
@@ -2573,14 +2573,14 @@ int speed_main(int argc, char **argv)
         }
         if ((mac = EVP_MAC_fetch(app_get0_libctx(), "GMAC",
                                  app_get0_propq())) != NULL) {
-            EVP_MAC_free(mac);
+            OPENSSL_BOX_EVP_MAC_free(mac);
             mac = NULL;
         } else {
             doit[D_GHASH] = 0;
         }
         if ((mac = EVP_MAC_fetch(app_get0_libctx(), "HMAC",
                                  app_get0_propq())) != NULL) {
-            EVP_MAC_free(mac);
+            OPENSSL_BOX_EVP_MAC_free(mac);
             mac = NULL;
         } else {
             doit[D_HMAC] = 0;
@@ -2780,7 +2780,7 @@ int speed_main(int argc, char **argv)
             print_result(D_CBC_DES, testnum, count, d);
         }
         for (i = 0; i < loopargs_len; i++)
-            EVP_CIPHER_CTX_free(loopargs[i].ctx);
+            OPENSSL_BOX_EVP_CIPHER_CTX_free(loopargs[i].ctx);
     }
 
     if (doit[D_EDE3_DES]) {
@@ -2803,7 +2803,7 @@ int speed_main(int argc, char **argv)
             print_result(D_EDE3_DES, testnum, count, d);
         }
         for (i = 0; i < loopargs_len; i++)
-            EVP_CIPHER_CTX_free(loopargs[i].ctx);
+            OPENSSL_BOX_EVP_CIPHER_CTX_free(loopargs[i].ctx);
     }
 
     for (k = 0; k < 3; k++) {
@@ -2829,7 +2829,7 @@ int speed_main(int argc, char **argv)
                 print_result(algindex, testnum, count, d);
             }
             for (i = 0; i < loopargs_len; i++)
-                EVP_CIPHER_CTX_free(loopargs[i].ctx);
+                OPENSSL_BOX_EVP_CIPHER_CTX_free(loopargs[i].ctx);
         }
     }
 
@@ -2856,7 +2856,7 @@ int speed_main(int argc, char **argv)
                 print_result(algindex, testnum, count, d);
             }
             for (i = 0; i < loopargs_len; i++)
-                EVP_CIPHER_CTX_free(loopargs[i].ctx);
+                OPENSSL_BOX_EVP_CIPHER_CTX_free(loopargs[i].ctx);
         }
     }
 
@@ -2882,7 +2882,7 @@ int speed_main(int argc, char **argv)
                 print_result(algindex, testnum, count, d);
             }
             for (i = 0; i < loopargs_len; i++)
-                EVP_CIPHER_CTX_free(loopargs[i].ctx);
+                OPENSSL_BOX_EVP_CIPHER_CTX_free(loopargs[i].ctx);
         }
     }
     if (doit[D_GHASH]) {
@@ -2939,16 +2939,16 @@ int speed_main(int argc, char **argv)
             int outlen = 0;
             unsigned int ae_mode = 0;
 
-            if (multiblock && (EVP_CIPHER_get_flags(evp_cipher)
+            if (multiblock && (OPENSSL_BOX_EVP_CIPHER_get_flags(evp_cipher)
                                & EVP_CIPH_FLAG_TLS1_1_MULTIBLOCK)) {
                 multiblock_speed(evp_cipher, lengths_single, &seconds);
                 ret = 0;
                 goto end;
             }
 
-            names[D_EVP] = EVP_CIPHER_get0_name(evp_cipher);
+            names[D_EVP] = OPENSSL_BOX_EVP_CIPHER_get0_name(evp_cipher);
 
-            mode_op = EVP_CIPHER_get_mode(evp_cipher);
+            mode_op = OPENSSL_BOX_EVP_CIPHER_get_mode(evp_cipher);
 
             if (aead) {
                 if (lengths == lengths_list) {
@@ -2974,7 +2974,7 @@ int speed_main(int argc, char **argv)
                 print_message(names[D_EVP], lengths[testnum], seconds.sym);
 
                 for (k = 0; k < loopargs_len; k++) {
-                    loopargs[k].ctx = EVP_CIPHER_CTX_new();
+                    loopargs[k].ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
                     if (loopargs[k].ctx == NULL) {
                         BIO_printf(bio_err, "\nEVP_CIPHER_CTX_new failure\n");
                         exit(1);
@@ -2994,11 +2994,11 @@ int speed_main(int argc, char **argv)
                     }
 
                     /* Padding isn't needed */
-                    EVP_CIPHER_CTX_set_padding(loopargs[k].ctx, 0);
+                    OPENSSL_BOX_EVP_CIPHER_CTX_set_padding(loopargs[k].ctx, 0);
 
-                    keylen = EVP_CIPHER_CTX_get_key_length(loopargs[k].ctx);
+                    keylen = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(loopargs[k].ctx);
                     loopargs[k].key = app_malloc(keylen, "evp_cipher key");
-                    EVP_CIPHER_CTX_rand_key(loopargs[k].ctx, loopargs[k].key);
+                    OPENSSL_BOX_EVP_CIPHER_CTX_rand_key(loopargs[k].ctx, loopargs[k].key);
 
                     if (!ae_mode) {
                         if (!EVP_CipherInit_ex(loopargs[k].ctx, NULL, NULL,
@@ -3009,13 +3009,13 @@ int speed_main(int argc, char **argv)
                         }
                     } else if (mode_op == EVP_CIPH_SIV_MODE
                                || mode_op == EVP_CIPH_GCM_SIV_MODE) {
-                        EVP_CIPHER_CTX_ctrl(loopargs[k].ctx,
+                        OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(loopargs[k].ctx,
                                             EVP_CTRL_SET_SPEED, 1, NULL);
                     }
                     if (ae_mode && decrypt) {
                         /* Set length of iv (Doesn't apply to SIV mode) */
                         if (mode_op != EVP_CIPH_SIV_MODE) {
-                            if (!EVP_CIPHER_CTX_ctrl(loopargs[k].ctx,
+                            if (!OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(loopargs[k].ctx,
                                                      EVP_CTRL_AEAD_SET_IVLEN,
                                                      sizeof(aead_iv), NULL)) {
                                 BIO_printf(bio_err, "\nFailed to set iv length\n");
@@ -3027,7 +3027,7 @@ int speed_main(int argc, char **argv)
                         if (mode_op != EVP_CIPH_GCM_MODE
                             && mode_op != EVP_CIPH_SIV_MODE
                             && mode_op != EVP_CIPH_GCM_SIV_MODE) {
-                            if (!EVP_CIPHER_CTX_ctrl(loopargs[k].ctx,
+                            if (!OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(loopargs[k].ctx,
                                                      EVP_CTRL_AEAD_SET_TAG,
                                                      TAG_LEN, NULL)) {
                                 BIO_printf(bio_err,
@@ -3079,15 +3079,15 @@ int speed_main(int argc, char **argv)
                             exit(1);
                         }
 
-                        if (!EVP_CIPHER_CTX_ctrl(loopargs[k].ctx, EVP_CTRL_AEAD_GET_TAG,
+                        if (!OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(loopargs[k].ctx, EVP_CTRL_AEAD_GET_TAG,
                                                  TAG_LEN, &loopargs[k].tag)) {
                             BIO_printf(bio_err, "\nFailed to get the tag\n");
                             dofail();
                             exit(1);
                         }
 
-                        EVP_CIPHER_CTX_free(loopargs[k].ctx);
-                        loopargs[k].ctx = EVP_CIPHER_CTX_new();
+                        OPENSSL_BOX_EVP_CIPHER_CTX_free(loopargs[k].ctx);
+                        loopargs[k].ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
                         if (loopargs[k].ctx == NULL) {
                             BIO_printf(bio_err,
                                        "\nEVP_CIPHER_CTX_new failure\n");
@@ -3101,12 +3101,12 @@ int speed_main(int argc, char **argv)
                             exit(1);
                         }
 
-                        EVP_CIPHER_CTX_set_padding(loopargs[k].ctx, 0);
+                        OPENSSL_BOX_EVP_CIPHER_CTX_set_padding(loopargs[k].ctx, 0);
 
                         /* GCM-SIV/SIV only allows for a single Update operation */
                         if (mode_op == EVP_CIPH_SIV_MODE
                             || mode_op == EVP_CIPH_GCM_SIV_MODE)
-                            EVP_CIPHER_CTX_ctrl(loopargs[k].ctx,
+                            OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(loopargs[k].ctx,
                                                 EVP_CTRL_SET_SPEED, 1, NULL);
                     }
                 }
@@ -3116,7 +3116,7 @@ int speed_main(int argc, char **argv)
                 d = Time_F(STOP);
                 for (k = 0; k < loopargs_len; k++) {
                     OPENSSL_clear_free(loopargs[k].key, keylen);
-                    EVP_CIPHER_CTX_free(loopargs[k].ctx);
+                    OPENSSL_BOX_EVP_CIPHER_CTX_free(loopargs[k].ctx);
                 }
                 print_result(D_EVP, testnum, count, d);
             }
@@ -3143,8 +3143,8 @@ int speed_main(int argc, char **argv)
         if (!opt_cipher(evp_mac_ciphername, &cipher))
             goto end;
 
-        keylen = EVP_CIPHER_get_key_length(cipher);
-        EVP_CIPHER_free(cipher);
+        keylen = OPENSSL_BOX_EVP_CIPHER_get_key_length(cipher);
+        OPENSSL_BOX_EVP_CIPHER_free(cipher);
         if (keylen <= 0 || keylen > (int)sizeof(key32)) {
             BIO_printf(bio_err, "\nRequested CMAC cipher with unsupported key length.\n");
             goto end;
@@ -3235,10 +3235,10 @@ int speed_main(int argc, char **argv)
                 && EVP_PKEY_CTX_set_rsa_keygen_bits(genctx, rsa_keys[testnum].bits) > 0
                 && EVP_PKEY_CTX_set1_rsa_keygen_pubexp(genctx, bn) > 0
                 && EVP_PKEY_CTX_set_rsa_keygen_primes(genctx, primes) > 0
-                && EVP_PKEY_keygen(genctx, &rsa_key) > 0;
+                && OPENSSL_BOX_EVP_PKEY_keygen(genctx, &rsa_key) > 0;
             BN_free(bn);
             bn = NULL;
-            EVP_PKEY_CTX_free(genctx);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(genctx);
             genctx = NULL;
         } else {
             const unsigned char *p = rsa_keys[testnum].data;
@@ -3248,10 +3248,10 @@ int speed_main(int argc, char **argv)
         }
 
         for (i = 0; st && i < loopargs_len; i++) {
-            loopargs[i].rsa_sign_ctx[testnum] = EVP_PKEY_CTX_new(rsa_key, NULL);
+            loopargs[i].rsa_sign_ctx[testnum] = OPENSSL_BOX_EVP_PKEY_CTX_new(rsa_key, NULL);
             loopargs[i].sigsize = loopargs[i].buflen;
             if (loopargs[i].rsa_sign_ctx[testnum] == NULL
-                || EVP_PKEY_sign_init(loopargs[i].rsa_sign_ctx[testnum]) <= 0
+                || OPENSSL_BOX_EVP_PKEY_sign_init(loopargs[i].rsa_sign_ctx[testnum]) <= 0
                 || EVP_PKEY_sign(loopargs[i].rsa_sign_ctx[testnum],
                                  loopargs[i].buf2,
                                  &loopargs[i].sigsize,
@@ -3279,10 +3279,10 @@ int speed_main(int argc, char **argv)
         }
 
         for (i = 0; st && i < loopargs_len; i++) {
-            loopargs[i].rsa_verify_ctx[testnum] = EVP_PKEY_CTX_new(rsa_key,
+            loopargs[i].rsa_verify_ctx[testnum] = OPENSSL_BOX_EVP_PKEY_CTX_new(rsa_key,
                                                                    NULL);
             if (loopargs[i].rsa_verify_ctx[testnum] == NULL
-                || EVP_PKEY_verify_init(loopargs[i].rsa_verify_ctx[testnum]) <= 0
+                || OPENSSL_BOX_EVP_PKEY_verify_init(loopargs[i].rsa_verify_ctx[testnum]) <= 0
                 || EVP_PKEY_verify(loopargs[i].rsa_verify_ctx[testnum],
                                    loopargs[i].buf2,
                                    loopargs[i].sigsize,
@@ -3308,10 +3308,10 @@ int speed_main(int argc, char **argv)
         }
 
         for (i = 0; st && i < loopargs_len; i++) {
-            loopargs[i].rsa_encrypt_ctx[testnum] = EVP_PKEY_CTX_new(rsa_key, NULL);
+            loopargs[i].rsa_encrypt_ctx[testnum] = OPENSSL_BOX_EVP_PKEY_CTX_new(rsa_key, NULL);
             loopargs[i].encsize = loopargs[i].buflen;
             if (loopargs[i].rsa_encrypt_ctx[testnum] == NULL
-                || EVP_PKEY_encrypt_init(loopargs[i].rsa_encrypt_ctx[testnum]) <= 0
+                || OPENSSL_BOX_EVP_PKEY_encrypt_init(loopargs[i].rsa_encrypt_ctx[testnum]) <= 0
                 || EVP_PKEY_encrypt(loopargs[i].rsa_encrypt_ctx[testnum],
                                     loopargs[i].buf2,
                                     &loopargs[i].encsize,
@@ -3339,10 +3339,10 @@ int speed_main(int argc, char **argv)
         }
 
         for (i = 0; st && i < loopargs_len; i++) {
-            loopargs[i].rsa_decrypt_ctx[testnum] = EVP_PKEY_CTX_new(rsa_key, NULL);
+            loopargs[i].rsa_decrypt_ctx[testnum] = OPENSSL_BOX_EVP_PKEY_CTX_new(rsa_key, NULL);
             declen = loopargs[i].buflen;
             if (loopargs[i].rsa_decrypt_ctx[testnum] == NULL
-                || EVP_PKEY_decrypt_init(loopargs[i].rsa_decrypt_ctx[testnum]) <= 0
+                || OPENSSL_BOX_EVP_PKEY_decrypt_init(loopargs[i].rsa_decrypt_ctx[testnum]) <= 0
                 || EVP_PKEY_decrypt(loopargs[i].rsa_decrypt_ctx[testnum],
                                     loopargs[i].buf,
                                     &declen,
@@ -3374,7 +3374,7 @@ int speed_main(int argc, char **argv)
             /* if longer than 10s, don't do any more */
             stop_it(rsa_doit, testnum);
         }
-        EVP_PKEY_free(rsa_key);
+        OPENSSL_BOX_EVP_PKEY_free(rsa_key);
     }
 
 #ifndef OPENSSL_NO_DSA
@@ -3388,11 +3388,11 @@ int speed_main(int argc, char **argv)
         st = (dsa_key = get_dsa(dsa_bits[testnum])) != NULL;
 
         for (i = 0; st && i < loopargs_len; i++) {
-            loopargs[i].dsa_sign_ctx[testnum] = EVP_PKEY_CTX_new(dsa_key,
+            loopargs[i].dsa_sign_ctx[testnum] = OPENSSL_BOX_EVP_PKEY_CTX_new(dsa_key,
                                                                  NULL);
             loopargs[i].sigsize = loopargs[i].buflen;
             if (loopargs[i].dsa_sign_ctx[testnum] == NULL
-                || EVP_PKEY_sign_init(loopargs[i].dsa_sign_ctx[testnum]) <= 0
+                || OPENSSL_BOX_EVP_PKEY_sign_init(loopargs[i].dsa_sign_ctx[testnum]) <= 0
                 || EVP_PKEY_sign(loopargs[i].dsa_sign_ctx[testnum],
                                  loopargs[i].buf2,
                                  &loopargs[i].sigsize,
@@ -3419,10 +3419,10 @@ int speed_main(int argc, char **argv)
         }
 
         for (i = 0; st && i < loopargs_len; i++) {
-            loopargs[i].dsa_verify_ctx[testnum] = EVP_PKEY_CTX_new(dsa_key,
+            loopargs[i].dsa_verify_ctx[testnum] = OPENSSL_BOX_EVP_PKEY_CTX_new(dsa_key,
                                                                    NULL);
             if (loopargs[i].dsa_verify_ctx[testnum] == NULL
-                || EVP_PKEY_verify_init(loopargs[i].dsa_verify_ctx[testnum]) <= 0
+                || OPENSSL_BOX_EVP_PKEY_verify_init(loopargs[i].dsa_verify_ctx[testnum]) <= 0
                 || EVP_PKEY_verify(loopargs[i].dsa_verify_ctx[testnum],
                                    loopargs[i].buf2,
                                    loopargs[i].sigsize,
@@ -3451,7 +3451,7 @@ int speed_main(int argc, char **argv)
             /* if longer than 10s, don't do any more */
             stop_it(dsa_doit, testnum);
         }
-        EVP_PKEY_free(dsa_key);
+        OPENSSL_BOX_EVP_PKEY_free(dsa_key);
     }
 #endif /* OPENSSL_NO_DSA */
 
@@ -3465,11 +3465,11 @@ int speed_main(int argc, char **argv)
         st = (ecdsa_key = get_ecdsa(&ec_curves[testnum])) != NULL;
 
         for (i = 0; st && i < loopargs_len; i++) {
-            loopargs[i].ecdsa_sign_ctx[testnum] = EVP_PKEY_CTX_new(ecdsa_key,
+            loopargs[i].ecdsa_sign_ctx[testnum] = OPENSSL_BOX_EVP_PKEY_CTX_new(ecdsa_key,
                                                                    NULL);
             loopargs[i].sigsize = loopargs[i].buflen;
             if (loopargs[i].ecdsa_sign_ctx[testnum] == NULL
-                || EVP_PKEY_sign_init(loopargs[i].ecdsa_sign_ctx[testnum]) <= 0
+                || OPENSSL_BOX_EVP_PKEY_sign_init(loopargs[i].ecdsa_sign_ctx[testnum]) <= 0
                 || EVP_PKEY_sign(loopargs[i].ecdsa_sign_ctx[testnum],
                                  loopargs[i].buf2,
                                  &loopargs[i].sigsize,
@@ -3496,10 +3496,10 @@ int speed_main(int argc, char **argv)
         }
 
         for (i = 0; st && i < loopargs_len; i++) {
-            loopargs[i].ecdsa_verify_ctx[testnum] = EVP_PKEY_CTX_new(ecdsa_key,
+            loopargs[i].ecdsa_verify_ctx[testnum] = OPENSSL_BOX_EVP_PKEY_CTX_new(ecdsa_key,
                                                                      NULL);
             if (loopargs[i].ecdsa_verify_ctx[testnum] == NULL
-                || EVP_PKEY_verify_init(loopargs[i].ecdsa_verify_ctx[testnum]) <= 0
+                || OPENSSL_BOX_EVP_PKEY_verify_init(loopargs[i].ecdsa_verify_ctx[testnum]) <= 0
                 || EVP_PKEY_verify(loopargs[i].ecdsa_verify_ctx[testnum],
                                    loopargs[i].buf2,
                                    loopargs[i].sigsize,
@@ -3528,7 +3528,7 @@ int speed_main(int argc, char **argv)
             /* if longer than 10s, don't do any more */
             stop_it(ecdsa_doit, testnum);
         }
-        EVP_PKEY_free(ecdsa_key);
+        OPENSSL_BOX_EVP_PKEY_free(ecdsa_key);
     }
 
     for (testnum = 0; testnum < EC_NUM; testnum++) {
@@ -3547,10 +3547,10 @@ int speed_main(int argc, char **argv)
 
             if ((key_A = get_ecdsa(&ec_curves[testnum])) == NULL /* generate secret key A */
                 || (key_B = get_ecdsa(&ec_curves[testnum])) == NULL /* generate secret key B */
-                || (ctx = EVP_PKEY_CTX_new(key_A, NULL)) == NULL /* derivation ctx from skeyA */
-                || EVP_PKEY_derive_init(ctx) <= 0 /* init derivation ctx */
-                || EVP_PKEY_derive_set_peer(ctx, key_B) <= 0 /* set peer pubkey in ctx */
-                || EVP_PKEY_derive(ctx, NULL, &outlen) <= 0 /* determine max length */
+                || (ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(key_A, NULL)) == NULL /* derivation ctx from skeyA */
+                || OPENSSL_BOX_EVP_PKEY_derive_init(ctx) <= 0 /* init derivation ctx */
+                || OPENSSL_BOX_EVP_PKEY_derive_set_peer(ctx, key_B) <= 0 /* set peer pubkey in ctx */
+                || OPENSSL_BOX_EVP_PKEY_derive(ctx, NULL, &outlen) <= 0 /* determine max length */
                 || outlen == 0 /* ensure outlen is a valid size */
                 || outlen > MAX_ECDH_SIZE /* avoid buffer overflow */) {
                 ecdh_checks = 0;
@@ -3562,16 +3562,16 @@ int speed_main(int argc, char **argv)
 
             /*
              * Here we perform a test run, comparing the output of a*B and b*A;
-             * we try this here and assume that further EVP_PKEY_derive calls
+             * we try this here and assume that further OPENSSL_BOX_EVP_PKEY_derive calls
              * never fail, so we can skip checks in the actually benchmarked
              * code, for maximum performance.
              */
-            if ((test_ctx = EVP_PKEY_CTX_new(key_B, NULL)) == NULL /* test ctx from skeyB */
-                || EVP_PKEY_derive_init(test_ctx) <= 0 /* init derivation test_ctx */
-                || EVP_PKEY_derive_set_peer(test_ctx, key_A) <= 0 /* set peer pubkey in test_ctx */
-                || EVP_PKEY_derive(test_ctx, NULL, &test_outlen) <= 0 /* determine max length */
-                || EVP_PKEY_derive(ctx, loopargs[i].secret_a, &outlen) <= 0 /* compute a*B */
-                || EVP_PKEY_derive(test_ctx, loopargs[i].secret_b, &test_outlen) <= 0 /* compute b*A */
+            if ((test_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(key_B, NULL)) == NULL /* test ctx from skeyB */
+                || OPENSSL_BOX_EVP_PKEY_derive_init(test_ctx) <= 0 /* init derivation test_ctx */
+                || OPENSSL_BOX_EVP_PKEY_derive_set_peer(test_ctx, key_A) <= 0 /* set peer pubkey in test_ctx */
+                || OPENSSL_BOX_EVP_PKEY_derive(test_ctx, NULL, &test_outlen) <= 0 /* determine max length */
+                || OPENSSL_BOX_EVP_PKEY_derive(ctx, loopargs[i].secret_a, &outlen) <= 0 /* compute a*B */
+                || OPENSSL_BOX_EVP_PKEY_derive(test_ctx, loopargs[i].secret_b, &test_outlen) <= 0 /* compute b*A */
                 || test_outlen != outlen /* compare output length */) {
                 ecdh_checks = 0;
                 BIO_printf(bio_err, "ECDH computation failure.\n");
@@ -3593,9 +3593,9 @@ int speed_main(int argc, char **argv)
             loopargs[i].ecdh_ctx[testnum] = ctx;
             loopargs[i].outlen[testnum] = outlen;
 
-            EVP_PKEY_free(key_A);
-            EVP_PKEY_free(key_B);
-            EVP_PKEY_CTX_free(test_ctx);
+            OPENSSL_BOX_EVP_PKEY_free(key_A);
+            OPENSSL_BOX_EVP_PKEY_free(key_B);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(test_ctx);
             test_ctx = NULL;
         }
         if (ecdh_checks != 0) {
@@ -3628,41 +3628,41 @@ int speed_main(int argc, char **argv)
         if (!eddsa_doit[testnum])
             continue;           /* Ignore Curve */
         for (i = 0; i < loopargs_len; i++) {
-            loopargs[i].eddsa_ctx[testnum] = EVP_MD_CTX_new();
+            loopargs[i].eddsa_ctx[testnum] = OPENSSL_BOX_EVP_MD_CTX_new();
             if (loopargs[i].eddsa_ctx[testnum] == NULL) {
                 st = 0;
                 break;
             }
-            loopargs[i].eddsa_ctx2[testnum] = EVP_MD_CTX_new();
+            loopargs[i].eddsa_ctx2[testnum] = OPENSSL_BOX_EVP_MD_CTX_new();
             if (loopargs[i].eddsa_ctx2[testnum] == NULL) {
                 st = 0;
                 break;
             }
 
-            if ((ed_pctx = EVP_PKEY_CTX_new_id(ed_curves[testnum].nid,
+            if ((ed_pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(ed_curves[testnum].nid,
                                                NULL)) == NULL
-                || EVP_PKEY_keygen_init(ed_pctx) <= 0
-                || EVP_PKEY_keygen(ed_pctx, &ed_pkey) <= 0) {
+                || OPENSSL_BOX_EVP_PKEY_keygen_init(ed_pctx) <= 0
+                || OPENSSL_BOX_EVP_PKEY_keygen(ed_pctx, &ed_pkey) <= 0) {
                 st = 0;
-                EVP_PKEY_CTX_free(ed_pctx);
+                OPENSSL_BOX_EVP_PKEY_CTX_free(ed_pctx);
                 break;
             }
-            EVP_PKEY_CTX_free(ed_pctx);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(ed_pctx);
 
             if (!EVP_DigestSignInit(loopargs[i].eddsa_ctx[testnum], NULL, NULL,
                                     NULL, ed_pkey)) {
                 st = 0;
-                EVP_PKEY_free(ed_pkey);
+                OPENSSL_BOX_EVP_PKEY_free(ed_pkey);
                 break;
             }
             if (!EVP_DigestVerifyInit(loopargs[i].eddsa_ctx2[testnum], NULL,
                                       NULL, NULL, ed_pkey)) {
                 st = 0;
-                EVP_PKEY_free(ed_pkey);
+                OPENSSL_BOX_EVP_PKEY_free(ed_pkey);
                 break;
             }
 
-            EVP_PKEY_free(ed_pkey);
+            OPENSSL_BOX_EVP_PKEY_free(ed_pkey);
             ed_pkey = NULL;
         }
         if (st == 0) {
@@ -3748,52 +3748,52 @@ int speed_main(int argc, char **argv)
             EVP_PKEY_CTX *pctx = NULL;
             st = 0;
 
-            loopargs[i].sm2_ctx[testnum] = EVP_MD_CTX_new();
-            loopargs[i].sm2_vfy_ctx[testnum] = EVP_MD_CTX_new();
+            loopargs[i].sm2_ctx[testnum] = OPENSSL_BOX_EVP_MD_CTX_new();
+            loopargs[i].sm2_vfy_ctx[testnum] = OPENSSL_BOX_EVP_MD_CTX_new();
             if (loopargs[i].sm2_ctx[testnum] == NULL
                     || loopargs[i].sm2_vfy_ctx[testnum] == NULL)
                 break;
 
             sm2_pkey = NULL;
 
-            st = !((pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_SM2, NULL)) == NULL
-                || EVP_PKEY_keygen_init(pctx) <= 0
+            st = !((pctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_SM2, NULL)) == NULL
+                || OPENSSL_BOX_EVP_PKEY_keygen_init(pctx) <= 0
                 || EVP_PKEY_CTX_set_ec_paramgen_curve_nid(pctx,
                     sm2_curves[testnum].nid) <= 0
-                || EVP_PKEY_keygen(pctx, &sm2_pkey) <= 0);
-            EVP_PKEY_CTX_free(pctx);
+                || OPENSSL_BOX_EVP_PKEY_keygen(pctx, &sm2_pkey) <= 0);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
             if (st == 0)
                 break;
 
             st = 0; /* set back to zero */
             /* attach it sooner to rely on main final cleanup */
             loopargs[i].sm2_pkey[testnum] = sm2_pkey;
-            loopargs[i].sigsize = EVP_PKEY_get_size(sm2_pkey);
+            loopargs[i].sigsize = OPENSSL_BOX_EVP_PKEY_get_size(sm2_pkey);
 
-            sm2_pctx = EVP_PKEY_CTX_new(sm2_pkey, NULL);
-            sm2_vfy_pctx = EVP_PKEY_CTX_new(sm2_pkey, NULL);
+            sm2_pctx = OPENSSL_BOX_EVP_PKEY_CTX_new(sm2_pkey, NULL);
+            sm2_vfy_pctx = OPENSSL_BOX_EVP_PKEY_CTX_new(sm2_pkey, NULL);
             if (sm2_pctx == NULL || sm2_vfy_pctx == NULL) {
-                EVP_PKEY_CTX_free(sm2_vfy_pctx);
+                OPENSSL_BOX_EVP_PKEY_CTX_free(sm2_vfy_pctx);
                 break;
             }
 
             /* attach them directly to respective ctx */
-            EVP_MD_CTX_set_pkey_ctx(loopargs[i].sm2_ctx[testnum], sm2_pctx);
-            EVP_MD_CTX_set_pkey_ctx(loopargs[i].sm2_vfy_ctx[testnum], sm2_vfy_pctx);
+            OPENSSL_BOX_EVP_MD_CTX_set_pkey_ctx(loopargs[i].sm2_ctx[testnum], sm2_pctx);
+            OPENSSL_BOX_EVP_MD_CTX_set_pkey_ctx(loopargs[i].sm2_vfy_ctx[testnum], sm2_vfy_pctx);
 
             /*
              * No need to allow user to set an explicit ID here, just use
              * the one defined in the 'draft-yang-tls-tl13-sm-suites' I-D.
              */
-            if (EVP_PKEY_CTX_set1_id(sm2_pctx, SM2_ID, SM2_ID_LEN) != 1
-                || EVP_PKEY_CTX_set1_id(sm2_vfy_pctx, SM2_ID, SM2_ID_LEN) != 1)
+            if (OPENSSL_BOX_EVP_PKEY_CTX_set1_id(sm2_pctx, SM2_ID, SM2_ID_LEN) != 1
+                || OPENSSL_BOX_EVP_PKEY_CTX_set1_id(sm2_vfy_pctx, SM2_ID, SM2_ID_LEN) != 1)
                 break;
 
             if (!EVP_DigestSignInit(loopargs[i].sm2_ctx[testnum], NULL,
-                                    EVP_sm3(), NULL, sm2_pkey))
+                                    OPENSSL_BOX_EVP_sm3(), NULL, sm2_pkey))
                 break;
             if (!EVP_DigestVerifyInit(loopargs[i].sm2_vfy_ctx[testnum], NULL,
-                                      EVP_sm3(), NULL, sm2_pkey))
+                                      OPENSSL_BOX_EVP_sm3(), NULL, sm2_pkey))
                 break;
             st = 1;         /* mark loop as succeeded */
         }
@@ -3889,7 +3889,7 @@ int speed_main(int argc, char **argv)
                 dofail();
             }
 
-            pkey_A = EVP_PKEY_new();
+            pkey_A = OPENSSL_BOX_EVP_PKEY_new();
             if (!pkey_A) {
                 BIO_printf(bio_err, "Error while initialising EVP_PKEY (out of memory?).\n");
                 dofail();
@@ -3897,7 +3897,7 @@ int speed_main(int argc, char **argv)
                 ffdh_checks = 0;
                 break;
             }
-            pkey_B = EVP_PKEY_new();
+            pkey_B = OPENSSL_BOX_EVP_PKEY_new();
             if (!pkey_B) {
                 BIO_printf(bio_err, "Error while initialising EVP_PKEY (out of memory?).\n");
                 dofail();
@@ -3906,7 +3906,7 @@ int speed_main(int argc, char **argv)
                 break;
             }
 
-            ffdh_ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_DH, NULL);
+            ffdh_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_DH, NULL);
             if (!ffdh_ctx) {
                 BIO_printf(bio_err, "Error while allocating EVP_PKEY_CTX.\n");
                 dofail();
@@ -3915,7 +3915,7 @@ int speed_main(int argc, char **argv)
                 break;
             }
 
-            if (EVP_PKEY_keygen_init(ffdh_ctx) <= 0) {
+            if (OPENSSL_BOX_EVP_PKEY_keygen_init(ffdh_ctx) <= 0) {
                 BIO_printf(bio_err, "Error while initialising EVP_PKEY_CTX.\n");
                 dofail();
                 op_count = 1;
@@ -3930,8 +3930,8 @@ int speed_main(int argc, char **argv)
                 break;
             }
 
-            if (EVP_PKEY_keygen(ffdh_ctx, &pkey_A) <= 0 ||
-                EVP_PKEY_keygen(ffdh_ctx, &pkey_B) <= 0) {
+            if (OPENSSL_BOX_EVP_PKEY_keygen(ffdh_ctx, &pkey_A) <= 0 ||
+                OPENSSL_BOX_EVP_PKEY_keygen(ffdh_ctx, &pkey_B) <= 0) {
                 BIO_printf(bio_err, "FFDH key generation failure.\n");
                 dofail();
                 op_count = 1;
@@ -3939,14 +3939,14 @@ int speed_main(int argc, char **argv)
                 break;
             }
 
-            EVP_PKEY_CTX_free(ffdh_ctx);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(ffdh_ctx);
 
             /*
              * check if the derivation works correctly both ways so that
              * we know if future derive calls will fail, and we can skip
              * error checking in benchmarked code
              */
-            ffdh_ctx = EVP_PKEY_CTX_new(pkey_A, NULL);
+            ffdh_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey_A, NULL);
             if (ffdh_ctx == NULL) {
                 BIO_printf(bio_err, "Error while allocating EVP_PKEY_CTX.\n");
                 dofail();
@@ -3954,21 +3954,21 @@ int speed_main(int argc, char **argv)
                 ffdh_checks = 0;
                 break;
             }
-            if (EVP_PKEY_derive_init(ffdh_ctx) <= 0) {
+            if (OPENSSL_BOX_EVP_PKEY_derive_init(ffdh_ctx) <= 0) {
                 BIO_printf(bio_err, "FFDH derivation context init failure.\n");
                 dofail();
                 op_count = 1;
                 ffdh_checks = 0;
                 break;
             }
-            if (EVP_PKEY_derive_set_peer(ffdh_ctx, pkey_B) <= 0) {
+            if (OPENSSL_BOX_EVP_PKEY_derive_set_peer(ffdh_ctx, pkey_B) <= 0) {
                 BIO_printf(bio_err, "Assigning peer key for derivation failed.\n");
                 dofail();
                 op_count = 1;
                 ffdh_checks = 0;
                 break;
             }
-            if (EVP_PKEY_derive(ffdh_ctx, NULL, &secret_size) <= 0) {
+            if (OPENSSL_BOX_EVP_PKEY_derive(ffdh_ctx, NULL, &secret_size) <= 0) {
                 BIO_printf(bio_err, "Checking size of shared secret failed.\n");
                 dofail();
                 op_count = 1;
@@ -3981,7 +3981,7 @@ int speed_main(int argc, char **argv)
                 ffdh_checks = 0;
                 break;
             }
-            if (EVP_PKEY_derive(ffdh_ctx,
+            if (OPENSSL_BOX_EVP_PKEY_derive(ffdh_ctx,
                                 loopargs[i].secret_ff_a,
                                 &secret_size) <= 0) {
                 BIO_printf(bio_err, "Shared secret derive failure.\n");
@@ -3991,7 +3991,7 @@ int speed_main(int argc, char **argv)
                 break;
             }
             /* Now check from side B */
-            test_ctx = EVP_PKEY_CTX_new(pkey_B, NULL);
+            test_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey_B, NULL);
             if (!test_ctx) {
                 BIO_printf(bio_err, "Error while allocating EVP_PKEY_CTX.\n");
                 dofail();
@@ -3999,10 +3999,10 @@ int speed_main(int argc, char **argv)
                 ffdh_checks = 0;
                 break;
             }
-            if (EVP_PKEY_derive_init(test_ctx) <= 0 ||
-                EVP_PKEY_derive_set_peer(test_ctx, pkey_A) <= 0 ||
-                EVP_PKEY_derive(test_ctx, NULL, &test_out) <= 0 ||
-                EVP_PKEY_derive(test_ctx, loopargs[i].secret_ff_b, &test_out) <= 0 ||
+            if (OPENSSL_BOX_EVP_PKEY_derive_init(test_ctx) <= 0 ||
+                OPENSSL_BOX_EVP_PKEY_derive_set_peer(test_ctx, pkey_A) <= 0 ||
+                OPENSSL_BOX_EVP_PKEY_derive(test_ctx, NULL, &test_out) <= 0 ||
+                OPENSSL_BOX_EVP_PKEY_derive(test_ctx, loopargs[i].secret_ff_b, &test_out) <= 0 ||
                 test_out != secret_size) {
                 BIO_printf(bio_err, "FFDH computation failure.\n");
                 op_count = 1;
@@ -4022,11 +4022,11 @@ int speed_main(int argc, char **argv)
 
             loopargs[i].ffdh_ctx[testnum] = ffdh_ctx;
 
-            EVP_PKEY_free(pkey_A);
+            OPENSSL_BOX_EVP_PKEY_free(pkey_A);
             pkey_A = NULL;
-            EVP_PKEY_free(pkey_B);
+            OPENSSL_BOX_EVP_PKEY_free(pkey_B);
             pkey_B = NULL;
-            EVP_PKEY_CTX_free(test_ctx);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(test_ctx);
             test_ctx = NULL;
         }
         if (ffdh_checks != 0) {
@@ -4107,14 +4107,14 @@ int speed_main(int argc, char **argv)
                                                  kem_name,
                                                app_get0_propq());
 
-            if ((!kem_gen_ctx || EVP_PKEY_keygen_init(kem_gen_ctx) <= 0)
+            if ((!kem_gen_ctx || OPENSSL_BOX_EVP_PKEY_keygen_init(kem_gen_ctx) <= 0)
                 || (use_params
-                    && EVP_PKEY_CTX_set_params(kem_gen_ctx, params) <= 0)) {
+                    && OPENSSL_BOX_EVP_PKEY_CTX_set_params(kem_gen_ctx, params) <= 0)) {
                 BIO_printf(bio_err, "Error initializing keygen ctx for %s.\n",
                            kem_name);
                 goto kem_err_break;
             }
-            if (EVP_PKEY_keygen(kem_gen_ctx, &pkey) <= 0) {
+            if (OPENSSL_BOX_EVP_PKEY_keygen(kem_gen_ctx, &pkey) <= 0) {
                 BIO_printf(bio_err, "Error while generating KEM EVP_PKEY.\n");
                 goto kem_err_break;
             }
@@ -4123,13 +4123,13 @@ int speed_main(int argc, char **argv)
                                                         pkey,
                                                         app_get0_propq());
             if (kem_encaps_ctx == NULL
-                || EVP_PKEY_encapsulate_init(kem_encaps_ctx, NULL) <= 0
+                || OPENSSL_BOX_EVP_PKEY_encapsulate_init(kem_encaps_ctx, NULL) <= 0
                 || (kem_type == KEM_RSA
-                    && EVP_PKEY_CTX_set_kem_op(kem_encaps_ctx, "RSASVE") <= 0)
+                    && OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op(kem_encaps_ctx, "RSASVE") <= 0)
                 || ((kem_type == KEM_EC
                     || kem_type == KEM_X25519
                     || kem_type == KEM_X448)
-                   && EVP_PKEY_CTX_set_kem_op(kem_encaps_ctx, "DHKEM") <= 0)
+                   && OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op(kem_encaps_ctx, "DHKEM") <= 0)
                 || EVP_PKEY_encapsulate(kem_encaps_ctx, NULL, &out_len,
                                       NULL, &send_secret_len) <= 0) {
                 BIO_printf(bio_err,
@@ -4153,13 +4153,13 @@ int speed_main(int argc, char **argv)
                                                         pkey,
                                                         app_get0_propq());
             if (kem_decaps_ctx == NULL
-                || EVP_PKEY_decapsulate_init(kem_decaps_ctx, NULL) <= 0
+                || OPENSSL_BOX_EVP_PKEY_decapsulate_init(kem_decaps_ctx, NULL) <= 0
                 || (kem_type == KEM_RSA
-                  && EVP_PKEY_CTX_set_kem_op(kem_decaps_ctx, "RSASVE") <= 0)
+                  && OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op(kem_decaps_ctx, "RSASVE") <= 0)
                 || ((kem_type == KEM_EC
                      || kem_type == KEM_X25519
                      || kem_type == KEM_X448)
-                  && EVP_PKEY_CTX_set_kem_op(kem_decaps_ctx, "DHKEM") <= 0)
+                  && OPENSSL_BOX_EVP_PKEY_CTX_set_kem_op(kem_decaps_ctx, "DHKEM") <= 0)
                 || EVP_PKEY_decapsulate(kem_decaps_ctx, NULL, &rcv_secret_len,
                                         out, out_len) <= 0) {
                 BIO_printf(bio_err,
@@ -4188,13 +4188,13 @@ int speed_main(int argc, char **argv)
             loopargs[i].kem_out[testnum] = out;
             loopargs[i].kem_send_secret[testnum] = send_secret;
             loopargs[i].kem_rcv_secret[testnum] = rcv_secret;
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             pkey = NULL;
             continue;
 
         kem_err_break:
             dofail();
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             op_count = 1;
             kem_checks = 0;
             break;
@@ -4282,14 +4282,14 @@ int speed_main(int argc, char **argv)
             }
 
             if (strncmp(sig_name, "dsa", 3) == 0) {
-                ctx_params = EVP_PKEY_CTX_new_id(EVP_PKEY_DSA, NULL);
+                ctx_params = OPENSSL_BOX_EVP_PKEY_CTX_new_id(EVP_PKEY_DSA, NULL);
                 if (ctx_params == NULL
-                    || EVP_PKEY_paramgen_init(ctx_params) <= 0
+                    || OPENSSL_BOX_EVP_PKEY_paramgen_init(ctx_params) <= 0
                     || EVP_PKEY_CTX_set_dsa_paramgen_bits(ctx_params,
                                                         atoi(sig_name + 3)) <= 0
-                    || EVP_PKEY_paramgen(ctx_params, &pkey_params) <= 0
-                    || (sig_gen_ctx = EVP_PKEY_CTX_new(pkey_params, NULL)) == NULL
-                    || EVP_PKEY_keygen_init(sig_gen_ctx) <= 0) {
+                    || OPENSSL_BOX_EVP_PKEY_paramgen(ctx_params, &pkey_params) <= 0
+                    || (sig_gen_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new(pkey_params, NULL)) == NULL
+                    || OPENSSL_BOX_EVP_PKEY_keygen_init(sig_gen_ctx) <= 0) {
                     BIO_printf(bio_err,
                                "Error initializing classic keygen ctx for %s.\n",
                                sig_name);
@@ -4302,14 +4302,14 @@ int speed_main(int argc, char **argv)
                                       use_params == 1 ? "RSA" : sig_name,
                                       app_get0_propq());
 
-            if (!sig_gen_ctx || EVP_PKEY_keygen_init(sig_gen_ctx) <= 0
+            if (!sig_gen_ctx || OPENSSL_BOX_EVP_PKEY_keygen_init(sig_gen_ctx) <= 0
                 || (use_params &&
-                    EVP_PKEY_CTX_set_params(sig_gen_ctx, params) <= 0)) {
+                    OPENSSL_BOX_EVP_PKEY_CTX_set_params(sig_gen_ctx, params) <= 0)) {
                 BIO_printf(bio_err, "Error initializing keygen ctx for %s.\n",
                            sig_name);
                 goto sig_err_break;
             }
-            if (EVP_PKEY_keygen(sig_gen_ctx, &pkey) <= 0) {
+            if (OPENSSL_BOX_EVP_PKEY_keygen(sig_gen_ctx, &pkey) <= 0) {
                 BIO_printf(bio_err,
                            "Error while generating signature EVP_PKEY for %s.\n",
                            sig_name);
@@ -4318,7 +4318,7 @@ int speed_main(int argc, char **argv)
 
             /*
              * Try explicitly fetching the signature algoritm implementation to
-             * use in case the algorithm does not support EVP_PKEY_sign_init
+             * use in case the algorithm does not support OPENSSL_BOX_EVP_PKEY_sign_init
              */
             ERR_set_mark();
             alg = EVP_SIGNATURE_fetch(app_get0_libctx(), sig_name, app_get0_propq());
@@ -4335,7 +4335,7 @@ int speed_main(int argc, char **argv)
                 goto sig_err_break;
             }
             ERR_set_mark();
-            if (EVP_PKEY_sign_init(sig_sign_ctx) <= 0
+            if (OPENSSL_BOX_EVP_PKEY_sign_init(sig_sign_ctx) <= 0
                 && (alg == NULL
                     || EVP_PKEY_sign_message_init(sig_sign_ctx, alg, NULL) <= 0)) {
                 ERR_clear_last_mark();
@@ -4379,7 +4379,7 @@ int speed_main(int argc, char **argv)
                 goto sig_err_break;
             }
             ERR_set_mark();
-            if (EVP_PKEY_verify_init(sig_verify_ctx) <= 0
+            if (OPENSSL_BOX_EVP_PKEY_verify_init(sig_verify_ctx) <= 0
                 && (alg == NULL
                     || EVP_PKEY_verify_message_init(sig_verify_ctx, alg, NULL) <= 0)) {
                 ERR_clear_last_mark();
@@ -4403,15 +4403,15 @@ int speed_main(int argc, char **argv)
             loopargs[i].sig_max_sig_len[testnum] = max_sig_len;
             loopargs[i].sig_act_sig_len[testnum] = sig_len;
             loopargs[i].sig_sig[testnum] = sig;
-            EVP_PKEY_free(pkey);
-            EVP_SIGNATURE_free(alg);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_SIGNATURE_free(alg);
             pkey = NULL;
             continue;
 
         sig_err_break:
             dofail();
-            EVP_PKEY_free(pkey);
-            EVP_SIGNATURE_free(alg);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_SIGNATURE_free(alg);
             op_count = 1;
             sig_checks = 0;
             break;
@@ -4488,7 +4488,7 @@ int speed_main(int argc, char **argv)
         if (k == D_EVP) {
             if (evp_cipher == NULL)
                 alg_name = evp_md_name;
-            else if ((alg_name = EVP_CIPHER_get0_name(evp_cipher)) == NULL)
+            else if ((alg_name = OPENSSL_BOX_EVP_CIPHER_get0_name(evp_cipher)) == NULL)
                 app_bail_out("failed to get name of cipher '%s'\n", evp_cipher);
         }
 
@@ -4698,35 +4698,35 @@ int speed_main(int argc, char **argv)
         OPENSSL_free(loopargs[i].buf2_malloc);
 
         BN_free(bn);
-        EVP_PKEY_CTX_free(genctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(genctx);
         for (k = 0; k < RSA_NUM; k++) {
-            EVP_PKEY_CTX_free(loopargs[i].rsa_sign_ctx[k]);
-            EVP_PKEY_CTX_free(loopargs[i].rsa_verify_ctx[k]);
-            EVP_PKEY_CTX_free(loopargs[i].rsa_encrypt_ctx[k]);
-            EVP_PKEY_CTX_free(loopargs[i].rsa_decrypt_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].rsa_sign_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].rsa_verify_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].rsa_encrypt_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].rsa_decrypt_ctx[k]);
         }
 #ifndef OPENSSL_NO_DH
         OPENSSL_free(loopargs[i].secret_ff_a);
         OPENSSL_free(loopargs[i].secret_ff_b);
         for (k = 0; k < FFDH_NUM; k++)
-            EVP_PKEY_CTX_free(loopargs[i].ffdh_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].ffdh_ctx[k]);
 #endif
 #ifndef OPENSSL_NO_DSA
         for (k = 0; k < DSA_NUM; k++) {
-            EVP_PKEY_CTX_free(loopargs[i].dsa_sign_ctx[k]);
-            EVP_PKEY_CTX_free(loopargs[i].dsa_verify_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].dsa_sign_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].dsa_verify_ctx[k]);
         }
 #endif
         for (k = 0; k < ECDSA_NUM; k++) {
-            EVP_PKEY_CTX_free(loopargs[i].ecdsa_sign_ctx[k]);
-            EVP_PKEY_CTX_free(loopargs[i].ecdsa_verify_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].ecdsa_sign_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].ecdsa_verify_ctx[k]);
         }
         for (k = 0; k < EC_NUM; k++)
-            EVP_PKEY_CTX_free(loopargs[i].ecdh_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].ecdh_ctx[k]);
 #ifndef OPENSSL_NO_ECX
         for (k = 0; k < EdDSA_NUM; k++) {
-            EVP_MD_CTX_free(loopargs[i].eddsa_ctx[k]);
-            EVP_MD_CTX_free(loopargs[i].eddsa_ctx2[k]);
+            OPENSSL_BOX_EVP_MD_CTX_free(loopargs[i].eddsa_ctx[k]);
+            OPENSSL_BOX_EVP_MD_CTX_free(loopargs[i].eddsa_ctx2[k]);
         }
 #endif /* OPENSSL_NO_ECX */
 #ifndef OPENSSL_NO_SM2
@@ -4735,30 +4735,30 @@ int speed_main(int argc, char **argv)
 
             /* free signing ctx */
             if (loopargs[i].sm2_ctx[k] != NULL
-                && (pctx = EVP_MD_CTX_get_pkey_ctx(loopargs[i].sm2_ctx[k])) != NULL)
-                EVP_PKEY_CTX_free(pctx);
-            EVP_MD_CTX_free(loopargs[i].sm2_ctx[k]);
+                && (pctx = OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(loopargs[i].sm2_ctx[k])) != NULL)
+                OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
+            OPENSSL_BOX_EVP_MD_CTX_free(loopargs[i].sm2_ctx[k]);
             /* free verification ctx */
             if (loopargs[i].sm2_vfy_ctx[k] != NULL
-                && (pctx = EVP_MD_CTX_get_pkey_ctx(loopargs[i].sm2_vfy_ctx[k])) != NULL)
-                EVP_PKEY_CTX_free(pctx);
-            EVP_MD_CTX_free(loopargs[i].sm2_vfy_ctx[k]);
+                && (pctx = OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(loopargs[i].sm2_vfy_ctx[k])) != NULL)
+                OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
+            OPENSSL_BOX_EVP_MD_CTX_free(loopargs[i].sm2_vfy_ctx[k]);
             /* free pkey */
-            EVP_PKEY_free(loopargs[i].sm2_pkey[k]);
+            OPENSSL_BOX_EVP_PKEY_free(loopargs[i].sm2_pkey[k]);
         }
 #endif
         for (k = 0; k < kems_algs_len; k++) {
-            EVP_PKEY_CTX_free(loopargs[i].kem_gen_ctx[k]);
-            EVP_PKEY_CTX_free(loopargs[i].kem_encaps_ctx[k]);
-            EVP_PKEY_CTX_free(loopargs[i].kem_decaps_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].kem_gen_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].kem_encaps_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].kem_decaps_ctx[k]);
             OPENSSL_free(loopargs[i].kem_out[k]);
             OPENSSL_free(loopargs[i].kem_send_secret[k]);
             OPENSSL_free(loopargs[i].kem_rcv_secret[k]);
         }
         for (k = 0; k < sigs_algs_len; k++) {
-            EVP_PKEY_CTX_free(loopargs[i].sig_gen_ctx[k]);
-            EVP_PKEY_CTX_free(loopargs[i].sig_sign_ctx[k]);
-            EVP_PKEY_CTX_free(loopargs[i].sig_verify_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].sig_gen_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].sig_sign_ctx[k]);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(loopargs[i].sig_verify_ctx[k]);
             OPENSSL_free(loopargs[i].sig_sig[k]);
         }
         OPENSSL_free(loopargs[i].secret_a);
@@ -4769,11 +4769,11 @@ int speed_main(int argc, char **argv)
     for (k = 0; k < kems_algs_len; k++)
         OPENSSL_free(kems_algname[k]);
     if (kem_stack != NULL)
-        sk_EVP_KEM_pop_free(kem_stack, EVP_KEM_free);
+        sk_EVP_KEM_pop_free(kem_stack, OPENSSL_BOX_EVP_KEM_free);
     for (k = 0; k < sigs_algs_len; k++)
         OPENSSL_free(sigs_algname[k]);
     if (sig_stack != NULL)
-        sk_EVP_SIGNATURE_pop_free(sig_stack, EVP_SIGNATURE_free);
+        sk_EVP_SIGNATURE_pop_free(sig_stack, OPENSSL_BOX_EVP_SIGNATURE_free);
 
     if (async_jobs > 0) {
         for (i = 0; i < loopargs_len; i++)
@@ -4785,8 +4785,8 @@ int speed_main(int argc, char **argv)
     }
     OPENSSL_free(loopargs);
     release_engine(e);
-    EVP_CIPHER_free(evp_cipher);
-    EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_CIPHER_free(evp_cipher);
+    OPENSSL_BOX_EVP_MAC_free(mac);
     NCONF_free(conf);
     return ret;
 }
@@ -5106,26 +5106,26 @@ static void multiblock_speed(const EVP_CIPHER *evp_cipher, int lengths_single,
 
     inp = app_malloc(mblengths[num - 1], "multiblock input buffer");
     out = app_malloc(mblengths[num - 1] + 1024, "multiblock output buffer");
-    if ((ctx = EVP_CIPHER_CTX_new()) == NULL)
+    if ((ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         app_bail_out("failed to allocate cipher context\n");
     if (!EVP_EncryptInit_ex(ctx, evp_cipher, NULL, NULL, no_iv))
         app_bail_out("failed to initialise cipher context\n");
 
-    if ((keylen = EVP_CIPHER_CTX_get_key_length(ctx)) < 0) {
+    if ((keylen = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx)) < 0) {
         BIO_printf(bio_err, "Impossible negative key length: %d\n", keylen);
         goto err;
     }
     key = app_malloc(keylen, "evp_cipher key");
-    if (EVP_CIPHER_CTX_rand_key(ctx, key) <= 0)
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_rand_key(ctx, key) <= 0)
         app_bail_out("failed to generate random cipher key\n");
     if (!EVP_EncryptInit_ex(ctx, NULL, NULL, key, NULL))
         app_bail_out("failed to set cipher key\n");
     OPENSSL_clear_free(key, keylen);
 
-    if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_MAC_KEY,
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_MAC_KEY,
                              sizeof(no_key), no_key) <= 0)
         app_bail_out("failed to set AEAD key\n");
-    if ((alg_name = EVP_CIPHER_get0_name(evp_cipher)) == NULL)
+    if ((alg_name = OPENSSL_BOX_EVP_CIPHER_get0_name(evp_cipher)) == NULL)
         app_bail_out("failed to get cipher name\n");
 
     for (j = 0; j < num; j++) {
@@ -5147,14 +5147,14 @@ static void multiblock_speed(const EVP_CIPHER *evp_cipher, int lengths_single,
             mb_param.len = len;
             mb_param.interleave = 8;
 
-            packlen = EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_TLS1_1_MULTIBLOCK_AAD,
+            packlen = OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_TLS1_1_MULTIBLOCK_AAD,
                                           sizeof(mb_param), &mb_param);
 
             if (packlen > 0) {
                 mb_param.out = out;
                 mb_param.inp = inp;
                 mb_param.len = len;
-                (void)EVP_CIPHER_CTX_ctrl(ctx,
+                (void)OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx,
                                           EVP_CTRL_TLS1_1_MULTIBLOCK_ENCRYPT,
                                           sizeof(mb_param), &mb_param);
             } else {
@@ -5165,7 +5165,7 @@ static void multiblock_speed(const EVP_CIPHER *evp_cipher, int lengths_single,
                 len += 16;
                 aad[11] = (unsigned char)(len >> 8);
                 aad[12] = (unsigned char)(len);
-                pad = EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_TLS1_AAD,
+                pad = OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_TLS1_AAD,
                                           EVP_AEAD_TLS1_AAD_LEN, aad);
                 ciph_success = EVP_Cipher(ctx, out, inp, (unsigned int)(len + pad));
             }
@@ -5208,5 +5208,5 @@ static void multiblock_speed(const EVP_CIPHER *evp_cipher, int lengths_single,
  err:
     OPENSSL_free(inp);
     OPENSSL_free(out);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
 }

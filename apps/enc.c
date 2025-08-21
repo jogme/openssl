@@ -360,7 +360,7 @@ int enc_main(int argc, char **argv)
             goto opthelp;
     }
     if (dgst == NULL)
-        dgst = (EVP_MD *)EVP_sha256();
+        dgst = (EVP_MD *)OPENSSL_BOX_EVP_sha256();
 
     if (iter == 0)
         iter = 1;
@@ -417,10 +417,10 @@ int enc_main(int argc, char **argv)
                 char prompt[200];
 
                 BIO_snprintf(prompt, sizeof(prompt), "enter %s %s password:",
-                        EVP_CIPHER_get0_name(cipher),
+                        OPENSSL_BOX_EVP_CIPHER_get0_name(cipher),
                         (enc) ? "encryption" : "decryption");
                 strbuf[0] = '\0';
-                i = EVP_read_pw_string((char *)strbuf, SIZE, prompt, enc);
+                i = OPENSSL_BOX_EVP_read_pw_string((char *)strbuf, SIZE, prompt, enc);
                 if (i == 0) {
                     if (strbuf[0] == '\0') {
                         ret = 1;
@@ -499,7 +499,7 @@ int enc_main(int argc, char **argv)
 #endif
 
     if (base64) {
-        if ((b64 = BIO_new(BIO_f_base64())) == NULL)
+        if ((b64 = BIO_new(OPENSSL_BOX_BIO_f_base64())) == NULL)
             goto end;
         if (debug) {
             BIO_set_callback_ex(b64, BIO_debug_callback_ex);
@@ -577,8 +577,8 @@ int enc_main(int argc, char **argv)
                 * concatenated into a temporary buffer
                 */
                 unsigned char tmpkeyiv[EVP_MAX_KEY_LENGTH + EVP_MAX_IV_LENGTH];
-                int iklen = EVP_CIPHER_get_key_length(cipher);
-                int ivlen = EVP_CIPHER_get_iv_length(cipher);
+                int iklen = OPENSSL_BOX_EVP_CIPHER_get_key_length(cipher);
+                int ivlen = OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher);
                 /* not needed if HASH_UPDATE() is fixed : */
                 int islen = (sptr != NULL ? saltlen : 0);
 
@@ -613,7 +613,7 @@ int enc_main(int argc, char **argv)
                 OPENSSL_cleanse(str, str_len);
         }
         if (hiv != NULL) {
-            int siz = EVP_CIPHER_get_iv_length(cipher);
+            int siz = OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher);
 
             if (siz == 0) {
                 BIO_printf(bio_err, "warning: iv not used by this cipher\n");
@@ -623,7 +623,7 @@ int enc_main(int argc, char **argv)
             }
         }
         if ((hiv == NULL) && (str == NULL)
-            && EVP_CIPHER_get_iv_length(cipher) != 0
+            && OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher) != 0
             && wrap == 0) {
             /*
              * No IV was explicitly set and no IV was generated.
@@ -633,7 +633,7 @@ int enc_main(int argc, char **argv)
             goto end;
         }
         if (hkey != NULL) {
-            if (!set_hex(hkey, key, EVP_CIPHER_get_key_length(cipher))) {
+            if (!set_hex(hkey, key, OPENSSL_BOX_EVP_CIPHER_get_key_length(cipher))) {
                 BIO_printf(bio_err, "invalid hex key value\n");
                 goto end;
             }
@@ -651,7 +651,7 @@ int enc_main(int argc, char **argv)
             goto end;
         }
 
-        if ((benc = BIO_new(BIO_f_cipher())) == NULL)
+        if ((benc = BIO_new(OPENSSL_BOX_BIO_f_cipher())) == NULL)
             goto end;
 
         /*
@@ -662,13 +662,13 @@ int enc_main(int argc, char **argv)
         BIO_get_cipher_ctx(benc, &ctx);
 
         if (wrap == 1)
-            EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPHER_CTX_FLAG_WRAP_ALLOW);
+            OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPHER_CTX_FLAG_WRAP_ALLOW);
 
         if (rawkey_set) {
             if (!EVP_CipherInit_ex(ctx, cipher, e, key,
                                    (hiv == NULL && wrap == 1 ? NULL : iv), enc)) {
                 BIO_printf(bio_err, "Error setting cipher %s\n",
-                           EVP_CIPHER_get0_name(cipher));
+                           OPENSSL_BOX_EVP_CIPHER_get0_name(cipher));
                 ERR_print_errors(bio_err);
                 goto end;
             }
@@ -682,11 +682,11 @@ int enc_main(int argc, char **argv)
                 goto end;
 
             params = app_params_new_from_opts(skeyopts,
-                                              EVP_SKEYMGMT_get0_imp_settable_params(mgmt));
+                                              OPENSSL_BOX_EVP_SKEYMGMT_get0_imp_settable_params(mgmt));
             if (params == NULL)
                 goto end;
 
-            skey = EVP_SKEY_import(app_get0_libctx(), EVP_SKEYMGMT_get0_name(mgmt),
+            skey = EVP_SKEY_import(app_get0_libctx(), OPENSSL_BOX_EVP_SKEYMGMT_get0_name(mgmt),
                                    app_get0_propq(), OSSL_SKEYMGMT_SELECT_ALL, params);
             OSSL_PARAM_free(params);
             if (skey == NULL) {
@@ -698,16 +698,16 @@ int enc_main(int argc, char **argv)
 
             if (!EVP_CipherInit_SKEY(ctx, cipher, skey,
                                      (hiv == NULL && wrap == 1 ? NULL : iv),
-                                     EVP_CIPHER_get_iv_length(cipher), enc, NULL)) {
+                                     OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher), enc, NULL)) {
                 BIO_printf(bio_err, "Error setting an opaque key for cipher %s\n",
-                           EVP_CIPHER_get0_name(cipher));
+                           OPENSSL_BOX_EVP_CIPHER_get0_name(cipher));
                 ERR_print_errors(bio_err);
                 goto end;
             }
         }
 
         if (nopad)
-            EVP_CIPHER_CTX_set_padding(ctx, 0);
+            OPENSSL_BOX_EVP_CIPHER_CTX_set_padding(ctx, 0);
 
         if (debug) {
             BIO_set_callback_ex(benc, BIO_debug_callback_ex);
@@ -721,15 +721,15 @@ int enc_main(int argc, char **argv)
                     printf("%02X", salt[i]);
                 printf("\n");
             }
-            if (EVP_CIPHER_get_key_length(cipher) > 0) {
+            if (OPENSSL_BOX_EVP_CIPHER_get_key_length(cipher) > 0) {
                 printf("key=");
-                for (i = 0; i < EVP_CIPHER_get_key_length(cipher); i++)
+                for (i = 0; i < OPENSSL_BOX_EVP_CIPHER_get_key_length(cipher); i++)
                     printf("%02X", key[i]);
                 printf("\n");
             }
-            if (EVP_CIPHER_get_iv_length(cipher) > 0) {
+            if (OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher) > 0) {
                 printf("iv =");
-                for (i = 0; i < EVP_CIPHER_get_iv_length(cipher); i++)
+                for (i = 0; i < OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher); i++)
                     printf("%02X", iv[i]);
                 printf("\n");
             }
@@ -775,16 +775,16 @@ int enc_main(int argc, char **argv)
  end:
     ERR_print_errors(bio_err);
     sk_OPENSSL_STRING_free(skeyopts);
-    EVP_SKEYMGMT_free(mgmt);
-    EVP_SKEY_free(skey);
+    OPENSSL_BOX_EVP_SKEYMGMT_free(mgmt);
+    OPENSSL_BOX_EVP_SKEY_free(skey);
     OPENSSL_free(strbuf);
     OPENSSL_free(buff);
     BIO_free(in);
     BIO_free_all(out);
     BIO_free(benc);
     BIO_free(b64);
-    EVP_MD_free(dgst);
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_MD_free(dgst);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
 #ifndef OPENSSL_NO_ZLIB
     BIO_free(bzl);
 #endif
@@ -804,11 +804,11 @@ static void show_ciphers(const OBJ_NAME *name, void *arg)
         return;
 
     /* Filter out ciphers that we cannot use */
-    cipher = EVP_get_cipherbyname(name->name);
+    cipher = OPENSSL_BOX_EVP_get_cipherbyname(name->name);
     if (cipher == NULL
-            || (EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_AEAD_CIPHER) != 0
-            || (EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_ENC_THEN_MAC) != 0
-            || EVP_CIPHER_get_mode(cipher) == EVP_CIPH_XTS_MODE)
+            || (OPENSSL_BOX_EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_AEAD_CIPHER) != 0
+            || (OPENSSL_BOX_EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_ENC_THEN_MAC) != 0
+            || OPENSSL_BOX_EVP_CIPHER_get_mode(cipher) == EVP_CIPH_XTS_MODE)
         return;
 
     BIO_printf(dec->bio, "-%-25s", name->name);

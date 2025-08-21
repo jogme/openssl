@@ -397,13 +397,13 @@ int opt_cipher_silent(const char *name, EVP_CIPHER **cipherp)
     if ((c = EVP_CIPHER_fetch(app_get0_libctx(), name,
                               app_get0_propq())) != NULL
         || (opt_legacy_okay()
-            && (c = (EVP_CIPHER *)EVP_get_cipherbyname(name)) != NULL)) {
+            && (c = (EVP_CIPHER *)OPENSSL_BOX_EVP_get_cipherbyname(name)) != NULL)) {
         ERR_pop_to_mark();
         if (cipherp != NULL) {
-            EVP_CIPHER_free(*cipherp);
+            OPENSSL_BOX_EVP_CIPHER_free(*cipherp);
             *cipherp = c;
         } else {
-            EVP_CIPHER_free(c);
+            OPENSSL_BOX_EVP_CIPHER_free(c);
         }
         return 1;
     }
@@ -431,8 +431,8 @@ int opt_cipher(const char *name, EVP_CIPHER **cipherp)
     if (name == NULL)
          return 1;
      if (opt_cipher_any(name, &c)) {
-        mode = EVP_CIPHER_get_mode(c);
-        flags = EVP_CIPHER_get_flags(c);
+        mode = OPENSSL_BOX_EVP_CIPHER_get_mode(c);
+        flags = OPENSSL_BOX_EVP_CIPHER_get_flags(c);
         if (mode == EVP_CIPH_XTS_MODE) {
             opt_printf_stderr("%s XTS ciphers not supported\n", prog);
         } else if ((flags & EVP_CIPH_FLAG_AEAD_CIPHER) != 0) {
@@ -458,13 +458,13 @@ int opt_md_silent(const char *name, EVP_MD **mdp)
     ERR_set_mark();
     if ((md = EVP_MD_fetch(app_get0_libctx(), name, app_get0_propq())) != NULL
         || (opt_legacy_okay()
-            && (md = (EVP_MD *)EVP_get_digestbyname(name)) != NULL)) {
+            && (md = (EVP_MD *)OPENSSL_BOX_EVP_get_digestbyname(name)) != NULL)) {
         ERR_pop_to_mark();
         if (mdp != NULL) {
-            EVP_MD_free(*mdp);
+            OPENSSL_BOX_EVP_MD_free(*mdp);
             *mdp = md;
         } else {
-            EVP_MD_free(md);
+            OPENSSL_BOX_EVP_MD_free(md);
         }
         return 1;
     }

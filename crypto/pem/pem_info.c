@@ -232,13 +232,13 @@ int PEM_X509_INFO_write_bio(BIO *bp, const X509_INFO *xi, EVP_CIPHER *enc,
     const unsigned char *iv = NULL;
 
     if (enc != NULL) {
-        objstr = EVP_CIPHER_get0_name(enc);
+        objstr = OPENSSL_BOX_EVP_CIPHER_get0_name(enc);
         if (objstr == NULL
                /*
                 * Check "Proc-Type: 4,Encrypted\nDEK-Info: objstr,hex-iv\n"
                 * fits into buf
                 */
-            || strlen(objstr) + 23 + 2 * EVP_CIPHER_get_iv_length(enc) + 13
+            || strlen(objstr) + 23 + 2 * OPENSSL_BOX_EVP_CIPHER_get_iv_length(enc) + 13
                > sizeof(buf)) {
             ERR_raise(ERR_LIB_PEM, PEM_R_UNSUPPORTED_CIPHER);
             goto err;
@@ -267,7 +267,7 @@ int PEM_X509_INFO_write_bio(BIO *bp, const X509_INFO *xi, EVP_CIPHER *enc,
              * than what the user has passed us ... as we have to match
              * exactly for some strange reason
              */
-            objstr = EVP_CIPHER_get0_name(xi->enc_cipher.cipher);
+            objstr = OPENSSL_BOX_EVP_CIPHER_get0_name(xi->enc_cipher.cipher);
             if (objstr == NULL) {
                 ERR_raise(ERR_LIB_PEM, PEM_R_UNSUPPORTED_CIPHER);
                 goto err;
@@ -276,7 +276,7 @@ int PEM_X509_INFO_write_bio(BIO *bp, const X509_INFO *xi, EVP_CIPHER *enc,
             /* Create the right magic header stuff */
             buf[0] = '\0';
             PEM_proc_type(buf, PEM_TYPE_ENCRYPTED);
-            PEM_dek_info(buf, objstr, EVP_CIPHER_get_iv_length(enc),
+            PEM_dek_info(buf, objstr, OPENSSL_BOX_EVP_CIPHER_get_iv_length(enc),
                          (const char *)iv);
 
             /* use the normal code to write things out */
@@ -287,7 +287,7 @@ int PEM_X509_INFO_write_bio(BIO *bp, const X509_INFO *xi, EVP_CIPHER *enc,
             /* Add DSA/DH */
             /* normal optionally encrypted stuff */
             if (PEM_write_bio_RSAPrivateKey(bp,
-                                            EVP_PKEY_get0_RSA(xi->x_pkey->dec_pkey),
+                                            OPENSSL_BOX_EVP_PKEY_get0_RSA(xi->x_pkey->dec_pkey),
                                             enc, kstr, klen, cb, u) <= 0)
                 goto err;
         }

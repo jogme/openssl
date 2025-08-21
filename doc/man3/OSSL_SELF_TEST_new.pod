@@ -118,7 +118,7 @@ A single self test could be set up in the following way:
     int ok = 0;
     unsigned char out[EVP_MAX_MD_SIZE];
     unsigned int out_len = 0;
-    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     EVP_MD *md = EVP_MD_fetch(libctx, t->algorithm, NULL);
 
     /*
@@ -147,8 +147,8 @@ A single self test could be set up in the following way:
     ok = 1;
   err:
     OSSL_SELF_TEST_onend(st, ok);
-    EVP_MD_free(md);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
 
 Multiple self test's can be set up in a similar way by repeating the pattern of
 OSSL_SELF_TEST_onbegin(), OSSL_SELF_TEST_oncorrupt_byte(), OSSL_SELF_TEST_onend()

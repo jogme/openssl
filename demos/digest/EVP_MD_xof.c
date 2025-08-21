@@ -73,14 +73,14 @@ int main(int argc, char **argv)
     }
 
     /* Create context. */
-    ctx = EVP_MD_CTX_new();
+    ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx == NULL) {
         fprintf(stderr, "Failed to create digest context\n");
         goto end;
     }
 
     /* Initialize digest context. */
-    if (EVP_DigestInit(ctx, md) == 0) {
+    if (OPENSSL_BOX_EVP_DigestInit(ctx, md) == 0) {
         fprintf(stderr, "Failed to initialize digest\n");
         goto end;
     }
@@ -125,8 +125,8 @@ int main(int argc, char **argv)
     ret = EXIT_SUCCESS;
 end:
     OPENSSL_free(digest);
-    EVP_MD_CTX_free(ctx);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_free(md);
     OSSL_LIB_CTX_free(libctx);
     return ret;
 }

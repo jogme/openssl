@@ -33,12 +33,12 @@ typedef struct {
 
 IMPLEMENT_BLOCK_CIPHER(bf, ks, BF, EVP_BF_KEY, NID_bf, 8, 16, 8, 64,
                        EVP_CIPH_VARIABLE_LENGTH, bf_init_key, NULL,
-                       EVP_CIPHER_set_asn1_iv, EVP_CIPHER_get_asn1_iv, NULL)
+                       OPENSSL_BOX_EVP_CIPHER_set_asn1_iv, OPENSSL_BOX_EVP_CIPHER_get_asn1_iv, NULL)
 
 static int bf_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
                        const unsigned char *iv, int enc)
 {
-    int len = EVP_CIPHER_CTX_get_key_length(ctx);
+    int len = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx);
 
     if (len < 0)
         return 0;

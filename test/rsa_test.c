@@ -492,17 +492,17 @@ static int test_EVP_rsa_legacy_key(void)
            && TEST_ptr((d = BN_bin2bn(d_data, sizeof(d_data), NULL)))
            && TEST_ptr((e = BN_bin2bn(e_data, sizeof(e_data), NULL)))
            && TEST_ptr((rsa = RSA_new()))
-           && TEST_ptr((md = EVP_sha256()))
-           && TEST_ptr((ctx = EVP_MD_CTX_new()))
-           && TEST_ptr((pkey = EVP_PKEY_new()))
+           && TEST_ptr((md = OPENSSL_BOX_EVP_sha256()))
+           && TEST_ptr((ctx = OPENSSL_BOX_EVP_MD_CTX_new()))
+           && TEST_ptr((pkey = OPENSSL_BOX_EVP_PKEY_new()))
            && TEST_true(RSA_set0_factors(rsa, p, q))
            && TEST_true(RSA_set0_key(rsa, n, e, d))
            && TEST_true(EVP_PKEY_assign_RSA(pkey, rsa))
            && TEST_true(EVP_DigestSignInit(ctx, NULL, md, NULL, pkey))
            && TEST_true(EVP_DigestSign(ctx, sigbuf, &buflen, msgbuf, msglen)));
 
-    EVP_MD_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 

@@ -31,7 +31,7 @@ static int tls_is_multiblock_capable(OSSL_RECORD_LAYER *rl, uint8_t type,
             && !rl->use_etm
             && RLAYER_USE_EXPLICIT_IV(rl)
             && !BIO_get_ktls_send(rl->bio)
-            && (EVP_CIPHER_get_flags(EVP_CIPHER_CTX_get0_cipher(rl->enc_ctx))
+            && (OPENSSL_BOX_EVP_CIPHER_get_flags(OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(rl->enc_ctx))
                 & EVP_CIPH_FLAG_TLS1_1_MULTIBLOCK) != 0)
         return 1;
 #endif
@@ -108,7 +108,7 @@ static int tls_write_records_multiblock_int(OSSL_RECORD_LAYER *rl,
      * multiblock write in the call to tls_setup_write_buffer() - the different
      * buffer sizes will be spotted and the buffer reallocated.
      */
-    packlen = EVP_CIPHER_CTX_ctrl(rl->enc_ctx,
+    packlen = OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(rl->enc_ctx,
                                   EVP_CTRL_TLS1_1_MULTIBLOCK_MAX_BUFSIZE,
                                   (int)templates[0].buflen, NULL);
     packlen *= numtempl;
@@ -129,7 +129,7 @@ static int tls_write_records_multiblock_int(OSSL_RECORD_LAYER *rl,
     mb_param.inp = aad;
     mb_param.len = totlen;
 
-    packleni = EVP_CIPHER_CTX_ctrl(rl->enc_ctx,
+    packleni = OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(rl->enc_ctx,
                                    EVP_CTRL_TLS1_1_MULTIBLOCK_AAD,
                                    sizeof(mb_param), &mb_param);
     packlen = (size_t)packleni;
@@ -142,7 +142,7 @@ static int tls_write_records_multiblock_int(OSSL_RECORD_LAYER *rl,
     mb_param.inp = templates[0].buf;
     mb_param.len = totlen;
 
-    if (EVP_CIPHER_CTX_ctrl(rl->enc_ctx,
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(rl->enc_ctx,
                             EVP_CTRL_TLS1_1_MULTIBLOCK_ENCRYPT,
                             sizeof(mb_param), &mb_param) <= 0) {
         RLAYERfatal(rl, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);

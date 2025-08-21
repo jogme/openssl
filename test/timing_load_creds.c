@@ -71,7 +71,7 @@ static void readpkey(const char *contents, int size)
         exit(EXIT_FAILURE);
     }
 
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     BIO_free(b);
 }
 

@@ -175,7 +175,7 @@ CMS_ContentInfo *CMS_digest_create_ex(BIO *in, const EVP_MD *md,
      * cannot fetch the algorithm if it isn't supplied.
      */
     if (md == NULL)
-        md = EVP_sha1();
+        md = OPENSSL_BOX_EVP_sha1();
     cms = ossl_cms_DigestedData_create(md, ctx, propq);
     if (cms == NULL)
         return NULL;
@@ -646,7 +646,7 @@ CMS_ContentInfo *CMS_encrypt_ex(STACK_OF(X509) *certs, BIO *data,
     X509 *recip;
 
 
-    cms = (EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_AEAD_CIPHER)
+    cms = (OPENSSL_BOX_EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_AEAD_CIPHER)
           ? CMS_AuthEnvelopedData_create_ex(cipher, libctx, propq)
           : CMS_EnvelopedData_create_ex(cipher, libctx, propq);
     if (cms == NULL) {
@@ -761,7 +761,7 @@ int CMS_decrypt_set1_pkey_and_peer(CMS_ContentInfo *cms, EVP_PKEY *pk,
         }
         /* If we have a cert, try matching RecipientInfo, else try them all */
         else if (cert == NULL || !CMS_RecipientInfo_ktri_cert_cmp(ri, cert)) {
-            if (!EVP_PKEY_up_ref(pk))
+            if (!OPENSSL_BOX_EVP_PKEY_up_ref(pk))
                 return 0;
             CMS_RecipientInfo_set0_pkey(ri, pk);
             r = CMS_RecipientInfo_decrypt(cms, ri);

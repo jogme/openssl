@@ -5482,7 +5482,7 @@ ossl_ed25519_sign(uint8_t *out_sig, const uint8_t *tbs, size_t tbs_len,
     ge_p3 R;
     uint8_t hram[SHA512_DIGEST_LENGTH];
     EVP_MD *sha512 = EVP_MD_fetch(libctx, SN_sha512, propq);
-    EVP_MD_CTX *hash_ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *hash_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     unsigned int sz;
     int res = 0;
 
@@ -5533,8 +5533,8 @@ ossl_ed25519_sign(uint8_t *out_sig, const uint8_t *tbs, size_t tbs_len,
 err:
     OPENSSL_cleanse(nonce, sizeof(nonce));
     OPENSSL_cleanse(az, sizeof(az));
-    EVP_MD_free(sha512);
-    EVP_MD_CTX_free(hash_ctx);
+    OPENSSL_BOX_EVP_MD_free(sha512);
+    OPENSSL_BOX_EVP_MD_CTX_free(hash_ctx);
     return res;
 }
 
@@ -5629,7 +5629,7 @@ ossl_ed25519_verify(const uint8_t *tbs, size_t tbs_len,
     sha512 = EVP_MD_fetch(libctx, SN_sha512, propq);
     if (sha512 == NULL)
         return 0;
-    hash_ctx = EVP_MD_CTX_new();
+    hash_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (hash_ctx == NULL)
         goto err;
 
@@ -5656,8 +5656,8 @@ ossl_ed25519_verify(const uint8_t *tbs, size_t tbs_len,
      *          [h*8](-A) + [s*8]B == [8]R
      */
 err:
-    EVP_MD_free(sha512);
-    EVP_MD_CTX_free(hash_ctx);
+    OPENSSL_BOX_EVP_MD_free(sha512);
+    OPENSSL_BOX_EVP_MD_CTX_free(hash_ctx);
     return res;
 }
 
@@ -5675,7 +5675,7 @@ ossl_ed25519_public_from_private(OSSL_LIB_CTX *ctx, uint8_t out_public_key[32],
     if (sha512 == NULL)
         return 0;
     r = EVP_Digest(private_key, 32, az, NULL, sha512, NULL);
-    EVP_MD_free(sha512);
+    OPENSSL_BOX_EVP_MD_free(sha512);
     if (!r) {
         OPENSSL_cleanse(az, sizeof(az));
         return 0;

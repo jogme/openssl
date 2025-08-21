@@ -67,18 +67,18 @@ static void *mac_newctx(void *provctx, const char *propq, const char *macname)
     if (mac == NULL)
         goto err;
 
-    pmacctx->macctx = EVP_MAC_CTX_new(mac);
+    pmacctx->macctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac);
     if (pmacctx->macctx == NULL)
         goto err;
 
-    EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_MAC_free(mac);
 
     return pmacctx;
 
  err:
     OPENSSL_free(pmacctx->propq);
     OPENSSL_free(pmacctx);
-    EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_MAC_free(mac);
     return NULL;
 }
 
@@ -116,7 +116,7 @@ static int mac_digest_sign_init(void *vpmacctx, const char *mdname, void *vkey,
     }
 
     if (pmacctx->key->cipher.cipher != NULL)
-        ciphername = (char *)EVP_CIPHER_get0_name(pmacctx->key->cipher.cipher);
+        ciphername = (char *)OPENSSL_BOX_EVP_CIPHER_get0_name(pmacctx->key->cipher.cipher);
 #if !defined(OPENSSL_NO_ENGINE) && !defined(FIPS_MODULE)
     if (pmacctx->key->cipher.engine != NULL)
         engine = (char *)ENGINE_get_id(pmacctx->key->cipher.engine);
@@ -144,7 +144,7 @@ int mac_digest_sign_update(void *vpmacctx, const unsigned char *data,
     if (pmacctx == NULL || pmacctx->macctx == NULL)
         return 0;
 
-    return EVP_MAC_update(pmacctx->macctx, data, datalen);
+    return OPENSSL_BOX_EVP_MAC_update(pmacctx->macctx, data, datalen);
 }
 
 int mac_digest_sign_final(void *vpmacctx, unsigned char *mac, size_t *maclen,
@@ -163,7 +163,7 @@ static void mac_freectx(void *vpmacctx)
     PROV_MAC_CTX *ctx = (PROV_MAC_CTX *)vpmacctx;
 
     OPENSSL_free(ctx->propq);
-    EVP_MAC_CTX_free(ctx->macctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx->macctx);
     ossl_mac_key_free(ctx->key);
     OPENSSL_free(ctx);
 }
@@ -193,7 +193,7 @@ static void *mac_dupctx(void *vpmacctx)
     dstctx->key = srcctx->key;
 
     if (srcctx->macctx != NULL) {
-        dstctx->macctx = EVP_MAC_CTX_dup(srcctx->macctx);
+        dstctx->macctx = OPENSSL_BOX_EVP_MAC_CTX_dup(srcctx->macctx);
         if (dstctx->macctx == NULL)
             goto err;
     }
@@ -208,7 +208,7 @@ static int mac_set_ctx_params(void *vpmacctx, const OSSL_PARAM params[])
 {
     PROV_MAC_CTX *ctx = (PROV_MAC_CTX *)vpmacctx;
 
-    return EVP_MAC_CTX_set_params(ctx->macctx, params);
+    return OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx->macctx, params);
 }
 
 static const OSSL_PARAM *mac_settable_ctx_params(ossl_unused void *ctx,
@@ -222,8 +222,8 @@ static const OSSL_PARAM *mac_settable_ctx_params(ossl_unused void *ctx,
     if (mac == NULL)
         return NULL;
 
-    params = EVP_MAC_settable_ctx_params(mac);
-    EVP_MAC_free(mac);
+    params = OPENSSL_BOX_EVP_MAC_settable_ctx_params(mac);
+    OPENSSL_BOX_EVP_MAC_free(mac);
 
     return params;
 }

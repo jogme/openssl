@@ -101,7 +101,7 @@ static int sm2sig_set_mdname(PROV_SM2_CTX *psm2ctx, const char *mdname)
         return 0;
 
     /* XOF digests don't work */
-    if (EVP_MD_xof(psm2ctx->md)) {
+    if (OPENSSL_BOX_EVP_MD_xof(psm2ctx->md)) {
         ERR_raise(ERR_LIB_PROV, PROV_R_XOF_DIGESTS_NOT_ALLOWED);
         return 0;
     }
@@ -110,7 +110,7 @@ static int sm2sig_set_mdname(PROV_SM2_CTX *psm2ctx, const char *mdname)
         return 1;
 
     if (strlen(mdname) >= sizeof(psm2ctx->mdname)
-        || !EVP_MD_is_a(psm2ctx->md, mdname)) {
+        || !OPENSSL_BOX_EVP_MD_is_a(psm2ctx->md, mdname)) {
         ERR_raise_data(ERR_LIB_PROV, PROV_R_INVALID_DIGEST, "digest=%s",
                        mdname);
         return 0;
@@ -202,8 +202,8 @@ static int sm2sig_verify(void *vpsm2ctx, const unsigned char *sig, size_t siglen
 
 static void free_md(PROV_SM2_CTX *ctx)
 {
-    EVP_MD_CTX_free(ctx->mdctx);
-    EVP_MD_free(ctx->md);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx->mdctx);
+    OPENSSL_BOX_EVP_MD_free(ctx->md);
     ctx->mdctx = NULL;
     ctx->md = NULL;
 }
@@ -222,12 +222,12 @@ static int sm2sig_digest_signverify_init(void *vpsm2ctx, const char *mdname,
         return ret;
 
     if (ctx->mdctx == NULL) {
-        ctx->mdctx = EVP_MD_CTX_new();
+        ctx->mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (ctx->mdctx == NULL)
             goto error;
     }
 
-    md_nid = EVP_MD_get_type(ctx->md);
+    md_nid = OPENSSL_BOX_EVP_MD_get_type(ctx->md);
 
     /*
      * We do not care about DER writing errors.
@@ -326,7 +326,7 @@ int sm2sig_digest_verify_final(void *vpsm2ctx, const unsigned char *sig,
     if (psm2ctx == NULL || psm2ctx->mdctx == NULL)
         return 0;
 
-    md_size = EVP_MD_get_size(psm2ctx->md);
+    md_size = OPENSSL_BOX_EVP_MD_get_size(psm2ctx->md);
     if (md_size <= 0 || md_size > (int)sizeof(digest))
         return 0;
 
@@ -374,14 +374,14 @@ static void *sm2sig_dupctx(void *vpsm2ctx)
             goto err;
     }
 
-    if (srcctx->md != NULL && !EVP_MD_up_ref(srcctx->md))
+    if (srcctx->md != NULL && !OPENSSL_BOX_EVP_MD_up_ref(srcctx->md))
         goto err;
     dstctx->md = srcctx->md;
 
     if (srcctx->mdctx != NULL) {
-        dstctx->mdctx = EVP_MD_CTX_new();
+        dstctx->mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (dstctx->mdctx == NULL
-                || !EVP_MD_CTX_copy_ex(dstctx->mdctx, srcctx->mdctx))
+                || !OPENSSL_BOX_EVP_MD_CTX_copy_ex(dstctx->mdctx, srcctx->mdctx))
             goto err;
     }
 
@@ -425,7 +425,7 @@ static int sm2sig_get_ctx_params(void *vpsm2ctx, OSSL_PARAM *params)
     if (p.digest != NULL
             && !OSSL_PARAM_set_utf8_string(p.digest, psm2ctx->md == NULL
                                                      ? psm2ctx->mdname
-                                                     : EVP_MD_get0_name(psm2ctx->md)))
+                                                     : OPENSSL_BOX_EVP_MD_get0_name(psm2ctx->md)))
         return 0;
 
     return 1;
@@ -508,7 +508,7 @@ static int sm2sig_get_ctx_md_params(void *vpsm2ctx, OSSL_PARAM *params)
     if (psm2ctx->mdctx == NULL)
         return 0;
 
-    return EVP_MD_CTX_get_params(psm2ctx->mdctx, params);
+    return OPENSSL_BOX_EVP_MD_CTX_get_params(psm2ctx->mdctx, params);
 }
 
 static const OSSL_PARAM *sm2sig_gettable_ctx_md_params(void *vpsm2ctx)
@@ -518,7 +518,7 @@ static const OSSL_PARAM *sm2sig_gettable_ctx_md_params(void *vpsm2ctx)
     if (psm2ctx->md == NULL)
         return 0;
 
-    return EVP_MD_gettable_ctx_params(psm2ctx->md);
+    return OPENSSL_BOX_EVP_MD_gettable_ctx_params(psm2ctx->md);
 }
 
 static int sm2sig_set_ctx_md_params(void *vpsm2ctx, const OSSL_PARAM params[])
@@ -528,7 +528,7 @@ static int sm2sig_set_ctx_md_params(void *vpsm2ctx, const OSSL_PARAM params[])
     if (psm2ctx->mdctx == NULL)
         return 0;
 
-    return EVP_MD_CTX_set_params(psm2ctx->mdctx, params);
+    return OPENSSL_BOX_EVP_MD_CTX_set_params(psm2ctx->mdctx, params);
 }
 
 static const OSSL_PARAM *sm2sig_settable_ctx_md_params(void *vpsm2ctx)
@@ -538,7 +538,7 @@ static const OSSL_PARAM *sm2sig_settable_ctx_md_params(void *vpsm2ctx)
     if (psm2ctx->md == NULL)
         return 0;
 
-    return EVP_MD_settable_ctx_params(psm2ctx->md);
+    return OPENSSL_BOX_EVP_MD_settable_ctx_params(psm2ctx->md);
 }
 
 const OSSL_DISPATCH ossl_sm2_signature_functions[] = {

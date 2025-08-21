@@ -65,8 +65,8 @@ static EVP_PKEY_CTX *create_merged_key(EVP_PKEY *dsaparams, const OSSL_PARAM *ne
     OSSL_PARAM *loadedparams = NULL;
 
     /* Specify EVP_PKEY_KEY_PUBLIC here if you have a public key */
-    if (EVP_PKEY_todata(dsaparams, EVP_PKEY_KEY_PARAMETERS, &loadedparams) <= 0) {
-        fprintf(stderr, "EVP_PKEY_todata() failed\n");
+    if (OPENSSL_BOX_EVP_PKEY_todata(dsaparams, EVP_PKEY_KEY_PARAMETERS, &loadedparams) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_todata() failed\n");
         goto cleanup;
     }
     mergedparams = OSSL_PARAM_merge(loadedparams, newparams);
@@ -80,7 +80,7 @@ static EVP_PKEY_CTX *create_merged_key(EVP_PKEY *dsaparams, const OSSL_PARAM *ne
         fprintf(stderr, "EVP_PKEY_CTX_new_from_name() failed\n");
         goto cleanup;
     }
-    if (EVP_PKEY_fromdata_init(ctx) <= 0
+    if (OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0
             || EVP_PKEY_fromdata(ctx, &pkey,
                                  EVP_PKEY_KEY_PARAMETERS, mergedparams) <= 0) {
         fprintf(stderr, "EVP_PKEY_fromdata() failed\n");
@@ -93,10 +93,10 @@ static EVP_PKEY_CTX *create_merged_key(EVP_PKEY *dsaparams, const OSSL_PARAM *ne
     }
 
 cleanup:
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     OSSL_PARAM_free(loadedparams);
     OSSL_PARAM_free(mergedparams);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return out;
 }
 
@@ -144,8 +144,8 @@ int main(int argc, char **argv)
      * This will fail however if the FIPS provider is used since it does
      * a proper FIPS 186-4 key validation which requires extra parameters
      */
-    if (EVP_PKEY_param_check(ctx) <= 0) {
-        fprintf(stderr, "Simple EVP_PKEY_param_check() failed\n");
+    if (OPENSSL_BOX_EVP_PKEY_param_check(ctx) <= 0) {
+        fprintf(stderr, "Simple OPENSSL_BOX_EVP_PKEY_param_check() failed\n");
         goto cleanup;
     }
 
@@ -167,8 +167,8 @@ int main(int argc, char **argv)
     if (ctx1 == NULL)
         goto cleanup;
     /* This will fail since not all the parameters used for key generation are added */
-    if (EVP_PKEY_param_check(ctx1) > 0) {
-        fprintf(stderr, "EVP_PKEY_param_check() should fail\n");
+    if (OPENSSL_BOX_EVP_PKEY_param_check(ctx1) > 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_param_check() should fail\n");
         goto cleanup;
     }
 
@@ -183,20 +183,20 @@ int main(int argc, char **argv)
     ctx2 = create_merged_key(dsaparamskey, params, libctx, propq);
     if (ctx2 == NULL)
         goto cleanup;
-    if (EVP_PKEY_param_check(ctx2) <= 0) {
-        fprintf(stderr, "EVP_PKEY_param_check() failed\n");
+    if (OPENSSL_BOX_EVP_PKEY_param_check(ctx2) <= 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_param_check() failed\n");
         goto cleanup;
     }
 
-    if (!dsa_print_key(EVP_PKEY_CTX_get0_pkey(ctx2), 0, libctx, propq))
+    if (!dsa_print_key(OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(ctx2), 0, libctx, propq))
         goto cleanup;
 
     ret = EXIT_SUCCESS;
 cleanup:
-    EVP_PKEY_free(dsaparamskey);
-    EVP_PKEY_CTX_free(ctx2);
-    EVP_PKEY_CTX_free(ctx1);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(dsaparamskey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx2);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx1);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     BIO_free(in);
     return ret;
 }

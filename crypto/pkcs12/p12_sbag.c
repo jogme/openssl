@@ -268,7 +268,7 @@ PKCS12_SAFEBAG *PKCS12_SAFEBAG_create_pkcs8_encrypt_ex(int pbe_nid,
         X509_SIG_free(p8);
 
 err:
-    EVP_CIPHER_free(pbe_ciph_fetch);
+    OPENSSL_BOX_EVP_CIPHER_free(pbe_ciph_fetch);
     return bag;
 }
 

@@ -67,16 +67,16 @@ If I<md> is NULL, the digest is placed in a static array.  The size of
 the output is placed in I<md_len>, unless it is NULL. Note: passing a NULL
 value for I<md> to use the static array is not thread safe.
 
-I<evp_md> is a message digest such as EVP_sha1(), EVP_ripemd160() etc.
-HMAC does not support variable output length digests such as EVP_shake128() and
-EVP_shake256().
+I<evp_md> is a message digest such as OPENSSL_BOX_EVP_sha1(), OPENSSL_BOX_EVP_ripemd160() etc.
+HMAC does not support variable output length digests such as OPENSSL_BOX_EVP_shake128() and
+OPENSSL_BOX_EVP_shake256().
 
 HMAC() uses the default B<OSSL_LIB_CTX>.
 Use L<EVP_Q_mac(3)> instead if a library context is required.
 
 All of the functions described below are deprecated.
-Applications should instead use L<EVP_MAC_CTX_new(3)>, L<EVP_MAC_CTX_free(3)>,
-L<EVP_MAC_init(3)>, L<EVP_MAC_update(3)> and L<EVP_MAC_final(3)>
+Applications should instead use L<OPENSSL_BOX_EVP_MAC_CTX_new(3)>, L<OPENSSL_BOX_EVP_MAC_CTX_free(3)>,
+L<EVP_MAC_init(3)>, L<OPENSSL_BOX_EVP_MAC_update(3)> and L<EVP_MAC_final(3)>
 or the 'quick' single-shot MAC function L<EVP_Q_mac(3)>.
 
 HMAC_CTX_new() creates a new HMAC_CTX in heap memory.
@@ -116,7 +116,7 @@ must have space for the hash function output.
 HMAC_CTX_copy() copies all of the internal state from I<sctx> into I<dctx>.
 
 HMAC_CTX_set_flags() applies the specified flags to the internal EVP_MD_CTXs.
-These flags have the same meaning as for L<EVP_MD_CTX_set_flags(3)>.
+These flags have the same meaning as for L<OPENSSL_BOX_EVP_MD_CTX_set_flags(3)>.
 
 HMAC_CTX_get_md() returns the EVP_MD that has previously been set for the
 supplied HMAC_CTX.

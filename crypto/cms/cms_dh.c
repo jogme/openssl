@@ -38,8 +38,8 @@ static int dh_cms_set_peerkey(EVP_PKEY_CTX *pctx,
     if (atype != V_ASN1_UNDEF && atype != V_ASN1_NULL)
         goto err;
 
-    pk = EVP_PKEY_CTX_get0_pkey(pctx);
-    if (pk == NULL || !EVP_PKEY_is_a(pk, "DHX"))
+    pk = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(pctx);
+    if (pk == NULL || !OPENSSL_BOX_EVP_PKEY_is_a(pk, "DHX"))
         goto err;
 
     /* Get public key */
@@ -54,7 +54,7 @@ static int dh_cms_set_peerkey(EVP_PKEY_CTX *pctx,
      * Pad to full p parameter size as that is checked by
      * EVP_PKEY_set1_encoded_public_key()
      */
-    plen = EVP_PKEY_get_size(pk);
+    plen = OPENSSL_BOX_EVP_PKEY_get_size(pk);
     if ((bnpub = ASN1_INTEGER_to_BN(public_key, NULL)) == NULL)
         goto err;
     if ((buf = OPENSSL_malloc(plen)) == NULL)
@@ -62,19 +62,19 @@ static int dh_cms_set_peerkey(EVP_PKEY_CTX *pctx,
     if (BN_bn2binpad(bnpub, buf, plen) < 0)
         goto err;
 
-    pkpeer = EVP_PKEY_new();
+    pkpeer = OPENSSL_BOX_EVP_PKEY_new();
     if (pkpeer == NULL
-            || !EVP_PKEY_copy_parameters(pkpeer, pk)
+            || !OPENSSL_BOX_EVP_PKEY_copy_parameters(pkpeer, pk)
             || EVP_PKEY_set1_encoded_public_key(pkpeer, buf, plen) <= 0)
         goto err;
 
-    if (EVP_PKEY_derive_set_peer(pctx, pkpeer) > 0)
+    if (OPENSSL_BOX_EVP_PKEY_derive_set_peer(pctx, pkpeer) > 0)
         rv = 1;
  err:
     ASN1_INTEGER_free(public_key);
     BN_free(bnpub);
     OPENSSL_free(buf);
-    EVP_PKEY_free(pkpeer);
+    OPENSSL_BOX_EVP_PKEY_free(pkpeer);
     return rv;
 }
 
@@ -104,7 +104,7 @@ static int dh_cms_set_shared_info(EVP_PKEY_CTX *pctx, CMS_RecipientInfo *ri)
     }
 
     if (EVP_PKEY_CTX_set_dh_kdf_type(pctx, EVP_PKEY_DH_KDF_X9_42) <= 0
-            || EVP_PKEY_CTX_set_dh_kdf_md(pctx, EVP_sha1()) <= 0)
+            || EVP_PKEY_CTX_set_dh_kdf_md(pctx, OPENSSL_BOX_EVP_sha1()) <= 0)
         goto err;
 
     if (alg->parameter->type != V_ASN1_SEQUENCE)
@@ -124,19 +124,19 @@ static int dh_cms_set_shared_info(EVP_PKEY_CTX *pctx, CMS_RecipientInfo *ri)
 
     kekcipher = EVP_CIPHER_fetch(pctx->libctx, name, pctx->propquery);
     if (kekcipher == NULL
-        || EVP_CIPHER_get_mode(kekcipher) != EVP_CIPH_WRAP_MODE)
+        || OPENSSL_BOX_EVP_CIPHER_get_mode(kekcipher) != EVP_CIPH_WRAP_MODE)
         goto err;
     if (!EVP_EncryptInit_ex(kekctx, kekcipher, NULL, NULL, NULL))
         goto err;
-    if (EVP_CIPHER_asn1_to_param(kekctx, kekalg->parameter) <= 0)
+    if (OPENSSL_BOX_EVP_CIPHER_asn1_to_param(kekctx, kekalg->parameter) <= 0)
         goto err;
 
-    keylen = EVP_CIPHER_CTX_get_key_length(kekctx);
+    keylen = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(kekctx);
     if (EVP_PKEY_CTX_set_dh_kdf_outlen(pctx, keylen) <= 0)
         goto err;
     /* Use OBJ_nid2obj to ensure we use built in OID that isn't freed */
     if (EVP_PKEY_CTX_set0_dh_kdf_oid(pctx,
-                                     OBJ_nid2obj(EVP_CIPHER_get_type(kekcipher)))
+                                     OBJ_nid2obj(OPENSSL_BOX_EVP_CIPHER_get_type(kekcipher)))
         <= 0)
         goto err;
 
@@ -154,7 +154,7 @@ static int dh_cms_set_shared_info(EVP_PKEY_CTX *pctx, CMS_RecipientInfo *ri)
     rv = 1;
  err:
     X509_ALGOR_free(kekalg);
-    EVP_CIPHER_free(kekcipher);
+    OPENSSL_BOX_EVP_CIPHER_free(kekcipher);
     OPENSSL_free(dukm);
     return rv;
 }
@@ -166,7 +166,7 @@ static int dh_cms_decrypt(CMS_RecipientInfo *ri)
     if (pctx == NULL)
         return 0;
     /* See if we need to set peer key */
-    if (!EVP_PKEY_CTX_get0_peerkey(pctx)) {
+    if (!OPENSSL_BOX_EVP_PKEY_CTX_get0_peerkey(pctx)) {
         X509_ALGOR *alg;
         ASN1_BIT_STRING *pubkey;
 
@@ -210,7 +210,7 @@ static int dh_cms_encrypt(CMS_RecipientInfo *ri)
     if (pctx == NULL)
         return 0;
     /* Get ephemeral key */
-    pkey = EVP_PKEY_CTX_get0_pkey(pctx);
+    pkey = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(pctx);
     if (!CMS_RecipientInfo_kari_get0_orig_id(ri, &talg, &pubkey,
                                              NULL, NULL, NULL))
         goto err;
@@ -256,10 +256,10 @@ static int dh_cms_encrypt(CMS_RecipientInfo *ri)
         goto err;
     if (kdf_md == NULL) {
         /* Only SHA1 supported */
-        kdf_md = EVP_sha1();
+        kdf_md = OPENSSL_BOX_EVP_sha1();
         if (EVP_PKEY_CTX_set_dh_kdf_md(pctx, kdf_md) <= 0)
             goto err;
-    } else if (EVP_MD_get_type(kdf_md) != NID_sha1)
+    } else if (OPENSSL_BOX_EVP_MD_get_type(kdf_md) != NID_sha1)
         /* Unsupported digest */
         goto err;
 
@@ -271,7 +271,7 @@ static int dh_cms_encrypt(CMS_RecipientInfo *ri)
     wrap_nid = EVP_CIPHER_CTX_get_type(ctx);
     if (EVP_PKEY_CTX_set0_dh_kdf_oid(pctx, OBJ_nid2obj(wrap_nid)) <= 0)
         goto err;
-    keylen = EVP_CIPHER_CTX_get_key_length(ctx);
+    keylen = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx);
 
     /* Package wrap algorithm in an AlgorithmIdentifier */
 
@@ -282,7 +282,7 @@ static int dh_cms_encrypt(CMS_RecipientInfo *ri)
     wrap_alg->parameter = ASN1_TYPE_new();
     if (wrap_alg->parameter == NULL)
         goto err;
-    if (EVP_CIPHER_param_to_asn1(ctx, wrap_alg->parameter) <= 0)
+    if (OPENSSL_BOX_EVP_CIPHER_param_to_asn1(ctx, wrap_alg->parameter) <= 0)
         goto err;
     if (ASN1_TYPE_get(wrap_alg->parameter) == NID_undef) {
         ASN1_TYPE_free(wrap_alg->parameter);

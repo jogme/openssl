@@ -396,23 +396,23 @@ static int do_evp_cipher(const EVP_CIPHER *evp_cipher, const OSSL_PARAM param[])
     const char intext[] = "text";
     EVP_CIPHER_CTX *ctx;
 
-    ctx = EVP_CIPHER_CTX_new();
+    ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
 
-    if (!EVP_CIPHER_CTX_set_params(ctx, param)) {
-        EVP_CIPHER_CTX_free(ctx);
+    if (!OPENSSL_BOX_EVP_CIPHER_CTX_set_params(ctx, param)) {
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
         return 0;
     }
 
     if (!EVP_EncryptInit_ex2(ctx, evp_cipher, key, iv, NULL)) {
         /* Error */
-        EVP_CIPHER_CTX_free(ctx);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
         return 0;
     }
 
     if (!EVP_EncryptUpdate(ctx, outbuf, &outlen, (const unsigned char *) intext,
                            (int)strlen(intext))) {
         /* Error */
-        EVP_CIPHER_CTX_free(ctx);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
         return 0;
     }
     /*
@@ -421,11 +421,11 @@ static int do_evp_cipher(const EVP_CIPHER *evp_cipher, const OSSL_PARAM param[])
      */
     if (!EVP_EncryptFinal_ex(ctx, outbuf + outlen, &tmplen)) {
         /* Error */
-        EVP_CIPHER_CTX_free(ctx);
+        OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
         return 0;
     }
     outlen += tmplen;
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     return 1;
 }
 
@@ -466,19 +466,19 @@ static int do_evp_mac(EVP_MAC *evp_mac, const OSSL_PARAM params[])
     unsigned char buf[4096];
     size_t final_l;
 
-    if ((ctx = EVP_MAC_CTX_new(evp_mac)) == NULL
+    if ((ctx = OPENSSL_BOX_EVP_MAC_CTX_new(evp_mac)) == NULL
         || !EVP_MAC_init(ctx, (const unsigned char *) key, strlen(key),
                          params)) {
         r = 0;
         goto end;
     }
 
-    if (EVP_MAC_CTX_set_params(ctx, params) <= 0) {
+    if (OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, params) <= 0) {
         r = 0;
         goto end;
     }
 
-    if (!EVP_MAC_update(ctx, (unsigned char *) text, sizeof(text))) {
+    if (!OPENSSL_BOX_EVP_MAC_update(ctx, (unsigned char *) text, sizeof(text))) {
         r = 0;
         goto end;
     }
@@ -489,7 +489,7 @@ static int do_evp_mac(EVP_MAC *evp_mac, const OSSL_PARAM params[])
     }
 
 end:
-    EVP_MAC_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
     return r;
 }
 
@@ -499,12 +499,12 @@ static int do_evp_rand(EVP_RAND *evp_rand, const OSSL_PARAM params[])
     EVP_RAND_CTX *ctx = NULL;
     unsigned char buf[4096];
 
-    if (!(ctx = EVP_RAND_CTX_new(evp_rand, NULL))) {
+    if (!(ctx = OPENSSL_BOX_EVP_RAND_CTX_new(evp_rand, NULL))) {
         r = 0;
         goto end;
     }
 
-    if (EVP_RAND_CTX_set_params(ctx, params) <= 0) {
+    if (OPENSSL_BOX_EVP_RAND_CTX_set_params(ctx, params) <= 0) {
         r = 0;
         goto end;
     }
@@ -520,7 +520,7 @@ static int do_evp_rand(EVP_RAND *evp_rand, const OSSL_PARAM params[])
     }
 
 end:
-    EVP_RAND_CTX_free(ctx);
+    OPENSSL_BOX_EVP_RAND_CTX_free(ctx);
     return r;
 }
 
@@ -551,12 +551,12 @@ static int do_evp_md(EVP_MD *evp_md, const OSSL_PARAM params[])
     unsigned int md_len;
     EVP_MD_CTX *mdctx = NULL;
 
-    if (!(mdctx = EVP_MD_CTX_new())) {
+    if (!(mdctx = OPENSSL_BOX_EVP_MD_CTX_new())) {
         r = 0;
         goto end;
     }
 
-    if (!EVP_MD_CTX_set_params(mdctx, params)) {
+    if (!OPENSSL_BOX_EVP_MD_CTX_set_params(mdctx, params)) {
         r = 0;
         goto end;
     }
@@ -575,7 +575,7 @@ static int do_evp_md(EVP_MD *evp_md, const OSSL_PARAM params[])
     }
 
 end:
-    EVP_MD_CTX_free(mdctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mdctx);
     return r;
 }
 

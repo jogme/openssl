@@ -2361,16 +2361,16 @@ int s_server_main(int argc, char *argv[])
              * We need 2 references: one for use by ctx and one for use by
              * ctx2
              */
-            if (!EVP_PKEY_up_ref(dhpkey)) {
-                EVP_PKEY_free(dhpkey);
+            if (!OPENSSL_BOX_EVP_PKEY_up_ref(dhpkey)) {
+                OPENSSL_BOX_EVP_PKEY_free(dhpkey);
                 goto end;
             }
             if (!SSL_CTX_set0_tmp_dh_pkey(ctx, dhpkey)) {
                 BIO_puts(bio_err, "Error setting temp DH parameters\n");
                 ERR_print_errors(bio_err);
                 /* Free 2 references */
-                EVP_PKEY_free(dhpkey);
-                EVP_PKEY_free(dhpkey);
+                OPENSSL_BOX_EVP_PKEY_free(dhpkey);
+                OPENSSL_BOX_EVP_PKEY_free(dhpkey);
                 goto end;
             }
         }
@@ -2386,7 +2386,7 @@ int s_server_main(int argc, char *argv[])
                     BIO_printf(bio_s_out, "Setting temp DH parameters\n");
                     (void)BIO_flush(bio_s_out);
 
-                    EVP_PKEY_free(dhpkey);
+                    OPENSSL_BOX_EVP_PKEY_free(dhpkey);
                     dhpkey = dhpkey2;
                 }
             }
@@ -2395,12 +2395,12 @@ int s_server_main(int argc, char *argv[])
             } else if (!SSL_CTX_set0_tmp_dh_pkey(ctx2, dhpkey)) {
                 BIO_puts(bio_err, "Error setting temp DH parameters\n");
                 ERR_print_errors(bio_err);
-                EVP_PKEY_free(dhpkey);
+                OPENSSL_BOX_EVP_PKEY_free(dhpkey);
                 goto end;
             }
             dhpkey = NULL;
         }
-        EVP_PKEY_free(dhpkey);
+        OPENSSL_BOX_EVP_PKEY_free(dhpkey);
     }
 
     if (!set_cert_key_stuff(ctx, s_cert, s_key, s_chain, build_chain))
@@ -2575,8 +2575,8 @@ int s_server_main(int argc, char *argv[])
     X509_free(s_cert);
     sk_X509_CRL_pop_free(crls, X509_CRL_free);
     X509_free(s_dcert);
-    EVP_PKEY_free(s_key);
-    EVP_PKEY_free(s_dkey);
+    OPENSSL_BOX_EVP_PKEY_free(s_key);
+    OPENSSL_BOX_EVP_PKEY_free(s_dkey);
     OSSL_STACK_OF_X509_free(s_chain);
     OSSL_STACK_OF_X509_free(s_dchain);
     OPENSSL_free(pass);
@@ -2591,7 +2591,7 @@ int s_server_main(int argc, char *argv[])
     OPENSSL_free(tlscstatp.path);
     SSL_CTX_free(ctx2);
     X509_free(s_cert2);
-    EVP_PKEY_free(s_key2);
+    OPENSSL_BOX_EVP_PKEY_free(s_key2);
 #ifndef OPENSSL_NO_NEXTPROTONEG
     OPENSSL_free(next_proto.data);
 #endif

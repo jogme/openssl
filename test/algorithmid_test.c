@@ -66,7 +66,7 @@ static int test_spki_aid(X509_PUBKEY *pubkey, const char *filename)
         goto end;
     }
 
-    if (!TEST_true(EVP_KEYMGMT_is_a(keymgmt, name))) {
+    if (!TEST_true(OPENSSL_BOX_EVP_KEYMGMT_is_a(keymgmt, name))) {
         TEST_info("The AlgorithmID key type (%s) for the public key found in"
                   " '%s' doesn't match the key type of the extracted public"
                   " key.",
@@ -75,7 +75,7 @@ static int test_spki_aid(X509_PUBKEY *pubkey, const char *filename)
         goto end;
     }
 
-    if (!TEST_ptr(gettable_params = EVP_KEYMGMT_gettable_params(keymgmt))
+    if (!TEST_ptr(gettable_params = OPENSSL_BOX_EVP_KEYMGMT_gettable_params(keymgmt))
         || !TEST_ptr(OSSL_PARAM_locate_const(gettable_params, ALGORITHMID_NAME))) {
         TEST_info("The %s provider keymgmt appears to lack support for algorithm-id."
                   "  Skipping...",
@@ -95,7 +95,7 @@ static int test_spki_aid(X509_PUBKEY *pubkey, const char *filename)
         ret = 1;
 
  end:
-    EVP_KEYMGMT_free(keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(keymgmt);
     OPENSSL_free(algid_legacy);
     return ret;
 }
@@ -137,19 +137,19 @@ static int test_x509_sig_aid(X509 *eecert, const char *ee_filename,
         || !TEST_ptr(pkey = X509_get0_pubkey(cacert)))
         goto end;
 
-    if (!TEST_true(EVP_PKEY_is_a(pkey, OBJ_nid2sn(pkey_nid)))) {
+    if (!TEST_true(OPENSSL_BOX_EVP_PKEY_is_a(pkey, OBJ_nid2sn(pkey_nid)))) {
         TEST_info("The '%s' pubkey can't be used to verify the '%s' signature",
                   ca_filename, ee_filename);
         TEST_info("Signature algorithm is %s (pkey type %s, hash type %s)",
                   OBJ_nid2sn(sig_nid), OBJ_nid2sn(pkey_nid), OBJ_nid2sn(dig_nid));
-        TEST_info("Pkey key type is %s", EVP_PKEY_get0_type_name(pkey));
+        TEST_info("Pkey key type is %s", OPENSSL_BOX_EVP_PKEY_get0_type_name(pkey));
         goto end;
     }
 
     if (!TEST_int_ge(algid_legacy_len = i2d_X509_ALGOR(alg, &algid_legacy), 0))
         goto end;
 
-    if (!TEST_ptr(mdctx = EVP_MD_CTX_new())
+    if (!TEST_ptr(mdctx = OPENSSL_BOX_EVP_MD_CTX_new())
         || !TEST_true(EVP_DigestVerifyInit_ex(mdctx, &pctx,
                                               OBJ_nid2sn(dig_nid),
                                               NULL, NULL, pkey, NULL))) {
@@ -159,7 +159,7 @@ static int test_x509_sig_aid(X509 *eecert, const char *ee_filename,
         goto end;
     }
 
-    if (!TEST_ptr(gettable_params = EVP_PKEY_CTX_gettable_params(pctx))
+    if (!TEST_ptr(gettable_params = OPENSSL_BOX_EVP_PKEY_CTX_gettable_params(pctx))
         || !TEST_ptr(OSSL_PARAM_locate_const(gettable_params, ALGORITHMID_NAME))) {
         TEST_info("The %s provider keymgmt appears to lack support for algorithm-id"
                   "  Skipping...",
@@ -169,7 +169,7 @@ static int test_x509_sig_aid(X509 *eecert, const char *ee_filename,
     }
 
     algid_prov[0] = '\0';
-    if (!TEST_true(EVP_PKEY_CTX_get_params(pctx, params)))
+    if (!TEST_true(OPENSSL_BOX_EVP_PKEY_CTX_get_params(pctx, params)))
         goto end;
     algid_prov_len = params[0].return_size;
 
@@ -179,8 +179,8 @@ static int test_x509_sig_aid(X509 *eecert, const char *ee_filename,
         ret = 1;
 
  end:
-    EVP_MD_CTX_free(mdctx);
-    /* pctx is free by EVP_MD_CTX_free() */
+    OPENSSL_BOX_EVP_MD_CTX_free(mdctx);
+    /* pctx is free by OPENSSL_BOX_EVP_MD_CTX_free() */
     OPENSSL_free(algid_legacy);
     return ret;
 }

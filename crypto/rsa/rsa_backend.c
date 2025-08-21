@@ -447,8 +447,8 @@ int ossl_rsa_pss_params_30_fromdata(RSA_PSS_PARAMS_30 *pss_params,
     ret = 1;
 
  err:
-    EVP_MD_free(md);
-    EVP_MD_free(mgf1md);
+    OPENSSL_BOX_EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(mgf1md);
     return ret;
 }
 
@@ -609,8 +609,8 @@ static int ossl_rsa_sync_to_pss_params_30(RSA *rsa)
         if (!ossl_rsa_pss_get_param_unverified(legacy_pss, &md, &mgf1md,
                                                &saltlen, &trailerField))
             return 0;
-        md_nid = EVP_MD_get_type(md);
-        mgf1md_nid = EVP_MD_get_type(mgf1md);
+        md_nid = OPENSSL_BOX_EVP_MD_get_type(md);
+        mgf1md_nid = OPENSSL_BOX_EVP_MD_get_type(mgf1md);
         if (!ossl_rsa_pss_params_30_set_defaults(&pss_params)
             || !ossl_rsa_pss_params_30_set_hashalg(&pss_params, md_nid)
             || !ossl_rsa_pss_params_30_set_maskgenhashalg(&pss_params,

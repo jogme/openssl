@@ -50,7 +50,7 @@ static int aes_gcm_siv_initkey(void *vctx)
         goto err;
     }
 
-    if (ctx->ecb_ctx == NULL && (ctx->ecb_ctx = EVP_CIPHER_CTX_new()) == NULL)
+    if (ctx->ecb_ctx == NULL && (ctx->ecb_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto err;
     if (!EVP_EncryptInit_ex2(ctx->ecb_ctx, ecb, ctx->key_gen_key, NULL, NULL))
         goto err;
@@ -95,11 +95,11 @@ static int aes_gcm_siv_initkey(void *vctx)
     /* Freshen up the state */
     ctx->used_enc = 0;
     ctx->used_dec = 0;
-    EVP_CIPHER_free(ecb);
+    OPENSSL_BOX_EVP_CIPHER_free(ecb);
     return 1;
  err:
-    EVP_CIPHER_CTX_free(ctx->ecb_ctx);
-    EVP_CIPHER_free(ecb);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx->ecb_ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(ecb);
     ctx->ecb_ctx = NULL;
     return 0;
 }
@@ -294,7 +294,7 @@ static void aes_gcm_siv_clean_ctx(void *vctx)
 {
     PROV_AES_GCM_SIV_CTX *ctx = (PROV_AES_GCM_SIV_CTX *)vctx;
 
-    EVP_CIPHER_CTX_free(ctx->ecb_ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx->ecb_ctx);
     ctx->ecb_ctx = NULL;
 }
 
@@ -305,15 +305,15 @@ static int aes_gcm_siv_dup_ctx(void *vdst, void *vsrc)
 
     dst->ecb_ctx = NULL;
     if (src->ecb_ctx != NULL) {
-        if ((dst->ecb_ctx = EVP_CIPHER_CTX_new()) == NULL)
+        if ((dst->ecb_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
             goto err;
-        if (!EVP_CIPHER_CTX_copy(dst->ecb_ctx, src->ecb_ctx))
+        if (!OPENSSL_BOX_EVP_CIPHER_CTX_copy(dst->ecb_ctx, src->ecb_ctx))
             goto err;
     }
     return 1;
 
  err:
-    EVP_CIPHER_CTX_free(dst->ecb_ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(dst->ecb_ctx);
     dst->ecb_ctx = NULL;
     return 0;
 }

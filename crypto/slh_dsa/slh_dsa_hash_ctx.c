@@ -31,7 +31,7 @@ SLH_DSA_HASH_CTX *ossl_slh_dsa_hash_ctx_new(const SLH_DSA_KEY *key)
         return NULL;
 
     ret->key = key;
-    ret->md_ctx = EVP_MD_CTX_new();
+    ret->md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ret->md_ctx == NULL)
         goto err;
     if (EVP_DigestInit_ex2(ret->md_ctx, key->md, NULL) != 1)
@@ -42,14 +42,14 @@ SLH_DSA_HASH_CTX *ossl_slh_dsa_hash_ctx_new(const SLH_DSA_KEY *key)
             ret->md_big_ctx = ret->md_ctx;
         } else {
             /* Only gets here for SHA2 */
-            ret->md_big_ctx = EVP_MD_CTX_new();
+            ret->md_big_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
             if (ret->md_big_ctx == NULL)
                 goto err;
             if (EVP_DigestInit_ex2(ret->md_big_ctx, key->md_big, NULL) != 1)
                 goto err;
         }
         if (key->hmac != NULL) {
-            ret->hmac_ctx = EVP_MAC_CTX_new(key->hmac);
+            ret->hmac_ctx = OPENSSL_BOX_EVP_MAC_CTX_new(key->hmac);
             if (ret->hmac_ctx == NULL)
                 goto err;
         }
@@ -77,18 +77,18 @@ SLH_DSA_HASH_CTX *ossl_slh_dsa_hash_ctx_dup(const SLH_DSA_HASH_CTX *src)
     ret->key = src->key;
 
     if (src->md_ctx != NULL
-            && (ret->md_ctx = EVP_MD_CTX_dup(src->md_ctx)) == NULL)
+            && (ret->md_ctx = OPENSSL_BOX_EVP_MD_CTX_dup(src->md_ctx)) == NULL)
         goto err;
     if (src->md_big_ctx != NULL) {
         if (src->md_big_ctx != src->md_ctx) {
-            if ((ret->md_big_ctx = EVP_MD_CTX_dup(src->md_big_ctx)) == NULL)
+            if ((ret->md_big_ctx = OPENSSL_BOX_EVP_MD_CTX_dup(src->md_big_ctx)) == NULL)
                 goto err;
         } else {
             ret->md_big_ctx = ret->md_ctx;
         }
     }
     if (src->hmac_ctx != NULL
-            && (ret->hmac_ctx = EVP_MAC_CTX_dup(src->hmac_ctx)) == NULL)
+            && (ret->hmac_ctx = OPENSSL_BOX_EVP_MAC_CTX_dup(src->hmac_ctx)) == NULL)
         goto err;
     return ret;
  err:
@@ -105,9 +105,9 @@ void ossl_slh_dsa_hash_ctx_free(SLH_DSA_HASH_CTX *ctx)
 {
     if (ctx == NULL)
         return;
-    EVP_MD_CTX_free(ctx->md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx->md_ctx);
     if (ctx->md_big_ctx != ctx->md_ctx)
-        EVP_MD_CTX_free(ctx->md_big_ctx);
-    EVP_MAC_CTX_free(ctx->hmac_ctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(ctx->md_big_ctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx->hmac_ctx);
     OPENSSL_free(ctx);
 }

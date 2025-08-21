@@ -187,7 +187,7 @@ int pkcs12_main(int argc, char **argv)
     BIO *in = NULL, *out = NULL;
     PKCS12 *p12 = NULL;
     STACK_OF(OPENSSL_STRING) *canames = NULL;
-    EVP_CIPHER *default_enc = (EVP_CIPHER *)EVP_aes_256_cbc();
+    EVP_CIPHER *default_enc = (EVP_CIPHER *)OPENSSL_BOX_EVP_aes_256_cbc();
     EVP_CIPHER *enc = (EVP_CIPHER *)default_enc;
     OPTION_CHOICE o;
 
@@ -472,7 +472,7 @@ int pkcs12_main(int argc, char **argv)
         if (key_pbe == NID_undef)
             key_pbe = NID_pbe_WithSHA1And3_Key_TripleDES_CBC;
         if (enc == default_enc)
-            enc = (EVP_CIPHER *)EVP_des_ede3_cbc();
+            enc = (EVP_CIPHER *)OPENSSL_BOX_EVP_des_ede3_cbc();
         if (macalg == NULL)
             macalg = "sha1";
     }
@@ -523,7 +523,7 @@ int pkcs12_main(int argc, char **argv)
         /* To avoid bit rot */
         if (1) {
 #ifndef OPENSSL_NO_UI_CONSOLE
-            if (EVP_read_pw_string(
+            if (OPENSSL_BOX_EVP_read_pw_string(
                 macpass, sizeof(macpass), "Enter MAC Password:", export_pkcs12)) {
                 BIO_printf(bio_err, "Can't read Password\n");
                 goto end;
@@ -673,7 +673,7 @@ int pkcs12_main(int argc, char **argv)
             /* To avoid bit rot */
             if (1) {
 #ifndef OPENSSL_NO_UI_CONSOLE
-                if (EVP_read_pw_string(pass, sizeof(pass),
+                if (OPENSSL_BOX_EVP_read_pw_string(pass, sizeof(pass),
                                        "Enter Export Password:", 1)) {
                     BIO_printf(bio_err, "Can't read Password\n");
                     goto export_end;
@@ -737,8 +737,8 @@ int pkcs12_main(int argc, char **argv)
 
  export_end:
 
-        EVP_PKEY_free(key);
-        EVP_MD_free(macmd);
+        OPENSSL_BOX_EVP_PKEY_free(key);
+        OPENSSL_BOX_EVP_MD_free(macmd);
         OSSL_STACK_OF_X509_free(certs);
         OSSL_STACK_OF_X509_free(untrusted_certs);
         X509_free(ee_cert);
@@ -765,7 +765,7 @@ int pkcs12_main(int argc, char **argv)
     if (!noprompt) {
         if (1) {
 #ifndef OPENSSL_NO_UI_CONSOLE
-            if (EVP_read_pw_string(pass, sizeof(pass), "Enter Import Password:",
+            if (OPENSSL_BOX_EVP_read_pw_string(pass, sizeof(pass), "Enter Import Password:",
                                    0)) {
                 BIO_printf(bio_err, "Can't read Password\n");
                 goto end;
@@ -1028,7 +1028,7 @@ int dump_certs_pkeys_bag(BIO *out, const PKCS12_SAFEBAG *bag,
             return 0;
         print_attribs(out, PKCS8_pkey_get0_attrs(p8c), "Key Attributes");
         ret = PEM_write_bio_PrivateKey(out, pkey, enc, NULL, 0, NULL, pempass);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         break;
 
     case NID_pkcs8ShroudedKeyBag:
@@ -1053,7 +1053,7 @@ int dump_certs_pkeys_bag(BIO *out, const PKCS12_SAFEBAG *bag,
         print_attribs(out, PKCS8_pkey_get0_attrs(p8), "Key Attributes");
         PKCS8_PRIV_KEY_INFO_free(p8);
         ret = PEM_write_bio_PrivateKey(out, pkey, enc, NULL, 0, NULL, pempass);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         break;
 
     case NID_certBag:

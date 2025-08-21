@@ -32,7 +32,7 @@ static int fetch_sig(OSSL_LIB_CTX *ctx, const char *alg, const char *propq,
     if (!TEST_ptr(sig))
         return 0;
 
-    if (!TEST_ptr(prov = EVP_SIGNATURE_get0_provider(sig)))
+    if (!TEST_ptr(prov = OPENSSL_BOX_EVP_SIGNATURE_get0_provider(sig)))
         goto end;
 
     if (!TEST_ptr_eq(prov, expected_prov)) {
@@ -44,7 +44,7 @@ static int fetch_sig(OSSL_LIB_CTX *ctx, const char *alg, const char *propq,
 
     ret = 1;
 end:
-    EVP_SIGNATURE_free(sig);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig);
     return ret;
 }
 
@@ -71,12 +71,12 @@ static int test_pkey_sig(void)
     /* Construct a pkey using precise propq to use our provider */
     if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "RSA",
                                                    "provider=fake-rsa"))
-        || !TEST_true(EVP_PKEY_fromdata_init(ctx))
+        || !TEST_true(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx))
         || !TEST_true(EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_KEYPAIR, NULL))
         || !TEST_ptr(pkey))
         goto end;
 
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     ctx = NULL;
 
     /* try exercising signature_init ops a few times */
@@ -97,14 +97,14 @@ static int test_pkey_sig(void)
          * we can get a segfault or some internal error. At least watch
          * whether fake-rsa sign_init is exercised by calling sign.
          */
-        if (!TEST_int_eq(EVP_PKEY_sign_init(ctx), 1))
+        if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_sign_init(ctx), 1))
             goto end;
 
         if (!TEST_int_eq(EVP_PKEY_sign(ctx, NULL, &siglen, NULL, 0), 1)
             || !TEST_size_t_eq(siglen, 256))
             goto end;
 
-        EVP_PKEY_CTX_free(ctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
         ctx = NULL;
     }
 
@@ -113,8 +113,8 @@ static int test_pkey_sig(void)
 end:
     fake_rsa_finish(fake_rsa);
     OSSL_PROVIDER_unload(deflt);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 
@@ -134,10 +134,10 @@ static int test_alternative_keygen_init(void)
     if (!TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "RSA", NULL)))
         goto end;
 
-    if (!TEST_int_gt(EVP_PKEY_keygen_init(ctx), 0))
+    if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx), 0))
         goto end;
 
-    if (!TEST_ptr(provider = EVP_PKEY_CTX_get0_provider(ctx)))
+    if (!TEST_ptr(provider = OPENSSL_BOX_EVP_PKEY_CTX_get0_provider(ctx)))
         goto end;
 
     if (!TEST_ptr(provname = OSSL_PROVIDER_get0_name(provider)))
@@ -146,7 +146,7 @@ static int test_alternative_keygen_init(void)
     if (!TEST_str_eq(provname, "default"))
         goto end;
 
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     ctx = NULL;
 
     /* now load fake RSA and try again */
@@ -157,10 +157,10 @@ static int test_alternative_keygen_init(void)
                                                    "?provider=fake-rsa")))
         goto end;
 
-    if (!TEST_int_gt(EVP_PKEY_keygen_init(ctx), 0))
+    if (!TEST_int_gt(OPENSSL_BOX_EVP_PKEY_keygen_init(ctx), 0))
         goto end;
 
-    if (!TEST_ptr(provider = EVP_PKEY_CTX_get0_provider(ctx)))
+    if (!TEST_ptr(provider = OPENSSL_BOX_EVP_PKEY_CTX_get0_provider(ctx)))
         goto end;
 
     if (!TEST_ptr(provname = OSSL_PROVIDER_get0_name(provider)))
@@ -174,7 +174,7 @@ static int test_alternative_keygen_init(void)
 end:
     fake_rsa_finish(fake_rsa);
     OSSL_PROVIDER_unload(deflt);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 
@@ -198,13 +198,13 @@ static int test_pkey_eq(void)
     if (!TEST_ptr(params = fake_rsa_key_params(0))
         || !TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "RSA",
                                                       "provider=fake-rsa"))
-        || !TEST_true(EVP_PKEY_fromdata_init(ctx))
+        || !TEST_true(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx))
         || !TEST_true(EVP_PKEY_fromdata(ctx, &pkey_fake, EVP_PKEY_PUBLIC_KEY,
                                         params))
         || !TEST_ptr(pkey_fake))
         goto end;
 
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     ctx = NULL;
     OSSL_PARAM_free(params);
     params = NULL;
@@ -213,28 +213,28 @@ static int test_pkey_eq(void)
     if (!TEST_ptr(params = fake_rsa_key_params(0))
         || !TEST_ptr(ctx = EVP_PKEY_CTX_new_from_name(libctx, "RSA",
                                                       "provider=default"))
-        || !TEST_true(EVP_PKEY_fromdata_init(ctx))
+        || !TEST_true(OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx))
         || !TEST_true(EVP_PKEY_fromdata(ctx, &pkey_dflt, EVP_PKEY_PUBLIC_KEY,
                                         params))
         || !TEST_ptr(pkey_dflt))
         goto end;
 
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     ctx = NULL;
     OSSL_PARAM_free(params);
     params = NULL;
 
     /* now test for equality */
-    if (!TEST_int_eq(EVP_PKEY_eq(pkey_fake, pkey_dflt), 1))
+    if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_eq(pkey_fake, pkey_dflt), 1))
         goto end;
 
     ret = 1;
 end:
     fake_rsa_finish(fake_rsa);
     OSSL_PROVIDER_unload(deflt);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey_fake);
-    EVP_PKEY_free(pkey_dflt);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey_fake);
+    OPENSSL_BOX_EVP_PKEY_free(pkey_dflt);
     OSSL_PARAM_free(params);
     return ret;
 }
@@ -277,7 +277,7 @@ static int test_pkey_store(int idx)
         info = NULL;
     }
 
-    if (!TEST_ptr(pkey) || !TEST_int_eq(EVP_PKEY_is_a(pkey, "RSA"), 1))
+    if (!TEST_ptr(pkey) || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA"), 1))
         goto end;
 
     ret = 1;
@@ -286,7 +286,7 @@ end:
     fake_rsa_finish(fake_rsa);
     OSSL_PROVIDER_unload(deflt);
     OSSL_STORE_close(ctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 
@@ -328,9 +328,9 @@ static int test_pkey_delete(void)
         info = NULL;
     }
 
-    if (!TEST_ptr(pkey) || !TEST_int_eq(EVP_PKEY_is_a(pkey, "RSA"), 1))
+    if (!TEST_ptr(pkey) || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA"), 1))
         goto end;
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     pkey = NULL;
 
     if (!TEST_int_eq(OSSL_STORE_delete("fake_rsa:test", libctx, propq,
@@ -420,7 +420,7 @@ end:
     fake_rsa_finish(fake_rsa);
     OSSL_PROVIDER_unload(deflt);
     OSSL_STORE_close(ctx);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 
@@ -439,7 +439,7 @@ static int reset_ctx_providers(OSSL_LIB_CTX **ctx, OSSL_PROVIDER *providers[2], 
     if (!TEST_ptr(*ctx = OSSL_LIB_CTX_new())
         || !TEST_ptr(providers[DEFAULT_PROVIDER_IDX] = OSSL_PROVIDER_load(*ctx, "default"))
         || !TEST_ptr(providers[FAKE_RSA_PROVIDER_IDX] = fake_rsa_start(*ctx))
-        || !TEST_true(EVP_set_default_properties(*ctx, prop)))
+        || !TEST_true(OPENSSL_BOX_EVP_set_default_properties(*ctx, prop)))
         return 0;
     return 1;
 }
@@ -654,7 +654,7 @@ static int test_pkey_provider_decoder_props(void)
         || !TEST_int_gt((len_pub = i2d_PUBKEY(pkey, &encoded_pub)), 0)
         || !TEST_ptr(p8 = EVP_PKEY2PKCS8(pkey)))
         goto end;
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     pkey = NULL;
 
     for (i = 0; i < OSSL_NELEM(properties_test); i++) {
@@ -672,9 +672,9 @@ static int test_pkey_provider_decoder_props(void)
         if (!TEST_int_ge(BIO_seek(bio_priv, 0), 0)
             || !TEST_ptr(pkey = PEM_read_bio_PrivateKey_ex(bio_priv, NULL, NULL, NULL, my_libctx,
                                                            explicit_prop))
-            || !TEST_ptr_eq(EVP_PKEY_get0_provider(pkey), *curr_provider))
+            || !TEST_ptr_eq(OPENSSL_BOX_EVP_PKEY_get0_provider(pkey), *curr_provider))
             goto end;
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         pkey = NULL;
 
         /* Decoding a DER-encoded X509_PUBKEY uses the properties to select the right provider */
@@ -682,18 +682,18 @@ static int test_pkey_provider_decoder_props(void)
             goto end;
         p = encoded_pub;
         if (!TEST_ptr(pkey = d2i_PUBKEY_ex(NULL, &p, len_pub, my_libctx, explicit_prop))
-            || !TEST_ptr_eq(EVP_PKEY_get0_provider(pkey), *curr_provider))
+            || !TEST_ptr_eq(OPENSSL_BOX_EVP_PKEY_get0_provider(pkey), *curr_provider))
             goto end;
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         pkey = NULL;
 
         /* Decoding a PKCS8_PRIV_KEY_INFO uses the properties to select the right provider */
         if (!TEST_int_eq(reset_ctx_providers(&my_libctx, providers, libctx_prop), 1))
             goto end;
         if (!TEST_ptr(pkey = EVP_PKCS82PKEY_ex(p8, my_libctx, explicit_prop))
-            || !TEST_ptr_eq(EVP_PKEY_get0_provider(pkey), *curr_provider))
+            || !TEST_ptr_eq(OPENSSL_BOX_EVP_PKEY_get0_provider(pkey), *curr_provider))
             goto end;
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         pkey = NULL;
     }
 
@@ -703,7 +703,7 @@ end:
     PKCS8_PRIV_KEY_INFO_free(p8);
     BIO_free(bio_priv);
     OPENSSL_free(encoded_pub);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     OSSL_PROVIDER_unload(providers[DEFAULT_PROVIDER_IDX]);
     fake_rsa_finish(providers[FAKE_RSA_PROVIDER_IDX]);
     OSSL_LIB_CTX_free(my_libctx);

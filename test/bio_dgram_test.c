@@ -463,7 +463,7 @@ static int random_data(const uint32_t *key, uint8_t *data, size_t data_len, size
 
     counter[0] = (uint32_t)offset;
 
-    ctx = EVP_CIPHER_CTX_new();
+    ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ctx == NULL)
         goto err;
 
@@ -485,8 +485,8 @@ static int random_data(const uint32_t *key, uint8_t *data, size_t data_len, size
 
     ret = 1;
 err:
-    EVP_CIPHER_CTX_free(ctx);
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     return ret;
 }
 

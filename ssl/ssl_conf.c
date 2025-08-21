@@ -656,7 +656,7 @@ static int cmd_DHParameters(SSL_CONF_CTX *cctx, const char *value)
             dhpkey = NULL;
     }
  end:
-    EVP_PKEY_free(dhpkey);
+    OPENSSL_BOX_EVP_PKEY_free(dhpkey);
     BIO_free(in);
     return rv > 0;
 }

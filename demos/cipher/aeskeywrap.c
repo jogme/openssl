@@ -66,10 +66,10 @@ static int aes_wrap_encrypt(void)
     BIO_dump_fp(stdout, wrap_pt, sizeof(wrap_pt));
 
     /* Create a context for the encrypt operation */
-    if ((ctx = EVP_CIPHER_CTX_new()) == NULL)
+    if ((ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto err;
 
-    EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPHER_CTX_FLAG_WRAP_ALLOW);
+    OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPHER_CTX_FLAG_WRAP_ALLOW);
 
     /* Fetch the cipher implementation */
     if ((cipher = EVP_CIPHER_fetch(libctx, "AES-256-WRAP", propq)) == NULL)
@@ -105,8 +105,8 @@ err:
     if (!ret)
         ERR_print_errors_fp(stderr);
 
-    EVP_CIPHER_free(cipher);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
 
     return ret;
 }
@@ -123,10 +123,10 @@ static int aes_wrap_decrypt(void)
     printf("Ciphertext:\n");
     BIO_dump_fp(stdout, wrap_ct, sizeof(wrap_ct));
 
-    if ((ctx = EVP_CIPHER_CTX_new()) == NULL)
+    if ((ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto err;
 
-    EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPHER_CTX_FLAG_WRAP_ALLOW);
+    OPENSSL_BOX_EVP_CIPHER_CTX_set_flags(ctx, EVP_CIPHER_CTX_FLAG_WRAP_ALLOW);
 
     /* Fetch the cipher implementation */
     if ((cipher = EVP_CIPHER_fetch(libctx, "aes-256-wrap", propq)) == NULL)
@@ -162,8 +162,8 @@ err:
     if (!ret)
         ERR_print_errors_fp(stderr);
 
-    EVP_CIPHER_free(cipher);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
 
     return ret;
 }

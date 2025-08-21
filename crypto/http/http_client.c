@@ -1413,7 +1413,7 @@ static char *base64encode(const void *buf, size_t len)
     if (out == NULL)
         return 0;
 
-    i = EVP_EncodeBlock((unsigned char *)out, buf, (int)len);
+    i = OPENSSL_BOX_EVP_EncodeBlock((unsigned char *)out, buf, (int)len);
     if (!ossl_assert(0 <= i && (size_t)i <= outl)) {
         OPENSSL_free(out);
         return NULL;

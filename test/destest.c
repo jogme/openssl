@@ -730,10 +730,10 @@ static int test_des_key_wrap(int idx)
     /* Some sanity checks and cipher loading */
     if (!TEST_size_t_le(in_bytes, sizeof(in))
             || !TEST_ptr(cipher = EVP_CIPHER_fetch(NULL, "DES3-WRAP", NULL))
-            || !TEST_int_eq(bs = EVP_CIPHER_get_block_size(cipher), 8)
+            || !TEST_int_eq(bs = OPENSSL_BOX_EVP_CIPHER_get_block_size(cipher), 8)
             || !TEST_size_t_eq(bs * 3u, sizeof(key))
             || !TEST_true(in_bytes % bs == 0)
-            || !TEST_ptr(ctx = EVP_CIPHER_CTX_new()))
+            || !TEST_ptr(ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()))
         goto err;
 
     /* Create random data to end to end test */
@@ -777,8 +777,8 @@ static int test_des_key_wrap(int idx)
         goto err;
     res = 1;
  err:
-    EVP_CIPHER_free(cipher);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     return res;
 }
 
@@ -858,16 +858,16 @@ static int test_des_two_key(void)
     unsigned char key[16];
 
     if (!TEST_ptr(cipher = EVP_CIPHER_fetch(NULL, "DES-EDE-ECB", NULL))
-            || !TEST_ptr(ctx = EVP_CIPHER_CTX_new())
+            || !TEST_ptr(ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new())
             || !EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, 1)
-            || !EVP_CIPHER_CTX_set_key_length(ctx, sizeof(key))
-            || !EVP_CIPHER_CTX_rand_key(ctx, key))
+            || !OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length(ctx, sizeof(key))
+            || !OPENSSL_BOX_EVP_CIPHER_CTX_rand_key(ctx, key))
         goto err;
 
     res = 1;
  err:
-    EVP_CIPHER_free(cipher);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     return res;
 }
 

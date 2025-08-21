@@ -262,7 +262,7 @@ EVP_PKEY *get_dsa(int dsa_bits)
         || (params = OSSL_PARAM_BLD_to_param(tmpl)) == NULL)
         goto err;
 
-    if (EVP_PKEY_fromdata_init(pctx) <= 0
+    if (OPENSSL_BOX_EVP_PKEY_fromdata_init(pctx) <= 0
         || EVP_PKEY_fromdata(pctx, &pkey, EVP_PKEY_KEYPAIR,
                              params) <= 0)
         pkey = NULL;
@@ -274,6 +274,6 @@ err:
     BN_free(p);
     BN_free(q);
     BN_free(g);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     return pkey;
 }

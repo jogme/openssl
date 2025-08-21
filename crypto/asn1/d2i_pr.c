@@ -94,7 +94,7 @@ d2i_PrivateKey_decoder(int keytype, EVP_PKEY **a, const unsigned char **pp,
 
  err:
     if (ppkey != a)
-        EVP_PKEY_free(*ppkey);
+        OPENSSL_BOX_EVP_PKEY_free(*ppkey);
     return NULL;
 }
 
@@ -106,7 +106,7 @@ ossl_d2i_PrivateKey_legacy(int keytype, EVP_PKEY **a, const unsigned char **pp,
     const unsigned char *p = *pp;
 
     if (a == NULL || *a == NULL) {
-        if ((ret = EVP_PKEY_new()) == NULL) {
+        if ((ret = OPENSSL_BOX_EVP_PKEY_new()) == NULL) {
             ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
             return NULL;
         }
@@ -118,7 +118,7 @@ ossl_d2i_PrivateKey_legacy(int keytype, EVP_PKEY **a, const unsigned char **pp,
 #endif
     }
 
-    if (!EVP_PKEY_set_type(ret, keytype)) {
+    if (!OPENSSL_BOX_EVP_PKEY_set_type(ret, keytype)) {
         ERR_raise(ERR_LIB_ASN1, ASN1_R_UNKNOWN_PUBLIC_KEY_TYPE);
         goto err;
     }
@@ -141,10 +141,10 @@ ossl_d2i_PrivateKey_legacy(int keytype, EVP_PKEY **a, const unsigned char **pp,
                 ERR_clear_last_mark();
                 goto err;
             }
-            EVP_PKEY_free(ret);
+            OPENSSL_BOX_EVP_PKEY_free(ret);
             ret = tmp;
             ERR_pop_to_mark();
-            if (EVP_PKEY_type(keytype) != EVP_PKEY_get_base_id(ret))
+            if (OPENSSL_BOX_EVP_PKEY_type(keytype) != OPENSSL_BOX_EVP_PKEY_get_base_id(ret))
                 goto err;
         } else {
             ERR_clear_last_mark();
@@ -160,7 +160,7 @@ ossl_d2i_PrivateKey_legacy(int keytype, EVP_PKEY **a, const unsigned char **pp,
     return ret;
  err:
     if (a == NULL || *a != ret)
-        EVP_PKEY_free(ret);
+        OPENSSL_BOX_EVP_PKEY_free(ret);
     return NULL;
 }
 

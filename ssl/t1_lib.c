@@ -340,7 +340,7 @@ static int add_provider_groups(const OSSL_PARAM params[], void *data)
         /* We have successfully fetched the algorithm, we can use the group. */
         ctx->group_list_len++;
         ginf = NULL;
-        EVP_KEYMGMT_free(keymgmt);
+        OPENSSL_BOX_EVP_KEYMGMT_free(keymgmt);
     }
     ERR_pop_to_mark();
  err:
@@ -606,7 +606,7 @@ static int add_provider_sigalgs(const OSSL_PARAM params[], void *data)
          * assumption to make (in which case perhaps we should document this
          * behaviour)?
          */
-        if (EVP_KEYMGMT_get0_provider(keymgmt) == provider) {
+        if (OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt) == provider) {
             /*
              * We have a match - so we could use this signature;
              * Check proper object registration first, though.
@@ -635,7 +635,7 @@ static int add_provider_sigalgs(const OSSL_PARAM params[], void *data)
             ctx->sigalg_list_len++;
             sinf = NULL;
         }
-        EVP_KEYMGMT_free(keymgmt);
+        OPENSSL_BOX_EVP_KEYMGMT_free(keymgmt);
     }
     ERR_pop_to_mark();
  err:
@@ -1798,12 +1798,12 @@ static int tls1_check_pkey_comp(SSL_CONNECTION *s, EVP_PKEY *pkey)
     int point_conv;
 
     /* If not an EC key nothing to check */
-    if (!EVP_PKEY_is_a(pkey, "EC"))
+    if (!OPENSSL_BOX_EVP_PKEY_is_a(pkey, "EC"))
         return 1;
 
 
     /* Get required compression id */
-    point_conv = EVP_PKEY_get_ec_point_conv_form(pkey);
+    point_conv = OPENSSL_BOX_EVP_PKEY_get_ec_point_conv_form(pkey);
     if (point_conv == 0)
         return 0;
     if (point_conv == POINT_CONVERSION_UNCOMPRESSED) {
@@ -1815,7 +1815,7 @@ static int tls1_check_pkey_comp(SSL_CONNECTION *s, EVP_PKEY *pkey)
          */
         return 1;
     } else {
-        int field_type = EVP_PKEY_get_field_type(pkey);
+        int field_type = OPENSSL_BOX_EVP_PKEY_get_field_type(pkey);
 
         if (field_type == NID_X9_62_prime_field)
             comp_id = TLSEXT_ECPOINTFORMAT_ansiX962_compressed_prime;
@@ -1860,7 +1860,7 @@ static int tls1_check_cert_param(SSL_CONNECTION *s, X509 *x, int check_ee_md)
     if (pkey == NULL)
         return 0;
     /* If not EC nothing to do */
-    if (!EVP_PKEY_is_a(pkey, "EC"))
+    if (!OPENSSL_BOX_EVP_PKEY_is_a(pkey, "EC"))
         return 1;
     /* Check compression */
     if (!tls1_check_pkey_comp(s, pkey))
@@ -2186,7 +2186,7 @@ int ssl_setup_sigalgs(SSL_CTX *ctx)
     const SIGALG_LOOKUP *lu;
     SIGALG_LOOKUP *cache = NULL;
     uint16_t *tls12_sigalgs_list = NULL;
-    EVP_PKEY *tmpkey = EVP_PKEY_new();
+    EVP_PKEY *tmpkey = OPENSSL_BOX_EVP_PKEY_new();
     int istls;
     int ret = 0;
 
@@ -2227,7 +2227,7 @@ int ssl_setup_sigalgs(SSL_CTX *ctx)
             continue;
         }
 
-        if (!EVP_PKEY_set_type(tmpkey, lu->sig)) {
+        if (!OPENSSL_BOX_EVP_PKEY_set_type(tmpkey, lu->sig)) {
             cache[i].available = 0;
             continue;
         }
@@ -2235,7 +2235,7 @@ int ssl_setup_sigalgs(SSL_CTX *ctx)
         /* If unable to create pctx we assume the sig algorithm is unavailable */
         if (pctx == NULL)
             cache[i].available = 0;
-        EVP_PKEY_CTX_free(pctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     }
 
     /* Now complete cache and tls12_sigalgs list with provider sig information */
@@ -2299,7 +2299,7 @@ int ssl_setup_sigalgs(SSL_CTX *ctx)
  err:
     OPENSSL_free(cache);
     OPENSSL_free(tls12_sigalgs_list);
-    EVP_PKEY_free(tmpkey);
+    OPENSSL_BOX_EVP_PKEY_free(tmpkey);
     return ret;
 }
 
@@ -2309,7 +2309,7 @@ char *SSL_get1_builtin_sigalgs(OSSL_LIB_CTX *libctx)
 {
     size_t i, maxretlen = SIGLEN_BUF_INCREMENT;
     const SIGALG_LOOKUP *lu;
-    EVP_PKEY *tmpkey = EVP_PKEY_new();
+    EVP_PKEY *tmpkey = OPENSSL_BOX_EVP_PKEY_new();
     char *retval = OPENSSL_malloc(maxretlen);
 
     if (retval == NULL)
@@ -2334,10 +2334,10 @@ char *SSL_get1_builtin_sigalgs(OSSL_LIB_CTX *libctx)
                 ERR_pop_to_mark();
                 continue;
             }
-            EVP_MD_free(hash);
+            OPENSSL_BOX_EVP_MD_free(hash);
         }
 
-        if (!EVP_PKEY_set_type(tmpkey, lu->sig)) {
+        if (!OPENSSL_BOX_EVP_PKEY_set_type(tmpkey, lu->sig)) {
             enabled = 0;
             ERR_pop_to_mark();
             continue;
@@ -2347,7 +2347,7 @@ char *SSL_get1_builtin_sigalgs(OSSL_LIB_CTX *libctx)
         if (pctx == NULL)
             enabled = 0;
         ERR_pop_to_mark();
-        EVP_PKEY_CTX_free(pctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
 
         if (enabled) {
             const char *sa = lu->name;
@@ -2374,7 +2374,7 @@ char *SSL_get1_builtin_sigalgs(OSSL_LIB_CTX *libctx)
         }
     }
 
-    EVP_PKEY_free(tmpkey);
+    OPENSSL_BOX_EVP_PKEY_free(tmpkey);
     return retval;
 }
 
@@ -2422,7 +2422,7 @@ int tls1_lookup_md(SSL_CTX *ctx, const SIGALG_LOOKUP *lu, const EVP_MD **pmd)
  * SHA512 has a hash length of 64 bytes, which is incompatible
  * with a 128 byte (1024 bit) key.
  */
-#define RSA_PSS_MINIMUM_KEY_SIZE(md) (2 * EVP_MD_get_size(md) + 2)
+#define RSA_PSS_MINIMUM_KEY_SIZE(md) (2 * OPENSSL_BOX_EVP_MD_get_size(md) + 2)
 static int rsa_pss_check_min_key_size(SSL_CTX *ctx, const EVP_PKEY *pkey,
                                       const SIGALG_LOOKUP *lu)
 {
@@ -2432,9 +2432,9 @@ static int rsa_pss_check_min_key_size(SSL_CTX *ctx, const EVP_PKEY *pkey,
         return 0;
     if (!tls1_lookup_md(ctx, lu, &md) || md == NULL)
         return 0;
-    if (EVP_MD_get_size(md) <= 0)
+    if (OPENSSL_BOX_EVP_MD_get_size(md) <= 0)
         return 0;
-    if (EVP_PKEY_get_size(pkey) < RSA_PSS_MINIMUM_KEY_SIZE(md))
+    if (OPENSSL_BOX_EVP_PKEY_get_size(pkey) < RSA_PSS_MINIMUM_KEY_SIZE(md))
         return 0;
     return 1;
 }
@@ -2615,10 +2615,10 @@ static int sigalg_security_bits(SSL_CTX *ctx, const SIGALG_LOOKUP *lu)
         return 0;
     if (md != NULL)
     {
-        int md_type = EVP_MD_get_type(md);
+        int md_type = OPENSSL_BOX_EVP_MD_get_type(md);
 
         /* Security bits: half digest bits */
-        secbits = EVP_MD_get_size(md) * 4;
+        secbits = OPENSSL_BOX_EVP_MD_get_size(md) * 4;
         if (secbits <= 0)
             return 0;
         /*
@@ -2707,7 +2707,7 @@ int tls12_check_peer_sigalg(SSL_CONNECTION *s, uint16_t sig, EVP_PKEY *pkey)
     const SIGALG_LOOKUP *lu;
     int secbits = 0;
 
-    pkeyid = EVP_PKEY_get_id(pkey);
+    pkeyid = OPENSSL_BOX_EVP_PKEY_get_id(pkey);
 
     if (SSL_CONNECTION_IS_TLS13(s)) {
         /* Disallow DSA for TLS 1.3 */
@@ -2750,7 +2750,7 @@ int tls12_check_peer_sigalg(SSL_CONNECTION *s, uint16_t sig, EVP_PKEY *pkey)
     }
     /* Check the sigalg is consistent with the key OID */
     if (!ssl_cert_lookup_by_nid(
-                 (pkeyid == EVP_PKEY_RSA_PSS) ? EVP_PKEY_get_id(pkey) : pkeyid,
+                 (pkeyid == EVP_PKEY_RSA_PSS) ? OPENSSL_BOX_EVP_PKEY_get_id(pkey) : pkeyid,
                  &cidx, SSL_CONNECTION_GET_CTX(s))
             || lu->sig_idx != (int)cidx) {
         SSLfatal(s, SSL_AD_ILLEGAL_PARAMETER, SSL_R_WRONG_SIGNATURE_TYPE);
@@ -2821,7 +2821,7 @@ int tls12_check_peer_sigalg(SSL_CONNECTION *s, uint16_t sig, EVP_PKEY *pkey)
     secbits = sigalg_security_bits(SSL_CONNECTION_GET_CTX(s), lu);
     if (secbits == 0 ||
         !ssl_security(s, SSL_SECOP_SIGALG_CHECK, secbits,
-                      md != NULL ? EVP_MD_get_type(md) : NID_undef,
+                      md != NULL ? OPENSSL_BOX_EVP_MD_get_type(md) : NID_undef,
                       (void *)sigalgstr)) {
         SSLfatal(s, SSL_AD_HANDSHAKE_FAILURE, SSL_R_WRONG_SIGNATURE_TYPE);
         return 0;
@@ -3110,7 +3110,7 @@ SSL_TICKET_STATUS tls_decrypt_ticket(SSL_CONNECTION *s,
         ret = SSL_TICKET_FATAL_ERR_MALLOC;
         goto end;
     }
-    ctx = EVP_CIPHER_CTX_new();
+    ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ctx == NULL) {
         ret = SSL_TICKET_FATAL_ERR_MALLOC;
         goto end;
@@ -3167,11 +3167,11 @@ SSL_TICKET_STATUS tls_decrypt_ticket(SSL_CONNECTION *s,
             || EVP_DecryptInit_ex(ctx, aes256cbc, NULL,
                                   tctx->ext.secure->tick_aes_key,
                                   etick + TLSEXT_KEYNAME_LENGTH) <= 0) {
-            EVP_CIPHER_free(aes256cbc);
+            OPENSSL_BOX_EVP_CIPHER_free(aes256cbc);
             ret = SSL_TICKET_FATAL_ERR_OTHER;
             goto end;
         }
-        EVP_CIPHER_free(aes256cbc);
+        OPENSSL_BOX_EVP_CIPHER_free(aes256cbc);
         if (SSL_CONNECTION_IS_TLS13(s))
             renew_ticket = 1;
     }
@@ -3185,7 +3185,7 @@ SSL_TICKET_STATUS tls_decrypt_ticket(SSL_CONNECTION *s,
         goto end;
     }
 
-    ivlen = EVP_CIPHER_CTX_get_iv_length(ctx);
+    ivlen = OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(ctx);
     if (ivlen < 0) {
         ret = SSL_TICKET_FATAL_ERR_OTHER;
         goto end;
@@ -3261,7 +3261,7 @@ SSL_TICKET_STATUS tls_decrypt_ticket(SSL_CONNECTION *s,
     ret = SSL_TICKET_NO_DECRYPT;
 
  end:
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
     ssl_hmac_free(hctx);
 
     /*
@@ -4039,7 +4039,7 @@ int tls1_check_chain(SSL_CONNECTION *s, X509 *x, EVP_PKEY *pk,
         chain = cpk->chain;
         strict_mode = c->cert_flags & SSL_CERT_FLAGS_CHECK_TLS_STRICT;
         if (tls12_rpk_and_privkey(s, idx)) {
-            if (EVP_PKEY_is_a(pk, "EC") && !tls1_check_pkey_comp(s, pk))
+            if (OPENSSL_BOX_EVP_PKEY_is_a(pk, "EC") && !tls1_check_pkey_comp(s, pk))
                 return 0;
             *pvalid = rv = CERT_PKEY_RPK;
             return rv;
@@ -4201,11 +4201,11 @@ int tls1_check_chain(SSL_CONNECTION *s, X509 *x, EVP_PKEY *pk,
         STACK_OF(X509_NAME) *ca_dn;
         int check_type = 0;
 
-        if (EVP_PKEY_is_a(pk, "RSA"))
+        if (OPENSSL_BOX_EVP_PKEY_is_a(pk, "RSA"))
             check_type = TLS_CT_RSA_SIGN;
-        else if (EVP_PKEY_is_a(pk, "DSA"))
+        else if (OPENSSL_BOX_EVP_PKEY_is_a(pk, "DSA"))
             check_type = TLS_CT_DSS_SIGN;
-        else if (EVP_PKEY_is_a(pk, "EC"))
+        else if (OPENSSL_BOX_EVP_PKEY_is_a(pk, "EC"))
             check_type = TLS_CT_ECDSA_SIGN;
 
         if (check_type) {
@@ -4315,7 +4315,7 @@ EVP_PKEY *ssl_get_auto_dh(SSL_CONNECTION *s)
         } else {
             if (s->s3.tmp.cert == NULL)
                 return NULL;
-            dh_secbits = EVP_PKEY_get_security_bits(s->s3.tmp.cert->privatekey);
+            dh_secbits = OPENSSL_BOX_EVP_PKEY_get_security_bits(s->s3.tmp.cert->privatekey);
         }
     }
 
@@ -4340,7 +4340,7 @@ EVP_PKEY *ssl_get_auto_dh(SSL_CONNECTION *s)
 
     pctx = EVP_PKEY_CTX_new_from_name(sctx->libctx, "DH", sctx->propq);
     if (pctx == NULL
-            || EVP_PKEY_fromdata_init(pctx) != 1)
+            || OPENSSL_BOX_EVP_PKEY_fromdata_init(pctx) != 1)
         goto err;
 
     tmpl = OSSL_PARAM_BLD_new();
@@ -4357,7 +4357,7 @@ EVP_PKEY *ssl_get_auto_dh(SSL_CONNECTION *s)
 err:
     OSSL_PARAM_free(params);
     OSSL_PARAM_BLD_free(tmpl);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     BN_free(p);
     return dhp;
 }
@@ -4375,7 +4375,7 @@ static int ssl_security_cert_key(SSL_CONNECTION *s, SSL_CTX *ctx, X509 *x,
          * reject keys which omit parameters but this only affects DSA and
          * omission of parameters is never (?) done in practice.
          */
-        secbits = EVP_PKEY_get_security_bits(pkey);
+        secbits = OPENSSL_BOX_EVP_PKEY_get_security_bits(pkey);
     }
     if (s != NULL)
         return ssl_security(s, op, secbits, 0, x);
@@ -4839,13 +4839,13 @@ SSL_HMAC *ssl_hmac_new(const SSL_CTX *ctx)
     }
 #endif
     mac = EVP_MAC_fetch(ctx->libctx, "HMAC", ctx->propq);
-    if (mac == NULL || (ret->ctx = EVP_MAC_CTX_new(mac)) == NULL)
+    if (mac == NULL || (ret->ctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac)) == NULL)
         goto err;
-    EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_MAC_free(mac);
     return ret;
  err:
-    EVP_MAC_CTX_free(ret->ctx);
-    EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ret->ctx);
+    OPENSSL_BOX_EVP_MAC_free(mac);
     OPENSSL_free(ret);
     return NULL;
 }
@@ -4853,7 +4853,7 @@ SSL_HMAC *ssl_hmac_new(const SSL_CTX *ctx)
 void ssl_hmac_free(SSL_HMAC *ctx)
 {
     if (ctx != NULL) {
-        EVP_MAC_CTX_free(ctx->ctx);
+        OPENSSL_BOX_EVP_MAC_CTX_free(ctx->ctx);
 #ifndef OPENSSL_NO_DEPRECATED_3_0
         ssl_hmac_old_free(ctx);
 #endif
@@ -4886,7 +4886,7 @@ int ssl_hmac_init(SSL_HMAC *ctx, void *key, size_t len, char *md)
 int ssl_hmac_update(SSL_HMAC *ctx, const unsigned char *data, size_t len)
 {
     if (ctx->ctx != NULL)
-        return EVP_MAC_update(ctx->ctx, data, len);
+        return OPENSSL_BOX_EVP_MAC_update(ctx->ctx, data, len);
 #ifndef OPENSSL_NO_DEPRECATED_3_0
     if (ctx->old_ctx != NULL)
         return ssl_hmac_old_update(ctx, data, len);
@@ -4909,7 +4909,7 @@ int ssl_hmac_final(SSL_HMAC *ctx, unsigned char *md, size_t *len,
 size_t ssl_hmac_size(const SSL_HMAC *ctx)
 {
     if (ctx->ctx != NULL)
-        return EVP_MAC_CTX_get_mac_size(ctx->ctx);
+        return OPENSSL_BOX_EVP_MAC_CTX_get_mac_size(ctx->ctx);
 #ifndef OPENSSL_NO_DEPRECATED_3_0
     if (ctx->old_ctx != NULL)
         return ssl_hmac_old_size(ctx);
@@ -4931,13 +4931,13 @@ __owur int tls13_set_encoded_pub_key(EVP_PKEY *pkey,
                                      const unsigned char *enckey,
                                      size_t enckeylen)
 {
-    if (EVP_PKEY_is_a(pkey, "DH")) {
-        int bits = EVP_PKEY_get_bits(pkey);
+    if (OPENSSL_BOX_EVP_PKEY_is_a(pkey, "DH")) {
+        int bits = OPENSSL_BOX_EVP_PKEY_get_bits(pkey);
 
         if (bits <= 0 || enckeylen != (size_t)bits / 8)
             /* the encoded key must be padded to the length of the p */
             return 0;
-    } else if (EVP_PKEY_is_a(pkey, "EC")) {
+    } else if (OPENSSL_BOX_EVP_PKEY_is_a(pkey, "EC")) {
         if (enckeylen < 3 /* point format and at least 1 byte for x and y */
             || enckey[0] != 0x04)
             return 0;

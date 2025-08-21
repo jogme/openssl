@@ -541,7 +541,7 @@ This example demonstrates a minimal round-trip using HPKE.
         printf(ok ? "All Good!\n" : "Error!\n");
         OSSL_HPKE_CTX_free(rctx);
         OSSL_HPKE_CTX_free(sctx);
-        EVP_PKEY_free(priv);
+        OPENSSL_BOX_EVP_PKEY_free(priv);
         return 0;
     }
 

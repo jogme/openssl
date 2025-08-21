@@ -22,14 +22,14 @@ static int test_is_fips_enabled(void)
 
     /*
      * Check we're in FIPS mode when we're supposed to be. We do this early to
-     * confirm that EVP_default_properties_is_fips_enabled() works even before
+     * confirm that OPENSSL_BOX_EVP_default_properties_is_fips_enabled() works even before
      * other function calls have auto-loaded the config file.
      */
-    is_fips_enabled = EVP_default_properties_is_fips_enabled(NULL);
+    is_fips_enabled = OPENSSL_BOX_EVP_default_properties_is_fips_enabled(NULL);
     is_fips_loaded = OSSL_PROVIDER_available(NULL, "fips");
 
     /*
-     * Check we're in an expected state. EVP_default_properties_is_fips_enabled
+     * Check we're in an expected state. OPENSSL_BOX_EVP_default_properties_is_fips_enabled
      * can return true even if the FIPS provider isn't loaded - it is only based
      * on the default properties. However we only set those properties if also
      * loading the FIPS provider.
@@ -45,23 +45,23 @@ static int test_is_fips_enabled(void)
     sha256 = EVP_MD_fetch(NULL, "SHA2-256", NULL);
     if (bad_fips) {
         if (!TEST_ptr_null(sha256)) {
-            EVP_MD_free(sha256);
+            OPENSSL_BOX_EVP_MD_free(sha256);
             return 0;
         }
     } else {
         if (!TEST_ptr(sha256))
             return 0;
         if (is_fips
-            && !TEST_str_eq(OSSL_PROVIDER_get0_name(EVP_MD_get0_provider(sha256)),
+            && !TEST_str_eq(OSSL_PROVIDER_get0_name(OPENSSL_BOX_EVP_MD_get0_provider(sha256)),
                             "fips")) {
-            EVP_MD_free(sha256);
+            OPENSSL_BOX_EVP_MD_free(sha256);
             return 0;
         }
-        EVP_MD_free(sha256);
+        OPENSSL_BOX_EVP_MD_free(sha256);
     }
 
     /* State should still be consistent */
-    is_fips_enabled = EVP_default_properties_is_fips_enabled(NULL);
+    is_fips_enabled = OPENSSL_BOX_EVP_default_properties_is_fips_enabled(NULL);
     if (!TEST_int_eq(is_fips || bad_fips, is_fips_enabled))
         return 0;
 

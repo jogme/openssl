@@ -119,7 +119,7 @@ void ssl_hmac_old_free(SSL_HMAC *ctx)
 
 int ssl_hmac_old_init(SSL_HMAC *ctx, void *key, size_t len, char *md)
 {
-    return HMAC_Init_ex(ctx->old_ctx, key, (int)len, EVP_get_digestbyname(md), NULL);
+    return HMAC_Init_ex(ctx->old_ctx, key, (int)len, OPENSSL_BOX_EVP_get_digestbyname(md), NULL);
 }
 
 int ssl_hmac_old_update(SSL_HMAC *ctx, const unsigned char *data, size_t len)
@@ -158,9 +158,9 @@ EVP_PKEY *ssl_dh_to_pkey(DH *dh)
 
     if (dh == NULL)
         return NULL;
-    ret = EVP_PKEY_new();
-    if (EVP_PKEY_set1_DH(ret, dh) <= 0) {
-        EVP_PKEY_free(ret);
+    ret = OPENSSL_BOX_EVP_PKEY_new();
+    if (OPENSSL_BOX_EVP_PKEY_set1_DH(ret, dh) <= 0) {
+        OPENSSL_BOX_EVP_PKEY_free(ret);
         return NULL;
     }
     return ret;

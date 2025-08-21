@@ -67,17 +67,17 @@ static int do_hmac(PROV_DRBG_HMAC *hmac, unsigned char inbyte,
 
     if (!EVP_MAC_init(ctx, hmac->K, hmac->blocklen, NULL)
             /* K = HMAC(K, V || inbyte || [in1] || [in2] || [in3]) */
-            || !EVP_MAC_update(ctx, hmac->V, hmac->blocklen)
-            || !EVP_MAC_update(ctx, &inbyte, 1)
-            || !(in1 == NULL || in1len == 0 || EVP_MAC_update(ctx, in1, in1len))
-            || !(in2 == NULL || in2len == 0 || EVP_MAC_update(ctx, in2, in2len))
-            || !(in3 == NULL || in3len == 0 || EVP_MAC_update(ctx, in3, in3len))
+            || !OPENSSL_BOX_EVP_MAC_update(ctx, hmac->V, hmac->blocklen)
+            || !OPENSSL_BOX_EVP_MAC_update(ctx, &inbyte, 1)
+            || !(in1 == NULL || in1len == 0 || OPENSSL_BOX_EVP_MAC_update(ctx, in1, in1len))
+            || !(in2 == NULL || in2len == 0 || OPENSSL_BOX_EVP_MAC_update(ctx, in2, in2len))
+            || !(in3 == NULL || in3len == 0 || OPENSSL_BOX_EVP_MAC_update(ctx, in3, in3len))
             || !EVP_MAC_final(ctx, hmac->K, NULL, sizeof(hmac->K)))
         return 0;
 
    /* V = HMAC(K, V) */
     return EVP_MAC_init(ctx, hmac->K, hmac->blocklen, NULL)
-           && EVP_MAC_update(ctx, hmac->V, hmac->blocklen)
+           && OPENSSL_BOX_EVP_MAC_update(ctx, hmac->V, hmac->blocklen)
            && EVP_MAC_final(ctx, hmac->V, NULL, sizeof(hmac->V));
 }
 
@@ -237,7 +237,7 @@ int ossl_drbg_hmac_generate(PROV_DRBG_HMAC *hmac,
      */
     for (;;) {
         if (!EVP_MAC_init(ctx, hmac->K, hmac->blocklen, NULL)
-            || !EVP_MAC_update(ctx, temp, hmac->blocklen))
+            || !OPENSSL_BOX_EVP_MAC_update(ctx, temp, hmac->blocklen))
             return 0;
 
         if (outlen > hmac->blocklen) {
@@ -359,7 +359,7 @@ static void drbg_hmac_free(void *vdrbg)
     PROV_DRBG_HMAC *hmac;
 
     if (drbg != NULL && (hmac = (PROV_DRBG_HMAC *)drbg->data) != NULL) {
-        EVP_MAC_CTX_free(hmac->ctx);
+        OPENSSL_BOX_EVP_MAC_CTX_free(hmac->ctx);
         ossl_prov_digest_reset(&hmac->digest);
         OPENSSL_secure_clear_free(hmac, sizeof(*hmac));
     }
@@ -413,7 +413,7 @@ static int drbg_hmac_get_ctx_params(void *vdrbg, OSSL_PARAM params[])
     if (p.mac != NULL) {
         if (hmac->ctx == NULL)
             goto err;
-        name = EVP_MAC_get0_name(EVP_MAC_CTX_get0_mac(hmac->ctx));
+        name = OPENSSL_BOX_EVP_MAC_get0_name(OPENSSL_BOX_EVP_MAC_CTX_get0_mac(hmac->ctx));
         if (!OSSL_PARAM_set_utf8_string(p.mac, name))
             goto err;
     }
@@ -421,7 +421,7 @@ static int drbg_hmac_get_ctx_params(void *vdrbg, OSSL_PARAM params[])
     if (p.digest != NULL) {
         md = ossl_prov_digest_md(&hmac->digest);
         if (md == NULL
-                || !OSSL_PARAM_set_utf8_string(p.digest, EVP_MD_get0_name(md)))
+                || !OSSL_PARAM_set_utf8_string(p.digest, OPENSSL_BOX_EVP_MD_get0_name(md)))
             goto err;
     }
 
@@ -463,7 +463,7 @@ static int drbg_fetch_algs_from_prov(const struct drbg_set_ctx_params_st *p,
 
         md = evp_digest_fetch_from_prov(prov, (const char *)p->digest->data, NULL);
         if (md) {
-            EVP_MD_free(*digest);
+            OPENSSL_BOX_EVP_MD_free(*digest);
             *digest = md;
         } else {
             goto done;
@@ -478,14 +478,14 @@ static int drbg_fetch_algs_from_prov(const struct drbg_set_ctx_params_st *p,
     if (p->mac->data_type != OSSL_PARAM_UTF8_STRING)
         goto done;
 
-    EVP_MAC_CTX_free(*macctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(*macctx);
     *macctx = NULL;
 
     mac = evp_mac_fetch_from_prov(prov, (const char *)p->mac->data, NULL);
     if (mac) {
-        *macctx = EVP_MAC_CTX_new(mac);
+        *macctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac);
         /* The context holds on to the MAC */
-        EVP_MAC_free(mac);
+        OPENSSL_BOX_EVP_MAC_free(mac);
         ret = 1;
     }
 
@@ -531,7 +531,7 @@ static int drbg_hmac_set_ctx_params_locked
 
     if (md != NULL && hmac->ctx != NULL) {
         /* These are taken from SP 800-90 10.1 Table 2 */
-        md_size = EVP_MD_get_size(md);
+        md_size = OPENSSL_BOX_EVP_MD_get_size(md);
         if (md_size <= 0)
             return 0;
         hmac->blocklen = (size_t)md_size;

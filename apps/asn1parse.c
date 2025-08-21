@@ -202,7 +202,7 @@ int asn1parse_main(int argc, char **argv)
             if (informat == FORMAT_BASE64) {
                 BIO *tmp;
 
-                if ((b64 = BIO_new(BIO_f_base64())) == NULL)
+                if ((b64 = BIO_new(OPENSSL_BOX_BIO_f_base64())) == NULL)
                     goto end;
                 BIO_push(b64, in);
                 tmp = in;

@@ -85,7 +85,7 @@ static int aes_gcm_encrypt(void)
     BIO_dump_fp(stdout, gcm_pt, sizeof(gcm_pt));
 
     /* Create a context for the encrypt operation */
-    if ((ctx = EVP_CIPHER_CTX_new()) == NULL)
+    if ((ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto err;
 
     /* Fetch the cipher implementation */
@@ -126,7 +126,7 @@ static int aes_gcm_encrypt(void)
     params[0] = OSSL_PARAM_construct_octet_string(OSSL_CIPHER_PARAM_AEAD_TAG,
                                                   outtag, 16);
 
-    if (!EVP_CIPHER_CTX_get_params(ctx, params))
+    if (!OPENSSL_BOX_EVP_CIPHER_CTX_get_params(ctx, params))
         goto err;
 
     /* Output tag */
@@ -138,8 +138,8 @@ err:
     if (!ret)
         ERR_print_errors_fp(stderr);
 
-    EVP_CIPHER_free(cipher);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
 
     return ret;
 }
@@ -160,7 +160,7 @@ static int aes_gcm_decrypt(void)
     printf("Ciphertext:\n");
     BIO_dump_fp(stdout, gcm_ct, sizeof(gcm_ct));
 
-    if ((ctx = EVP_CIPHER_CTX_new()) == NULL)
+    if ((ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto err;
 
     /* Fetch the cipher implementation */
@@ -194,7 +194,7 @@ static int aes_gcm_decrypt(void)
     params[0] = OSSL_PARAM_construct_octet_string(OSSL_CIPHER_PARAM_AEAD_TAG,
                                                   (void*)gcm_tag, sizeof(gcm_tag));
 
-    if (!EVP_CIPHER_CTX_set_params(ctx, params))
+    if (!OPENSSL_BOX_EVP_CIPHER_CTX_set_params(ctx, params))
         goto err;
 
     /* Finalise: note get no output for GCM */
@@ -210,8 +210,8 @@ err:
     if (!ret)
         ERR_print_errors_fp(stderr);
 
-    EVP_CIPHER_free(cipher);
-    EVP_CIPHER_CTX_free(ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx);
 
     return ret;
 }

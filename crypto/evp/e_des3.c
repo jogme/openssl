@@ -73,7 +73,7 @@ static int des_ede_ecb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         DES_ecb3_encrypt((const_DES_cblock *)(in + i),
                          (DES_cblock *)(out + i),
                          &data(ctx)->ks1, &data(ctx)->ks2,
-                         &data(ctx)->ks3, EVP_CIPHER_CTX_is_encrypting(ctx));
+                         &data(ctx)->ks3, OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));
     return 1;
 }
 
@@ -81,25 +81,25 @@ static int des_ede_ofb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                               const unsigned char *in, size_t inl)
 {
     while (inl >= EVP_MAXCHUNK) {
-        int num = EVP_CIPHER_CTX_get_num(ctx);
+        int num = OPENSSL_BOX_EVP_CIPHER_CTX_get_num(ctx);
         DES_ede3_ofb64_encrypt(in, out, (long)EVP_MAXCHUNK,
                                &data(ctx)->ks1, &data(ctx)->ks2,
                                &data(ctx)->ks3,
                                (DES_cblock *)ctx->iv,
                                &num);
-        EVP_CIPHER_CTX_set_num(ctx, num);
+        OPENSSL_BOX_EVP_CIPHER_CTX_set_num(ctx, num);
         inl -= EVP_MAXCHUNK;
         in += EVP_MAXCHUNK;
         out += EVP_MAXCHUNK;
     }
     if (inl) {
-        int num = EVP_CIPHER_CTX_get_num(ctx);
+        int num = OPENSSL_BOX_EVP_CIPHER_CTX_get_num(ctx);
         DES_ede3_ofb64_encrypt(in, out, (long)inl,
                                &data(ctx)->ks1, &data(ctx)->ks2,
                                &data(ctx)->ks3,
                                (DES_cblock *)ctx->iv,
                                &num);
-        EVP_CIPHER_CTX_set_num(ctx, num);
+        OPENSSL_BOX_EVP_CIPHER_CTX_set_num(ctx, num);
     }
     return 1;
 }
@@ -119,7 +119,7 @@ static int des_ede_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         DES_ede3_cbc_encrypt(in, out, (long)EVP_MAXCHUNK,
                              &dat->ks1, &dat->ks2, &dat->ks3,
                              (DES_cblock *)ctx->iv,
-                             EVP_CIPHER_CTX_is_encrypting(ctx));
+                             OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));
         inl -= EVP_MAXCHUNK;
         in += EVP_MAXCHUNK;
         out += EVP_MAXCHUNK;
@@ -128,7 +128,7 @@ static int des_ede_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         DES_ede3_cbc_encrypt(in, out, (long)inl,
                              &dat->ks1, &dat->ks2, &dat->ks3,
                              (DES_cblock *)ctx->iv,
-                             EVP_CIPHER_CTX_is_encrypting(ctx));
+                             OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));
     return 1;
 }
 
@@ -136,23 +136,23 @@ static int des_ede_cfb64_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                                 const unsigned char *in, size_t inl)
 {
     while (inl >= EVP_MAXCHUNK) {
-        int num = EVP_CIPHER_CTX_get_num(ctx);
+        int num = OPENSSL_BOX_EVP_CIPHER_CTX_get_num(ctx);
         DES_ede3_cfb64_encrypt(in, out, (long)EVP_MAXCHUNK,
                                &data(ctx)->ks1, &data(ctx)->ks2,
                                &data(ctx)->ks3, (DES_cblock *)ctx->iv,
-                               &num, EVP_CIPHER_CTX_is_encrypting(ctx));
-        EVP_CIPHER_CTX_set_num(ctx, num);
+                               &num, OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));
+        OPENSSL_BOX_EVP_CIPHER_CTX_set_num(ctx, num);
         inl -= EVP_MAXCHUNK;
         in += EVP_MAXCHUNK;
         out += EVP_MAXCHUNK;
     }
     if (inl) {
-        int num = EVP_CIPHER_CTX_get_num(ctx);
+        int num = OPENSSL_BOX_EVP_CIPHER_CTX_get_num(ctx);
         DES_ede3_cfb64_encrypt(in, out, (long)inl,
                                &data(ctx)->ks1, &data(ctx)->ks2,
                                &data(ctx)->ks3, (DES_cblock *)ctx->iv,
-                               &num, EVP_CIPHER_CTX_is_encrypting(ctx));
-        EVP_CIPHER_CTX_set_num(ctx, num);
+                               &num, OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));
+        OPENSSL_BOX_EVP_CIPHER_CTX_set_num(ctx, num);
     }
     return 1;
 }
@@ -168,14 +168,14 @@ static int des_ede3_cfb1_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
     unsigned char c[1];
     unsigned char d[1] = { 0 }; /* Appease Coverity */
 
-    if (!EVP_CIPHER_CTX_test_flags(ctx, EVP_CIPH_FLAG_LENGTH_BITS))
+    if (!OPENSSL_BOX_EVP_CIPHER_CTX_test_flags(ctx, EVP_CIPH_FLAG_LENGTH_BITS))
             inl *= 8;
     for (n = 0; n < inl; ++n) {
         c[0] = (in[n / 8] & (1 << (7 - n % 8))) ? 0x80 : 0;
         DES_ede3_cfb_encrypt(c, d, 1, 1,
                              &data(ctx)->ks1, &data(ctx)->ks2,
                              &data(ctx)->ks3, (DES_cblock *)ctx->iv,
-                             EVP_CIPHER_CTX_is_encrypting(ctx));
+                             OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));
         out[n / 8] = (out[n / 8] & ~(0x80 >> (unsigned int)(n % 8)))
             | ((d[0] & 0x80) >> (unsigned int)(n % 8));
     }
@@ -190,7 +190,7 @@ static int des_ede3_cfb8_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         DES_ede3_cfb_encrypt(in, out, 8, (long)EVP_MAXCHUNK,
                              &data(ctx)->ks1, &data(ctx)->ks2,
                              &data(ctx)->ks3, (DES_cblock *)ctx->iv,
-                             EVP_CIPHER_CTX_is_encrypting(ctx));
+                             OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));
         inl -= EVP_MAXCHUNK;
         in += EVP_MAXCHUNK;
         out += EVP_MAXCHUNK;
@@ -199,7 +199,7 @@ static int des_ede3_cfb8_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         DES_ede3_cfb_encrypt(in, out, 8, (long)inl,
                              &data(ctx)->ks1, &data(ctx)->ks2,
                              &data(ctx)->ks3, (DES_cblock *)ctx->iv,
-                             EVP_CIPHER_CTX_is_encrypting(ctx));
+                             OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));
     return 1;
 }
 
@@ -284,7 +284,7 @@ static int des3_ctrl(EVP_CIPHER_CTX *ctx, int type, int arg, void *ptr)
 
     switch (type) {
     case EVP_CTRL_RAND_KEY:
-        kl = EVP_CIPHER_CTX_get_key_length(ctx);
+        kl = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx);
         if (kl < 0 || RAND_priv_bytes(ptr, kl) <= 0)
             return 0;
         DES_set_odd_parity(deskey);
@@ -299,12 +299,12 @@ static int des3_ctrl(EVP_CIPHER_CTX *ctx, int type, int arg, void *ptr)
     }
 }
 
-const EVP_CIPHER *EVP_des_ede(void)
+const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede(void)
 {
     return &des_ede_ecb;
 }
 
-const EVP_CIPHER *EVP_des_ede3(void)
+const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede3(void)
 {
     return &des_ede3_ecb;
 }
@@ -402,7 +402,7 @@ static int des_ede3_wrap_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         return 0;
     }
 
-    if (EVP_CIPHER_CTX_is_encrypting(ctx))
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx))
         return des_ede3_wrap(ctx, out, in, inl);
     else
         return des_ede3_unwrap(ctx, out, in, inl);
@@ -420,7 +420,7 @@ static const EVP_CIPHER des3_wrap = {
     NULL, NULL, NULL, NULL
 };
 
-const EVP_CIPHER *EVP_des_ede3_wrap(void)
+const EVP_CIPHER *OPENSSL_BOX_EVP_des_ede3_wrap(void)
 {
     return &des3_wrap;
 }

@@ -20,10 +20,10 @@ static int test_provider(OSSL_LIB_CTX *ctx)
 
     ok = TEST_true(OSSL_PROVIDER_available(ctx, "default"))
         && TEST_ptr(rsameth = EVP_KEYMGMT_fetch(ctx, "RSA", NULL))
-        && TEST_ptr(prov = EVP_KEYMGMT_get0_provider(rsameth))
+        && TEST_ptr(prov = OPENSSL_BOX_EVP_KEYMGMT_get0_provider(rsameth))
         && TEST_str_eq(OSSL_PROVIDER_get0_name(prov), "default");
 
-    EVP_KEYMGMT_free(rsameth);
+    OPENSSL_BOX_EVP_KEYMGMT_free(rsameth);
     return ok;
 }
 

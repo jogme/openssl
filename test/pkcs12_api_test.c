@@ -83,7 +83,7 @@ static int changepass(PKCS12 *p12, EVP_PKEY *key, X509 *cert, STACK_OF(X509) *ca
     if (!TEST_true(PKCS12_parse(p12new, "NEWPASS", &key2, &cert2, &ca2)))
         goto err;
     if (has_key) {
-        if (!TEST_ptr(key2) || !TEST_int_eq(EVP_PKEY_eq(key, key2), 1))
+        if (!TEST_ptr(key2) || !TEST_int_eq(OPENSSL_BOX_EVP_PKEY_eq(key, key2), 1))
             goto err;
     }
     if (has_cert) {
@@ -94,7 +94,7 @@ static int changepass(PKCS12 *p12, EVP_PKEY *key, X509 *cert, STACK_OF(X509) *ca
 err:
     BIO_free(bio);
     PKCS12_free(p12new);
-    EVP_PKEY_free(key2);
+    OPENSSL_BOX_EVP_PKEY_free(key2);
     X509_free(cert2);
     OSSL_STACK_OF_X509_free(ca2);
     return ret;
@@ -128,7 +128,7 @@ static int pkcs12_parse_test(void)
     ret = 1;
 err:
     PKCS12_free(p12);
-    EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     X509_free(cert);
     OSSL_STACK_OF_X509_free(ca);
     return TEST_true(ret);
@@ -220,7 +220,7 @@ static int pkcs12_create_ex2_test(int test)
 err:
     PKCS12_free(p12);
     PKCS12_free(ptr);
-    EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     X509_free(cert);
     OSSL_STACK_OF_X509_free(ca);
     return TEST_true(ret);

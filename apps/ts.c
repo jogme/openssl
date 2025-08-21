@@ -347,7 +347,7 @@ int ts_main(int argc, char **argv)
 
  end:
     X509_VERIFY_PARAM_free(vpm);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     NCONF_free(conf);
     OPENSSL_free(password);
     return ret;
@@ -453,7 +453,7 @@ static TS_REQ *create_query(BIO *data_bio, const char *digest, const EVP_MD *md,
     ASN1_OBJECT *policy_obj = NULL;
     ASN1_INTEGER *nonce_asn1 = NULL;
 
-    if (md == NULL && (md = EVP_get_digestbyname("sha256")) == NULL)
+    if (md == NULL && (md = OPENSSL_BOX_EVP_get_digestbyname("sha256")) == NULL)
         goto err;
     if ((ts_req = TS_REQ_new()) == NULL)
         goto err;
@@ -463,7 +463,7 @@ static TS_REQ *create_query(BIO *data_bio, const char *digest, const EVP_MD *md,
         goto err;
     if ((algo = X509_ALGOR_new()) == NULL)
         goto err;
-    if ((algo->algorithm = OBJ_nid2obj(EVP_MD_get_type(md))) == NULL)
+    if ((algo->algorithm = OBJ_nid2obj(OPENSSL_BOX_EVP_MD_get_type(md))) == NULL)
         goto err;
     if ((algo->parameter = ASN1_TYPE_new()) == NULL)
         goto err;
@@ -512,7 +512,7 @@ static int create_digest(BIO *input, const char *digest, const EVP_MD *md,
     int rv = 0;
     EVP_MD_CTX *md_ctx = NULL;
 
-    md_value_len = EVP_MD_get_size(md);
+    md_value_len = OPENSSL_BOX_EVP_MD_get_size(md);
     if (md_value_len <= 0)
         return 0;
 
@@ -520,11 +520,11 @@ static int create_digest(BIO *input, const char *digest, const EVP_MD *md,
         unsigned char buffer[4096];
         int length;
 
-        md_ctx = EVP_MD_CTX_new();
+        md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (md_ctx == NULL)
             return 0;
         *md_value = app_malloc(md_value_len, "digest buffer");
-        if (!EVP_DigestInit(md_ctx, md))
+        if (!OPENSSL_BOX_EVP_DigestInit(md_ctx, md))
             goto err;
         while ((length = BIO_read(input, buffer, sizeof(buffer))) > 0) {
             if (!EVP_DigestUpdate(md_ctx, buffer, length))
@@ -532,7 +532,7 @@ static int create_digest(BIO *input, const char *digest, const EVP_MD *md,
         }
         if (!EVP_DigestFinal(md_ctx, *md_value, NULL))
             goto err;
-        md_value_len = EVP_MD_get_size(md);
+        md_value_len = OPENSSL_BOX_EVP_MD_get_size(md);
     } else {
         long digest_len;
 
@@ -550,7 +550,7 @@ static int create_digest(BIO *input, const char *digest, const EVP_MD *md,
         *md_value = NULL;
         rv = 0;
     }
-    EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     return rv;
 }
 

@@ -611,21 +611,21 @@ static int test_fips_mode(void)
     if (!TEST_ptr(ctx = OSSL_LIB_CTX_new()))
         goto err;
 
-    ret = TEST_true(EVP_set_default_properties(ctx, "default=yes,fips=yes"))
-          && TEST_true(EVP_default_properties_is_fips_enabled(ctx))
-          && TEST_true(EVP_set_default_properties(ctx, "fips=no,default=yes"))
-          && TEST_false(EVP_default_properties_is_fips_enabled(ctx))
-          && TEST_true(EVP_set_default_properties(ctx, "fips=no"))
-          && TEST_false(EVP_default_properties_is_fips_enabled(ctx))
-          && TEST_true(EVP_set_default_properties(ctx, "fips!=no"))
-          && TEST_true(EVP_default_properties_is_fips_enabled(ctx))
-          && TEST_true(EVP_set_default_properties(ctx, "fips=no"))
-          && TEST_false(EVP_default_properties_is_fips_enabled(ctx))
-          && TEST_true(EVP_set_default_properties(ctx, "fips=no,default=yes"))
-          && TEST_true(EVP_default_properties_enable_fips(ctx, 1))
-          && TEST_true(EVP_default_properties_is_fips_enabled(ctx))
-          && TEST_true(EVP_default_properties_enable_fips(ctx, 0))
-          && TEST_false(EVP_default_properties_is_fips_enabled(ctx));
+    ret = TEST_true(OPENSSL_BOX_EVP_set_default_properties(ctx, "default=yes,fips=yes"))
+          && TEST_true(OPENSSL_BOX_EVP_default_properties_is_fips_enabled(ctx))
+          && TEST_true(OPENSSL_BOX_EVP_set_default_properties(ctx, "fips=no,default=yes"))
+          && TEST_false(OPENSSL_BOX_EVP_default_properties_is_fips_enabled(ctx))
+          && TEST_true(OPENSSL_BOX_EVP_set_default_properties(ctx, "fips=no"))
+          && TEST_false(OPENSSL_BOX_EVP_default_properties_is_fips_enabled(ctx))
+          && TEST_true(OPENSSL_BOX_EVP_set_default_properties(ctx, "fips!=no"))
+          && TEST_true(OPENSSL_BOX_EVP_default_properties_is_fips_enabled(ctx))
+          && TEST_true(OPENSSL_BOX_EVP_set_default_properties(ctx, "fips=no"))
+          && TEST_false(OPENSSL_BOX_EVP_default_properties_is_fips_enabled(ctx))
+          && TEST_true(OPENSSL_BOX_EVP_set_default_properties(ctx, "fips=no,default=yes"))
+          && TEST_true(OPENSSL_BOX_EVP_default_properties_enable_fips(ctx, 1))
+          && TEST_true(OPENSSL_BOX_EVP_default_properties_is_fips_enabled(ctx))
+          && TEST_true(OPENSSL_BOX_EVP_default_properties_enable_fips(ctx, 0))
+          && TEST_false(OPENSSL_BOX_EVP_default_properties_is_fips_enabled(ctx));
 err:
     OSSL_LIB_CTX_free(ctx);
     return ret;

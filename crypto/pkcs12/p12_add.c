@@ -136,12 +136,12 @@ PKCS7 *PKCS12_pack_p7encdata_ex(int pbe_nid, const char *pass, int passlen,
         goto err;
     }
 
-    EVP_CIPHER_free(pbe_ciph_fetch);
+    OPENSSL_BOX_EVP_CIPHER_free(pbe_ciph_fetch);
     return p7;
 
  err:
     PKCS7_free(p7);
-    EVP_CIPHER_free(pbe_ciph_fetch);
+    OPENSSL_BOX_EVP_CIPHER_free(pbe_ciph_fetch);
     return NULL;
 }
 

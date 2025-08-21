@@ -428,15 +428,15 @@ BIO *ossl_cms_DigestAlgorithm_init_bio(X509_ALGOR *digestAlgorithm,
     }
     (void)ERR_pop_to_mark();
 
-    mdbio = BIO_new(BIO_f_md());
-    if (mdbio == NULL || BIO_set_md(mdbio, digest) <= 0) {
+    mdbio = BIO_new(OPENSSL_BOX_BIO_f_md());
+    if (mdbio == NULL || OPENSSL_BOX_BIO_set_md(mdbio, digest) <= 0) {
         ERR_raise(ERR_LIB_CMS, CMS_R_MD_BIO_INIT_ERROR);
         goto err;
     }
-    if (EVP_MD_xof(digest)) {
-        if (EVP_MD_is_a(digest, SN_shake128))
+    if (OPENSSL_BOX_EVP_MD_xof(digest)) {
+        if (OPENSSL_BOX_EVP_MD_is_a(digest, SN_shake128))
             xof_len = 32;
-        else if (EVP_MD_is_a(digest, SN_shake256))
+        else if (OPENSSL_BOX_EVP_MD_is_a(digest, SN_shake256))
             xof_len = 64;
         if (xof_len > 0) {
             EVP_MD_CTX *mdctx;
@@ -447,14 +447,14 @@ BIO *ossl_cms_DigestAlgorithm_init_bio(X509_ALGOR *digestAlgorithm,
             params[0] = OSSL_PARAM_construct_size_t(OSSL_DIGEST_PARAM_XOFLEN,
                                                     &xof_len);
             params[1] = OSSL_PARAM_construct_end();
-            if (!EVP_MD_CTX_set_params(mdctx, params))
+            if (!OPENSSL_BOX_EVP_MD_CTX_set_params(mdctx, params))
                 goto err;
         }
     }
-    EVP_MD_free(fetched_digest);
+    OPENSSL_BOX_EVP_MD_free(fetched_digest);
     return mdbio;
  err:
-    EVP_MD_free(fetched_digest);
+    OPENSSL_BOX_EVP_MD_free(fetched_digest);
     BIO_free(mdbio);
     return NULL;
 }
@@ -482,8 +482,8 @@ int ossl_cms_DigestAlgorithm_find_ctx(EVP_MD_CTX *mctx, BIO *chain,
              * Workaround for broken implementations that use signature
              * algorithm OID instead of digest.
              */
-            || EVP_MD_get_pkey_type(EVP_MD_CTX_get0_md(mtmp)) == nid)
-            return EVP_MD_CTX_copy_ex(mctx, mtmp);
+            || OPENSSL_BOX_EVP_MD_get_pkey_type(OPENSSL_BOX_EVP_MD_CTX_get0_md(mtmp)) == nid)
+            return OPENSSL_BOX_EVP_MD_CTX_copy_ex(mctx, mtmp);
         chain = BIO_next(chain);
     }
 }

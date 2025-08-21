@@ -37,7 +37,7 @@ B<iter> value less than 1 is invalid; such values will result in failure
 and raise the PROV_R_INVALID_ITERATION_COUNT error.
 
 B<digest> is the message digest function used in the derivation.
-PKCS5_PBKDF2_HMAC_SHA1() calls PKCS5_PBKDF2_HMAC() with EVP_sha1().
+PKCS5_PBKDF2_HMAC_SHA1() calls PKCS5_PBKDF2_HMAC() with OPENSSL_BOX_EVP_sha1().
 
 The derived key will be written to B<out>. The size of the B<out> buffer
 is specified via B<keylen>.

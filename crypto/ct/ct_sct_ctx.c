@@ -43,7 +43,7 @@ void SCT_CTX_free(SCT_CTX *sctx)
 {
     if (sctx == NULL)
         return;
-    EVP_PKEY_free(sctx->pkey);
+    OPENSSL_BOX_EVP_PKEY_free(sctx->pkey);
     OPENSSL_free(sctx->pkeyhash);
     OPENSSL_free(sctx->ihash);
     OPENSSL_free(sctx->certder);
@@ -236,7 +236,7 @@ __owur static int ct_public_key_hash(SCT_CTX *sctx, X509_PUBKEY *pkey,
     md = NULL;
     ret = 1;
  err:
-    EVP_MD_free(sha256);
+    OPENSSL_BOX_EVP_MD_free(sha256);
     OPENSSL_free(md);
     OPENSSL_free(der);
     return ret;
@@ -260,11 +260,11 @@ int SCT_CTX_set1_pubkey(SCT_CTX *sctx, X509_PUBKEY *pubkey)
         return 0;
 
     if (!ct_public_key_hash(sctx, pubkey, &sctx->pkeyhash, &sctx->pkeyhashlen)) {
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         return 0;
     }
 
-    EVP_PKEY_free(sctx->pkey);
+    OPENSSL_BOX_EVP_PKEY_free(sctx->pkey);
     sctx->pkey = pkey;
     return 1;
 }

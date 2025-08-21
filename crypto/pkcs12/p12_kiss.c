@@ -120,7 +120,7 @@ int PKCS12_parse(PKCS12 *p12, const char *pass, EVP_PKEY **pkey, X509 **cert,
  err:
 
     if (pkey != NULL) {
-        EVP_PKEY_free(*pkey);
+        OPENSSL_BOX_EVP_PKEY_free(*pkey);
         *pkey = NULL;
     }
     if (cert != NULL) {

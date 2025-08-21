@@ -104,7 +104,7 @@ int main(int argc, char **argv)
  err:
     OPENSSL_free(name);
     X509_free(cert);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     OSSL_STACK_OF_X509_free(ca);
 
     return ret;

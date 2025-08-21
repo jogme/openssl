@@ -65,11 +65,11 @@ The usual life-cycle of a CIPHER is illustrated:
                                  |                           |
                                  +---------------------------+   + - - - - - - - - - - - - - +
                                        |                         '  any of the initialised   '
-                                       | EVP_CIPHER_CTX_new      ' updated or finaled states '
+                                       | OPENSSL_BOX_EVP_CIPHER_CTX_new      ' updated or finaled states '
                                        v                         '                           '
                                  +---------------------------+   + - - - - - - - - - - - - - +
                                  |                           |      |
-                                 |           newed           |      | EVP_CIPHER_CTX_reset
+                                 |           newed           |      | OPENSSL_BOX_EVP_CIPHER_CTX_reset
                                  |                           | <----+
                                  +---------------------------+
                                     |   |                 |
@@ -102,9 +102,9 @@ The usual life-cycle of a CIPHER is illustrated:
                                  |                           |-----------------------------+
                                  |          finaled          |                             |
                                  |                           | <---------------------------+
-                                 +---------------------------+   EVP_CIPHER_CTX_get_params
+                                 +---------------------------+   OPENSSL_BOX_EVP_CIPHER_CTX_get_params
                                        |                             (AEAD encryption)
-                                       | EVP_CIPHER_CTX_free
+                                       | OPENSSL_BOX_EVP_CIPHER_CTX_free
                                        v
                                  +---------------------------+
                                  |                           |
@@ -126,7 +126,7 @@ This is the canonical list.
  Function Call                ---------------------------------------------- Current State -----------------------------------------------
                               start   newed    initialised   updated     finaled   initialised   updated    initialised   updated    freed
                                                                                     decryption  decryption   encryption  encryption
- EVP_CIPHER_CTX_new           newed
+ OPENSSL_BOX_EVP_CIPHER_CTX_new           newed
  EVP_CipherInit                    initialised initialised initialised initialised initialised initialised  initialised initialised
  EVP_DecryptInit                   initialised initialised initialised initialised initialised initialised  initialised initialised
                                     decryption  decryption  decryption  decryption  decryption  decryption  decryption  decryption
@@ -140,15 +140,15 @@ This is the canonical list.
  EVP_CipherFinal                                             finaled
  EVP_DecryptFinal                                                                                finaled
  EVP_EncryptFinal                                                                                                         finaled
- EVP_CIPHER_CTX_free          freed   freed       freed       freed       freed       freed       freed        freed       freed
- EVP_CIPHER_CTX_reset                 newed       newed       newed       newed       newed       newed        newed       newed
- EVP_CIPHER_CTX_get_params            newed    initialised   updated               initialised   updated    initialised   updated
+ OPENSSL_BOX_EVP_CIPHER_CTX_free          freed   freed       freed       freed       freed       freed       freed        freed       freed
+ OPENSSL_BOX_EVP_CIPHER_CTX_reset                 newed       newed       newed       newed       newed       newed        newed       newed
+ OPENSSL_BOX_EVP_CIPHER_CTX_get_params            newed    initialised   updated               initialised   updated    initialised   updated
                                                                                     decryption  decryption   encryption  encryption
- EVP_CIPHER_CTX_set_params            newed    initialised   updated               initialised   updated    initialised   updated
+ OPENSSL_BOX_EVP_CIPHER_CTX_set_params            newed    initialised   updated               initialised   updated    initialised   updated
                                                                                     decryption  decryption   encryption  encryption
- EVP_CIPHER_CTX_gettable_params       newed    initialised   updated               initialised   updated    initialised   updated
+ OPENSSL_BOX_EVP_CIPHER_CTX_gettable_params       newed    initialised   updated               initialised   updated    initialised   updated
                                                                                     decryption  decryption   encryption  encryption
- EVP_CIPHER_CTX_settable_params       newed    initialised   updated               initialised   updated    initialised   updated
+ OPENSSL_BOX_EVP_CIPHER_CTX_settable_params       newed    initialised   updated               initialised   updated    initialised   updated
                                                                                     decryption  decryption   encryption  encryption
 
 =end man
@@ -169,7 +169,7 @@ This is the canonical list.
     <th style="border:1px solid" align="center">initialised<br>encryption</th>
     <th style="border:1px solid" align="center">updated<br>encryption</th>
     <th style="border:1px solid" align="center">freed</th></tr>
-<tr><th style="border:1px solid" align="left">EVP_CIPHER_CTX_new</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_CIPHER_CTX_new</th>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
@@ -279,7 +279,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">finaled<br>decryption</td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_CIPHER_CTX_free</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_CIPHER_CTX_free</th>
     <td style="border:1px solid" align="center">freed</td>
     <td style="border:1px solid" align="center">freed</td>
     <td style="border:1px solid" align="center">freed</td>
@@ -290,7 +290,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">freed</td>
     <td style="border:1px solid" align="center">freed</td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_CIPHER_CTX_reset</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_CIPHER_CTX_reset</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
@@ -301,7 +301,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_CIPHER_CTX_get_params</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_CIPHER_CTX_get_params</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>
@@ -312,7 +312,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">initialised<br>encryption</td>
     <td style="border:1px solid" align="center">updated<br>encryption</td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_CIPHER_CTX_set_params</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_CIPHER_CTX_set_params</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>
@@ -323,7 +323,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">initialised<br>encryption</td>
     <td style="border:1px solid" align="center">updated<br>encryption</td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_CIPHER_CTX_gettable_params</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_CIPHER_CTX_gettable_params</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>
@@ -334,7 +334,7 @@ This is the canonical list.
     <td style="border:1px solid" align="center">initialised<br>encryption</td>
     <td style="border:1px solid" align="center">updated<br>encryption</td>
     <td style="border:1px solid" align="center"></td></tr>
-<tr><th style="border:1px solid" align="left">EVP_CIPHER_CTX_settable_params</th>
+<tr><th style="border:1px solid" align="left">OPENSSL_BOX_EVP_CIPHER_CTX_settable_params</th>
     <td style="border:1px solid" align="center"></td>
     <td style="border:1px solid" align="center">newed</td>
     <td style="border:1px solid" align="center">initialised</td>

@@ -798,7 +798,7 @@ static int blake2b_mac(EVP_MAC *mac, void *out, size_t outlen, const void *in,
     EVP_MAC_CTX *ctx = NULL;
     OSSL_PARAM par[3];
 
-    if ((ctx = EVP_MAC_CTX_new(mac)) == NULL)
+    if ((ctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac)) == NULL)
         goto fail;
 
     par[par_n++] = OSSL_PARAM_construct_octet_string(OSSL_MAC_PARAM_KEY,
@@ -806,13 +806,13 @@ static int blake2b_mac(EVP_MAC *mac, void *out, size_t outlen, const void *in,
     par[par_n++] = OSSL_PARAM_construct_size_t(OSSL_MAC_PARAM_SIZE, &outlen);
     par[par_n++] = OSSL_PARAM_construct_end();
 
-    ret = EVP_MAC_CTX_set_params(ctx, par) == 1
+    ret = OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, par) == 1
         && EVP_MAC_init(ctx, NULL, 0, NULL) == 1
-        && EVP_MAC_update(ctx, in, inlen) == 1
+        && OPENSSL_BOX_EVP_MAC_update(ctx, in, inlen) == 1
         && EVP_MAC_final(ctx, out, (size_t *) &out_written, outlen) == 1;
 
 fail:
-    EVP_MAC_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
     return ret;
 }
 
@@ -833,7 +833,7 @@ static int blake2b_md(EVP_MD *md, void *out, size_t outlen, const void *in,
         && EVP_DigestUpdate(ctx, in, inlen) == 1
         && EVP_DigestFinal_ex(ctx, out, NULL) == 1;
 
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -907,7 +907,7 @@ static int blake2b_long(EVP_MD *md, EVP_MAC *mac, unsigned char *out,
     ret = 1;
 
 fail:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -1004,8 +1004,8 @@ static void kdf_argon2_free(void *vctx)
     if (ctx->ad != NULL)
         OPENSSL_clear_free(ctx->ad, ctx->adlen);
 
-    EVP_MD_free(ctx->md);
-    EVP_MAC_free(ctx->mac);
+    OPENSSL_BOX_EVP_MD_free(ctx->md);
+    OPENSSL_BOX_EVP_MAC_free(ctx->mac);
 
     OPENSSL_free(ctx->propq);
 
@@ -1131,8 +1131,8 @@ static void kdf_argon2_reset(void *vctx)
     type = ctx->type;
     libctx = ctx->libctx;
 
-    EVP_MD_free(ctx->md);
-    EVP_MAC_free(ctx->mac);
+    OPENSSL_BOX_EVP_MD_free(ctx->md);
+    OPENSSL_BOX_EVP_MAC_free(ctx->mac);
 
     OPENSSL_free(ctx->propq);
 
@@ -1387,9 +1387,9 @@ static int set_property_query(KDF_ARGON2 *ctx, const char *propq)
         if (ctx->propq == NULL)
             return 0;
     }
-    EVP_MD_free(ctx->md);
+    OPENSSL_BOX_EVP_MD_free(ctx->md);
     ctx->md = NULL;
-    EVP_MAC_free(ctx->mac);
+    OPENSSL_BOX_EVP_MAC_free(ctx->mac);
     ctx->mac = NULL;
     return 1;
 }

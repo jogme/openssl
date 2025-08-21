@@ -466,7 +466,7 @@ static OSSL_CRMF_ENCRYPTEDKEY *enc_privkey(OSSL_CMP_CTX *ctx, const EVP_PKEY *pk
     envData = ossl_cms_sign_encrypt(privbio, ctx->cert, ctx->chain, ctx->pkey, CMS_BINARY,
                                     encryption_recips, cipher, CMS_BINARY,
                                     ctx->libctx, ctx->propq);
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     if (envData == NULL)
         goto err;
     ek = OSSL_CRMF_ENCRYPTEDKEY_init_envdata(envData);
@@ -891,7 +891,7 @@ OSSL_CMP_MSG *ossl_cmp_certConf_new(OSSL_CMP_CTX *ctx, int certReqId,
             goto err;
         X509_ALGOR_set_md(certStatus->hashAlg, md);
     }
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
 
     if (!ossl_cmp_certstatus_set0_certHash(certStatus, certHash))
         goto err;

@@ -57,7 +57,7 @@ CMAC_CTX *CMAC_CTX_new(void)
 
     if ((ctx = OPENSSL_malloc(sizeof(*ctx))) == NULL)
         return NULL;
-    ctx->cctx = EVP_CIPHER_CTX_new();
+    ctx->cctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (ctx->cctx == NULL) {
         OPENSSL_free(ctx);
         return NULL;
@@ -68,7 +68,7 @@ CMAC_CTX *CMAC_CTX_new(void)
 
 void CMAC_CTX_cleanup(CMAC_CTX *ctx)
 {
-    EVP_CIPHER_CTX_reset(ctx->cctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_reset(ctx->cctx);
     OPENSSL_cleanse(ctx->tbl, EVP_MAX_BLOCK_LENGTH);
     OPENSSL_cleanse(ctx->k1, EVP_MAX_BLOCK_LENGTH);
     OPENSSL_cleanse(ctx->k2, EVP_MAX_BLOCK_LENGTH);
@@ -86,7 +86,7 @@ void CMAC_CTX_free(CMAC_CTX *ctx)
     if (!ctx)
         return;
     CMAC_CTX_cleanup(ctx);
-    EVP_CIPHER_CTX_free(ctx->cctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(ctx->cctx);
     OPENSSL_free(ctx);
 }
 
@@ -96,9 +96,9 @@ int CMAC_CTX_copy(CMAC_CTX *out, const CMAC_CTX *in)
 
     if (in->nlast_block == -1)
         return 0;
-    if ((bl = EVP_CIPHER_CTX_get_block_size(in->cctx)) == 0)
+    if ((bl = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(in->cctx)) == 0)
         return 0;
-    if (!EVP_CIPHER_CTX_copy(out->cctx, in->cctx))
+    if (!OPENSSL_BOX_EVP_CIPHER_CTX_copy(out->cctx, in->cctx))
         return 0;
     memcpy(out->k1, in->k1, bl);
     memcpy(out->k2, in->k2, bl);
@@ -122,7 +122,7 @@ int ossl_cmac_init(CMAC_CTX *ctx, const void *key, size_t keylen,
             return 0;
         if (!EVP_EncryptInit_ex2(ctx->cctx, NULL, NULL, zero_iv, param))
             return 0;
-        block_len = EVP_CIPHER_CTX_get_block_size(ctx->cctx);
+        block_len = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx->cctx);
         if (block_len == 0)
             return 0;
         memset(ctx->tbl, 0, block_len);
@@ -147,14 +147,14 @@ int ossl_cmac_init(CMAC_CTX *ctx, const void *key, size_t keylen,
 
         /* If anything fails then ensure we can't use this ctx */
         ctx->nlast_block = -1;
-        if (EVP_CIPHER_CTX_get0_cipher(ctx->cctx) == NULL)
+        if (OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(ctx->cctx) == NULL)
             return 0;
         if (keylen > INT_MAX
-            || EVP_CIPHER_CTX_set_key_length(ctx->cctx, (int)keylen) <= 0)
+            || OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length(ctx->cctx, (int)keylen) <= 0)
             return 0;
         if (!EVP_EncryptInit_ex2(ctx->cctx, NULL, key, zero_iv, param))
             return 0;
-        if ((bl = EVP_CIPHER_CTX_get_block_size(ctx->cctx)) < 0)
+        if ((bl = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx->cctx)) < 0)
             return 0;
         if (EVP_Cipher(ctx->cctx, ctx->tbl, zero_iv, bl) <= 0)
             return 0;
@@ -188,7 +188,7 @@ int CMAC_Update(CMAC_CTX *ctx, const void *in, size_t dlen)
         return 0;
     if (dlen == 0)
         return 1;
-    if ((bl = EVP_CIPHER_CTX_get_block_size(ctx->cctx)) == 0)
+    if ((bl = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx->cctx)) == 0)
         return 0;
     /* Copy into partial block if we need to */
     if (ctx->nlast_block > 0) {
@@ -252,7 +252,7 @@ int CMAC_Final(CMAC_CTX *ctx, unsigned char *out, size_t *poutlen)
 
     if (ctx->nlast_block == -1)
         return 0;
-    if ((bl = EVP_CIPHER_CTX_get_block_size(ctx->cctx)) == 0)
+    if ((bl = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx->cctx)) == 0)
         return 0;
     if (poutlen != NULL)
         *poutlen = (size_t)bl;

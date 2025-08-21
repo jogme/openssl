@@ -61,10 +61,10 @@ static int get_peer_public_key(PEER_DATA *peer, OSSL_LIB_CTX *libctx)
     params[1] = OSSL_PARAM_construct_octet_string(OSSL_PKEY_PARAM_PUB_KEY,
                                                   pubkeydata, pubkeylen);
     params[2] = OSSL_PARAM_construct_end();
-    ret = EVP_PKEY_fromdata_init(ctx) > 0
+    ret = OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) > 0
           && (EVP_PKEY_fromdata(ctx, &peer->pub, EVP_PKEY_PUBLIC_KEY,
                                 params) > 0);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 
@@ -82,24 +82,24 @@ static int create_peer(PEER_DATA *peer, OSSL_LIB_CTX *libctx)
     if (ctx == NULL)
         return 0;
 
-    if (EVP_PKEY_keygen_init(ctx) <= 0
-            || !EVP_PKEY_CTX_set_params(ctx, params)
-            || EVP_PKEY_generate(ctx, &peer->priv) <= 0
+    if (OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) <= 0
+            || !OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, params)
+            || OPENSSL_BOX_EVP_PKEY_generate(ctx, &peer->priv) <= 0
             || !get_peer_public_key(peer, libctx)) {
-        EVP_PKEY_free(peer->priv);
+        OPENSSL_BOX_EVP_PKEY_free(peer->priv);
         peer->priv = NULL;
         goto err;
     }
     ret = 1;
 err:
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 
 static void destroy_peer(PEER_DATA *peer)
 {
-    EVP_PKEY_free(peer->priv);
-    EVP_PKEY_free(peer->pub);
+    OPENSSL_BOX_EVP_PKEY_free(peer->priv);
+    OPENSSL_BOX_EVP_PKEY_free(peer->pub);
 }
 
 static int generate_secret(PEER_DATA *peerA, EVP_PKEY *peerBpub,
@@ -114,10 +114,10 @@ static int generate_secret(PEER_DATA *peerA, EVP_PKEY *peerBpub,
     if (derivectx == NULL)
         return 0;
 
-    if (EVP_PKEY_derive_init(derivectx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_derive_init(derivectx) <= 0)
         goto cleanup;
     /* Set up peerB's public key */
-    if (EVP_PKEY_derive_set_peer(derivectx, peerBpub) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_derive_set_peer(derivectx, peerBpub) <= 0)
         goto cleanup;
 
     /*
@@ -137,7 +137,7 @@ static int generate_secret(PEER_DATA *peerA, EVP_PKEY *peerBpub,
      *   params[3] = OSSL_PARAM_construct_octet_string(OSSL_EXCHANGE_PARAM_KDF_UKM,
      *                                                 ukm, sizeof(ukm));
      *   params[4] = OSSL_PARAM_construct_end();
-     *   if (!EVP_PKEY_CTX_set_params(derivectx, params))
+     *   if (!OPENSSL_BOX_EVP_PKEY_CTX_set_params(derivectx, params))
      *       goto cleanup;
      *
      * Note: After the secret is generated below, the peer could alternatively
@@ -146,7 +146,7 @@ static int generate_secret(PEER_DATA *peerA, EVP_PKEY *peerBpub,
      */
 
     /* Calculate the size of the secret and allocate space */
-    if (EVP_PKEY_derive(derivectx, NULL, &secretlen) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_derive(derivectx, NULL, &secretlen) <= 0)
         goto cleanup;
     secret = (unsigned char *)OPENSSL_malloc(secretlen);
     if (secret == NULL)
@@ -157,7 +157,7 @@ static int generate_secret(PEER_DATA *peerA, EVP_PKEY *peerBpub,
      * For EC curves the secret size is related to the degree of the curve
      * which is 256 bits for P-256.
      */
-    if (EVP_PKEY_derive(derivectx, secret, &secretlen) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_derive(derivectx, secret, &secretlen) <= 0)
         goto cleanup;
     peerA->secret = secret;
     peerA->secretlen = secretlen;
@@ -169,7 +169,7 @@ static int generate_secret(PEER_DATA *peerA, EVP_PKEY *peerBpub,
     return 1;
 cleanup:
     OPENSSL_free(secret);
-    EVP_PKEY_CTX_free(derivectx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(derivectx);
     return 0;
 }
 

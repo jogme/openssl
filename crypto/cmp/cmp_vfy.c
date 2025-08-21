@@ -60,7 +60,7 @@ static int verify_signature(const OSSL_CMP_CTX *cmp_ctx,
     res = 0;
 
  end:
-    EVP_PKEY_free(pubkey);
+    OPENSSL_BOX_EVP_PKEY_free(pubkey);
     BIO_free(bio);
 
     return res;

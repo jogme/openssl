@@ -135,7 +135,7 @@ The digest can be initialized as normal using:
 
 ```text
 md = EVP_MD_fetch(libctx, "SHAKE256", propq);
-ctx = EVP_MD_CTX_new();
+ctx = OPENSSL_BOX_EVP_MD_CTX_new();
 EVP_DigestInit_ex2(ctx, md, NULL);
 ```
 
@@ -174,7 +174,7 @@ EVP_DigestInit_ex2(ctx, NULL, NULL);
 The internal state can be copied by calling:
 
 ```text
-EVP_MD_CTX_copy_ex(ctx, newctx);
+OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx, newctx);
 ```
 
 Low Level squeeze changes

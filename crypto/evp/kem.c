@@ -19,12 +19,12 @@
 
 static void evp_kem_free(void *data)
 {
-    EVP_KEM_free(data);
+    OPENSSL_BOX_EVP_KEM_free(data);
 }
 
 static int evp_kem_up_ref(void *data)
 {
-    return EVP_KEM_up_ref(data);
+    return OPENSSL_BOX_EVP_KEM_up_ref(data);
 }
 
 static int evp_kem_init(EVP_PKEY_CTX *ctx, int operation,
@@ -96,17 +96,17 @@ static int evp_kem_init(EVP_PKEY_CTX *ctx, int operation,
          * They are NULL on the first iteration, so no need to check what
          * iteration we're on.
          */
-        EVP_KEM_free(kem);
-        EVP_KEYMGMT_free(tmp_keymgmt);
+        OPENSSL_BOX_EVP_KEM_free(kem);
+        OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
 
         switch (iter) {
         case 1:
             kem = EVP_KEM_fetch(ctx->libctx, supported_kem, ctx->propquery);
             if (kem != NULL)
-                tmp_prov = EVP_KEM_get0_provider(kem);
+                tmp_prov = OPENSSL_BOX_EVP_KEM_get0_provider(kem);
             break;
         case 2:
-            tmp_prov = EVP_KEYMGMT_get0_provider(ctx->keymgmt);
+            tmp_prov = OPENSSL_BOX_EVP_KEYMGMT_get0_provider(ctx->keymgmt);
             kem = evp_kem_fetch_from_prov((OSSL_PROVIDER *)tmp_prov,
                                           supported_kem, ctx->propquery);
 
@@ -131,7 +131,7 @@ static int evp_kem_init(EVP_PKEY_CTX *ctx, int operation,
          */
         tmp_keymgmt_tofree = tmp_keymgmt =
             evp_keymgmt_fetch_from_prov((OSSL_PROVIDER *)tmp_prov,
-                                        EVP_KEYMGMT_get0_name(ctx->keymgmt),
+                                        OPENSSL_BOX_EVP_KEYMGMT_get0_name(ctx->keymgmt),
                                         ctx->propquery);
         if (tmp_keymgmt != NULL) {
             provkey = evp_pkey_export_to_provider(ctx->pkey, ctx->libctx,
@@ -141,18 +141,18 @@ static int evp_kem_init(EVP_PKEY_CTX *ctx, int operation,
                                                           &tmp_keymgmt,
                                                           ctx->propquery);
                 if (provauthkey == NULL) {
-                    EVP_KEM_free(kem);
+                    OPENSSL_BOX_EVP_KEM_free(kem);
                     ERR_raise(ERR_LIB_EVP, EVP_R_INITIALIZATION_ERROR);
                     goto err;
                 }
             }
         }
         if (tmp_keymgmt == NULL)
-            EVP_KEYMGMT_free(tmp_keymgmt_tofree);
+            OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt_tofree);
     }
 
     if (provkey == NULL) {
-        EVP_KEM_free(kem);
+        OPENSSL_BOX_EVP_KEM_free(kem);
         ERR_raise(ERR_LIB_EVP, EVP_R_INITIALIZATION_ERROR);
         goto err;
     }
@@ -195,7 +195,7 @@ static int evp_kem_init(EVP_PKEY_CTX *ctx, int operation,
         goto err;
     }
 
-    EVP_KEYMGMT_free(tmp_keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
     tmp_keymgmt = NULL;
 
     if (ret > 0)
@@ -205,7 +205,7 @@ static int evp_kem_init(EVP_PKEY_CTX *ctx, int operation,
         evp_pkey_ctx_free_old_ops(ctx);
         ctx->operation = EVP_PKEY_OP_UNDEFINED;
     }
-    EVP_KEYMGMT_free(tmp_keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
     return ret;
 }
 
@@ -217,7 +217,7 @@ int EVP_PKEY_auth_encapsulate_init(EVP_PKEY_CTX *ctx, EVP_PKEY *authpriv,
     return evp_kem_init(ctx, EVP_PKEY_OP_ENCAPSULATE, params, authpriv);
 }
 
-int EVP_PKEY_encapsulate_init(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
+int OPENSSL_BOX_EVP_PKEY_encapsulate_init(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
 {
     return evp_kem_init(ctx, EVP_PKEY_OP_ENCAPSULATE, params, NULL);
 }
@@ -246,7 +246,7 @@ int EVP_PKEY_encapsulate(EVP_PKEY_CTX *ctx,
                                           out, outlen, secret, secretlen);
 }
 
-int EVP_PKEY_decapsulate_init(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
+int OPENSSL_BOX_EVP_PKEY_decapsulate_init(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
 {
     return evp_kem_init(ctx, EVP_PKEY_OP_DECAPSULATE, params, NULL);
 }
@@ -425,11 +425,11 @@ static void *evp_kem_from_algorithm(int name_id, const OSSL_ALGORITHM *algodef,
 
     return kem;
  err:
-    EVP_KEM_free(kem);
+    OPENSSL_BOX_EVP_KEM_free(kem);
     return NULL;
 }
 
-void EVP_KEM_free(EVP_KEM *kem)
+void OPENSSL_BOX_EVP_KEM_free(EVP_KEM *kem)
 {
     int i;
 
@@ -445,7 +445,7 @@ void EVP_KEM_free(EVP_KEM *kem)
     OPENSSL_free(kem);
 }
 
-int EVP_KEM_up_ref(EVP_KEM *kem)
+int OPENSSL_BOX_EVP_KEM_up_ref(EVP_KEM *kem)
 {
     int ref = 0;
 
@@ -453,7 +453,7 @@ int EVP_KEM_up_ref(EVP_KEM *kem)
     return 1;
 }
 
-OSSL_PROVIDER *EVP_KEM_get0_provider(const EVP_KEM *kem)
+OSSL_PROVIDER *OPENSSL_BOX_EVP_KEM_get0_provider(const EVP_KEM *kem)
 {
     return kem->prov;
 }
@@ -476,7 +476,7 @@ EVP_KEM *evp_kem_fetch_from_prov(OSSL_PROVIDER *prov, const char *algorithm,
                                        evp_kem_free);
 }
 
-int EVP_KEM_is_a(const EVP_KEM *kem, const char *name)
+int OPENSSL_BOX_EVP_KEM_is_a(const EVP_KEM *kem, const char *name)
 {
     return kem != NULL && evp_is_a(kem->prov, kem->name_id, NULL, name);
 }
@@ -486,12 +486,12 @@ int evp_kem_get_number(const EVP_KEM *kem)
     return kem->name_id;
 }
 
-const char *EVP_KEM_get0_name(const EVP_KEM *kem)
+const char *OPENSSL_BOX_EVP_KEM_get0_name(const EVP_KEM *kem)
 {
     return kem->type_name;
 }
 
-const char *EVP_KEM_get0_description(const EVP_KEM *kem)
+const char *OPENSSL_BOX_EVP_KEM_get0_description(const EVP_KEM *kem)
 {
     return kem->description;
 }
@@ -516,24 +516,24 @@ int EVP_KEM_names_do_all(const EVP_KEM *kem,
     return 1;
 }
 
-const OSSL_PARAM *EVP_KEM_gettable_ctx_params(const EVP_KEM *kem)
+const OSSL_PARAM *OPENSSL_BOX_EVP_KEM_gettable_ctx_params(const EVP_KEM *kem)
 {
     void *provctx;
 
     if (kem == NULL || kem->gettable_ctx_params == NULL)
         return NULL;
 
-    provctx = ossl_provider_ctx(EVP_KEM_get0_provider(kem));
+    provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_KEM_get0_provider(kem));
     return kem->gettable_ctx_params(NULL, provctx);
 }
 
-const OSSL_PARAM *EVP_KEM_settable_ctx_params(const EVP_KEM *kem)
+const OSSL_PARAM *OPENSSL_BOX_EVP_KEM_settable_ctx_params(const EVP_KEM *kem)
 {
     void *provctx;
 
     if (kem == NULL || kem->settable_ctx_params == NULL)
         return NULL;
 
-    provctx = ossl_provider_ctx(EVP_KEM_get0_provider(kem));
+    provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_KEM_get0_provider(kem));
     return kem->settable_ctx_params(NULL, provctx);
 }

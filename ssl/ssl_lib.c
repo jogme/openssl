@@ -166,7 +166,7 @@ static void tlsa_free(danetls_record *t)
     if (t == NULL)
         return;
     OPENSSL_free(t->data);
-    EVP_PKEY_free(t->spki);
+    OPENSSL_BOX_EVP_PKEY_free(t->spki);
     OPENSSL_free(t);
 }
 
@@ -306,7 +306,7 @@ static int dane_tlsa_add(SSL_DANE *dane,
     }
 
     if (md != NULL) {
-        mdsize = EVP_MD_get_size(md);
+        mdsize = OPENSSL_BOX_EVP_MD_get_size(md);
         if (mdsize <= 0 || dlen != (size_t)mdsize) {
             ERR_raise(ERR_LIB_SSL, SSL_R_DANE_TLSA_BAD_DIGEST_LENGTH);
             return 0;
@@ -390,7 +390,7 @@ static int dane_tlsa_add(SSL_DANE *dane,
         case DANETLS_SELECTOR_SPKI:
             if (!d2i_PUBKEY(&pkey, &p, ilen) || p < data ||
                 dlen != (size_t)(p - data)) {
-                EVP_PKEY_free(pkey);
+                OPENSSL_BOX_EVP_PKEY_free(pkey);
                 tlsa_free(t);
                 ERR_raise(ERR_LIB_SSL, SSL_R_DANE_TLSA_BAD_PUBLIC_KEY);
                 return 0;
@@ -404,7 +404,7 @@ static int dane_tlsa_add(SSL_DANE *dane,
             if (usage == DANETLS_USAGE_DANE_TA)
                 t->spki = pkey;
             else
-                EVP_PKEY_free(pkey);
+                OPENSSL_BOX_EVP_PKEY_free(pkey);
             break;
         }
     }
@@ -625,7 +625,7 @@ int ossl_ssl_connection_reset(SSL *s)
            sizeof(sc->ext.compress_certificate_from_peer));
     sc->ext.compress_certificate_sent = 0;
 
-    EVP_MD_CTX_free(sc->pha_dgst);
+    OPENSSL_BOX_EVP_MD_CTX_free(sc->pha_dgst);
     sc->pha_dgst = NULL;
 
     /* Reset DANE verification result state */
@@ -1518,7 +1518,7 @@ void ossl_ssl_connection_free(SSL *ssl)
         OPENSSL_free(s->clienthello->pre_proc_exts);
     OPENSSL_free(s->clienthello);
     OPENSSL_free(s->pha_context);
-    EVP_MD_CTX_free(s->pha_dgst);
+    OPENSSL_BOX_EVP_MD_CTX_free(s->pha_dgst);
 
     sk_X509_NAME_pop_free(s->ca_names, X509_NAME_free);
     sk_X509_NAME_pop_free(s->client_ca_names, X509_NAME_free);
@@ -6117,13 +6117,13 @@ int ssl_handshake_hash(SSL_CONNECTION *s,
         goto err;
     }
 
-    ctx = EVP_MD_CTX_new();
+    ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx == NULL) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
 
-    if (!EVP_MD_CTX_copy_ex(ctx, hdgst)
+    if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx, hdgst)
         || EVP_DigestFinal_ex(ctx, out, NULL) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
@@ -6133,7 +6133,7 @@ int ssl_handshake_hash(SSL_CONNECTION *s,
 
     ret = 1;
  err:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 
@@ -7524,10 +7524,10 @@ const EVP_CIPHER *ssl_evp_cipher_fetch(OSSL_LIB_CTX *libctx,
         params[0] = OSSL_PARAM_construct_int(OSSL_CIPHER_PARAM_DECRYPT_ONLY,
                                              &decrypt_only);
         params[1] = OSSL_PARAM_construct_end();
-        if (EVP_CIPHER_get_params((EVP_CIPHER *)ciph, params)
+        if (OPENSSL_BOX_EVP_CIPHER_get_params((EVP_CIPHER *)ciph, params)
             && decrypt_only) {
             /* If a cipher is decrypt-only, it is unusable */
-            EVP_CIPHER_free((EVP_CIPHER *)ciph);
+            OPENSSL_BOX_EVP_CIPHER_free((EVP_CIPHER *)ciph);
             ciph = NULL;
         }
     }
@@ -7539,14 +7539,14 @@ const EVP_CIPHER *ssl_evp_cipher_fetch(OSSL_LIB_CTX *libctx,
 int ssl_evp_cipher_up_ref(const EVP_CIPHER *cipher)
 {
     /* Don't up-ref an implicit EVP_CIPHER */
-    if (EVP_CIPHER_get0_provider(cipher) == NULL)
+    if (OPENSSL_BOX_EVP_CIPHER_get0_provider(cipher) == NULL)
         return 1;
 
     /*
      * The cipher was explicitly fetched and therefore it is safe to cast
      * away the const
      */
-    return EVP_CIPHER_up_ref((EVP_CIPHER *)cipher);
+    return OPENSSL_BOX_EVP_CIPHER_up_ref((EVP_CIPHER *)cipher);
 }
 
 void ssl_evp_cipher_free(const EVP_CIPHER *cipher)
@@ -7554,12 +7554,12 @@ void ssl_evp_cipher_free(const EVP_CIPHER *cipher)
     if (cipher == NULL)
         return;
 
-    if (EVP_CIPHER_get0_provider(cipher) != NULL) {
+    if (OPENSSL_BOX_EVP_CIPHER_get0_provider(cipher) != NULL) {
         /*
          * The cipher was explicitly fetched and therefore it is safe to cast
          * away the const
          */
-        EVP_CIPHER_free((EVP_CIPHER *)cipher);
+        OPENSSL_BOX_EVP_CIPHER_free((EVP_CIPHER *)cipher);
     }
 }
 
@@ -7583,14 +7583,14 @@ const EVP_MD *ssl_evp_md_fetch(OSSL_LIB_CTX *libctx,
 int ssl_evp_md_up_ref(const EVP_MD *md)
 {
     /* Don't up-ref an implicit EVP_MD */
-    if (EVP_MD_get0_provider(md) == NULL)
+    if (OPENSSL_BOX_EVP_MD_get0_provider(md) == NULL)
         return 1;
 
     /*
      * The digest was explicitly fetched and therefore it is safe to cast
      * away the const
      */
-    return EVP_MD_up_ref((EVP_MD *)md);
+    return OPENSSL_BOX_EVP_MD_up_ref((EVP_MD *)md);
 }
 
 void ssl_evp_md_free(const EVP_MD *md)
@@ -7598,12 +7598,12 @@ void ssl_evp_md_free(const EVP_MD *md)
     if (md == NULL)
         return;
 
-    if (EVP_MD_get0_provider(md) != NULL) {
+    if (OPENSSL_BOX_EVP_MD_get0_provider(md) != NULL) {
         /*
          * The digest was explicitly fetched and therefore it is safe to cast
          * away the const
          */
-        EVP_MD_free((EVP_MD *)md);
+        OPENSSL_BOX_EVP_MD_free((EVP_MD *)md);
     }
 }
 
@@ -7615,11 +7615,11 @@ int SSL_set0_tmp_dh_pkey(SSL *s, EVP_PKEY *dhpkey)
         return 0;
 
     if (!ssl_security(sc, SSL_SECOP_TMP_DH,
-                      EVP_PKEY_get_security_bits(dhpkey), 0, dhpkey)) {
+                      OPENSSL_BOX_EVP_PKEY_get_security_bits(dhpkey), 0, dhpkey)) {
         ERR_raise(ERR_LIB_SSL, SSL_R_DH_KEY_TOO_SMALL);
         return 0;
     }
-    EVP_PKEY_free(sc->cert->dh_tmp);
+    OPENSSL_BOX_EVP_PKEY_free(sc->cert->dh_tmp);
     sc->cert->dh_tmp = dhpkey;
     return 1;
 }
@@ -7627,11 +7627,11 @@ int SSL_set0_tmp_dh_pkey(SSL *s, EVP_PKEY *dhpkey)
 int SSL_CTX_set0_tmp_dh_pkey(SSL_CTX *ctx, EVP_PKEY *dhpkey)
 {
     if (!ssl_ctx_security(ctx, SSL_SECOP_TMP_DH,
-                          EVP_PKEY_get_security_bits(dhpkey), 0, dhpkey)) {
+                          OPENSSL_BOX_EVP_PKEY_get_security_bits(dhpkey), 0, dhpkey)) {
         ERR_raise(ERR_LIB_SSL, SSL_R_DH_KEY_TOO_SMALL);
         return 0;
     }
-    EVP_PKEY_free(ctx->cert->dh_tmp);
+    OPENSSL_BOX_EVP_PKEY_free(ctx->cert->dh_tmp);
     ctx->cert->dh_tmp = dhpkey;
     return 1;
 }

@@ -241,7 +241,7 @@ static int test_bio_base64_run(test_case *t, int llen, int wscnt)
     if (n1 > 0)
         BIO_write(bio, encoded, n1);
 
-    b64 = BIO_new(BIO_f_base64());
+    b64 = BIO_new(OPENSSL_BOX_BIO_f_base64());
     if (t->no_nl)
         BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
     BIO_push(b64, bio);

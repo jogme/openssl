@@ -500,7 +500,7 @@ int X509_pubkey_digest(const X509 *data, const EVP_MD *type,
 int X509_digest(const X509 *cert, const EVP_MD *md, unsigned char *data,
                 unsigned int *len)
 {
-    if (EVP_MD_is_a(md, SN_sha1) && (cert->ex_flags & EXFLAG_SET) != 0
+    if (OPENSSL_BOX_EVP_MD_is_a(md, SN_sha1) && (cert->ex_flags & EXFLAG_SET) != 0
             && (cert->ex_flags & EXFLAG_NO_FINGERPRINT) == 0) {
         /* Asking for SHA1 and we already computed it. */
         if (len != NULL)
@@ -555,7 +555,7 @@ ASN1_OCTET_STRING *X509_digest_sig(const X509 *cert,
             }
             RSA_PSS_PARAMS_free(pss);
             /* Fetch explicitly and do not fallback */
-            if ((md = EVP_MD_fetch(cert->libctx, EVP_MD_get0_name(mmd),
+            if ((md = EVP_MD_fetch(cert->libctx, OPENSSL_BOX_EVP_MD_get0_name(mmd),
                                    cert->propq)) == NULL)
                 /* Error code from fetch is sufficient */
                 return NULL;
@@ -595,12 +595,12 @@ ASN1_OCTET_STRING *X509_digest_sig(const X509 *cert,
         if (md_used != NULL)
             *md_used = md;
         else
-            EVP_MD_free(md);
+            OPENSSL_BOX_EVP_MD_free(md);
         return new;
     }
     ASN1_OCTET_STRING_free(new);
  err:
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     return NULL;
 }
 
@@ -611,7 +611,7 @@ int X509_CRL_digest(const X509_CRL *data, const EVP_MD *type,
         ERR_raise(ERR_LIB_X509, ERR_R_PASSED_NULL_PARAMETER);
         return 0;
     }
-    if (EVP_MD_is_a(type, SN_sha1)
+    if (OPENSSL_BOX_EVP_MD_is_a(type, SN_sha1)
             && (data->flags & EXFLAG_SET) != 0
             && (data->flags & EXFLAG_NO_FINGERPRINT) == 0) {
         /* Asking for SHA1; always computed in CRL d2i. */
@@ -723,12 +723,12 @@ int i2d_PKCS8PrivateKeyInfo_fp(FILE *fp, const EVP_PKEY *key)
 
 int i2d_PrivateKey_fp(FILE *fp, const EVP_PKEY *pkey)
 {
-    return ASN1_i2d_fp_of(EVP_PKEY, i2d_PrivateKey, fp, pkey);
+    return ASN1_i2d_fp_of(EVP_PKEY, OPENSSL_BOX_i2d_PrivateKey, fp, pkey);
 }
 
 EVP_PKEY *d2i_PrivateKey_fp(FILE *fp, EVP_PKEY **a)
 {
-    return ASN1_d2i_fp_of(EVP_PKEY, EVP_PKEY_new, d2i_AutoPrivateKey, fp, a);
+    return ASN1_d2i_fp_of(EVP_PKEY, OPENSSL_BOX_EVP_PKEY_new, d2i_AutoPrivateKey, fp, a);
 }
 
 EVP_PKEY *d2i_PrivateKey_ex_fp(FILE *fp, EVP_PKEY **a, OSSL_LIB_CTX *libctx,
@@ -770,7 +770,7 @@ EVP_PKEY *d2i_PUBKEY_ex_fp(FILE *fp, EVP_PKEY **a, OSSL_LIB_CTX *libctx,
 
 EVP_PKEY *d2i_PUBKEY_fp(FILE *fp, EVP_PKEY **a)
 {
-    return ASN1_d2i_fp_of(EVP_PKEY, EVP_PKEY_new, d2i_PUBKEY, fp, a);
+    return ASN1_d2i_fp_of(EVP_PKEY, OPENSSL_BOX_EVP_PKEY_new, d2i_PUBKEY, fp, a);
 }
 
 #endif
@@ -803,12 +803,12 @@ int i2d_PKCS8PrivateKeyInfo_bio(BIO *bp, const EVP_PKEY *key)
 
 int i2d_PrivateKey_bio(BIO *bp, const EVP_PKEY *pkey)
 {
-    return ASN1_i2d_bio_of(EVP_PKEY, i2d_PrivateKey, bp, pkey);
+    return ASN1_i2d_bio_of(EVP_PKEY, OPENSSL_BOX_i2d_PrivateKey, bp, pkey);
 }
 
 EVP_PKEY *d2i_PrivateKey_bio(BIO *bp, EVP_PKEY **a)
 {
-    return ASN1_d2i_bio_of(EVP_PKEY, EVP_PKEY_new, d2i_AutoPrivateKey, bp, a);
+    return ASN1_d2i_bio_of(EVP_PKEY, OPENSSL_BOX_EVP_PKEY_new, d2i_AutoPrivateKey, bp, a);
 }
 
 EVP_PKEY *d2i_PrivateKey_ex_bio(BIO *bp, EVP_PKEY **a, OSSL_LIB_CTX *libctx,
@@ -856,7 +856,7 @@ EVP_PKEY *d2i_PUBKEY_ex_bio(BIO *bp, EVP_PKEY **a, OSSL_LIB_CTX *libctx,
 
 EVP_PKEY *d2i_PUBKEY_bio(BIO *bp, EVP_PKEY **a)
 {
-    return ASN1_d2i_bio_of(EVP_PKEY, EVP_PKEY_new, d2i_PUBKEY, bp, a);
+    return ASN1_d2i_bio_of(EVP_PKEY, OPENSSL_BOX_EVP_PKEY_new, d2i_PUBKEY, bp, a);
 }
 
 #ifndef OPENSSL_NO_STDIO

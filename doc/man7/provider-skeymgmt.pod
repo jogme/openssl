@@ -142,7 +142,7 @@ be provided to the OSSL_FUNC_skeymgmt_generate() function.
 =head2 Key Object Information functions
 
 OSSL_FUNC_skeymgmt_get_key_id() returns a NUL-terminated string identifying the
-particular key. The returned string will be freed by a call to EVP_SKEY_free()
+particular key. The returned string will be freed by a call to OPENSSL_BOX_EVP_SKEY_free()
 so callers need to copy it themselves if they want to preserve the value past
 the key lifetime.  The purpose of this function is providing a printable string
 that can help users to access the specific key.  The content of this string is

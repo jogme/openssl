@@ -185,7 +185,7 @@ encoder_construct_pkey(OSSL_ENCODER_INSTANCE *encoder_inst, void *arg)
         OSSL_ENCODER *encoder =
             OSSL_ENCODER_INSTANCE_get_encoder(encoder_inst);
         const EVP_PKEY *pk = data->pk;
-        const OSSL_PROVIDER *k_prov = EVP_KEYMGMT_get0_provider(pk->keymgmt);
+        const OSSL_PROVIDER *k_prov = OPENSSL_BOX_EVP_KEYMGMT_get0_provider(pk->keymgmt);
         const OSSL_PROVIDER *e_prov = OSSL_ENCODER_get0_provider(encoder);
 
         if (k_prov != e_prov) {
@@ -246,7 +246,7 @@ static int ossl_encoder_ctx_setup_for_pkey(OSSL_ENCODER_CTX *ctx,
     }
 
     if (evp_pkey_is_provided(pkey)) {
-        prov = EVP_KEYMGMT_get0_provider(pkey->keymgmt);
+        prov = OPENSSL_BOX_EVP_KEYMGMT_get0_provider(pkey->keymgmt);
         libctx = ossl_provider_libctx(prov);
     }
 
@@ -370,7 +370,7 @@ OSSL_ENCODER_CTX *OSSL_ENCODER_CTX_new_for_pkey(const EVP_PKEY *pkey,
     }
 
     if (evp_pkey_is_provided(pkey)) {
-        const OSSL_PROVIDER *prov = EVP_KEYMGMT_get0_provider(pkey->keymgmt);
+        const OSSL_PROVIDER *prov = OPENSSL_BOX_EVP_KEYMGMT_get0_provider(pkey->keymgmt);
 
         libctx = ossl_provider_libctx(prov);
     }
@@ -378,7 +378,7 @@ OSSL_ENCODER_CTX *OSSL_ENCODER_CTX_new_for_pkey(const EVP_PKEY *pkey,
     OSSL_TRACE_BEGIN(ENCODER) {
         BIO_printf(trc_out,
                    "(ctx %p) Looking for %s encoders with selection %d\n",
-                   (void *)ctx, EVP_PKEY_get0_type_name(pkey), selection);
+                   (void *)ctx, OPENSSL_BOX_EVP_PKEY_get0_type_name(pkey), selection);
         BIO_printf(trc_out, "    output type: %s, output structure: %s\n",
                    output_type, output_struct);
     } OSSL_TRACE_END(ENCODER);

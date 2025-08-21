@@ -199,7 +199,7 @@ static size_t kdf_hkdf_size(KDF_HKDF *ctx)
         ERR_raise(ERR_LIB_PROV, PROV_R_MISSING_MESSAGE_DIGEST);
         return 0;
     }
-    sz = EVP_MD_get_size(md);
+    sz = OPENSSL_BOX_EVP_MD_get_size(md);
     if (sz <= 0)
         return 0;
 
@@ -296,7 +296,7 @@ static int hkdf_common_set_ctx_params
             return 0;
 
         md = ossl_prov_digest_md(&ctx->digest);
-        if (EVP_MD_xof(md)) {
+        if (OPENSSL_BOX_EVP_MD_xof(md)) {
             ERR_raise(ERR_LIB_PROV, PROV_R_XOF_DIGESTS_NOT_ALLOWED);
             return 0;
         }
@@ -433,7 +433,7 @@ static int hkdf_common_get_ctx_params(void *vctx, OSSL_PARAM params[])
 
         if (md == NULL)
             return 0;
-        else if (!OSSL_PARAM_set_utf8_string(p.digest, EVP_MD_get0_name(md)))
+        else if (!OSSL_PARAM_set_utf8_string(p.digest, OPENSSL_BOX_EVP_MD_get0_name(md)))
             return 0;
     }
 
@@ -632,7 +632,7 @@ static int HKDF(OSSL_LIB_CTX *libctx, const EVP_MD *evp_md,
     int ret, sz;
     size_t prk_len;
 
-    sz = EVP_MD_get_size(evp_md);
+    sz = OPENSSL_BOX_EVP_MD_get_size(evp_md);
     if (sz <= 0)
         return 0;
     prk_len = (size_t)sz;
@@ -678,7 +678,7 @@ static int HKDF_Extract(OSSL_LIB_CTX *libctx, const EVP_MD *evp_md,
                         const unsigned char *ikm, size_t ikm_len,
                         unsigned char *prk, size_t prk_len)
 {
-    int sz = EVP_MD_get_size(evp_md);
+    int sz = OPENSSL_BOX_EVP_MD_get_size(evp_md);
 
     if (sz <= 0)
         return 0;
@@ -688,8 +688,8 @@ static int HKDF_Extract(OSSL_LIB_CTX *libctx, const EVP_MD *evp_md,
     }
     /* calc: PRK = HMAC-Hash(salt, IKM) */
     return
-        EVP_Q_mac(libctx, "HMAC", NULL, EVP_MD_get0_name(evp_md), NULL, salt,
-                  salt_len, ikm, ikm_len, prk, EVP_MD_get_size(evp_md), NULL)
+        EVP_Q_mac(libctx, "HMAC", NULL, OPENSSL_BOX_EVP_MD_get0_name(evp_md), NULL, salt,
+                  salt_len, ikm, ikm_len, prk, OPENSSL_BOX_EVP_MD_get_size(evp_md), NULL)
         != NULL;
 }
 
@@ -743,7 +743,7 @@ static int HKDF_Expand(const EVP_MD *evp_md,
     unsigned char prev[EVP_MAX_MD_SIZE];
     size_t done_len = 0, dig_len, n;
 
-    sz = EVP_MD_get_size(evp_md);
+    sz = OPENSSL_BOX_EVP_MD_get_size(evp_md);
     if (sz <= 0)
         return 0;
     dig_len = (size_t)sz;
@@ -864,7 +864,7 @@ static int prov_tls13_hkdf_generate_secret(OSSL_LIB_CTX *libctx,
     /* Always filled with zeros */
     static const unsigned char default_zeros[EVP_MAX_MD_SIZE];
 
-    ret = EVP_MD_get_size(md);
+    ret = OPENSSL_BOX_EVP_MD_get_size(md);
     /* Ensure cast to size_t is safe */
     if (ret <= 0)
         return 0;
@@ -878,17 +878,17 @@ static int prov_tls13_hkdf_generate_secret(OSSL_LIB_CTX *libctx,
         prevsecret = default_zeros;
         prevsecretlen = mdlen;
     } else {
-        EVP_MD_CTX *mctx = EVP_MD_CTX_new();
+        EVP_MD_CTX *mctx = OPENSSL_BOX_EVP_MD_CTX_new();
         unsigned char hash[EVP_MAX_MD_SIZE];
 
         /* The pre-extract derive step uses a hash of no messages */
         if (mctx == NULL
                 || EVP_DigestInit_ex(mctx, md, NULL) <= 0
                 || EVP_DigestFinal_ex(mctx, hash, NULL) <= 0) {
-            EVP_MD_CTX_free(mctx);
+            OPENSSL_BOX_EVP_MD_CTX_free(mctx);
             return 0;
         }
-        EVP_MD_CTX_free(mctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(mctx);
 
         /* Generate the pre-extract secret */
         if (!prov_tls13_hkdf_expand(md, prevsecret, prevsecretlen,
@@ -918,8 +918,8 @@ static int fips_tls1_3_digest_check_passed(KDF_HKDF *ctx, const EVP_MD *md)
      * specified in FIPS 180-4. However, it only lists SHA2-256 and SHA2-384 in
      * the table. ACVP also only lists the same set of hash functions.
      */
-    int digest_unapproved = !EVP_MD_is_a(md, SN_sha256)
-        && !EVP_MD_is_a(md, SN_sha384);
+    int digest_unapproved = !OPENSSL_BOX_EVP_MD_is_a(md, SN_sha256)
+        && !OPENSSL_BOX_EVP_MD_is_a(md, SN_sha384);
 
     if (digest_unapproved) {
         if (!OSSL_FIPS_IND_ON_UNAPPROVED(ctx, OSSL_FIPS_IND_SETTABLE0,

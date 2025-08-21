@@ -141,8 +141,8 @@ static OSSL_STORE_INFO *engine_load(OSSL_STORE_LOADER_CTX *ctx,
     else if (pkey != NULL)
         info = OSSL_STORE_INFO_new_PKEY(pkey);
     if (info == NULL) {
-        EVP_PKEY_free(pkey);
-        EVP_PKEY_free(pubkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pubkey);
     }
     return info;
 }

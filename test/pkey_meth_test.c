@@ -30,8 +30,8 @@ static int test_asn1_meths(void)
     int pkey_id;
     const EVP_PKEY_ASN1_METHOD *ameth;
 
-    for (i = 0; i < EVP_PKEY_asn1_get_count(); i++) {
-        ameth = EVP_PKEY_asn1_get0(i);
+    for (i = 0; i < OPENSSL_BOX_EVP_PKEY_asn1_get_count(); i++) {
+        ameth = OPENSSL_BOX_EVP_PKEY_asn1_get0(i);
         EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, NULL, NULL, ameth);
         if (pkey_id < prev)
             good = 0;
@@ -40,10 +40,10 @@ static int test_asn1_meths(void)
     }
     if (!good) {
         TEST_error("EVP_PKEY_ASN1_METHOD table out of order");
-        for (i = 0; i < EVP_PKEY_asn1_get_count(); i++) {
+        for (i = 0; i < OPENSSL_BOX_EVP_PKEY_asn1_get_count(); i++) {
             const char *info;
 
-            ameth = EVP_PKEY_asn1_get0(i);
+            ameth = OPENSSL_BOX_EVP_PKEY_asn1_get0(i);
             EVP_PKEY_asn1_get0_info(&pkey_id, NULL, NULL, &info, NULL, ameth);
             if (info == NULL)
                 info = "<NO NAME>";
@@ -64,8 +64,8 @@ static int test_pkey_meths(void)
     int pkey_id;
     const EVP_PKEY_METHOD *pmeth;
 
-    for (i = 0; i < EVP_PKEY_meth_get_count(); i++) {
-        pmeth = EVP_PKEY_meth_get0(i);
+    for (i = 0; i < OPENSSL_BOX_EVP_PKEY_meth_get_count(); i++) {
+        pmeth = OPENSSL_BOX_EVP_PKEY_meth_get0(i);
         EVP_PKEY_meth_get0_info(&pkey_id, NULL, pmeth);
         if (pkey_id < prev)
             good = 0;
@@ -74,8 +74,8 @@ static int test_pkey_meths(void)
     }
     if (!good) {
         TEST_error("EVP_PKEY_METHOD table out of order");
-        for (i = 0; i < EVP_PKEY_meth_get_count(); i++) {
-            pmeth = EVP_PKEY_meth_get0(i);
+        for (i = 0; i < OPENSSL_BOX_EVP_PKEY_meth_get_count(); i++) {
+            pmeth = OPENSSL_BOX_EVP_PKEY_meth_get0(i);
             EVP_PKEY_meth_get0_info(&pkey_id, NULL, pmeth);
             TEST_note("%d : %s", pkey_id, OBJ_nid2ln(pkey_id));
         }

@@ -745,7 +745,7 @@ static void sv_usage(void)
 
 static void print_key_details(BIO *out, EVP_PKEY *key)
 {
-    int keyid = EVP_PKEY_get_id(key);
+    int keyid = OPENSSL_BOX_EVP_PKEY_get_id(key);
 
 #ifndef OPENSSL_NO_EC
     if (keyid == EVP_PKEY_EC) {
@@ -754,7 +754,7 @@ static void print_key_details(BIO *out, EVP_PKEY *key)
 
         if (!EVP_PKEY_get_group_name(key, group, sizeof(group), &size))
             strcpy(group, "unknown group");
-        BIO_printf(out, "%d bits EC (%s)", EVP_PKEY_get_bits(key), group);
+        BIO_printf(out, "%d bits EC (%s)", OPENSSL_BOX_EVP_PKEY_get_bits(key), group);
     } else
 #endif
     {
@@ -773,7 +773,7 @@ static void print_key_details(BIO *out, EVP_PKEY *key)
             algname = OBJ_nid2sn(keyid);
             break;
         }
-        BIO_printf(out, "%d bits %s", EVP_PKEY_get_bits(key), algname);
+        BIO_printf(out, "%d bits %s", OPENSSL_BOX_EVP_PKEY_get_bits(key), algname);
     }
 }
 
@@ -801,7 +801,7 @@ static void print_details(SSL *c_ssl, const char *prefix)
     if (SSL_get_peer_tmp_key(c_ssl, &pkey)) {
         BIO_puts(bio_stdout, ", temp key: ");
         print_key_details(bio_stdout, pkey);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
     }
     if (SSL_get_peer_signature_nid(c_ssl, &mdnid))
         BIO_printf(bio_stdout, ", digest=%s", OBJ_nid2sn(mdnid));
@@ -1532,16 +1532,16 @@ int main(int argc, char *argv[])
         else
             dhpkey = get_dh2048(libctx);
 
-        if (dhpkey == NULL || !EVP_PKEY_up_ref(dhpkey)) {
-            EVP_PKEY_free(dhpkey);
+        if (dhpkey == NULL || !OPENSSL_BOX_EVP_PKEY_up_ref(dhpkey)) {
+            OPENSSL_BOX_EVP_PKEY_free(dhpkey);
             BIO_puts(bio_err, "Error getting DH parameters\n");
             ERR_print_errors(bio_err);
             goto end;
         }
         if (!SSL_CTX_set0_tmp_dh_pkey(s_ctx, dhpkey))
-            EVP_PKEY_free(dhpkey);
+            OPENSSL_BOX_EVP_PKEY_free(dhpkey);
         if (!SSL_CTX_set0_tmp_dh_pkey(s_ctx2, dhpkey))
-            EVP_PKEY_free(dhpkey);
+            OPENSSL_BOX_EVP_PKEY_free(dhpkey);
     }
 #endif
 

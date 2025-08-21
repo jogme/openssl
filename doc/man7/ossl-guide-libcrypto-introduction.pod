@@ -41,7 +41,7 @@ has a different set of functions associated with it. For example to perform an
 encryption operation using AES (or any other encryption algorithm) you would use
 the encryption functions detailed on the L<EVP_EncryptInit(3)> page. Or to
 perform a digest operation using SHA256 then you would use the digesting
-functions on the L<EVP_DigestInit(3)> page.
+functions on the L<OPENSSL_BOX_EVP_DigestInit(3)> page.
 
 =head1 ALGORITHM FETCHING
 
@@ -108,8 +108,8 @@ call to L<EVP_MD_fetch(3)>.
 =head2 Implicit fetching
 
 OpenSSL has a number of functions that return an algorithm object with no
-associated implementation, such as L<EVP_sha256(3)>, L<EVP_aes_128_cbc(3)>,
-L<EVP_get_cipherbyname(3)> or L<EVP_get_digestbyname(3)>. These are present for
+associated implementation, such as L<OPENSSL_BOX_EVP_sha256(3)>, L<OPENSSL_BOX_EVP_aes_128_cbc(3)>,
+L<OPENSSL_BOX_EVP_get_cipherbyname(3)> or L<OPENSSL_BOX_EVP_get_digestbyname(3)>. These are present for
 compatibility with OpenSSL before version 3.0 where explicit fetching was not
 available.
 
@@ -136,7 +136,7 @@ explicitly fetched algorithm each subsequent time. This will typically be
 faster than implicitly fetching the algorithm every time you use it. See an
 example of Explicit fetching in L</USING ALGORITHMS IN APPLICATIONS>.
 
-Prior to OpenSSL 3.0, functions such as EVP_sha256() which return a "const"
+Prior to OpenSSL 3.0, functions such as OPENSSL_BOX_EVP_sha256() which return a "const"
 object were used directly to indicate the algorithm to use in various function
 calls. If you pass the return value of one of these convenience functions to an
 operation then you are using implicit fetching. If you are converting an
@@ -203,41 +203,41 @@ that some algorithms have aliases. So "SHA256" and "SHA2-256" are synonymous:
 
  EVP_MD *md = EVP_MD_fetch(NULL, "SHA2-256", NULL);
  ...
- EVP_MD_free(md);
+ OPENSSL_BOX_EVP_MD_free(md);
 
 Fetch any available implementation of AES-128-CBC in the default context:
 
  EVP_CIPHER *cipher = EVP_CIPHER_fetch(NULL, "AES-128-CBC", NULL);
  ...
- EVP_CIPHER_free(cipher);
+ OPENSSL_BOX_EVP_CIPHER_free(cipher);
 
 Fetch an implementation of SHA2-256 from the default provider in the default
 context:
 
  EVP_MD *md = EVP_MD_fetch(NULL, "SHA2-256", "provider=default");
  ...
- EVP_MD_free(md);
+ OPENSSL_BOX_EVP_MD_free(md);
 
 Fetch an implementation of SHA2-256 that is not from the default provider in the
 default context:
 
  EVP_MD *md = EVP_MD_fetch(NULL, "SHA2-256", "provider!=default");
  ...
- EVP_MD_free(md);
+ OPENSSL_BOX_EVP_MD_free(md);
 
 Fetch an implementation of SHA2-256 that is preferably from the FIPS provider in
 the default context:
 
  EVP_MD *md = EVP_MD_fetch(NULL, "SHA2-256", "provider=?fips");
  ...
- EVP_MD_free(md);
+ OPENSSL_BOX_EVP_MD_free(md);
 
 Fetch an implementation of SHA2-256 from the default provider in the specified
 library context:
 
  EVP_MD *md = EVP_MD_fetch(libctx, "SHA2-256", "provider=default");
  ...
- EVP_MD_free(md);
+ OPENSSL_BOX_EVP_MD_free(md);
 
 Load the legacy provider into the default context and then fetch an
 implementation of WHIRLPOOL from it:
@@ -247,7 +247,7 @@ implementation of WHIRLPOOL from it:
 
  EVP_MD *md = EVP_MD_fetch(NULL, "WHIRLPOOL", "provider=legacy");
  ...
- EVP_MD_free(md);
+ OPENSSL_BOX_EVP_MD_free(md);
 
 Note that in the above example the property string "provider=legacy" is optional
 since, assuming no other providers have been loaded, the only implementation of
@@ -262,8 +262,8 @@ other providers:
  EVP_MD *md_whirlpool = EVP_MD_fetch(NULL, "whirlpool", NULL);
  EVP_MD *md_sha256 = EVP_MD_fetch(NULL, "SHA2-256", NULL);
  ...
- EVP_MD_free(md_whirlpool);
- EVP_MD_free(md_sha256);
+ OPENSSL_BOX_EVP_MD_free(md_whirlpool);
+ OPENSSL_BOX_EVP_MD_free(md_sha256);
 
 
 =head1 USING ALGORITHMS IN APPLICATIONS
@@ -306,7 +306,7 @@ L<ossl-guide-libraries-introduction(7)/DEMO APPLICATIONS>).
      int ret = 1;
 
      /* Create a context for the digest operation */
-     ctx = EVP_MD_CTX_new();
+     ctx = OPENSSL_BOX_EVP_MD_CTX_new();
      if (ctx == NULL)
          goto err;
 
@@ -335,7 +335,7 @@ L<ossl-guide-libraries-introduction(7)/DEMO APPLICATIONS>).
          goto err;
 
      /* Allocate the output buffer */
-     outdigest = OPENSSL_malloc(EVP_MD_get_size(sha256));
+     outdigest = OPENSSL_malloc(OPENSSL_BOX_EVP_MD_get_size(sha256));
      if (outdigest == NULL)
          goto err;
 
@@ -351,8 +351,8 @@ L<ossl-guide-libraries-introduction(7)/DEMO APPLICATIONS>).
   err:
      /* Clean up all the resources we allocated */
      OPENSSL_free(outdigest);
-     EVP_MD_free(sha256);
-     EVP_MD_CTX_free(ctx);
+     OPENSSL_BOX_EVP_MD_free(sha256);
+     OPENSSL_BOX_EVP_MD_CTX_free(ctx);
      if (ret != 0)
         ERR_print_errors_fp(stderr);
      return ret;

@@ -275,7 +275,7 @@ int req_main(int argc, char **argv)
     long newkey_len = -1;
     unsigned long chtype = MBSTRING_ASC, reqflag = 0;
 
-    cipher = (EVP_CIPHER *)EVP_aes_256_cbc();
+    cipher = (EVP_CIPHER *)OPENSSL_BOX_EVP_aes_256_cbc();
 
     opt_set_unknown_name("digest");
     prog = opt_init(argc, argv, req_options);
@@ -492,7 +492,7 @@ int req_main(int argc, char **argv)
             newreq = precert = 1;
             break;
         case OPT_CIPHER:
-            cipher = EVP_get_cipherbyname(opt_arg());
+            cipher = OPENSSL_BOX_EVP_get_cipherbyname(opt_arg());
             if (cipher == NULL) {
                 BIO_printf(bio_err, "Unknown cipher: %s\n", opt_arg());
                 goto opthelp;
@@ -645,24 +645,24 @@ int req_main(int argc, char **argv)
             goto end;
 
         if (newkey_len < MIN_KEY_LENGTH
-            && (EVP_PKEY_CTX_is_a(genctx, "RSA")
-                || EVP_PKEY_CTX_is_a(genctx, "RSA-PSS")
-                || EVP_PKEY_CTX_is_a(genctx, "DSA"))) {
+            && (OPENSSL_BOX_EVP_PKEY_CTX_is_a(genctx, "RSA")
+                || OPENSSL_BOX_EVP_PKEY_CTX_is_a(genctx, "RSA-PSS")
+                || OPENSSL_BOX_EVP_PKEY_CTX_is_a(genctx, "DSA"))) {
             BIO_printf(bio_err, "Private key length too short, needs to be at least %d bits, not %ld.\n",
                        MIN_KEY_LENGTH, newkey_len);
             goto end;
         }
 
         if (newkey_len > OPENSSL_RSA_MAX_MODULUS_BITS
-            && (EVP_PKEY_CTX_is_a(genctx, "RSA")
-                || EVP_PKEY_CTX_is_a(genctx, "RSA-PSS")))
+            && (OPENSSL_BOX_EVP_PKEY_CTX_is_a(genctx, "RSA")
+                || OPENSSL_BOX_EVP_PKEY_CTX_is_a(genctx, "RSA-PSS")))
             BIO_printf(bio_err,
                        "Warning: It is not recommended to use more than %d bit for RSA keys.\n"
                        "         Your key size is %ld! Larger key size may behave not as expected.\n",
                        OPENSSL_RSA_MAX_MODULUS_BITS, newkey_len);
 
 #ifndef OPENSSL_NO_DSA
-        if (EVP_PKEY_CTX_is_a(genctx, "DSA")
+        if (OPENSSL_BOX_EVP_PKEY_CTX_is_a(genctx, "DSA")
                 && newkey_len > OPENSSL_DSA_MAX_MODULUS_BITS)
             BIO_printf(bio_err,
                        "Warning: It is not recommended to use more than %d bit for DSA keys.\n"
@@ -681,15 +681,15 @@ int req_main(int argc, char **argv)
             }
         }
 
-        EVP_PKEY_CTX_set_app_data(genctx, bio_err);
+        OPENSSL_BOX_EVP_PKEY_CTX_set_app_data(genctx, bio_err);
         if (progress)
-            EVP_PKEY_CTX_set_cb(genctx, progress_cb);
+            OPENSSL_BOX_EVP_PKEY_CTX_set_cb(genctx, progress_cb);
 
         pkey = app_keygen(genctx, keyalgstr, newkey_len, verbose);
         if (pkey == NULL)
             goto end;
 
-        EVP_PKEY_CTX_free(genctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(genctx);
         genctx = NULL;
     }
     if (keyout == NULL && keyfile == NULL)
@@ -1005,7 +1005,7 @@ int req_main(int argc, char **argv)
             goto end;
         }
         BIO_puts(out, "Modulus=");
-        if (EVP_PKEY_is_a(tpubkey, "RSA") || EVP_PKEY_is_a(tpubkey, "RSA-PSS")) {
+        if (OPENSSL_BOX_EVP_PKEY_is_a(tpubkey, "RSA") || OPENSSL_BOX_EVP_PKEY_is_a(tpubkey, "RSA-PSS")) {
             BIGNUM *n = NULL;
 
             if (!EVP_PKEY_get_bn_param(tpubkey, "n", &n))
@@ -1049,8 +1049,8 @@ int req_main(int argc, char **argv)
     NCONF_free(addext_conf);
     BIO_free(addext_bio);
     BIO_free_all(out);
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_CTX_free(genctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(genctx);
     sk_OPENSSL_STRING_free(pkeyopts);
     sk_OPENSSL_STRING_free(sigopts);
     sk_OPENSSL_STRING_free(vfyopts);
@@ -1064,7 +1064,7 @@ int req_main(int argc, char **argv)
     X509_NAME_free(fsubj);
     X509_free(new_x509);
     X509_free(CAcert);
-    EVP_PKEY_free(CAkey);
+    OPENSSL_BOX_EVP_PKEY_free(CAkey);
     ASN1_INTEGER_free(serial);
     release_engine(e);
     if (passin != nofree_passin)
@@ -1571,9 +1571,9 @@ static EVP_PKEY_CTX *set_keygen_ctx(const char *gstr,
             return NULL;
         }
         if (keytype == NULL) {
-            keytype = EVP_PKEY_get0_type_name(param);
+            keytype = OPENSSL_BOX_EVP_PKEY_get0_type_name(param);
             if (keytype == NULL) {
-                EVP_PKEY_free(param);
+                OPENSSL_BOX_EVP_PKEY_free(param);
                 BIO_puts(bio_err, "Unable to determine key type\n");
                 return NULL;
             }
@@ -1587,7 +1587,7 @@ static EVP_PKEY_CTX *set_keygen_ctx(const char *gstr,
 
     if (*pkeytype == NULL) {
         BIO_printf(bio_err, "Out of memory\n");
-        EVP_PKEY_free(param);
+        OPENSSL_BOX_EVP_PKEY_free(param);
         return NULL;
     }
 
@@ -1595,19 +1595,19 @@ static EVP_PKEY_CTX *set_keygen_ctx(const char *gstr,
         *pkeylen = keylen;
 
     if (param != NULL) {
-        if (!EVP_PKEY_is_a(param, *pkeytype)) {
+        if (!OPENSSL_BOX_EVP_PKEY_is_a(param, *pkeytype)) {
             BIO_printf(bio_err, "Key type does not match parameters\n");
-            EVP_PKEY_free(param);
+            OPENSSL_BOX_EVP_PKEY_free(param);
             return NULL;
         }
 
         if (keygen_engine != NULL)
-            gctx = EVP_PKEY_CTX_new(param, keygen_engine);
+            gctx = OPENSSL_BOX_EVP_PKEY_CTX_new(param, keygen_engine);
         else
             gctx = EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(),
                                               param, app_get0_propq());
-        *pkeylen = EVP_PKEY_get_bits(param);
-        EVP_PKEY_free(param);
+        *pkeylen = OPENSSL_BOX_EVP_PKEY_get_bits(param);
+        OPENSSL_BOX_EVP_PKEY_free(param);
     } else {
 #ifndef OPENSSL_NO_DEPRECATED_3_6
         if (keygen_engine != NULL) {
@@ -1615,7 +1615,7 @@ static EVP_PKEY_CTX *set_keygen_ctx(const char *gstr,
                                              keygen_engine);
 
             if (pkey_id != NID_undef)
-                gctx = EVP_PKEY_CTX_new_id(pkey_id, keygen_engine);
+                gctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(pkey_id, keygen_engine);
         } else {
 #endif
             gctx = EVP_PKEY_CTX_new_from_name(app_get0_libctx(),
@@ -1630,13 +1630,13 @@ static EVP_PKEY_CTX *set_keygen_ctx(const char *gstr,
         return NULL;
     }
 
-    if (EVP_PKEY_keygen_init(gctx) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_keygen_init(gctx) <= 0) {
         BIO_puts(bio_err, "Error initializing keygen context\n");
-        EVP_PKEY_CTX_free(gctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(gctx);
         return NULL;
     }
-    if (keylen == -1 && (EVP_PKEY_CTX_is_a(gctx, "RSA")
-        || EVP_PKEY_CTX_is_a(gctx, "RSA-PSS")))
+    if (keylen == -1 && (OPENSSL_BOX_EVP_PKEY_CTX_is_a(gctx, "RSA")
+        || OPENSSL_BOX_EVP_PKEY_CTX_is_a(gctx, "RSA-PSS")))
         keylen = *pkeylen;
 
     if (keylen != -1) {
@@ -1645,9 +1645,9 @@ static EVP_PKEY_CTX *set_keygen_ctx(const char *gstr,
 
         params[0] =
             OSSL_PARAM_construct_size_t(OSSL_PKEY_PARAM_BITS, &bits);
-        if (EVP_PKEY_CTX_set_params(gctx, params) <= 0) {
+        if (OPENSSL_BOX_EVP_PKEY_CTX_set_params(gctx, params) <= 0) {
             BIO_puts(bio_err, "Error setting keysize\n");
-            EVP_PKEY_CTX_free(gctx);
+            OPENSSL_BOX_EVP_PKEY_CTX_free(gctx);
             return NULL;
         }
     }

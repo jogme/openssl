@@ -184,7 +184,7 @@ Indicating that all key object parameters should be considered,
 regardless of their more granular classification.
 
 =for comment This should used by EVP functions such as
-EVP_PKEY_copy_parameters() and EVP_PKEY_parameters_eq()
+OPENSSL_BOX_EVP_PKEY_copy_parameters() and OPENSSL_BOX_EVP_PKEY_parameters_eq()
 
 This is a combination of B<OSSL_KEYMGMT_SELECT_DOMAIN_PARAMETERS> and
 B<OSSL_KEYMGMT_SELECT_OTHER_PARAMETERS>.
@@ -531,9 +531,9 @@ To enable, specify the B<enable-lms> build configuration option.
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_get_size(3)>,
-L<EVP_PKEY_get_bits(3)>,
-L<EVP_PKEY_get_security_bits(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_size(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_bits(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get_security_bits(3)>,
 L<provider(7)>,
 L<EVP_PKEY-X25519(7)>,
 L<EVP_PKEY-X448(7)>,

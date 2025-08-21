@@ -92,7 +92,7 @@ static int test_cert_key_cert(void)
     if (!TEST_ptr(key = load_pkey_pem(pemfile, NULL)))
         return 0;
 
-    EVP_PKEY_free(key);
+    OPENSSL_BOX_EVP_PKEY_free(key);
     return 1;
 }
 
@@ -149,7 +149,7 @@ static int test_protected_params(void)
 
     ret = 1;
  err:
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     BIO_free(b);
     return ret;
 }

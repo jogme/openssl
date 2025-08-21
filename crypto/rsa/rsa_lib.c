@@ -965,7 +965,7 @@ done:
 static int int_set_rsa_md_name(EVP_PKEY_CTX *ctx,
                                /* For checks */
                                int keytype, int optype,
-                               /* For EVP_PKEY_CTX_set_params() */
+                               /* For OPENSSL_BOX_EVP_PKEY_CTX_set_params() */
                                const char *mdkey, const char *mdname,
                                const char *propkey, const char *mdprops)
 {
@@ -980,12 +980,12 @@ static int int_set_rsa_md_name(EVP_PKEY_CTX *ctx,
     /* If key type not RSA return error */
     switch (keytype) {
     case -1:
-        if (!EVP_PKEY_CTX_is_a(ctx, "RSA")
-            && !EVP_PKEY_CTX_is_a(ctx, "RSA-PSS"))
+        if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA")
+            && !OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA-PSS"))
             return -1;
         break;
     default:
-        if (!EVP_PKEY_CTX_is_a(ctx, evp_pkey_type2name(keytype)))
+        if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, evp_pkey_type2name(keytype)))
             return -1;
         break;
     }
@@ -1005,7 +1005,7 @@ static int int_set_rsa_md_name(EVP_PKEY_CTX *ctx,
 static int int_get_rsa_md_name(EVP_PKEY_CTX *ctx,
                                /* For checks */
                                int keytype, int optype,
-                               /* For EVP_PKEY_CTX_get_params() */
+                               /* For OPENSSL_BOX_EVP_PKEY_CTX_get_params() */
                                const char *mdkey,
                                char *mdname, size_t mdnamesize)
 {
@@ -1020,12 +1020,12 @@ static int int_get_rsa_md_name(EVP_PKEY_CTX *ctx,
     /* If key type not RSA return error */
     switch (keytype) {
     case -1:
-        if (!EVP_PKEY_CTX_is_a(ctx, "RSA")
-            && !EVP_PKEY_CTX_is_a(ctx, "RSA-PSS"))
+        if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA")
+            && !OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA-PSS"))
             return -1;
         break;
     default:
-        if (!EVP_PKEY_CTX_is_a(ctx, evp_pkey_type2name(keytype)))
+        if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, evp_pkey_type2name(keytype)))
             return -1;
         break;
     }
@@ -1083,7 +1083,7 @@ int EVP_PKEY_CTX_set_rsa_pss_keygen_md_name(EVP_PKEY_CTX *ctx,
 int EVP_PKEY_CTX_set_rsa_oaep_md(EVP_PKEY_CTX *ctx, const EVP_MD *md)
 {
     /* If key type not RSA return error */
-    if (!EVP_PKEY_CTX_is_a(ctx, "RSA"))
+    if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA"))
         return -1;
 
     return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA, EVP_PKEY_OP_TYPE_CRYPT,
@@ -1114,7 +1114,7 @@ int EVP_PKEY_CTX_get_rsa_oaep_md_name(EVP_PKEY_CTX *ctx, char *name,
 int EVP_PKEY_CTX_get_rsa_oaep_md(EVP_PKEY_CTX *ctx, const EVP_MD **md)
 {
     /* If key type not RSA return error */
-    if (!EVP_PKEY_CTX_is_a(ctx, "RSA"))
+    if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA"))
         return -1;
 
     return EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA, EVP_PKEY_OP_TYPE_CRYPT,
@@ -1194,7 +1194,7 @@ int EVP_PKEY_CTX_set0_rsa_oaep_label(EVP_PKEY_CTX *ctx, void *label, int llen)
     }
 
     /* If key type not RSA return error */
-    if (!EVP_PKEY_CTX_is_a(ctx, "RSA"))
+    if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA"))
         return -1;
 
     /* Accept NULL for backward compatibility */
@@ -1227,14 +1227,14 @@ int EVP_PKEY_CTX_get0_rsa_oaep_label(EVP_PKEY_CTX *ctx, unsigned char **label)
     }
 
     /* If key type not RSA return error */
-    if (!EVP_PKEY_CTX_is_a(ctx, "RSA"))
+    if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA"))
         return -1;
 
     *p++ = OSSL_PARAM_construct_octet_ptr(OSSL_ASYM_CIPHER_PARAM_OAEP_LABEL,
                                           (void **)label, 0);
     *p++ = OSSL_PARAM_construct_end();
 
-    if (!EVP_PKEY_CTX_get_params(ctx, rsa_params))
+    if (!OPENSSL_BOX_EVP_PKEY_CTX_get_params(ctx, rsa_params))
         return -1;
 
     labellen = rsa_params[0].return_size;
@@ -1293,7 +1293,7 @@ int EVP_PKEY_CTX_set_rsa_pss_keygen_saltlen(EVP_PKEY_CTX *ctx, int saltlen)
         return -2;
     }
 
-    if (!EVP_PKEY_CTX_is_a(ctx, "RSA-PSS"))
+    if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA-PSS"))
         return -1;
 
     *p++ = OSSL_PARAM_construct_int(OSSL_SIGNATURE_PARAM_PSS_SALTLEN,
@@ -1315,8 +1315,8 @@ int EVP_PKEY_CTX_set_rsa_keygen_bits(EVP_PKEY_CTX *ctx, int bits)
     }
 
     /* If key type not RSA return error */
-    if (!EVP_PKEY_CTX_is_a(ctx, "RSA")
-        && !EVP_PKEY_CTX_is_a(ctx, "RSA-PSS"))
+    if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA")
+        && !OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA-PSS"))
         return -1;
 
     *p++ = OSSL_PARAM_construct_size_t(OSSL_PKEY_PARAM_RSA_BITS, &bits2);
@@ -1375,8 +1375,8 @@ int EVP_PKEY_CTX_set_rsa_keygen_primes(EVP_PKEY_CTX *ctx, int primes)
     }
 
     /* If key type not RSA return error */
-    if (!EVP_PKEY_CTX_is_a(ctx, "RSA")
-        && !EVP_PKEY_CTX_is_a(ctx, "RSA-PSS"))
+    if (!OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA")
+        && !OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, "RSA-PSS"))
         return -1;
 
     *p++ = OSSL_PARAM_construct_size_t(OSSL_PKEY_PARAM_RSA_PRIMES, &primes2);

@@ -25,7 +25,7 @@ static const EVP_MD sm3_md = {
                              SM3_CBLOCK),
 };
 
-const EVP_MD *EVP_sm3(void)
+const EVP_MD *OPENSSL_BOX_EVP_sm3(void)
 {
     return &sm3_md;
 }

@@ -118,7 +118,7 @@ int SCT_CTX_verify(const SCT_CTX *sctx, const SCT *sct)
         return 0;
     }
 
-    ctx = EVP_MD_CTX_new();
+    ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx == NULL)
         goto end;
 
@@ -136,6 +136,6 @@ int SCT_CTX_verify(const SCT_CTX *sctx, const SCT *sct)
         ERR_raise(ERR_LIB_CT, CT_R_SCT_INVALID_SIGNATURE);
 
 end:
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }

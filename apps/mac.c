@@ -147,7 +147,7 @@ opthelp:
         goto opthelp;
     }
 
-    ctx = EVP_MAC_CTX_new(mac);
+    ctx = OPENSSL_BOX_EVP_MAC_CTX_new(mac);
     if (ctx == NULL)
         goto err;
 
@@ -155,11 +155,11 @@ opthelp:
         int ok = 1;
 
         params = app_params_new_from_opts(opts,
-                                          EVP_MAC_settable_ctx_params(mac));
+                                          OPENSSL_BOX_EVP_MAC_settable_ctx_params(mac));
         if (params == NULL)
             goto err;
 
-        if (!EVP_MAC_CTX_set_params(ctx, params)) {
+        if (!OPENSSL_BOX_EVP_MAC_CTX_set_params(ctx, params)) {
             BIO_printf(bio_err, "MAC parameter error\n");
             ERR_print_errors(bio_err);
             ok = 0;
@@ -191,8 +191,8 @@ opthelp:
         }
         if (i == 0)
             break;
-        if (!EVP_MAC_update(ctx, buf, i)) {
-            BIO_printf(bio_err, "EVP_MAC_update failed\n");
+        if (!OPENSSL_BOX_EVP_MAC_update(ctx, buf, i)) {
+            BIO_printf(bio_err, "OPENSSL_BOX_EVP_MAC_update failed\n");
             goto err;
         }
     }
@@ -230,7 +230,7 @@ err:
     sk_OPENSSL_STRING_free(opts);
     BIO_free(in);
     BIO_free(out);
-    EVP_MAC_CTX_free(ctx);
-    EVP_MAC_free(mac);
+    OPENSSL_BOX_EVP_MAC_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MAC_free(mac);
     return ret;
 }

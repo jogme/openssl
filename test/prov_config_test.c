@@ -41,7 +41,7 @@ static int test_double_config(void)
 
     testresult = 1;
  err:
-    EVP_MD_free(sha256);
+    OPENSSL_BOX_EVP_MD_free(sha256);
     OSSL_LIB_CTX_free(ctx);
     return testresult;
 }

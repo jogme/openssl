@@ -161,7 +161,7 @@ static int kdf_pvk_derive(void *vctx, unsigned char *key, size_t keylen,
         ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_DIGEST);
         return 0;
     }
-    res = EVP_MD_get_size(md);
+    res = OPENSSL_BOX_EVP_MD_get_size(md);
     if (res <= 0) {
         ERR_raise(ERR_LIB_PROV, PROV_R_BAD_LENGTH);
         return 0;
@@ -171,13 +171,13 @@ static int kdf_pvk_derive(void *vctx, unsigned char *key, size_t keylen,
         return 0;
     }
 
-    mctx = EVP_MD_CTX_new();
+    mctx = OPENSSL_BOX_EVP_MD_CTX_new();
     res = mctx != NULL
           && EVP_DigestInit_ex(mctx, md, NULL)
           && EVP_DigestUpdate(mctx, ctx->salt, ctx->salt_len)
           && EVP_DigestUpdate(mctx, ctx->pass, ctx->pass_len)
           && EVP_DigestFinal_ex(mctx, key, NULL);
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
     return res;
 }
 

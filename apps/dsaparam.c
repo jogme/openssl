@@ -163,14 +163,14 @@ int dsaparam_main(int argc, char **argv)
                        "         Your key size is %d! Larger key size may behave not as expected.\n",
                        OPENSSL_DSA_MAX_MODULUS_BITS, numbits);
 
-        EVP_PKEY_CTX_set_app_data(ctx, bio_err);
+        OPENSSL_BOX_EVP_PKEY_CTX_set_app_data(ctx, bio_err);
         if (verbose) {
-            EVP_PKEY_CTX_set_cb(ctx, progress_cb);
+            OPENSSL_BOX_EVP_PKEY_CTX_set_cb(ctx, progress_cb);
             BIO_printf(bio_err, "Generating DSA parameters, %d bit long prime\n",
                        num);
             BIO_printf(bio_err, "This could take some time\n");
         }
-        if (EVP_PKEY_paramgen_init(ctx) <= 0) {
+        if (OPENSSL_BOX_EVP_PKEY_paramgen_init(ctx) <= 0) {
             BIO_printf(bio_err,
                        "Error, DSA key generation paramgen init failed\n");
             goto end;
@@ -209,7 +209,7 @@ int dsaparam_main(int argc, char **argv)
 
     if (!noout) {
         if (outformat == FORMAT_ASN1)
-            i = i2d_KeyParams_bio(out, params);
+            i = OPENSSL_BOX_i2d_KeyParams_bio(out, params);
         else
             i = PEM_write_bio_Parameters(out, params);
         if (!i) {
@@ -218,7 +218,7 @@ int dsaparam_main(int argc, char **argv)
         }
     }
     if (genkey) {
-        EVP_PKEY_CTX_free(ctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
         ctx = EVP_PKEY_CTX_new_from_pkey(app_get0_libctx(), params,
                 app_get0_propq());
         if (ctx == NULL) {
@@ -226,7 +226,7 @@ int dsaparam_main(int argc, char **argv)
                        "Error, DSA key generation context allocation failed\n");
             goto end;
         }
-        if (EVP_PKEY_keygen_init(ctx) <= 0) {
+        if (OPENSSL_BOX_EVP_PKEY_keygen_init(ctx) <= 0) {
             BIO_printf(bio_err,
                        "Error, unable to initialise for key generation\n");
             goto end;
@@ -245,9 +245,9 @@ int dsaparam_main(int argc, char **argv)
     if (ret != 0)
         ERR_print_errors(bio_err);
     BIO_free_all(out);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_free(params);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(params);
     release_engine(e);
     return ret;
 }

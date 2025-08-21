@@ -187,7 +187,7 @@ void ecdh_freectx(void *vpecdhctx)
     EC_KEY_free(pecdhctx->k);
     EC_KEY_free(pecdhctx->peerk);
 
-    EVP_MD_free(pecdhctx->kdf_md);
+    OPENSSL_BOX_EVP_MD_free(pecdhctx->kdf_md);
     OPENSSL_clear_free(pecdhctx->kdf_ukm, pecdhctx->kdf_ukmlen);
 
     OPENSSL_free(pecdhctx);
@@ -227,7 +227,7 @@ void *ecdh_dupctx(void *vpecdhctx)
     else
         dstctx->peerk = srcctx->peerk;
 
-    if (srcctx->kdf_md != NULL && !EVP_MD_up_ref(srcctx->kdf_md))
+    if (srcctx->kdf_md != NULL && !OPENSSL_BOX_EVP_MD_up_ref(srcctx->kdf_md))
         goto err;
     else
         dstctx->kdf_md = srcctx->kdf_md;
@@ -315,12 +315,12 @@ int ecdh_set_ctx_params(void *vpecdhctx, const OSSL_PARAM params[])
                 return 0;
         }
 
-        EVP_MD_free(pectx->kdf_md);
+        OPENSSL_BOX_EVP_MD_free(pectx->kdf_md);
         pectx->kdf_md = EVP_MD_fetch(pectx->libctx, name, mdprops);
         if (pectx->kdf_md == NULL)
             return 0;
         /* XOF digests are not allowed */
-        if (EVP_MD_xof(pectx->kdf_md)) {
+        if (OPENSSL_BOX_EVP_MD_xof(pectx->kdf_md)) {
             ERR_raise(ERR_LIB_PROV, PROV_R_XOF_DIGESTS_NOT_ALLOWED);
             return 0;
         }
@@ -328,7 +328,7 @@ int ecdh_set_ctx_params(void *vpecdhctx, const OSSL_PARAM params[])
         if (!ossl_fips_ind_digest_exch_check(OSSL_FIPS_IND_GET(pectx),
                                              OSSL_FIPS_IND_SETTABLE1, pectx->libctx,
                                              pectx->kdf_md, "ECDH Set Ctx")) {
-            EVP_MD_free(pectx->kdf_md);
+            OPENSSL_BOX_EVP_MD_free(pectx->kdf_md);
             pectx->kdf_md = NULL;
             return 0;
         }
@@ -415,7 +415,7 @@ int ecdh_get_ctx_params(void *vpecdhctx, OSSL_PARAM params[])
     if (p.digest != NULL
             && !OSSL_PARAM_set_utf8_string(p.digest, pectx->kdf_md == NULL
                                            ? ""
-                                           : EVP_MD_get0_name(pectx->kdf_md))) {
+                                           : OPENSSL_BOX_EVP_MD_get0_name(pectx->kdf_md))) {
         return 0;
     }
 

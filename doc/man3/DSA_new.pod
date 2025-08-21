@@ -19,7 +19,7 @@ see L<openssl_user_macros(7)>:
 =head1 DESCRIPTION
 
 All of the functions described on this page are deprecated.
-Applications should instead use L<EVP_PKEY_new(3)> and L<EVP_PKEY_free(3)>.
+Applications should instead use L<OPENSSL_BOX_EVP_PKEY_new(3)> and L<OPENSSL_BOX_EVP_PKEY_free(3)>.
 
 DSA_new() allocates and initializes a B<DSA> structure. It is equivalent to
 calling DSA_new_method(NULL).
@@ -39,7 +39,7 @@ DSA_free() returns no value.
 
 =head1 SEE ALSO
 
-L<EVP_PKEY_new(3)>, L<EVP_PKEY_free(3)>,
+L<OPENSSL_BOX_EVP_PKEY_new(3)>, L<OPENSSL_BOX_EVP_PKEY_free(3)>,
 L<DSA_new(3)>, L<ERR_get_error(3)>,
 L<DSA_generate_parameters(3)>,
 L<DSA_generate_key(3)>

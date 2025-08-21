@@ -197,15 +197,15 @@ int dhparam_main(int argc, char **argv)
                         alg);
             goto end;
         }
-        EVP_PKEY_CTX_set_app_data(ctx, bio_err);
+        OPENSSL_BOX_EVP_PKEY_CTX_set_app_data(ctx, bio_err);
         if (verbose) {
-            EVP_PKEY_CTX_set_cb(ctx, progress_cb);
+            OPENSSL_BOX_EVP_PKEY_CTX_set_cb(ctx, progress_cb);
             BIO_printf(bio_err,
                         "Generating %s parameters, %d bit long %sprime\n",
                         alg, num, dsaparam ? "" : "safe ");
         }
 
-        if (EVP_PKEY_paramgen_init(ctx) <= 0) {
+        if (OPENSSL_BOX_EVP_PKEY_paramgen_init(ctx) <= 0) {
             BIO_printf(bio_err,
                         "Error, unable to initialise %s parameters\n",
                         alg);
@@ -231,13 +231,13 @@ int dhparam_main(int argc, char **argv)
         tmppkey = app_paramgen(ctx, alg);
         if (tmppkey == NULL)
             goto end;
-        EVP_PKEY_CTX_free(ctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
         ctx = NULL;
         if (dsaparam) {
             pkey = dsa_to_dh(tmppkey);
             if (pkey == NULL)
                 goto end;
-            EVP_PKEY_free(tmppkey);
+            OPENSSL_BOX_EVP_PKEY_free(tmppkey);
         } else {
             pkey = tmppkey;
         }
@@ -300,7 +300,7 @@ int dhparam_main(int argc, char **argv)
         }
 
         if (dsaparam) {
-            if (!EVP_PKEY_is_a(tmppkey, "DSA")) {
+            if (!OPENSSL_BOX_EVP_PKEY_is_a(tmppkey, "DSA")) {
                 BIO_printf(bio_err, "Error, unable to load DSA parameters\n");
                 goto end;
             }
@@ -308,8 +308,8 @@ int dhparam_main(int argc, char **argv)
             if (pkey == NULL)
                 goto end;
         } else {
-            if (!EVP_PKEY_is_a(tmppkey, "DH")
-                    && !EVP_PKEY_is_a(tmppkey, "DHX")) {
+            if (!OPENSSL_BOX_EVP_PKEY_is_a(tmppkey, "DH")
+                    && !OPENSSL_BOX_EVP_PKEY_is_a(tmppkey, "DHX")) {
                 BIO_printf(bio_err, "Error, unable to load DH parameters\n");
                 goto end;
             }
@@ -331,7 +331,7 @@ int dhparam_main(int argc, char **argv)
             BIO_printf(bio_err, "Error, failed to check DH parameters\n");
             goto end;
         }
-        if (EVP_PKEY_param_check(ctx) <= 0) {
+        if (OPENSSL_BOX_EVP_PKEY_param_check(ctx) <= 0) {
             BIO_printf(bio_err, "Error, invalid parameters generated\n");
             goto end;
         }
@@ -359,9 +359,9 @@ int dhparam_main(int argc, char **argv)
         ERR_print_errors(bio_err);
     BIO_free(in);
     BIO_free_all(out);
-    EVP_PKEY_free(pkey);
-    EVP_PKEY_free(tmppkey);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(tmppkey);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     release_engine(e);
     return ret;
 }
@@ -400,14 +400,14 @@ static EVP_PKEY *dsa_to_dh(EVP_PKEY *dh)
 
     ctx = EVP_PKEY_CTX_new_from_name(app_get0_libctx(), "DHX", app_get0_propq());
     if (ctx == NULL
-            || EVP_PKEY_fromdata_init(ctx) <= 0
+            || OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0
             || EVP_PKEY_fromdata(ctx, &pkey, EVP_PKEY_KEY_PARAMETERS, params) <= 0) {
         BIO_printf(bio_err, "Error, failed to set DH parameters\n");
         goto err;
     }
 
  err:
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     OSSL_PARAM_free(params);
     OSSL_PARAM_BLD_free(tmpl);
     BN_free(bn_p);

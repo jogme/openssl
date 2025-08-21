@@ -209,10 +209,10 @@ providers/implementations/rands/test_rng.c
 /demos/cms/cms_sign2
 /demos/cms/cms_uncomp
 /demos/cms/cms_ver
-/demos/digest/BIO_f_md
+/demos/digest/OPENSSL_BOX_BIO_f_md
 /demos/digest/EVP_MD_demo
 /demos/digest/EVP_MD_stdin
-/demos/digest/EVP_MD_xof
+/demos/digest/OPENSSL_BOX_EVP_MD_xof
 /demos/encode/ec_encode
 /demos/encode/rsa_encode
 /demos/encrypt/rsa_encrypt

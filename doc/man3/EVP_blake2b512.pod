@@ -2,16 +2,16 @@
 
 =head1 NAME
 
-EVP_blake2b512,
-EVP_blake2s256
+OPENSSL_BOX_EVP_blake2b512,
+OPENSSL_BOX_EVP_blake2s256
 - BLAKE2 For EVP
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- const EVP_MD *EVP_blake2b512(void);
- const EVP_MD *EVP_blake2s256(void);
+ const EVP_MD *OPENSSL_BOX_EVP_blake2b512(void);
+ const EVP_MD *OPENSSL_BOX_EVP_blake2s256(void);
 
 =head1 DESCRIPTION
 
@@ -21,11 +21,11 @@ RFC 7693.
 
 =over 4
 
-=item EVP_blake2s256()
+=item OPENSSL_BOX_EVP_blake2s256()
 
 The BLAKE2s algorithm that produces a 256-bit output from a given input.
 
-=item EVP_blake2b512()
+=item OPENSSL_BOX_EVP_blake2b512()
 
 The BLAKE2b algorithm that produces a 512-bit output from a given input.
 
@@ -44,7 +44,7 @@ but this is only available through L<EVP_MD-BLAKE2(7)>.
 =head1 RETURN VALUES
 
 These functions return a B<EVP_MD> structure that contains the
-implementation of the message digest. See L<EVP_MD_meth_new(3)> for
+implementation of the message digest. See L<OPENSSL_BOX_EVP_MD_meth_new(3)> for
 details of the B<EVP_MD> structure.
 
 =head1 CONFORMING TO
@@ -54,7 +54,7 @@ RFC 7693.
 =head1 SEE ALSO
 
 L<evp(7)>,
-L<EVP_DigestInit(3)>
+L<OPENSSL_BOX_EVP_DigestInit(3)>
 
 =head1 COPYRIGHT
 

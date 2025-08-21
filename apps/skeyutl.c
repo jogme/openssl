@@ -101,7 +101,7 @@ int skeyutl_main(int argc, char **argv)
         if (mgmt == NULL)
             goto end;
         params = app_params_new_from_opts(skeyopts,
-                                          EVP_SKEYMGMT_get0_gen_settable_params(mgmt));
+                                          OPENSSL_BOX_EVP_SKEYMGMT_get0_gen_settable_params(mgmt));
 
         skey = EVP_SKEY_generate(app_get0_libctx(),
                                  skeymgmt ? skeymgmt : EVP_CIPHER_name(cipher),
@@ -112,12 +112,12 @@ int skeyutl_main(int argc, char **argv)
                        skeymgmt ? skeymgmt : EVP_CIPHER_name(cipher));
             ERR_print_errors(bio_err);
         } else {
-            const char *key_name = EVP_SKEY_get0_key_id(skey);
+            const char *key_name = OPENSSL_BOX_EVP_SKEY_get0_key_id(skey);
 
             BIO_printf(bio_out, "An opaque key identified by %s is created\n",
                        key_name ? key_name : "<unknown>");
-            BIO_printf(bio_out, "Provider: %s\n", EVP_SKEY_get0_provider_name(skey));
-            BIO_printf(bio_out, "Key management: %s\n", EVP_SKEY_get0_skeymgmt_name(skey));
+            BIO_printf(bio_out, "Provider: %s\n", OPENSSL_BOX_EVP_SKEY_get0_provider_name(skey));
+            BIO_printf(bio_out, "Key management: %s\n", OPENSSL_BOX_EVP_SKEY_get0_skeymgmt_name(skey));
             ret = 0;
         }
         goto end;
@@ -128,8 +128,8 @@ int skeyutl_main(int argc, char **argv)
  end:
     ERR_print_errors(bio_err);
     sk_OPENSSL_STRING_free(skeyopts);
-    EVP_SKEYMGMT_free(mgmt);
-    EVP_SKEY_free(skey);
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_SKEYMGMT_free(mgmt);
+    OPENSSL_BOX_EVP_SKEY_free(skey);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     return ret;
 }

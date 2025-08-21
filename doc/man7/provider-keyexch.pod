@@ -44,7 +44,7 @@ for further information.
 
 The key exchange (OSSL_OP_KEYEXCH) operation enables providers to implement key
 exchange algorithms and make them available to applications via
-L<EVP_PKEY_derive(3)> and
+L<OPENSSL_BOX_EVP_PKEY_derive(3)> and
 other related functions).
 
 All "functions" mentioned here are passed as function pointers between

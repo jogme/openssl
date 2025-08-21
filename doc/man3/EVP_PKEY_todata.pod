@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-EVP_PKEY_todata, EVP_PKEY_export
+OPENSSL_BOX_EVP_PKEY_todata, EVP_PKEY_export
 - functions to return keys as an array of key parameters
 
 =head1 SYNOPSIS
 
  #include <openssl/evp.h>
 
- int EVP_PKEY_todata(const EVP_PKEY *pkey, int selection, OSSL_PARAM **params);
+ int OPENSSL_BOX_EVP_PKEY_todata(const EVP_PKEY *pkey, int selection, OSSL_PARAM **params);
  int EVP_PKEY_export(const EVP_PKEY *pkey, int selection,
                      OSSL_CALLBACK *export_cb, void *export_cbarg);
 
@@ -18,17 +18,17 @@ EVP_PKEY_todata, EVP_PKEY_export
 The functions described here are used to extract B<EVP_PKEY> key values as an
 array of L<OSSL_PARAM(3)>.
 
-EVP_PKEY_todata() extracts values from a key I<pkey> using the I<selection>.
+OPENSSL_BOX_EVP_PKEY_todata() extracts values from a key I<pkey> using the I<selection>.
 I<selection> is described in L<EVP_PKEY_fromdata(3)/Selections>.
 L<OSSL_PARAM_free(3)> should be used to free the returned parameters in
 I<*params>.
 
-EVP_PKEY_export() is similar to EVP_PKEY_todata() but uses a callback
+EVP_PKEY_export() is similar to OPENSSL_BOX_EVP_PKEY_todata() but uses a callback
 I<export_cb> that gets passed the value of I<export_cbarg>.
 See L<openssl-core.h(7)> for more information about the callback. Note that the
 L<OSSL_PARAM(3)> array that is passed to the callback is not persistent after the
 callback returns. The user must preserve the items of interest, or use
-EVP_PKEY_todata() if persistence is required.
+OPENSSL_BOX_EVP_PKEY_todata() if persistence is required.
 
 =head1 NOTES
 
@@ -40,7 +40,7 @@ To enable, specify the B<enable-lms> build configuration option.
 
 =head1 RETURN VALUES
 
-EVP_PKEY_todata() and EVP_PKEY_export() return 1 for success and 0 for failure.
+OPENSSL_BOX_EVP_PKEY_todata() and EVP_PKEY_export() return 1 for success and 0 for failure.
 
 =head1 SEE ALSO
 

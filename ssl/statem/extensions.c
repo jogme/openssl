@@ -1532,7 +1532,7 @@ int tls_psk_do_binder(SSL_CONNECTION *s, const EVP_MD *md,
     static const unsigned char external_label[] = "\x65\x78\x74\x20\x62\x69\x6E\x64\x65\x72";
     const unsigned char *label;
     size_t bindersize, labelsize, hashsize;
-    int hashsizei = EVP_MD_get_size(md);
+    int hashsizei = OPENSSL_BOX_EVP_MD_get_size(md);
     int ret = -1;
     int usepskfored = 0;
     SSL_CTX *sctx = SSL_CONNECTION_GET_CTX(s);
@@ -1581,7 +1581,7 @@ int tls_psk_do_binder(SSL_CONNECTION *s, const EVP_MD *md,
      * Create the handshake hash for the binder key...the messages so far are
      * empty!
      */
-    mctx = EVP_MD_CTX_new();
+    mctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (mctx == NULL
             || EVP_DigestInit_ex(mctx, md, NULL) <= 0
             || EVP_DigestFinal_ex(mctx, hash, NULL) <= 0) {
@@ -1667,9 +1667,9 @@ int tls_psk_do_binder(SSL_CONNECTION *s, const EVP_MD *md,
         binderout = tmpbinder;
 
     bindersize = hashsize;
-    if (EVP_DigestSignInit_ex(mctx, NULL, EVP_MD_get0_name(md), sctx->libctx,
+    if (EVP_DigestSignInit_ex(mctx, NULL, OPENSSL_BOX_EVP_MD_get0_name(md), sctx->libctx,
                               sctx->propq, mackey, NULL) <= 0
-            || EVP_DigestSignUpdate(mctx, hash, hashsize) <= 0
+            || OPENSSL_BOX_EVP_DigestSignUpdate(mctx, hash, hashsize) <= 0
             || EVP_DigestSignFinal(mctx, binderout, &bindersize) <= 0
             || bindersize != hashsize) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
@@ -1688,8 +1688,8 @@ int tls_psk_do_binder(SSL_CONNECTION *s, const EVP_MD *md,
  err:
     OPENSSL_cleanse(binderkey, sizeof(binderkey));
     OPENSSL_cleanse(finishedkey, sizeof(finishedkey));
-    EVP_PKEY_free(mackey);
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_PKEY_free(mackey);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
 
     return ret;
 }

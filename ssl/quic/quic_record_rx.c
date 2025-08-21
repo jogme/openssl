@@ -936,7 +936,7 @@ static int qrx_decrypt_pkt_body(OSSL_QRX *qrx, unsigned char *dst,
     cctx = el->cctx[cctx_idx];
 
     /* Construct nonce (nonce=IV ^ PN). */
-    nonce_len = EVP_CIPHER_CTX_get_iv_length(cctx);
+    nonce_len = OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(cctx);
     if (!ossl_assert(nonce_len >= (int)sizeof(QUIC_PN)))
         return 0;
 
@@ -950,7 +950,7 @@ static int qrx_decrypt_pkt_body(OSSL_QRX *qrx, unsigned char *dst,
         return 0;
 
     /* Feed the AEAD tag we got so the cipher can validate it. */
-    if (EVP_CIPHER_CTX_ctrl(cctx, EVP_CTRL_AEAD_SET_TAG,
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(cctx, EVP_CTRL_AEAD_SET_TAG,
                             el->tag_len,
                             (unsigned char *)src + src_len - el->tag_len) != 1)
         return 0;

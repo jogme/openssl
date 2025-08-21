@@ -78,7 +78,7 @@ To load a LMS key from XDR encoded "data" of size "datalen":
         OSSL_PARAM_construct_octet_string(OSSL_PKEY_PARAM_ENCODED_PUBLIC_KEY,
                                           (unsigned char *)data, datalen);
     params[1] = OSSL_PARAM_construct_end();
-    ret = EVP_PKEY_fromdata_init(ctx)
+    ret = OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx)
     ret = EVP_PKEY_fromdata(ctx, &key, EVP_PKEY_PUBLIC_KEY, params);
 
 =head1 SEE ALSO

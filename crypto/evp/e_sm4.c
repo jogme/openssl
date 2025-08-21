@@ -90,7 +90,7 @@ static int sm4_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
 #endif
         {
             dat->block = (block128_f) ossl_sm4_decrypt;
-            ossl_sm4_set_key(key, EVP_CIPHER_CTX_get_cipher_data(ctx));
+            ossl_sm4_set_key(key, OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx));
         }
     } else
 #ifdef HWSM4_CAPABLE
@@ -131,7 +131,7 @@ static int sm4_init_key(EVP_CIPHER_CTX *ctx, const unsigned char *key,
 #endif
     {
         dat->block = (block128_f) ossl_sm4_encrypt;
-        ossl_sm4_set_key(key, EVP_CIPHER_CTX_get_cipher_data(ctx));
+        ossl_sm4_set_key(key, OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx));
     }
     return 1;
 }
@@ -143,8 +143,8 @@ static int sm4_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
 
     if (dat->stream.cbc)
         (*dat->stream.cbc) (in, out, len, &dat->ks.ks, ctx->iv,
-                            EVP_CIPHER_CTX_is_encrypting(ctx));
-    else if (EVP_CIPHER_CTX_is_encrypting(ctx))
+                            OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));
+    else if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx))
         CRYPTO_cbc128_encrypt(in, out, len, &dat->ks, ctx->iv,
                               dat->block);
     else
@@ -157,19 +157,19 @@ static int sm4_cfb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                           const unsigned char *in, size_t len)
 {
     EVP_SM4_KEY *dat = EVP_C_DATA(EVP_SM4_KEY,ctx);
-    int num = EVP_CIPHER_CTX_get_num(ctx);
+    int num = OPENSSL_BOX_EVP_CIPHER_CTX_get_num(ctx);
 
     CRYPTO_cfb128_encrypt(in, out, len, &dat->ks,
                           ctx->iv, &num,
-                          EVP_CIPHER_CTX_is_encrypting(ctx), dat->block);
-    EVP_CIPHER_CTX_set_num(ctx, num);
+                          OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx), dat->block);
+    OPENSSL_BOX_EVP_CIPHER_CTX_set_num(ctx, num);
     return 1;
 }
 
 static int sm4_ecb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                           const unsigned char *in, size_t len)
 {
-    size_t bl = EVP_CIPHER_CTX_get_block_size(ctx);
+    size_t bl = OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(ctx);
     size_t i;
     EVP_SM4_KEY *dat = EVP_C_DATA(EVP_SM4_KEY,ctx);
 
@@ -178,7 +178,7 @@ static int sm4_ecb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
 
     if (dat->stream.ecb != NULL)
         (*dat->stream.ecb) (in, out, len, &dat->ks.ks,
-                            EVP_CIPHER_CTX_is_encrypting(ctx));
+                            OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx));
     else
         for (i = 0, len -= bl; i <= len; i += bl)
             (*dat->block) (in + i, out + i, &dat->ks);
@@ -190,18 +190,18 @@ static int sm4_ofb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                           const unsigned char *in, size_t len)
 {
     EVP_SM4_KEY *dat = EVP_C_DATA(EVP_SM4_KEY,ctx);
-    int num = EVP_CIPHER_CTX_get_num(ctx);
+    int num = OPENSSL_BOX_EVP_CIPHER_CTX_get_num(ctx);
 
     CRYPTO_ofb128_encrypt(in, out, len, &dat->ks,
                           ctx->iv, &num, dat->block);
-    EVP_CIPHER_CTX_set_num(ctx, num);
+    OPENSSL_BOX_EVP_CIPHER_CTX_set_num(ctx, num);
     return 1;
 }
 
 static int sm4_ctr_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
                           const unsigned char *in, size_t len)
 {
-    int n = EVP_CIPHER_CTX_get_num(ctx);
+    int n = OPENSSL_BOX_EVP_CIPHER_CTX_get_num(ctx);
     unsigned int num;
     EVP_SM4_KEY *dat = EVP_C_DATA(EVP_SM4_KEY,ctx);
 
@@ -212,14 +212,14 @@ static int sm4_ctr_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
     if (dat->stream.ctr)
         CRYPTO_ctr128_encrypt_ctr32(in, out, len, &dat->ks,
                                     ctx->iv,
-                                    EVP_CIPHER_CTX_buf_noconst(ctx),
+                                    OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(ctx),
                                     &num, dat->stream.ctr);
     else
         CRYPTO_ctr128_encrypt(in, out, len, &dat->ks,
                               ctx->iv,
-                              EVP_CIPHER_CTX_buf_noconst(ctx), &num,
+                              OPENSSL_BOX_EVP_CIPHER_CTX_buf_noconst(ctx), &num,
                               dat->block);
-    EVP_CIPHER_CTX_set_num(ctx, num);
+    OPENSSL_BOX_EVP_CIPHER_CTX_set_num(ctx, num);
     return 1;
 }
 

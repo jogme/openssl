@@ -154,7 +154,7 @@ static int select_keytype_and_size(uint8_t **buf, size_t *len,
  * @param key2  Unused parameter (reserved for future use).
  *
  * @note The generated key is allocated using OpenSSL's EVP_PKEY functions
- *       and should be freed appropriately using `EVP_PKEY_free()`.
+ *       and should be freed appropriately using `OPENSSL_BOX_EVP_PKEY_free()`.
  */
 static void create_ml_dsa_raw_key(uint8_t **buf, size_t *len,
                                   void **key1, void **key2)
@@ -227,7 +227,7 @@ static int keygen_ml_dsa_real_key_helper(uint8_t **buf, size_t *len,
     /*
      * Only generate valid key types and lengths. Note, no adjustment is made to
      * keylen here, as the provider is responsible for selecting the keys and
-     * sizes for us during the EVP_PKEY_keygen call
+     * sizes for us during the OPENSSL_BOX_EVP_PKEY_keygen call
      */
     if (!select_keytype_and_size(buf, len, &keytype, &keylen, 1))
         goto err;
@@ -238,23 +238,23 @@ static int keygen_ml_dsa_real_key_helper(uint8_t **buf, size_t *len,
         goto err;
     }
 
-    if (!EVP_PKEY_keygen_init(ctx)) {
+    if (!OPENSSL_BOX_EVP_PKEY_keygen_init(ctx)) {
         fprintf(stderr, "Failed to init keygen ctx\n");
         goto err;
     }
 
-    *key = EVP_PKEY_new();
+    *key = OPENSSL_BOX_EVP_PKEY_new();
     if (*key == NULL)
         goto err;
 
-    if (!EVP_PKEY_generate(ctx, key)) {
+    if (!OPENSSL_BOX_EVP_PKEY_generate(ctx, key)) {
         fprintf(stderr, "Failed to generate new real key\n");
         goto err;
     }
 
     ret = 1;
 err:
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return ret;
 }
 
@@ -271,7 +271,7 @@ err:
  * @param key2   Pointer to store the second generated EVP_PKEY key.
  *
  * @note The generated key is allocated using OpenSSL's EVP_PKEY functions
- *       and should be freed using `EVP_PKEY_free()`.
+ *       and should be freed using `OPENSSL_BOX_EVP_PKEY_free()`.
  */
 static void keygen_ml_dsa_real_key(uint8_t **buf, size_t *len,
                                    void **key1, void **key2)
@@ -305,7 +305,7 @@ static void ml_dsa_sign_verify(uint8_t **buf, size_t *len, void *key1,
     size_t sig_len = 0, tbslen;
     unsigned char *tbs = NULL;
     /* Ownership of alg is retained by the pkey object */
-    const char *alg = EVP_PKEY_get0_type_name(key);
+    const char *alg = OPENSSL_BOX_EVP_PKEY_get0_type_name(key);
     const OSSL_PARAM params[] = {
         OSSL_PARAM_octet_string("context-string",
                                 (unsigned char *)"A context string", 16),
@@ -342,7 +342,7 @@ static void ml_dsa_sign_verify(uint8_t **buf, size_t *len, void *key1,
     }
 
     /* Verify signature */
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     ctx = NULL;
 
     if ((ctx = EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL)) == NULL
@@ -354,8 +354,8 @@ static void ml_dsa_sign_verify(uint8_t **buf, size_t *len, void *key1,
 
 err:
     OPENSSL_free(tbs);
-    EVP_PKEY_CTX_free(ctx);
-    EVP_SIGNATURE_free(sig_alg);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig_alg);
     OPENSSL_free(sig);
     return;
 }
@@ -378,7 +378,7 @@ static void ml_dsa_digest_sign_verify(uint8_t **buf, size_t *len, void *key1,
                                       void *in2, void **out1, void **out2)
 {
     EVP_PKEY *key = (EVP_PKEY *)key1;
-    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     EVP_SIGNATURE *sig_alg = NULL;
     unsigned char *sig = NULL;
     size_t sig_len, tbslen;
@@ -418,10 +418,10 @@ static void ml_dsa_digest_sign_verify(uint8_t **buf, size_t *len, void *key1,
     }
 
     /* Verify signature */
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     ctx = NULL;
 
-    if ((ctx = EVP_MD_CTX_new()) == NULL
+    if ((ctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL
         || EVP_DigestVerifyInit_ex(ctx, NULL, NULL, NULL, "?fips=true", key,
                                    params) <= 0
         || EVP_DigestVerify(ctx, sig, sig_len, tbs, tbslen) <= 0) {
@@ -431,8 +431,8 @@ static void ml_dsa_digest_sign_verify(uint8_t **buf, size_t *len, void *key1,
 
 err:
     OPENSSL_free(tbs);
-    EVP_MD_CTX_free(ctx);
-    EVP_SIGNATURE_free(sig_alg);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_SIGNATURE_free(sig_alg);
     OPENSSL_free(sig);
     return;
 }
@@ -442,7 +442,7 @@ err:
  *
  * This function extracts key material from the given key (`key1`), exports it
  * as parameters, and then attempts to reconstruct a new key from those
- * parameters. It uses OpenSSL's `EVP_PKEY_todata()` and `EVP_PKEY_fromdata()`
+ * parameters. It uses OpenSSL's `OPENSSL_BOX_EVP_PKEY_todata()` and `EVP_PKEY_fromdata()`
  * functions for this process.
  *
  * @param[out] buf Unused output buffer (reserved for future use).
@@ -463,7 +463,7 @@ static void ml_dsa_export_import(uint8_t **buf, size_t *len, void *key1,
     EVP_PKEY_CTX *ctx = NULL;
     OSSL_PARAM *params = NULL;
 
-    if (!EVP_PKEY_todata(alice, EVP_PKEY_KEYPAIR, &params)) {
+    if (!OPENSSL_BOX_EVP_PKEY_todata(alice, EVP_PKEY_KEYPAIR, &params)) {
         fprintf(stderr, "Failed todata\n");
         goto err;
     }
@@ -480,8 +480,8 @@ static void ml_dsa_export_import(uint8_t **buf, size_t *len, void *key1,
     }
 
 err:
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(new_key);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(new_key);
     OSSL_PARAM_free(params);
 }
 
@@ -489,7 +489,7 @@ err:
  * @brief Compares two cryptographic keys and performs equality checks.
  *
  * This function takes in two cryptographic keys, casts them to `EVP_PKEY`
- * structures, and checks their equality using `EVP_PKEY_eq()`. The purpose of
+ * structures, and checks their equality using `OPENSSL_BOX_EVP_PKEY_eq()`. The purpose of
  * `buf`, `len`, `out1`, and `out2` parameters is not clear from the function's
  * current implementation.
  *
@@ -506,15 +506,15 @@ static void ml_dsa_compare(uint8_t **buf, size_t *len, void *key1,
     EVP_PKEY *alice = (EVP_PKEY *)key1;
     EVP_PKEY *bob = (EVP_PKEY *)key2;
 
-    EVP_PKEY_eq(alice, alice);
-    EVP_PKEY_eq(alice, bob);
+    OPENSSL_BOX_EVP_PKEY_eq(alice, alice);
+    OPENSSL_BOX_EVP_PKEY_eq(alice, bob);
 }
 
 /**
  * @brief Frees allocated ML-DSA keys.
  *
  * This function releases memory associated with up to four EVP_PKEY objects by
- * calling `EVP_PKEY_free()` on each provided key.
+ * calling `OPENSSL_BOX_EVP_PKEY_free()` on each provided key.
  *
  * @param key1 Pointer to the first key to be freed.
  * @param key2 Pointer to the second key to be freed.
@@ -527,10 +527,10 @@ static void ml_dsa_compare(uint8_t **buf, size_t *len, void *key1,
 static void cleanup_ml_dsa_keys(void *key1, void *key2,
                                 void *key3, void *key4)
 {
-    EVP_PKEY_free((EVP_PKEY *)key1);
-    EVP_PKEY_free((EVP_PKEY *)key2);
-    EVP_PKEY_free((EVP_PKEY *)key3);
-    EVP_PKEY_free((EVP_PKEY *)key4);
+    OPENSSL_BOX_EVP_PKEY_free((EVP_PKEY *)key1);
+    OPENSSL_BOX_EVP_PKEY_free((EVP_PKEY *)key2);
+    OPENSSL_BOX_EVP_PKEY_free((EVP_PKEY *)key3);
+    OPENSSL_BOX_EVP_PKEY_free((EVP_PKEY *)key4);
 }
 
 /**
@@ -591,7 +591,7 @@ static struct op_table_entry ops[] = {
         NULL,
         cleanup_ml_dsa_keys
     }, {
-        "Generate ML-DSA keypair, using EVP_PKEY_keygen",
+        "Generate ML-DSA keypair, using OPENSSL_BOX_EVP_PKEY_keygen",
         "Generates a real ML-DSA keypair, should always work",
         keygen_ml_dsa_real_key,
         NULL,
@@ -610,7 +610,7 @@ static struct op_table_entry ops[] = {
         cleanup_ml_dsa_keys
     }, {
         "Do an export/import of key data",
-        "Exercise EVP_PKEY_todata/fromdata",
+        "Exercise OPENSSL_BOX_EVP_PKEY_todata/fromdata",
         keygen_ml_dsa_real_key,
         ml_dsa_export_import,
         cleanup_ml_dsa_keys

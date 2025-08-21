@@ -25,7 +25,7 @@ We already have known parameter keys:
 - "algor_id_param", also known as the macro `OSSL_CIPHER_PARAM_ALGORITHM_ID_PARAMS`.
 
   This is currently only specified for `EVP_CIPHER`, in support of
-  `EVP_CIPHER_param_to_asn1()` and `EVP_CIPHER_asn1_to_param()`
+  `OPENSSL_BOX_EVP_CIPHER_param_to_asn1()` and `OPENSSL_BOX_EVP_CIPHER_asn1_to_param()`
 
 - "algorithm-id", also known as the macro `OSSL_SIGNATURE_PARAM_ALGORITHM_ID`.
 
@@ -45,7 +45,7 @@ provider implementations alike in whatever way they see fit.
 Applications can choose to add these in an `OSSL_PARAM` array, to be passed
 with the multitude of initialization functions that take such an array, or
 using specific operation `OSSL_PARAM` setters and getters (such as
-`EVP_PKEY_CTX_set_params`), or using other available convenience functions
+`OPENSSL_BOX_EVP_PKEY_CTX_set_params`), or using other available convenience functions
 (see below).
 
 These parameter will have to be documented in the following files:
@@ -78,12 +78,12 @@ such parameter data from them.
 
 ``` C
 /*
- * These two would essentially be aliases for EVP_CIPHER_param_to_asn1()
- * and EVP_CIPHER_asn1_to_param().
+ * These two would essentially be aliases for OPENSSL_BOX_EVP_CIPHER_param_to_asn1()
+ * and OPENSSL_BOX_EVP_CIPHER_asn1_to_param().
  */
-EVP_CIPHER_CTX_set_algor_params(EVP_CIPHER_CTX *ctx, const X509_ALGOR *alg);
-EVP_CIPHER_CTX_get_algor_params(EVP_CIPHER_CTX *ctx, X509_ALGOR *alg);
-EVP_CIPHER_CTX_get_algor(EVP_CIPHER_CTX *ctx, X509_ALGOR **alg);
+OPENSSL_BOX_EVP_CIPHER_CTX_set_algor_params(EVP_CIPHER_CTX *ctx, const X509_ALGOR *alg);
+OPENSSL_BOX_EVP_CIPHER_CTX_get_algor_params(EVP_CIPHER_CTX *ctx, X509_ALGOR *alg);
+OPENSSL_BOX_EVP_CIPHER_CTX_get_algor(EVP_CIPHER_CTX *ctx, X509_ALGOR **alg);
 
 EVP_MD_CTX_set_algor_params(EVP_MD_CTX *ctx, const X509_ALGOR *alg);
 EVP_MD_CTX_get_algor_params(EVP_MD_CTX *ctx, X509_ALGOR *alg);
@@ -97,9 +97,9 @@ EVP_KDF_CTX_set_algor_params(EVP_KDF_CTX *ctx, const X509_ALGOR *alg);
 EVP_KDF_CTX_get_algor_params(EVP_KDF_CTX *ctx, X509_ALGOR *alg);
 EVP_KDF_CTX_get_algor(EVP_KDF_CTX *ctx, X509_ALGOR **alg);
 
-EVP_PKEY_CTX_set_algor_params(EVP_PKEY_CTX *ctx, const X509_ALGOR *alg);
-EVP_PKEY_CTX_get_algor_params(EVP_PKEY_CTX *ctx, X509_ALGOR *alg);
-EVP_PKEY_CTX_get_algor(EVP_PKEY_CTX *ctx, X509_ALGOR **alg);
+OPENSSL_BOX_EVP_PKEY_CTX_set_algor_params(EVP_PKEY_CTX *ctx, const X509_ALGOR *alg);
+OPENSSL_BOX_EVP_PKEY_CTX_get_algor_params(EVP_PKEY_CTX *ctx, X509_ALGOR *alg);
+OPENSSL_BOX_EVP_PKEY_CTX_get_algor(EVP_PKEY_CTX *ctx, X509_ALGOR **alg);
 ```
 
 Note that all might not need to be added immediately, depending on if they

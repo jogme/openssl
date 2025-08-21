@@ -174,7 +174,7 @@ const EVP_MD *get_digest_from_engine(const char *name)
     eng = ENGINE_get_digest_engine(OBJ_sn2nid(name));
     if (eng != NULL) {
         ENGINE_finish(eng);
-        return EVP_get_digestbyname(name);
+        return OPENSSL_BOX_EVP_get_digestbyname(name);
     }
 #endif
     return NULL;
@@ -188,7 +188,7 @@ const EVP_CIPHER *get_cipher_from_engine(const char *name)
     eng = ENGINE_get_cipher_engine(OBJ_sn2nid(name));
     if (eng != NULL) {
         ENGINE_finish(eng);
-        return EVP_get_cipherbyname(name);
+        return OPENSSL_BOX_EVP_get_cipherbyname(name);
     }
 #endif
     return NULL;

@@ -16,8 +16,8 @@
     Len = 80
     Msg = 1ca984dcc913344370cf
     MD = 6915ea0eeffb99b9b246a0e34daf3947852684c3d618260119a22835659e4f23d4eb66a15d0affb8e93771578f5e8f25b7a5f2a55f511fb8b96325ba2cd14816
- * use xxd convert the hex message string to binary input for BIO_f_md:
- * echo "1ca984dcc913344370cf" | xxd -r -p | ./BIO_f_md
+ * use xxd convert the hex message string to binary input for OPENSSL_BOX_BIO_f_md:
+ * echo "1ca984dcc913344370cf" | xxd -r -p | ./OPENSSL_BOX_BIO_f_md
  * and then verify the output matches MD above.
  */
 
@@ -71,9 +71,9 @@ int main(int argc, char *argv[])
         fprintf(stderr, "EVP_MD_fetch did not find SHA3-512.\n");
         goto cleanup;
     }
-    digest_size = EVP_MD_get_size(md);
+    digest_size = OPENSSL_BOX_EVP_MD_get_size(md);
     if (digest_size <= 0) {
-        fprintf(stderr, "EVP_MD_get_size returned invalid size.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MD_get_size returned invalid size.\n");
         goto cleanup;
     }
 
@@ -83,14 +83,14 @@ int main(int argc, char *argv[])
         goto cleanup;
     }
     /* Make a bio that uses the digest */
-    bio_digest = BIO_new(BIO_f_md());
+    bio_digest = BIO_new(OPENSSL_BOX_BIO_f_md());
     if (bio_digest == NULL) {
-        fprintf(stderr, "BIO_new(BIO_f_md()) returned NULL\n");
+        fprintf(stderr, "BIO_new(OPENSSL_BOX_BIO_f_md()) returned NULL\n");
         goto cleanup;
     }
     /* set our bio_digest BIO to digest data */
-    if (BIO_set_md(bio_digest, md) != 1) {
-           fprintf(stderr, "BIO_set_md failed.\n");
+    if (OPENSSL_BOX_BIO_set_md(bio_digest, md) != 1) {
+           fprintf(stderr, "OPENSSL_BOX_BIO_set_md failed.\n");
            goto cleanup;
     }
     /*-
@@ -123,7 +123,7 @@ cleanup:
     OPENSSL_free(digest_value);
     BIO_free(input);
     BIO_free(bio_digest);
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     OSSL_LIB_CTX_free(library_context);
 
     return ret;

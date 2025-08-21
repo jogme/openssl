@@ -102,7 +102,7 @@ static int rsa_pub_decode(EVP_PKEY *pkey, const X509_PUBKEY *pubkey)
         break;
     }
 
-    if (!EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, rsa)) {
+    if (!OPENSSL_BOX_EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, rsa)) {
         RSA_free(rsa);
         return 0;
     }
@@ -133,7 +133,7 @@ static int old_rsa_priv_decode(EVP_PKEY *pkey,
 
     if ((rsa = d2i_RSAPrivateKey(NULL, pder, derlen)) == NULL)
         return 0;
-    EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, rsa);
+    OPENSSL_BOX_EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, rsa);
     return 1;
 }
 
@@ -177,7 +177,7 @@ static int rsa_priv_decode(EVP_PKEY *pkey, const PKCS8_PRIV_KEY_INFO *p8)
 
     if (rsa != NULL) {
         ret = 1;
-        EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, rsa);
+        OPENSSL_BOX_EVP_PKEY_assign(pkey, pkey->ameth->pkey_id, rsa);
     }
     return ret;
 }
@@ -431,7 +431,7 @@ static int rsa_pkey_ctrl(EVP_PKEY *pkey, int op, long arg1, void *arg2)
                 ERR_raise(ERR_LIB_RSA, ERR_R_INTERNAL_ERROR);
                 return 0;
             }
-            *(int *)arg2 = EVP_MD_get_type(md);
+            *(int *)arg2 = OPENSSL_BOX_EVP_MD_get_type(md);
             /* Return of 2 indicates this MD is mandatory */
             return 2;
         }
@@ -451,14 +451,14 @@ static int rsa_pkey_ctrl(EVP_PKEY *pkey, int op, long arg1, void *arg2)
 static RSA_PSS_PARAMS *rsa_ctx_to_pss(EVP_PKEY_CTX *pkctx)
 {
     const EVP_MD *sigmd, *mgf1md;
-    EVP_PKEY *pk = EVP_PKEY_CTX_get0_pkey(pkctx);
+    EVP_PKEY *pk = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(pkctx);
     int saltlen;
     int saltlenMax = -1;
     int md_size;
 
-    if (EVP_PKEY_CTX_get_signature_md(pkctx, &sigmd) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_CTX_get_signature_md(pkctx, &sigmd) <= 0)
         return NULL;
-    md_size = EVP_MD_get_size(sigmd);
+    md_size = OPENSSL_BOX_EVP_MD_get_size(sigmd);
     if (md_size <= 0)
         return NULL;
     if (EVP_PKEY_CTX_get_rsa_mgf1_md(pkctx, &mgf1md) <= 0)
@@ -479,8 +479,8 @@ static RSA_PSS_PARAMS *rsa_ctx_to_pss(EVP_PKEY_CTX *pkctx)
         saltlenMax = md_size;
     }
     if (saltlen == RSA_PSS_SALTLEN_MAX || saltlen == RSA_PSS_SALTLEN_AUTO) {
-        saltlen = EVP_PKEY_get_size(pk) - md_size - 2;
-        if ((EVP_PKEY_get_bits(pk) & 0x7) == 1)
+        saltlen = OPENSSL_BOX_EVP_PKEY_get_size(pk) - md_size - 2;
+        if ((OPENSSL_BOX_EVP_PKEY_get_bits(pk) & 0x7) == 1)
             saltlen--;
         if (saltlen < 0)
             return NULL;
@@ -565,9 +565,9 @@ int ossl_rsa_pss_to_ctx(EVP_MD_CTX *ctx, EVP_PKEY_CTX *pkctx,
             goto err;
     } else {
         const EVP_MD *checkmd;
-        if (EVP_PKEY_CTX_get_signature_md(pkctx, &checkmd) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_CTX_get_signature_md(pkctx, &checkmd) <= 0)
             goto err;
-        if (EVP_MD_get_type(md) != EVP_MD_get_type(checkmd)) {
+        if (OPENSSL_BOX_EVP_MD_get_type(md) != OPENSSL_BOX_EVP_MD_get_type(checkmd)) {
             ERR_raise(ERR_LIB_RSA, RSA_R_DIGEST_DOES_NOT_MATCH);
             goto err;
         }
@@ -651,7 +651,7 @@ static int rsa_item_sign(EVP_MD_CTX *ctx, const ASN1_ITEM *it, const void *asn,
                          ASN1_BIT_STRING *sig)
 {
     int pad_mode;
-    EVP_PKEY_CTX *pkctx = EVP_MD_CTX_get_pkey_ctx(ctx);
+    EVP_PKEY_CTX *pkctx = OPENSSL_BOX_EVP_MD_CTX_get_pkey_ctx(ctx);
 
     if (EVP_PKEY_CTX_get_rsa_padding(pkctx, &pad_mode) <= 0)
         return 0;
@@ -696,7 +696,7 @@ static int rsa_item_sign(EVP_MD_CTX *ctx, const ASN1_ITEM *it, const void *asn,
             OSSL_SIGNATURE_PARAM_ALGORITHM_ID, aid, sizeof(aid));
         params[1] = OSSL_PARAM_construct_end();
 
-        if (EVP_PKEY_CTX_get_params(pkctx, params) <= 0)
+        if (OPENSSL_BOX_EVP_PKEY_CTX_get_params(pkctx, params) <= 0)
             return 0;
         if ((aid_len = params[0].return_size) == 0)
             return 0;
@@ -736,16 +736,16 @@ static int rsa_sig_info_set(X509_SIG_INFO *siginf, const X509_ALGOR *sigalg,
     pss = ossl_rsa_pss_decode(sigalg);
     if (!ossl_rsa_pss_get_param(pss, &md, &mgf1md, &saltlen))
         goto err;
-    md_size = EVP_MD_get_size(md);
+    md_size = OPENSSL_BOX_EVP_MD_get_size(md);
     if (md_size <= 0)
         goto err;
-    mdnid = EVP_MD_get_type(md);
+    mdnid = OPENSSL_BOX_EVP_MD_get_type(md);
     /*
      * For TLS need SHA256, SHA384 or SHA512, digest and MGF1 digest must
      * match and salt length must equal digest size
      */
     if ((mdnid == NID_sha256 || mdnid == NID_sha384 || mdnid == NID_sha512)
-            && mdnid == EVP_MD_get_type(mgf1md)
+            && mdnid == OPENSSL_BOX_EVP_MD_get_type(mgf1md)
             && saltlen == md_size)
         flags = X509_SIG_INFO_TLS;
     else
@@ -788,7 +788,7 @@ static size_t rsa_pkey_dirty_cnt(const EVP_PKEY *pkey)
 
 /*
  * There is no need to do RSA_test_flags(rsa, RSA_FLAG_TYPE_RSASSAPSS)
- * checks in this method since the caller tests EVP_KEYMGMT_is_a() first.
+ * checks in this method since the caller tests OPENSSL_BOX_EVP_KEYMGMT_is_a() first.
  */
 static int rsa_int_export_to(const EVP_PKEY *from, int rsa_type,
                              void *to_keydata,
@@ -822,8 +822,8 @@ static int rsa_int_export_to(const EVP_PKEY *from, int rsa_type,
         if (!ossl_rsa_pss_get_param_unverified(rsa->pss, &md, &mgf1md,
                                                &saltlen, &trailerfield))
             goto err;
-        md_nid = EVP_MD_get_type(md);
-        mgf1md_nid = EVP_MD_get_type(mgf1md);
+        md_nid = OPENSSL_BOX_EVP_MD_get_type(md);
+        mgf1md_nid = OPENSSL_BOX_EVP_MD_get_type(mgf1md);
         if (!ossl_rsa_pss_params_30_set_defaults(&pss_params)
             || !ossl_rsa_pss_params_30_set_hashalg(&pss_params, md_nid)
             || !ossl_rsa_pss_params_30_set_maskgenhashalg(&pss_params,
@@ -850,7 +850,7 @@ static int rsa_int_import_from(const OSSL_PARAM params[], void *vpctx,
                                int rsa_type)
 {
     EVP_PKEY_CTX *pctx = vpctx;
-    EVP_PKEY *pkey = EVP_PKEY_CTX_get0_pkey(pctx);
+    EVP_PKEY *pkey = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(pctx);
     RSA *rsa = ossl_rsa_new_with_ctx(pctx->libctx);
     RSA_PSS_PARAMS_30 rsa_pss_params = { 0, };
     int pss_defaults_set = 0;
@@ -908,7 +908,7 @@ static int rsa_int_import_from(const OSSL_PARAM params[], void *vpctx,
         ok = EVP_PKEY_assign_RSA(pkey, rsa);
         break;
     case RSA_FLAG_TYPE_RSASSAPSS:
-        ok = EVP_PKEY_assign(pkey, EVP_PKEY_RSA_PSS, rsa);
+        ok = OPENSSL_BOX_EVP_PKEY_assign(pkey, EVP_PKEY_RSA_PSS, rsa);
         break;
     }
 
@@ -956,7 +956,7 @@ static int rsa_pkey_copy(EVP_PKEY *to, EVP_PKEY *from)
             return 0;
     }
 
-    ret = EVP_PKEY_assign(to, from->type, dupkey);
+    ret = OPENSSL_BOX_EVP_PKEY_assign(to, from->type, dupkey);
     if (!ret)
         RSA_free(dupkey);
     return ret;

@@ -99,8 +99,8 @@ consider algorithm implementations in the default provider.
 
 Property query strings can be specified explicitly as an argument to a function.
 It is also possible to specify a default property query string for the whole
-library context using the L<EVP_set_default_properties(3)> or
-L<EVP_default_properties_enable_fips(3)> functions. Where both
+library context using the L<OPENSSL_BOX_EVP_set_default_properties(3)> or
+L<OPENSSL_BOX_EVP_default_properties_enable_fips(3)> functions. Where both
 default properties and function specific properties are specified then they are
 combined. Function specific properties will override default properties where
 there is a conflict.

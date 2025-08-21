@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     }
     PKCS7_free(p7);
     X509_free(rcert);
-    EVP_PKEY_free(rkey);
+    OPENSSL_BOX_EVP_PKEY_free(rkey);
     BIO_free(in);
     BIO_free(out);
     BIO_free(tbio);

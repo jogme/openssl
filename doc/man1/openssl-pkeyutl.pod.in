@@ -310,7 +310,7 @@ Unless otherwise mentioned, the B<-pkeyopt> option supports
 for all public-key types the C<digest:>I<alg> argument,
 which specifies the digest in use for the signing and verification operations.
 The value I<alg> should represent a digest name as used in the
-EVP_get_digestbyname() function for example B<sha256>. This value is not used to
+OPENSSL_BOX_EVP_get_digestbyname() function for example B<sha256>. This value is not used to
 hash the input data. It is used (by some algorithms) for sanity-checking the
 lengths of data passed in and for creating the structures that make up the
 signature (e.g., B<DigestInfo> in RSASSA PKCS#1 v1.5 signatures).

@@ -135,7 +135,7 @@ static int select_keytype_and_size(uint8_t **buf, size_t *len,
  * @param key2  Unused parameter (reserved for future use).
  *
  * @note The generated key is allocated using OpenSSL's EVP_PKEY functions
- *       and should be freed appropriately using `EVP_PKEY_free()`.
+ *       and should be freed appropriately using `OPENSSL_BOX_EVP_PKEY_free()`.
  */
 static void create_mlkem_raw_key(uint8_t **buf, size_t *len,
                                  void **key1, void **key2)
@@ -197,7 +197,7 @@ static void create_mlkem_raw_key(uint8_t **buf, size_t *len,
  * @param unused Unused parameter (reserved for future use).
  *
  * @note The generated key is allocated using OpenSSL's EVP_PKEY functions
- *       and should be freed using `EVP_PKEY_free()`.
+ *       and should be freed using `OPENSSL_BOX_EVP_PKEY_free()`.
  */
 static void keygen_mlkem_real_key(uint8_t **buf, size_t *len,
                                   void **key1, void **key2)
@@ -216,7 +216,7 @@ again:
      * Only generate valid key types and lengths
      * Note, no adjustment is made to keylen here, as
      * the provider is responsible for selecting the keys and sizes
-     * for us during the EVP_PKEY_keygen call
+     * for us during the OPENSSL_BOX_EVP_PKEY_keygen call
      */
     if (!select_keytype_and_size(buf, len, &keytype, &keylen, 1))
         return;
@@ -227,28 +227,28 @@ again:
         return;
     }
 
-    if (!EVP_PKEY_keygen_init(ctx)) {
+    if (!OPENSSL_BOX_EVP_PKEY_keygen_init(ctx)) {
         fprintf(stderr, "Failed to init keygen ctx\n");
         goto err;
     }
 
-    *key = EVP_PKEY_new();
+    *key = OPENSSL_BOX_EVP_PKEY_new();
     if (*key == NULL)
         goto err;
 
-    if (!EVP_PKEY_generate(ctx, key)) {
+    if (!OPENSSL_BOX_EVP_PKEY_generate(ctx, key)) {
         fprintf(stderr, "Failed to generate new real key\n");
         goto err;
     }
 
     if (key == (EVP_PKEY **)key1) {
-        EVP_PKEY_CTX_free(ctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
         key = (EVP_PKEY **)key2;
         goto again;
     }
 
 err:
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return;
 }
 
@@ -284,7 +284,7 @@ static void mlkem_encap_decap(uint8_t **buf, size_t *len, void *key1, void *in2,
         goto err;
     }
 
-    if (!EVP_PKEY_encapsulate_init(ctx, NULL)) {
+    if (!OPENSSL_BOX_EVP_PKEY_encapsulate_init(ctx, NULL)) {
         fprintf(stderr, "Failed to init encap context\n");
         goto err;
     }
@@ -297,14 +297,14 @@ static void mlkem_encap_decap(uint8_t **buf, size_t *len, void *key1, void *in2,
         goto err;
     }
 
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     ctx = EVP_PKEY_CTX_new_from_pkey(NULL, key, NULL);
     if (ctx == NULL) {
         fprintf(stderr, "Failed to create context\n");
         goto err;
     }
 
-    if (!EVP_PKEY_decapsulate_init(ctx, NULL)) {
+    if (!OPENSSL_BOX_EVP_PKEY_decapsulate_init(ctx, NULL)) {
         fprintf(stderr, "Failed to init decap\n");
         goto err;
     }
@@ -318,7 +318,7 @@ static void mlkem_encap_decap(uint8_t **buf, size_t *len, void *key1, void *in2,
     if (memcmp(unwrappedkey, genkey, genkey_len))
         fprintf(stderr, "mismatch on secret comparison\n");
 err:
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return;
 }
 
@@ -350,17 +350,17 @@ static void do_derive(EVP_PKEY *key, EVP_PKEY *peer, uint8_t **shared, size_t *s
         goto err;
     }
 
-    if (!EVP_PKEY_derive_init(ctx)) {
+    if (!OPENSSL_BOX_EVP_PKEY_derive_init(ctx)) {
         fprintf(stderr, "failed to init derive context\n");
         goto err;
     }
 
-    if (!EVP_PKEY_derive_set_peer(ctx, peer)) {
+    if (!OPENSSL_BOX_EVP_PKEY_derive_set_peer(ctx, peer)) {
         fprintf(stderr, "failed to set peer\n");
         goto err;
     }
 
-    if (!EVP_PKEY_derive(ctx, NULL, shared_len)) {
+    if (!OPENSSL_BOX_EVP_PKEY_derive(ctx, NULL, shared_len)) {
         fprintf(stderr, "Derive failed 1\n");
         goto err;
     }
@@ -373,7 +373,7 @@ static void do_derive(EVP_PKEY *key, EVP_PKEY *peer, uint8_t **shared, size_t *s
         fprintf(stderr, "Failed to alloc\n");
         goto err;
     }
-    if (!EVP_PKEY_derive(ctx, *shared, shared_len)) {
+    if (!OPENSSL_BOX_EVP_PKEY_derive(ctx, *shared, shared_len)) {
         fprintf(stderr, "Derive failed 2\n");
         OPENSSL_free(*shared);
         *shared = NULL;
@@ -381,7 +381,7 @@ static void do_derive(EVP_PKEY *key, EVP_PKEY *peer, uint8_t **shared, size_t *s
         goto err;
     }
 err:
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
 }
 
 /**
@@ -426,7 +426,7 @@ static void mlkem_kex(uint8_t **buf, size_t *len, void *key1, void *key2,
  *
  * This function extracts key material from the given key (`key1`),
  * exports it as parameters, and then attempts to reconstruct a new
- * key from those parameters. It uses OpenSSL's `EVP_PKEY_todata()`
+ * key from those parameters. It uses OpenSSL's `OPENSSL_BOX_EVP_PKEY_todata()`
  * and `EVP_PKEY_fromdata()` functions for this process.
  *
  * @param[out] buf Unused output buffer (reserved for future use).
@@ -447,7 +447,7 @@ static void mlkem_export_import(uint8_t **buf, size_t *len, void *key1,
     EVP_PKEY_CTX *ctx = NULL;
     OSSL_PARAM *params = NULL;
 
-    if (!EVP_PKEY_todata(alice, EVP_PKEY_KEYPAIR, &params)) {
+    if (!OPENSSL_BOX_EVP_PKEY_todata(alice, EVP_PKEY_KEYPAIR, &params)) {
         fprintf(stderr, "Failed todata\n");
         goto err;
     }
@@ -464,8 +464,8 @@ static void mlkem_export_import(uint8_t **buf, size_t *len, void *key1,
     }
 
 err:
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(new);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(new);
     OSSL_PARAM_free(params);
 }
 
@@ -473,7 +473,7 @@ err:
  * @brief Compares two cryptographic keys and performs equality checks.
  *
  * This function takes in two cryptographic keys, casts them to `EVP_PKEY`
- * structures, and checks their equality using `EVP_PKEY_eq()`. The purpose
+ * structures, and checks their equality using `OPENSSL_BOX_EVP_PKEY_eq()`. The purpose
  * of `buf`, `len`, `out1`, and `out2` parameters is not clear from the
  * function's current implementation.
  *
@@ -490,15 +490,15 @@ static void mlkem_compare(uint8_t **buf, size_t *len, void *key1,
     EVP_PKEY *alice = (EVP_PKEY *)key1;
     EVP_PKEY *bob = (EVP_PKEY *)key2;
 
-    EVP_PKEY_eq(alice, alice);
-    EVP_PKEY_eq(alice, bob);
+    OPENSSL_BOX_EVP_PKEY_eq(alice, alice);
+    OPENSSL_BOX_EVP_PKEY_eq(alice, bob);
 }
 
 /**
  * @brief Frees allocated ML-KEM keys.
  *
  * This function releases memory associated with up to four EVP_PKEY
- * objects by calling `EVP_PKEY_free()` on each provided key.
+ * objects by calling `OPENSSL_BOX_EVP_PKEY_free()` on each provided key.
  *
  * @param key1 Pointer to the first key to be freed.
  * @param key2 Pointer to the second key to be freed.
@@ -511,10 +511,10 @@ static void mlkem_compare(uint8_t **buf, size_t *len, void *key1,
 static void cleanup_mlkem_keys(void *key1, void *key2,
                                void *key3, void *key4)
 {
-    EVP_PKEY_free((EVP_PKEY *)key1);
-    EVP_PKEY_free((EVP_PKEY *)key2);
-    EVP_PKEY_free((EVP_PKEY *)key3);
-    EVP_PKEY_free((EVP_PKEY *)key4);
+    OPENSSL_BOX_EVP_PKEY_free((EVP_PKEY *)key1);
+    OPENSSL_BOX_EVP_PKEY_free((EVP_PKEY *)key2);
+    OPENSSL_BOX_EVP_PKEY_free((EVP_PKEY *)key3);
+    OPENSSL_BOX_EVP_PKEY_free((EVP_PKEY *)key4);
     return;
 }
 
@@ -576,7 +576,7 @@ static struct op_table_entry ops[] = {
         NULL,
         cleanup_mlkem_keys
     }, {
-        "Generate ML-KEM keypair, using EVP_PKEY_keygen",
+        "Generate ML-KEM keypair, using OPENSSL_BOX_EVP_PKEY_keygen",
         "Generates a real ML-KEM keypair, should always work",
         keygen_mlkem_real_key,
         NULL,
@@ -595,7 +595,7 @@ static struct op_table_entry ops[] = {
         cleanup_mlkem_keys
     }, {
         "Do an export/import of key data",
-        "Exercise EVP_PKEY_todata/fromdata",
+        "Exercise OPENSSL_BOX_EVP_PKEY_todata/fromdata",
         keygen_mlkem_real_key,
         mlkem_export_import,
         cleanup_mlkem_keys

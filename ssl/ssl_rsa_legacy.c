@@ -23,24 +23,24 @@ int SSL_use_RSAPrivateKey(SSL *ssl, RSA *rsa)
         ERR_raise(ERR_LIB_SSL, ERR_R_PASSED_NULL_PARAMETER);
         return 0;
     }
-    if ((pkey = EVP_PKEY_new()) == NULL) {
+    if ((pkey = OPENSSL_BOX_EVP_PKEY_new()) == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         return 0;
     }
 
     if (!RSA_up_ref(rsa)) {
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         return 0;
     }
 
     if (EVP_PKEY_assign_RSA(pkey, rsa) <= 0) {
         RSA_free(rsa);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         return 0;
     }
 
     ret = SSL_use_PrivateKey(ssl, pkey);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 
@@ -114,24 +114,24 @@ int SSL_CTX_use_RSAPrivateKey(SSL_CTX *ctx, RSA *rsa)
         ERR_raise(ERR_LIB_SSL, ERR_R_PASSED_NULL_PARAMETER);
         return 0;
     }
-    if ((pkey = EVP_PKEY_new()) == NULL) {
+    if ((pkey = OPENSSL_BOX_EVP_PKEY_new()) == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         return 0;
     }
 
     if (!RSA_up_ref(rsa)) {
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         return 0;
     }
 
     if (EVP_PKEY_assign_RSA(pkey, rsa) <= 0) {
         RSA_free(rsa);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         return 0;
     }
 
     ret = SSL_CTX_use_PrivateKey(ctx, pkey);
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     return ret;
 }
 

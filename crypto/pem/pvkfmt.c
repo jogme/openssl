@@ -85,21 +85,21 @@ static EVP_PKEY *evp_pkey_new0_key(void *key, int evp_type)
         return NULL;
     }
 
-    if ((pkey = EVP_PKEY_new()) != NULL) {
+    if ((pkey = OPENSSL_BOX_EVP_PKEY_new()) != NULL) {
         switch (evp_type) {
         case EVP_PKEY_RSA:
-            if (EVP_PKEY_set1_RSA(pkey, key))
+            if (OPENSSL_BOX_EVP_PKEY_set1_RSA(pkey, key))
                 break;
             ERR_raise(ERR_LIB_PEM, ERR_R_EVP_LIB);
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             pkey = NULL;
             break;
 #ifndef OPENSSL_NO_DSA
         case EVP_PKEY_DSA:
-            if (EVP_PKEY_set1_DSA(pkey, key))
+            if (OPENSSL_BOX_EVP_PKEY_set1_DSA(pkey, key))
                 break;
             ERR_raise(ERR_LIB_PEM, ERR_R_EVP_LIB);
-            EVP_PKEY_free(pkey);
+            OPENSSL_BOX_EVP_PKEY_free(pkey);
             pkey = NULL;
             break;
 #endif
@@ -570,12 +570,12 @@ static int do_i2b(unsigned char **out, const EVP_PKEY *pk, int ispub)
     unsigned int bitlen = 0, magic = 0, keyalg = 0;
     int outlen = -1, noinc = 0;
 
-    if (EVP_PKEY_is_a(pk, "RSA")) {
-        bitlen = check_bitlen_rsa(EVP_PKEY_get0_RSA(pk), ispub, &magic);
+    if (OPENSSL_BOX_EVP_PKEY_is_a(pk, "RSA")) {
+        bitlen = check_bitlen_rsa(OPENSSL_BOX_EVP_PKEY_get0_RSA(pk), ispub, &magic);
         keyalg = MS_KEYALG_RSA_KEYX;
 #ifndef OPENSSL_NO_DSA
-    } else if (EVP_PKEY_is_a(pk, "DSA")) {
-        bitlen = check_bitlen_dsa(EVP_PKEY_get0_DSA(pk), ispub, &magic);
+    } else if (OPENSSL_BOX_EVP_PKEY_is_a(pk, "DSA")) {
+        bitlen = check_bitlen_dsa(OPENSSL_BOX_EVP_PKEY_get0_DSA(pk), ispub, &magic);
         keyalg = MS_KEYALG_DSS_SIGN;
 #endif
     }
@@ -607,10 +607,10 @@ static int do_i2b(unsigned char **out, const EVP_PKEY *pk, int ispub)
     write_ledword(&p, magic);
     write_ledword(&p, bitlen);
     if (keyalg == MS_KEYALG_RSA_KEYX)
-        write_rsa(&p, EVP_PKEY_get0_RSA(pk), ispub);
+        write_rsa(&p, OPENSSL_BOX_EVP_PKEY_get0_RSA(pk), ispub);
 #ifndef OPENSSL_NO_DSA
     else
-        write_dsa(&p, EVP_PKEY_get0_DSA(pk), ispub);
+        write_dsa(&p, OPENSSL_BOX_EVP_PKEY_get0_DSA(pk), ispub);
 #endif
     if (!noinc)
         *out += outlen;
@@ -864,7 +864,7 @@ static void *do_PVK_body_key(const unsigned char **in,
 #ifndef OPENSSL_NO_RC4
     EVP_CIPHER *rc4 = NULL;
 #endif
-    EVP_CIPHER_CTX *cctx = EVP_CIPHER_CTX_new();
+    EVP_CIPHER_CTX *cctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
 
     if (cctx == NULL) {
         ERR_raise(ERR_LIB_PEM, ERR_R_EVP_LIB);
@@ -935,9 +935,9 @@ static void *do_PVK_body_key(const unsigned char **in,
 
     key = do_b2i_key(&p, keylen, isdss, ispub);
  err:
-    EVP_CIPHER_CTX_free(cctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(cctx);
 #ifndef OPENSSL_NO_RC4
-    EVP_CIPHER_free(rc4);
+    OPENSSL_BOX_EVP_CIPHER_free(rc4);
 #endif
     if (enctmp != NULL) {
         OPENSSL_cleanse(keybuf, sizeof(keybuf));
@@ -1054,13 +1054,13 @@ static int i2b_PVK(unsigned char **out, const EVP_PKEY *pk, int enclevel,
             return -1;
     }
 
-    cctx = EVP_CIPHER_CTX_new();
+    cctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (cctx == NULL)
         goto error;
 
     write_ledword(&p, MS_PVKMAGIC);
     write_ledword(&p, 0);
-    if (EVP_PKEY_get_id(pk) == EVP_PKEY_RSA)
+    if (OPENSSL_BOX_EVP_PKEY_get_id(pk) == EVP_PKEY_RSA)
         write_ledword(&p, MS_KEYTYPE_KEYX);
 #ifndef OPENSSL_NO_DSA
     else
@@ -1116,9 +1116,9 @@ static int i2b_PVK(unsigned char **out, const EVP_PKEY *pk, int enclevel,
         *out = start;
     ret = outlen;
  error:
-    EVP_CIPHER_CTX_free(cctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(cctx);
 #ifndef OPENSSL_NO_RC4
-    EVP_CIPHER_free(rc4);
+    OPENSSL_BOX_EVP_CIPHER_free(rc4);
 #endif
     if (*out == NULL)
         OPENSSL_free(start);

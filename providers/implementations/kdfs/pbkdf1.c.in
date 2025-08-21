@@ -62,7 +62,7 @@ static int kdf_pbkdf1_do_derive(const unsigned char *pass, size_t passlen,
     unsigned char md_tmp[EVP_MAX_MD_SIZE];
     EVP_MD_CTX *ctx = NULL;
 
-    ctx = EVP_MD_CTX_new();
+    ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx == NULL) {
         ERR_raise(ERR_LIB_PROV, ERR_R_EVP_LIB);
         goto err;
@@ -94,7 +94,7 @@ static int kdf_pbkdf1_do_derive(const unsigned char *pass, size_t passlen,
     ret = 1;
 err:
     OPENSSL_cleanse(md_tmp, EVP_MAX_MD_SIZE);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 

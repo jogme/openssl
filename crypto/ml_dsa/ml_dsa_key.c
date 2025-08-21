@@ -138,8 +138,8 @@ void ossl_ml_dsa_key_free(ML_DSA_KEY *key)
     if (key == NULL)
         return;
 
-    EVP_MD_free(key->shake128_md);
-    EVP_MD_free(key->shake256_md);
+    OPENSSL_BOX_EVP_MD_free(key->shake128_md);
+    OPENSSL_BOX_EVP_MD_free(key->shake256_md);
     ossl_ml_dsa_key_reset(key);
     OPENSSL_free(key);
 }
@@ -236,8 +236,8 @@ ML_DSA_KEY *ossl_ml_dsa_key_dup(const ML_DSA_KEY *src, int selection)
                 }
             }
         }
-        EVP_MD_up_ref(src->shake128_md);
-        EVP_MD_up_ref(src->shake256_md);
+        OPENSSL_BOX_EVP_MD_up_ref(src->shake128_md);
+        OPENSSL_BOX_EVP_MD_up_ref(src->shake256_md);
         ret->shake128_md = src->shake128_md;
         ret->shake256_md = src->shake256_md;
     }
@@ -364,7 +364,7 @@ int ossl_ml_dsa_key_public_from_private(ML_DSA_KEY *key)
 
     if (!vector_alloc(&t0, key->params->k)) /* t0 is already in the private key */
         return 0;
-    ret = ((md_ctx = EVP_MD_CTX_new())!= NULL)
+    ret = ((md_ctx = OPENSSL_BOX_EVP_MD_CTX_new())!= NULL)
         && ossl_ml_dsa_key_pub_alloc(key)  /* allocate space for t1 */
         && public_from_private(key, md_ctx, &key->t1, &t0)
         && vector_equal(&t0, &key->t0) /* compare the generated t0 to the expected */
@@ -373,7 +373,7 @@ int ossl_ml_dsa_key_public_from_private(ML_DSA_KEY *key)
                      key->pub_encoding, key->params->pk_len,
                      key->tr, sizeof(key->tr));
     vector_free(&t0);
-    EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     return ret;
 }
 
@@ -391,7 +391,7 @@ int ossl_ml_dsa_key_pairwise_check(const ML_DSA_KEY *key)
     polys = OPENSSL_malloc_array(2 * k, sizeof(*polys));
     if (polys == NULL)
         return 0;
-    md_ctx = EVP_MD_CTX_new();
+    md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (md_ctx == NULL)
         goto err;
 
@@ -402,7 +402,7 @@ int ossl_ml_dsa_key_pairwise_check(const ML_DSA_KEY *key)
 
     ret = vector_equal(&t1, &key->t1) && vector_equal(&t0, &key->t0);
 err:
-    EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     OPENSSL_free(polys);
     return ret;
 }
@@ -427,7 +427,7 @@ static int keygen_internal(ML_DSA_KEY *out)
     EVP_MD_CTX *md_ctx = NULL;
 
     if (out->seed == NULL
-        || (md_ctx = EVP_MD_CTX_new()) == NULL
+        || (md_ctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL
         || !ossl_ml_dsa_key_pub_alloc(out)
         || !ossl_ml_dsa_key_priv_alloc(out))
         goto err;
@@ -456,7 +456,7 @@ err:
         OPENSSL_clear_free(out->seed, ML_DSA_SEED_BYTES);
         out->seed = NULL;
     }
-    EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     OPENSSL_cleanse(augmented_seed, sizeof(augmented_seed));
     OPENSSL_cleanse(expanded_seed, sizeof(expanded_seed));
     return ret;

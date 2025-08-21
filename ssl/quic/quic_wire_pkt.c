@@ -35,7 +35,7 @@ int ossl_quic_hdr_protector_init(QUIC_HDR_PROTECTOR *hpr,
             return 0;
     }
 
-    hpr->cipher_ctx = EVP_CIPHER_CTX_new();
+    hpr->cipher_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new();
     if (hpr->cipher_ctx == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         return 0;
@@ -43,7 +43,7 @@ int ossl_quic_hdr_protector_init(QUIC_HDR_PROTECTOR *hpr,
 
     hpr->cipher = EVP_CIPHER_fetch(libctx, cipher_name, propq);
     if (hpr->cipher == NULL
-        || quic_hp_key_len != (size_t)EVP_CIPHER_get_key_length(hpr->cipher)) {
+        || quic_hp_key_len != (size_t)OPENSSL_BOX_EVP_CIPHER_get_key_length(hpr->cipher)) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         goto err;
     }
@@ -66,10 +66,10 @@ err:
 
 void ossl_quic_hdr_protector_cleanup(QUIC_HDR_PROTECTOR *hpr)
 {
-    EVP_CIPHER_CTX_free(hpr->cipher_ctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(hpr->cipher_ctx);
     hpr->cipher_ctx = NULL;
 
-    EVP_CIPHER_free(hpr->cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(hpr->cipher);
     hpr->cipher = NULL;
 }
 
@@ -914,7 +914,7 @@ int ossl_quic_calculate_retry_integrity_tag(OSSL_LIB_CTX *libctx,
         goto err;
     }
 
-    if ((cctx = EVP_CIPHER_CTX_new()) == NULL) {
+    if ((cctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
         goto err;
     }
@@ -944,7 +944,7 @@ int ossl_quic_calculate_retry_integrity_tag(OSSL_LIB_CTX *libctx,
         goto err;
     }
 
-    if (EVP_CIPHER_CTX_ctrl(cctx, EVP_CTRL_AEAD_GET_TAG,
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_ctrl(cctx, EVP_CTRL_AEAD_GET_TAG,
                             QUIC_RETRY_INTEGRITY_TAG_LEN,
                             tag) != 1) {
         ERR_raise(ERR_LIB_SSL, ERR_R_EVP_LIB);
@@ -953,8 +953,8 @@ int ossl_quic_calculate_retry_integrity_tag(OSSL_LIB_CTX *libctx,
 
     ok = 1;
 err:
-    EVP_CIPHER_free(cipher);
-    EVP_CIPHER_CTX_free(cctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(cctx);
     if (wpkt_valid)
         WPACKET_finish(&wpkt);
 

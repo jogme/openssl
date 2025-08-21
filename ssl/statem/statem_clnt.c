@@ -1919,7 +1919,7 @@ MSG_PROCESS_RETURN tls_process_server_rpk(SSL_CONNECTION *sc, PACKET *pkt)
         return MSG_PROCESS_ERROR;
     }
 
-    EVP_PKEY_free(sc->session->peer_rpk);
+    OPENSSL_BOX_EVP_PKEY_free(sc->session->peer_rpk);
     sc->session->peer_rpk = peer_rpk;
 
     return MSG_PROCESS_CONTINUE_PROCESSING;
@@ -2137,7 +2137,7 @@ WORK_STATE tls_post_process_server_certificate(SSL_CONNECTION *s,
 
     pkey = X509_get0_pubkey(x);
 
-    if (pkey == NULL || EVP_PKEY_missing_parameters(pkey)) {
+    if (pkey == NULL || OPENSSL_BOX_EVP_PKEY_missing_parameters(pkey)) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR,
                  SSL_R_UNABLE_TO_FIND_PUBLIC_KEY_PARAMETERS);
         return WORK_ERROR;
@@ -2169,7 +2169,7 @@ WORK_STATE tls_post_process_server_certificate(SSL_CONNECTION *s,
     s->session->peer = x;
     s->session->verify_result = s->verify_result;
     /* Ensure there is no RPK */
-    EVP_PKEY_free(s->session->peer_rpk);
+    OPENSSL_BOX_EVP_PKEY_free(s->session->peer_rpk);
     s->session->peer_rpk = NULL;
 
     /* Save the current hash state for when we receive the CertificateVerify */
@@ -2326,29 +2326,29 @@ static int tls_process_ske_dhe(SSL_CONNECTION *s, PACKET *pkt, EVP_PKEY **pkey)
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
-    if (EVP_PKEY_fromdata_init(pctx) <= 0
+    if (OPENSSL_BOX_EVP_PKEY_fromdata_init(pctx) <= 0
             || EVP_PKEY_fromdata(pctx, &peer_tmp, EVP_PKEY_KEYPAIR, params) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_BAD_DH_VALUE);
         goto err;
     }
 
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     pctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx, peer_tmp, sctx->propq);
     if (pctx == NULL
             /*
-             * EVP_PKEY_param_check() will verify that the DH params are using
+             * OPENSSL_BOX_EVP_PKEY_param_check() will verify that the DH params are using
              * a safe prime. In this context, because we're using ephemeral DH,
              * we're ok with it not being a safe prime.
-             * EVP_PKEY_param_check_quick() skips the safe prime check.
+             * OPENSSL_BOX_EVP_PKEY_param_check_quick() skips the safe prime check.
              */
-            || EVP_PKEY_param_check_quick(pctx) != 1
-            || EVP_PKEY_public_check(pctx) != 1) {
+            || OPENSSL_BOX_EVP_PKEY_param_check_quick(pctx) != 1
+            || OPENSSL_BOX_EVP_PKEY_public_check(pctx) != 1) {
         SSLfatal(s, SSL_AD_ILLEGAL_PARAMETER, SSL_R_BAD_DH_VALUE);
         goto err;
     }
 
     if (!ssl_security(s, SSL_SECOP_TMP_DH,
-                      EVP_PKEY_get_security_bits(peer_tmp),
+                      OPENSSL_BOX_EVP_PKEY_get_security_bits(peer_tmp),
                       0, peer_tmp)) {
         SSLfatal(s, SSL_AD_HANDSHAKE_FAILURE, SSL_R_DH_KEY_TOO_SMALL);
         goto err;
@@ -2370,8 +2370,8 @@ static int tls_process_ske_dhe(SSL_CONNECTION *s, PACKET *pkt, EVP_PKEY **pkey)
  err:
     OSSL_PARAM_BLD_free(tmpl);
     OSSL_PARAM_free(params);
-    EVP_PKEY_free(peer_tmp);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_free(peer_tmp);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     BN_free(p);
     BN_free(g);
     BN_free(bnpub_key);
@@ -2450,7 +2450,7 @@ MSG_PROCESS_RETURN tls_process_key_exchange(SSL_CONNECTION *s, PACKET *pkt)
 
     save_param_start = *pkt;
 
-    EVP_PKEY_free(s->s3.peer_tmp);
+    OPENSSL_BOX_EVP_PKEY_free(s->s3.peer_tmp);
     s->s3.peer_tmp = NULL;
 
     if (alg_k & SSL_PSK) {
@@ -2525,7 +2525,7 @@ MSG_PROCESS_RETURN tls_process_key_exchange(SSL_CONNECTION *s, PACKET *pkt)
         }
         if (SSL_USE_SIGALGS(s))
             OSSL_TRACE1(TLS, "USING TLSv1.2 HASH %s\n",
-                        md == NULL ? "n/a" : EVP_MD_get0_name(md));
+                        md == NULL ? "n/a" : OPENSSL_BOX_EVP_MD_get0_name(md));
 
         if (!PACKET_get_length_prefixed_2(pkt, &signature)
             || PACKET_remaining(pkt) != 0) {
@@ -2533,14 +2533,14 @@ MSG_PROCESS_RETURN tls_process_key_exchange(SSL_CONNECTION *s, PACKET *pkt)
             goto err;
         }
 
-        md_ctx = EVP_MD_CTX_new();
+        md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
         if (md_ctx == NULL) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
             goto err;
         }
 
         if (EVP_DigestVerifyInit_ex(md_ctx, &pctx,
-                                    md == NULL ? NULL : EVP_MD_get0_name(md),
+                                    md == NULL ? NULL : OPENSSL_BOX_EVP_MD_get0_name(md),
                                     sctx->libctx, sctx->propq, pkey,
                                     NULL) <= 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
@@ -2568,7 +2568,7 @@ MSG_PROCESS_RETURN tls_process_key_exchange(SSL_CONNECTION *s, PACKET *pkt)
             SSLfatal(s, SSL_AD_DECRYPT_ERROR, SSL_R_BAD_SIGNATURE);
             goto err;
         }
-        EVP_MD_CTX_free(md_ctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
         md_ctx = NULL;
     } else {
         /* aNULL, aSRP or PSK do not need public keys */
@@ -2590,7 +2590,7 @@ MSG_PROCESS_RETURN tls_process_key_exchange(SSL_CONNECTION *s, PACKET *pkt)
 
     return MSG_PROCESS_CONTINUE_READING;
  err:
-    EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
     return MSG_PROCESS_ERROR;
 }
 
@@ -2854,7 +2854,7 @@ MSG_PROCESS_RETURN tls_process_new_session_ticket(SSL_CONNECTION *s,
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
     }
-    EVP_MD_free(sha256);
+    OPENSSL_BOX_EVP_MD_free(sha256);
     sha256 = NULL;
     s->session->session_id_length = sess_len;
     s->session->not_resumable = 0;
@@ -2862,7 +2862,7 @@ MSG_PROCESS_RETURN tls_process_new_session_ticket(SSL_CONNECTION *s,
     /* This is a standalone message in TLSv1.3, so there is no more to read */
     if (SSL_CONNECTION_IS_TLS13(s)) {
         const EVP_MD *md = ssl_handshake_md(s);
-        int hashleni = EVP_MD_get_size(md);
+        int hashleni = OPENSSL_BOX_EVP_MD_get_size(md);
         size_t hashlen;
         static const unsigned char nonce_label[] = "resumption";
 
@@ -2892,7 +2892,7 @@ MSG_PROCESS_RETURN tls_process_new_session_ticket(SSL_CONNECTION *s,
 
     return MSG_PROCESS_CONTINUE_READING;
  err:
-    EVP_MD_free(sha256);
+    OPENSSL_BOX_EVP_MD_free(sha256);
     OPENSSL_free(exts);
     return MSG_PROCESS_ERROR;
 }
@@ -3157,7 +3157,7 @@ static int tls_construct_cke_rsa(SSL_CONNECTION *s, WPACKET *pkt)
         return 0;
     }
 
-    if (!EVP_PKEY_is_a(pkey, "RSA")) {
+    if (!OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA")) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         return 0;
     }
@@ -3183,7 +3183,7 @@ static int tls_construct_cke_rsa(SSL_CONNECTION *s, WPACKET *pkt)
     }
 
     pctx = EVP_PKEY_CTX_new_from_pkey(sctx->libctx, pkey, sctx->propq);
-    if (pctx == NULL || EVP_PKEY_encrypt_init(pctx) <= 0
+    if (pctx == NULL || OPENSSL_BOX_EVP_PKEY_encrypt_init(pctx) <= 0
         || EVP_PKEY_encrypt(pctx, NULL, &enclen, pms, pmslen) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EVP_LIB);
         goto err;
@@ -3193,7 +3193,7 @@ static int tls_construct_cke_rsa(SSL_CONNECTION *s, WPACKET *pkt)
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, SSL_R_BAD_RSA_ENCRYPT);
         goto err;
     }
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     pctx = NULL;
 
     /* Fix buf for TLS and beyond */
@@ -3214,7 +3214,7 @@ static int tls_construct_cke_rsa(SSL_CONNECTION *s, WPACKET *pkt)
     return 1;
  err:
     OPENSSL_clear_free(pms, pmslen);
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
 
     return 0;
 }
@@ -3248,10 +3248,10 @@ static int tls_construct_cke_dhe(SSL_CONNECTION *s, WPACKET *pkt)
     /* send off the data */
 
     /* Generate encoding of server key */
-    encoded_pub_len = EVP_PKEY_get1_encoded_public_key(ckey, &encoded_pub);
+    encoded_pub_len = OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(ckey, &encoded_pub);
     if (encoded_pub_len == 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
-        EVP_PKEY_free(ckey);
+        OPENSSL_BOX_EVP_PKEY_free(ckey);
         return EXT_RETURN_FAIL;
     }
 
@@ -3260,7 +3260,7 @@ static int tls_construct_cke_dhe(SSL_CONNECTION *s, WPACKET *pkt)
      * stack, we need to zero pad the DHE pub key to the same length
      * as the prime.
      */
-    prime_len = EVP_PKEY_get_size(ckey);
+    prime_len = OPENSSL_BOX_EVP_PKEY_get_size(ckey);
     pad_len = prime_len - encoded_pub_len;
     if (pad_len > 0) {
         if (!WPACKET_sub_allocate_bytes_u16(pkt, pad_len, &keybytes)) {
@@ -3278,7 +3278,7 @@ static int tls_construct_cke_dhe(SSL_CONNECTION *s, WPACKET *pkt)
     ret = 1;
  err:
     OPENSSL_free(encoded_pub);
-    EVP_PKEY_free(ckey);
+    OPENSSL_BOX_EVP_PKEY_free(ckey);
     return ret;
 }
 
@@ -3307,7 +3307,7 @@ static int tls_construct_cke_ecdhe(SSL_CONNECTION *s, WPACKET *pkt)
     }
 
     /* Generate encoding of client key */
-    encoded_pt_len = EVP_PKEY_get1_encoded_public_key(ckey, &encodedPoint);
+    encoded_pt_len = OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(ckey, &encodedPoint);
 
     if (encoded_pt_len == 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_EC_LIB);
@@ -3322,7 +3322,7 @@ static int tls_construct_cke_ecdhe(SSL_CONNECTION *s, WPACKET *pkt)
     ret = 1;
  err:
     OPENSSL_free(encodedPoint);
-    EVP_PKEY_free(ckey);
+    OPENSSL_BOX_EVP_PKEY_free(ckey);
     return ret;
 }
 
@@ -3374,7 +3374,7 @@ static int tls_construct_cke_gost(SSL_CONNECTION *s, WPACKET *pkt)
         goto err;
     }
 
-    if (EVP_PKEY_encrypt_init(pkey_ctx) <= 0
+    if (OPENSSL_BOX_EVP_PKEY_encrypt_init(pkey_ctx) <= 0
         /* Generate session key
          */
         || RAND_bytes_ex(sctx->libctx, pms, pmslen, 0) <= 0) {
@@ -3385,9 +3385,9 @@ static int tls_construct_cke_gost(SSL_CONNECTION *s, WPACKET *pkt)
      * Compute shared IV and store it in algorithm-specific context
      * data
      */
-    ukm_hash = EVP_MD_CTX_new();
+    ukm_hash = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ukm_hash == NULL
-        || EVP_DigestInit(ukm_hash, EVP_get_digestbynid(dgst_nid)) <= 0
+        || OPENSSL_BOX_EVP_DigestInit(ukm_hash, EVP_get_digestbynid(dgst_nid)) <= 0
         || EVP_DigestUpdate(ukm_hash, s->s3.client_random,
                             SSL3_RANDOM_SIZE) <= 0
         || EVP_DigestUpdate(ukm_hash, s->s3.server_random,
@@ -3396,7 +3396,7 @@ static int tls_construct_cke_gost(SSL_CONNECTION *s, WPACKET *pkt)
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     }
-    EVP_MD_CTX_free(ukm_hash);
+    OPENSSL_BOX_EVP_MD_CTX_free(ukm_hash);
     ukm_hash = NULL;
     if (EVP_PKEY_CTX_ctrl(pkey_ctx, -1, EVP_PKEY_OP_ENCRYPT,
                           EVP_PKEY_CTRL_SET_IV, 8, shared_ukm) <= 0) {
@@ -3420,15 +3420,15 @@ static int tls_construct_cke_gost(SSL_CONNECTION *s, WPACKET *pkt)
         goto err;
     }
 
-    EVP_PKEY_CTX_free(pkey_ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pkey_ctx);
     s->s3.tmp.pms = pms;
     s->s3.tmp.pmslen = pmslen;
 
     return 1;
  err:
-    EVP_PKEY_CTX_free(pkey_ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pkey_ctx);
     OPENSSL_clear_free(pms, pmslen);
-    EVP_MD_CTX_free(ukm_hash);
+    OPENSSL_BOX_EVP_MD_CTX_free(ukm_hash);
     return 0;
 #else
     SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
@@ -3458,17 +3458,17 @@ int ossl_gost_ukm(const SSL_CONNECTION *s, unsigned char *dgst_buf)
     if (md == NULL)
         return 0;
 
-    if ((hash = EVP_MD_CTX_new()) == NULL
-        || EVP_DigestInit(hash, md) <= 0
+    if ((hash = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL
+        || OPENSSL_BOX_EVP_DigestInit(hash, md) <= 0
         || EVP_DigestUpdate(hash, s->s3.client_random, SSL3_RANDOM_SIZE) <= 0
         || EVP_DigestUpdate(hash, s->s3.server_random, SSL3_RANDOM_SIZE) <= 0
         || EVP_DigestFinal_ex(hash, dgst_buf, &md_len) <= 0) {
-        EVP_MD_CTX_free(hash);
+        OPENSSL_BOX_EVP_MD_CTX_free(hash);
         ssl_evp_md_free(md);
         return 0;
     }
 
-    EVP_MD_CTX_free(hash);
+    OPENSSL_BOX_EVP_MD_CTX_free(hash);
     ssl_evp_md_free(md);
     return 1;
 }
@@ -3526,7 +3526,7 @@ static int tls_construct_cke_gost18(SSL_CONNECTION *s, WPACKET *pkt)
         goto err;
     }
 
-    if (EVP_PKEY_encrypt_init(pkey_ctx) <= 0) {
+    if (OPENSSL_BOX_EVP_PKEY_encrypt_init(pkey_ctx) <= 0) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
         goto err;
     };
@@ -3555,14 +3555,14 @@ static int tls_construct_cke_gost18(SSL_CONNECTION *s, WPACKET *pkt)
         goto err;
     }
 
-    EVP_PKEY_CTX_free(pkey_ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pkey_ctx);
     pkey_ctx = NULL;
     s->s3.tmp.pms = pms;
     s->s3.tmp.pmslen = pmslen;
 
     return 1;
  err:
-    EVP_PKEY_CTX_free(pkey_ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pkey_ctx);
     OPENSSL_clear_free(pms, pmslen);
     return 0;
 #else
@@ -3795,7 +3795,7 @@ WORK_STATE tls_prepare_client_certificate(SSL_CONNECTION *s, WORK_STATE wst)
         }
 
         X509_free(x509);
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         if (i && !ssl3_check_client_certificate(s))
             i = 0;
         if (i == 0) {

@@ -27,7 +27,7 @@ used with EVP_MAC_fetch():
 The general description of these parameters can be found in
 L<EVP_MAC(3)/PARAMETERS>.
 
-The following parameter can be set with EVP_MAC_CTX_set_params():
+The following parameter can be set with OPENSSL_BOX_EVP_MAC_CTX_set_params():
 
 =over 4
 
@@ -62,20 +62,20 @@ to return 0.
 =back
 
 The following parameters can be retrieved with
-EVP_MAC_CTX_get_params():
+OPENSSL_BOX_EVP_MAC_CTX_get_params():
 
 =over 4
 
 =item "size" (B<OSSL_MAC_PARAM_SIZE>) <unsigned integer>
 
-The "size" parameter can also be retrieved with with EVP_MAC_CTX_get_mac_size().
+The "size" parameter can also be retrieved with with OPENSSL_BOX_EVP_MAC_CTX_get_mac_size().
 The length of the "size" parameter is equal to that of an B<unsigned int>.
 
 
 =item "block-size" (B<OSSL_MAC_PARAM_BLOCK_SIZE>) <unsigned integer>
 
 Gets the MAC block size.  The "block-size" parameter can also be retrieved with
-EVP_MAC_CTX_get_block_size().
+OPENSSL_BOX_EVP_MAC_CTX_get_block_size().
 
 =item "fips-indicator" (B<OSSL_CIPHER_PARAM_FIPS_APPROVED_INDICATOR>) <integer>
 
@@ -89,7 +89,7 @@ It may return 0 if the "encrypt-check" option is set to 0.
 
 =head1 SEE ALSO
 
-L<EVP_MAC_CTX_get_params(3)>, L<EVP_MAC_CTX_set_params(3)>,
+L<OPENSSL_BOX_EVP_MAC_CTX_get_params(3)>, L<OPENSSL_BOX_EVP_MAC_CTX_set_params(3)>,
 L<EVP_MAC(3)/PARAMETERS>, L<OSSL_PARAM(3)>
 
 =head1 COPYRIGHT

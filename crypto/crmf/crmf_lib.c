@@ -794,10 +794,10 @@ unsigned char
     }
     (void)ERR_pop_to_mark();
 
-    cikeysize = EVP_CIPHER_get_key_length(cipher);
+    cikeysize = OPENSSL_BOX_EVP_CIPHER_get_key_length(cipher);
     /* first the symmetric key needs to be decrypted */
     pkctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq);
-    if (pkctx != NULL && EVP_PKEY_decrypt_init(pkctx) > 0) {
+    if (pkctx != NULL && OPENSSL_BOX_EVP_PKEY_decrypt_init(pkctx) > 0) {
         ASN1_BIT_STRING *encKey = enc->encSymmKey;
         size_t failure;
         int retval;
@@ -818,20 +818,20 @@ unsigned char
     } else {
         goto end;
     }
-    if ((iv = OPENSSL_malloc(EVP_CIPHER_get_iv_length(cipher))) == NULL)
+    if ((iv = OPENSSL_malloc(OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher))) == NULL)
         goto end;
     if (ASN1_TYPE_get_octetstring(enc->symmAlg->parameter, iv,
-                                  EVP_CIPHER_get_iv_length(cipher))
-        != EVP_CIPHER_get_iv_length(cipher)) {
+                                  OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher))
+        != OPENSSL_BOX_EVP_CIPHER_get_iv_length(cipher)) {
         ERR_raise(ERR_LIB_CRMF, CRMF_R_MALFORMED_IV);
         goto end;
     }
 
     if ((out = OPENSSL_malloc(enc->encValue->length +
-                              EVP_CIPHER_get_block_size(cipher))) == NULL
-            || (evp_ctx = EVP_CIPHER_CTX_new()) == NULL)
+                              OPENSSL_BOX_EVP_CIPHER_get_block_size(cipher))) == NULL
+            || (evp_ctx = OPENSSL_BOX_EVP_CIPHER_CTX_new()) == NULL)
         goto end;
-    EVP_CIPHER_CTX_set_padding(evp_ctx, 0);
+    OPENSSL_BOX_EVP_CIPHER_CTX_set_padding(evp_ctx, 0);
 
     if (!EVP_DecryptInit(evp_ctx, cipher, ek, iv)
             || !EVP_DecryptUpdate(evp_ctx, out, outlen,
@@ -845,9 +845,9 @@ unsigned char
     ret = 1;
 
  end:
-    EVP_PKEY_CTX_free(pkctx);
-    EVP_CIPHER_CTX_free(evp_ctx);
-    EVP_CIPHER_free(cipher);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pkctx);
+    OPENSSL_BOX_EVP_CIPHER_CTX_free(evp_ctx);
+    OPENSSL_BOX_EVP_CIPHER_free(cipher);
     OPENSSL_clear_free(ek, eksize);
     OPENSSL_free(iv);
     if (ret)

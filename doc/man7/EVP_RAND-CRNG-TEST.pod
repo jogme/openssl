@@ -50,7 +50,7 @@ A context for a health test filter can be obtained by calling:
 
  EVP_RAND *parent = ...;
  EVP_RAND *rand = EVP_RAND_fetch(NULL, "CRNG-TEST", NULL);
- EVP_RAND_CTX *rctx = EVP_RAND_CTX_new(rand, parent);
+ EVP_RAND_CTX *rctx = OPENSSL_BOX_EVP_RAND_CTX_new(rand, parent);
 
 =head1 SEE ALSO
 

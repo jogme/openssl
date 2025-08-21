@@ -129,11 +129,11 @@ static int execute_pkimessage_create_test(CMP_MSG_TEST_FIXTURE *fixture)
 
 static int set1_newPkey(OSSL_CMP_CTX *ctx, EVP_PKEY *pkey)
 {
-    if (!EVP_PKEY_up_ref(pkey))
+    if (!OPENSSL_BOX_EVP_PKEY_up_ref(pkey))
         return 0;
 
     if (!OSSL_CMP_CTX_set0_newPkey(ctx, 1, pkey)) {
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         return 0;
     }
     return 1;
@@ -536,7 +536,7 @@ static int test_cmp_pkimessage_create(int bodytype)
 
 void cleanup_tests(void)
 {
-    EVP_PKEY_free(newkey);
+    OPENSSL_BOX_EVP_PKEY_free(newkey);
     X509_free(cert);
     OSSL_PROVIDER_unload(default_null_provider);
     OSSL_PROVIDER_unload(provider);

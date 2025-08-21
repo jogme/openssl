@@ -30,10 +30,10 @@ static void cleanup_old_md_data(EVP_MD_CTX *ctx, int force)
 {
     if (ctx->digest != NULL) {
         if (ctx->digest->cleanup != NULL
-                && !EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_CLEANED))
+                && !OPENSSL_BOX_EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_CLEANED))
             ctx->digest->cleanup(ctx);
         if (ctx->md_data != NULL && ctx->digest->ctx_size > 0
-                && (!EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_REUSE)
+                && (!OPENSSL_BOX_EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_REUSE)
                     || force)) {
             OPENSSL_clear_free(ctx->md_data, ctx->digest->ctx_size);
             ctx->md_data = NULL;
@@ -47,7 +47,7 @@ void evp_md_ctx_clear_digest(EVP_MD_CTX *ctx, int force, int keep_fetched)
         if (ctx->digest != NULL && ctx->digest->freectx != NULL)
             ctx->digest->freectx(ctx->algctx);
         ctx->algctx = NULL;
-        EVP_MD_CTX_set_flags(ctx, EVP_MD_CTX_FLAG_CLEANED);
+        OPENSSL_BOX_EVP_MD_CTX_set_flags(ctx, EVP_MD_CTX_FLAG_CLEANED);
     }
 
     /* Code below to be removed when legacy support is dropped. */
@@ -67,7 +67,7 @@ void evp_md_ctx_clear_digest(EVP_MD_CTX *ctx, int force, int keep_fetched)
 
     /* Non legacy code, this has to be later than the ctx->digest cleaning */
     if (!keep_fetched) {
-        EVP_MD_free(ctx->fetched_digest);
+        OPENSSL_BOX_EVP_MD_free(ctx->fetched_digest);
         ctx->fetched_digest = NULL;
         ctx->reqdigest = NULL;
     }
@@ -82,8 +82,8 @@ static int evp_md_ctx_reset_ex(EVP_MD_CTX *ctx, int keep_fetched)
      * pctx should be freed by the user of EVP_MD_CTX
      * if EVP_MD_CTX_FLAG_KEEP_PKEY_CTX is set
      */
-    if (!EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_KEEP_PKEY_CTX)) {
-        EVP_PKEY_CTX_free(ctx->pctx);
+    if (!OPENSSL_BOX_EVP_MD_CTX_test_flags(ctx, EVP_MD_CTX_FLAG_KEEP_PKEY_CTX)) {
+        OPENSSL_BOX_EVP_PKEY_CTX_free(ctx->pctx);
         ctx->pctx = NULL;
     }
 
@@ -95,7 +95,7 @@ static int evp_md_ctx_reset_ex(EVP_MD_CTX *ctx, int keep_fetched)
 }
 
 /* This call frees resources associated with the context */
-int EVP_MD_CTX_reset(EVP_MD_CTX *ctx)
+int OPENSSL_BOX_EVP_MD_CTX_reset(EVP_MD_CTX *ctx)
 {
     return evp_md_ctx_reset_ex(ctx, 0);
 }
@@ -107,36 +107,36 @@ EVP_MD_CTX *evp_md_ctx_new_ex(EVP_PKEY *pkey, const ASN1_OCTET_STRING *id,
     EVP_MD_CTX *ctx;
     EVP_PKEY_CTX *pctx = NULL;
 
-    if ((ctx = EVP_MD_CTX_new()) == NULL
+    if ((ctx = OPENSSL_BOX_EVP_MD_CTX_new()) == NULL
         || (pctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, propq)) == NULL) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         goto err;
     }
 
-    if (id != NULL && EVP_PKEY_CTX_set1_id(pctx, id->data, id->length) <= 0)
+    if (id != NULL && OPENSSL_BOX_EVP_PKEY_CTX_set1_id(pctx, id->data, id->length) <= 0)
         goto err;
 
-    EVP_MD_CTX_set_pkey_ctx(ctx, pctx);
+    OPENSSL_BOX_EVP_MD_CTX_set_pkey_ctx(ctx, pctx);
     return ctx;
 
  err:
-    EVP_PKEY_CTX_free(pctx);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return NULL;
 }
 #endif
 
-EVP_MD_CTX *EVP_MD_CTX_new(void)
+EVP_MD_CTX *OPENSSL_BOX_EVP_MD_CTX_new(void)
 {
     return OPENSSL_zalloc(sizeof(EVP_MD_CTX));
 }
 
-void EVP_MD_CTX_free(EVP_MD_CTX *ctx)
+void OPENSSL_BOX_EVP_MD_CTX_free(EVP_MD_CTX *ctx)
 {
     if (ctx == NULL)
         return;
 
-    EVP_MD_CTX_reset(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_reset(ctx);
     OPENSSL_free(ctx);
 }
 
@@ -180,7 +180,7 @@ static int evp_md_init_internal(EVP_MD_CTX *ctx, const EVP_MD *type,
     }
 #endif
 
-    EVP_MD_CTX_clear_flags(ctx, EVP_MD_CTX_FLAG_CLEANED
+    OPENSSL_BOX_EVP_MD_CTX_clear_flags(ctx, EVP_MD_CTX_FLAG_CLEANED
                                 | EVP_MD_CTX_FLAG_FINALISED);
 
     if (type != NULL) {
@@ -238,7 +238,7 @@ static int evp_md_init_internal(EVP_MD_CTX *ctx, const EVP_MD *type,
             return 0;
         if (ctx->digest == ctx->fetched_digest)
             ctx->digest = NULL;
-        EVP_MD_free(ctx->fetched_digest);
+        OPENSSL_BOX_EVP_MD_free(ctx->fetched_digest);
         ctx->fetched_digest = NULL;
         goto legacy;
     }
@@ -272,17 +272,17 @@ static int evp_md_init_internal(EVP_MD_CTX *ctx, const EVP_MD *type,
             return 0;
         }
         type = provmd;
-        EVP_MD_free(ctx->fetched_digest);
+        OPENSSL_BOX_EVP_MD_free(ctx->fetched_digest);
         ctx->fetched_digest = provmd;
 #endif
     }
 
     if (ossl_unlikely(type->prov != NULL && ctx->fetched_digest != type)) {
-        if (ossl_unlikely(!EVP_MD_up_ref((EVP_MD *)type))) {
+        if (ossl_unlikely(!OPENSSL_BOX_EVP_MD_up_ref((EVP_MD *)type))) {
             ERR_raise(ERR_LIB_EVP, EVP_R_INITIALIZATION_ERROR);
             return 0;
         }
-        EVP_MD_free(ctx->fetched_digest);
+        OPENSSL_BOX_EVP_MD_free(ctx->fetched_digest);
         ctx->fetched_digest = (EVP_MD *)type;
     }
     ctx->digest = type;
@@ -371,9 +371,9 @@ int EVP_DigestInit_ex2(EVP_MD_CTX *ctx, const EVP_MD *type,
     return evp_md_init_internal(ctx, type, params, NULL);
 }
 
-int EVP_DigestInit(EVP_MD_CTX *ctx, const EVP_MD *type)
+int OPENSSL_BOX_EVP_DigestInit(EVP_MD_CTX *ctx, const EVP_MD *type)
 {
-    EVP_MD_CTX_reset(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_reset(ctx);
     return evp_md_init_internal(ctx, type, NULL, NULL);
 }
 
@@ -397,17 +397,17 @@ int EVP_DigestUpdate(EVP_MD_CTX *ctx, const void *data, size_t count)
             && ctx->pctx->op.sig.algctx != NULL) {
 #ifndef FIPS_MODULE
         /*
-         * Prior to OpenSSL 3.0 EVP_DigestSignUpdate() and
-         * EVP_DigestVerifyUpdate() were just macros for EVP_DigestUpdate().
+         * Prior to OpenSSL 3.0 OPENSSL_BOX_EVP_DigestSignUpdate() and
+         * OPENSSL_BOX_EVP_DigestVerifyUpdate() were just macros for EVP_DigestUpdate().
          * Some code calls EVP_DigestUpdate() directly even when initialised
          * with EVP_DigestSignInit_ex() or
          * EVP_DigestVerifyInit_ex(), so we detect that and redirect to
          * the correct EVP_Digest*Update() function
          */
         if (ctx->pctx->operation == EVP_PKEY_OP_SIGNCTX)
-            return EVP_DigestSignUpdate(ctx, data, count);
+            return OPENSSL_BOX_EVP_DigestSignUpdate(ctx, data, count);
         if (ctx->pctx->operation == EVP_PKEY_OP_VERIFYCTX)
-            return EVP_DigestVerifyUpdate(ctx, data, count);
+            return OPENSSL_BOX_EVP_DigestVerifyUpdate(ctx, data, count);
 #endif
         ERR_raise(ERR_LIB_EVP, EVP_R_UPDATE_ERROR);
         return 0;
@@ -434,7 +434,7 @@ int EVP_DigestFinal(EVP_MD_CTX *ctx, unsigned char *md, unsigned int *size)
 {
     int ret;
     ret = EVP_DigestFinal_ex(ctx, md, size);
-    EVP_MD_CTX_reset(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_reset(ctx);
     return ret;
 }
 
@@ -488,7 +488,7 @@ int EVP_DigestFinal_ex(EVP_MD_CTX *ctx, unsigned char *md, unsigned int *isize)
         *isize = (unsigned int)mdsize;
     if (ctx->digest->cleanup) {
         ctx->digest->cleanup(ctx);
-        EVP_MD_CTX_set_flags(ctx, EVP_MD_CTX_FLAG_CLEANED);
+        OPENSSL_BOX_EVP_MD_CTX_set_flags(ctx, EVP_MD_CTX_FLAG_CLEANED);
     }
     OPENSSL_cleanse(ctx->md_data, ctx->digest->ctx_size);
     return ret;
@@ -527,7 +527,7 @@ int EVP_DigestFinalXOF(EVP_MD_CTX *ctx, unsigned char *md, size_t size)
     params[i++] = OSSL_PARAM_construct_size_t(OSSL_DIGEST_PARAM_XOFLEN, &size);
     params[i++] = OSSL_PARAM_construct_end();
 
-    if (ossl_likely(EVP_MD_CTX_set_params(ctx, params) >= 0))
+    if (ossl_likely(OPENSSL_BOX_EVP_MD_CTX_set_params(ctx, params) >= 0))
         ret = ctx->digest->dfinal(ctx->algctx, md, &size, size);
 
     ctx->flags |= EVP_MD_CTX_FLAG_FINALISED;
@@ -535,13 +535,13 @@ int EVP_DigestFinalXOF(EVP_MD_CTX *ctx, unsigned char *md, size_t size)
     return ret;
 
 legacy:
-    if (EVP_MD_xof(ctx->digest)
+    if (OPENSSL_BOX_EVP_MD_xof(ctx->digest)
         && size <= INT_MAX
         && ctx->digest->md_ctrl(ctx, EVP_MD_CTRL_XOF_LEN, (int)size, NULL)) {
         ret = ctx->digest->final(ctx, md);
         if (ctx->digest->cleanup != NULL) {
             ctx->digest->cleanup(ctx);
-            EVP_MD_CTX_set_flags(ctx, EVP_MD_CTX_FLAG_CLEANED);
+            OPENSSL_BOX_EVP_MD_CTX_set_flags(ctx, EVP_MD_CTX_FLAG_CLEANED);
         }
         OPENSSL_cleanse(ctx->md_data, ctx->digest->ctx_size);
     } else {
@@ -572,24 +572,24 @@ int EVP_DigestSqueeze(EVP_MD_CTX *ctx, unsigned char *md, size_t size)
     return ctx->digest->dsqueeze(ctx->algctx, md, &size, size);
 }
 
-EVP_MD_CTX *EVP_MD_CTX_dup(const EVP_MD_CTX *in)
+EVP_MD_CTX *OPENSSL_BOX_EVP_MD_CTX_dup(const EVP_MD_CTX *in)
 {
-    EVP_MD_CTX *out = EVP_MD_CTX_new();
+    EVP_MD_CTX *out = OPENSSL_BOX_EVP_MD_CTX_new();
 
-    if (out != NULL && !EVP_MD_CTX_copy_ex(out, in)) {
-        EVP_MD_CTX_free(out);
+    if (out != NULL && !OPENSSL_BOX_EVP_MD_CTX_copy_ex(out, in)) {
+        OPENSSL_BOX_EVP_MD_CTX_free(out);
         out = NULL;
     }
     return out;
 }
 
-int EVP_MD_CTX_copy(EVP_MD_CTX *out, const EVP_MD_CTX *in)
+int OPENSSL_BOX_EVP_MD_CTX_copy(EVP_MD_CTX *out, const EVP_MD_CTX *in)
 {
-    EVP_MD_CTX_reset(out);
-    return EVP_MD_CTX_copy_ex(out, in);
+    OPENSSL_BOX_EVP_MD_CTX_reset(out);
+    return OPENSSL_BOX_EVP_MD_CTX_copy_ex(out, in);
 }
 
-int EVP_MD_CTX_copy_ex(EVP_MD_CTX *out, const EVP_MD_CTX *in)
+int OPENSSL_BOX_EVP_MD_CTX_copy_ex(EVP_MD_CTX *out, const EVP_MD_CTX *in)
 {
     int digest_change = 0;
     unsigned char *tmp_buf;
@@ -601,9 +601,9 @@ int EVP_MD_CTX_copy_ex(EVP_MD_CTX *out, const EVP_MD_CTX *in)
 
     if (in->digest == NULL) {
         /* copying uninitialized digest context */
-        EVP_MD_CTX_reset(out);
+        OPENSSL_BOX_EVP_MD_CTX_reset(out);
         if (out->fetched_digest != NULL)
-            EVP_MD_free(out->fetched_digest);
+            OPENSSL_BOX_EVP_MD_free(out->fetched_digest);
         *out = *in;
         goto clone_pkey;
     }
@@ -621,7 +621,7 @@ int EVP_MD_CTX_copy_ex(EVP_MD_CTX *out, const EVP_MD_CTX *in)
 
         in->digest->copyctx(out->algctx, in->algctx);
 
-        EVP_PKEY_CTX_free(out->pctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(out->pctx);
         out->pctx = NULL;
         cleanup_old_md_data(out, 0);
 
@@ -632,10 +632,10 @@ int EVP_MD_CTX_copy_ex(EVP_MD_CTX *out, const EVP_MD_CTX *in)
         digest_change = (out->fetched_digest != in->fetched_digest);
 
         if (digest_change && in->fetched_digest != NULL
-            && !EVP_MD_up_ref(in->fetched_digest))
+            && !OPENSSL_BOX_EVP_MD_up_ref(in->fetched_digest))
             return 0;
         if (digest_change && out->fetched_digest != NULL)
-            EVP_MD_free(out->fetched_digest);
+            OPENSSL_BOX_EVP_MD_free(out->fetched_digest);
         *out = *in;
         /* NULL out pointers in case of error */
         out->pctx = NULL;
@@ -652,13 +652,13 @@ int EVP_MD_CTX_copy_ex(EVP_MD_CTX *out, const EVP_MD_CTX *in)
 
  clone_pkey:
     /* copied EVP_MD_CTX should free the copied EVP_PKEY_CTX */
-    EVP_MD_CTX_clear_flags(out, EVP_MD_CTX_FLAG_KEEP_PKEY_CTX);
+    OPENSSL_BOX_EVP_MD_CTX_clear_flags(out, EVP_MD_CTX_FLAG_KEEP_PKEY_CTX);
 #ifndef FIPS_MODULE
     if (in->pctx != NULL) {
-        out->pctx = EVP_PKEY_CTX_dup(in->pctx);
+        out->pctx = OPENSSL_BOX_EVP_PKEY_CTX_dup(in->pctx);
         if (out->pctx == NULL) {
             ERR_raise(ERR_LIB_EVP, EVP_R_NOT_ABLE_TO_COPY_CTX);
-            EVP_MD_CTX_reset(out);
+            OPENSSL_BOX_EVP_MD_CTX_reset(out);
             return 0;
         }
     }
@@ -678,14 +678,14 @@ int EVP_MD_CTX_copy_ex(EVP_MD_CTX *out, const EVP_MD_CTX *in)
 
     if (out->digest == in->digest) {
         tmp_buf = out->md_data;
-        EVP_MD_CTX_set_flags(out, EVP_MD_CTX_FLAG_REUSE);
+        OPENSSL_BOX_EVP_MD_CTX_set_flags(out, EVP_MD_CTX_FLAG_REUSE);
     } else
         tmp_buf = NULL;
-    EVP_MD_CTX_reset(out);
+    OPENSSL_BOX_EVP_MD_CTX_reset(out);
     memcpy(out, in, sizeof(*out));
 
     /* copied EVP_MD_CTX should free the copied EVP_PKEY_CTX */
-    EVP_MD_CTX_clear_flags(out, EVP_MD_CTX_FLAG_KEEP_PKEY_CTX);
+    OPENSSL_BOX_EVP_MD_CTX_clear_flags(out, EVP_MD_CTX_FLAG_KEEP_PKEY_CTX);
 
     /* Null these variables, since they are getting fixed up
      * properly below.  Anything else may cause a memleak and/or
@@ -709,9 +709,9 @@ int EVP_MD_CTX_copy_ex(EVP_MD_CTX *out, const EVP_MD_CTX *in)
 
 #ifndef FIPS_MODULE
     if (in->pctx) {
-        out->pctx = EVP_PKEY_CTX_dup(in->pctx);
+        out->pctx = OPENSSL_BOX_EVP_PKEY_CTX_dup(in->pctx);
         if (!out->pctx) {
-            EVP_MD_CTX_reset(out);
+            OPENSSL_BOX_EVP_MD_CTX_reset(out);
             return 0;
         }
     }
@@ -727,16 +727,16 @@ int EVP_Digest(const void *data, size_t count,
                unsigned char *md, unsigned int *size, const EVP_MD *type,
                ENGINE *impl)
 {
-    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     int ret;
 
     if (ctx == NULL)
         return 0;
-    EVP_MD_CTX_set_flags(ctx, EVP_MD_CTX_FLAG_ONESHOT);
+    OPENSSL_BOX_EVP_MD_CTX_set_flags(ctx, EVP_MD_CTX_FLAG_ONESHOT);
     ret = EVP_DigestInit_ex(ctx, type, impl)
         && EVP_DigestUpdate(ctx, data, count)
         && EVP_DigestFinal_ex(ctx, md, size);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
 
     return ret;
 }
@@ -751,29 +751,29 @@ int EVP_Q_digest(OSSL_LIB_CTX *libctx, const char *name, const char *propq,
 
     if (digest != NULL) {
         ret = EVP_Digest(data, datalen, md, &temp, digest, NULL);
-        EVP_MD_free(digest);
+        OPENSSL_BOX_EVP_MD_free(digest);
     }
     if (mdlen != NULL)
         *mdlen = temp;
     return ret;
 }
 
-int EVP_MD_get_params(const EVP_MD *digest, OSSL_PARAM params[])
+int OPENSSL_BOX_EVP_MD_get_params(const EVP_MD *digest, OSSL_PARAM params[])
 {
     if (digest != NULL && digest->get_params != NULL)
         return digest->get_params(params);
     return 0;
 }
 
-const OSSL_PARAM *EVP_MD_gettable_params(const EVP_MD *digest)
+const OSSL_PARAM *OPENSSL_BOX_EVP_MD_gettable_params(const EVP_MD *digest)
 {
     if (digest != NULL && digest->gettable_params != NULL)
         return digest->gettable_params(
-                           ossl_provider_ctx(EVP_MD_get0_provider(digest)));
+                           ossl_provider_ctx(OPENSSL_BOX_EVP_MD_get0_provider(digest)));
     return NULL;
 }
 
-int EVP_MD_CTX_set_params(EVP_MD_CTX *ctx, const OSSL_PARAM params[])
+int OPENSSL_BOX_EVP_MD_CTX_set_params(EVP_MD_CTX *ctx, const OSSL_PARAM params[])
 {
     EVP_PKEY_CTX *pctx = ctx->pctx;
 
@@ -792,18 +792,18 @@ int EVP_MD_CTX_set_params(EVP_MD_CTX *ctx, const OSSL_PARAM params[])
     return 0;
 }
 
-const OSSL_PARAM *EVP_MD_settable_ctx_params(const EVP_MD *md)
+const OSSL_PARAM *OPENSSL_BOX_EVP_MD_settable_ctx_params(const EVP_MD *md)
 {
     void *provctx;
 
     if (md != NULL && md->settable_ctx_params != NULL) {
-        provctx = ossl_provider_ctx(EVP_MD_get0_provider(md));
+        provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_MD_get0_provider(md));
         return md->settable_ctx_params(NULL, provctx);
     }
     return NULL;
 }
 
-const OSSL_PARAM *EVP_MD_CTX_settable_params(EVP_MD_CTX *ctx)
+const OSSL_PARAM *OPENSSL_BOX_EVP_MD_CTX_settable_params(EVP_MD_CTX *ctx)
 {
     EVP_PKEY_CTX *pctx;
     void *alg;
@@ -822,14 +822,14 @@ const OSSL_PARAM *EVP_MD_CTX_settable_params(EVP_MD_CTX *ctx)
                    pctx->op.sig.algctx);
 
     if (ctx->digest != NULL && ctx->digest->settable_ctx_params != NULL) {
-        alg = ossl_provider_ctx(EVP_MD_get0_provider(ctx->digest));
+        alg = ossl_provider_ctx(OPENSSL_BOX_EVP_MD_get0_provider(ctx->digest));
         return ctx->digest->settable_ctx_params(ctx->algctx, alg);
     }
 
     return NULL;
 }
 
-int EVP_MD_CTX_get_params(EVP_MD_CTX *ctx, OSSL_PARAM params[])
+int OPENSSL_BOX_EVP_MD_CTX_get_params(EVP_MD_CTX *ctx, OSSL_PARAM params[])
 {
     EVP_PKEY_CTX *pctx = ctx->pctx;
 
@@ -848,18 +848,18 @@ int EVP_MD_CTX_get_params(EVP_MD_CTX *ctx, OSSL_PARAM params[])
     return 0;
 }
 
-const OSSL_PARAM *EVP_MD_gettable_ctx_params(const EVP_MD *md)
+const OSSL_PARAM *OPENSSL_BOX_EVP_MD_gettable_ctx_params(const EVP_MD *md)
 {
     void *provctx;
 
     if (md != NULL && md->gettable_ctx_params != NULL) {
-        provctx = ossl_provider_ctx(EVP_MD_get0_provider(md));
+        provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_MD_get0_provider(md));
         return md->gettable_ctx_params(NULL, provctx);
     }
     return NULL;
 }
 
-const OSSL_PARAM *EVP_MD_CTX_gettable_params(EVP_MD_CTX *ctx)
+const OSSL_PARAM *OPENSSL_BOX_EVP_MD_CTX_gettable_params(EVP_MD_CTX *ctx)
 {
     EVP_PKEY_CTX *pctx;
     void *provctx;
@@ -879,13 +879,13 @@ const OSSL_PARAM *EVP_MD_CTX_gettable_params(EVP_MD_CTX *ctx)
 
     if (ossl_unlikely(ctx->digest != NULL
                       && ctx->digest->gettable_ctx_params != NULL)) {
-        provctx = ossl_provider_ctx(EVP_MD_get0_provider(ctx->digest));
+        provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_MD_get0_provider(ctx->digest));
         return ctx->digest->gettable_ctx_params(ctx->algctx, provctx);
     }
     return NULL;
 }
 
-int EVP_MD_CTX_ctrl(EVP_MD_CTX *ctx, int cmd, int p1, void *p2)
+int OPENSSL_BOX_EVP_MD_CTX_ctrl(EVP_MD_CTX *ctx, int cmd, int p1, void *p2)
 {
     int ret = EVP_CTRL_RET_UNSUPPORTED;
     int set_params = 1;
@@ -919,9 +919,9 @@ int EVP_MD_CTX_ctrl(EVP_MD_CTX *ctx, int cmd, int p1, void *p2)
     }
 
     if (set_params)
-        ret = EVP_MD_CTX_set_params(ctx, params);
+        ret = OPENSSL_BOX_EVP_MD_CTX_set_params(ctx, params);
     else
-        ret = EVP_MD_CTX_get_params(ctx, params);
+        ret = OPENSSL_BOX_EVP_MD_CTX_get_params(ctx, params);
     goto conclude;
 
 
@@ -962,7 +962,7 @@ static void set_legacy_nid(const char *name, void *vlegacy_nid)
     int *legacy_nid = vlegacy_nid;
     /*
      * We use lowest level function to get the associated method, because
-     * higher level functions such as EVP_get_digestbyname() have changed
+     * higher level functions such as OPENSSL_BOX_EVP_get_digestbyname() have changed
      * to look at providers too.
      */
     const void *legacy_method = OBJ_NAME_get(name, OBJ_NAME_TYPE_MD_METH);
@@ -1146,18 +1146,18 @@ static void *evp_md_from_algorithm(int name_id,
     return md;
 
 err:
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
     return NULL;
 }
 
 static int evp_md_up_ref(void *md)
 {
-    return EVP_MD_up_ref(md);
+    return OPENSSL_BOX_EVP_MD_up_ref(md);
 }
 
 static void evp_md_free(void *md)
 {
-    EVP_MD_free(md);
+    OPENSSL_BOX_EVP_MD_free(md);
 }
 
 EVP_MD *EVP_MD_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
@@ -1170,7 +1170,7 @@ EVP_MD *EVP_MD_fetch(OSSL_LIB_CTX *ctx, const char *algorithm,
     return md;
 }
 
-int EVP_MD_up_ref(EVP_MD *md)
+int OPENSSL_BOX_EVP_MD_up_ref(EVP_MD *md)
 {
     int ref = 0;
 
@@ -1179,7 +1179,7 @@ int EVP_MD_up_ref(EVP_MD *md)
     return 1;
 }
 
-void EVP_MD_free(EVP_MD *md)
+void OPENSSL_BOX_EVP_MD_free(EVP_MD *md)
 {
     int i;
 

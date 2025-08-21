@@ -102,7 +102,7 @@ static int keyexch_x25519_before(
     ret = 1;
 end:
     if (ret == 0) {
-        EVP_PKEY_free(local_peer->privk);
+        OPENSSL_BOX_EVP_PKEY_free(local_peer->privk);
         local_peer->privk = NULL;
     }
 
@@ -143,20 +143,20 @@ static int keyexch_x25519_after(
     }
 
     /* Initialize derivation process. */
-    if (EVP_PKEY_derive_init(ctx) == 0) {
-        fprintf(stderr, "EVP_PKEY_derive_init() failed\n");
+    if (OPENSSL_BOX_EVP_PKEY_derive_init(ctx) == 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_derive_init() failed\n");
         goto end;
     }
 
     /* Configure each peer with the other peer's public key. */
-    if (EVP_PKEY_derive_set_peer(ctx, remote_peer_pubk) == 0) {
-        fprintf(stderr, "EVP_PKEY_derive_set_peer() failed\n");
+    if (OPENSSL_BOX_EVP_PKEY_derive_set_peer(ctx, remote_peer_pubk) == 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_derive_set_peer() failed\n");
         goto end;
     }
 
     /* Determine the secret length. */
-    if (EVP_PKEY_derive(ctx, NULL, &local_peer->secret_len) == 0) {
-        fprintf(stderr, "EVP_PKEY_derive() failed\n");
+    if (OPENSSL_BOX_EVP_PKEY_derive(ctx, NULL, &local_peer->secret_len) == 0) {
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_derive() failed\n");
         goto end;
     }
 
@@ -178,9 +178,9 @@ static int keyexch_x25519_after(
     }
 
     /* Derive the shared secret. */
-    if (EVP_PKEY_derive(ctx, local_peer->secret,
+    if (OPENSSL_BOX_EVP_PKEY_derive(ctx, local_peer->secret,
                         &local_peer->secret_len) == 0) {
-        fprintf(stderr, "EVP_PKEY_derive() failed\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_PKEY_derive() failed\n");
         goto end;
     }
 
@@ -190,8 +190,8 @@ static int keyexch_x25519_after(
 
     ret = 1;
 end:
-    EVP_PKEY_CTX_free(ctx);
-    EVP_PKEY_free(remote_peer_pubk);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_free(remote_peer_pubk);
     if (ret == 0) {
         OPENSSL_clear_free(local_peer->secret, local_peer->secret_len);
         local_peer->secret = NULL;
@@ -256,8 +256,8 @@ end:
     OPENSSL_clear_free(peer1.secret, peer1.secret_len);
     OPENSSL_clear_free(peer2.secret, peer2.secret_len);
 
-    EVP_PKEY_free(peer1.privk);
-    EVP_PKEY_free(peer2.privk);
+    OPENSSL_BOX_EVP_PKEY_free(peer1.privk);
+    OPENSSL_BOX_EVP_PKEY_free(peer2.privk);
     OSSL_LIB_CTX_free(libctx);
     return ret;
 }

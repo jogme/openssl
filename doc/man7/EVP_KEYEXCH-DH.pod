@@ -77,7 +77,7 @@ To convert the received peer's public key from DER format on the host:
     const unsigned char *pd = peer_pub_der;
     EVP_PKEY *peer_pub_key = d2i_PUBKEY(NULL, &pd, peer_pub_der_len);
     ...
-    EVP_PKEY_free(peer_pub_key);
+    OPENSSL_BOX_EVP_PKEY_free(peer_pub_key);
 
 To derive a shared secret on the host using the host's key and the peer's public
 key:
@@ -91,23 +91,23 @@ key:
         size_t secret_len = 0;
         EVP_PKEY_CTX *dctx = EVP_PKEY_CTX_new_from_pkey(NULL, host_key, NULL);
 
-        EVP_PKEY_derive_init(dctx);
+        OPENSSL_BOX_EVP_PKEY_derive_init(dctx);
 
         /* Optionally set the padding */
         params[0] = OSSL_PARAM_construct_uint(OSSL_EXCHANGE_PARAM_PAD, &pad);
         params[1] = OSSL_PARAM_construct_end();
-        EVP_PKEY_CTX_set_params(dctx, params);
+        OPENSSL_BOX_EVP_PKEY_CTX_set_params(dctx, params);
 
-        EVP_PKEY_derive_set_peer(dctx, peer_pub_key);
+        OPENSSL_BOX_EVP_PKEY_derive_set_peer(dctx, peer_pub_key);
 
         /* Get the size by passing NULL as the buffer */
-        EVP_PKEY_derive(dctx, NULL, &secret_len);
+        OPENSSL_BOX_EVP_PKEY_derive(dctx, NULL, &secret_len);
         secret = OPENSSL_zalloc(secret_len);
 
-        EVP_PKEY_derive(dctx, secret, &secret_len);
+        OPENSSL_BOX_EVP_PKEY_derive(dctx, secret, &secret_len);
         ...
         OPENSSL_clear_free(secret, secret_len);
-        EVP_PKEY_CTX_free(dctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(dctx);
     }
 
 Very similar code can be used by the peer to derive the same shared secret

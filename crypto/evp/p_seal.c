@@ -29,24 +29,24 @@ int EVP_SealInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
     int rv = 0;
 
     if (type != NULL) {
-        EVP_CIPHER_CTX_reset(ctx);
+        OPENSSL_BOX_EVP_CIPHER_CTX_reset(ctx);
         if (!EVP_EncryptInit_ex(ctx, type, NULL, NULL, NULL))
             return 0;
     }
-    if ((cipher = EVP_CIPHER_CTX_get0_cipher(ctx)) != NULL
-            && (prov = EVP_CIPHER_get0_provider(cipher)) != NULL)
+    if ((cipher = OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(ctx)) != NULL
+            && (prov = OPENSSL_BOX_EVP_CIPHER_get0_provider(cipher)) != NULL)
         libctx = ossl_provider_libctx(prov);
     if ((npubk <= 0) || !pubk)
         return 1;
 
-    if (EVP_CIPHER_CTX_rand_key(ctx, key) <= 0)
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_rand_key(ctx, key) <= 0)
         return 0;
 
-    len = EVP_CIPHER_CTX_get_iv_length(ctx);
+    len = OPENSSL_BOX_EVP_CIPHER_CTX_get_iv_length(ctx);
     if (len < 0 || RAND_priv_bytes_ex(libctx, iv, len, 0) <= 0)
         goto err;
 
-    len = EVP_CIPHER_CTX_get_key_length(ctx);
+    len = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx);
     if (len < 0)
         goto err;
 
@@ -62,21 +62,21 @@ int EVP_SealInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
             goto err;
         }
 
-        if (EVP_PKEY_encrypt_init(pctx) <= 0
+        if (OPENSSL_BOX_EVP_PKEY_encrypt_init(pctx) <= 0
             || EVP_PKEY_encrypt(pctx, ek[i], &keylen, key, keylen) <= 0)
             goto err;
         ekl[i] = (int)keylen;
-        EVP_PKEY_CTX_free(pctx);
+        OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     }
     pctx = NULL;
     rv = npubk;
 err:
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     OPENSSL_cleanse(key, sizeof(key));
     return rv;
 }
 
-int EVP_SealFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
+int OPENSSL_BOX_EVP_SealFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
 {
     int i;
     i = EVP_EncryptFinal_ex(ctx, out, outl);

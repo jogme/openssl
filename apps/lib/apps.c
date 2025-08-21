@@ -657,12 +657,12 @@ EVP_PKEY *load_keyparams_suppress(const char *uri, int format, int maybe_stdin,
     (void)load_key_certs_crls(uri, format, maybe_stdin, NULL, desc,
                               suppress_decode_errors,
                               NULL, NULL, &params, NULL, NULL, NULL, NULL);
-    if (params != NULL && keytype != NULL && !EVP_PKEY_is_a(params, keytype)) {
+    if (params != NULL && keytype != NULL && !OPENSSL_BOX_EVP_PKEY_is_a(params, keytype)) {
         ERR_print_errors(bio_err);
         BIO_printf(bio_err,
                    "Unable to load %s from %s (unexpected parameters type)\n",
                    desc, uri);
-        EVP_PKEY_free(params);
+        OPENSSL_BOX_EVP_PKEY_free(params);
         params = NULL;
     }
     return params;
@@ -2375,7 +2375,7 @@ int cert_matches_key(const X509 *cert, const EVP_PKEY *pkey)
 int do_X509_sign(X509 *cert, int force_v1, EVP_PKEY *pkey, const char *md,
                  STACK_OF(OPENSSL_STRING) *sigopts, X509V3_CTX *ext_ctx)
 {
-    EVP_MD_CTX *mctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *mctx = OPENSSL_BOX_EVP_MD_CTX_new();
     int self_sign;
     int rv = 0;
 
@@ -2401,7 +2401,7 @@ int do_X509_sign(X509 *cert, int force_v1, EVP_PKEY *pkey, const char *md,
     if (mctx != NULL && do_sign_init(mctx, pkey, md, sigopts) > 0)
         rv = (X509_sign_ctx(cert, mctx) > 0);
  end:
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
     return rv;
 }
 
@@ -2410,11 +2410,11 @@ int do_X509_REQ_sign(X509_REQ *x, EVP_PKEY *pkey, const char *md,
                      STACK_OF(OPENSSL_STRING) *sigopts)
 {
     int rv = 0;
-    EVP_MD_CTX *mctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *mctx = OPENSSL_BOX_EVP_MD_CTX_new();
 
     if (do_sign_init(mctx, pkey, md, sigopts) > 0)
         rv = (X509_REQ_sign_ctx(x, mctx) > 0);
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
     return rv;
 }
 
@@ -2423,11 +2423,11 @@ int do_X509_CRL_sign(X509_CRL *x, EVP_PKEY *pkey, const char *md,
                      STACK_OF(OPENSSL_STRING) *sigopts)
 {
     int rv = 0;
-    EVP_MD_CTX *mctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *mctx = OPENSSL_BOX_EVP_MD_CTX_new();
 
     if (do_sign_init(mctx, pkey, md, sigopts) > 0)
         rv = (X509_CRL_sign_ctx(x, mctx) > 0);
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
     return rv;
 }
 
@@ -3516,7 +3516,7 @@ EVP_PKEY *app_keygen(EVP_PKEY_CTX *ctx, const char *alg, int bits, int verbose)
     if (!RAND_status())
         BIO_printf(bio_err, "Warning: generating random key material may take a long time\n"
                    "if the system has a poor entropy source\n");
-    if (EVP_PKEY_keygen(ctx, &res) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_keygen(ctx, &res) <= 0)
         BIO_printf(bio_err, "%s: Error generating %s key\n", opt_getprog(),
                    alg != NULL ? alg : "asymmetric");
     return res;
@@ -3529,7 +3529,7 @@ EVP_PKEY *app_paramgen(EVP_PKEY_CTX *ctx, const char *alg)
     if (!RAND_status())
         BIO_printf(bio_err, "Warning: generating random key parameters may take a long time\n"
                    "if the system has a poor entropy source\n");
-    if (EVP_PKEY_paramgen(ctx, &res) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_paramgen(ctx, &res) <= 0)
         BIO_printf(bio_err, "%s: Generating %s key parameters failed\n",
                    opt_getprog(), alg != NULL ? alg : "asymmetric");
     return res;

@@ -22,12 +22,12 @@
 
 static void evp_signature_free(void *data)
 {
-    EVP_SIGNATURE_free(data);
+    OPENSSL_BOX_EVP_SIGNATURE_free(data);
 }
 
 static int evp_signature_up_ref(void *data)
 {
-    return EVP_SIGNATURE_up_ref(data);
+    return OPENSSL_BOX_EVP_SIGNATURE_up_ref(data);
 }
 
 static EVP_SIGNATURE *evp_signature_new(OSSL_PROVIDER *prov)
@@ -452,11 +452,11 @@ static void *evp_signature_from_algorithm(int name_id,
 
     return signature;
  err:
-    EVP_SIGNATURE_free(signature);
+    OPENSSL_BOX_EVP_SIGNATURE_free(signature);
     return NULL;
 }
 
-void EVP_SIGNATURE_free(EVP_SIGNATURE *signature)
+void OPENSSL_BOX_EVP_SIGNATURE_free(EVP_SIGNATURE *signature)
 {
     int i;
 
@@ -471,7 +471,7 @@ void EVP_SIGNATURE_free(EVP_SIGNATURE *signature)
     OPENSSL_free(signature);
 }
 
-int EVP_SIGNATURE_up_ref(EVP_SIGNATURE *signature)
+int OPENSSL_BOX_EVP_SIGNATURE_up_ref(EVP_SIGNATURE *signature)
 {
     int ref = 0;
 
@@ -479,7 +479,7 @@ int EVP_SIGNATURE_up_ref(EVP_SIGNATURE *signature)
     return 1;
 }
 
-OSSL_PROVIDER *EVP_SIGNATURE_get0_provider(const EVP_SIGNATURE *signature)
+OSSL_PROVIDER *OPENSSL_BOX_EVP_SIGNATURE_get0_provider(const EVP_SIGNATURE *signature)
 {
     return signature->prov;
 }
@@ -504,7 +504,7 @@ EVP_SIGNATURE *evp_signature_fetch_from_prov(OSSL_PROVIDER *prov,
                                        evp_signature_free);
 }
 
-int EVP_SIGNATURE_is_a(const EVP_SIGNATURE *signature, const char *name)
+int OPENSSL_BOX_EVP_SIGNATURE_is_a(const EVP_SIGNATURE *signature, const char *name)
 {
     return signature != NULL
            && evp_is_a(signature->prov, signature->name_id, NULL, name);
@@ -515,12 +515,12 @@ int evp_signature_get_number(const EVP_SIGNATURE *signature)
     return signature->name_id;
 }
 
-const char *EVP_SIGNATURE_get0_name(const EVP_SIGNATURE *signature)
+const char *OPENSSL_BOX_EVP_SIGNATURE_get0_name(const EVP_SIGNATURE *signature)
 {
     return signature->type_name;
 }
 
-const char *EVP_SIGNATURE_get0_description(const EVP_SIGNATURE *signature)
+const char *OPENSSL_BOX_EVP_SIGNATURE_get0_description(const EVP_SIGNATURE *signature)
 {
     return signature->description;
 }
@@ -548,25 +548,25 @@ int EVP_SIGNATURE_names_do_all(const EVP_SIGNATURE *signature,
     return 1;
 }
 
-const OSSL_PARAM *EVP_SIGNATURE_gettable_ctx_params(const EVP_SIGNATURE *sig)
+const OSSL_PARAM *OPENSSL_BOX_EVP_SIGNATURE_gettable_ctx_params(const EVP_SIGNATURE *sig)
 {
     void *provctx;
 
     if (sig == NULL || sig->gettable_ctx_params == NULL)
         return NULL;
 
-    provctx = ossl_provider_ctx(EVP_SIGNATURE_get0_provider(sig));
+    provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_SIGNATURE_get0_provider(sig));
     return sig->gettable_ctx_params(NULL, provctx);
 }
 
-const OSSL_PARAM *EVP_SIGNATURE_settable_ctx_params(const EVP_SIGNATURE *sig)
+const OSSL_PARAM *OPENSSL_BOX_EVP_SIGNATURE_settable_ctx_params(const EVP_SIGNATURE *sig)
 {
     void *provctx;
 
     if (sig == NULL || sig->settable_ctx_params == NULL)
         return NULL;
 
-    provctx = ossl_provider_ctx(EVP_SIGNATURE_get0_provider(sig));
+    provctx = ossl_provider_ctx(OPENSSL_BOX_EVP_SIGNATURE_get0_provider(sig));
     return sig->settable_ctx_params(NULL, provctx);
 }
 
@@ -612,16 +612,16 @@ static int evp_pkey_signature_init(EVP_PKEY_CTX *ctx, EVP_SIGNATURE *signature,
          * is smart enough to only actually export it if |tmp_keymgmt|
          * is different from |ctx->pkey|'s keymgmt)
          */
-        tmp_prov = EVP_SIGNATURE_get0_provider(signature);
+        tmp_prov = OPENSSL_BOX_EVP_SIGNATURE_get0_provider(signature);
         tmp_keymgmt_tofree = tmp_keymgmt =
             evp_keymgmt_fetch_from_prov((OSSL_PROVIDER *)tmp_prov,
-                                        EVP_KEYMGMT_get0_name(ctx->keymgmt),
+                                        OPENSSL_BOX_EVP_KEYMGMT_get0_name(ctx->keymgmt),
                                         ctx->propquery);
         if (tmp_keymgmt != NULL)
             provkey = evp_pkey_export_to_provider(ctx->pkey, ctx->libctx,
                                                   &tmp_keymgmt, ctx->propquery);
         if (tmp_keymgmt == NULL)
-            EVP_KEYMGMT_free(tmp_keymgmt_tofree);
+            OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt_tofree);
 
         if (provkey == NULL)
             goto end;
@@ -637,7 +637,7 @@ static int evp_pkey_signature_init(EVP_PKEY_CTX *ctx, EVP_SIGNATURE *signature,
 
             keytypes = signature->query_key_types();
             for (; *keytypes != NULL; keytypes++)
-                if (EVP_PKEY_CTX_is_a(ctx, *keytypes))
+                if (OPENSSL_BOX_EVP_PKEY_CTX_is_a(ctx, *keytypes))
                     break;
             if (*keytypes == NULL) {
                 ERR_raise(ERR_LIB_EVP, EVP_R_SIGNATURE_TYPE_AND_KEY_TYPE_INCOMPATIBLE);
@@ -648,8 +648,8 @@ static int evp_pkey_signature_init(EVP_PKEY_CTX *ctx, EVP_SIGNATURE *signature,
              * Fallback 1:
              * check if the keytype is the same as the signature algorithm name
              */
-            const char *keytype = EVP_KEYMGMT_get0_name(ctx->keymgmt);
-            int ok = EVP_SIGNATURE_is_a(signature, keytype);
+            const char *keytype = OPENSSL_BOX_EVP_KEYMGMT_get0_name(ctx->keymgmt);
+            int ok = OPENSSL_BOX_EVP_SIGNATURE_is_a(signature, keytype);
 
             /*
              * Fallback 2:
@@ -661,7 +661,7 @@ static int evp_pkey_signature_init(EVP_PKEY_CTX *ctx, EVP_SIGNATURE *signature,
                     = evp_keymgmt_util_query_operation_name(ctx->keymgmt,
                                                             OSSL_OP_SIGNATURE);
 
-                ok = EVP_SIGNATURE_is_a(signature, signame);
+                ok = OPENSSL_BOX_EVP_SIGNATURE_is_a(signature, signame);
             }
 
             /* If none of the fallbacks helped, we're lost */
@@ -671,7 +671,7 @@ static int evp_pkey_signature_init(EVP_PKEY_CTX *ctx, EVP_SIGNATURE *signature,
             }
         }
 
-        if (!EVP_SIGNATURE_up_ref(signature))
+        if (!OPENSSL_BOX_EVP_SIGNATURE_up_ref(signature))
             return 0;
     } else {
         /* Without a pre-fetched signature, it must be figured out somehow */
@@ -729,18 +729,18 @@ static int evp_pkey_signature_init(EVP_PKEY_CTX *ctx, EVP_SIGNATURE *signature,
              * They are NULL on the first iteration, so no need to check what
              * iteration we're on.
              */
-            EVP_SIGNATURE_free(signature);
-            EVP_KEYMGMT_free(tmp_keymgmt);
+            OPENSSL_BOX_EVP_SIGNATURE_free(signature);
+            OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
 
             switch (iter) {
             case 1:
                 signature =
                     EVP_SIGNATURE_fetch(ctx->libctx, supported_sig, ctx->propquery);
                 if (signature != NULL)
-                    tmp_prov = EVP_SIGNATURE_get0_provider(signature);
+                    tmp_prov = OPENSSL_BOX_EVP_SIGNATURE_get0_provider(signature);
                 break;
             case 2:
-                tmp_prov = EVP_KEYMGMT_get0_provider(ctx->keymgmt);
+                tmp_prov = OPENSSL_BOX_EVP_KEYMGMT_get0_provider(ctx->keymgmt);
                 signature =
                     evp_signature_fetch_from_prov((OSSL_PROVIDER *)tmp_prov,
                                                   supported_sig, ctx->propquery);
@@ -763,17 +763,17 @@ static int evp_pkey_signature_init(EVP_PKEY_CTX *ctx, EVP_SIGNATURE *signature,
              */
             tmp_keymgmt_tofree = tmp_keymgmt =
                 evp_keymgmt_fetch_from_prov((OSSL_PROVIDER *)tmp_prov,
-                                            EVP_KEYMGMT_get0_name(ctx->keymgmt),
+                                            OPENSSL_BOX_EVP_KEYMGMT_get0_name(ctx->keymgmt),
                                             ctx->propquery);
             if (tmp_keymgmt != NULL)
                 provkey = evp_pkey_export_to_provider(ctx->pkey, ctx->libctx,
                                                       &tmp_keymgmt, ctx->propquery);
             if (tmp_keymgmt == NULL)
-                EVP_KEYMGMT_free(tmp_keymgmt_tofree);
+                OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt_tofree);
         }
 
         if (provkey == NULL) {
-            EVP_SIGNATURE_free(signature);
+            OPENSSL_BOX_EVP_SIGNATURE_free(signature);
             goto legacy;
         }
 
@@ -857,7 +857,7 @@ static int evp_pkey_signature_init(EVP_PKEY_CTX *ctx, EVP_SIGNATURE *signature,
      * let's go see if legacy does.
      */
     ERR_pop_to_mark();
-    EVP_KEYMGMT_free(tmp_keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
     tmp_keymgmt = NULL;
 
     if (ctx->pmeth == NULL
@@ -897,21 +897,21 @@ static int evp_pkey_signature_init(EVP_PKEY_CTX *ctx, EVP_SIGNATURE *signature,
         ret = evp_pkey_ctx_use_cached_data(ctx);
 #endif
 
-    EVP_KEYMGMT_free(tmp_keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
     return ret;
  err:
     evp_pkey_ctx_free_old_ops(ctx);
     ctx->operation = EVP_PKEY_OP_UNDEFINED;
-    EVP_KEYMGMT_free(tmp_keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(tmp_keymgmt);
     return ret;
 }
 
-int EVP_PKEY_sign_init(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_sign_init(EVP_PKEY_CTX *ctx)
 {
     return evp_pkey_signature_init(ctx, NULL, EVP_PKEY_OP_SIGN, NULL);
 }
 
-int EVP_PKEY_sign_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
+int OPENSSL_BOX_EVP_PKEY_sign_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
 {
     return evp_pkey_signature_init(ctx, NULL, EVP_PKEY_OP_SIGN, params);
 }
@@ -1040,12 +1040,12 @@ int EVP_PKEY_sign(EVP_PKEY_CTX *ctx,
         return ctx->pmeth->sign(ctx, sig, siglen, tbs, tbslen);
 }
 
-int EVP_PKEY_verify_init(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_verify_init(EVP_PKEY_CTX *ctx)
 {
     return evp_pkey_signature_init(ctx, NULL, EVP_PKEY_OP_VERIFY, NULL);
 }
 
-int EVP_PKEY_verify_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
+int OPENSSL_BOX_EVP_PKEY_verify_init_ex(EVP_PKEY_CTX *ctx, const OSSL_PARAM params[])
 {
     return evp_pkey_signature_init(ctx, NULL, EVP_PKEY_OP_VERIFY, params);
 }
@@ -1080,7 +1080,7 @@ int EVP_PKEY_CTX_set_signature(EVP_PKEY_CTX *ctx,
                                              (char *)sig, siglen);
     *p = OSSL_PARAM_construct_end();
 
-    return EVP_PKEY_CTX_set_params(ctx, sig_params);
+    return OPENSSL_BOX_EVP_PKEY_CTX_set_params(ctx, sig_params);
 }
 
 int EVP_PKEY_verify_message_update(EVP_PKEY_CTX *ctx,
@@ -1115,7 +1115,7 @@ int EVP_PKEY_verify_message_update(EVP_PKEY_CTX *ctx,
     return ret;
 }
 
-int EVP_PKEY_verify_message_final(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_verify_message_final(EVP_PKEY_CTX *ctx)
 {
     EVP_SIGNATURE *signature;
     const char *desc;
@@ -1193,7 +1193,7 @@ int EVP_PKEY_verify(EVP_PKEY_CTX *ctx,
     return ctx->pmeth->verify(ctx, sig, siglen, tbs, tbslen);
 }
 
-int EVP_PKEY_verify_recover_init(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_verify_recover_init(EVP_PKEY_CTX *ctx)
 {
     return evp_pkey_signature_init(ctx, NULL, EVP_PKEY_OP_VERIFYRECOVER, NULL);
 }

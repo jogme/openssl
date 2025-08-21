@@ -264,8 +264,8 @@ static int drbg_hash_instantiate(PROV_DRBG *drbg,
 {
     PROV_DRBG_HASH *hash = (PROV_DRBG_HASH *)drbg->data;
 
-    EVP_MD_CTX_free(hash->ctx);
-    hash->ctx = EVP_MD_CTX_new();
+    OPENSSL_BOX_EVP_MD_CTX_free(hash->ctx);
+    hash->ctx = OPENSSL_BOX_EVP_MD_CTX_new();
 
     /* (Step 1-3) V = Hash_df(entropy||nonce||pers, seedlen) */
     return hash->ctx != NULL
@@ -467,7 +467,7 @@ static void drbg_hash_free(void *vdrbg)
     PROV_DRBG_HASH *hash;
 
     if (drbg != NULL && (hash = (PROV_DRBG_HASH *)drbg->data) != NULL) {
-        EVP_MD_CTX_free(hash->ctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(hash->ctx);
         ossl_prov_digest_reset(&hash->digest);
         OPENSSL_secure_clear_free(hash, sizeof(*hash));
     }
@@ -519,7 +519,7 @@ static int drbg_hash_get_ctx_params(void *vdrbg, OSSL_PARAM params[])
     if (p.digest != NULL) {
         md = ossl_prov_digest_md(&hash->digest);
         if (md == NULL
-                || !OSSL_PARAM_set_utf8_string(p.digest, EVP_MD_get0_name(md)))
+                || !OSSL_PARAM_set_utf8_string(p.digest, OPENSSL_BOX_EVP_MD_get0_name(md)))
             goto err;
     }
 
@@ -563,7 +563,7 @@ static int drbg_fetch_digest_from_prov(const struct drbg_set_ctx_params_st *p,
 
     md = evp_digest_fetch_from_prov(prov, (const char *)p->digest->data, NULL);
     if (md) {
-        EVP_MD_free(*digest);
+        OPENSSL_BOX_EVP_MD_free(*digest);
         *digest = md;
         ret = 1;
     }
@@ -605,7 +605,7 @@ static int drbg_hash_set_ctx_params_locked
             return 0;   /* Error already raised for us */
 
         /* These are taken from SP 800-90 10.1 Table 2 */
-        md_size = EVP_MD_get_size(md);
+        md_size = OPENSSL_BOX_EVP_MD_get_size(md);
         if (md_size <= 0)
             return 0;
         hash->blocklen = md_size;

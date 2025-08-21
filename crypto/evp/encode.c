@@ -124,24 +124,24 @@ static unsigned char conv_ascii2bin(unsigned char a, const unsigned char *table)
 }
 #endif
 
-EVP_ENCODE_CTX *EVP_ENCODE_CTX_new(void)
+EVP_ENCODE_CTX *OPENSSL_BOX_EVP_ENCODE_CTX_new(void)
 {
     return OPENSSL_zalloc(sizeof(EVP_ENCODE_CTX));
 }
 
-void EVP_ENCODE_CTX_free(EVP_ENCODE_CTX *ctx)
+void OPENSSL_BOX_EVP_ENCODE_CTX_free(EVP_ENCODE_CTX *ctx)
 {
     OPENSSL_free(ctx);
 }
 
-int EVP_ENCODE_CTX_copy(EVP_ENCODE_CTX *dctx, const EVP_ENCODE_CTX *sctx)
+int OPENSSL_BOX_EVP_ENCODE_CTX_copy(EVP_ENCODE_CTX *dctx, const EVP_ENCODE_CTX *sctx)
 {
     memcpy(dctx, sctx, sizeof(EVP_ENCODE_CTX));
 
     return 1;
 }
 
-int EVP_ENCODE_CTX_num(EVP_ENCODE_CTX *ctx)
+int OPENSSL_BOX_EVP_ENCODE_CTX_num(EVP_ENCODE_CTX *ctx)
 {
     return ctx->num;
 }
@@ -151,7 +151,7 @@ void evp_encode_ctx_set_flags(EVP_ENCODE_CTX *ctx, unsigned int flags)
     ctx->flags = flags;
 }
 
-void EVP_EncodeInit(EVP_ENCODE_CTX *ctx)
+void OPENSSL_BOX_EVP_EncodeInit(EVP_ENCODE_CTX *ctx)
 {
     ctx->length = 48;
     ctx->num = 0;
@@ -214,7 +214,7 @@ int EVP_EncodeUpdate(EVP_ENCODE_CTX *ctx, unsigned char *out, int *outl,
     return 1;
 }
 
-void EVP_EncodeFinal(EVP_ENCODE_CTX *ctx, unsigned char *out, int *outl)
+void OPENSSL_BOX_EVP_EncodeFinal(EVP_ENCODE_CTX *ctx, unsigned char *out, int *outl)
 {
     unsigned int ret = 0;
 
@@ -266,12 +266,12 @@ static int evp_encodeblock_int(EVP_ENCODE_CTX *ctx, unsigned char *t,
     return ret;
 }
 
-int EVP_EncodeBlock(unsigned char *t, const unsigned char *f, int dlen)
+int OPENSSL_BOX_EVP_EncodeBlock(unsigned char *t, const unsigned char *f, int dlen)
 {
     return evp_encodeblock_int(NULL, t, f, dlen);
 }
 
-void EVP_DecodeInit(EVP_ENCODE_CTX *ctx)
+void OPENSSL_BOX_EVP_DecodeInit(EVP_ENCODE_CTX *ctx)
 {
     /* Only ctx->num and ctx->flags are used during decoding. */
     ctx->num = 0;
@@ -494,7 +494,7 @@ static int evp_decodeblock_int(EVP_ENCODE_CTX *ctx, unsigned char *t,
     return ret;
 }
 
-int EVP_DecodeBlock(unsigned char *t, const unsigned char *f, int n)
+int OPENSSL_BOX_EVP_DecodeBlock(unsigned char *t, const unsigned char *f, int n)
 {
     return evp_decodeblock_int(NULL, t, f, n, 0);
 }

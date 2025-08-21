@@ -651,7 +651,7 @@ Don't automatically load all supported ciphers and digests.
 Typically OpenSSL will make available all of its supported ciphers and digests.
 For a statically linked application this may be undesirable if small executable
 size is an objective.  This only affects libcrypto.  Ciphers and digests will
-have to be loaded manually using `EVP_add_cipher()` and `EVP_add_digest()`
+have to be loaded manually using `OPENSSL_BOX_EVP_add_cipher()` and `OPENSSL_BOX_EVP_add_digest()`
 if this option is used.  This option will force a non-shared build.
 
 ### no-autoerrinit

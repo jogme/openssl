@@ -82,14 +82,14 @@ static EVP_PKEY *pem_read_bio_key_decoder(BIO *bp, EVP_PKEY **x,
         selection = selection & ~OSSL_KEYMGMT_SELECT_PUBLIC_KEY;
 
     if (!evp_keymgmt_util_has(pkey, selection)) {
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         pkey = NULL;
         ERR_raise(ERR_LIB_PEM, PEM_R_UNSUPPORTED_KEY_COMPONENTS);
         goto err;
     }
 
     if (x != NULL) {
-        EVP_PKEY_free(*x);
+        OPENSSL_BOX_EVP_PKEY_free(*x);
         *x = pkey;
     }
 
@@ -141,7 +141,7 @@ static EVP_PKEY *pem_read_bio_key_legacy(BIO *bp, EVP_PKEY **x,
             goto p8err;
         ret = evp_pkcs82pkey_legacy(p8inf, libctx, propq);
         if (x != NULL) {
-            EVP_PKEY_free(*x);
+            OPENSSL_BOX_EVP_PKEY_free(*x);
             *x = ret;
         }
         PKCS8_PRIV_KEY_INFO_free(p8inf);
@@ -169,7 +169,7 @@ static EVP_PKEY *pem_read_bio_key_legacy(BIO *bp, EVP_PKEY **x,
             goto p8err;
         ret = evp_pkcs82pkey_legacy(p8inf, libctx, propq);
         if (x != NULL) {
-            EVP_PKEY_free(*x);
+            OPENSSL_BOX_EVP_PKEY_free(*x);
             *x = ret;
         }
         PKCS8_PRIV_KEY_INFO_free(p8inf);
@@ -187,18 +187,18 @@ static EVP_PKEY *pem_read_bio_key_legacy(BIO *bp, EVP_PKEY **x,
     } else if ((selection & EVP_PKEY_KEYPAIR) == 0
                && (slen = ossl_pem_check_suffix(nm, "PARAMETERS")) > 0) {
         /* Trying legacy params decoding only if we do not want a key. */
-        ret = EVP_PKEY_new();
+        ret = OPENSSL_BOX_EVP_PKEY_new();
         if (ret == NULL)
             goto err;
-        if (!EVP_PKEY_set_type_str(ret, nm, slen)
+        if (!OPENSSL_BOX_EVP_PKEY_set_type_str(ret, nm, slen)
             || !ret->ameth->param_decode
             || !ret->ameth->param_decode(ret, &p, len)) {
-            EVP_PKEY_free(ret);
+            OPENSSL_BOX_EVP_PKEY_free(ret);
             ret = NULL;
             goto err;
         }
         if (x) {
-            EVP_PKEY_free(*x);
+            OPENSSL_BOX_EVP_PKEY_free(*x);
             *x = ret;
         }
     }
@@ -357,14 +357,14 @@ int PEM_write_bio_PrivateKey_traditional(BIO *bp, const EVP_PKEY *x,
 
     if (x->ameth == NULL || x->ameth->old_priv_encode == NULL) {
         ERR_raise(ERR_LIB_PEM, PEM_R_UNSUPPORTED_PUBLIC_KEY_TYPE);
-        EVP_PKEY_free(copy);
+        OPENSSL_BOX_EVP_PKEY_free(copy);
         return 0;
     }
     BIO_snprintf(pem_str, 80, "%s PRIVATE KEY", x->ameth->pem_str);
-    ret = PEM_ASN1_write_bio((i2d_of_void *)i2d_PrivateKey,
+    ret = PEM_ASN1_write_bio((i2d_of_void *)OPENSSL_BOX_i2d_PrivateKey,
                              pem_str, bp, x, enc, kstr, klen, cb, u);
 
-    EVP_PKEY_free(copy);
+    OPENSSL_BOX_EVP_PKEY_free(copy);
     return ret;
 }
 

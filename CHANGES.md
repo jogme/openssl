@@ -375,7 +375,7 @@ OpenSSL 3.5
    *Dan Zimmerman, Alina Elizarova*
 
  * Cipher pipelining support for provided ciphers with new API functions
-   EVP_CIPHER_can_pipeline(), EVP_CipherPipelineEncryptInit(),
+   OPENSSL_BOX_EVP_CIPHER_can_pipeline(), EVP_CipherPipelineEncryptInit(),
    EVP_CipherPipelineDecryptInit(), EVP_CipherPipelineUpdate(),
    and EVP_CipherPipelineFinal(). Cipher pipelining support allows application to
    submit multiple chunks of data in one cipher update call, thereby allowing the
@@ -420,7 +420,7 @@ OpenSSL 3.5
    (ignoring whitespace, carriage returns and line feeds), EVP_DecodeUpdate()
    produces 3 bytes of binary output data (except at the end of data
    terminated with one or two padding characters). However, the function
-   behaved like an EVP_DecodeBlock(). It produced exactly 3 output bytes for
+   behaved like an OPENSSL_BOX_EVP_DecodeBlock(). It produced exactly 3 output bytes for
    every 4 input bytes. Such behaviour could cause writes to a non-allocated
    output buffer if a user allocates its size based on the documentation and
    knowing the padding size.
@@ -522,11 +522,11 @@ OpenSSL 3.4
  * XOF Digest API improvements
 
    EVP_MD_CTX_get_size() and EVP_MD_CTX_size are macros that were aliased to
-   EVP_MD_get_size which returns a constant value. XOF Digests such as SHAKE
-   have an output size that is not fixed, so calling EVP_MD_get_size() is not
+   OPENSSL_BOX_EVP_MD_get_size which returns a constant value. XOF Digests such as SHAKE
+   have an output size that is not fixed, so calling OPENSSL_BOX_EVP_MD_get_size() is not
    sufficent. The existing macros now point to the new function
-   EVP_MD_CTX_get_size_ex() which will retrieve the "size" for a XOF digest,
-   otherwise it falls back to calling EVP_MD_get_size(). Note that the SHAKE
+   OPENSSL_BOX_EVP_MD_CTX_get_size_ex() which will retrieve the "size" for a XOF digest,
+   otherwise it falls back to calling OPENSSL_BOX_EVP_MD_get_size(). Note that the SHAKE
    implementation did not have a context getter previously, so the "size" will
    only be able to be retrieved with new providers.
 
@@ -749,8 +749,8 @@ OpenSSL 3.3
  * Fixed an issue where checking excessively long DSA keys or parameters may
    be very slow.
 
-   Applications that use the functions EVP_PKEY_param_check() or
-   EVP_PKEY_public_check() to check a DSA public key or DSA parameters may
+   Applications that use the functions OPENSSL_BOX_EVP_PKEY_param_check() or
+   OPENSSL_BOX_EVP_PKEY_public_check() to check a DSA public key or DSA parameters may
    experience long delays. Where the key or parameters that are being checked
    have been obtained from an untrusted source this may lead to a Denial of
    Service.
@@ -1013,17 +1013,17 @@ OpenSSL 3.2
 
    *Matt Caswell*
 
- * When function EVP_PKEY_public_check() is called on RSA public keys,
+ * When function OPENSSL_BOX_EVP_PKEY_public_check() is called on RSA public keys,
    a computation is done to confirm that the RSA modulus, n, is composite.
    For valid RSA keys, n is a product of two or more large primes and this
    computation completes quickly. However, if n is an overly large prime,
    then this computation would take a long time.
 
-   An application that calls EVP_PKEY_public_check() and supplies an RSA key
+   An application that calls OPENSSL_BOX_EVP_PKEY_public_check() and supplies an RSA key
    obtained from an untrusted source could be vulnerable to a Denial of Service
    attack.
 
-   The function EVP_PKEY_public_check() is not called from other OpenSSL
+   The function OPENSSL_BOX_EVP_PKEY_public_check() is not called from other OpenSSL
    functions however it is called from the OpenSSL pkey command line
    application. For that reason that application is also vulnerable if used
    with the "-pubin" and "-check" options on untrusted data.
@@ -1073,7 +1073,7 @@ OpenSSL 3.2
 
    Applications that use the functions DH_generate_key() to generate an
    X9.42 DH key may experience long delays. Likewise, applications that use
-   DH_check_pub_key(), DH_check_pub_key_ex() or EVP_PKEY_public_check()
+   DH_check_pub_key(), DH_check_pub_key_ex() or OPENSSL_BOX_EVP_PKEY_public_check()
    to check an X9.42 DH key or X9.42 DH parameters may experience long delays.
    Where the key or parameters that are being checked have been obtained from
    an untrusted source this may lead to a Denial of Service.
@@ -1846,7 +1846,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    An invalid pointer dereference on read can be triggered when an
    application tries to check a malformed DSA public key by the
-   EVP_PKEY_public_check() function. This will most likely lead
+   OPENSSL_BOX_EVP_PKEY_public_check() function. This will most likely lead
    to an application crash. This function can be called on public
    keys supplied from untrusted sources which could allow an attacker
    to cause a denial of service attack.
@@ -2028,7 +2028,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 ### Changes between 3.0.5 and 3.0.6 [11 Oct 2022]
 
  * OpenSSL supports creating a custom cipher via the legacy
-   EVP_CIPHER_meth_new() function and associated function calls. This function
+   OPENSSL_BOX_EVP_CIPHER_meth_new() function and associated function calls. This function
    was deprecated in OpenSSL 3.0 and application authors are instead encouraged
    to use the new provider mechanism in order to implement custom ciphers.
 
@@ -2038,9 +2038,9 @@ breaking changes, and mappings for the large list of deprecated functions.
    and decryption initialisation functions). Instead of using the custom cipher
    directly it incorrectly tries to fetch an equivalent cipher from the
    available providers. An equivalent cipher is found based on the NID passed to
-   EVP_CIPHER_meth_new(). This NID is supposed to represent the unique NID for a
+   OPENSSL_BOX_EVP_CIPHER_meth_new(). This NID is supposed to represent the unique NID for a
    given cipher. However it is possible for an application to incorrectly pass
-   NID_undef as this value in the call to EVP_CIPHER_meth_new(). When NID_undef
+   NID_undef as this value in the call to OPENSSL_BOX_EVP_CIPHER_meth_new(). When NID_undef
    is used in this way the OpenSSL encryption/decryption initialisation function
    will match the NULL cipher as being equivalent and will fetch this from the
    available providers. This will succeed if the default provider has been
@@ -2049,7 +2049,7 @@ breaking changes, and mappings for the large list of deprecated functions.
    ciphertext.
 
    Applications are only affected by this issue if they call
-   EVP_CIPHER_meth_new() using NID_undef and subsequently use it in a call to an
+   OPENSSL_BOX_EVP_CIPHER_meth_new() using NID_undef and subsequently use it in a call to an
    encryption/decryption initialisation function. Applications that only use
    SSL/TLS are not impacted by this issue.
    ([CVE-2022-3358])
@@ -2383,7 +2383,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Richard Levitte*
 
- * Fixed EVP_PKEY_eq() to make it possible to use it with strictly private
+ * Fixed OPENSSL_BOX_EVP_PKEY_eq() to make it possible to use it with strictly private
    keys.
 
    *Richard Levitte*
@@ -2403,7 +2403,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Richard Levitte*
 
- * Allow copying uninitialized digest contexts with EVP_MD_CTX_copy_ex.
+ * Allow copying uninitialized digest contexts with OPENSSL_BOX_EVP_MD_CTX_copy_ex.
 
    *Tomáš Mráz*
 
@@ -2468,7 +2468,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *OpenSSL team members and many third party contributors*
 
- * The EVP_get_cipherbyname() function will return NULL for algorithms such as
+ * The OPENSSL_BOX_EVP_get_cipherbyname() function will return NULL for algorithms such as
    "AES-128-SIV", "AES-128-CBC-CTS" and "CAMELLIA-128-CBC-CTS" which were
    previously only accessible via low-level interfaces. Use EVP_CIPHER_fetch()
    instead to retrieve these algorithms from a provider.
@@ -2582,7 +2582,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Paul Dale*
 
- * A public key check is now performed during EVP_PKEY_derive_set_peer().
+ * A public key check is now performed during OPENSSL_BOX_EVP_PKEY_derive_set_peer().
 
    *Shane Lontis*
 
@@ -2600,7 +2600,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Tomáš Mráz*
 
- * The EVP_PKEY_public_check() and EVP_PKEY_param_check() functions now work for
+ * The OPENSSL_BOX_EVP_PKEY_public_check() and OPENSSL_BOX_EVP_PKEY_param_check() functions now work for
    more key types.
 
  * The output from the command line applications may have minor
@@ -2653,23 +2653,23 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Matt Caswell*
 
- * The deprecated function EVP_PKEY_get0() now returns NULL being called for a
+ * The deprecated function OPENSSL_BOX_EVP_PKEY_get0() now returns NULL being called for a
    provided key.
 
    *Dmitry Belyavskiy*
 
- * The deprecated functions EVP_PKEY_get0_RSA(),
-   EVP_PKEY_get0_DSA(), EVP_PKEY_get0_EC_KEY(), EVP_PKEY_get0_DH(),
-   EVP_PKEY_get0_hmac(), EVP_PKEY_get0_poly1305() and EVP_PKEY_get0_siphash() as
+ * The deprecated functions OPENSSL_BOX_EVP_PKEY_get0_RSA(),
+   OPENSSL_BOX_EVP_PKEY_get0_DSA(), OPENSSL_BOX_EVP_PKEY_get0_EC_KEY(), OPENSSL_BOX_EVP_PKEY_get0_DH(),
+   OPENSSL_BOX_EVP_PKEY_get0_hmac(), OPENSSL_BOX_EVP_PKEY_get0_poly1305() and OPENSSL_BOX_EVP_PKEY_get0_siphash() as
    well as the similarly named "get1" functions behave differently in
    OpenSSL 3.0.
 
    *Matt Caswell*
 
  * A number of functions handling low-level keys or engines were deprecated
-   including EVP_PKEY_set1_engine(), EVP_PKEY_get0_engine(), EVP_PKEY_assign(),
-   EVP_PKEY_get0(), EVP_PKEY_get0_hmac(), EVP_PKEY_get0_poly1305() and
-   EVP_PKEY_get0_siphash().
+   including OPENSSL_BOX_EVP_PKEY_set1_engine(), OPENSSL_BOX_EVP_PKEY_get0_engine(), OPENSSL_BOX_EVP_PKEY_assign(),
+   OPENSSL_BOX_EVP_PKEY_get0(), OPENSSL_BOX_EVP_PKEY_get0_hmac(), OPENSSL_BOX_EVP_PKEY_get0_poly1305() and
+   OPENSSL_BOX_EVP_PKEY_get0_siphash().
 
    *Matt Caswell*
 
@@ -2955,7 +2955,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Richard Levitte*
 
- * Deprecated `EVP_PKEY_cmp()` and `EVP_PKEY_cmp_parameters()`.
+ * Deprecated `OPENSSL_BOX_EVP_PKEY_cmp()` and `OPENSSL_BOX_EVP_PKEY_cmp_parameters()`.
 
    *David von Oheimb and Shane Lontis*
 
@@ -3026,7 +3026,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Kurt Roeckx*
 
- * Added EVP_PKEY_set_type_by_keymgmt(), to initialise an EVP_PKEY to
+ * Added OPENSSL_BOX_EVP_PKEY_set_type_by_keymgmt(), to initialise an EVP_PKEY to
    contain a provider side internal key.
 
    *Richard Levitte*
@@ -3145,8 +3145,8 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Richard Levitte*
 
- * Enhanced the documentation of EVP_PKEY_get_size(), EVP_PKEY_get_bits()
-   and EVP_PKEY_get_security_bits().  Especially EVP_PKEY_get_size() needed
+ * Enhanced the documentation of OPENSSL_BOX_EVP_PKEY_get_size(), OPENSSL_BOX_EVP_PKEY_get_bits()
+   and OPENSSL_BOX_EVP_PKEY_get_security_bits().  Especially OPENSSL_BOX_EVP_PKEY_get_size() needed
    a new formulation to include all the things it can be used for,
    as well as words of caution.
 
@@ -3336,8 +3336,8 @@ breaking changes, and mappings for the large list of deprecated functions.
    *Rich Salz*
 
  * Introduced the new functions EVP_DigestSignInit_ex() and
-   EVP_DigestVerifyInit_ex(). The macros EVP_DigestSignUpdate() and
-   EVP_DigestVerifyUpdate() have been converted to functions. See the man
+   EVP_DigestVerifyInit_ex(). The macros OPENSSL_BOX_EVP_DigestSignUpdate() and
+   OPENSSL_BOX_EVP_DigestVerifyUpdate() have been converted to functions. See the man
    pages for further details.
 
    *Matt Caswell*
@@ -3540,8 +3540,8 @@ breaking changes, and mappings for the large list of deprecated functions.
  * A new type, EVP_KEYEXCH, has been introduced to represent key exchange
    algorithms. An implementation of a key exchange algorithm can be obtained
    by using the function EVP_KEYEXCH_fetch(). An EVP_KEYEXCH algorithm can be
-   used in a call to EVP_PKEY_derive_init_ex() which works in a similar way to
-   the older EVP_PKEY_derive_init() function. See the man pages for the new
+   used in a call to OPENSSL_BOX_EVP_PKEY_derive_init_ex() which works in a similar way to
+   the older OPENSSL_BOX_EVP_PKEY_derive_init() function. See the man pages for the new
    functions for further details.
 
    *Matt Caswell*
@@ -3715,7 +3715,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Bernd Edlinger*
 
- * Move strictness check from EVP_PKEY_asn1_new() to EVP_PKEY_asn1_add0().
+ * Move strictness check from EVP_PKEY_asn1_new() to OPENSSL_BOX_EVP_PKEY_asn1_add0().
 
    *Richard Levitte*
 
@@ -4297,7 +4297,7 @@ OpenSSL 1.1.1
 
    *Paul Yang, Joshua Lock*
 
- * Add the missing accessor EVP_PKEY_get0_engine()
+ * Add the missing accessor OPENSSL_BOX_EVP_PKEY_get0_engine()
 
    *Matt Caswell*
 
@@ -5049,7 +5049,7 @@ OpenSSL 1.1.0
 
    *Bernd Edlinger*
 
- * Move strictness check from EVP_PKEY_asn1_new() to EVP_PKEY_asn1_add0().
+ * Move strictness check from EVP_PKEY_asn1_new() to OPENSSL_BOX_EVP_PKEY_asn1_add0().
 
    *Richard Levitte*
 
@@ -5564,7 +5564,7 @@ OpenSSL 1.1.0
    *Rich Salz*
 
  * Unify TYPE_up_ref(obj) methods signature.
-   SSL_CTX_up_ref(), SSL_up_ref(), X509_up_ref(), EVP_PKEY_up_ref(),
+   SSL_CTX_up_ref(), SSL_up_ref(), X509_up_ref(), OPENSSL_BOX_EVP_PKEY_up_ref(),
    X509_CRL_up_ref(), X509_OBJECT_up_ref_count() methods are now returning an
    int (instead of void) like all others TYPE_up_ref() methods.
    So now these methods also check the return value of CRYPTO_atomic_add(),
@@ -6071,13 +6071,13 @@ OpenSSL 1.1.0
        void HMAC_CTX_free(HMAC_CTX *ctx);
 
    For EVP_MD and EVP_CIPHER, complete APIs to create, fill and
-   destroy such methods has been added.  See EVP_MD_meth_new(3) and
-   EVP_CIPHER_meth_new(3) for documentation.
+   destroy such methods has been added.  See OPENSSL_BOX_EVP_MD_meth_new(3) and
+   OPENSSL_BOX_EVP_CIPHER_meth_new(3) for documentation.
 
    Additional changes:
    1) `EVP_MD_CTX_cleanup()`, `EVP_CIPHER_CTX_cleanup()` and
       `HMAC_CTX_cleanup()` were removed. `HMAC_CTX_reset()` and
-      `EVP_MD_CTX_reset()` should be called instead to reinitialise
+      `OPENSSL_BOX_EVP_MD_CTX_reset()` should be called instead to reinitialise
       an already created structure.
    2) For consistency with the majority of our object creators and
       destructors, `EVP_MD_CTX_(create|destroy)` were renamed to
@@ -6842,7 +6842,7 @@ OpenSSL 1.0.2
 
    *Matt Caswell*
 
- * Move strictness check from EVP_PKEY_asn1_new() to EVP_PKEY_asn1_add0().
+ * Move strictness check from EVP_PKEY_asn1_new() to OPENSSL_BOX_EVP_PKEY_asn1_add0().
 
    *Richard Levitte*
 
@@ -10613,7 +10613,7 @@ OpenSSL 1.0.1.]
 
 ### Changes between 0.9.8n and 1.0.0  [29 Mar 2010]
 
- * Add "missing" function EVP_CIPHER_CTX_copy(). This copies a cipher
+ * Add "missing" function OPENSSL_BOX_EVP_CIPHER_CTX_copy(). This copies a cipher
    context. The operation can be customised via the ctrl mechanism in
    case ENGINEs want to include additional functionality.
 
@@ -12464,7 +12464,7 @@ OpenSSL 0.9.x
 
    *Douglas Stebila*
 
- * New functions EVP_CIPHER_CTX_new() and EVP_CIPHER_CTX_free() to support
+ * New functions OPENSSL_BOX_EVP_CIPHER_CTX_new() and OPENSSL_BOX_EVP_CIPHER_CTX_free() to support
    opaque EVP_CIPHER_CTX handling.
 
    *Steve Henson*
@@ -12721,7 +12721,7 @@ OpenSSL 0.9.8.]
 
    *Steve Henson*
 
- * Add new EVP function EVP_CIPHER_CTX_rand_key and associated functionality.
+ * Add new EVP function OPENSSL_BOX_EVP_CIPHER_CTX_rand_key and associated functionality.
    This will generate a random key of the appropriate length based on the
    cipher context. The EVP_CIPHER can provide its own random key generation
    routine to support keys of a specific form. This is used in the des and
@@ -13824,7 +13824,7 @@ OpenSSL 0.9.8.]
    *Steve Henson*
 
  * New md flag EVP_MD_CTX_FLAG_REUSE this allows md_data to be reused when
-   calling EVP_MD_CTX_copy_ex() to avoid calling OPENSSL_malloc(). Without
+   calling OPENSSL_BOX_EVP_MD_CTX_copy_ex() to avoid calling OPENSSL_malloc(). Without
    this HMAC (and other) operations are several times slower than OpenSSL
    < 0.9.7.
 
@@ -14571,17 +14571,17 @@ OpenSSL 0.9.7.]
 
    *Steve Henson*
 
- * Modify the behaviour of EVP_DigestInit() and EVP_DigestFinal() to retain
+ * Modify the behaviour of OPENSSL_BOX_EVP_DigestInit() and EVP_DigestFinal() to retain
    compatibility with existing code. In particular the 'ctx' parameter does
-   not have to be to be initialized before the call to EVP_DigestInit() and
+   not have to be to be initialized before the call to OPENSSL_BOX_EVP_DigestInit() and
    it is tidied up after a call to EVP_DigestFinal(). New function
    EVP_DigestFinal_ex() which does not tidy up the ctx. Similarly function
-   EVP_MD_CTX_copy() changed to not require the destination to be
-   initialized valid and new function EVP_MD_CTX_copy_ex() added which
+   OPENSSL_BOX_EVP_MD_CTX_copy() changed to not require the destination to be
+   initialized valid and new function OPENSSL_BOX_EVP_MD_CTX_copy_ex() added which
    requires the destination to be valid.
 
    Modify all the OpenSSL digest calls to use EVP_DigestInit_ex(),
-   EVP_DigestFinal_ex() and EVP_MD_CTX_copy_ex().
+   EVP_DigestFinal_ex() and OPENSSL_BOX_EVP_MD_CTX_copy_ex().
 
    *Steve Henson*
 
@@ -14794,7 +14794,7 @@ OpenSSL 0.9.7.]
            EVP_MD_CTX md;
 
            EVP_MD_CTX_init(&md);             /* new function call */
-           EVP_DigestInit(&md, EVP_sha1());
+           OPENSSL_BOX_EVP_DigestInit(&md, OPENSSL_BOX_EVP_sha1());
            EVP_DigestUpdate(&md, in, len);
            EVP_DigestFinal(&md, out, NULL);
            EVP_MD_CTX_cleanup(&md);          /* new function call */
@@ -15371,7 +15371,7 @@ s-cbc           3624.96k     5258.21k     5530.91k     5624.30k     5628.26k
 
    *Steve Henson*
 
- * New function EVP_CIPHER_CTX_set_padding() this is used to
+ * New function OPENSSL_BOX_EVP_CIPHER_CTX_set_padding() this is used to
    disable standard block padding (aka PKCS#5 padding) in the EVP
    API, which was previously mandatory. This means that the data is
    not padded in any way and so the total length much be a multiple
@@ -17846,7 +17846,7 @@ s-cbc           3624.96k     5258.21k     5530.91k     5624.30k     5628.26k
  * Major EVP API cipher revision.
    Add hooks for extra EVP features. This allows various cipher
    parameters to be set in the EVP interface. Support added for variable
-   key length ciphers via the EVP_CIPHER_CTX_set_key_length() function and
+   key length ciphers via the OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length() function and
    setting of RC2 and RC5 parameters.
 
    Modify EVP_OpenInit() and EVP_SealInit() to cope with variable key length
@@ -20827,7 +20827,7 @@ ndif
 
    *Steve Henson*
 
- * Add new function, EVP_MD_CTX_copy() to replace frequent use of memcpy.
+ * Add new function, OPENSSL_BOX_EVP_MD_CTX_copy() to replace frequent use of memcpy.
 
    *Eric A. Young, (from changes to C2Net SSLeay, integrated by Mark Cox)*
 

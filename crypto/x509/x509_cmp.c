@@ -37,7 +37,7 @@ int X509_issuer_and_serial_cmp(const X509 *a, const X509 *b)
 unsigned long X509_issuer_and_serial_hash(X509 *a)
 {
     unsigned long ret = 0;
-    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     unsigned char md[16];
     char *f = NULL;
     EVP_MD *digest = NULL;
@@ -66,8 +66,8 @@ unsigned long X509_issuer_and_serial_hash(X509 *a)
         ) & 0xffffffffL;
  err:
     OPENSSL_free(f);
-    EVP_MD_free(digest);
-    EVP_MD_CTX_free(ctx);
+    OPENSSL_BOX_EVP_MD_free(digest);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx);
     return ret;
 }
 #endif
@@ -310,7 +310,7 @@ unsigned long X509_NAME_hash_ex(const X509_NAME *x, OSSL_LIB_CTX *libctx,
         if (ok != NULL)
             *ok = 1;
     }
-    EVP_MD_free(sha1);
+    OPENSSL_BOX_EVP_MD_free(sha1);
     return ret;
 }
 
@@ -322,7 +322,7 @@ unsigned long X509_NAME_hash_ex(const X509_NAME *x, OSSL_LIB_CTX *libctx,
 unsigned long X509_NAME_hash_old(const X509_NAME *x)
 {
     EVP_MD *md5 = EVP_MD_fetch(NULL, OSSL_DIGEST_NAME_MD5, "-fips");
-    EVP_MD_CTX *md_ctx = EVP_MD_CTX_new();
+    EVP_MD_CTX *md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     unsigned long ret = 0;
     unsigned char md[16];
 
@@ -341,8 +341,8 @@ unsigned long X509_NAME_hash_old(const X509_NAME *x)
             ) & 0xffffffffL;
 
  end:
-    EVP_MD_CTX_free(md_ctx);
-    EVP_MD_free(md5);
+    OPENSSL_BOX_EVP_MD_CTX_free(md_ctx);
+    OPENSSL_BOX_EVP_MD_free(md5);
 
     return ret;
 }
@@ -413,7 +413,7 @@ int ossl_x509_check_private_key(const EVP_PKEY *x, const EVP_PKEY *pkey)
         ERR_raise(ERR_LIB_X509, ERR_R_PASSED_NULL_PARAMETER);
         return 0;
     }
-    switch (EVP_PKEY_eq(x, pkey)) {
+    switch (OPENSSL_BOX_EVP_PKEY_eq(x, pkey)) {
     case 1:
         return 1;
     case 0:
@@ -444,7 +444,7 @@ static int check_suite_b(EVP_PKEY *pkey, int sign_nid, unsigned long *pflags)
     size_t curve_name_len;
     int curve_nid;
 
-    if (pkey == NULL || !EVP_PKEY_is_a(pkey, "EC"))
+    if (pkey == NULL || !OPENSSL_BOX_EVP_PKEY_is_a(pkey, "EC"))
         return X509_V_ERR_SUITE_B_INVALID_ALGORITHM;
 
     if (!EVP_PKEY_get_group_name(pkey, curve_name, sizeof(curve_name),

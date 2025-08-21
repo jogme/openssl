@@ -594,20 +594,20 @@ static EVP_PKEY *new_raw_private_key(const char *curvename,
     if (params == NULL)
         goto err;
 
-    if (EVP_PKEY_fromdata_init(ctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0)
           goto err;
     if (EVP_PKEY_fromdata(ctx, &key, EVP_PKEY_KEYPAIR, params) <= 0)
           goto err;
     ok = 1;
 err:
     if (!ok) {
-        EVP_PKEY_free(key);
+        OPENSSL_BOX_EVP_PKEY_free(key);
         key = NULL;
     }
     BN_free(privbn);
     OSSL_PARAM_free(params);
     OSSL_PARAM_BLD_free(bld);
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return key;
 }
 
@@ -633,17 +633,17 @@ static EVP_PKEY *new_raw_public_key(const char *curvename,
     *p++ = OSSL_PARAM_construct_octet_string(OSSL_PKEY_PARAM_PUB_KEY,
                                              (char *)pub, publen);
     *p = OSSL_PARAM_construct_end();
-    if (EVP_PKEY_fromdata_init(ctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_fromdata_init(ctx) <= 0)
           goto err;
     if (EVP_PKEY_fromdata(ctx, &key, EVP_PKEY_PUBLIC_KEY, params) <= 0)
           goto err;
     ok = 1;
 err:
     if (!ok) {
-        EVP_PKEY_free(key);
+        OPENSSL_BOX_EVP_PKEY_free(key);
         key = NULL;
     }
-    EVP_PKEY_CTX_free(ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(ctx);
     return key;
 }
 
@@ -667,7 +667,7 @@ static int do_encap(const TEST_ENCAPDATA *t, EVP_PKEY *rpub, EVP_PKEY *spriv)
     if (!TEST_ptr(sctx = EVP_PKEY_CTX_new_from_pkey(libctx, rpub, NULL)))
         goto err;
     if (t->spriv == NULL) {
-        if (!TEST_int_eq(EVP_PKEY_encapsulate_init(sctx, params), 1))
+        if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_encapsulate_init(sctx, params), 1))
             goto err;
     } else {
         if (!TEST_int_eq(EVP_PKEY_auth_encapsulate_init(sctx, spriv, params), 1))
@@ -681,7 +681,7 @@ static int do_encap(const TEST_ENCAPDATA *t, EVP_PKEY *rpub, EVP_PKEY *spriv)
           && TEST_mem_eq(secret, secretlen,
                          t->expected_secret, t->expected_secretlen);
 err:
-    EVP_PKEY_CTX_free(sctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(sctx);
     return ret;
 }
 
@@ -696,7 +696,7 @@ static int do_decap(const TEST_ENCAPDATA *t, EVP_PKEY *rpriv, EVP_PKEY *spub)
     if (!TEST_ptr(recipctx = EVP_PKEY_CTX_new_from_pkey(libctx, rpriv, NULL)))
         goto err;
     if (t->spub == NULL) {
-        if (!TEST_int_eq(EVP_PKEY_decapsulate_init(recipctx, opparam), 1))
+        if (!TEST_int_eq(OPENSSL_BOX_EVP_PKEY_decapsulate_init(recipctx, opparam), 1))
             goto err;
     } else {
         if (!TEST_int_eq(EVP_PKEY_auth_decapsulate_init(recipctx, spub,
@@ -712,6 +712,6 @@ static int do_decap(const TEST_ENCAPDATA *t, EVP_PKEY *rpriv, EVP_PKEY *spub)
           && TEST_mem_eq(secret, secretlen,
                          t->expected_secret, t->expected_secretlen);
 err:
-    EVP_PKEY_CTX_free(recipctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(recipctx);
     return ret;
 }

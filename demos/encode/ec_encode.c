@@ -85,7 +85,7 @@ cleanup:
      * in this case.
      */
     if (ret == 0) {
-        EVP_PKEY_free(pkey);
+        OPENSSL_BOX_EVP_PKEY_free(pkey);
         pkey = NULL;
     }
 
@@ -199,7 +199,7 @@ int main(int argc, char **argv)
 
     ret = EXIT_SUCCESS;
 cleanup:
-    EVP_PKEY_free(pkey);
+    OPENSSL_BOX_EVP_PKEY_free(pkey);
     OSSL_LIB_CTX_free(libctx);
     return ret;
 }

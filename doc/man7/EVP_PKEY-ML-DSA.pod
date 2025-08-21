@@ -51,7 +51,7 @@ ML-DSA hashing operations.
 
 =back
 
-Use L<EVP_PKEY_CTX_set_params(3)> after calling L<EVP_PKEY_keygen_init(3)>.
+Use L<OPENSSL_BOX_EVP_PKEY_CTX_set_params(3)> after calling L<OPENSSL_BOX_EVP_PKEY_keygen_init(3)>.
 
 =head2 Common ML-DSA parameters
 
@@ -59,9 +59,9 @@ In addition to the common parameters that all keytypes should support (see
 L<provider-keymgmt(7)/Common Information Parameters>, the implementation of
 these key types support the parameters listed below.
 These are gettable using
-L<EVP_PKEY_get_octet_string_param(3)> or L<EVP_PKEY_get_params(3)>.
+L<EVP_PKEY_get_octet_string_param(3)> or L<OPENSSL_BOX_EVP_PKEY_get_params(3)>.
 They can be initialised via L<EVP_PKEY_fromdata(3)>, and are returned by
-L<EVP_PKEY_todata(3)> given a suitable I<selection>.
+L<OPENSSL_BOX_EVP_PKEY_todata(3)> given a suitable I<selection>.
 Once a public or private key is configured, it can no longer be modified,
 nor can another key component be added.
 
@@ -284,7 +284,7 @@ L<EVP_PKEY(3)>,
 L<provider-keymgmt(7)>,
 L<EVP_PKEY_get_raw_private_key(3)>,
 L<EVP_PKEY_get_raw_public_key(3)>,
-L<EVP_PKEY_get1_encoded_public_key(3)>,
+L<OPENSSL_BOX_EVP_PKEY_get1_encoded_public_key(3)>,
 L<OSSL_PROVIDER_add_conf_parameter(3)>,
 L<provider-keymgmt(7)>,
 L<EVP_SIGNATURE-ML-DSA(7)>

@@ -150,7 +150,7 @@ static int p_get_params(void *provctx, OSSL_PARAM params[])
              */
 #ifdef PROVIDER_INIT_FUNCTION_NAME
             EVP_MD *md4 = EVP_MD_fetch(ctx->libctx, "MD4", NULL);
-            EVP_MD_CTX *mdctx = EVP_MD_CTX_new();
+            EVP_MD_CTX *mdctx = OPENSSL_BOX_EVP_MD_CTX_new();
             const char *msg = "Hello world";
             unsigned char out[16];
             OSSL_PROVIDER *deflt;
@@ -187,8 +187,8 @@ static int p_get_params(void *provctx, OSSL_PARAM params[])
                         && EVP_DigestFinal(mdctx, out, NULL))
                     digestsuccess = 1;
             }
-            EVP_MD_CTX_free(mdctx);
-            EVP_MD_free(md4);
+            OPENSSL_BOX_EVP_MD_CTX_free(mdctx);
+            OPENSSL_BOX_EVP_MD_free(md4);
             OSSL_PROVIDER_unload(deflt);
 #endif
             if (p->data_size >= sizeof(digestsuccess)) {
@@ -205,7 +205,7 @@ static int p_get_params(void *provctx, OSSL_PARAM params[])
             unsigned int stopsuccess = 0;
 
 #ifdef PROVIDER_INIT_FUNCTION_NAME
-            stopsuccess = EVP_set_default_properties(ctx->libctx, NULL);
+            stopsuccess = OPENSSL_BOX_EVP_set_default_properties(ctx->libctx, NULL);
 #endif
             if (p->data_size >= sizeof(stopsuccess)) {
                 *(unsigned int *)p->data = stopsuccess;
@@ -315,7 +315,7 @@ int OSSL_provider_init(const OSSL_CORE_HANDLE *handle,
     {
         EVP_MD *sha256 = EVP_MD_fetch(ctx->libctx, "SHA2-256", NULL);
         if (sha256 != NULL) {
-            EVP_MD_free(sha256);
+            OPENSSL_BOX_EVP_MD_free(sha256);
             p_teardown(ctx);
             return 0;
         }

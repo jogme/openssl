@@ -39,12 +39,12 @@ int RSA_print(BIO *bp, const RSA *x, int off)
 {
     EVP_PKEY *pk;
     int ret;
-    pk = EVP_PKEY_new();
+    pk = OPENSSL_BOX_EVP_PKEY_new();
     if (pk == NULL)
         return 0;
-    ret = EVP_PKEY_set1_RSA(pk, (RSA *)x);
+    ret = OPENSSL_BOX_EVP_PKEY_set1_RSA(pk, (RSA *)x);
     if (ret)
         ret = EVP_PKEY_print_private(bp, pk, off, NULL);
-    EVP_PKEY_free(pk);
+    OPENSSL_BOX_EVP_PKEY_free(pk);
     return ret;
 }

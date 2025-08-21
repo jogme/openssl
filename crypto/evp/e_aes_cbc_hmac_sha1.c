@@ -64,7 +64,7 @@ void aesni256_cbc_sha1_dec(const void *inp, void *out, size_t blocks,
                            const AES_KEY *key, unsigned char iv[16],
                            SHA_CTX *ctx, const void *in0);
 
-# define data(ctx) ((EVP_AES_HMAC_SHA1 *)EVP_CIPHER_CTX_get_cipher_data(ctx))
+# define data(ctx) ((EVP_AES_HMAC_SHA1 *)OPENSSL_BOX_EVP_CIPHER_CTX_get_cipher_data(ctx))
 
 static int aesni_cbc_hmac_sha1_init_key(EVP_CIPHER_CTX *ctx,
                                         const unsigned char *inkey,
@@ -72,7 +72,7 @@ static int aesni_cbc_hmac_sha1_init_key(EVP_CIPHER_CTX *ctx,
 {
     EVP_AES_HMAC_SHA1 *key = data(ctx);
     int ret;
-    const int keylen = EVP_CIPHER_CTX_get_key_length(ctx) * 8;
+    const int keylen = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx) * 8;
 
     if (keylen <= 0) {
         ERR_raise(ERR_LIB_EVP, EVP_R_INVALID_KEY_LENGTH);
@@ -425,7 +425,7 @@ static int aesni_cbc_hmac_sha1_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
     if (len % AES_BLOCK_SIZE)
         return 0;
 
-    if (EVP_CIPHER_CTX_is_encrypting(ctx)) {
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx)) {
         if (plen == NO_PAYLOAD_LENGTH)
             plen = len;
         else if (len !=
@@ -497,7 +497,7 @@ static int aesni_cbc_hmac_sha1_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
 # if defined(STITCHED_DECRYPT_CALL)
             unsigned char tail_iv[AES_BLOCK_SIZE];
             int stitch = 0;
-            const int keylen = EVP_CIPHER_CTX_get_key_length(ctx);
+            const int keylen = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(ctx);
 
             if (keylen <= 0) {
                 ERR_raise(ERR_LIB_EVP, EVP_R_INVALID_KEY_LENGTH);
@@ -820,7 +820,7 @@ static int aesni_cbc_hmac_sha1_ctrl(EVP_CIPHER_CTX *ctx, int type, int arg,
 
             len = p[arg - 2] << 8 | p[arg - 1];
 
-            if (EVP_CIPHER_CTX_is_encrypting(ctx)) {
+            if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx)) {
                 key->payload_length = len;
                 if ((key->aux.tls_ver =
                      p[arg - 4] << 8 | p[arg - 3]) >= TLS1_1_VERSION) {
@@ -858,7 +858,7 @@ static int aesni_cbc_hmac_sha1_ctrl(EVP_CIPHER_CTX *ctx, int type, int arg,
 
             inp_len = param->inp[11] << 8 | param->inp[12];
 
-            if (EVP_CIPHER_CTX_is_encrypting(ctx)) {
+            if (OPENSSL_BOX_EVP_CIPHER_CTX_is_encrypting(ctx)) {
                 if ((param->inp[9] << 8 | param->inp[10]) < TLS1_1_VERSION)
                     return -1;
 
@@ -926,8 +926,8 @@ static EVP_CIPHER aesni_128_cbc_hmac_sha1_cipher = {
     aesni_cbc_hmac_sha1_cipher,
     NULL,
     sizeof(EVP_AES_HMAC_SHA1),
-    EVP_CIPH_FLAG_DEFAULT_ASN1 ? NULL : EVP_CIPHER_set_asn1_iv,
-    EVP_CIPH_FLAG_DEFAULT_ASN1 ? NULL : EVP_CIPHER_get_asn1_iv,
+    EVP_CIPH_FLAG_DEFAULT_ASN1 ? NULL : OPENSSL_BOX_EVP_CIPHER_set_asn1_iv,
+    EVP_CIPH_FLAG_DEFAULT_ASN1 ? NULL : OPENSSL_BOX_EVP_CIPHER_get_asn1_iv,
     aesni_cbc_hmac_sha1_ctrl,
     NULL
 };
@@ -946,30 +946,30 @@ static EVP_CIPHER aesni_256_cbc_hmac_sha1_cipher = {
     aesni_cbc_hmac_sha1_cipher,
     NULL,
     sizeof(EVP_AES_HMAC_SHA1),
-    EVP_CIPH_FLAG_DEFAULT_ASN1 ? NULL : EVP_CIPHER_set_asn1_iv,
-    EVP_CIPH_FLAG_DEFAULT_ASN1 ? NULL : EVP_CIPHER_get_asn1_iv,
+    EVP_CIPH_FLAG_DEFAULT_ASN1 ? NULL : OPENSSL_BOX_EVP_CIPHER_set_asn1_iv,
+    EVP_CIPH_FLAG_DEFAULT_ASN1 ? NULL : OPENSSL_BOX_EVP_CIPHER_get_asn1_iv,
     aesni_cbc_hmac_sha1_ctrl,
     NULL
 };
 
-const EVP_CIPHER *EVP_aes_128_cbc_hmac_sha1(void)
+const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_cbc_hmac_sha1(void)
 {
     return (OPENSSL_ia32cap_P[1] & AESNI_CAPABLE ?
             &aesni_128_cbc_hmac_sha1_cipher : NULL);
 }
 
-const EVP_CIPHER *EVP_aes_256_cbc_hmac_sha1(void)
+const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_cbc_hmac_sha1(void)
 {
     return (OPENSSL_ia32cap_P[1] & AESNI_CAPABLE ?
             &aesni_256_cbc_hmac_sha1_cipher : NULL);
 }
 #else
-const EVP_CIPHER *EVP_aes_128_cbc_hmac_sha1(void)
+const EVP_CIPHER *OPENSSL_BOX_EVP_aes_128_cbc_hmac_sha1(void)
 {
     return NULL;
 }
 
-const EVP_CIPHER *EVP_aes_256_cbc_hmac_sha1(void)
+const EVP_CIPHER *OPENSSL_BOX_EVP_aes_256_cbc_hmac_sha1(void)
 {
     return NULL;
 }

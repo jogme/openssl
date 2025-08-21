@@ -42,14 +42,14 @@ static int kem_cms_decrypt(CMS_RecipientInfo *ri)
 
     OBJ_obj2txt(name, sizeof(name), wrap->algorithm, 0);
     kekcipher = EVP_CIPHER_fetch(pctx->libctx, name, pctx->propquery);
-    if (kekcipher == NULL || EVP_CIPHER_get_mode(kekcipher) != EVP_CIPH_WRAP_MODE)
+    if (kekcipher == NULL || OPENSSL_BOX_EVP_CIPHER_get_mode(kekcipher) != EVP_CIPH_WRAP_MODE)
         goto err;
     if (!EVP_EncryptInit_ex(kekctx, kekcipher, NULL, NULL, NULL))
         goto err;
-    if (EVP_CIPHER_asn1_to_param(kekctx, wrap->parameter) <= 0)
+    if (OPENSSL_BOX_EVP_CIPHER_asn1_to_param(kekctx, wrap->parameter) <= 0)
         goto err;
 
-    cipher_length = EVP_CIPHER_CTX_get_key_length(kekctx);
+    cipher_length = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(kekctx);
     if (cipher_length != *kekLength) {
         ERR_raise(ERR_LIB_CMS, CMS_R_INVALID_KEY_LENGTH);
         goto err;
@@ -57,7 +57,7 @@ static int kem_cms_decrypt(CMS_RecipientInfo *ri)
 
     rv = 1;
 err:
-    EVP_CIPHER_free(kekcipher);
+    OPENSSL_BOX_EVP_CIPHER_free(kekcipher);
     return rv;
 }
 
@@ -88,11 +88,11 @@ static int kem_cms_encrypt(CMS_RecipientInfo *ri)
     if (pctx == NULL)
         goto err;
 
-    pkey = EVP_PKEY_CTX_get0_pkey(pctx);
+    pkey = OPENSSL_BOX_EVP_PKEY_CTX_get0_pkey(pctx);
     if (pkey == NULL)
         goto err;
 
-    security_bits = EVP_PKEY_get_security_bits(pkey);
+    security_bits = OPENSSL_BOX_EVP_PKEY_get_security_bits(pkey);
     if (security_bits == 0)
         goto err;
 
@@ -105,7 +105,7 @@ static int kem_cms_encrypt(CMS_RecipientInfo *ri)
         params[0] = OSSL_PARAM_construct_octet_string(OSSL_PKEY_PARAM_CMS_KEMRI_KDF_ALGORITHM,
                                                       kemri_x509_algor, sizeof(kemri_x509_algor));
         params[1] = OSSL_PARAM_construct_end();
-        if (!EVP_PKEY_get_params(pkey, params))
+        if (!OPENSSL_BOX_EVP_PKEY_get_params(pkey, params))
             goto err;
         if (OSSL_PARAM_modified(&params[0])) {
             const unsigned char *p = kemri_x509_algor;
@@ -125,7 +125,7 @@ static int kem_cms_encrypt(CMS_RecipientInfo *ri)
     kekctx = CMS_RecipientInfo_kemri_get0_ctx(ri);
     if (kekctx == NULL)
         goto err;
-    *kekLength = EVP_CIPHER_CTX_get_key_length(kekctx);
+    *kekLength = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(kekctx);
     wrap_nid = EVP_CIPHER_CTX_get_type(kekctx);
 
     /* Package wrap algorithm in an AlgorithmIdentifier */
@@ -135,7 +135,7 @@ static int kem_cms_encrypt(CMS_RecipientInfo *ri)
     wrap->parameter = ASN1_TYPE_new();
     if (wrap->parameter == NULL)
         goto err;
-    if (EVP_CIPHER_param_to_asn1(kekctx, wrap->parameter) <= 0)
+    if (OPENSSL_BOX_EVP_CIPHER_param_to_asn1(kekctx, wrap->parameter) <= 0)
         goto err;
     if (ASN1_TYPE_get(wrap->parameter) == NID_undef) {
         ASN1_TYPE_free(wrap->parameter);

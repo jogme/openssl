@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-EVP_MD_meth_new, EVP_MD_meth_dup, EVP_MD_meth_free,
-EVP_MD_meth_set_input_blocksize,
-EVP_MD_meth_set_result_size, EVP_MD_meth_set_app_datasize,
-EVP_MD_meth_set_flags, EVP_MD_meth_set_init, EVP_MD_meth_set_update,
-EVP_MD_meth_set_final, EVP_MD_meth_set_copy, EVP_MD_meth_set_cleanup,
-EVP_MD_meth_set_ctrl, EVP_MD_meth_get_input_blocksize,
-EVP_MD_meth_get_result_size, EVP_MD_meth_get_app_datasize,
-EVP_MD_meth_get_flags, EVP_MD_meth_get_init, EVP_MD_meth_get_update,
+OPENSSL_BOX_EVP_MD_meth_new, OPENSSL_BOX_EVP_MD_meth_dup, OPENSSL_BOX_EVP_MD_meth_free,
+OPENSSL_BOX_EVP_MD_meth_set_input_blocksize,
+OPENSSL_BOX_EVP_MD_meth_set_result_size, OPENSSL_BOX_EVP_MD_meth_set_app_datasize,
+OPENSSL_BOX_EVP_MD_meth_set_flags, OPENSSL_BOX_EVP_MD_meth_set_init, EVP_MD_meth_set_update,
+EVP_MD_meth_set_final, EVP_MD_meth_set_copy, OPENSSL_BOX_EVP_MD_meth_set_cleanup,
+EVP_MD_meth_set_ctrl, OPENSSL_BOX_EVP_MD_meth_get_input_blocksize,
+OPENSSL_BOX_EVP_MD_meth_get_result_size, OPENSSL_BOX_EVP_MD_meth_get_app_datasize,
+OPENSSL_BOX_EVP_MD_meth_get_flags, EVP_MD_meth_get_init, EVP_MD_meth_get_update,
 EVP_MD_meth_get_final, EVP_MD_meth_get_copy, EVP_MD_meth_get_cleanup,
 EVP_MD_meth_get_ctrl
 - Routines to build up legacy EVP_MD methods
@@ -22,15 +22,15 @@ The following functions have been deprecated since OpenSSL 3.0, and can be
 hidden entirely by defining B<OPENSSL_API_COMPAT> with a suitable version value,
 see L<openssl_user_macros(7)>:
 
- EVP_MD *EVP_MD_meth_new(int md_type, int pkey_type);
- void EVP_MD_meth_free(EVP_MD *md);
- EVP_MD *EVP_MD_meth_dup(const EVP_MD *md);
+ EVP_MD *OPENSSL_BOX_EVP_MD_meth_new(int md_type, int pkey_type);
+ void OPENSSL_BOX_EVP_MD_meth_free(EVP_MD *md);
+ EVP_MD *OPENSSL_BOX_EVP_MD_meth_dup(const EVP_MD *md);
 
- int EVP_MD_meth_set_input_blocksize(EVP_MD *md, int blocksize);
- int EVP_MD_meth_set_result_size(EVP_MD *md, int resultsize);
- int EVP_MD_meth_set_app_datasize(EVP_MD *md, int datasize);
- int EVP_MD_meth_set_flags(EVP_MD *md, unsigned long flags);
- int EVP_MD_meth_set_init(EVP_MD *md, int (*init)(EVP_MD_CTX *ctx));
+ int OPENSSL_BOX_EVP_MD_meth_set_input_blocksize(EVP_MD *md, int blocksize);
+ int OPENSSL_BOX_EVP_MD_meth_set_result_size(EVP_MD *md, int resultsize);
+ int OPENSSL_BOX_EVP_MD_meth_set_app_datasize(EVP_MD *md, int datasize);
+ int OPENSSL_BOX_EVP_MD_meth_set_flags(EVP_MD *md, unsigned long flags);
+ int OPENSSL_BOX_EVP_MD_meth_set_init(EVP_MD *md, int (*init)(EVP_MD_CTX *ctx));
  int EVP_MD_meth_set_update(EVP_MD *md, int (*update)(EVP_MD_CTX *ctx,
                                                       const void *data,
                                                       size_t count));
@@ -38,14 +38,14 @@ see L<openssl_user_macros(7)>:
                                                     unsigned char *md));
  int EVP_MD_meth_set_copy(EVP_MD *md, int (*copy)(EVP_MD_CTX *to,
                                                   const EVP_MD_CTX *from));
- int EVP_MD_meth_set_cleanup(EVP_MD *md, int (*cleanup)(EVP_MD_CTX *ctx));
+ int OPENSSL_BOX_EVP_MD_meth_set_cleanup(EVP_MD *md, int (*cleanup)(EVP_MD_CTX *ctx));
  int EVP_MD_meth_set_ctrl(EVP_MD *md, int (*ctrl)(EVP_MD_CTX *ctx, int cmd,
                                                   int p1, void *p2));
 
- int EVP_MD_meth_get_input_blocksize(const EVP_MD *md);
- int EVP_MD_meth_get_result_size(const EVP_MD *md);
- int EVP_MD_meth_get_app_datasize(const EVP_MD *md);
- unsigned long EVP_MD_meth_get_flags(const EVP_MD *md);
+ int OPENSSL_BOX_EVP_MD_meth_get_input_blocksize(const EVP_MD *md);
+ int OPENSSL_BOX_EVP_MD_meth_get_result_size(const EVP_MD *md);
+ int OPENSSL_BOX_EVP_MD_meth_get_app_datasize(const EVP_MD *md);
+ unsigned long OPENSSL_BOX_EVP_MD_meth_get_flags(const EVP_MD *md);
  int (*EVP_MD_meth_get_init(const EVP_MD *md))(EVP_MD_CTX *ctx);
  int (*EVP_MD_meth_get_update(const EVP_MD *md))(EVP_MD_CTX *ctx,
                                                  const void *data,
@@ -67,26 +67,26 @@ The B<EVP_MD> type is a structure for digest method implementation.
 It can also have associated public/private key signing and verifying
 routines.
 
-EVP_MD_meth_new() creates a new B<EVP_MD> structure.
+OPENSSL_BOX_EVP_MD_meth_new() creates a new B<EVP_MD> structure.
 These B<EVP_MD> structures are reference counted.
 
-EVP_MD_meth_dup() creates a copy of B<md>.
+OPENSSL_BOX_EVP_MD_meth_dup() creates a copy of B<md>.
 
-EVP_MD_meth_free() decrements the reference count for the B<EVP_MD> structure.
+OPENSSL_BOX_EVP_MD_meth_free() decrements the reference count for the B<EVP_MD> structure.
 If the reference count drops to 0 then the structure is freed.
 If the argument is NULL, nothing is done.
 
-EVP_MD_meth_set_input_blocksize() sets the internal input block size
+OPENSSL_BOX_EVP_MD_meth_set_input_blocksize() sets the internal input block size
 for the method B<md> to B<blocksize> bytes.
 
-EVP_MD_meth_set_result_size() sets the size of the result that the
+OPENSSL_BOX_EVP_MD_meth_set_result_size() sets the size of the result that the
 digest method in B<md> is expected to produce to B<resultsize> bytes.
 
 The digest method may have its own private data, which OpenSSL will
-allocate for it.  EVP_MD_meth_set_app_datasize() should be used to
+allocate for it.  OPENSSL_BOX_EVP_MD_meth_set_app_datasize() should be used to
 set the size for it to B<datasize>.
 
-EVP_MD_meth_set_flags() sets the flags to describe optional
+OPENSSL_BOX_EVP_MD_meth_set_flags() sets the flags to describe optional
 behaviours in the particular B<md>.  Several flags can be or'd
 together.  The available flags are:
 
@@ -127,8 +127,8 @@ Currently unused.
 
 =back
 
-EVP_MD_meth_set_init() sets the digest init function for B<md>.
-The digest init function is called by EVP_Digest(), EVP_DigestInit(),
+OPENSSL_BOX_EVP_MD_meth_set_init() sets the digest init function for B<md>.
+The digest init function is called by EVP_Digest(), OPENSSL_BOX_EVP_DigestInit(),
 EVP_DigestInit_ex(), EVP_SignInit, EVP_SignInit_ex(), EVP_VerifyInit()
 and EVP_VerifyInit_ex().
 
@@ -145,23 +145,23 @@ computations after the method's private data structure has been copied
 from one B<EVP_MD_CTX> to another.  If all that's needed is to copy
 the data, there is no need for this copy function.
 Note that the copy function is passed two B<EVP_MD_CTX *>, the private
-data structure is then available with EVP_MD_CTX_get0_md_data().
-This copy function is called by EVP_MD_CTX_copy() and
-EVP_MD_CTX_copy_ex().
+data structure is then available with OPENSSL_BOX_EVP_MD_CTX_get0_md_data().
+This copy function is called by OPENSSL_BOX_EVP_MD_CTX_copy() and
+OPENSSL_BOX_EVP_MD_CTX_copy_ex().
 
-EVP_MD_meth_set_cleanup() sets the function for B<md> to do extra
+OPENSSL_BOX_EVP_MD_meth_set_cleanup() sets the function for B<md> to do extra
 cleanup before the method's private data structure is cleaned out and
 freed.
 Note that the cleanup function is passed a B<EVP_MD_CTX *>, the
-private data structure is then available with EVP_MD_CTX_get0_md_data().
-This cleanup function is called by EVP_MD_CTX_reset() and
-EVP_MD_CTX_free().
+private data structure is then available with OPENSSL_BOX_EVP_MD_CTX_get0_md_data().
+This cleanup function is called by OPENSSL_BOX_EVP_MD_CTX_reset() and
+OPENSSL_BOX_EVP_MD_CTX_free().
 
 EVP_MD_meth_set_ctrl() sets the control function for B<md>.
-See L<EVP_MD_CTX_ctrl(3)> for the available controls.
+See L<OPENSSL_BOX_EVP_MD_CTX_ctrl(3)> for the available controls.
 
-EVP_MD_meth_get_input_blocksize(), EVP_MD_meth_get_result_size(),
-EVP_MD_meth_get_app_datasize(), EVP_MD_meth_get_flags(),
+OPENSSL_BOX_EVP_MD_meth_get_input_blocksize(), OPENSSL_BOX_EVP_MD_meth_get_result_size(),
+OPENSSL_BOX_EVP_MD_meth_get_app_datasize(), OPENSSL_BOX_EVP_MD_meth_get_flags(),
 EVP_MD_meth_get_init(), EVP_MD_meth_get_update(),
 EVP_MD_meth_get_final(), EVP_MD_meth_get_copy(),
 EVP_MD_meth_get_cleanup() and EVP_MD_meth_get_ctrl() are all used
@@ -170,18 +170,18 @@ functions above.
 
 =head1 RETURN VALUES
 
-EVP_MD_meth_new() and EVP_MD_meth_dup() return a pointer to a newly
+OPENSSL_BOX_EVP_MD_meth_new() and OPENSSL_BOX_EVP_MD_meth_dup() return a pointer to a newly
 created B<EVP_MD>, or NULL on failure.
 All EVP_MD_meth_set_*() functions return 1.
-EVP_MD_get_input_blocksize(), EVP_MD_meth_get_result_size(),
-EVP_MD_meth_get_app_datasize() and EVP_MD_meth_get_flags() return the
+EVP_MD_get_input_blocksize(), OPENSSL_BOX_EVP_MD_meth_get_result_size(),
+OPENSSL_BOX_EVP_MD_meth_get_app_datasize() and OPENSSL_BOX_EVP_MD_meth_get_flags() return the
 indicated sizes or flags.
 All other EVP_CIPHER_meth_get_*() functions return pointers to their
 respective B<md> function.
 
 =head1 SEE ALSO
 
-L<EVP_DigestInit(3)>, L<EVP_SignInit(3)>, L<EVP_VerifyInit(3)>
+L<OPENSSL_BOX_EVP_DigestInit(3)>, L<EVP_SignInit(3)>, L<EVP_VerifyInit(3)>
 
 =head1 HISTORY
 

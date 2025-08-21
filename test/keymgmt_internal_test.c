@@ -213,7 +213,7 @@ static int test_pass_rsa(FIXTURE *fixture)
                                                   bn_coeffs, 1)))
         goto err;
 
-    if (!TEST_ptr(pk = EVP_PKEY_new())
+    if (!TEST_ptr(pk = OPENSSL_BOX_EVP_PKEY_new())
         || !TEST_true(EVP_PKEY_assign_RSA(pk, rsa)))
         goto err;
     rsa = NULL;
@@ -259,11 +259,11 @@ static int test_pass_rsa(FIXTURE *fixture)
         if (!ret || dup_pk != NULL)
             break;
 
-        if (!TEST_ptr(dup_pk = EVP_PKEY_dup(pk)))
+        if (!TEST_ptr(dup_pk = OPENSSL_BOX_EVP_PKEY_dup(pk)))
             goto err;
 
-        ret = TEST_int_eq(EVP_PKEY_eq(pk, dup_pk), 1);
-        EVP_PKEY_free(pk);
+        ret = TEST_int_eq(OPENSSL_BOX_EVP_PKEY_eq(pk, dup_pk), 1);
+        OPENSSL_BOX_EVP_PKEY_free(pk);
         pk = dup_pk;
         if (!ret)
             goto err;
@@ -274,10 +274,10 @@ static int test_pass_rsa(FIXTURE *fixture)
     BN_free(bn1);
     BN_free(bn2);
     BN_free(bn3);
-    EVP_PKEY_free(pk);
-    EVP_KEYMGMT_free(km1);
-    EVP_KEYMGMT_free(km2);
-    EVP_KEYMGMT_free(km3);
+    OPENSSL_BOX_EVP_PKEY_free(pk);
+    OPENSSL_BOX_EVP_KEYMGMT_free(km1);
+    OPENSSL_BOX_EVP_KEYMGMT_free(km2);
+    OPENSSL_BOX_EVP_KEYMGMT_free(km3);
 
     return ret;
 }
@@ -345,7 +345,7 @@ static int test_evp_pkey_export_to_provider(int n)
  end:
     BIO_free(bio);
     X509_free(cert);
-    EVP_KEYMGMT_free(keymgmt);
+    OPENSSL_BOX_EVP_KEYMGMT_free(keymgmt);
     OSSL_PROVIDER_unload(prov);
     OSSL_LIB_CTX_free(libctx);
     return ret;

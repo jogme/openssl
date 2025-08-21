@@ -32,7 +32,7 @@ EVP_PKEY *d2i_PublicKey(int type, EVP_PKEY **a, const unsigned char **pp,
     EVP_PKEY *copy = NULL;
 
     if ((a == NULL) || (*a == NULL)) {
-        if ((ret = EVP_PKEY_new()) == NULL) {
+        if ((ret = OPENSSL_BOX_EVP_PKEY_new()) == NULL) {
             ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
             return NULL;
         }
@@ -41,20 +41,20 @@ EVP_PKEY *d2i_PublicKey(int type, EVP_PKEY **a, const unsigned char **pp,
 
 #ifndef OPENSSL_NO_EC
         if (evp_pkey_is_provided(ret)
-            && EVP_PKEY_get_base_id(ret) == EVP_PKEY_EC) {
+            && OPENSSL_BOX_EVP_PKEY_get_base_id(ret) == EVP_PKEY_EC) {
             if (!evp_pkey_copy_downgraded(&copy, ret))
                 goto err;
         }
 #endif
     }
 
-    if ((type != EVP_PKEY_get_id(ret) || copy != NULL)
-        && !EVP_PKEY_set_type(ret, type)) {
+    if ((type != OPENSSL_BOX_EVP_PKEY_get_id(ret) || copy != NULL)
+        && !OPENSSL_BOX_EVP_PKEY_set_type(ret, type)) {
         ERR_raise(ERR_LIB_ASN1, ERR_R_EVP_LIB);
         goto err;
     }
 
-    switch (EVP_PKEY_get_base_id(ret)) {
+    switch (OPENSSL_BOX_EVP_PKEY_get_base_id(ret)) {
     case EVP_PKEY_RSA:
         if ((ret->pkey.rsa = d2i_RSAPublicKey(NULL, pp, length)) == NULL) {
             ERR_raise(ERR_LIB_ASN1, ERR_R_ASN1_LIB);
@@ -88,11 +88,11 @@ EVP_PKEY *d2i_PublicKey(int type, EVP_PKEY **a, const unsigned char **pp,
     }
     if (a != NULL)
         (*a) = ret;
-    EVP_PKEY_free(copy);
+    OPENSSL_BOX_EVP_PKEY_free(copy);
     return ret;
  err:
     if (a == NULL || *a != ret)
-        EVP_PKEY_free(ret);
-    EVP_PKEY_free(copy);
+        OPENSSL_BOX_EVP_PKEY_free(ret);
+    OPENSSL_BOX_EVP_PKEY_free(copy);
     return NULL;
 }

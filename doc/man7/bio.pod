@@ -83,8 +83,8 @@ Create a memory BIO:
 =head1 SEE ALSO
 
 L<BIO_ctrl(3)>,
-L<BIO_f_base64(3)>, L<BIO_f_buffer(3)>,
-L<BIO_f_cipher(3)>, L<BIO_f_md(3)>,
+L<OPENSSL_BOX_BIO_f_base64(3)>, L<BIO_f_buffer(3)>,
+L<OPENSSL_BOX_BIO_f_cipher(3)>, L<OPENSSL_BOX_BIO_f_md(3)>,
 L<BIO_f_null(3)>, L<BIO_f_ssl(3)>,
 L<BIO_f_readbuffer(3)>,
 L<BIO_find_type(3)>,

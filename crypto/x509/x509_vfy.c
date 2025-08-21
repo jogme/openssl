@@ -2342,7 +2342,7 @@ int X509_get_pubkey_parameters(EVP_PKEY *pkey, STACK_OF(X509) *chain)
     EVP_PKEY *ktmp = NULL, *ktmp2;
     int i, j;
 
-    if (pkey != NULL && !EVP_PKEY_missing_parameters(pkey))
+    if (pkey != NULL && !OPENSSL_BOX_EVP_PKEY_missing_parameters(pkey))
         return 1;
 
     for (i = 0; i < sk_X509_num(chain); i++) {
@@ -2351,7 +2351,7 @@ int X509_get_pubkey_parameters(EVP_PKEY *pkey, STACK_OF(X509) *chain)
             ERR_raise(ERR_LIB_X509, X509_R_UNABLE_TO_GET_CERTS_PUBLIC_KEY);
             return 0;
         }
-        if (!EVP_PKEY_missing_parameters(ktmp))
+        if (!OPENSSL_BOX_EVP_PKEY_missing_parameters(ktmp))
             break;
         ktmp = NULL;
     }
@@ -2363,12 +2363,12 @@ int X509_get_pubkey_parameters(EVP_PKEY *pkey, STACK_OF(X509) *chain)
     /* first, populate the other certs */
     for (j = i - 1; j >= 0; j--) {
         ktmp2 = X509_get0_pubkey(sk_X509_value(chain, j));
-        if (!EVP_PKEY_copy_parameters(ktmp2, ktmp))
+        if (!OPENSSL_BOX_EVP_PKEY_copy_parameters(ktmp2, ktmp))
             return 0;
     }
 
     if (pkey != NULL)
-        return EVP_PKEY_copy_parameters(pkey, ktmp);
+        return OPENSSL_BOX_EVP_PKEY_copy_parameters(pkey, ktmp);
     return 1;
 }
 
@@ -3910,7 +3910,7 @@ static int check_key_level(X509_STORE_CTX *ctx, EVP_PKEY *pkey)
     if (level > NUM_AUTH_LEVELS)
         level = NUM_AUTH_LEVELS;
 
-    return EVP_PKEY_get_security_bits(pkey) >= minbits_table[level - 1];
+    return OPENSSL_BOX_EVP_PKEY_get_security_bits(pkey) >= minbits_table[level - 1];
 }
 
 /*-
@@ -3936,7 +3936,7 @@ static int check_curve(X509 *cert)
     /* Unsupported or malformed key */
     if (pkey == NULL)
         return -1;
-    if (EVP_PKEY_get_id(pkey) != EVP_PKEY_EC)
+    if (OPENSSL_BOX_EVP_PKEY_get_id(pkey) != EVP_PKEY_EC)
         return 1;
 
     ret =

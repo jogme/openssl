@@ -37,9 +37,9 @@ static int demo_sign(EVP_PKEY *priv,
     EVP_MD_CTX *sign_context = NULL;
 
     /* Create a signature context */
-    sign_context = EVP_MD_CTX_new();
+    sign_context = OPENSSL_BOX_EVP_MD_CTX_new();
     if (sign_context == NULL) {
-        fprintf(stderr, "EVP_MD_CTX_new failed.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MD_CTX_new failed.\n");
         goto cleanup;
     }
 
@@ -80,7 +80,7 @@ static int demo_sign(EVP_PKEY *priv,
 cleanup:
     if (!ret)
         OPENSSL_free(sig_value);
-    EVP_MD_CTX_free(sign_context);
+    OPENSSL_BOX_EVP_MD_CTX_free(sign_context);
     return ret;
 }
 
@@ -96,9 +96,9 @@ static int demo_verify(EVP_PKEY *pub,
      * Make a verify signature context to hold temporary state
      * during signature verification
      */
-    verify_context = EVP_MD_CTX_new();
+    verify_context = OPENSSL_BOX_EVP_MD_CTX_new();
     if (verify_context == NULL) {
-        fprintf(stderr, "EVP_MD_CTX_new failed.\n");
+        fprintf(stderr, "OPENSSL_BOX_EVP_MD_CTX_new failed.\n");
         goto cleanup;
     }
     /* Initialize the verify context with a ED25519 public key */
@@ -109,7 +109,7 @@ static int demo_verify(EVP_PKEY *pub,
     }
     /*
      * ED25519 only supports the one shot interface using EVP_DigestVerify()
-     * The streaming EVP_DigestVerifyUpdate() API is not supported.
+     * The streaming OPENSSL_BOX_EVP_DigestVerifyUpdate() API is not supported.
      */
     if (!EVP_DigestVerify(verify_context, sig_value, sig_len,
                           tbs, tbs_len)) {
@@ -120,7 +120,7 @@ static int demo_verify(EVP_PKEY *pub,
     ret = 1;
 
 cleanup:
-    EVP_MD_CTX_free(verify_context);
+    OPENSSL_BOX_EVP_MD_CTX_free(verify_context);
     return ret;
 }
 
@@ -162,7 +162,7 @@ end:
         *pubout = pub;
         *privout = priv;
     } else {
-        EVP_PKEY_free(priv);
+        OPENSSL_BOX_EVP_PKEY_free(priv);
     }
     return ret;
 }
@@ -200,8 +200,8 @@ int main(void)
 cleanup:
     if (ret != EXIT_SUCCESS)
         ERR_print_errors_fp(stderr);
-    EVP_PKEY_free(pub);
-    EVP_PKEY_free(priv);
+    OPENSSL_BOX_EVP_PKEY_free(pub);
+    OPENSSL_BOX_EVP_PKEY_free(priv);
     OSSL_LIB_CTX_free(libctx);
     OPENSSL_free(sig_value);
     return ret;

@@ -136,7 +136,7 @@ static int sanity_test(void)
         params[1] =
             OSSL_PARAM_construct_uint(OSSL_RAND_PARAM_STRENGTH, &strength);
         params[2] = OSSL_PARAM_construct_end();
-        if (!TEST_true(EVP_RAND_CTX_set_params(privctx, params))) {
+        if (!TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(privctx, params))) {
             ret = -1;
             goto err;
         }
@@ -181,7 +181,7 @@ static int sanity_test(void)
             OSSL_PARAM_construct_octet_string(OSSL_RAND_PARAM_TEST_ENTROPY,
                                               ml_kem_public_entropy,
                                               sizeof(ml_kem_public_entropy));
-        if (!TEST_true(EVP_RAND_CTX_set_params(pubctx, params)))
+        if (!TEST_true(OPENSSL_BOX_EVP_RAND_CTX_set_params(pubctx, params)))
             goto done;
 
         /* encaps - decaps test: validate shared secret equality */
@@ -260,7 +260,7 @@ static int sanity_test(void)
     }
 
 err:
-    EVP_MD_free(sha256);
+    OPENSSL_BOX_EVP_MD_free(sha256);
     return ret == 0;
 }
 

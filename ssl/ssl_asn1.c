@@ -336,7 +336,7 @@ SSL_SESSION *d2i_SSL_SESSION_ex(SSL_SESSION **a, const unsigned char **pp,
     ret->peer = as->peer;
     as->peer = NULL;
 
-    EVP_PKEY_free(ret->peer_rpk);
+    OPENSSL_BOX_EVP_PKEY_free(ret->peer_rpk);
     ret->peer_rpk = NULL;
     if (as->peer_rpk != NULL) {
         const unsigned char *data = as->peer_rpk->data;

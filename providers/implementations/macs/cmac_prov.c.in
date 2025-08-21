@@ -112,10 +112,10 @@ static size_t cmac_size(void *vmacctx)
     struct cmac_data_st *macctx = vmacctx;
     const EVP_CIPHER_CTX *cipherctx = CMAC_CTX_get0_cipher_ctx(macctx->ctx);
 
-    if (EVP_CIPHER_CTX_get0_cipher(cipherctx) == NULL)
+    if (OPENSSL_BOX_EVP_CIPHER_CTX_get0_cipher(cipherctx) == NULL)
         return 0;
 
-    return EVP_CIPHER_CTX_get_block_size(cipherctx);
+    return OPENSSL_BOX_EVP_CIPHER_CTX_get_block_size(cipherctx);
 }
 
 #ifdef FIPS_MODULE
@@ -138,7 +138,7 @@ static int tdes_check_param(struct cmac_data_st *macctx, OSSL_PARAM *p,
     const EVP_CIPHER *cipher = ossl_prov_cipher_cipher(&macctx->cipher);
 
     *state = OSSL_FIPS_IND_STATE_UNKNOWN;
-    if (EVP_CIPHER_is_a(cipher, "DES-EDE3-CBC")) {
+    if (OPENSSL_BOX_EVP_CIPHER_is_a(cipher, "DES-EDE3-CBC")) {
         if (!OSSL_FIPS_IND_ON_UNAPPROVED(macctx, OSSL_FIPS_IND_SETTABLE0,
                                          libctx, "CMAC", "Triple-DES",
                                          ossl_fips_config_tdes_encrypt_disallowed))
@@ -271,7 +271,7 @@ static int cmac_set_ctx_params(void *vmacctx, const OSSL_PARAM params[])
                                    p.engine, ctx))
             return 0;
 
-        if (EVP_CIPHER_get_mode(ossl_prov_cipher_cipher(&macctx->cipher))
+        if (OPENSSL_BOX_EVP_CIPHER_get_mode(ossl_prov_cipher_cipher(&macctx->cipher))
             != EVP_CIPH_CBC_MODE) {
             ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_MODE);
             return 0;
@@ -280,10 +280,10 @@ static int cmac_set_ctx_params(void *vmacctx, const OSSL_PARAM params[])
         {
             const EVP_CIPHER *cipher = ossl_prov_cipher_cipher(&macctx->cipher);
 
-            if (!EVP_CIPHER_is_a(cipher, "AES-256-CBC")
-                    && !EVP_CIPHER_is_a(cipher, "AES-192-CBC")
-                    && !EVP_CIPHER_is_a(cipher, "AES-128-CBC")
-                    && !EVP_CIPHER_is_a(cipher, "DES-EDE3-CBC")) {
+            if (!OPENSSL_BOX_EVP_CIPHER_is_a(cipher, "AES-256-CBC")
+                    && !OPENSSL_BOX_EVP_CIPHER_is_a(cipher, "AES-192-CBC")
+                    && !OPENSSL_BOX_EVP_CIPHER_is_a(cipher, "AES-128-CBC")
+                    && !OPENSSL_BOX_EVP_CIPHER_is_a(cipher, "DES-EDE3-CBC")) {
                 ERR_raise(ERR_LIB_PROV, EVP_R_UNSUPPORTED_CIPHER);
                 return 0;
             }

@@ -119,21 +119,21 @@ static int decoder_construct_pkey(OSSL_DECODER_INSTANCE *decoder_inst,
     end = sk_EVP_KEYMGMT_num(data->keymgmts);
     for (i = 0; i < end; i++) {
         keymgmt = sk_EVP_KEYMGMT_value(data->keymgmts, i);
-        keymgmt_prov = EVP_KEYMGMT_get0_provider(keymgmt);
+        keymgmt_prov = OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt);
 
         if (keymgmt_prov == decoder_prov
             && evp_keymgmt_has_load(keymgmt)
-            && EVP_KEYMGMT_is_a(keymgmt, data->object_type))
+            && OPENSSL_BOX_EVP_KEYMGMT_is_a(keymgmt, data->object_type))
             break;
     }
     if (i < end) {
         /* To allow it to be freed further down */
-        if (!EVP_KEYMGMT_up_ref(keymgmt))
+        if (!OPENSSL_BOX_EVP_KEYMGMT_up_ref(keymgmt))
             return 0;
     } else if ((keymgmt = EVP_KEYMGMT_fetch(data->libctx,
                                             data->object_type,
                                             data->propq)) != NULL) {
-        keymgmt_prov = EVP_KEYMGMT_get0_provider(keymgmt);
+        keymgmt_prov = OPENSSL_BOX_EVP_KEYMGMT_get0_provider(keymgmt);
     }
 
     if (keymgmt != NULL) {
@@ -191,7 +191,7 @@ static int decoder_construct_pkey(OSSL_DECODER_INSTANCE *decoder_inst,
          * evp_keymgmt_util_make_pkey() increments the reference count when
          * assigning the EVP_PKEY, so we can free the keymgmt here.
          */
-        EVP_KEYMGMT_free(keymgmt);
+        OPENSSL_BOX_EVP_KEYMGMT_free(keymgmt);
     }
     /*
      * We successfully looked through, |*ctx->object| determines if we
@@ -205,7 +205,7 @@ static void decoder_clean_pkey_construct_arg(void *construct_data)
     struct decoder_pkey_data_st *data = construct_data;
 
     if (data != NULL) {
-        sk_EVP_KEYMGMT_pop_free(data->keymgmts, EVP_KEYMGMT_free);
+        sk_EVP_KEYMGMT_pop_free(data->keymgmts, OPENSSL_BOX_EVP_KEYMGMT_free);
         OPENSSL_free(data->propq);
         OPENSSL_free(data->object_type);
         OPENSSL_free(data);
@@ -409,11 +409,11 @@ static void collect_keymgmt(EVP_KEYMGMT *keymgmt, void *arg)
      * (decoder_clean_pkey_construct_arg) unrefs every element of the stack and
      * frees it.
      */
-    if (!EVP_KEYMGMT_up_ref(keymgmt))
+    if (!OPENSSL_BOX_EVP_KEYMGMT_up_ref(keymgmt))
         return;
 
     if (sk_EVP_KEYMGMT_push(data->keymgmts, keymgmt) <= 0) {
-        EVP_KEYMGMT_free(keymgmt);
+        OPENSSL_BOX_EVP_KEYMGMT_free(keymgmt);
         data->error_occurred = 1;
     }
 }
@@ -497,7 +497,7 @@ static int ossl_decoder_ctx_setup_for_pkey(OSSL_DECODER_CTX *ctx,
      * EVP_KEYMGMTs into a stack here and call both functions only once.
      *
      * We resolve the keytype string to a name ID so we don't have to resolve it
-     * multiple times, avoiding repeated calls to EVP_KEYMGMT_is_a, which is a
+     * multiple times, avoiding repeated calls to OPENSSL_BOX_EVP_KEYMGMT_is_a, which is a
      * performance bottleneck. However, we do this lazily on the first call to
      * collect_keymgmt made by EVP_KEYMGMT_do_all_provided, rather than do it
      * upfront, as this ensures that the names for all loaded providers have
@@ -550,7 +550,7 @@ static int ossl_decoder_ctx_setup_for_pkey(OSSL_DECODER_CTX *ctx,
 /* Only const here because deep_copy requires it */
 static EVP_KEYMGMT *keymgmt_dup(const EVP_KEYMGMT *keymgmt)
 {
-    if (!EVP_KEYMGMT_up_ref((EVP_KEYMGMT *)keymgmt))
+    if (!OPENSSL_BOX_EVP_KEYMGMT_up_ref((EVP_KEYMGMT *)keymgmt))
         return NULL;
 
     return (EVP_KEYMGMT *)keymgmt;
@@ -622,7 +622,7 @@ ossl_decoder_ctx_for_pkey_dup(OSSL_DECODER_CTX *src,
             process_data_dest->keymgmts
                 = sk_EVP_KEYMGMT_deep_copy(process_data_src->keymgmts,
                                            keymgmt_dup,
-                                           EVP_KEYMGMT_free);
+                                           OPENSSL_BOX_EVP_KEYMGMT_free);
             if (process_data_dest->keymgmts == NULL) {
                 ERR_raise(ERR_LIB_OSSL_DECODER, ERR_R_EVP_LIB);
                 goto err;

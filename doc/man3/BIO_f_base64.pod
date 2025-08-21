@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-BIO_f_base64 - base64 BIO filter
+OPENSSL_BOX_BIO_f_base64 - base64 BIO filter
 
 =head1 SYNOPSIS
 
@@ -11,11 +11,11 @@ BIO_f_base64 - base64 BIO filter
  #include <openssl/bio.h>
  #include <openssl/evp.h>
 
- const BIO_METHOD *BIO_f_base64(void);
+ const BIO_METHOD *OPENSSL_BOX_BIO_f_base64(void);
 
 =head1 DESCRIPTION
 
-BIO_f_base64() returns the base64 BIO method. This is a filter
+OPENSSL_BOX_BIO_f_base64() returns the base64 BIO method. This is a filter
 BIO that base64 encodes any data written through it and decodes
 any data read through it.
 
@@ -63,7 +63,7 @@ block cannot always be reliably determined.
 
 =head1 RETURN VALUES
 
-BIO_f_base64() returns the base64 BIO method.
+OPENSSL_BOX_BIO_f_base64() returns the base64 BIO method.
 
 =head1 EXAMPLES
 
@@ -73,7 +73,7 @@ to standard output:
  BIO *bio, *b64;
  char message[] = "Hello World \n";
 
- b64 = BIO_new(BIO_f_base64());
+ b64 = BIO_new(OPENSSL_BOX_BIO_f_base64());
  bio = BIO_new_fp(stdout, BIO_NOCLOSE);
  BIO_push(b64, bio);
  BIO_write(b64, message, strlen(message));
@@ -88,7 +88,7 @@ data to standard output:
  char inbuf[512];
  int inlen;
 
- b64 = BIO_new(BIO_f_base64());
+ b64 = BIO_new(OPENSSL_BOX_BIO_f_base64());
  bio = BIO_new_fp(stdin, BIO_NOCLOSE);
  bio_out = BIO_new_fp(stdout, BIO_NOCLOSE);
  BIO_push(b64, bio);

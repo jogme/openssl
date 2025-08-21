@@ -33,7 +33,7 @@ limited to the modulus size of the RSA pkey.
 Until now, `EVP_PKEY_sign()` and friends were only expected to act on the
 pre-computed digest of a message (under the condition that proper flags
 and signature md are specified using functions like
-`EVP_PKEY_CTX_set_rsa_padding()` and `EVP_PKEY_CTX_set_signature_md()`),
+`EVP_PKEY_CTX_set_rsa_padding()` and `OPENSSL_BOX_EVP_PKEY_CTX_set_signature_md()`),
 or to act as "primitive" [^1] functions (under the condition that proper
 flags are specified, like `RSA_NO_PADDING` for RSA signatures).
 
@@ -107,7 +107,7 @@ int EVP_PKEY_CTX_set_signature(EVP_PKEY_CTX *pctx,
 int EVP_PKEY_verify_message_update(EVP_PKEY_CTX *ctx,
                                    const unsigned char *in,
                                    size_t inlen);
-int EVP_PKEY_verify_message_final(EVP_PKEY_CTX *ctx);
+int OPENSSL_BOX_EVP_PKEY_verify_message_final(EVP_PKEY_CTX *ctx);
 
 #define EVP_PKEY_verify_message(ctx,sig,siglen,tbs,tbslen) \
     EVP_PKEY_verify(ctx,sig,siglen,tbs,tbslen)

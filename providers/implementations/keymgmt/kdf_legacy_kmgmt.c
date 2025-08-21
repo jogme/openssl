@@ -9,7 +9,7 @@
 
 /*
  * This implemments a dummy key manager for legacy KDFs that still support the
- * old way of performing a KDF via EVP_PKEY_derive(). New KDFs should not be
+ * old way of performing a KDF via OPENSSL_BOX_EVP_PKEY_derive(). New KDFs should not be
  * implemented this way. In reality there is no key data for such KDFs, so this
  * key manager does very little.
  */

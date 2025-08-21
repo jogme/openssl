@@ -100,7 +100,7 @@ static int pkcs7_bio_add_digest(BIO **pbio, X509_ALGOR *alg,
     EVP_MD *fetched = NULL;
     const EVP_MD *md;
 
-    if ((btmp = BIO_new(BIO_f_md())) == NULL) {
+    if ((btmp = BIO_new(OPENSSL_BOX_BIO_f_md())) == NULL) {
         ERR_raise(ERR_LIB_PKCS7, ERR_R_BIO_LIB);
         goto err;
     }
@@ -113,7 +113,7 @@ static int pkcs7_bio_add_digest(BIO **pbio, X509_ALGOR *alg,
     if (fetched != NULL)
         md = fetched;
     else
-        md = EVP_get_digestbyname(name);
+        md = OPENSSL_BOX_EVP_get_digestbyname(name);
 
     if (md == NULL) {
         (void)ERR_clear_last_mark();
@@ -122,12 +122,12 @@ static int pkcs7_bio_add_digest(BIO **pbio, X509_ALGOR *alg,
     }
     (void)ERR_pop_to_mark();
 
-    if (BIO_set_md(btmp, md) <= 0) {
+    if (OPENSSL_BOX_BIO_set_md(btmp, md) <= 0) {
         ERR_raise(ERR_LIB_PKCS7, ERR_R_BIO_LIB);
-        EVP_MD_free(fetched);
+        OPENSSL_BOX_EVP_MD_free(fetched);
         goto err;
     }
-    EVP_MD_free(fetched);
+    OPENSSL_BOX_EVP_MD_free(fetched);
     if (*pbio == NULL)
         *pbio = btmp;
     else if (!BIO_push(*pbio, btmp)) {
@@ -162,7 +162,7 @@ static int pkcs7_encode_rinfo(PKCS7_RECIP_INFO *ri,
     if (pctx == NULL)
         return 0;
 
-    if (EVP_PKEY_encrypt_init(pctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_encrypt_init(pctx) <= 0)
         goto err;
 
     if (EVP_PKEY_encrypt(pctx, NULL, &eklen, key, keylen) <= 0)
@@ -181,7 +181,7 @@ static int pkcs7_encode_rinfo(PKCS7_RECIP_INFO *ri,
     ret = 1;
 
  err:
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     OPENSSL_free(ek);
     return ret;
 
@@ -202,10 +202,10 @@ static int pkcs7_decrypt_rinfo(unsigned char **pek, int *peklen,
     if (pctx == NULL)
         return -1;
 
-    if (EVP_PKEY_decrypt_init(pctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_decrypt_init(pctx) <= 0)
         goto err;
 
-    if (EVP_PKEY_is_a(pkey, "RSA"))
+    if (OPENSSL_BOX_EVP_PKEY_is_a(pkey, "RSA"))
         /* upper layer pkcs7 code incorrectly assumes that a successful RSA
          * decryption means that the key matches ciphertext (which never
          * was the case, implicit rejection or not), so to make it work
@@ -224,7 +224,7 @@ static int pkcs7_decrypt_rinfo(unsigned char **pek, int *peklen,
     *peklen = (int)eklen;
 
  err:
-    EVP_PKEY_CTX_free(pctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(pctx);
     if (!ret)
         OPENSSL_free(ek);
 
@@ -322,21 +322,21 @@ BIO *PKCS7_dataInit(PKCS7 *p7, BIO *bio)
         int keylen, ivlen;
         EVP_CIPHER_CTX *ctx;
 
-        if ((btmp = BIO_new(BIO_f_cipher())) == NULL) {
+        if ((btmp = BIO_new(OPENSSL_BOX_BIO_f_cipher())) == NULL) {
             ERR_raise(ERR_LIB_PKCS7, ERR_R_BIO_LIB);
             goto err;
         }
         BIO_get_cipher_ctx(btmp, &ctx);
-        keylen = EVP_CIPHER_get_key_length(evp_cipher);
-        ivlen = EVP_CIPHER_get_iv_length(evp_cipher);
-        xalg->algorithm = OBJ_nid2obj(EVP_CIPHER_get_type(evp_cipher));
+        keylen = OPENSSL_BOX_EVP_CIPHER_get_key_length(evp_cipher);
+        ivlen = OPENSSL_BOX_EVP_CIPHER_get_iv_length(evp_cipher);
+        xalg->algorithm = OBJ_nid2obj(OPENSSL_BOX_EVP_CIPHER_get_type(evp_cipher));
         if (ivlen > 0)
             if (RAND_bytes_ex(libctx, iv, ivlen, 0) <= 0)
                 goto err;
 
         (void)ERR_set_mark();
         fetched_cipher = EVP_CIPHER_fetch(libctx,
-                                          EVP_CIPHER_get0_name(evp_cipher),
+                                          OPENSSL_BOX_EVP_CIPHER_get0_name(evp_cipher),
                                           propq);
         (void)ERR_pop_to_mark();
         if (fetched_cipher != NULL)
@@ -347,10 +347,10 @@ BIO *PKCS7_dataInit(PKCS7 *p7, BIO *bio)
         if (EVP_CipherInit_ex(ctx, cipher, NULL, NULL, NULL, 1) <= 0)
             goto err;
 
-        EVP_CIPHER_free(fetched_cipher);
+        OPENSSL_BOX_EVP_CIPHER_free(fetched_cipher);
         fetched_cipher = NULL;
 
-        if (EVP_CIPHER_CTX_rand_key(ctx, key) <= 0)
+        if (OPENSSL_BOX_EVP_CIPHER_CTX_rand_key(ctx, key) <= 0)
             goto err;
         if (EVP_CipherInit_ex(ctx, NULL, NULL, key, iv, 1) <= 0)
             goto err;
@@ -361,7 +361,7 @@ BIO *PKCS7_dataInit(PKCS7 *p7, BIO *bio)
                 if (xalg->parameter == NULL)
                     goto err;
             }
-            if (EVP_CIPHER_param_to_asn1(ctx, xalg->parameter) <= 0) {
+            if (OPENSSL_BOX_EVP_CIPHER_param_to_asn1(ctx, xalg->parameter) <= 0) {
                 ASN1_TYPE_free(xalg->parameter);
                 xalg->parameter = NULL;
                 goto err;
@@ -418,7 +418,7 @@ BIO *PKCS7_dataInit(PKCS7 *p7, BIO *bio)
 
  err:
     ASN1_OCTET_STRING_free(os);
-    EVP_CIPHER_free(fetched_cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(fetched_cipher);
     BIO_free_all(out);
     BIO_free_all(btmp);
     return NULL;
@@ -504,7 +504,7 @@ BIO *PKCS7_dataDecode(PKCS7 *p7, EVP_PKEY *pkey, BIO *in_bio, X509 *pcert)
         if (evp_cipher != NULL)
             cipher = evp_cipher;
         else
-            cipher = EVP_get_cipherbyname(name);
+            cipher = OPENSSL_BOX_EVP_get_cipherbyname(name);
 
         if (cipher == NULL) {
             (void)ERR_clear_last_mark();
@@ -525,7 +525,7 @@ BIO *PKCS7_dataDecode(PKCS7 *p7, EVP_PKEY *pkey, BIO *in_bio, X509 *pcert)
         if (evp_cipher != NULL)
             cipher = evp_cipher;
         else
-            cipher = EVP_get_cipherbyname(name);
+            cipher = OPENSSL_BOX_EVP_get_cipherbyname(name);
 
         if (cipher == NULL) {
             (void)ERR_clear_last_mark();
@@ -549,7 +549,7 @@ BIO *PKCS7_dataDecode(PKCS7 *p7, EVP_PKEY *pkey, BIO *in_bio, X509 *pcert)
     if (md_sk != NULL) {
         for (i = 0; i < sk_X509_ALGOR_num(md_sk); i++) {
             xa = sk_X509_ALGOR_value(md_sk, i);
-            if ((btmp = BIO_new(BIO_f_md())) == NULL) {
+            if ((btmp = BIO_new(OPENSSL_BOX_BIO_f_md())) == NULL) {
                 ERR_raise(ERR_LIB_PKCS7, ERR_R_BIO_LIB);
                 goto err;
             }
@@ -561,7 +561,7 @@ BIO *PKCS7_dataDecode(PKCS7 *p7, EVP_PKEY *pkey, BIO *in_bio, X509 *pcert)
             if (evp_md != NULL)
                 md = evp_md;
             else
-                md = EVP_get_digestbyname(name);
+                md = OPENSSL_BOX_EVP_get_digestbyname(name);
 
             if (md == NULL) {
                 (void)ERR_clear_last_mark();
@@ -570,12 +570,12 @@ BIO *PKCS7_dataDecode(PKCS7 *p7, EVP_PKEY *pkey, BIO *in_bio, X509 *pcert)
             }
             (void)ERR_pop_to_mark();
 
-            if (BIO_set_md(btmp, md) <= 0) {
-                EVP_MD_free(evp_md);
+            if (OPENSSL_BOX_BIO_set_md(btmp, md) <= 0) {
+                OPENSSL_BOX_EVP_MD_free(evp_md);
                 ERR_raise(ERR_LIB_PKCS7, ERR_R_BIO_LIB);
                 goto err;
             }
-            EVP_MD_free(evp_md);
+            OPENSSL_BOX_EVP_MD_free(evp_md);
             if (out == NULL)
                 out = btmp;
             else
@@ -585,7 +585,7 @@ BIO *PKCS7_dataDecode(PKCS7 *p7, EVP_PKEY *pkey, BIO *in_bio, X509 *pcert)
     }
 
     if (cipher != NULL) {
-        if ((etmp = BIO_new(BIO_f_cipher())) == NULL) {
+        if ((etmp = BIO_new(OPENSSL_BOX_BIO_f_cipher())) == NULL) {
             ERR_raise(ERR_LIB_PKCS7, ERR_R_BIO_LIB);
             goto err;
         }
@@ -624,7 +624,7 @@ BIO *PKCS7_dataDecode(PKCS7 *p7, EVP_PKEY *pkey, BIO *in_bio, X509 *pcert)
                 ri = sk_PKCS7_RECIP_INFO_value(rsk, i);
                 ri->ctx = p7_ctx;
                 if (pkcs7_decrypt_rinfo(&ek, &eklen, ri, pkey,
-                        EVP_CIPHER_get_key_length(cipher)) < 0)
+                        OPENSSL_BOX_EVP_CIPHER_get_key_length(cipher)) < 0)
                     goto err;
                 ERR_clear_error();
             }
@@ -640,17 +640,17 @@ BIO *PKCS7_dataDecode(PKCS7 *p7, EVP_PKEY *pkey, BIO *in_bio, X509 *pcert)
         BIO_get_cipher_ctx(etmp, &evp_ctx);
         if (EVP_CipherInit_ex(evp_ctx, cipher, NULL, NULL, NULL, 0) <= 0)
             goto err;
-        if (EVP_CIPHER_asn1_to_param(evp_ctx, enc_alg->parameter) <= 0)
+        if (OPENSSL_BOX_EVP_CIPHER_asn1_to_param(evp_ctx, enc_alg->parameter) <= 0)
             goto err;
         /* Generate random key as MMA defence */
-        len = EVP_CIPHER_CTX_get_key_length(evp_ctx);
+        len = OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(evp_ctx);
         if (len <= 0)
             goto err;
         tkeylen = (size_t)len;
         tkey = OPENSSL_malloc(tkeylen);
         if (tkey == NULL)
             goto err;
-        if (EVP_CIPHER_CTX_rand_key(evp_ctx, tkey) <= 0)
+        if (OPENSSL_BOX_EVP_CIPHER_CTX_rand_key(evp_ctx, tkey) <= 0)
             goto err;
         if (ek == NULL) {
             ek = tkey;
@@ -658,13 +658,13 @@ BIO *PKCS7_dataDecode(PKCS7 *p7, EVP_PKEY *pkey, BIO *in_bio, X509 *pcert)
             tkey = NULL;
         }
 
-        if (eklen != EVP_CIPHER_CTX_get_key_length(evp_ctx)) {
+        if (eklen != OPENSSL_BOX_EVP_CIPHER_CTX_get_key_length(evp_ctx)) {
             /*
              * Some S/MIME clients don't use the same key and effective key
              * length. The key length is determined by the size of the
              * decrypted RSA key.
              */
-            if (EVP_CIPHER_CTX_set_key_length(evp_ctx, eklen) <= 0) {
+            if (OPENSSL_BOX_EVP_CIPHER_CTX_set_key_length(evp_ctx, eklen) <= 0) {
                 /* Use random key as MMA defence */
                 OPENSSL_clear_free(ek, eklen);
                 ek = tkey;
@@ -704,11 +704,11 @@ BIO *PKCS7_dataDecode(PKCS7 *p7, EVP_PKEY *pkey, BIO *in_bio, X509 *pcert)
     }
     BIO_push(out, bio);
     bio = NULL;
-    EVP_CIPHER_free(evp_cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(evp_cipher);
     return out;
 
  err:
-    EVP_CIPHER_free(evp_cipher);
+    OPENSSL_BOX_EVP_CIPHER_free(evp_cipher);
     OPENSSL_clear_free(ek, eklen);
     OPENSSL_clear_free(tkey, tkeylen);
     BIO_free_all(out);
@@ -792,7 +792,7 @@ int PKCS7_dataFinal(PKCS7 *p7, BIO *bio)
         return 0;
     }
 
-    ctx_tmp = EVP_MD_CTX_new();
+    ctx_tmp = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx_tmp == NULL) {
         ERR_raise(ERR_LIB_PKCS7, ERR_R_EVP_LIB);
         return 0;
@@ -874,7 +874,7 @@ int PKCS7_dataFinal(PKCS7 *p7, BIO *bio)
             /*
              * We now have the EVP_MD_CTX, lets do the signing.
              */
-            if (!EVP_MD_CTX_copy_ex(ctx_tmp, mdc))
+            if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx_tmp, mdc))
                 goto err;
 
             sk = si->auth_attr;
@@ -888,7 +888,7 @@ int PKCS7_dataFinal(PKCS7 *p7, BIO *bio)
                     goto err;
             } else {
                 unsigned char *abuf = NULL;
-                unsigned int abuflen = EVP_PKEY_get_size(si->pkey);
+                unsigned int abuflen = OPENSSL_BOX_EVP_PKEY_get_size(si->pkey);
 
                 if (abuflen == 0 || (abuf = OPENSSL_malloc(abuflen)) == NULL)
                     goto err;
@@ -942,7 +942,7 @@ int PKCS7_dataFinal(PKCS7 *p7, BIO *bio)
     }
     ret = 1;
  err:
-    EVP_MD_CTX_free(ctx_tmp);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx_tmp);
     return ret;
 }
 
@@ -960,13 +960,13 @@ int PKCS7_SIGNER_INFO_sign(PKCS7_SIGNER_INFO *si)
     if (md == NULL)
         return 0;
 
-    mctx = EVP_MD_CTX_new();
+    mctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (mctx == NULL) {
         ERR_raise(ERR_LIB_PKCS7, ERR_R_EVP_LIB);
         goto err;
     }
 
-    if (EVP_DigestSignInit_ex(mctx, &pctx, EVP_MD_get0_name(md),
+    if (EVP_DigestSignInit_ex(mctx, &pctx, OPENSSL_BOX_EVP_MD_get0_name(md),
                               ossl_pkcs7_ctx_get0_libctx(ctx),
                               ossl_pkcs7_ctx_get0_propq(ctx), si->pkey,
                               NULL) <= 0)
@@ -976,7 +976,7 @@ int PKCS7_SIGNER_INFO_sign(PKCS7_SIGNER_INFO *si)
                          ASN1_ITEM_rptr(PKCS7_ATTR_SIGN));
     if (alen < 0 || abuf == NULL)
         goto err;
-    if (EVP_DigestSignUpdate(mctx, abuf, alen) <= 0)
+    if (OPENSSL_BOX_EVP_DigestSignUpdate(mctx, abuf, alen) <= 0)
         goto err;
     OPENSSL_free(abuf);
     abuf = NULL;
@@ -988,7 +988,7 @@ int PKCS7_SIGNER_INFO_sign(PKCS7_SIGNER_INFO *si)
     if (EVP_DigestSignFinal(mctx, abuf, &siglen) <= 0)
         goto err;
 
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
 
     ASN1_STRING_set0(si->enc_digest, abuf, (int)siglen);
 
@@ -996,7 +996,7 @@ int PKCS7_SIGNER_INFO_sign(PKCS7_SIGNER_INFO *si)
 
  err:
     OPENSSL_free(abuf);
-    EVP_MD_CTX_free(mctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(mctx);
     return 0;
 }
 
@@ -1077,7 +1077,7 @@ int PKCS7_signatureVerify(BIO *bio, PKCS7 *p7, PKCS7_SIGNER_INFO *si,
     OSSL_LIB_CTX *libctx = ossl_pkcs7_ctx_get0_libctx(ctx);
     const char *propq = ossl_pkcs7_ctx_get0_propq(ctx);
 
-    mdc_tmp = EVP_MD_CTX_new();
+    mdc_tmp = OPENSSL_BOX_EVP_MD_CTX_new();
     if (mdc_tmp == NULL) {
         ERR_raise(ERR_LIB_PKCS7, ERR_R_EVP_LIB);
         goto err;
@@ -1108,7 +1108,7 @@ int PKCS7_signatureVerify(BIO *bio, PKCS7 *p7, PKCS7_SIGNER_INFO *si,
          * Workaround for some broken clients that put the signature OID
          * instead of the digest OID in digest_alg->algorithm
          */
-        if (EVP_MD_get_pkey_type(EVP_MD_CTX_get0_md(mdc)) == md_type)
+        if (OPENSSL_BOX_EVP_MD_get_pkey_type(OPENSSL_BOX_EVP_MD_CTX_get0_md(mdc)) == md_type)
             break;
         btmp = BIO_next(btmp);
     }
@@ -1117,7 +1117,7 @@ int PKCS7_signatureVerify(BIO *bio, PKCS7 *p7, PKCS7_SIGNER_INFO *si,
      * mdc is the digest ctx that we want, unless there are attributes, in
      * which case the digest is the signed attributes
      */
-    if (!EVP_MD_CTX_copy_ex(mdc_tmp, mdc))
+    if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(mdc_tmp, mdc))
         goto err;
 
     sk = si->auth_attr;
@@ -1182,8 +1182,8 @@ int PKCS7_signatureVerify(BIO *bio, PKCS7 *p7, PKCS7_SIGNER_INFO *si,
     ret = 1;
  err:
     OPENSSL_free(abuf);
-    EVP_MD_CTX_free(mdc_tmp);
-    EVP_MD_free(fetched_md);
+    OPENSSL_BOX_EVP_MD_CTX_free(mdc_tmp);
+    OPENSSL_BOX_EVP_MD_free(fetched_md);
     return ret;
 }
 

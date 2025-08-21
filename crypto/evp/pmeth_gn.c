@@ -91,12 +91,12 @@ static int gen_init(EVP_PKEY_CTX *ctx, int operation)
     goto end;
 }
 
-int EVP_PKEY_paramgen_init(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_paramgen_init(EVP_PKEY_CTX *ctx)
 {
     return gen_init(ctx, EVP_PKEY_OP_PARAMGEN);
 }
 
-int EVP_PKEY_keygen_init(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_keygen_init(EVP_PKEY_CTX *ctx)
 {
     return gen_init(ctx, EVP_PKEY_OP_KEYGEN);
 }
@@ -125,7 +125,7 @@ static int ossl_callback_to_pkey_gencb(const OSSL_PARAM params[], void *arg)
     return ctx->pkey_gencb(ctx);
 }
 
-int EVP_PKEY_generate(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey)
+int OPENSSL_BOX_EVP_PKEY_generate(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey)
 {
     int ret = 0;
     EVP_PKEY *allocated_pkey = NULL;
@@ -142,7 +142,7 @@ int EVP_PKEY_generate(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey)
         goto not_initialized;
 
     if (*ppkey == NULL)
-        *ppkey = allocated_pkey = EVP_PKEY_new();
+        *ppkey = allocated_pkey = OPENSSL_BOX_EVP_PKEY_new();
 
     if (*ppkey == NULL) {
         ERR_raise(ERR_LIB_EVP, ERR_R_EVP_LIB);
@@ -236,7 +236,7 @@ int EVP_PKEY_generate(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey)
     if (ret <= 0) {
         if (allocated_pkey != NULL)
             *ppkey = NULL;
-        EVP_PKEY_free(allocated_pkey);
+        OPENSSL_BOX_EVP_PKEY_free(allocated_pkey);
     }
     return ret;
 
@@ -256,30 +256,30 @@ int EVP_PKEY_generate(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey)
 #endif
 }
 
-int EVP_PKEY_paramgen(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey)
+int OPENSSL_BOX_EVP_PKEY_paramgen(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey)
 {
     if (ctx->operation != EVP_PKEY_OP_PARAMGEN) {
         ERR_raise(ERR_LIB_EVP, EVP_R_OPERATION_NOT_INITIALIZED);
         return -1;
     }
-    return EVP_PKEY_generate(ctx, ppkey);
+    return OPENSSL_BOX_EVP_PKEY_generate(ctx, ppkey);
 }
 
-int EVP_PKEY_keygen(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey)
+int OPENSSL_BOX_EVP_PKEY_keygen(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey)
 {
     if (ctx->operation != EVP_PKEY_OP_KEYGEN) {
         ERR_raise(ERR_LIB_EVP, EVP_R_OPERATION_NOT_INITIALIZED);
         return -1;
     }
-    return EVP_PKEY_generate(ctx, ppkey);
+    return OPENSSL_BOX_EVP_PKEY_generate(ctx, ppkey);
 }
 
-void EVP_PKEY_CTX_set_cb(EVP_PKEY_CTX *ctx, EVP_PKEY_gen_cb *cb)
+void OPENSSL_BOX_EVP_PKEY_CTX_set_cb(EVP_PKEY_CTX *ctx, EVP_PKEY_gen_cb *cb)
 {
     ctx->pkey_gencb = cb;
 }
 
-EVP_PKEY_gen_cb *EVP_PKEY_CTX_get_cb(EVP_PKEY_CTX *ctx)
+EVP_PKEY_gen_cb *OPENSSL_BOX_EVP_PKEY_CTX_get_cb(EVP_PKEY_CTX *ctx)
 {
     return ctx->pkey_gencb;
 }
@@ -302,7 +302,7 @@ void evp_pkey_set_cb_translate(BN_GENCB *cb, EVP_PKEY_CTX *ctx)
     BN_GENCB_set(cb, trans_cb, ctx);
 }
 
-int EVP_PKEY_CTX_get_keygen_info(EVP_PKEY_CTX *ctx, int idx)
+int OPENSSL_BOX_EVP_PKEY_CTX_get_keygen_info(EVP_PKEY_CTX *ctx, int idx)
 {
     if (idx == -1)
         return ctx->keygen_info_count;
@@ -318,17 +318,17 @@ EVP_PKEY *EVP_PKEY_new_mac_key(int type, ENGINE *e,
 {
     EVP_PKEY_CTX *mac_ctx = NULL;
     EVP_PKEY *mac_key = NULL;
-    mac_ctx = EVP_PKEY_CTX_new_id(type, e);
+    mac_ctx = OPENSSL_BOX_EVP_PKEY_CTX_new_id(type, e);
     if (!mac_ctx)
         return NULL;
-    if (EVP_PKEY_keygen_init(mac_ctx) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_keygen_init(mac_ctx) <= 0)
         goto merr;
     if (EVP_PKEY_CTX_set_mac_key(mac_ctx, key, keylen) <= 0)
         goto merr;
-    if (EVP_PKEY_keygen(mac_ctx, &mac_key) <= 0)
+    if (OPENSSL_BOX_EVP_PKEY_keygen(mac_ctx, &mac_key) <= 0)
         goto merr;
  merr:
-    EVP_PKEY_CTX_free(mac_ctx);
+    OPENSSL_BOX_EVP_PKEY_CTX_free(mac_ctx);
     return mac_key;
 }
 
@@ -355,7 +355,7 @@ static int fromdata_init(EVP_PKEY_CTX *ctx, int operation)
     return -2;
 }
 
-int EVP_PKEY_fromdata_init(EVP_PKEY_CTX *ctx)
+int OPENSSL_BOX_EVP_PKEY_fromdata_init(EVP_PKEY_CTX *ctx)
 {
     return fromdata_init(ctx, EVP_PKEY_OP_FROMDATA);
 }
@@ -375,7 +375,7 @@ int EVP_PKEY_fromdata(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey, int selection,
         return -1;
 
     if (*ppkey == NULL)
-        allocated_pkey = *ppkey = EVP_PKEY_new();
+        allocated_pkey = *ppkey = OPENSSL_BOX_EVP_PKEY_new();
 
     if (*ppkey == NULL) {
         ERR_raise(ERR_LIB_EVP, ERR_R_EVP_LIB);
@@ -386,7 +386,7 @@ int EVP_PKEY_fromdata(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey, int selection,
     if (keydata == NULL) {
         if (allocated_pkey != NULL) {
             *ppkey = NULL;
-            EVP_PKEY_free(allocated_pkey);
+            OPENSSL_BOX_EVP_PKEY_free(allocated_pkey);
         }
         return 0;
     }
@@ -394,7 +394,7 @@ int EVP_PKEY_fromdata(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey, int selection,
     return 1;
 }
 
-const OSSL_PARAM *EVP_PKEY_fromdata_settable(EVP_PKEY_CTX *ctx, int selection)
+const OSSL_PARAM *OPENSSL_BOX_EVP_PKEY_fromdata_settable(EVP_PKEY_CTX *ctx, int selection)
 {
     /* We call fromdata_init to get ctx->keymgmt populated */
     if (fromdata_init(ctx, EVP_PKEY_OP_UNDEFINED) == 1)
@@ -412,7 +412,7 @@ static int ossl_pkey_todata_cb(const OSSL_PARAM params[], void *arg)
     return 1;
 }
 
-int EVP_PKEY_todata(const EVP_PKEY *pkey, int selection, OSSL_PARAM **params)
+int OPENSSL_BOX_EVP_PKEY_todata(const EVP_PKEY *pkey, int selection, OSSL_PARAM **params)
 {
     if (params == NULL)
         return 0;

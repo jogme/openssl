@@ -46,7 +46,7 @@ int HMAC_Init_ex(HMAC_CTX *ctx, const void *key, int len,
      * The HMAC construction is not allowed to be used with the
      * extendable-output functions (XOF) shake128 and shake256.
      */
-    if (EVP_MD_xof(md))
+    if (OPENSSL_BOX_EVP_MD_xof(md))
         return 0;
 
 #ifdef OPENSSL_HMAC_S390X
@@ -58,7 +58,7 @@ int HMAC_Init_ex(HMAC_CTX *ctx, const void *key, int len,
     if (key != NULL) {
         reset = 1;
 
-        j = EVP_MD_get_block_size(md);
+        j = OPENSSL_BOX_EVP_MD_get_block_size(md);
         if (!ossl_assert(j <= (int)sizeof(keytmp)))
             return 0;
         if (j < 0)
@@ -83,17 +83,17 @@ int HMAC_Init_ex(HMAC_CTX *ctx, const void *key, int len,
             pad[i] = 0x36 ^ keytmp[i];
         if (!EVP_DigestInit_ex(ctx->i_ctx, md, impl)
                 || !EVP_DigestUpdate(ctx->i_ctx, pad,
-                                     EVP_MD_get_block_size(md)))
+                                     OPENSSL_BOX_EVP_MD_get_block_size(md)))
             goto err;
 
         for (i = 0; i < HMAC_MAX_MD_CBLOCK_SIZE; i++)
             pad[i] = 0x5c ^ keytmp[i];
         if (!EVP_DigestInit_ex(ctx->o_ctx, md, impl)
                 || !EVP_DigestUpdate(ctx->o_ctx, pad,
-                                     EVP_MD_get_block_size(md)))
+                                     OPENSSL_BOX_EVP_MD_get_block_size(md)))
             goto err;
     }
-    if (!EVP_MD_CTX_copy_ex(ctx->md_ctx, ctx->i_ctx))
+    if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx->md_ctx, ctx->i_ctx))
         goto err;
     rv = 1;
  err:
@@ -141,7 +141,7 @@ int HMAC_Final(HMAC_CTX *ctx, unsigned char *md, unsigned int *len)
 
     if (!EVP_DigestFinal_ex(ctx->md_ctx, buf, &i))
         goto err;
-    if (!EVP_MD_CTX_copy_ex(ctx->md_ctx, ctx->o_ctx))
+    if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(ctx->md_ctx, ctx->o_ctx))
         goto err;
     if (!EVP_DigestUpdate(ctx->md_ctx, buf, i))
         goto err;
@@ -154,7 +154,7 @@ int HMAC_Final(HMAC_CTX *ctx, unsigned char *md, unsigned int *len)
 
 size_t HMAC_size(const HMAC_CTX *ctx)
 {
-    int size = EVP_MD_get_size((ctx)->md);
+    int size = OPENSSL_BOX_EVP_MD_get_size((ctx)->md);
 
     return (size < 0) ? 0 : size;
 }
@@ -174,9 +174,9 @@ HMAC_CTX *HMAC_CTX_new(void)
 
 static void hmac_ctx_cleanup(HMAC_CTX *ctx)
 {
-    EVP_MD_CTX_reset(ctx->i_ctx);
-    EVP_MD_CTX_reset(ctx->o_ctx);
-    EVP_MD_CTX_reset(ctx->md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_reset(ctx->i_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_reset(ctx->o_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_reset(ctx->md_ctx);
     ctx->md = NULL;
 
 #ifdef OPENSSL_HMAC_S390X
@@ -188,9 +188,9 @@ void HMAC_CTX_free(HMAC_CTX *ctx)
 {
     if (ctx != NULL) {
         hmac_ctx_cleanup(ctx);
-        EVP_MD_CTX_free(ctx->i_ctx);
-        EVP_MD_CTX_free(ctx->o_ctx);
-        EVP_MD_CTX_free(ctx->md_ctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(ctx->i_ctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(ctx->o_ctx);
+        OPENSSL_BOX_EVP_MD_CTX_free(ctx->md_ctx);
         OPENSSL_free(ctx);
     }
 }
@@ -198,15 +198,15 @@ void HMAC_CTX_free(HMAC_CTX *ctx)
 static int hmac_ctx_alloc_mds(HMAC_CTX *ctx)
 {
     if (ctx->i_ctx == NULL)
-        ctx->i_ctx = EVP_MD_CTX_new();
+        ctx->i_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx->i_ctx == NULL)
         return 0;
     if (ctx->o_ctx == NULL)
-        ctx->o_ctx = EVP_MD_CTX_new();
+        ctx->o_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx->o_ctx == NULL)
         return 0;
     if (ctx->md_ctx == NULL)
-        ctx->md_ctx = EVP_MD_CTX_new();
+        ctx->md_ctx = OPENSSL_BOX_EVP_MD_CTX_new();
     if (ctx->md_ctx == NULL)
         return 0;
     return 1;
@@ -226,11 +226,11 @@ int HMAC_CTX_copy(HMAC_CTX *dctx, HMAC_CTX *sctx)
 {
     if (!hmac_ctx_alloc_mds(dctx))
         goto err;
-    if (!EVP_MD_CTX_copy_ex(dctx->i_ctx, sctx->i_ctx))
+    if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(dctx->i_ctx, sctx->i_ctx))
         goto err;
-    if (!EVP_MD_CTX_copy_ex(dctx->o_ctx, sctx->o_ctx))
+    if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(dctx->o_ctx, sctx->o_ctx))
         goto err;
-    if (!EVP_MD_CTX_copy_ex(dctx->md_ctx, sctx->md_ctx))
+    if (!OPENSSL_BOX_EVP_MD_CTX_copy_ex(dctx->md_ctx, sctx->md_ctx))
         goto err;
     dctx->md = sctx->md;
 
@@ -250,12 +250,12 @@ unsigned char *HMAC(const EVP_MD *evp_md, const void *key, int key_len,
                     unsigned char *md, unsigned int *md_len)
 {
     static unsigned char static_md[EVP_MAX_MD_SIZE];
-    int size = EVP_MD_get_size(evp_md);
+    int size = OPENSSL_BOX_EVP_MD_get_size(evp_md);
     size_t temp_md_len = 0;
     unsigned char *ret = NULL;
 
     if (size > 0) {
-        ret = EVP_Q_mac(NULL, "HMAC", NULL, EVP_MD_get0_name(evp_md), NULL,
+        ret = EVP_Q_mac(NULL, "HMAC", NULL, OPENSSL_BOX_EVP_MD_get0_name(evp_md), NULL,
                         key, key_len, data, data_len,
                         md == NULL ? static_md : md, size, &temp_md_len);
         if (md_len != NULL)
@@ -266,9 +266,9 @@ unsigned char *HMAC(const EVP_MD *evp_md, const void *key, int key_len,
 
 void HMAC_CTX_set_flags(HMAC_CTX *ctx, unsigned long flags)
 {
-    EVP_MD_CTX_set_flags(ctx->i_ctx, flags);
-    EVP_MD_CTX_set_flags(ctx->o_ctx, flags);
-    EVP_MD_CTX_set_flags(ctx->md_ctx, flags);
+    OPENSSL_BOX_EVP_MD_CTX_set_flags(ctx->i_ctx, flags);
+    OPENSSL_BOX_EVP_MD_CTX_set_flags(ctx->o_ctx, flags);
+    OPENSSL_BOX_EVP_MD_CTX_set_flags(ctx->md_ctx, flags);
 }
 
 const EVP_MD *HMAC_CTX_get_md(const HMAC_CTX *ctx)

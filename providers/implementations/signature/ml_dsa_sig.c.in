@@ -73,7 +73,7 @@ static void ml_dsa_freectx(void *vctx)
 {
     PROV_ML_DSA_CTX *ctx = (PROV_ML_DSA_CTX *)vctx;
 
-    EVP_MD_CTX_free(ctx->md_ctx);
+    OPENSSL_BOX_EVP_MD_CTX_free(ctx->md_ctx);
     OPENSSL_cleanse(ctx->test_entropy, ctx->test_entropy_len);
     OPENSSL_free(ctx->sig);
     OPENSSL_free(ctx);
@@ -126,7 +126,7 @@ static void *ml_dsa_dupctx(void *vctx)
     }
 
     if (srcctx->md_ctx != NULL) {
-        dstctx->md_ctx = EVP_MD_CTX_dup(srcctx->md_ctx);
+        dstctx->md_ctx = OPENSSL_BOX_EVP_MD_CTX_dup(srcctx->md_ctx);
         if (dstctx->md_ctx == NULL) {
             ml_dsa_freectx(dstctx);
             return NULL;
