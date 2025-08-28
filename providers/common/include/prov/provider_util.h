@@ -79,8 +79,7 @@ int ossl_prov_digest_load_from_params(PROV_DIGEST *pd,
                                       const OSSL_PARAM params[],
                                       OSSL_LIB_CTX *ctx);
 int ossl_prov_digest_load(PROV_DIGEST *pd,const OSSL_PARAM *digest,
-                          const OSSL_PARAM *propq, const OSSL_PARAM *engine,
-                          OSSL_LIB_CTX *ctx);
+                          const OSSL_PARAM *propq, OSSL_LIB_CTX *ctx);
 
 /* Reset the PROV_DIGEST fields and free any allocated digest reference */
 void ossl_prov_digest_reset(PROV_DIGEST *pd);
