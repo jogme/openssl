@@ -12,9 +12,9 @@ on:
     paths:
       - 'crypto/comp/*.c'
       - '.github/workflows/windows_comp.yml'
-  push:
-    paths:
-      - '**.c'
+  #push:
+  #  paths:
+  #    - '**.c'
 
 permissions:
   contents: read
