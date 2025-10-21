@@ -78,7 +78,7 @@ jobs:
         ref: ${{ matrix.branch.openssl }}
         fetch-depth: 1
     - name: config
-      run: ./config --banner=Configured -fPIC --prefix=/opt/openssl no-docs no-threads shared -Wl,-rpath,/opt/openssl/lib64 && perl configdata.pm --dump
+      run: ./config --banner=Configured -fPIC --prefix=/opt/openssl no-docs shared -Wl,-rpath,/opt/openssl/lib64 && perl configdata.pm --dump
     - name: make
       run: |
         make -s -j4
