@@ -12,8 +12,12 @@
 #pragma once
 
 #include <openssl/x509_acert.h>
+#include "openssl/crypto.h"
+#include "openssl/safestack.h"
+#include "openssl/x509.h"
 
-#include <crypto/asn1.h>
+/* needed for _st definitions */
+#include "crypto/asn1.h" // IWYU pragma: keep
 
 #define OSSL_ODI_TYPE_PUBLIC_KEY 0
 #define OSSL_ODI_TYPE_PUBLIC_KEY_CERT 1

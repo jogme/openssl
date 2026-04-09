@@ -12,6 +12,7 @@
 #define OSSL_CRYPTO_SPARSE_ARRAY_H
 #pragma once
 
+#include <stddef.h>
 #include <openssl/e_os2.h>
 
 #ifdef __cplusplus

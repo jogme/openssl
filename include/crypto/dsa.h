@@ -12,7 +12,6 @@
 #pragma once
 
 #include <openssl/core.h>
-#include <openssl/dsa.h>
 #include "internal/ffc.h"
 
 /*

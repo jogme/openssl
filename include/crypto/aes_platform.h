@@ -11,7 +11,14 @@
 #define OSSL_AES_PLATFORM_H
 #pragma once
 
-#include <openssl/aes.h>
+#include <openssl/aes.h> // IWYU pragma: keep
+#ifdef VPAES_ASM
+#include <stddef.h> /* for size_t */
+#endif
+#ifdef AES_ASM
+#include <openssl/e_os2.h>
+// #include "crypto/aes/aes_local.h" /* ??jogme */
+#endif
 
 #ifdef VPAES_ASM
 int vpaes_set_encrypt_key(const unsigned char *userKey, int bits,
@@ -172,7 +179,7 @@ void gcm_ghash_v8(u64 Xi[2], const u128 Htable[16], const u8 *inp, size_t len);
 #endif
 
 #if defined(__loongarch__) || defined(__loongarch64)
-#include "loongarch_arch.h"
+#include "loongarch_arch.h" /* ??jogme */
 #if defined(VPAES_ASM)
 #define VPAES_CAPABLE (OPENSSL_loongarch_hwcap_P & LOONGARCH_HWCAP_LSX)
 #endif

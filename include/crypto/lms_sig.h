@@ -19,6 +19,8 @@
 #define OSSL_CRYPTO_LMS_SIG_H
 #pragma once
 #ifndef OPENSSL_NO_LMS
+#include <stdint.h>
+#include <stddef.h>
 #include "lms.h"
 #include "internal/packet.h"
 

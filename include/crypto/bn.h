@@ -9,6 +9,8 @@
 
 #ifndef OSSL_CRYPTO_BN_H
 #define OSSL_CRYPTO_BN_H
+#include <stddef.h>
+#include <stdint.h>
 #pragma once
 
 #include <openssl/bn.h>

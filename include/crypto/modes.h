@@ -9,6 +9,8 @@
 
 /* This header can move into provider when legacy support is removed */
 #include <openssl/modes.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #if (defined(_WIN32) || defined(_WIN64)) && !defined(__MINGW32__)
 typedef __int64 i64;

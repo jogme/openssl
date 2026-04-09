@@ -9,10 +9,18 @@
 
 /* @brief Internal LMS helper functions */
 
-#include "internal/packet.h"
-#include <openssl/params.h>
-#include <openssl/core_names.h>
-#include <openssl/evp.h>
+#ifndef OSSL_CRYPTO_LMS_UTIL_H
+#define OSSL_CRYPTO_LMS_UTIL_H
+#pragma once
+#ifndef OPENSSL_NO_LMS
+#include <string.h>
+
+#include "lms.h"
+#include "openssl/e_os2.h"
+#include <stdint.h>
+#include "openssl/params.h"
+#include "openssl/core_names.h"
+#include "openssl/evp.h"
 
 /*
  * This LMS implementation assumes that the hash algorithm must be the same for
@@ -50,3 +58,5 @@ static ossl_unused ossl_inline int lms_evp_md_ctx_init(EVP_MD_CTX *ctx, const EV
     }
     return EVP_DigestInit_ex2(ctx, md, p);
 }
+#endif
+#endif

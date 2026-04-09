@@ -13,13 +13,13 @@
 #define OSSL_CRYPTO_ECX_H
 #pragma once
 
+#ifndef OPENSSL_NO_ECX
 #include <openssl/opensslconf.h>
 
-#ifndef OPENSSL_NO_ECX
+#include <stddef.h>
+#include <stdint.h>
 
 #include <openssl/core.h>
-#include <openssl/e_os2.h>
-#include <openssl/crypto.h>
 #include "internal/refcount.h"
 #include "crypto/types.h"
 

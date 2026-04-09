@@ -7,6 +7,11 @@
  * https://www.openssl.org/source/license.html
  */
 
+#ifndef OSSL_CRYPTO_OBJECTS_H
+#define OSSL_CRYPTO_OBJECTS_H
+#pragma once
 #include <openssl/objects.h>
 
 void ossl_obj_cleanup_int(void);
+
+#endif

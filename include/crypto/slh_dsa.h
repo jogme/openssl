@@ -13,9 +13,11 @@
 #define OSSL_CRYPTO_SLH_DSA_H
 
 #pragma once
+
+#include <stdint.h>
+#include <stddef.h>
 #include <openssl/e_os2.h>
 #include <openssl/types.h>
-#include "crypto/types.h"
 
 #define SLH_DSA_MAX_CONTEXT_STRING_LEN 255
 #define SLH_DSA_MAX_N 32

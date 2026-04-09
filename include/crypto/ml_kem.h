@@ -11,10 +11,11 @@
 #define OPENSSL_HEADER_ML_KEM_H
 #pragma once
 
+#include <stddef.h>
+#include <stdint.h>
+#include "openssl/obj_mac.h"
+#include "openssl/crypto.h"
 #include <openssl/e_os2.h>
-#include <openssl/bio.h>
-#include <openssl/core_dispatch.h>
-#include <crypto/evp.h>
 
 #define ML_KEM_DEGREE 256
 /*

@@ -7,7 +7,14 @@
  * https://www.openssl.org/source/license.html
  */
 
+#ifndef OSSL_CRYPTO_SIV_H
+#define OSSL_CRYPTO_SIV_H
+#pragma once
+
 #ifndef OPENSSL_NO_SIV
+
+#include <stddef.h>
+#include "openssl/evp.h"
 
 typedef struct siv128_context SIV128_CONTEXT;
 
@@ -31,3 +38,4 @@ int ossl_siv128_cleanup(SIV128_CONTEXT *ctx);
 int ossl_siv128_speed(SIV128_CONTEXT *ctx, int arg);
 
 #endif /* OPENSSL_NO_SIV */
+#endif /* OSSL_CRYPTO_SIV_H */

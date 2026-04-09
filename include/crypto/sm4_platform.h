@@ -11,6 +11,9 @@
 #define OSSL_SM4_PLATFORM_H
 #pragma once
 
+#include <stddef.h>
+#include "crypto/sm4.h"
+
 #if defined(OPENSSL_CPUID_OBJ)
 #if defined(__aarch64__) || defined(_M_ARM64)
 #include "arm_arch.h"
@@ -55,7 +58,6 @@ void rv64i_zvksed_sm4_cbc_decrypt(const unsigned char *in, unsigned char *out,
     unsigned char *iv, int enc);
 #elif (defined(__x86_64) || defined(__x86_64__) || defined(_M_AMD64) || defined(_M_X64))
 /* Intel x86_64 support */
-#include "internal/cryptlib.h"
 #define HWSM4_CAPABLE_X86_64 \
     ((OPENSSL_ia32cap_P[2] & (1 << 5)) && (OPENSSL_ia32cap_P[5] & (1 << 2)))
 int hw_x86_64_sm4_set_key(const unsigned char *userKey, SM4_KEY *key);

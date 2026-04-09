@@ -19,6 +19,9 @@
 #define OSSL_CRYPTO_RAND_H
 #pragma once
 
+#include <stddef.h>
+#include <stdint.h>
+
 #include <openssl/rand.h>
 #include "crypto/rand_pool.h"
 

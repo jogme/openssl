@@ -7,7 +7,13 @@
  * https://www.openssl.org/source/license.html
  */
 
+#ifndef OSSL_CRYPTO_BN_SRP_H
+#define OSSL_CRYPTO_BN_SRP_H
+#pragma once
+
 #ifndef OPENSSL_NO_SRP
+
+#include "openssl/types.h"
 
 extern const BIGNUM ossl_bn_group_1024;
 
@@ -29,4 +35,5 @@ extern const BIGNUM ossl_bn_generator_5;
 
 extern const BIGNUM ossl_bn_generator_2;
 
+#endif
 #endif

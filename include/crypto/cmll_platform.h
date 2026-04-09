@@ -12,6 +12,7 @@
 #pragma once
 
 #if defined(CMLL_ASM) && (defined(__sparc) || defined(__sparc__))
+#include <stddef.h>
 
 /* Fujitsu SPARC64 X support */
 #include "crypto/sparc_arch.h"

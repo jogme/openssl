@@ -11,6 +11,11 @@
 #define OSSL_CRYPTO_ESS_H
 #pragma once
 
+#include "openssl/x509v3.h" /* for GENERAL_NAME */
+#include "openssl/ess.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+
 /*-
  * IssuerSerial ::= SEQUENCE {
  *        issuer                  GeneralNames,

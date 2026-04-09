@@ -13,9 +13,10 @@
 #define OSSL_CRYPTO_ML_DSA_H
 
 #pragma once
+#include <stddef.h>
+#include <stdint.h>
 #include <openssl/e_os2.h>
 #include <openssl/types.h>
-#include "crypto/types.h"
 
 #define ML_DSA_MAX_CONTEXT_STRING_LEN 255
 #define ML_DSA_SEED_BYTES 32

@@ -12,6 +12,7 @@
 #define OSSL_CRYPTO_SHA_H
 #pragma once
 
+#include <stddef.h>
 #include <openssl/sha.h>
 
 #ifndef OPENSSL_NO_DEPRECATED_3_0
