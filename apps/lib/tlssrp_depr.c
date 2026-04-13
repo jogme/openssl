@@ -20,9 +20,14 @@
 #include <openssl/bio.h>
 #include <openssl/ssl.h>
 #include <openssl/srp.h>
+#include <stddef.h>
+
 #include "apps_ui.h"
 #include "apps.h"
 #include "s_apps.h"
+#include "openssl/crypto.h"
+#include "openssl/ssl3.h"
+#include "openssl/types.h"
 
 static int srp_Verify_N_and_g(const BIGNUM *N, const BIGNUM *g)
 {

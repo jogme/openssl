@@ -10,7 +10,12 @@
 #include <string.h>
 #include <openssl/err.h>
 #include <openssl/ui.h>
+#include <stdlib.h>
+
 #include "apps_ui.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 static UI_METHOD *ui_method = NULL;
 static const UI_METHOD *ui_base_method = NULL;

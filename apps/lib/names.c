@@ -7,11 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <string.h>
 #include <openssl/bio.h>
 #include <openssl/safestack.h>
+
 #include "names.h"
-#include "internal/e_os.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 int name_cmp(const char *const *a, const char *const *b)
 {

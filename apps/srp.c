@@ -14,19 +14,19 @@
 /* SRP is deprecated, so we're going to have to use some deprecated APIs */
 #define OPENSSL_SUPPRESS_DEPRECATED
 
-#include <openssl/opensslconf.h>
-
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <openssl/conf.h>
 #include <openssl/bio.h>
 #include <openssl/err.h>
 #include <openssl/txt_db.h>
-#include <openssl/buffer.h>
 #include <openssl/srp.h>
+
 #include "apps.h"
 #include "progs.h"
+#include "apps_ui.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 #define BASE_SECTION "srp"
 #define CONFIG_FILE "openssl.cnf"

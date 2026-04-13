@@ -8,7 +8,7 @@
  */
 
 #include <string.h>
-#include "apps.h"
+
 #include "function.h"
 
 void calculate_columns(FUNCTION *functions, DISPLAY_COLUMNS *dc)

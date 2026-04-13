@@ -10,9 +10,16 @@
 /* We need to use some deprecated APIs */
 #include "internal/nelem.h"
 #include "openssl/bio.h"
-#define OPENSSL_SUPPRESS_DEPRECATED
+#include "app_libctx.h"
+#include "function.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/types.h"
 
-#include "internal/e_os.h"
+#define OPENSSL_SUPPRESS_DEPRECATED
 
 #include <string.h>
 #include <openssl/evp.h>
@@ -25,9 +32,11 @@
 #include <openssl/store.h>
 #include <openssl/core_names.h>
 #include <openssl/rand.h>
-#include <openssl/safestack.h>
 #include <openssl/ssl.h>
 #include <openssl/tls1.h>
+#include <openssl/params.h>
+#include <stdint.h>
+
 #include "apps.h"
 #include "app_params.h"
 #include "progs.h"
@@ -110,6 +119,7 @@ static void legacy_cipher_fn(const EVP_CIPHER *c,
 #endif
 
 DEFINE_STACK_OF(EVP_CIPHER)
+
 static int cipher_cmp(const EVP_CIPHER *const *a,
     const EVP_CIPHER *const *b)
 {
@@ -196,6 +206,7 @@ static void legacy_md_fn(const EVP_MD *m,
 #endif
 
 DEFINE_STACK_OF(EVP_MD)
+
 static int md_cmp(const EVP_MD *const *a, const EVP_MD *const *b)
 {
     return strcmp(OSSL_PROVIDER_get0_name(EVP_MD_get0_provider(*a)),
@@ -265,6 +276,7 @@ static void list_digests(const char *prefix)
 }
 
 DEFINE_STACK_OF(EVP_MAC)
+
 static int mac_cmp(const EVP_MAC *const *a, const EVP_MAC *const *b)
 {
     return strcmp(OSSL_PROVIDER_get0_name(EVP_MAC_get0_provider(*a)),
@@ -329,6 +341,7 @@ static void list_macs(void)
  * KDFs and PRFs
  */
 DEFINE_STACK_OF(EVP_KDF)
+
 static int kdf_cmp(const EVP_KDF *const *a, const EVP_KDF *const *b)
 {
     return strcmp(OSSL_PROVIDER_get0_name(EVP_KDF_get0_provider(*a)),
@@ -524,6 +537,7 @@ static void list_random_instances(void)
  * Encoders
  */
 DEFINE_STACK_OF(OSSL_ENCODER)
+
 static int encoder_cmp(const OSSL_ENCODER *const *a,
     const OSSL_ENCODER *const *b)
 {
@@ -590,6 +604,7 @@ static void list_encoders(void)
  * Decoders
  */
 DEFINE_STACK_OF(OSSL_DECODER)
+
 static int decoder_cmp(const OSSL_DECODER *const *a,
     const OSSL_DECODER *const *b)
 {
@@ -653,6 +668,7 @@ static void list_decoders(void)
 }
 
 DEFINE_STACK_OF(EVP_KEYMGMT)
+
 static int keymanager_cmp(const EVP_KEYMGMT *const *a,
     const EVP_KEYMGMT *const *b)
 {
@@ -717,6 +733,7 @@ static void list_keymanagers(void)
 }
 
 DEFINE_STACK_OF(EVP_SKEYMGMT)
+
 static int skeymanager_cmp(const EVP_SKEYMGMT *const *a,
     const EVP_SKEYMGMT *const *b)
 {
@@ -771,6 +788,7 @@ static void list_skeymanagers(void)
 }
 
 DEFINE_STACK_OF(EVP_SIGNATURE)
+
 static int signature_cmp(const EVP_SIGNATURE *const *a,
     const EVP_SIGNATURE *const *b)
 {
@@ -916,6 +934,7 @@ static void list_tls_signatures(void)
 }
 
 DEFINE_STACK_OF(EVP_KEM)
+
 static int kem_cmp(const EVP_KEM *const *a,
     const EVP_KEM *const *b)
 {
@@ -976,6 +995,7 @@ static void list_kems(void)
 }
 
 DEFINE_STACK_OF(EVP_ASYM_CIPHER)
+
 static int asymcipher_cmp(const EVP_ASYM_CIPHER *const *a,
     const EVP_ASYM_CIPHER *const *b)
 {
@@ -1038,6 +1058,7 @@ static void list_asymciphers(void)
 }
 
 DEFINE_STACK_OF(EVP_KEYEXCH)
+
 static int kex_cmp(const EVP_KEYEXCH *const *a,
     const EVP_KEYEXCH *const *b)
 {
@@ -1274,6 +1295,7 @@ static void list_pkey_meth(void)
 }
 
 DEFINE_STACK_OF(OSSL_STORE_LOADER)
+
 static int store_cmp(const OSSL_STORE_LOADER *const *a,
     const OSSL_STORE_LOADER *const *b)
 {
@@ -1333,6 +1355,7 @@ static void list_store_loaders(void)
 }
 
 DEFINE_STACK_OF(OSSL_PROVIDER)
+
 static int provider_cmp(const OSSL_PROVIDER *const *a,
     const OSSL_PROVIDER *const *b)
 {

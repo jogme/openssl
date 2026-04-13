@@ -8,18 +8,23 @@
  */
 
 #include <string.h>
-#include <openssl/opensslconf.h>
 #include <openssl/evp.h>
 #include <openssl/encoder.h>
 #include <openssl/decoder.h>
 #include <openssl/core_names.h>
 #include <openssl/core_dispatch.h>
-#include <openssl/params.h>
 #include <openssl/err.h>
+#include <assert.h>
 
 #include "apps.h"
 #include "progs.h"
 #include "ec_common.h"
+#include "apps_ui.h"
+#include "fmt.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 typedef enum OPTION_choice {
     OPT_COMMON,

@@ -7,11 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include "apps.h"
-#include "progs.h"
 #include <openssl/bio.h>
 #include <openssl/asn1.h>
 #include <openssl/err.h>
@@ -21,11 +17,20 @@
 #include <openssl/x509v3.h>
 #include <openssl/objects.h>
 #include <openssl/pem.h>
-#include <openssl/rsa.h>
-#ifndef OPENSSL_NO_DSA
-#include <openssl/dsa.h>
-#endif
-#include "internal/e_os.h" /* For isatty() */
+#include <time.h>
+#include <unistd.h>
+
+#include "apps.h"
+#include "progs.h"
+#include "app_libctx.h"
+#include "fmt.h"
+#include "openssl/conf.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 #undef POSTFIX
 #define POSTFIX ".srl"

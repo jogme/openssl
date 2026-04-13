@@ -11,22 +11,28 @@
  * This file is also used by the test suite. Do not #include "apps.h".
  */
 #include "opt.h"
-#include "fmt.h"
-#include "app_libctx.h"
-#include "internal/nelem.h"
-#include "internal/numbers.h"
-#include <string.h>
-#if !defined(OPENSSL_SYS_MSDOS)
-#include <unistd.h>
-#endif
 
+#include <string.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <ctype.h>
 #include <limits.h>
 #include <openssl/err.h>
 #include <openssl/bio.h>
 #include <openssl/x509v3.h>
+#include <inttypes.h>
+#include <openssl/x509.h>
+#include <time.h>
+
+#include "fmt.h"
+#include "app_libctx.h"
+#include "internal/nelem.h"
+#include "internal/numbers.h"
+#include "openssl/asn1.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/objects.h"
+#include "openssl/types.h"
 
 #define MAX_OPT_HELP_WIDTH 30
 const char OPT_HELP_STR[] = "-H";
@@ -1226,6 +1232,7 @@ void opt_help(const OPTIONS *list)
 /* opt_isdir section */
 #ifdef _WIN32
 #include <windows.h>
+
 int opt_isdir(const char *name)
 {
     DWORD attr;

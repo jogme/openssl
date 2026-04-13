@@ -7,20 +7,28 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "apps.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "progs.h"
 #include <openssl/bio.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/objects.h>
-#include <openssl/x509.h>
-#include <openssl/pem.h>
-#include <openssl/hmac.h>
 #include <ctype.h>
-#include <sys/stat.h>
+#include <stdint.h>
+#include <sys/mman.h>
+#include <unistd.h>
+
+#include "apps.h"
+#include "progs.h"
+#include "app_libctx.h"
+#include "fmt.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 #undef BUFSIZE
 #define BUFSIZE 1024 * 8

@@ -8,19 +8,21 @@
  */
 
 #include <string.h>
+#include <openssl/bio.h>
+#include <openssl/evp.h>
+#include <openssl/rand.h>
+#include <openssl/md5.h>
+#include <openssl/sha.h>
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "apps.h"
 #include "progs.h"
-
-#include <openssl/bio.h>
-#include <openssl/err.h>
-#include <openssl/evp.h>
-#include <openssl/rand.h>
-#if !defined(OPENSSL_NO_DES) && !defined(OPENSSL_NO_DEPRECATED_3_0)
-#include <openssl/des.h>
-#endif
-#include <openssl/md5.h>
-#include <openssl/sha.h>
+#include "fmt.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 static const unsigned char cov_2char[64] = {
     /* from crypto/des/fcrypt.c */

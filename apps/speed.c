@@ -24,31 +24,45 @@
 
 /* We need to use some deprecated APIs */
 #define OPENSSL_SUPPRESS_DEPRECATED
-#include "internal/e_os.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
-#include "apps.h"
-#include "progs.h"
-#include "internal/nelem.h"
-#include "internal/numbers.h"
 #include <openssl/crypto.h>
 #include <openssl/rand.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
-#include <openssl/objects.h>
 #include <openssl/core_names.h>
 #include <openssl/async.h>
 #include <openssl/prov_ssl.h>
 #include <openssl/provider.h>
+#include <openssl/params.h>
+#include <errno.h>
+#include <limits.h>
+#include <signal.h>
+#include <stdint.h>
+#include <sys/select.h>
+
+#include "apps.h"
+#include "progs.h"
+#include "internal/nelem.h"
+#include "app_libctx.h"
+#include "internal/common.h"
+#include "openssl/bio.h"
+#include "openssl/conf.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/sha.h"
+#include "openssl/types.h"
+#include "opt.h"
 #if !defined(OPENSSL_SYS_MSDOS)
 #include <unistd.h>
 #endif
 
 #if defined(_WIN32)
 #include <windows.h>
+
 /*
  * While VirtualLock is available under the app partition (e.g. UWP),
  * the headers do not define the API. Define it ourselves instead.
@@ -67,14 +81,14 @@ BOOL
 
 #include <openssl/bn.h>
 #include <openssl/rsa.h>
+
 #include "./testrsa.h"
 #ifndef OPENSSL_NO_DH
 #include <openssl/dh.h>
 #endif
-#include <openssl/x509.h>
 #include <openssl/dsa.h>
+
 #include "./testdsa.h"
-#include <openssl/modes.h>
 
 #ifndef HAVE_FORK
 #if defined(OPENSSL_SYS_VMS) || defined(OPENSSL_SYS_WINDOWS) || defined(OPENSSL_SYS_VXWORKS)

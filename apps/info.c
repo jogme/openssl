@@ -8,8 +8,12 @@
  */
 
 #include <openssl/crypto.h>
+#include <stddef.h>
+
 #include "apps.h"
 #include "progs.h"
+#include "openssl/bio.h"
+#include "opt.h"
 
 typedef enum OPTION_choice {
     OPT_COMMON,

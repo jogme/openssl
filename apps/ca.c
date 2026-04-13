@@ -6,8 +6,6 @@
  * in the file LICENSE in the source distribution or at
  * https://www.openssl.org/source/license.html
  */
-#include "internal/e_os.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,8 +22,8 @@
 #include <openssl/objects.h>
 #include <openssl/ocsp.h>
 #include <openssl/pem.h>
-
-#include <crypto/asn1.h>
+#include <limits.h>
+#include <unistd.h>
 
 #ifndef W_OK
 #ifdef OPENSSL_SYS_VMS
@@ -37,6 +35,16 @@
 
 #include "apps.h"
 #include "progs.h"
+#include "app_libctx.h"
+#include "fmt.h"
+#include "internal/nelem.h"
+#include "openssl/asn1.h"
+#include "openssl/crypto.h"
+#include "openssl/lhash.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 #ifndef W_OK
 #define F_OK 0

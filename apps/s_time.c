@@ -10,22 +10,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
+#include <time.h>
 
-#include <openssl/opensslconf.h>
+#include "openssl/bio.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 #ifndef OPENSSL_NO_SOCK
 
-#include "apps.h"
-#include "progs.h"
 #include <openssl/x509.h>
 #include <openssl/ssl.h>
-#include <openssl/pem.h>
-#include "s_apps.h"
 #include <openssl/err.h>
-#include "internal/sockets.h"
-#if !defined(OPENSSL_SYS_MSDOS)
-#include <unistd.h>
-#endif
+
+#include "apps.h"
+#include "progs.h"
+#include "s_apps.h"
 
 #define SSL_CONNECT_NAME "localhost:4433"
 
