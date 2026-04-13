@@ -18,6 +18,10 @@
 #define HEADER_TLS1_H
 #endif
 
+#include <stdint.h>
+#include <stddef.h>
+#include "openssl/e_os2.h"
+#include "openssl/safestack.h"
 #include <openssl/buffer.h>
 #include <openssl/x509.h>
 #include <openssl/prov_ssl.h>

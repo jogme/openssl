@@ -11,7 +11,7 @@
 #define OPENSSL_OPENSSLCONF_H
 #pragma once
 
-#include <openssl/configuration.h>
-#include <openssl/macros.h>
+#include <openssl/configuration.h> // IWYU pragma: keep
+#include <openssl/macros.h> // IWYU pragma: keep
 
 #endif /* OPENSSL_OPENSSLCONF_H */

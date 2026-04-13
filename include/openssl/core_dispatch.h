@@ -11,9 +11,12 @@
 #define OPENSSL_CORE_NUMBERS_H
 #pragma once
 
+#include <stdint.h>
+#include <stddef.h>
 #include <stdarg.h>
 #include <openssl/core.h>
 #include <openssl/indicator.h>
+#include "openssl/e_os2.h"
 
 #ifdef __cplusplus
 extern "C" {

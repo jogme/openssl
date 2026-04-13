@@ -12,7 +12,9 @@
 #define OPENSSL_PARAM_BUILD_H
 #pragma once
 
-#include <openssl/params.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <time.h>
 #include <openssl/types.h>
 
 #ifdef __cplusplus

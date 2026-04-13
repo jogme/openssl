@@ -17,6 +17,7 @@
 #endif
 
 #include <stdarg.h>
+#include <stdint.h>
 
 #ifndef OPENSSL_NO_STDIO
 #include <stdio.h>
@@ -29,7 +30,9 @@
 #include <openssl/symhacks.h>
 #include <openssl/bio.h>
 #include <openssl/evperr.h>
-#include <openssl/params.h>
+#include "openssl/obj_mac.h"
+#include "openssl/e_os2.h"
+#include "openssl/crypto.h"
 
 #define EVP_MAX_MD_SIZE 64 /* longest known is SHA512 */
 #define EVP_MAX_KEY_LENGTH 64

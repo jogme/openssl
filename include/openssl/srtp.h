@@ -22,6 +22,9 @@
 #define HEADER_D1_SRTP_H
 #endif
 
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
+#include "openssl/safestack.h"
 #include <openssl/ssl.h>
 
 #ifdef __cplusplus

@@ -16,8 +16,10 @@
 #define HEADER_PEM_H
 #endif
 
-#include <openssl/e_os2.h>
-#include <openssl/bio.h>
+#include "openssl/pkcs7.h"
+#include "openssl/ec.h"
+#include "openssl/crypto.h"
+#include "openssl/asn1.h"
 #include <openssl/safestack.h>
 #include <openssl/evp.h>
 #include <openssl/x509.h>

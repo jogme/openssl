@@ -17,6 +17,7 @@
 #define HEADER_EC_H
 #endif
 
+#include "openssl/crypto.h"
 #include <openssl/opensslconf.h>
 #include <openssl/types.h>
 
@@ -95,7 +96,6 @@ const char *OSSL_EC_curve_nid2name(int nid);
 #include <openssl/asn1.h>
 #include <openssl/symhacks.h>
 #ifndef OPENSSL_NO_DEPRECATED_1_1_0
-#include <openssl/bn.h>
 #endif
 #include <openssl/ecerr.h>
 
@@ -103,7 +103,6 @@ const char *OSSL_EC_curve_nid2name(int nid);
 #define OPENSSL_ECC_MAX_FIELD_BITS 661
 #endif
 
-#include <openssl/params.h>
 #ifndef OPENSSL_NO_DEPRECATED_3_0
 typedef struct ec_method_st EC_METHOD;
 #endif

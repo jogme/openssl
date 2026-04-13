@@ -13,6 +13,7 @@
 
 #include <openssl/macros.h>
 #include <openssl/ssl.h>
+#include "openssl/e_os2.h"
 
 #ifndef OPENSSL_NO_QUIC
 

@@ -41,12 +41,10 @@
 #define HEADER_SEED_H
 #endif
 
+#include <stddef.h>
 #include <openssl/opensslconf.h>
 
 #ifndef OPENSSL_NO_SEED
-#include <openssl/e_os2.h>
-#include <openssl/crypto.h>
-#include <sys/types.h>
 
 #ifdef __cplusplus
 extern "C" {

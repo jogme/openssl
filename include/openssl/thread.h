@@ -11,6 +11,7 @@
 #ifndef OPENSSL_THREAD_H
 #define OPENSSL_THREAD_H
 
+#include <stdint.h>
 #define OSSL_THREAD_SUPPORT_FLAG_THREAD_POOL (1U << 0)
 #define OSSL_THREAD_SUPPORT_FLAG_DEFAULT_SPAWN (1U << 1)
 

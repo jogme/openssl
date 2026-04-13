@@ -14,7 +14,7 @@
 
 #include <openssl/opensslconf.h>
 #include <openssl/symhacks.h>
-#include <openssl/sslerr_legacy.h>
+#include <openssl/sslerr_legacy.h> // IWYU pragma: keep
 
 /*
  * SSL reason codes.

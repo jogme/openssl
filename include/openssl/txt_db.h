@@ -17,9 +17,9 @@
 #endif
 
 #include <openssl/opensslconf.h>
-#include <openssl/bio.h>
 #include <openssl/safestack.h>
 #include <openssl/lhash.h>
+#include "openssl/types.h"
 
 #define DB_ERROR_OK 0
 #define DB_ERROR_MALLOC 1

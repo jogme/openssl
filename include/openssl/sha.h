@@ -16,7 +16,6 @@
 #define HEADER_SHA_H
 #endif
 
-#include <openssl/e_os2.h>
 #include <stddef.h>
 
 #ifdef __cplusplus

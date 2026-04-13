@@ -16,8 +16,6 @@
 #define HEADER_SYMHACKS_H
 #endif
 
-#include <openssl/e_os2.h>
-
 /* Case insensitive linking causes problems.... */
 #if defined(OPENSSL_SYS_VMS)
 #undef ERR_load_CRYPTO_strings

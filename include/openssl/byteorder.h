@@ -9,6 +9,7 @@
 
 #ifndef OPENSSL_BYTEORDER_H
 #define OPENSSL_BYTEORDER_H
+#include <stdint.h>
 #pragma once
 
 #include <openssl/e_os2.h>

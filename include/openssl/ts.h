@@ -19,17 +19,12 @@
 #include <openssl/opensslconf.h>
 
 #ifndef OPENSSL_NO_TS
+#include "openssl/types.h"
+#include "openssl/pkcs7.h"
 #include <openssl/symhacks.h>
-#include <openssl/buffer.h>
-#include <openssl/evp.h>
-#include <openssl/bio.h>
 #include <openssl/asn1.h>
 #include <openssl/safestack.h>
-#include <openssl/rsa.h>
-#include <openssl/dsa.h>
-#include <openssl/dh.h>
 #include <openssl/tserr.h>
-#include <openssl/ess.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 #ifndef OPENSSL_NO_STDIO

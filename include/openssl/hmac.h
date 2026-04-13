@@ -16,8 +16,11 @@
 #define HEADER_HMAC_H
 #endif
 
+#include <stddef.h>
+
 #include <openssl/opensslconf.h>
 
+#include "openssl/e_os2.h"
 #include <openssl/evp.h>
 
 #ifndef OPENSSL_NO_DEPRECATED_3_0

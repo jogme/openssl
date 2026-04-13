@@ -29,7 +29,6 @@
 extern "C" {
 #endif
 
-#include <openssl/e_os2.h>
 #include <openssl/safestack.h>
 #include <openssl/macros.h>
 

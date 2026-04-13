@@ -13,7 +13,7 @@
 
 #include <openssl/macros.h>
 #include <openssl/opensslconf.h>
-#include <openssl/e_os2.h>
+#include <openssl/e_os2.h> // IWYU pragma: keep
 
 /*
  * This header guarantees that 'struct timeval' will be available. It includes
@@ -29,10 +29,10 @@
  * winsock2.h if either header has been included to avoid breakage with
  * applications that prefer to use <winsock.h> over <winsock2.h>.
  */
-#include <winsock2.h>
+#include <winsock2.h> // IWYU pragma: keep
 #endif
 #else
-#include <sys/time.h>
+#include <sys/time.h> // IWYU pragma: keep
 #endif
 
 #endif

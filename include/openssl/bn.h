@@ -17,7 +17,6 @@
 #define HEADER_BN_H
 #endif
 
-#include <openssl/e_os2.h>
 #ifndef OPENSSL_NO_STDIO
 #include <stdio.h>
 #endif

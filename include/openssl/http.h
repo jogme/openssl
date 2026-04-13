@@ -12,11 +12,14 @@
 #define OPENSSL_HTTP_H
 #pragma once
 
+#include <stddef.h>
+
 #include <openssl/opensslconf.h>
 
-#include <openssl/bio.h>
 #include <openssl/asn1.h>
 #include <openssl/conf.h>
+#include "openssl/types.h"
+#include "openssl/safestack.h"
 
 #ifdef __cplusplus
 extern "C" {

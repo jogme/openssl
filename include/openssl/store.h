@@ -16,10 +16,11 @@
 #define HEADER_OSSL_STORE_H
 #endif
 
+#include <stddef.h>
 #include <stdarg.h>
 #include <openssl/types.h>
-#include <openssl/pem.h>
 #include <openssl/storeerr.h>
+#include "openssl/core.h" // IWYU pragma: keep
 
 #ifdef __cplusplus
 extern "C" {

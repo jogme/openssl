@@ -16,10 +16,11 @@
 #define HEADER_OBJECTS_H
 #endif
 
+#include <stddef.h>
 #include <openssl/obj_mac.h>
-#include <openssl/bio.h>
 #include <openssl/asn1.h>
 #include <openssl/objectserr.h>
+#include "openssl/types.h"
 
 #define OBJ_NAME_TYPE_UNDEF 0x00
 #define OBJ_NAME_TYPE_MD_METH 0x01

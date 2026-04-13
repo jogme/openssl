@@ -12,6 +12,7 @@
 #pragma once
 
 #include <stddef.h>
+#include "openssl/e_os2.h"
 #include <openssl/types.h>
 
 #ifdef __cplusplus

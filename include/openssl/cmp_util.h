@@ -17,7 +17,7 @@
 #ifndef OPENSSL_NO_CMP
 
 #include <openssl/macros.h>
-#include <openssl/trace.h>
+#include "openssl/types.h"
 
 #ifdef __cplusplus
 extern "C" {

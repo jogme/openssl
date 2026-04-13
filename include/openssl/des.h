@@ -22,7 +22,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <openssl/e_os2.h>
 
 #ifndef OPENSSL_NO_DEPRECATED_3_0
 typedef unsigned int DES_LONG;

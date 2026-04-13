@@ -16,9 +16,9 @@
 #define HEADER_KDF_H
 #endif
 
+#include <stdint.h>
 #include <stdarg.h>
 #include <stddef.h>
-#include <openssl/types.h>
 #include <openssl/core.h>
 
 #ifdef __cplusplus

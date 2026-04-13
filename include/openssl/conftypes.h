@@ -15,6 +15,9 @@
 #include <openssl/conf.h>
 #endif
 
+#include "openssl/types.h"
+#include "openssl/lhash.h"
+
 /*
  * The contents of this file are deprecated and will be made opaque
  */

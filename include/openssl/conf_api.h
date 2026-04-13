@@ -16,8 +16,9 @@
 #define HEADER_CONF_API_H
 #endif
 
-#include <openssl/lhash.h>
 #include <openssl/conf.h>
+#include "openssl/types.h"
+#include "openssl/safestack.h"
 
 #ifdef __cplusplus
 extern "C" {

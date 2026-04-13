@@ -17,11 +17,6 @@
 #define HEADER_SSL3_H
 #endif
 
-#include <openssl/comp.h>
-#include <openssl/buffer.h>
-#include <openssl/evp.h>
-#include <openssl/ssl.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif

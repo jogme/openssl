@@ -27,7 +27,6 @@ extern "C" {
 #endif
 
 #include <stddef.h>
-#include <sys/types.h>
 
 #ifndef OPENSSL_NO_DEPRECATED_3_0
 #define BUF_strdup(s) OPENSSL_strdup(s)

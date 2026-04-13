@@ -12,8 +12,8 @@
 #pragma once
 
 #include <stdarg.h>
-
-#include <openssl/bio.h>
+#include <stddef.h>
+#include "openssl/types.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -12,6 +12,9 @@
 #define OSSL_HPKE_H
 #pragma once
 
+#include <stdint.h>
+#include <stddef.h>
+
 #include <openssl/types.h>
 
 /* HPKE modes */
