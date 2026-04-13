@@ -1,0 +1,7 @@
+Checks: '-*,misc-include-cleaner'
+
+CheckOptions:
+  - key: misc-include-cleaner.IgnoreHeaders
+    value: '.*deprecated\.h|.*opensslconf\.h|.*symhacks\.h|.*macros.h|.*cryptoerr_legacy\.h|.*err.h'
+  - key: misc-include-cleaner.MissingIncludes
+    value: 'true'
