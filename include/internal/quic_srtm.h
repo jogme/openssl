@@ -9,12 +9,13 @@
 
 #ifndef OSSL_INTERNAL_QUIC_SRTM_H
 #define OSSL_INTERNAL_QUIC_SRTM_H
+#include "openssl/types.h"
+#include <stdint.h>
+#include <stddef.h>
 #pragma once
 
 #include "internal/e_os.h"
-#include "internal/time.h"
 #include "internal/quic_types.h"
-#include "internal/quic_wire.h"
 #include "internal/quic_predef.h"
 
 #ifndef OPENSSL_NO_QUIC

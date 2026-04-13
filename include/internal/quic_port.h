@@ -9,12 +9,12 @@
 #ifndef OSSL_QUIC_PORT_H
 #define OSSL_QUIC_PORT_H
 
-#include <openssl/ssl.h>
-#include "internal/quic_types.h"
-#include "internal/quic_reactor.h"
-#include "internal/quic_demux.h"
+#include <stdint.h>
+#include <stddef.h>
 #include "internal/quic_predef.h"
 #include "internal/thread_arch.h"
+#include "openssl/types.h"
+#include "internal/time.h"
 
 #ifndef OPENSSL_NO_QUIC
 

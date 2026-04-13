@@ -9,13 +9,13 @@
 #ifndef OSSL_QUIC_ACKM_H
 #define OSSL_QUIC_ACKM_H
 
-#include "internal/quic_statm.h"
-#include "internal/quic_cc.h"
 #include "internal/quic_types.h"
 #include "internal/quic_wire.h"
 #include "internal/quic_predef.h"
 #include "internal/time.h"
 #include "internal/list.h"
+#include <stddef.h>
+#include <stdint.h>
 
 #ifndef OPENSSL_NO_QUIC
 

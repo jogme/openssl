@@ -9,7 +9,7 @@
 #ifndef _INTERNAL_COMP_H
 #define _INTERNAL_COMP_H
 
-#include <openssl/comp.h>
+#include "openssl/types.h"
 
 void ossl_comp_zlib_cleanup(void);
 void ossl_comp_brotli_cleanup(void);

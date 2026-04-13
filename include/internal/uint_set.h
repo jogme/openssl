@@ -9,8 +9,9 @@
 #ifndef OSSL_UINT_SET_H
 #define OSSL_UINT_SET_H
 
-#include "openssl/params.h"
 #include "internal/list.h"
+#include "openssl/e_os2.h" /* IWYU pragma: keep */
+#include <stdint.h>
 
 /*
  * uint64_t Integer Sets

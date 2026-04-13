@@ -11,9 +11,9 @@
 #define OPENSSL_INTERNAL_THREAD_H
 #include <openssl/configuration.h>
 #include <internal/thread_arch.h>
-#include <openssl/e_os2.h>
 #include <openssl/types.h>
 #include <internal/cryptlib.h>
+#include <stdint.h>
 #include "crypto/context.h"
 
 void *ossl_crypto_thread_start(OSSL_LIB_CTX *ctx, CRYPTO_THREAD_ROUTINE start,

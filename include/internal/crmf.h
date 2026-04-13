@@ -11,6 +11,8 @@
 #pragma once
 
 #include <openssl/crmf.h>
+#include "openssl/types.h"
+#include "openssl/asn1.h"
 
 struct ossl_crmf_attributetypeandvalue_st {
     ASN1_OBJECT *type;

@@ -12,6 +12,7 @@
 
 #include <openssl/e_os2.h>
 #include <stddef.h>
+#include <stdint.h>
 /**
  * Generalized fnv1a 64 bit hash function
  */

@@ -12,6 +12,8 @@
 #pragma once
 
 #include <openssl/conf.h>
+#include "openssl/types.h"
+#include "openssl/e_os2.h"
 
 /*
  * namespaces:

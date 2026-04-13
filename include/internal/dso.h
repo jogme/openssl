@@ -11,7 +11,6 @@
 #define OSSL_INTERNAL_DSO_H
 #pragma once
 
-#include <openssl/crypto.h>
 #include "internal/dsoerr.h"
 
 /* These values are used as commands to DSO_ctrl() */

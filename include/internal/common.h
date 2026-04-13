@@ -11,12 +11,12 @@
 #define OSSL_INTERNAL_COMMON_H
 #pragma once
 
-#include <stdlib.h>
 #include <string.h>
-#include "openssl/configuration.h"
 
+#include "openssl/e_os2.h"
+#include "openssl/configuration.h" // IWYU pragma: keep
 #include "internal/e_os.h" /* ossl_inline in many files */
-#include "internal/nelem.h"
+#include "openssl/crypto.h"
 
 #if defined(__GNUC__) || defined(__clang__)
 #define ossl_likely(x) __builtin_expect(!!(x), 1)

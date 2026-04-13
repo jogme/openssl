@@ -11,13 +11,13 @@
 #define OSSL_INTERNAL_PACKET_H
 #pragma once
 
+#include <stdint.h>
 #include <string.h>
 #include <openssl/bn.h>
-#include <openssl/buffer.h>
 #include <openssl/crypto.h>
 #include <openssl/e_os2.h>
 
-#include "internal/numbers.h"
+#include "internal/numbers.h" // IWYU pragma: keep
 
 typedef struct {
     /* Pointer to where we are currently reading from */

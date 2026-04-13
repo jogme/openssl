@@ -11,8 +11,7 @@
 #define OSSL_INTERNAL_ENCODER_H
 #pragma once
 
-#include <openssl/bio.h>
-#include <openssl/buffer.h>
+#include <stddef.h>
 #include <openssl/types.h>
 #include "internal/ffc.h"
 

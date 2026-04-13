@@ -16,10 +16,12 @@
 
 #include <limits.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #include "internal/common.h"
 #include "internal/safe_math.h"
+#include "openssl/e_os2.h"
 
 #include <openssl/cryptoerr.h>
 #include <openssl/err.h>

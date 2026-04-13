@@ -10,18 +10,19 @@
 #ifndef OSSL_QUIC_TXP_H
 #define OSSL_QUIC_TXP_H
 
-#include <openssl/ssl.h>
+#include <stdint.h>
+#include <stddef.h>
 #include "internal/quic_types.h"
 #include "internal/quic_predef.h"
 #include "internal/quic_record_tx.h"
-#include "internal/quic_cfq.h"
-#include "internal/quic_txpim.h"
-#include "internal/quic_stream.h"
-#include "internal/quic_stream_map.h"
 #include "internal/quic_fc.h"
-#include "internal/bio_addr.h"
+#include "internal/quic_wire.h"
+#include "internal/ssl.h"
 #include "internal/time.h"
 #include "internal/qlog.h"
+#include "openssl/bio.h"
+#include "internal/bio_addr.h" // IWYU pragma: keep
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_QUIC
 

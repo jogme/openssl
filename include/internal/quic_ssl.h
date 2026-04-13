@@ -10,13 +10,16 @@
 #ifndef OSSL_QUIC_SSL_H
 #define OSSL_QUIC_SSL_H
 
+#include <bits/types/struct_timeval.h>
 #include <openssl/ssl.h>
 #include <openssl/bio.h>
+#include <stdint.h>
+#include <stddef.h>
 #include "internal/refcount.h"
-#include "internal/quic_record_rx.h" /* OSSL_QRX */
-#include "internal/quic_ackm.h" /* OSSL_ACKM */
-#include "internal/quic_channel.h" /* QUIC_CHANNEL */
 #include "internal/quic_predef.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
+#include "internal/time.h"
 
 #ifndef OPENSSL_NO_QUIC
 

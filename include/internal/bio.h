@@ -11,6 +11,8 @@
 #define OSSL_INTERNAL_BIO_H
 #pragma once
 
+#include <stddef.h>
+#include <stdint.h>
 #include <openssl/core.h>
 #include <openssl/bio.h>
 

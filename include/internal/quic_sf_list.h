@@ -10,9 +10,10 @@
 #ifndef OSSL_QUIC_SF_LIST_H
 #define OSSL_QUIC_SF_LIST_H
 
-#include "internal/common.h"
+#include "internal/quic_predef.h"
 #include "internal/uint_set.h"
-#include "internal/quic_record_rx.h"
+#include <stddef.h>
+#include <stdint.h>
 
 /*
  * Stream frame list

@@ -7,8 +7,8 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include "openssl/core.h"
 #include <stddef.h>
-#include <openssl/params.h>
 
 /*
  * Extract the parameter into an allocated buffer.

@@ -13,9 +13,10 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 #include <openssl/e_os2.h>
-#include <internal/rcu.h>
 #include "crypto/context.h"
+#include "openssl/core.h"
 
 typedef struct ht_internal_st HT;
 

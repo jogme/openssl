@@ -10,7 +10,8 @@
 #ifndef OSSL_QUIC_FC_H
 #define OSSL_QUIC_FC_H
 
-#include <openssl/ssl.h>
+#include <stdint.h>
+#include <stddef.h>
 #include "internal/time.h"
 
 #ifndef OPENSSL_NO_QUIC

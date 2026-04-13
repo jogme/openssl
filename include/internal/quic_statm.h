@@ -10,7 +10,6 @@
 #ifndef OSSL_QUIC_STATS_H
 #define OSSL_QUIC_STATS_H
 
-#include <openssl/ssl.h>
 #include "internal/time.h"
 #include "internal/quic_predef.h"
 

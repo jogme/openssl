@@ -9,12 +9,15 @@
 
 #ifndef OSSL_INTERNAL_QUIC_WIRE_H
 #define OSSL_INTERNAL_QUIC_WIRE_H
+#include <stdint.h>
+#include "openssl/e_os2.h"
+#include <stddef.h>
+#include "internal/packet.h"
 #pragma once
 
 #include "internal/e_os.h"
 #include "internal/time.h"
 #include "internal/quic_types.h"
-#include "internal/packet_quic.h"
 
 #ifndef OPENSSL_NO_QUIC
 

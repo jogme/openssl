@@ -11,7 +11,10 @@
 #define OSSL_INTERNAL_DANE_H
 #pragma once
 
+#include <stdint.h>
+#include <stddef.h>
 #include <openssl/safestack.h>
+#include <openssl/types.h>
 
 /*-
  * Certificate usages:

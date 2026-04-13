@@ -9,12 +9,15 @@
 
 #ifndef OSSL_INTERNAL_QUIC_STREAM_MAP_H
 #define OSSL_INTERNAL_QUIC_STREAM_MAP_H
+#include <stdint.h>
+#include "openssl/e_os2.h"
+#include <assert.h>
+#include <stddef.h>
 #pragma once
 
 #include "internal/e_os.h"
 #include "internal/time.h"
 #include "internal/common.h"
-#include "internal/quic_types.h"
 #include "internal/quic_predef.h"
 #include "internal/quic_stream.h"
 #include "internal/quic_fc.h"

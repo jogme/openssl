@@ -10,8 +10,10 @@
 #ifndef OSSL_JSON_ENC_H
 #define OSSL_JSON_ENC_H
 
+#include "openssl/types.h"
 #include <stdbool.h>
-#include <openssl/bio.h>
+#include <stddef.h>
+#include <stdint.h>
 
 /*
  * JSON Encoder

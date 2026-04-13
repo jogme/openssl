@@ -9,9 +9,11 @@
 #ifndef OSSL_QUIC_CC_H
 #define OSSL_QUIC_CC_H
 
-#include "openssl/params.h"
+#include "openssl/core.h"
 #include "internal/time.h"
 #include "internal/quic_predef.h"
+#include <stddef.h>
+#include <stdint.h>
 
 #ifndef OPENSSL_NO_QUIC
 

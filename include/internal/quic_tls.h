@@ -10,7 +10,9 @@
 #ifndef OSSL_QUIC_TLS_H
 #define OSSL_QUIC_TLS_H
 
-#include <openssl/ssl.h>
+#include "openssl/types.h"
+#include <stddef.h>
+#include <stdint.h>
 
 typedef struct quic_tls_st QUIC_TLS;
 

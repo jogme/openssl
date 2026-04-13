@@ -12,8 +12,8 @@
 #pragma once
 
 #include "internal/dso.h"
-#include "internal/thread_once.h"
 
+#include "openssl/types.h"
 #include <openssl/conf.h>
 
 #define DEFAULT_CONF_MFLAGS \

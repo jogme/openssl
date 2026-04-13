@@ -11,6 +11,10 @@
 #define OSSL_INTERNAL_TO_HEX_H
 #pragma once
 
+#include <stddef.h>
+#include <stdint.h>
+#include "openssl/e_os2.h"
+
 static ossl_inline size_t to_hex(char *buf, uint8_t n, const char hexdig[17])
 {
     *buf++ = hexdig[(n >> 4) & 0xf];

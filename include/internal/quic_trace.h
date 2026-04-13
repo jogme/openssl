@@ -12,6 +12,9 @@
 
 #ifndef OPENSSL_NO_QUIC
 
+#include <stddef.h>
+#include "openssl/types.h"
+
 int ossl_quic_trace(int write_p, int version, int content_type,
     const void *buf, size_t msglen, SSL *ssl, void *arg);
 

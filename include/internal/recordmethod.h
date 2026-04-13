@@ -11,7 +11,10 @@
 #define OSSL_INTERNAL_RECORDMETHOD_H
 #pragma once
 
-#include <openssl/ssl.h>
+#include <stdint.h>
+#include <stddef.h>
+#include "openssl/types.h"
+#include "openssl/bio.h"
 
 /*
  * We use the term "record" here to refer to a packet of data. Records are

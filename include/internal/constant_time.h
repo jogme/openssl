@@ -11,6 +11,7 @@
 #define OSSL_INTERNAL_CONSTANT_TIME_H
 #pragma once
 
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <openssl/e_os2.h> /* For 'ossl_inline' */
@@ -147,6 +148,7 @@ static ossl_inline uint64_t constant_time_lt_64(uint64_t a, uint64_t b)
 }
 
 #ifdef BN_BYTES
+#include "openssl/bn.h"
 static ossl_inline BN_ULONG value_barrier_bn(BN_ULONG a)
 {
 #if !defined(OPENSSL_NO_ASM) && defined(__GNUC__)

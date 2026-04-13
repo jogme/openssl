@@ -11,8 +11,8 @@
 #define OSSL_INTERNAL_PROVIDER_H
 #pragma once
 
+#include <stddef.h>
 #include <openssl/core.h>
-#include <openssl/core_dispatch.h>
 #include "internal/dso.h"
 #include "internal/symhacks.h"
 

@@ -9,10 +9,11 @@
 
 #ifndef OSSL_INTERNAL_QUIC_RCIDM_H
 #define OSSL_INTERNAL_QUIC_RCIDM_H
+#include <stdint.h>
+#include <stddef.h>
 #pragma once
 
 #include "internal/e_os.h"
-#include "internal/time.h"
 #include "internal/quic_types.h"
 #include "internal/quic_wire.h"
 

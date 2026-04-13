@@ -11,6 +11,8 @@
 #define OSSL_INTERNAL_DER_H
 #pragma once
 
+#include <stddef.h>
+#include <stdint.h>
 #include <openssl/bn.h>
 #include "internal/packet.h"
 

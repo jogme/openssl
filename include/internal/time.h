@@ -11,9 +11,11 @@
 #define OSSL_INTERNAL_TIME_H
 #pragma once
 
+#include <stdint.h>
+#include <bits/types/struct_timeval.h>
+#include <time.h>
 #include <openssl/e_os2.h> /* uint64_t */
 #include "internal/e_os.h"
-#include "internal/e_winsock.h" /* for struct timeval */
 #include "internal/safe_math.h"
 
 /*

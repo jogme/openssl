@@ -11,6 +11,8 @@
 #pragma once
 
 #include <openssl/cms.h>
+#include "openssl/types.h"
+#include "openssl/safestack.h"
 
 #ifndef OPENSSL_NO_CMS
 CMS_EnvelopedData *ossl_cms_sign_encrypt(BIO *data, X509 *sign_cert, STACK_OF(X509) *certs,

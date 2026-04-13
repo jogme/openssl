@@ -10,9 +10,12 @@
 #ifndef OSSL_QUIC_WIRE_PKT_H
 #define OSSL_QUIC_WIRE_PKT_H
 
-#include <openssl/ssl.h>
-#include "internal/packet_quic.h"
+#include <stdint.h>
+#include <stddef.h>
+#include "internal/packet.h"
 #include "internal/quic_types.h"
+#include "openssl/bn.h"
+#include "openssl/e_os2.h"
 
 #ifndef OPENSSL_NO_QUIC
 

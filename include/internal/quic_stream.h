@@ -9,17 +9,15 @@
 
 #ifndef OSSL_INTERNAL_QUIC_STREAM_H
 #define OSSL_INTERNAL_QUIC_STREAM_H
+#include <stddef.h>
+#include <stdint.h>
 #pragma once
 
 #include "internal/e_os.h"
-#include "internal/time.h"
-#include "internal/quic_types.h"
 #include "internal/quic_predef.h"
 #include "internal/quic_wire.h"
 #include "internal/quic_record_tx.h"
-#include "internal/quic_record_rx.h"
 #include "internal/quic_fc.h"
-#include "internal/quic_statm.h"
 
 #ifndef OPENSSL_NO_QUIC
 

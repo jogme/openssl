@@ -9,6 +9,7 @@
 
 #ifndef OPENSSL_RCU_H
 #define OPENSSL_RCU_H
+#include "openssl/core.h"
 #pragma once
 
 #include "crypto/context.h"

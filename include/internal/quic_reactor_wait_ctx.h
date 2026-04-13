@@ -10,7 +10,6 @@
 #define OSSL_QUIC_REACTOR_WAIT_CTX_H
 
 #include "internal/quic_predef.h"
-#include "internal/quic_reactor.h"
 #include "internal/list.h"
 
 #ifndef OPENSSL_NO_QUIC

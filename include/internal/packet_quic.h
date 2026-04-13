@@ -11,6 +11,9 @@
 #define OSSL_INTERNAL_PACKET_QUIC_H
 #pragma once
 
+#include <stdint.h>
+#include <stddef.h>
+#include "openssl/e_os2.h"
 #include "internal/packet.h"
 #include "internal/quic_vlint.h"
 

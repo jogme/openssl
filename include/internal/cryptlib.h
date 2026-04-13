@@ -18,11 +18,12 @@
 #define BIO_FLAGS_UPLINK_INTERNAL 0
 #endif
 
-#include "internal/common.h"
-
+#include <stddef.h>
+#include <stdio.h>
+#include <stdint.h>
+#include "openssl/safestack.h"
+#include "openssl/lhash.h"
 #include <openssl/crypto.h>
-#include <openssl/buffer.h>
-#include <openssl/bio.h>
 #include <openssl/asn1.h>
 #include <openssl/err.h>
 

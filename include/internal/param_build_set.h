@@ -11,9 +11,10 @@
 #define OSSL_INTERNAL_PARAM_BUILD_SET_H
 #pragma once
 
+#include <stddef.h>
 #include <openssl/safestack.h>
 #include <openssl/param_build.h>
-#include "internal/cryptlib.h"
+#include "internal/common.h"
 
 typedef union {
     OSSL_UNION_ALIGN;

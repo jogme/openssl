@@ -15,6 +15,8 @@
 #define OPENSSL_ECH_HELPERS_H
 #pragma once
 
+#include <stddef.h>
+#include <stdint.h>
 #ifndef OPENSSL_NO_ECH
 
 /*

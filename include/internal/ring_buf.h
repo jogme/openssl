@@ -11,8 +11,13 @@
 #define OSSL_INTERNAL_RING_BUF_H
 #pragma once
 
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <assert.h>
 #include <openssl/e_os2.h> /* For 'ossl_inline' */
 #include "internal/safe_math.h"
+#include "openssl/crypto.h"
 
 /*
  * ==================================================================

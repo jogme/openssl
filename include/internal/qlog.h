@@ -10,10 +10,13 @@
 #ifndef OSSL_QLOG_H
 #define OSSL_QLOG_H
 
-#include <openssl/ssl.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stddef.h>
 #include "internal/quic_types.h"
 #include "internal/time.h"
+#include "openssl/types.h"
 
 typedef struct qlog_st QLOG;
 

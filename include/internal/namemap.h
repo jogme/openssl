@@ -7,7 +7,8 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/cryptlib.h"
+#include "openssl/crypto.h"
+#include <stddef.h>
 
 typedef struct ossl_namemap_st OSSL_NAMEMAP;
 

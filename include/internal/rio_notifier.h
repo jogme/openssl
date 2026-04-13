@@ -9,8 +9,7 @@
 #ifndef OSSL_RIO_NOTIFIER_H
 #define OSSL_RIO_NOTIFIER_H
 
-#include "internal/common.h"
-#include "internal/sockets.h"
+#include "openssl/e_os2.h"
 
 /*
  * Pollable Notifier
