@@ -36,6 +36,8 @@
 #include "crypto/evp.h"
 #include "crypto/dh.h"
 #include "crypto/ec.h"
+#include "internal/sizes.h"
+#include "internal/common.h"
 
 struct translation_ctx_st; /* Forwarding */
 struct translation_st; /* Forwarding */

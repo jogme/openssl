@@ -11,6 +11,7 @@
 #include <errno.h>
 #include "bio_local.h"
 #include "internal/cryptlib.h"
+#include <openssl/buffer.h>
 
 static int mem_write(BIO *h, const char *buf, int num);
 static int mem_read(BIO *h, char *buf, int size);

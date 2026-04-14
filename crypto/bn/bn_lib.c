@@ -14,6 +14,7 @@
 #include "bn_local.h"
 #include <openssl/opensslconf.h>
 #include "internal/constant_time.h"
+#include "internal/common.h"
 
 /* This stuff appears to be completely unused, so is deprecated */
 #ifndef OPENSSL_NO_DEPRECATED_0_9_8

@@ -7,8 +7,11 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <string.h>
 #include <ctype.h>
 
+#include "internal/common.h"
+#include <openssl/obj_mac.h>
 #include <openssl/core_names.h>
 #include <openssl/bio.h>
 #include <openssl/encoder.h>

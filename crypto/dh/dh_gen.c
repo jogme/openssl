@@ -25,6 +25,7 @@
 
 #include <stdio.h>
 #include "internal/cryptlib.h"
+#include <openssl/obj_mac.h>
 #include <openssl/bn.h>
 #include <openssl/sha.h>
 #include "crypto/dh.h"

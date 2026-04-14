@@ -13,6 +13,7 @@
  */
 #include "internal/deprecated.h"
 
+#include <openssl/params.h>
 #include <stdio.h>
 #include <openssl/x509.h>
 #include <openssl/ec.h>

@@ -12,6 +12,7 @@
 #include "internal/cryptlib.h"
 #include <openssl/asn1.h>
 #include "asn1_local.h"
+#include <string.h>
 
 #include <crypto/asn1.h>
 

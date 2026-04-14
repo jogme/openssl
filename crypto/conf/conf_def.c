@@ -25,6 +25,7 @@
 #include "conf_def.h"
 #include <openssl/buffer.h>
 #include <openssl/err.h>
+#include "internal/common.h"
 #ifndef OPENSSL_NO_POSIX_IO
 #include <sys/stat.h>
 #ifdef _WIN32

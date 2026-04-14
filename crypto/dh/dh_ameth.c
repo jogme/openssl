@@ -19,6 +19,9 @@
 #include <openssl/bn.h>
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
+#include "internal/common.h"
+#include <openssl/obj_mac.h>
+#include <openssl/params.h>
 #include "internal/ffc.h"
 #include "internal/cryptlib.h"
 #include "crypto/asn1.h"

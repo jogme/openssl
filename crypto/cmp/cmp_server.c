@@ -11,6 +11,7 @@
 
 /* general CMP server functions */
 
+#include "internal/common.h"
 #include "cmp_local.h"
 
 /* the context for the generic CMP server */

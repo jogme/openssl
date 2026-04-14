@@ -11,6 +11,7 @@
 #include <time.h>
 #include "internal/cryptlib.h"
 #include "bn_local.h"
+#include "internal/nelem.h"
 
 /*
  * The quick sieve algorithm approach to weeding out primes is Philip

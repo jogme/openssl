@@ -19,6 +19,7 @@
 #include <openssl/bn.h>
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
+#include <openssl/params.h>
 #include "internal/cryptlib.h"
 #include "crypto/asn1.h"
 #include "crypto/dsa.h"

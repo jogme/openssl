@@ -7,6 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include "internal/common.h"
 #include <openssl/err.h>
 #include <openssl/ui.h>
 #include <openssl/params.h>

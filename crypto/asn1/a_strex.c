@@ -15,6 +15,7 @@
 #include <openssl/crypto.h>
 #include <openssl/x509.h>
 #include <openssl/asn1.h>
+#include "internal/common.h"
 
 #include "charmap.h"
 

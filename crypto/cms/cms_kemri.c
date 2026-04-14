@@ -17,6 +17,7 @@
 #include "cms_local.h"
 #include "crypto/evp.h"
 #include "internal/sizes.h"
+#include <openssl/params.h>
 
 #include <crypto/asn1.h>
 

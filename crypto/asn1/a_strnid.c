@@ -11,6 +11,9 @@
 #include "internal/cryptlib.h"
 #include <openssl/asn1.h>
 #include <openssl/objects.h>
+#include "internal/common.h"
+#include <string.h>
+#include "internal/nelem.h"
 
 static STACK_OF(ASN1_STRING_TABLE) *stable = NULL;
 static void st_free(ASN1_STRING_TABLE *tbl);

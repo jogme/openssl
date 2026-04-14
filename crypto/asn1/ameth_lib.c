@@ -13,6 +13,7 @@
 #include <openssl/x509.h>
 #include "crypto/asn1.h"
 #include "crypto/evp.h"
+#include "internal/nelem.h"
 
 #include "standard_methods.h"
 

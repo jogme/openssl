@@ -12,6 +12,7 @@
 #include <openssl/evp.h>
 #include <openssl/asn1.h>
 #include "internal/asn1.h"
+#include <openssl/buffer.h>
 #include "crypto/asn1.h"
 #include "crypto/evp.h"
 

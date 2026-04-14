@@ -21,6 +21,7 @@
 #include "crypto/ess.h"
 #include "crypto/x509.h" /* for ossl_x509_add_cert_new() */
 #include "cms_local.h"
+#include "internal/common.h"
 
 /* CMS SignedData Utilities */
 

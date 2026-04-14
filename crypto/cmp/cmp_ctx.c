@@ -10,6 +10,7 @@
  */
 
 #include "cmp_local.h"
+#include "internal/common.h"
 #include <openssl/ocsp.h> /* for OCSP_REVOKED_STATUS_* */
 
 #define DEFINE_OSSL_CMP_CTX_get0(FIELD, TYPE) \

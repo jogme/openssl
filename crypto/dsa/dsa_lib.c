@@ -18,7 +18,8 @@
 #include "internal/refcount.h"
 #include "internal/common.h"
 #include "crypto/dsa.h"
-#include "crypto/dh.h" /* required by DSA_dup_DH() */
+#include "crypto/dh.h"
+#include <openssl/dh.h> /* required by DSA_dup_DH() */
 #include "dsa_local.h"
 
 static DSA *dsa_new_intern(OSSL_LIB_CTX *libctx);

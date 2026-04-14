@@ -18,6 +18,7 @@
 #include "crypto/evp.h"
 #include "internal/bio.h"
 #include "asn1_local.h"
+#include "internal/common.h"
 
 /*
  * Generalised MIME like utilities for streaming ASN1. Although many have a

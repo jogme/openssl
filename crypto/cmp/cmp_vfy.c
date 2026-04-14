@@ -11,6 +11,7 @@
 
 /* CMP functions for PKIMessage checking */
 
+#include "internal/common.h"
 #include "cmp_local.h"
 
 /* Verify a message protected by signature according to RFC section 5.1.3.3 */

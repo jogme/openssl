@@ -24,6 +24,8 @@
 #include "crypto/x509.h"
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
+#include "internal/common.h"
+#include <openssl/params.h>
 #include "ec_local.h"
 
 static int eckey_param2type(int *pptype, void **ppval, const EC_KEY *ec_key)

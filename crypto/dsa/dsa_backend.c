@@ -13,6 +13,7 @@
  */
 #include "internal/deprecated.h"
 
+#include <openssl/params.h>
 #include <openssl/core_names.h>
 #include <openssl/err.h>
 #ifndef FIPS_MODULE

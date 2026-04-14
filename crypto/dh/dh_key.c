@@ -13,6 +13,8 @@
  */
 #include "internal/deprecated.h"
 
+#include <string.h>
+#include <openssl/obj_mac.h>
 #include <stdio.h>
 #include "internal/cryptlib.h"
 #include "dh_local.h"

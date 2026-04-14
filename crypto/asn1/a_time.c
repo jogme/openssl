@@ -14,6 +14,7 @@
  *      generalTime    GeneralizedTime }
  */
 
+#include <string.h>
 #include <stdio.h>
 #include <time.h>
 #include "crypto/asn1.h"

@@ -24,6 +24,8 @@
 #include "internal/constant_time.h"
 #include "internal/e_os.h"
 #include "err_local.h"
+#include "internal/cryptlib.h"
+#include "internal/common.h"
 
 /* Forward declaration in case it's not published because of configuration */
 ERR_STATE *ERR_get_state(void);

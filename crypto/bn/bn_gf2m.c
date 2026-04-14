@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include "internal/cryptlib.h"
 #include "bn_local.h"
+#include "internal/common.h"
+#include "internal/nelem.h"
 
 #ifndef OPENSSL_NO_EC2M
 #include <openssl/ec.h>

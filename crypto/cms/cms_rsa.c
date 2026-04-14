@@ -11,6 +11,7 @@
 #include <openssl/cms.h>
 #include <openssl/err.h>
 #include <openssl/core_names.h>
+#include <openssl/params.h>
 #include "crypto/asn1.h"
 #include "crypto/rsa.h"
 #include "crypto/evp.h"

@@ -20,6 +20,7 @@
 #include <openssl/x509.h>
 #include <openssl/trace.h>
 #include "conf_local.h"
+#include "internal/common.h"
 
 DEFINE_STACK_OF(CONF_MODULE)
 DEFINE_STACK_OF(CONF_IMODULE)

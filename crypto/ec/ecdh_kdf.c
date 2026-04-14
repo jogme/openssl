@@ -14,6 +14,7 @@
 #include "internal/deprecated.h"
 
 #include <string.h>
+#include <openssl/params.h>
 #include <openssl/core_names.h>
 #include <openssl/ec.h>
 #include <openssl/evp.h>

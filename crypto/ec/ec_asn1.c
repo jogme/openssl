@@ -18,6 +18,7 @@
 #include <openssl/err.h>
 #include <openssl/asn1t.h>
 #include <openssl/objects.h>
+#include <openssl/buffer.h>
 #include "internal/nelem.h"
 #include "crypto/asn1.h"
 #include "crypto/asn1_dsa.h"

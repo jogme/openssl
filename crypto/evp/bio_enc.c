@@ -9,6 +9,7 @@
 
 #define OPENSSL_SUPPRESS_DEPRECATED /* for BIO_get_callback */
 
+#include <string.h>
 #include <stdio.h>
 #include <errno.h>
 #include "internal/cryptlib.h"

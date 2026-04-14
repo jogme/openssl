@@ -22,6 +22,8 @@
 #include <openssl/kdf.h>
 #include "internal/provider.h"
 #include "crypto/dh.h"
+#include <openssl/params.h>
+#include "internal/sizes.h"
 
 /* Key derivation function from X9.63/SECG */
 int ossl_dh_kdf_X9_42_asn1(unsigned char *out, size_t outlen,

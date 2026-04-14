@@ -16,6 +16,7 @@
 #define _GNU_SOURCE /* make sure dladdr is declared */
 #endif
 
+#include <string.h>
 #include "dso_local.h"
 #include "internal/e_os.h"
 

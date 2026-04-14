@@ -9,6 +9,7 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include "internal/common.h"
 #include "cmp_local.h"
 #include "crypto/asn1.h" /* for ossl_X509_ALGOR_from_nid() */
 

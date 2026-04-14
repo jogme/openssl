@@ -15,6 +15,7 @@
 #include <openssl/cmperr.h>
 #include <openssl/err.h> /* should be implied by cmperr.h */
 #include <openssl/x509v3.h>
+#include "internal/common.h"
 
 /*
  * use trace API for CMP-specific logging, prefixed by "CMP " and severity

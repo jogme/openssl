@@ -9,6 +9,7 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include "internal/common.h"
 #include "cmp_local.h"
 
 #define IS_CREP(t) ((t) == OSSL_CMP_PKIBODY_IP || (t) == OSSL_CMP_PKIBODY_CP \

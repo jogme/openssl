@@ -13,6 +13,7 @@
 #include <openssl/core_names.h>
 #include <openssl/err.h>
 #include <openssl/decoder.h>
+#include <openssl/params.h>
 #include "internal/sizes.h"
 #include "crypto/asn1.h"
 #include "crypto/evp.h"

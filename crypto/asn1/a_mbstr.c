@@ -12,6 +12,7 @@
 #include "internal/cryptlib.h"
 #include "internal/unicode.h"
 #include <openssl/asn1.h>
+#include <string.h>
 
 #include <crypto/asn1.h>
 

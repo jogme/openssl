@@ -20,6 +20,8 @@
 #include "crypto/x509.h"
 #include "cms_local.h"
 #include "internal/cms.h"
+#include <openssl/params.h>
+#include "internal/common.h"
 
 static STACK_OF(CMS_CertificateChoices)
     **
