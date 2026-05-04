@@ -22,12 +22,12 @@
 #include "crypto/async.h"
 #include <openssl/crypto.h>
 #include <openssl/e_os2.h>
+#include <openssl/async.h>
 
 typedef struct async_ctx_st async_ctx;
 typedef struct async_pool_st async_pool;
 
 #if defined(_WIN32)
-#include <openssl/async.h>
 #define ASYNC_WIN
 #define ASYNC_ARCH
 
