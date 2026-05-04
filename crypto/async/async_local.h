@@ -19,7 +19,6 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
-#include "crypto/async.h"
 #include <openssl/crypto.h>
 #include <openssl/e_os2.h>
 
@@ -159,6 +158,7 @@ typedef struct async_fibre_st {
 
 /* needs to be included after windows.h */
 #include <openssl/async.h>
+#include "crypto/async.h"
 
 struct async_ctx_st {
     async_fibre dispatcher;
