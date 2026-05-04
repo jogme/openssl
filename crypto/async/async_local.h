@@ -22,7 +22,6 @@
 #include "crypto/async.h"
 #include <openssl/crypto.h>
 #include <openssl/e_os2.h>
-#include <openssl/async.h>
 
 typedef struct async_ctx_st async_ctx;
 typedef struct async_pool_st async_pool;
@@ -157,6 +156,9 @@ typedef struct async_fibre_st {
 #define async_local_init() 1
 #define async_local_deinit()
 #endif
+
+/* needs to be included after windows.h */
+#include <openssl/async.h>
 
 struct async_ctx_st {
     async_fibre dispatcher;
