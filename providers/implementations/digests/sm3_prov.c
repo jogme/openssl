@@ -7,7 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/crypto.h>
 #include "internal/sm3.h"
 #include "prov/digestcommon.h"
 #include "prov/implementations.h"

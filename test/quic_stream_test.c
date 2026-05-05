@@ -6,9 +6,14 @@
  * in the file LICENSE in the source distribution or at
  * https://www.openssl.org/source/license.html
  */
-#include "internal/packet.h"
+#include <string.h>
 #include "internal/quic_stream.h"
 #include "testutil.h"
+#include "internal/nelem.h"
+#include "internal/quic_predef.h"
+#include "internal/quic_record_tx.h"
+#include "internal/quic_wire.h"
+#include "openssl/crypto.h"
 
 static int compare_iov(const unsigned char *ref, size_t ref_len,
     const OSSL_QTX_IOVEC *iov, size_t iov_len)

@@ -14,9 +14,20 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/aes.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/proverr.h>
+#include <stdint.h>
+#include <string.h>
 #include "cipher_aes_ocb.h"
 #include "prov/providercommon.h"
 #include "prov/ciphercommon_aead.h"

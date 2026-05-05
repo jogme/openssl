@@ -7,7 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 #include "cipher_sm4.h"
+#include "crypto/sm4.h"
+#include "openssl/evp.h"
+#include "openssl/modes.h"
+#include "prov/ciphercommon.h"
 
 static int cipher_hw_sm4_initkey(PROV_CIPHER_CTX *ctx,
     const unsigned char *key, size_t keylen)

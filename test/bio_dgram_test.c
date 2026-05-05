@@ -9,10 +9,16 @@
 
 #include <string.h>
 #include <openssl/bio.h>
-#include <openssl/rand.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <stdint.h>
+#include <sys/socket.h>
 #include "testutil.h"
 #include "internal/sockets.h"
 #include "internal/bio_addr.h"
+#include "internal/nelem.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 
 #if !defined(OPENSSL_NO_DGRAM) && !defined(OPENSSL_NO_SOCK)
 

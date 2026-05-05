@@ -7,7 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/e_os2.h>
 #include "prov/providercommon.h"
 
 /* By default, our providers don't have an error state */

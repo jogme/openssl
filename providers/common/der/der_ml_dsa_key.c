@@ -7,19 +7,21 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
+#include <stdint.h>
 /*
  * DSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
-/* IWYU pragma: end_keep */
-#include <openssl/obj_mac.h>
-#include <openssl/evp.h>
 #include "internal/packet.h"
 #include "prov/der_ml_dsa.h"
 #include "prov/der_pq_dsa.h"
 #include "prov/der_digests.h"
+#include "crypto/ml_dsa.h"
+#include "internal/der.h"
+#include "openssl/crypto.h"
 
 #define SET_OID(oid, oidlen, oidname)  \
     (oid) = ossl_der_oid_id_##oidname; \

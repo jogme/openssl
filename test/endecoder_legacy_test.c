@@ -33,7 +33,6 @@
  * - PEM_read_bio_{TYPE}_PUBKEY()
  */
 
-#include <stdlib.h>
 #include <string.h>
 
 /*
@@ -55,8 +54,13 @@
 #endif
 #include "internal/nelem.h"
 #include "crypto/evp.h"
-
 #include "testutil.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/ec.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 typedef int PEM_write_bio_of_void_protected(BIO *out, const void *obj,
     const EVP_CIPHER *enc,

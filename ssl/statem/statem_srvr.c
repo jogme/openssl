@@ -22,7 +22,6 @@
 #include <openssl/comp.h>
 #include <openssl/ocsp.h>
 #include <errno.h>
-#include <openssl/ssl3.h>
 #include <stdint.h>
 #include <string.h>
 #include "internal/e_os.h"

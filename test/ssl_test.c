@@ -7,17 +7,20 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <string.h>
-
 #include <openssl/conf.h>
-#include <openssl/err.h>
 #include <openssl/ssl.h>
 #include <openssl/provider.h>
-
 #include "helpers/handshake.h"
 #include "helpers/ssl_test_ctx.h"
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 static CONF *conf = NULL;
 static OSSL_PROVIDER *defctxnull = NULL, *thisprov = NULL;

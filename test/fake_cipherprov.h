@@ -8,6 +8,7 @@
  */
 
 #include <openssl/core_dispatch.h>
+#include "openssl/types.h"
 
 /* Fake cipher provider implementation */
 OSSL_PROVIDER *fake_cipher_start(OSSL_LIB_CTX *libctx);

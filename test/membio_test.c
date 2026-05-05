@@ -8,7 +8,9 @@
  */
 
 #include <openssl/bio.h>
+#include <stddef.h>
 #include "testutil.h"
+#include "openssl/types.h"
 
 static int test_eof(void)
 {

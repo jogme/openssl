@@ -16,6 +16,7 @@
 #include <openssl/opensslconf.h>
 #include "testutil.h"
 #include "crypto/chacha.h"
+#include "openssl/opensslconf.h"
 #if defined(__powerpc64__) && !defined(OPENSSL_SYS_AIX) && !defined(OPENSSL_SYS_MACOSX)
 #include "crypto/ppc_arch.h"
 #endif

@@ -8,10 +8,13 @@
  */
 
 #include <openssl/core_dispatch.h>
+#include <stddef.h>
 #include "crypto/types.h"
 #include "prov/skeymgmt_lcl.h"
 #include "internal/skey.h"
 #include "prov/implementations.h"
+#include "openssl/core.h"
+#include "openssl/types.h"
 
 static OSSL_FUNC_skeymgmt_import_fn aes_import;
 static OSSL_FUNC_skeymgmt_export_fn aes_export;

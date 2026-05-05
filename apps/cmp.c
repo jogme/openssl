@@ -9,18 +9,32 @@
  * https://www.openssl.org/source/license.html
  */
 
-/* This app is disabled when OPENSSL_NO_CMP is defined. */
-#include "internal/e_os.h"
-
 #include <string.h>
 #include <ctype.h>
-
+#include <errno.h>
+#include <limits.h>
+#include <openssl/opensslv.h>
+#include <unistd.h>
 #include "apps.h"
 #include "http_server.h"
-#include "s_apps.h"
 #include "progs.h"
-
 #include "cmp_mock_srv.h"
+#include "app_libctx.h"
+#include "apps_ui.h"
+#include "fmt.h"
+#include "internal/common.h"
+#include "internal/nelem.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/conf.h"
+#include "openssl/evp.h"
+#include "openssl/http.h"
+#include "openssl/obj_mac.h"
+#include "openssl/pem.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509v3.h"
+#include "opt.h"
 
 /* tweaks needed due to missing unistd.h on Windows */
 #if defined(_WIN32) && !defined(__BORLANDC__)
@@ -31,9 +45,7 @@
 #endif
 
 #include <openssl/ui.h>
-#include <openssl/pkcs12.h>
 #include <openssl/ssl.h>
-
 /* explicit #includes not strictly needed since implied by the above: */
 #include <stdlib.h>
 #include <openssl/cmp.h>
@@ -41,7 +53,6 @@
 #include <openssl/crmf.h>
 #include <openssl/crypto.h>
 #include <openssl/err.h>
-#include <openssl/store.h>
 #include <openssl/objects.h>
 #include <openssl/x509.h>
 

@@ -10,7 +10,6 @@
 
 #include <openssl/cmp_util.h>
 #include <openssl/opensslv.h>
-#include <openssl/x509.h>
 #include <stdint.h>
 #include <string.h>
 #include "cmp_local.h"

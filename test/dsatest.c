@@ -13,23 +13,16 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#include <openssl/crypto.h>
-#include <openssl/rand.h>
 #include <openssl/bn.h>
 #include <openssl/dsa.h>
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
-
 #include "testutil.h"
-#include "internal/nelem.h"
 
 #ifndef OPENSSL_NO_DSA
 static int dsa_cb(int p, int n, BN_GENCB *arg);

@@ -11,6 +11,8 @@
 #define OSSL_CRYPTO_CONTEXT_H
 
 #include <openssl/core.h>
+#include "openssl/configuration.h"
+#include "openssl/types.h"
 
 void *ossl_provider_store_new(OSSL_LIB_CTX *);
 void *ossl_property_string_data_new(OSSL_LIB_CTX *);

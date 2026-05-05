@@ -12,9 +12,17 @@
 #include <openssl/core_names.h>
 #include <openssl/rand.h>
 #include <openssl/provider.h>
-#include "../include/crypto/evp.h"
+#include <limits.h>
+#include <stdint.h>
 #include "../../crypto/evp/evp_local.h"
 #include "../testutil.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 typedef struct {
     fake_random_generate_cb *cb;

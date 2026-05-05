@@ -8,10 +8,12 @@
 #define OPENSSL_SUPPRESS_DEPRECATED
 
 #include <stdio.h>
-#include <openssl/err.h>
 #include <openssl/x509_vfy.h>
-
 #include "testutil.h"
+#include "openssl/asn1.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 static const char *chain;
 static const char *crl;

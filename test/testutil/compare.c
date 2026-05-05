@@ -7,7 +7,10 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <string.h>
 #include "../testutil.h"
+#include "openssl/bio.h"
+#include "openssl/types.h"
 
 static void strip_line_ends(char *str)
 {

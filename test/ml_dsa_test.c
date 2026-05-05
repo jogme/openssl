@@ -9,10 +9,20 @@
 
 #include <openssl/core_names.h>
 #include <openssl/evp.h>
+#include <stdint.h>
+#include <string.h>
 #include "internal/nelem.h"
 #include "testutil.h"
 #include "ml_dsa.inc"
 #include "crypto/ml_dsa.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/obj_mac.h"
+#include "openssl/params.h"
+#include "openssl/provider.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 typedef enum OPTION_choice {
     OPT_ERR = -1,

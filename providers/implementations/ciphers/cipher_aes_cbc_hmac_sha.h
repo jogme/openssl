@@ -10,8 +10,10 @@
 #if !defined(OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_AES_CBC_HMAC_SHA_H)
 #define OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_AES_CBC_HMAC_SHA_H
 
+#include <stddef.h>
 #include "prov/ciphercommon.h"
 #include "crypto/aes_platform.h"
+#include "openssl/evp.h"
 
 int ossl_cipher_capable_aes_cbc_hmac_sha1(void);
 int ossl_cipher_capable_aes_cbc_hmac_sha256(void);

@@ -11,12 +11,20 @@
 
 #include <openssl/rand.h>
 #include <openssl/proverr.h>
+#include <string.h>
 #include "prov/ciphercommon.h"
 #include "prov/ciphercommon_gcm.h"
 #include "prov/providercommon.h"
 #include "prov/provider_ctx.h"
-
 #include "providers/implementations/ciphers/ciphercommon_gcm.inc"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
+#include "prov/ciphercommon_aead.h"
 
 static int gcm_tls_init(PROV_GCM_CTX *dat, unsigned char *aad, size_t aad_len);
 static int gcm_tls_iv_set_fixed(PROV_GCM_CTX *ctx, unsigned char *iv,

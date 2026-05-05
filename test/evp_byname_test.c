@@ -7,12 +7,9 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include <openssl/evp.h>
 #include "testutil.h"
+#include "openssl/types.h"
 
 static int test_evp_get_digestbyname(void)
 {

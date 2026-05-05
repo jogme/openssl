@@ -8,14 +8,17 @@
  */
 
 #include <openssl/crypto.h>
+#include <stdlib.h>
 #include "../testutil.h"
 #include "output.h"
 #include "tu_local.h"
+#include "opt.h"
 
 #if defined __has_include
 /* Any compiler you're going to run valgrind on has this */
 #if __has_include(<valgrind/valgrind.h>)
 #include <valgrind/valgrind.h>
+
 #define OPENSSL_VALGRIND_H_INCLUDED
 #endif
 #endif /* defined(__has_include) */

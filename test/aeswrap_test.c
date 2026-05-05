@@ -7,7 +7,11 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
+#include <stdint.h>
 #include "testutil.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 
 /* Test that calling EVP_CipherUpdate() twice fails for AES_WRAP_PAD */
 static int aeswrap_multi_update_fail_test(void)

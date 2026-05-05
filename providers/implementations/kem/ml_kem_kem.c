@@ -11,18 +11,17 @@
 #include <openssl/crypto.h>
 #include <openssl/evp.h>
 #include <openssl/core_dispatch.h>
-#include <openssl/core_names.h>
 #include <openssl/params.h>
 #include <openssl/err.h>
 #include <openssl/proverr.h>
+#include <stdint.h>
 #include "crypto/ml_kem.h"
-#include "internal/cryptlib.h"
-#include "internal/fips.h"
-#include "prov/provider_ctx.h"
 #include "prov/implementations.h"
-#include "prov/securitycheck.h"
 #include "prov/providercommon.h"
 #include "providers/implementations/kem/ml_kem_kem.inc"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 static OSSL_FUNC_kem_newctx_fn ml_kem_newctx;
 static OSSL_FUNC_kem_freectx_fn ml_kem_freectx;

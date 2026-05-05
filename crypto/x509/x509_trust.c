@@ -9,7 +9,6 @@
 
 #include <stdio.h>
 #include <openssl/x509v3.h>
-#include <openssl/x509.h>
 #include "crypto/x509.h"
 #include "internal/nelem.h"
 #include "openssl/asn1.h"

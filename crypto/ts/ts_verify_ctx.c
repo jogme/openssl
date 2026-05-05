@@ -9,7 +9,6 @@
 
 #include <openssl/objects.h>
 #include <openssl/ts.h>
-#include <openssl/x509.h>
 #include <string.h>
 #include "ts_local.h"
 #include "openssl/asn1.h"

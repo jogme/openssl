@@ -7,7 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 #include "cipher_sm4_xts.h"
+#include "crypto/modes.h"
+#include "crypto/sm4.h"
+#include "openssl/modes.h"
+#include "prov/ciphercommon.h"
 
 #define XTS_SET_KEY_FN(fn_set_enc_key, fn_set_dec_key,   \
     fn_block_enc, fn_block_dec,                          \

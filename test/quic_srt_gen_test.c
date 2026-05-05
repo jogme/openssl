@@ -7,14 +7,13 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <string.h>
-
 #include <openssl/opensslconf.h>
 #include "internal/quic_srt_gen.h"
-
 #include "testutil.h"
-#include "testutil/output.h"
+#include "internal/nelem.h"
+#include "internal/quic_types.h"
+#include "openssl/opensslconf.h"
 
 struct test_case {
     const unsigned char *key;

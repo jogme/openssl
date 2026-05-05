@@ -13,10 +13,11 @@
  */
 #include <limits.h>
 #include <openssl/err.h>
-#include <openssl/bio.h>
-#include <internal/common.h>
 #include <internal/hashtable.h>
+#include <stdint.h>
+#include <string.h>
 #include "fuzzer.h"
+#include "openssl/crypto.h"
 
 /*
  * Make the key space very small here to make lookups

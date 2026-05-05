@@ -10,7 +10,9 @@
  */
 
 #include "cmp_testlib.h"
-#include <openssl/rsa.h> /* needed in case config no-deprecated */
+#include <stddef.h>
+#include "openssl/cmp.h"
+#include "test/testutil.h"
 
 OSSL_CMP_MSG *load_pkimsg(const char *file, OSSL_LIB_CTX *libctx)
 {

@@ -6,6 +6,8 @@
  * in the file LICENSE in the source distribution or at
  * https://www.openssl.org/source/license.html
  */
+#include <stdint.h>
+#include <string.h>
 #include "internal/packet.h"
 #include "internal/quic_txp.h"
 #include "internal/quic_statm.h"
@@ -14,6 +16,25 @@
 #include "internal/quic_channel.h"
 #include "testutil.h"
 #include "quic_record_test_util.h"
+#include "internal/nelem.h"
+#include "internal/quic_ackm.h"
+#include "internal/quic_cc.h"
+#include "internal/quic_cfq.h"
+#include "internal/quic_fc.h"
+#include "internal/quic_predef.h"
+#include "internal/quic_record_tx.h"
+#include "internal/quic_record_util.h"
+#include "internal/quic_stream.h"
+#include "internal/quic_stream_map.h"
+#include "internal/quic_txpim.h"
+#include "internal/quic_types.h"
+#include "internal/quic_wire.h"
+#include "internal/quic_wire_pkt.h"
+#include "internal/time.h"
+#include "openssl/bio.h"
+#include "openssl/buffer.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 static const QUIC_CONN_ID scid_1 = {
     1, { 0x5f }

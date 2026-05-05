@@ -11,6 +11,12 @@
 #include <openssl/crypto.h>
 #include "internal/provider.h"
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/evp.h"
+#include "openssl/opensslv.h"
+#include "openssl/provider.h"
+#include "openssl/types.h"
 
 extern OSSL_provider_init_fn PROVIDER_INIT_FUNCTION_NAME;
 

@@ -11,8 +11,10 @@
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
-
 #include "testutil.h"
+#include "openssl/buffer.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 /* 2047 bytes of "#ooooooooo..." + NUL terminator */
 static char gunk[2048];

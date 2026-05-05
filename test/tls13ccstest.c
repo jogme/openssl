@@ -12,6 +12,10 @@
 #include "helpers/ssltestlib.h"
 #include "testutil.h"
 #include "internal/packet.h"
+#include "openssl/bio.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/ssl3.h"
+#include "openssl/types.h"
 
 static char *cert = NULL;
 static char *privkey = NULL;

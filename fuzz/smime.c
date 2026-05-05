@@ -8,11 +8,16 @@
  * or in the file LICENSE in the source distribution.
  */
 
-#include "fuzzer.h"
 #include <openssl/err.h>
 #include <openssl/pkcs7.h>
 #include <openssl/x509.h>
 #include <stdio.h>
+#include <stdint.h>
+#include "fuzzer.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 int FuzzerInitialize(int *argc, char ***argv)
 {

@@ -10,9 +10,11 @@
 #if !defined(OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_ARIA_GCM_H)
 #define OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_ARIA_GCM_H
 
+#include <stddef.h>
 #include "crypto/aria.h"
 #include "prov/ciphercommon.h"
 #include "prov/ciphercommon_gcm.h"
+#include "internal/common.h"
 
 typedef struct prov_aria_gcm_ctx_st {
     PROV_GCM_CTX base; /* must be first entry in struct */

@@ -9,16 +9,13 @@
 
 /* time_t/offset (+/-XXXX) tests for ASN1 and X509 */
 
-#include <stdio.h>
 #include <string.h>
 #include <time.h>
-
 #include <openssl/asn1.h>
-#include <openssl/x509.h>
+#include <crypto/asn1.h>
 #include "testutil.h"
 #include "internal/nelem.h"
-
-#include <crypto/asn1.h>
+#include "openssl/types.h"
 
 typedef struct {
     const char *data;

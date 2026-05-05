@@ -9,21 +9,19 @@
 
 /* Time tests for the asn1 module */
 
-#include <inttypes.h>
 #include <limits.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <string.h>
-
 #include <crypto/asn1.h>
 #include <openssl/asn1.h>
-#include <openssl/evp.h>
-#include <openssl/objects.h>
+#include <time.h>
 #include "testutil.h"
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
 /* IWYU pragma: end_keep */
 #include "internal/nelem.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 struct testdata {
     char *data; /* TIME string value */

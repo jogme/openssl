@@ -8,8 +8,10 @@
  */
 
 #include "internal/quic_fc.h"
-#include "internal/quic_error.h"
+#include <stdio.h>
 #include "testutil.h"
+#include "internal/nelem.h"
+#include "openssl/quic.h"
 
 static int test_txfc(int is_stream)
 {

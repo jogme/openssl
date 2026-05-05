@@ -10,6 +10,10 @@
 #include <stdlib.h>
 #include "apps.h"
 #include "../testutil.h"
+#include "app_libctx.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 /* shim that avoids sucking in too much from apps/apps.c */
 

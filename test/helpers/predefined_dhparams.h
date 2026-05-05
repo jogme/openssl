@@ -8,6 +8,7 @@
  */
 
 #include <openssl/evp.h>
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_DH
 EVP_PKEY *get_dh512(OSSL_LIB_CTX *libctx);

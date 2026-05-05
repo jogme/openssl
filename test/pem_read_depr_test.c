@@ -18,8 +18,10 @@
 #include <openssl/dh.h>
 #include <openssl/dsa.h>
 #include <openssl/rsa.h>
-
+#include <stddef.h>
 #include "testutil.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 static const char *datadir;
 

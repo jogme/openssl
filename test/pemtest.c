@@ -10,9 +10,11 @@
 #include <string.h>
 #include <openssl/bio.h>
 #include <openssl/pem.h>
-
 #include "testutil.h"
 #include "internal/nelem.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 
 typedef struct {
     const char *raw;

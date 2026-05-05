@@ -15,6 +15,11 @@
 
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/types.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
@@ -25,17 +30,14 @@
 #include <openssl/params.h>
 #include <openssl/kdf.h>
 #include <openssl/err.h>
-#include <openssl/sha.h>
 #include <openssl/rand.h>
 #include <openssl/proverr.h>
-#include "internal/cryptlib.h"
+#include <stdint.h>
 #include "prov/provider_ctx.h"
 #include "prov/implementations.h"
-#include "prov/securitycheck.h"
 #include "prov/providercommon.h"
 #include "prov/ecx.h"
 #include "crypto/ecx.h"
-#include <openssl/hpke.h>
 #include "internal/hpke_util.h"
 #include "prov/eckem.h"
 #include "providers/implementations/kem/ecx_kem.inc"

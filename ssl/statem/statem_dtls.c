@@ -11,7 +11,6 @@
 #include <limits.h>
 #include <string.h>
 #include <openssl/buffer.h>
-#include <openssl/ssl3.h>
 #include <stdint.h>
 #include "../ssl_local.h"
 #include "statem_local.h"

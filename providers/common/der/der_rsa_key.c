@@ -13,10 +13,19 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/rsa.h"
+#include "internal/common.h"
+#include "internal/der.h"
+#include "internal/packet.h"
+#include "openssl/err.h"
+#include "openssl/rsa.h"
+#include "openssl/rsaerr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/obj_mac.h>
-#include "internal/cryptlib.h"
+#include <stddef.h>
+#include <stdint.h>
 #include "prov/der_rsa.h"
 #include "prov/der_digests.h"
 

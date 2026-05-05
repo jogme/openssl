@@ -9,8 +9,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <openssl/e_os2.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 
 #ifdef OPENSSL_SYS_UNIX
 #include <sys/stat.h>
@@ -19,7 +23,6 @@
 #include <openssl/x509.h>
 #include <openssl/err.h>
 #include <openssl/bio.h>
-#include "internal/e_os.h"
 #if defined(_POSIX_VERSION) && _POSIX_VERSION >= 200112L
 
 #ifndef timersub

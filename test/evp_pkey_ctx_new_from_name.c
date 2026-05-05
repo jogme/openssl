@@ -1,7 +1,6 @@
 #include <stdio.h>
-#include <openssl/ec.h>
 #include <openssl/evp.h>
-#include <openssl/err.h>
+#include "openssl/types.h"
 
 int main(int argc, char *argv[])
 {

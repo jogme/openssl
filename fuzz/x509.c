@@ -12,8 +12,10 @@
 #include <openssl/ocsp.h>
 #include <openssl/bio.h>
 #include <openssl/err.h>
-#include <openssl/rand.h>
 #include "fuzzer.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509_vfy.h"
 
 int FuzzerInitialize(int *argc, char ***argv)
 {

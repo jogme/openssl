@@ -13,12 +13,16 @@
  */
 #include <string.h>
 #include <openssl/evp.h>
-#include <openssl/err.h>
 #include <openssl/rand.h>
 #include <openssl/byteorder.h>
 #include <openssl/ml_kem.h>
+#include <stdint.h>
+#include <stdio.h>
 #include "internal/nelem.h"
 #include "fuzzer.h"
+#include "openssl/crypto.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 /**
  * @brief Consumes an 8-bit unsigned integer from a buffer.

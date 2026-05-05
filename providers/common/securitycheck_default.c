@@ -9,9 +9,9 @@
 
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <openssl/rsa.h>
 #include <openssl/core.h>
 #include <openssl/core_names.h>
 #include <openssl/obj_mac.h>

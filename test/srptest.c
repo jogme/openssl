@@ -14,7 +14,11 @@
 #define OPENSSL_SUPPRESS_DEPRECATED
 
 #include <openssl/opensslconf.h>
+#include <stddef.h>
 #include "testutil.h"
+#include "openssl/bn.h"
+#include "openssl/opensslconf.h"
+#include "openssl/types.h"
 
 #ifdef OPENSSL_NO_SRP
 #include <stdio.h>
@@ -22,7 +26,6 @@
 
 #include <openssl/srp.h>
 #include <openssl/rand.h>
-#include <openssl/err.h>
 
 #define RANDOM_SIZE 32 /* use 256 bits on each side */
 

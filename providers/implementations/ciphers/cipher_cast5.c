@@ -7,17 +7,21 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 /*
  * CAST low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "prov/ciphercommon.h"
 /* IWYU pragma: end_keep */
 
 /* Dispatch functions for cast cipher modes ecb, cbc, ofb, cfb */
 
-#include <openssl/proverr.h>
 #include "cipher_cast.h"
 #include "prov/implementations.h"
 #include "prov/providercommon.h"

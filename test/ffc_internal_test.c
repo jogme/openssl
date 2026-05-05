@@ -14,20 +14,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/dh.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "internal/nelem.h"
-#include <openssl/crypto.h>
-#include <openssl/bio.h>
 #include <openssl/bn.h>
-#include <openssl/rand.h>
-#include <openssl/err.h>
 #include "testutil.h"
-
 #include "internal/ffc.h"
 #include "crypto/security_bits.h"
 

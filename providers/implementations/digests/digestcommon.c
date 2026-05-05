@@ -11,9 +11,10 @@
 #include <openssl/err.h>
 #include <openssl/proverr.h>
 #include "prov/digestcommon.h"
-#include "internal/common.h"
-
 #include "providers/implementations/digests/digestcommon.inc"
+#include "openssl/core.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 int ossl_digest_default_get_params(OSSL_PARAM params[], size_t blksz,
     size_t paramsz, unsigned long flags)

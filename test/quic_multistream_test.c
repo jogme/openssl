@@ -6,11 +6,19 @@
  * in the file LICENSE in the source distribution or at
  * https://www.openssl.org/source/license.html
  */
-#include <openssl/ssl.h>
 #include <openssl/quic.h>
 #include <openssl/bio.h>
 #include <openssl/lhash.h>
 #include <openssl/rand.h>
+#include <arpa/inet.h>
+#include <assert.h>
+#include <netinet/in.h>
+#include <openssl/ssl3.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/time.h>
 #include "internal/quic_tserver.h"
 #include "internal/quic_ssl.h"
 #include "internal/quic_error.h"
@@ -18,10 +26,30 @@
 #include "internal/quic_engine.h"
 #include "testutil.h"
 #include "helpers/quictestlib.h"
+#include "internal/nelem.h"
+#include "internal/packet.h"
+#include "internal/packet_quic.h"
+#include "internal/quic_channel.h"
+#include "internal/quic_predef.h"
+#include "internal/quic_record_tx.h"
+#include "internal/quic_types.h"
+#include "internal/quic_vlint.h"
+#include "internal/quic_wire.h"
+#include "internal/quic_wire_pkt.h"
+#include "internal/time.h"
+#include "openssl/buffer.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/ssl3.h"
+#include "openssl/sslerr.h"
+#include "openssl/tls1.h"
+#include "openssl/types.h"
 #if defined(OPENSSL_THREADS)
 #include "internal/thread_arch.h"
 #endif
-#include "internal/numbers.h" /* UINT64_C */
 
 static const char *certfile, *keyfile;
 

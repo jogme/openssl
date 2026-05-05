@@ -13,20 +13,25 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/common.h"
 /* IWYU pragma: end_keep */
 
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/dsa.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/pemerr.h"
+#include "openssl/rsa.h"
+#include "openssl/types.h"
+#include "prov/provider_ctx.h"
 #include <string.h>
-
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
 #include <openssl/core_object.h>
 #include <openssl/crypto.h>
 #include <openssl/params.h>
 #include <openssl/err.h>
-#include <openssl/proverr.h>
-#include <openssl/pem.h> /* For public PVK functions */
-#include <openssl/x509.h>
-#include "internal/cryptlib.h"
 #include "internal/passphrase.h"
 #include "internal/sizes.h"
 #include "crypto/pem.h" /* For internal PVK and "blob" headers */
@@ -37,6 +42,7 @@
 #include "providers/implementations/encode_decode/decode_pvk2key.inc"
 
 struct pvk2key_ctx_st; /* Forward declaration */
+
 typedef int check_key_fn(void *, struct pvk2key_ctx_st *ctx);
 typedef void adjust_key_fn(void *, struct pvk2key_ctx_st *ctx);
 typedef void *b2i_PVK_of_bio_pw_fn(BIO *in, pem_password_cb *cb, void *u,

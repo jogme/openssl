@@ -19,7 +19,6 @@
 #define OPENSSL_SUPPRESS_DEPRECATED
 
 #include <stdio.h>
-#include <string.h>
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
 #include <openssl/dh.h>
@@ -33,13 +32,16 @@
 #include <openssl/cms.h>
 #include <openssl/ess.h>
 #include <openssl/err.h>
-#include <openssl/rand.h>
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 #include <openssl/ssl.h>
 #include <openssl/x509_acert.h>
-#include "internal/nelem.h"
+#include <stdint.h>
 #include "fuzzer.h"
+#include "openssl/crypto.h"
+#include "openssl/pkcs7.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 static ASN1_ITEM_EXP *item_type[] = {
     ASN1_ITEM_ref(ACCESS_DESCRIPTION),

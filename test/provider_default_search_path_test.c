@@ -10,6 +10,8 @@
 #include <stddef.h>
 #include <openssl/provider.h>
 #include "testutil.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 static int test_default_libctx(void)
 {

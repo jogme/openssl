@@ -11,9 +11,11 @@
 #define OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_AES_GCM_H
 
 #include <openssl/aes.h>
+#include <stddef.h>
 #include "prov/ciphercommon.h"
 #include "prov/ciphercommon_gcm.h"
 #include "crypto/aes_platform.h"
+#include "internal/common.h"
 
 typedef struct prov_aes_gcm_ctx_st {
     PROV_GCM_CTX base; /* must be first entry in struct */

@@ -7,7 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <string.h>
 #include <stdio.h>
 #include <openssl/opensslconf.h>
 #include <openssl/core.h>
@@ -18,8 +17,12 @@
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
 #include "prov/implementations.h"
-#include "prov/provider_util.h"
 #include "prov/names.h"
+#include "openssl/bio.h"
+#include "openssl/configuration.h"
+#include "openssl/opensslconf.h"
+#include "openssl/opensslv.h"
+#include "openssl/types.h"
 
 /*
  * Forward declarations to ensure that interface functions are correctly
@@ -71,6 +74,7 @@ static int base_get_params(void *provctx, OSSL_PARAM params[])
 static const OSSL_ALGORITHM base_encoder[] = {
 #define ENCODER_PROVIDER "base"
 #include "encoders.inc"
+
     { NULL, NULL, NULL }
 #undef ENCODER_PROVIDER
 };
@@ -78,6 +82,7 @@ static const OSSL_ALGORITHM base_encoder[] = {
 static const OSSL_ALGORITHM base_decoder[] = {
 #define DECODER_PROVIDER "base"
 #include "decoders.inc"
+
     { NULL, NULL, NULL }
 #undef DECODER_PROVIDER
 };
@@ -87,6 +92,7 @@ static const OSSL_ALGORITHM base_store[] = {
     { name, "provider=base,fips=" _fips, (func_table) },
 
 #include "stores.inc"
+
     { NULL, NULL, NULL }
 #undef STORE
 };

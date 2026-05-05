@@ -8,18 +8,12 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "internal/nelem.h"
-#include <openssl/crypto.h>
 #include <openssl/bio.h>
-#include <openssl/bn.h>
-#include <openssl/rand.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
-#include <openssl/ec.h>
+#include "internal/nelem.h"
 #include "testutil.h"
+#include "openssl/types.h"
 
 #if defined(OPENSSL_NO_DH) && defined(OPENSSL_NO_DSA) && defined(OPENSSL_NO_EC)
 #define OPENSSL_NO_KEYPARAMS

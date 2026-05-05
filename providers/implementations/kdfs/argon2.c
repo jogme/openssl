@@ -10,28 +10,24 @@
  *
  */
 
-#include <stdlib.h>
-#include <stddef.h>
-#include <stdarg.h>
 #include <string.h>
 #include <openssl/e_os2.h>
 #include <openssl/evp.h>
-#include <openssl/objects.h>
 #include <openssl/crypto.h>
-#include <openssl/kdf.h>
 #include <openssl/err.h>
 #include <openssl/core_names.h>
 #include <openssl/params.h>
-#include <openssl/thread.h>
 #include <openssl/proverr.h>
+#include <stdint.h>
 #include "internal/thread.h"
-#include "internal/numbers.h"
-#include "internal/endian.h"
-#include "crypto/evp.h"
 #include "prov/implementations.h"
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
 #include "prov/blake2.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/types.h"
 
 #if defined(OPENSSL_NO_DEFAULT_THREAD_POOL) && defined(OPENSSL_NO_THREAD_POOL)
 #define ARGON2_NO_THREADS

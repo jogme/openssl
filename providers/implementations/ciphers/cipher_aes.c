@@ -14,6 +14,9 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
 /* IWYU pragma: end_keep */
 
 /* Dispatch functions for AES cipher modes ecb, cbc, ofb, cfb, ctr */
@@ -92,5 +95,3 @@ IMPLEMENT_generic_cipher(aes, AES, ctr, CTR, 0, 256, 8, 128, stream)
 IMPLEMENT_generic_cipher(aes, AES, ctr, CTR, 0, 192, 8, 128, stream)
 /* ossl_aes128ctr_functions */
 IMPLEMENT_generic_cipher(aes, AES, ctr, CTR, 0, 128, 8, 128, stream)
-
-#include "cipher_aes_cts.inc"

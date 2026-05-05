@@ -21,6 +21,7 @@
 #include <openssl/decodererr.h>
 #include <openssl/types.h>
 #include <openssl/core.h>
+#include "openssl/opensslconf.h"
 
 #ifdef __cplusplus
 extern "C" {

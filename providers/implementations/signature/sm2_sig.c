@@ -13,26 +13,28 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/packet.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/ec.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h> /* memcpy */
 #include <openssl/crypto.h>
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
-#include <openssl/dsa.h>
 #include <openssl/params.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/prov_ssl.h>
 #include <openssl/proverr.h>
-#include "internal/nelem.h"
+#include <stdint.h>
 #include "internal/sizes.h"
-#include "internal/cryptlib.h"
 #include "internal/sm3.h"
 #include "prov/implementations.h"
 #include "prov/providercommon.h"
 #include "prov/provider_ctx.h"
-#include "crypto/ec.h"
 #include "crypto/sm2.h"
 #include "prov/der_sm2.h"
 #include "providers/implementations/signature/sm2_sig.inc"

@@ -10,13 +10,14 @@
 /* Internal tests for the x509 and x509v3 modules */
 
 #include <stdio.h>
-#include <string.h>
-
-#include <openssl/ssl.h>
+#include <stdint.h>
 #include "testutil.h"
 #include "internal/nelem.h"
 #include "../ssl/ssl_local.h"
 #include "../ssl/ssl_cert_table.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
 
 #define test_cert_table(nid, amask, idx) \
     do_test_cert_table(nid, amask, idx, #idx)

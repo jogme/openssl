@@ -8,11 +8,15 @@
  */
 
 #include <string.h>
-#include <internal/cryptlib.h>
 #include <internal/thread_arch.h>
 #include <internal/thread.h>
 #include <openssl/thread.h>
+#include <stdint.h>
 #include "testutil.h"
+#include "internal/nelem.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 static int test_thread_reported_flags(void)
 {

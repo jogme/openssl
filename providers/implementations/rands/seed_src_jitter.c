@@ -7,24 +7,8 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <string.h>
-#include <openssl/rand.h>
-#include <openssl/core_dispatch.h>
-#include <openssl/e_os2.h>
-#include <openssl/params.h>
-#include <openssl/core_names.h>
-#include <openssl/evp.h>
-#include <openssl/err.h>
-#include <openssl/randerr.h>
-#include <openssl/proverr.h>
-#include <openssl/self_test.h>
-#include "internal/common.h"
-#include "prov/implementations.h"
-#include "prov/provider_ctx.h"
-#include "prov/providercommon.h"
-#include "crypto/rand.h"
-#include "crypto/rand_pool.h"
-
+#include <openssl/opensslv.h>
+#include "openssl/configuration.h"
 #ifndef OPENSSL_NO_JITTER
 #include <jitterentropy.h>
 #include "providers/implementations/rands/seed_src_jitter.inc"

@@ -8,17 +8,20 @@
  */
 
 #include <openssl/evp.h>
-#include <openssl/kdf.h>
-#include <openssl/sha.h>
-#include <openssl/core_names.h>
 #include <openssl/proverr.h>
-#include "internal/cryptlib.h"
-#include "internal/fips.h"
+#include <string.h>
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
 #include "prov/implementations.h"
 #include "prov/provider_util.h"
 #include "providers/implementations/kdfs/snmpkdf.inc"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 #define KDF_SNMP_PASSWORD_HASH_AMOUNT (1024 * 1024)
 #define KDF_SNMP_MIN_PASSWORD_LEN 8

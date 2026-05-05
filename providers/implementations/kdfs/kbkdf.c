@@ -24,29 +24,29 @@
  * Variable names attempt to match those of SP800-108.
  */
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
+/* IWYU pragma: begin_keep */
+#include "internal/common.h"
+/* IWYU pragma: end_keep */
 
+#include <string.h>
 #include <openssl/core_names.h>
 #include <openssl/evp.h>
-#include <openssl/hmac.h>
-#include <openssl/kdf.h>
 #include <openssl/params.h>
 #include <openssl/proverr.h>
-
-#include "internal/cryptlib.h"
-#include "crypto/evp.h"
-#include "internal/numbers.h"
+#include <stdint.h>
 #include "internal/endian.h"
 #include "prov/implementations.h"
 #include "prov/provider_ctx.h"
 #include "prov/provider_util.h"
 #include "prov/providercommon.h"
-#include "prov/securitycheck.h"
-#include "internal/e_os.h"
-#include "internal/fips.h"
 #include "internal/params.h"
+#include "fips/fipsindicator.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 
 #define ossl_min(a, b) ((a) < (b)) ? (a) : (b)
 

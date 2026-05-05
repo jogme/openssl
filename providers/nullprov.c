@@ -7,14 +7,14 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <string.h>
 #include <stdio.h>
 #include <openssl/core.h>
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
 #include <openssl/params.h>
-#include "prov/implementations.h"
 #include "prov/providercommon.h"
+#include "openssl/opensslv.h"
+#include "openssl/types.h"
 
 OSSL_provider_init_fn ossl_null_provider_init;
 

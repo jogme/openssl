@@ -10,7 +10,6 @@
  */
 
 #include <limits.h>
-#include <openssl/x509.h>
 #include <stdint.h>
 #include <time.h>
 #include "cmp_local.h"

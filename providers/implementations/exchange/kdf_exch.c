@@ -10,15 +10,17 @@
 #include <openssl/crypto.h>
 #include <openssl/kdf.h>
 #include <openssl/core_dispatch.h>
-#include <openssl/core_names.h>
 #include <openssl/err.h>
 #include <openssl/proverr.h>
-#include <openssl/params.h>
-#include "internal/numbers.h"
+#include <stddef.h>
+#include <stdint.h>
 #include "prov/implementations.h"
 #include "prov/provider_ctx.h"
 #include "prov/kdfexchange.h"
 #include "prov/providercommon.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 static OSSL_FUNC_keyexch_newctx_fn kdf_tls1_prf_newctx;
 static OSSL_FUNC_keyexch_newctx_fn kdf_hkdf_newctx;

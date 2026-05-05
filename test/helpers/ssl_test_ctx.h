@@ -12,6 +12,8 @@
 
 #include <openssl/conf.h>
 #include <openssl/ssl.h>
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 typedef enum {
     SSL_TEST_SUCCESS = 0, /* Default */

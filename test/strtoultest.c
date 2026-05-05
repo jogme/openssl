@@ -9,6 +9,8 @@
 
 #include <openssl/crypto.h>
 #include <internal/nelem.h>
+#include <limits.h>
+#include <stddef.h>
 #include "testutil.h"
 
 struct strtoul_test_entry {

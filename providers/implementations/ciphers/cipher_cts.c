@@ -47,9 +47,11 @@
  */
 
 #include <openssl/core_names.h>
+#include <string.h>
 #include "prov/ciphercommon.h"
 #include "internal/nelem.h"
 #include "cipher_cts.h"
+#include "openssl/crypto.h"
 
 /* The value assigned to 0 is the default */
 #define CTS_CS1 0

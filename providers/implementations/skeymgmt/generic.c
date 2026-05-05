@@ -10,16 +10,17 @@
 #include <string.h>
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
-#include <openssl/proverr.h>
 #include "crypto/types.h"
-#include "internal/cryptlib.h"
 #include "internal/skey.h"
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
 #include "prov/implementations.h"
 #include "prov/skeymgmt_lcl.h"
-
 #include "providers/implementations/skeymgmt/generic.inc"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 void generic_free(void *keydata)
 {

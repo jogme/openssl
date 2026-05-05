@@ -12,15 +12,28 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/types.h"
+#include "internal/ffc.h"
+#include "openssl/bio.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/dh.h"
+#include "openssl/dsa.h"
+#include "openssl/e_os2.h"
+#include "openssl/ec.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/rsa.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/core.h>
 #include <openssl/core_dispatch.h>
-#include <openssl/core_names.h>
 #include <openssl/bn.h>
 #include <openssl/err.h>
 #include <openssl/safestack.h>
 #include <openssl/proverr.h>
+#include <stddef.h>
 #include "crypto/dh.h" /* ossl_dh_get0_params() */
 #include "crypto/dsa.h" /* ossl_dsa_get0_params() */
 #include "crypto/ec.h" /* ossl_ec_key_get_libctx */
@@ -35,7 +48,6 @@
 #include "prov/endecoder_local.h"
 #include "prov/ml_dsa_codecs.h"
 #include "prov/ml_kem_codecs.h"
-#include "prov/lms_codecs.h"
 
 DEFINE_SPECIAL_STACK_OF_CONST(BIGNUM_const, BIGNUM)
 

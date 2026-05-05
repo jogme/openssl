@@ -15,9 +15,12 @@
 #include <openssl/cmp.h>
 #include <openssl/pem.h>
 #include <openssl/rand.h>
-
 #include "../../crypto/cmp/cmp_local.h"
 #include "../testutil.h"
+#include "openssl/cmp_util.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 #ifndef OPENSSL_NO_CMP
 #define CMP_TEST_REFVALUE_LENGTH 15 /* arbitrary value */

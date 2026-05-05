@@ -8,7 +8,9 @@
  */
 
 #include <openssl/evp.h>
+#include <stddef.h>
 #include "testutil.h"
+#include "openssl/objects.h"
 
 /*
  * Password based encryption (PBE) table ordering test.

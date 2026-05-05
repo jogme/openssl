@@ -13,9 +13,21 @@
 #include <openssl/proverr.h>
 #include <openssl/x509.h>
 #include <openssl/core_names.h>
+#include <stdint.h>
 #include "internal/encoder.h"
 #include "prov/ml_dsa.h"
 #include "prov/ml_dsa_codecs.h"
+#include "crypto/ml_dsa.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/objects.h"
+#include "openssl/types.h"
+#include "prov/ml_common_codecs.h"
+#include "prov/provider_ctx.h"
 
 /*-
  * Tables describing supported ASN.1 input/output formats.

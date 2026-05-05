@@ -15,16 +15,23 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bn.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objectserr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
 #include <string.h>
-
 #include <openssl/asn1.h>
 #include <openssl/evp.h>
 #include <openssl/pkcs12.h>
 #include <openssl/objects.h>
 #include <openssl/posix_time.h>
+#include <limits.h>
+#include <stdint.h>
+#include <time.h>
 #include "testutil.h"
 #include "internal/nelem.h"
 

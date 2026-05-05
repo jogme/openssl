@@ -12,6 +12,9 @@
 #include "cipher_sm4.h"
 #include "prov/implementations.h"
 #include "prov/providercommon.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
 
 static OSSL_FUNC_cipher_freectx_fn sm4_freectx;
 static OSSL_FUNC_cipher_dupctx_fn sm4_dupctx;

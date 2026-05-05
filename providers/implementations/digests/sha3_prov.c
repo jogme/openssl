@@ -9,19 +9,21 @@
 
 #include <string.h>
 #include <openssl/byteorder.h>
-#include <openssl/core_names.h>
 #include <openssl/crypto.h>
-#include <openssl/evp.h>
 #include <openssl/params.h>
 #include <openssl/err.h>
 #include <openssl/proverr.h>
-#include "internal/cryptlib.h"
-#include "internal/numbers.h"
+#include <stdint.h>
 #include "internal/sha3.h"
 #include "prov/digestcommon.h"
 #include "prov/implementations.h"
 #include "internal/common.h"
 #include "providers/implementations/digests/sha3_prov.inc"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
+#include "prov/providercommon.h"
 
 #define SHA3_FLAGS PROV_DIGEST_FLAG_ALGID_ABSENT
 #define SHAKE_FLAGS (PROV_DIGEST_FLAG_XOF | PROV_DIGEST_FLAG_ALGID_ABSENT)
@@ -60,6 +62,7 @@
  * IBM S390X support
  */
 #include "s390x_arch.h"
+
 #define S390_SHA3 1
 #define S390_SHA3_CAPABLE(name) \
     ((OPENSSL_s390xcap_P.kimd[0] & S390X_CAPBIT(S390X_##name)) && (OPENSSL_s390xcap_P.klmd[0] & S390X_CAPBIT(S390X_##name)))

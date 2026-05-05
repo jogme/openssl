@@ -11,12 +11,16 @@
 #include <openssl/opensslconf.h>
 #include <openssl/rand.h>
 #include <openssl/core_names.h>
-#ifndef OPENSSL_NO_STDIO
-#include <stdio.h>
-#endif
 #include <crypto/ml_kem.h>
+#include <stdint.h>
 #include "testutil.h"
-#include "testutil/output.h"
+#include "internal/nelem.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/opensslconf.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 static uint8_t ml_kem_private_entropy[] = {
     /* Seed for genkey */

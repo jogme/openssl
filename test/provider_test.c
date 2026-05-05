@@ -7,10 +7,20 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stddef.h>
 #include <openssl/provider.h>
 #include <openssl/param_build.h>
+#include <stdio.h>
+#include <string.h>
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/opensslv.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 extern OSSL_provider_init_fn PROVIDER_INIT_FUNCTION_NAME;
 

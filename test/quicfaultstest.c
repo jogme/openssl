@@ -9,9 +9,19 @@
 
 #include <string.h>
 #include <openssl/ssl.h>
+#include <stdint.h>
 #include "helpers/quictestlib.h"
 #include "internal/quic_error.h"
 #include "testutil.h"
+#include "internal/quic_tserver.h"
+#include "internal/quic_wire_pkt.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/quic.h"
+#include "openssl/sslerr.h"
+#include "openssl/tls1.h"
+#include "openssl/types.h"
 
 static char *cert = NULL;
 static char *privkey = NULL;

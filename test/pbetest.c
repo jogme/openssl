@@ -8,15 +8,10 @@
  */
 
 #include <string.h>
-
-#include "testutil.h"
-
 #include <openssl/evp.h>
 #include <openssl/x509.h>
-#include <openssl/rc4.h>
-#include <openssl/md5.h>
-#include <openssl/configuration.h>
-#include <openssl/provider.h>
+#include "testutil.h"
+#include "openssl/types.h"
 
 #if !defined OPENSSL_NO_RC4 && !defined OPENSSL_NO_MD5 \
     || !defined OPENSSL_NO_DES && !defined OPENSSL_NO_SHA1

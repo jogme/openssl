@@ -10,6 +10,10 @@
 #include <string.h>
 #include <openssl/bio.h>
 #include "testutil.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 struct ossl_core_bio_st {
     int dummy;

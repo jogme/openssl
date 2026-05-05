@@ -10,8 +10,12 @@
 #include <string.h>
 #include <openssl/buffer.h>
 #include <openssl/rand.h>
+#include <stdint.h>
 #include "internal/packet_quic.h"
 #include "testutil.h"
+#include "internal/packet.h"
+#include "internal/quic_vlint.h"
+#include "openssl/types.h"
 
 static const unsigned char simple1[] = { 0xff };
 static const unsigned char simple2[] = { 0x01, 0xff };

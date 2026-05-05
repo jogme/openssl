@@ -9,9 +9,23 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <openssl/x509.h>
+#include <stddef.h>
 #include "helpers/cmp_testlib.h"
-
 #include "cmp_mock_srv.h"
+#include "crypto/cmp/cmp_local.h"
+#include "openssl/cmp.h"
+#include "openssl/cmp_util.h"
+#include "openssl/crmf.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/objects.h"
+#include "openssl/provider.h"
+#include "openssl/rand.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "test/testutil.h"
 
 static const char *server_key_f;
 static const char *server_cert_f;

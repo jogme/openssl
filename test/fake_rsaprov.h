@@ -8,6 +8,7 @@
  */
 
 #include <openssl/core_dispatch.h>
+#include "openssl/types.h"
 
 #define FAKE_PASSPHRASE "Passphrase Testing"
 

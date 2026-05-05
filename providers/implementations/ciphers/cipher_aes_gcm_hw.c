@@ -9,12 +9,18 @@
 
 /* Dispatch functions for AES GCM mode */
 
+#include <stddef.h>
 /*
  * This file uses the low level AES functions (which are deprecated for
  * non-internal use) in order to implement provider AES ciphers.
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/aes_platform.h"
+#include "crypto/modes.h"
+#include "openssl/aes.h"
+#include "openssl/modes.h"
+#include "prov/ciphercommon_gcm.h"
 /* IWYU pragma: end_keep */
 
 #include "cipher_aes_gcm.h"
@@ -137,7 +143,6 @@ static const PROV_GCM_HW aes_gcm = {
 #if defined(S390X_aes_128_CAPABLE)
 #include "cipher_aes_gcm_hw_s390x.inc"
 #elif defined(AESNI_CAPABLE)
-#include "cipher_aes_gcm_hw_aesni.inc"
 #elif defined(SPARC_AES_CAPABLE)
 #include "cipher_aes_gcm_hw_t4.inc"
 #elif defined(AES_PMULL_CAPABLE) && defined(AES_GCM_ASM)

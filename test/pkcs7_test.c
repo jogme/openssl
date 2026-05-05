@@ -11,9 +11,11 @@
 #include <openssl/pkcs7.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
-#include <openssl/pem.h>
 #include "internal/nelem.h"
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_EC
 static const unsigned char cert_der[] = {

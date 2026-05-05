@@ -7,23 +7,23 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
 #include <openssl/evp.h>
-#include <openssl/kdf.h>
-#include <openssl/core_names.h>
 #include <openssl/proverr.h>
-#include "internal/cryptlib.h"
-#include "internal/fips.h"
-#include "internal/numbers.h"
-#include "crypto/evp.h"
+#include <stdint.h>
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
 #include "prov/implementations.h"
 #include "prov/provider_util.h"
-#include "prov/securitycheck.h"
 #include "providers/implementations/kdfs/sshkdf.inc"
+#include "fips/fipsindicator.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 /* See RFC 4253, Section 7.2 */
 static OSSL_FUNC_kdf_newctx_fn kdf_sshkdf_new;
@@ -61,16 +61,6 @@ static void *kdf_sshkdf_new(void *provctx)
 
     if (!ossl_prov_is_running())
         return NULL;
-
-#ifdef FIPS_MODULE
-    /*
-     * Normally we'd want a call to ossl_deferred_self_test() here, but
-     * according to FIPS 140-3 10.3.A Note18: SSH KDF is not required, since
-     * it is sufficient to self-test the underlying SHA hash functions.
-     * The underlying hash functions are implicitly tested when the hash is
-     * instantiated, so we do not need to have an explicit test here.
-     */
-#endif
 
     if ((ctx = OPENSSL_zalloc(sizeof(*ctx))) != NULL) {
         ctx->provctx = provctx;

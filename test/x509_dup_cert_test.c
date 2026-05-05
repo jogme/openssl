@@ -9,10 +9,10 @@
  */
 
 #include <stdio.h>
-#include <openssl/err.h>
 #include <openssl/x509_vfy.h>
-
 #include "testutil.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 static int test_509_dup_cert(int n)
 {

@@ -13,29 +13,30 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/common.h"
 /* IWYU pragma: end_keep */
 
-#include <stdlib.h>
-#include <stdarg.h>
+#include "fips/fipsindicator.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 #include <string.h>
 #include <openssl/hmac.h>
 #include <openssl/evp.h>
 #include <openssl/kdf.h>
 #include <openssl/core_names.h>
 #include <openssl/proverr.h>
-#include "internal/cryptlib.h"
-#include "internal/numbers.h"
+#include <stdint.h>
 #include "internal/packet.h"
-#include "crypto/evp.h"
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
 #include "prov/implementations.h"
 #include "prov/provider_util.h"
-#include "prov/securitycheck.h"
-#include "internal/e_os.h"
-#include "internal/fips.h"
 #include "internal/params.h"
-#include "internal/sizes.h"
 
 #define HKDF_MAXBUF 2048
 #define HKDF_MAXINFO (32 * 1024)

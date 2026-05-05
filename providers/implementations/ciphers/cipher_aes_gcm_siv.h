@@ -11,8 +11,13 @@
 #define OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_AES_GCM_SIV_H
 
 #include <openssl/aes.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "prov/ciphercommon.h"
 #include "crypto/aes_platform.h"
+#include "crypto/modes.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 #define BLOCK_SIZE 16
 #define NONCE_SIZE 12

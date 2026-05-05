@@ -8,7 +8,11 @@
  */
 
 #include <openssl/evp.h>
+#include <stddef.h>
 #include "testutil.h"
+#include "openssl/crypto.h"
+#include "openssl/provider.h"
+#include "openssl/types.h"
 
 /*
  * Test that the default libctx does not get initialised when using a custom

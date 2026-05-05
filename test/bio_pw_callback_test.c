@@ -7,10 +7,15 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "testutil.h"
-
 #include <openssl/bio.h>
 #include <openssl/pem.h>
+#include <string.h>
+#include "testutil.h"
+#include "openssl/buffer.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 /* dummy data that needs to be passed to the callback */
 typedef struct CallbackData {

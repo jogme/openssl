@@ -19,6 +19,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <openssl/crypto.h>
+#include <limits.h>
 #include "fuzzer.h"
 #include "internal/o_dir.h"
 

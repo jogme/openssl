@@ -10,6 +10,7 @@
 #ifndef OSSL_TEST_SIMPLEDYNAMIC_H
 #define OSSL_TEST_SIMPLEDYNAMIC_H
 
+#include <stddef.h>
 #include "crypto/dso_conf.h"
 
 #if defined(DSO_DLFCN) || defined(DSO_VMS)

@@ -7,7 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/ssl3.h>
 #include <stddef.h>
 #include "ssl_local.h"
 #include "internal/ssl_unwrap.h"

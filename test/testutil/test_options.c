@@ -7,8 +7,9 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 #include "../testutil.h"
-#include "tu_local.h"
+#include "opt.h"
 
 /* An overridable list of command line options */
 const OPTIONS *test_get_options(void)

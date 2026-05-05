@@ -7,6 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 /*
  * IDEA low level APIs are deprecated for public use, but still ok for internal
  * use where we're using them to implement the higher level EVP interface, as is
@@ -14,6 +15,10 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/idea.h"
+#include "prov/ciphercommon.h"
 /* IWYU pragma: end_keep */
 
 #include "cipher_idea.h"

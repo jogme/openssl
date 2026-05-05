@@ -8,11 +8,9 @@
  */
 
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <openssl/crypto.h>
-
 #include "testutil.h"
+#include "openssl/types.h"
 
 static long saved_argl;
 static void *saved_argp;

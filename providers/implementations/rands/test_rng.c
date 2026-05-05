@@ -8,22 +8,19 @@
  */
 
 #include <string.h>
-#include <stdlib.h>
 #include <openssl/core_dispatch.h>
 #include <openssl/e_os2.h>
 #include <openssl/params.h>
-#include <openssl/core_names.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
-#include <openssl/proverr.h>
 #include <openssl/randerr.h>
-#include "internal/common.h"
-#include "prov/securitycheck.h"
-#include "prov/providercommon.h"
-#include "prov/provider_ctx.h"
-#include "prov/provider_util.h"
+#include <limits.h>
+#include <stdint.h>
 #include "prov/implementations.h"
 #include "providers/implementations/rands/test_rng.inc"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 static OSSL_FUNC_rand_newctx_fn test_rng_new;
 static OSSL_FUNC_rand_freectx_fn test_rng_free;

@@ -13,26 +13,36 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/asn1.h"
+#include "internal/sizes.h"
+#include "openssl/asn1.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/dh.h"
+#include "openssl/dsa.h"
+#include "openssl/e_os2.h"
+#include "openssl/ec.h"
+#include "openssl/evp.h"
+#include "openssl/objects.h"
+#include "openssl/rsa.h"
+#include "openssl/types.h"
+#include "prov/provider_ctx.h"
 /* IWYU pragma: end_keep */
 
-#include <openssl/byteorder.h>
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
 #include <openssl/core_object.h>
 #include <openssl/crypto.h>
 #include <openssl/err.h>
 #include <openssl/params.h>
-#include <openssl/pem.h> /* PEM_BUFSIZE and public PEM functions */
-#include <openssl/pkcs12.h>
-#include <openssl/provider.h>
 #include <openssl/x509.h>
 #include <openssl/proverr.h>
 #include <openssl/asn1t.h>
-#include "internal/cryptlib.h" /* ossl_assert() */
+#include <stdint.h>
+#include <string.h>
 #include "crypto/dh.h"
 #include "crypto/dsa.h"
 #include "crypto/ec.h"
-#include "crypto/evp.h"
 #include "crypto/ecx.h"
 #include "crypto/rsa.h"
 #include "crypto/ml_dsa.h"
@@ -40,13 +50,11 @@
 #include "crypto/x509.h"
 #include "crypto/ml_kem.h"
 #include "openssl/obj_mac.h"
-#include "prov/bio.h"
 #include "prov/implementations.h"
 #include "prov/endecoder_local.h"
 #include "internal/nelem.h"
 #include "prov/ml_dsa_codecs.h"
 #include "prov/ml_kem_codecs.h"
-#include "prov/lms_codecs.h"
 #include "providers/implementations/encode_decode/decode_der2key.inc"
 
 #ifndef OPENSSL_NO_SLH_DSA
@@ -70,6 +78,7 @@ ASN1_SEQUENCE(BARE_PUBKEY) = {
 #endif /* OPENSSL_NO_SLH_DSA */
 
 struct der2key_ctx_st; /* Forward declaration */
+
 typedef int check_key_fn(void *, struct der2key_ctx_st *ctx);
 typedef void adjust_key_fn(void *, struct der2key_ctx_st *ctx);
 typedef void free_key_fn(void *);

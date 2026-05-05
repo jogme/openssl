@@ -10,8 +10,13 @@
 
 #include <openssl/decoder.h>
 #include <openssl/err.h>
-#include <openssl/rand.h>
+#include <stdint.h>
 #include "fuzzer.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 
 static ASN1_PCTX *pctx;
 

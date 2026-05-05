@@ -9,7 +9,6 @@
 
 #include <openssl/safestack.h>
 #include <openssl/store.h>
-#include <openssl/x509.h>
 #include <stddef.h>
 #include "crypto/x509.h"
 #include "x509_local.h"

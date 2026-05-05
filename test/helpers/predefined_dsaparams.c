@@ -7,6 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 /*
  * DSA low level APIs are deprecated for public use, but still ok for
  * internal use.

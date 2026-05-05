@@ -13,10 +13,9 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/evp.h"
 /* IWYU pragma: end_keep */
 
-#include <openssl/rand.h>
-#include <openssl/proverr.h>
 #include "prov/ciphercommon.h"
 #include "cipher_tdes.h"
 #include "prov/implementations.h"

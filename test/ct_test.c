@@ -7,18 +7,19 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <ctype.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
 #include <openssl/ct.h>
-#include <openssl/err.h>
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
-#include "testutil.h"
 #include <openssl/crypto.h>
+#include <stdint.h>
+#include <time.h>
+#include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_CT
 

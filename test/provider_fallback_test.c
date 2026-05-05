@@ -11,6 +11,8 @@
 #include <openssl/provider.h>
 #include <openssl/evp.h>
 #include "testutil.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 static int test_provider(OSSL_LIB_CTX *ctx)
 {

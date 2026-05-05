@@ -15,12 +15,20 @@
 #include <string.h>
 #include <openssl/prov_ssl.h>
 #include <openssl/proverr.h>
+#include <stdint.h>
 #include "ciphercommon_local.h"
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
-#include "internal/skey.h"
-#include "internal/e_os.h"
 #include "crypto/types.h"
+#include "internal/common.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
+#include "prov/ciphercommon.h"
 
 #define cipher_generic_get_ctx_params_st ossl_cipher_get_ctx_param_list_st
 #define cipher_generic_set_ctx_params_st ossl_cipher_set_ctx_param_list_st

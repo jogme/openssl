@@ -10,9 +10,6 @@
 /* Internal tests for the siphash module */
 
 #include <stdio.h>
-#include <string.h>
-
-#include <openssl/bio.h>
 #include "testutil.h"
 #include "crypto/siphash.h"
 #include "internal/nelem.h"

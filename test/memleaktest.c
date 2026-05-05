@@ -8,9 +8,8 @@
  */
 
 #include <string.h>
-#include <openssl/bio.h>
 #include <openssl/crypto.h>
-
+#include <stdlib.h>
 #include "testutil.h"
 
 /* __has_feature is a clang-ism, while __SANITIZE_ADDRESS__ is a gcc-ism */

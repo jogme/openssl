@@ -11,13 +11,14 @@
 
 #include <string.h>
 #include <time.h>
-
 #include <openssl/asn1.h>
 #include <openssl/x509.h>
+#include <crypto/asn1.h>
+#include <openssl/opensslv.h>
 #include "testutil.h"
 #include "internal/nelem.h"
-
-#include <crypto/asn1.h>
+#include "openssl/bio.h"
+#include "openssl/types.h"
 
 typedef struct {
     const char *data;

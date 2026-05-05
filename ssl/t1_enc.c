@@ -14,7 +14,6 @@
 #include <openssl/obj_mac.h>
 #include <openssl/core_names.h>
 #include <openssl/trace.h>
-#include <openssl/ssl3.h>
 #include <string.h>
 #include "ssl_local.h"
 #include "internal/ssl_unwrap.h"

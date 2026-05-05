@@ -32,9 +32,6 @@
 #include "openssl/types.h"
 #include "ssl/record/record.h"
 
-struct ossl_record_layer_st;
-struct quic_tls_st;
-
 #define QUIC_TLS_FATAL(rl, ad, err)    \
     do {                               \
         if ((rl) != NULL)              \

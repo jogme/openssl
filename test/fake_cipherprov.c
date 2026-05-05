@@ -10,13 +10,16 @@
 
 #include <string.h>
 #include <openssl/core_names.h>
-#include <openssl/core_object.h>
-#include <openssl/rand.h>
 #include <openssl/provider.h>
 #include <openssl/proverr.h>
-#include <openssl/param_build.h>
 #include "testutil.h"
 #include "fake_cipherprov.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/params.h"
 
 #define MAX_KEYNAME 32
 #define FAKE_KEY_LEN 16

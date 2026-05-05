@@ -7,20 +7,46 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <string.h>
-
 #include <openssl/opensslconf.h>
 #include <openssl/quic.h>
 #include <openssl/rand.h>
-
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <openssl/ssl.h>
+#include <openssl/x509.h>
+#include <stdint.h>
+#include <sys/socket.h>
+#include <sys/time.h>
 #include "helpers/ssltestlib.h"
 #include "helpers/quictestlib.h"
 #include "testutil.h"
-#include "testutil/output.h"
 #include "../ssl/ssl_local.h"
 #include "../ssl/quic/quic_channel_local.h"
-#include "internal/quic_error.h"
+#include "internal/nelem.h"
+#include "internal/packet.h"
+#include "internal/quic_predef.h"
+#include "internal/quic_record_tx.h"
+#include "internal/quic_tserver.h"
+#include "internal/quic_types.h"
+#include "internal/quic_wire.h"
+#include "internal/sockets.h"
+#include "internal/time.h"
+#include "openssl/bio.h"
+#include "openssl/buffer.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/ech.h"
+#include "openssl/err.h"
+#include "openssl/opensslconf.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/provider.h"
+#include "openssl/safestack.h"
+#include "openssl/sha.h"
+#include "openssl/srtp.h"
+#include "openssl/ssl.h"
+#include "openssl/ssl3.h"
+#include "openssl/types.h"
 
 static OSSL_LIB_CTX *libctx = NULL;
 static char *propq = NULL;

@@ -10,6 +10,15 @@
 #include <string.h>
 #include "helpers/ssltestlib.h"
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/safestack.h"
+#include "openssl/ssl.h"
+#include "openssl/sslerr.h"
+#include "openssl/types.h"
 
 static int docorrupt = 0;
 

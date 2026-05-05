@@ -12,18 +12,16 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/e_os2.h"
+#include "openssl/ec.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
-#include <openssl/bio.h>
 #include <openssl/evp.h>
 #include <openssl/bn.h>
 #include <openssl/crypto.h>
-#include <openssl/err.h>
-#include <openssl/rand.h>
+#include <stdint.h>
 #include "testutil.h"
 
 #ifndef OPENSSL_NO_SM2

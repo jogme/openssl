@@ -7,9 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-/* including crypto/sha.h requires this for SHA256_CTX */
-/* IWYU pragma: begin_keep */
-#include "internal/deprecated.h"
 /* IWYU pragma: end_keep */
 /*
  * NOTE: By default CSHAKE sets secure xof lengths (OSSL_DIGEST_PARAM_XOFLEN)
@@ -22,6 +19,10 @@
 #include <openssl/err.h>
 #include <openssl/proverr.h>
 #include <openssl/core_names.h>
+#include <stdint.h>
+/* including crypto/sha.h requires this for SHA256_CTX */
+/* IWYU pragma: begin_keep */
+#include "internal/deprecated.h"
 #include "crypto/sha.h"
 #include "prov/provider_ctx.h"
 #include "prov/digestcommon.h"
@@ -29,6 +30,13 @@
 #include "internal/common.h"
 #include "internal/sha3.h"
 #include "providers/implementations/digests/cshake_prov.inc"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
+#include "prov/providercommon.h"
 
 /*
  * Length encoding will be a 1 byte size + length in bits (3 bytes max)

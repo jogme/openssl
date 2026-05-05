@@ -16,7 +16,14 @@
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
 #include <openssl/x509.h>
+#include <limits.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "fuzzer.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 int FuzzerInitialize(int *argc, char ***argv)
 {

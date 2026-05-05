@@ -7,10 +7,14 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <sys/stat.h>
 #include <openssl/conf.h>
 #include <openssl/ssl.h>
+#include <stddef.h>
 #include "testutil.h"
+#include "internal/nelem.h"
+#include "openssl/crypto.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/types.h"
 
 static char *cfg1 = NULL;
 static char *cfg2 = NULL;

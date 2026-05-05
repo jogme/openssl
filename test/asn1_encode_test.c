@@ -7,13 +7,17 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <string.h>
-
 #include <openssl/rand.h>
 #include <openssl/asn1t.h>
-#include "internal/numbers.h"
+#include <limits.h>
+#include <stdint.h>
 #include "testutil.h"
+#include "internal/nelem.h"
+#include "openssl/asn1.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 
 #ifdef __GNUC__
 #pragma GCC diagnostic ignored "-Wunused-function"

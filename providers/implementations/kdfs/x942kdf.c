@@ -8,25 +8,27 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/e_os.h"
-#include <openssl/core_names.h>
 #include <openssl/core_dispatch.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/params.h>
 #include <openssl/proverr.h>
-#include "internal/common.h"
+#include <stdint.h>
+#include <string.h>
 #include "internal/packet.h"
 #include "internal/der.h"
-#include "internal/fips.h"
 #include "internal/nelem.h"
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
 #include "prov/implementations.h"
 #include "prov/provider_util.h"
-#include "prov/securitycheck.h"
 #include "prov/der_wrap.h"
 #include "providers/implementations/kdfs/x942kdf.inc"
+#include "fips/fipsindicator.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 #define X942KDF_MAX_INLEN (1 << 30)
 

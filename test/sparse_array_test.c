@@ -8,14 +8,12 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <string.h>
 #include <limits.h>
-
-#include <openssl/crypto.h>
 #include "internal/nelem.h"
 #include "crypto/sparse_array.h"
 #include "testutil.h"
+#include "openssl/e_os2.h"
 
 /* The macros below generate unused functions which error out one of the clang
  * builds.  We disable this check here.

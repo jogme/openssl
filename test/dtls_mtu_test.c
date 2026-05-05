@@ -7,19 +7,19 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <string.h>
-
-#include <openssl/dtls1.h>
 #include <openssl/ssl.h>
-#include <openssl/err.h>
-
 #include "helpers/ssltestlib.h"
 #include "testutil.h"
-
 /* for SSL_READ_ETM() */
 #include "../ssl/ssl_local.h"
 #include "internal/ssl_unwrap.h"
+#include "internal/common.h"
+#include "internal/statem.h"
+#include "openssl/bio.h"
+#include "openssl/safestack.h"
+#include "openssl/tls1.h"
+#include "openssl/types.h"
 
 static int debug = 0;
 

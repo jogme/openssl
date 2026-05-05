@@ -12,6 +12,9 @@
 #include "cipher_aria.h"
 #include "prov/implementations.h"
 #include "prov/providercommon.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
 
 static OSSL_FUNC_cipher_freectx_fn aria_freectx;
 static OSSL_FUNC_cipher_dupctx_fn aria_dupctx;

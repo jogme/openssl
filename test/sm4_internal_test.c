@@ -14,7 +14,9 @@
 
 #include <string.h>
 #include <openssl/opensslconf.h>
+#include <stdint.h>
 #include "testutil.h"
+#include "openssl/opensslconf.h"
 
 #ifndef OPENSSL_NO_SM4
 #include "crypto/sm4.h"

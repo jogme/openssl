@@ -9,8 +9,12 @@
 
 #include <openssl/pem.h>
 #include <openssl/x509.h>
-
+#include <stddef.h>
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 
 static char *certsDir = NULL;
 

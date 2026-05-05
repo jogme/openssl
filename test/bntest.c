@@ -7,21 +7,20 @@
  * https://www.openssl.org/source/license.html
  */
 #include <assert.h>
-#include <errno.h>
-#include <stdio.h>
 #include <string.h>
+#include <limits.h>
+#include <stdint.h>
 #ifdef __TANDEM
 #include <strings.h> /* strcasecmp */
 #endif
-#include <ctype.h>
-
 #include <openssl/bn.h>
 #include <openssl/crypto.h>
 #include <openssl/err.h>
-#include <openssl/rand.h>
 #include "internal/nelem.h"
-#include "internal/numbers.h"
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 /*
  * Things in boring, not in openssl.

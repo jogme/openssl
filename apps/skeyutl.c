@@ -8,14 +8,16 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
-#include "apps.h"
-#include "progs.h"
 #include <openssl/bio.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
+#include "apps.h"
+#include "progs.h"
+#include "app_libctx.h"
+#include "openssl/params.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 typedef enum OPTION_choice {
     OPT_COMMON,

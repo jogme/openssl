@@ -28,7 +28,6 @@
  * much to be done anyway.
  */
 #include <string.h>
-
 #include <openssl/core_names.h>
 #include <openssl/params.h>
 #include <openssl/opensslconf.h>
@@ -36,12 +35,21 @@
 #include <openssl/crypto.h>
 #include <openssl/evp.h>
 #include <openssl/ssl.h>
-#include <openssl/err.h>
 #include <openssl/rand.h>
 #include <openssl/kdf.h>
+#include <stdint.h>
+#include <time.h>
 #include "internal/packet.h"
 #include "internal/nelem.h"
 #include "testutil.h"
+#include "openssl/core.h"
+#include "openssl/dtls1.h"
+#include "openssl/opensslconf.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/sha.h"
+#include "openssl/ssl3.h"
+#include "openssl/tls1.h"
+#include "openssl/types.h"
 
 /* For DTLS1_BAD_VER packets the MAC doesn't include the handshake header */
 #define MAC_OFFSET (DTLS1_RT_HEADER_LENGTH + DTLS1_HM_HEADER_LENGTH)

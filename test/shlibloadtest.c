@@ -9,11 +9,12 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include <openssl/opensslv.h>
 #include <openssl/ssl.h>
 #include <openssl/types.h>
+#include <stdint.h>
 #include "simpledynamic.h"
+#include "crypto/dso_conf.h"
 
 typedef void DSO;
 

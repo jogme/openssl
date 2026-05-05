@@ -13,17 +13,22 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/dsa.h"
+#include "openssl/evp.h"
+#include "openssl/pemerr.h"
+#include "openssl/rsa.h"
+#include "openssl/types.h"
+#include "prov/provider_ctx.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
-
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
 #include <openssl/core_object.h>
 #include <openssl/crypto.h>
 #include <openssl/params.h>
-#include <openssl/pem.h> /* For public PVK functions */
-#include <openssl/x509.h>
 #include <openssl/err.h>
 #include "internal/passphrase.h"
 #include "crypto/pem.h" /* For internal PVK and "blob" headers */
@@ -33,6 +38,7 @@
 #include "prov/endecoder_local.h"
 
 struct msblob2key_ctx_st; /* Forward declaration */
+
 typedef void *b2i_of_void_fn(const unsigned char **in, unsigned int bitlen,
     int ispub);
 typedef void adjust_key_fn(void *, struct msblob2key_ctx_st *ctx);

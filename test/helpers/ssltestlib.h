@@ -11,6 +11,10 @@
 #define OSSL_TEST_SSLTESTLIB_H
 
 #include <openssl/ssl.h>
+#include <stddef.h>
+#include "openssl/bio.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 #define TLS13_AES_128_GCM_SHA256_BYTES ((const unsigned char *)"\x13\x01")
 #define TLS13_AES_256_GCM_SHA384_BYTES ((const unsigned char *)"\x13\x02")

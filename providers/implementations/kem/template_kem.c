@@ -11,14 +11,12 @@
 #include <openssl/crypto.h>
 #include <openssl/evp.h>
 #include <openssl/core_dispatch.h>
-#include <openssl/core_names.h>
 #include <openssl/params.h>
-#include <openssl/err.h>
-#include <openssl/proverr.h>
 #include "prov/provider_ctx.h"
-#include "prov/implementations.h"
-#include "prov/securitycheck.h"
 #include "prov/providercommon.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 extern const OSSL_DISPATCH ossl_template_asym_kem_functions[];
 

@@ -13,8 +13,6 @@
 #include <spt_extensions.h> /* timeval */
 #endif
 #include <openssl/rand.h>
-#include <openssl/ssl3.h>
-#include <openssl/x509.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>

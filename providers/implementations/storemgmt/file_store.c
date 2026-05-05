@@ -10,25 +10,34 @@
 /* This file has quite some overlap with engines/e_loader_attic.c */
 
 #include <string.h>
-#include "internal/e_os.h" /* for stat() */
 #include <sys/stat.h> /* for struct stat */
 #include <ctype.h> /* isdigit */
 #include <assert.h>
-
 #include <openssl/core_names.h>
 #include <openssl/core_object.h>
 #include <openssl/params.h>
 #include <openssl/proverr.h>
 #include <openssl/store.h> /* The OSSL_STORE_INFO type numbers */
-#include "internal/cryptlib.h"
+#include <errno.h>
+#include <limits.h>
 #include "internal/o_dir.h"
 #include "crypto/decoder.h"
 #include "prov/implementations.h"
 #include "prov/bio.h"
-#include "prov/providercommon.h"
 #include "prov/file_store_local.h"
-
 #include "providers/implementations/storemgmt/file_store.inc"
+#include "internal/common.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/decoder.h"
+#include "openssl/err.h"
+#include "openssl/safestack.h"
+#include "openssl/storeerr.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "prov/provider_ctx.h"
 
 DEFINE_STACK_OF(OSSL_STORE_INFO)
 

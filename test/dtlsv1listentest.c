@@ -10,10 +10,10 @@
 #include <string.h>
 #include <openssl/ssl.h>
 #include <openssl/bio.h>
-#include <openssl/err.h>
-#include <openssl/conf.h>
 #include "internal/nelem.h"
 #include "testutil.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_SOCK
 

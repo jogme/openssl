@@ -10,7 +10,16 @@
 #include <openssl/pem.h>
 #include <openssl/core_names.h>
 #include <openssl/self_test.h>
+#include <string.h>
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/params.h"
+#include "openssl/provider.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 typedef enum OPTION_choice {
     OPT_ERR = -1,

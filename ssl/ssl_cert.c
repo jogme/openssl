@@ -14,8 +14,6 @@
 #include <openssl/x509v3.h>
 #include <openssl/crypto.h>
 #include <errno.h>
-#include <openssl/ssl.h>
-#include <openssl/x509.h>
 #include <string.h>
 #include "internal/e_os.h"
 #include "internal/nelem.h"

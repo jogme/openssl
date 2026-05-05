@@ -11,10 +11,20 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <openssl/bio.h>
+#include <assert.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/time.h>
 #include "fuzzer.h"
-#include "internal/sockets.h"
 #include "internal/time.h"
 #include "internal/quic_ssl.h"
+#include "internal/nelem.h"
+#include "openssl/comp.h"
+#include "openssl/crypto.h"
+#include "openssl/quic.h"
+#include "openssl/safestack.h"
+#include "openssl/tls1.h"
+#include "openssl/types.h"
 
 /* unused, to avoid warning. */
 static int idx;

@@ -7,12 +7,17 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "testutil.h"
 #include <openssl/evp.h>
-#include "internal/cryptlib.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include "testutil.h"
 #include "crypto/evp.h"
 #include "evp_local.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 #define MAX_INPUT_LEN 3000
 

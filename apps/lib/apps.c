@@ -19,6 +19,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <sys/mman.h>
+#include <sys/select.h>
+#include <unistd.h>
 #ifndef OPENSSL_NO_POSIX_IO
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -31,21 +36,38 @@
 #include <openssl/http.h>
 #include <openssl/pem.h>
 #include <openssl/store.h>
-#include <openssl/pkcs12.h>
-#include <openssl/ui.h>
 #include <openssl/safestack.h>
-#include <openssl/rsa.h>
 #include <openssl/rand.h>
 #include <openssl/bn.h>
 #include <openssl/ssl.h>
 #include <openssl/core_names.h>
 #include <openssl/encoder.h>
-#include "s_apps.h"
 #include "apps.h"
-
 #include "internal/sockets.h" /* for openssl_fdset() */
-#include "internal/numbers.h" /* for LONG_MAX */
-#include "internal/e_os.h"
+#include "app_libctx.h"
+#include "apps_ui.h"
+#include "fmt.h"
+#include "internal/common.h"
+#include "openssl/asn1.h"
+#include "openssl/async.h"
+#include "openssl/bio.h"
+#include "openssl/buffer.h"
+#include "openssl/conf.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/lhash.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/params.h"
+#include "openssl/pemerr.h"
+#include "openssl/ssl3.h"
+#include "openssl/sslerr.h"
+#include "openssl/txt_db.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 #ifdef _WIN32
 static int WIN32_rename(const char *from, const char *to);
@@ -3164,6 +3186,7 @@ int app_isdir(const char *name)
 /* raw_read|write section */
 #if defined(__VMS)
 #include "vms_term_sock.h"
+
 static int stdin_sock = -1;
 
 static void close_stdin_sock(void)

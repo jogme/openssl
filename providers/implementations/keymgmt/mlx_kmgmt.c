@@ -13,16 +13,21 @@
 #include <openssl/param_build.h>
 #include <openssl/params.h>
 #include <openssl/proverr.h>
-#include <openssl/rand.h>
-#include <openssl/self_test.h>
+#include <stdint.h>
+#include <string.h>
 #include "internal/nelem.h"
 #include "internal/param_build_set.h"
 #include "prov/implementations.h"
 #include "prov/mlx_kem.h"
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
-#include "prov/securitycheck.h"
 #include "providers/implementations/keymgmt/mlx_kmgmt.inc"
+#include "crypto/ml_kem.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 
 static OSSL_FUNC_keymgmt_gen_fn mlx_kem_gen;
 static OSSL_FUNC_keymgmt_gen_cleanup_fn mlx_kem_gen_cleanup;

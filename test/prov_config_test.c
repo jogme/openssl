@@ -9,8 +9,14 @@
 
 #include <sys/stat.h>
 #include <openssl/evp.h>
-#include <openssl/conf.h>
+#include <stdlib.h>
+#include <string.h>
 #include "testutil.h"
+#include "openssl/conferr.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/provider.h"
+#include "openssl/types.h"
 
 static char *configfile = NULL;
 static char *recurseconfigfile = NULL;

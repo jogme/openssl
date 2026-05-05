@@ -9,6 +9,12 @@
 
 #include <openssl/ssl.h>
 #include <internal/quic_tserver.h>
+#include <stddef.h>
+#include <stdint.h>
+#include "internal/quic_wire_pkt.h"
+#include "internal/time.h"
+#include "openssl/bio.h"
+#include "openssl/types.h"
 
 /* Type to represent the Fault Injector */
 typedef struct qtest_fault QTEST_FAULT;

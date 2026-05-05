@@ -10,9 +10,14 @@
 #include <openssl/conf.h>
 #include <openssl/err.h>
 #include <openssl/safestack.h>
-
+#include <stddef.h>
 #include "apps.h"
 #include "progs.h"
+#include "fmt.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 /**
  * Print the given value escaped for the OpenSSL configuration file format.

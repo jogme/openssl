@@ -8,11 +8,10 @@
  */
 
 #include <stdio.h>
-#include <string.h>
-#include <openssl/bio.h>
 #include <openssl/conf.h>
 #include <openssl/safestack.h>
 #include <openssl/err.h>
+#include "openssl/types.h"
 
 static void dump_section(const char *name, const CONF *cnf)
 {

@@ -9,11 +9,16 @@
  */
 
 #include <openssl/http.h>
-#include <openssl/pem.h>
 #include <openssl/x509v3.h>
 #include <string.h>
-
+#include <stdio.h>
 #include "testutil.h"
+#include "internal/common.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/conf.h"
+#include "openssl/crypto.h"
+#include "openssl/x509.h"
 
 #define HTTP_STATUS_CODE_OK 200
 #define HTTP_STATUS_CODES_FATAL_ERROR 399

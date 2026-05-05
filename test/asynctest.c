@@ -12,9 +12,9 @@
 #endif
 
 #include <stdio.h>
-#include <string.h>
 #include <openssl/async.h>
 #include <openssl/crypto.h>
+#include "openssl/types.h"
 
 static int ctr = 0;
 static ASYNC_JOB *currjob = NULL;

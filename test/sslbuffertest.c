@@ -12,6 +12,7 @@
 #include <openssl/ssl.h>
 #include <openssl/bio.h>
 #include <openssl/err.h>
+#include <stdio.h>
 
 #ifndef OPENSSL_NO_QUIC
 /* This test does not link libssl so avoid pulling in QUIC unwrappers. */
@@ -20,15 +21,15 @@
 
 /* We include internal headers so we can check if the buffers are allocated */
 #include "../ssl/ssl_local.h"
-#include "../ssl/record/record_local.h"
 #include "internal/recordmethod.h"
 #include "../ssl/record/methods/recmethod_local.h"
 #include "internal/ssl_unwrap.h"
-
-#include "internal/packet.h"
-
 #include "helpers/ssltestlib.h"
 #include "testutil.h"
+#include "internal/statem.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/ssl3.h"
+#include "openssl/types.h"
 
 struct async_ctrs {
     unsigned int rctr;

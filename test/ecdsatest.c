@@ -13,9 +13,16 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/objects.h"
+#include "openssl/opensslconf.h"
+#include "openssl/provider.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/opensslconf.h> /* To see if OPENSSL_NO_EC is defined */
+#include <stddef.h>
 #include "testutil.h"
 
 #ifndef OPENSSL_NO_EC

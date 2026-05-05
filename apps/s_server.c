@@ -9,12 +9,15 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/e_os.h"
-
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
+#include <limits.h>
+#include <netinet/tcp.h>
+#include <sys/select.h>
+#include <unistd.h>
 #if defined(_WIN32)
 /* Included before async.h to avoid some warnings */
 #include <windows.h>
@@ -23,17 +26,26 @@
 #define PATH_MAX 4096
 #endif
 
-#include <openssl/e_os2.h>
-#include <openssl/async.h>
 #include <openssl/ssl.h>
-#include <openssl/decoder.h>
 #include "internal/sockets.h" /* for openssl_fdset() */
+#include "app_libctx.h"
+#include "fmt.h"
+#include "internal/common.h"
+#include "openssl/bio.h"
+#include "openssl/buffer.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/ech.h"
+#include "openssl/evp.h"
+#include "openssl/http.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/safestack.h"
+#include "openssl/srtp.h"
+#include "openssl/ssl3.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 #ifndef OPENSSL_NO_ECH
-/* to use tracing, if configured and requested */
-#ifndef OPENSSL_NO_SSL_TRACE
-#include <openssl/trace.h>
-#endif
 /* sockaddr stuff  */
 #if defined(_WIN32)
 #include <winsock.h>
@@ -42,7 +54,6 @@
 #else
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include <arpa/inet.h>
 #include <netdb.h>
 #endif
 /* for timing in some TRACE statements */
@@ -63,25 +74,18 @@
 typedef unsigned int u_int;
 #endif
 
-#include <openssl/bn.h>
-#include "apps.h"
-#include "progs.h"
 #include <openssl/err.h>
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/rand.h>
 #include <openssl/ocsp.h>
-#ifndef OPENSSL_NO_DH
-#include <openssl/dh.h>
-#endif
-#include <openssl/rsa.h>
+#include "apps.h"
+#include "progs.h"
 #include "s_apps.h"
 #include "timeouts.h"
 #ifdef CHARSET_EBCDIC
 #include <openssl/ebcdic.h>
 #endif
-#include "internal/sockets.h"
-#include "internal/statem.h"
 
 #ifndef OPENSSL_NO_ECH
 /* needed for X509_check_host in some CI builds "no-http" */

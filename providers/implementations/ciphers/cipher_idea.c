@@ -14,6 +14,9 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
 /* IWYU pragma: end_keep */
 
 /* Dispatch functions for Idea cipher modes ecb, cbc, ofb, cfb */

@@ -9,15 +9,16 @@
 
 #if !defined(OPENSSL_SYS_WINDOWS) && !defined(OPENSSL_NO_SOCK) && !defined(__DJGPP__)
 
-#include "internal/sockets.h"
 #include <openssl/bio.h>
-#include <internal/bio.h>
 #include <openssl/err.h>
-
-#include "testutil.h"
-
 #include <signal.h>
 #include <errno.h>
+#include <string.h>
+#include <sys/socket.h>
+#include "internal/sockets.h"
+#include "testutil.h"
+#include "openssl/configuration.h"
+#include "openssl/types.h"
 
 static volatile sig_atomic_t sigpipe_seen = 0;
 

@@ -13,6 +13,8 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/evp.h"
+#include "providers/implementations/ciphers/cipher_tdes.h"
 /* IWYU pragma: end_keep */
 
 #include "cipher_tdes_default.h"

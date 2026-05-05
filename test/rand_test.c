@@ -9,11 +9,20 @@
 
 #include <openssl/evp.h>
 #include <openssl/rand.h>
-#include <openssl/bio.h>
 #include <openssl/core_names.h>
 #include <openssl/params.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 #include "crypto/rand.h"
 #include "testutil.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/provider.h"
+#include "openssl/types.h"
 
 static char *configfile;
 

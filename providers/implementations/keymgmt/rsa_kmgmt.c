@@ -13,6 +13,15 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/cryptlib.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/param_build.h"
+#include "openssl/params.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/core_dispatch.h>
@@ -20,15 +29,13 @@
 #include <openssl/bn.h>
 #include <openssl/err.h>
 #include <openssl/rsa.h>
-#include <openssl/evp.h>
 #include <openssl/proverr.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "prov/implementations.h"
 #include "prov/providercommon.h"
 #include "prov/provider_ctx.h"
 #include "crypto/rsa.h"
-#include "crypto/cryptlib.h"
-#include "internal/fips.h"
-#include "internal/param_build_set.h"
 
 static OSSL_FUNC_keymgmt_new_fn rsa_newdata;
 static OSSL_FUNC_keymgmt_new_ex_fn rsa_newdata_ex;

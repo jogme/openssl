@@ -14,7 +14,11 @@
 #include <openssl/kdf.h>
 #include <openssl/evp.h>
 #include <openssl/provider.h>
+#include <stdint.h>
 #include "fuzzer.h"
+#include "openssl/core.h"
+#include "openssl/params.h"
+#include "openssl/safestack.h"
 
 #define DEFINE_ALGORITHMS(name, evp)                                     \
     DEFINE_STACK_OF(evp)                                                 \
@@ -46,23 +50,14 @@
     }
 
 DEFINE_ALGORITHMS(digests, EVP_MD)
-
 DEFINE_ALGORITHMS(kdf, EVP_KDF)
-
 DEFINE_ALGORITHMS(cipher, EVP_CIPHER)
-
 DEFINE_ALGORITHMS(kem, EVP_KEM)
-
 DEFINE_ALGORITHMS(keyexch, EVP_KEYEXCH)
-
 DEFINE_ALGORITHMS(rand, EVP_RAND)
-
 DEFINE_ALGORITHMS(mac, EVP_MAC)
-
 DEFINE_ALGORITHMS(keymgmt, EVP_KEYMGMT)
-
 DEFINE_ALGORITHMS(signature, EVP_SIGNATURE)
-
 DEFINE_ALGORITHMS(asym_ciphers, EVP_ASYM_CIPHER)
 
 static OSSL_LIB_CTX *libctx = NULL;

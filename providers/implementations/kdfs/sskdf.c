@@ -8,51 +8,24 @@
  * https://www.openssl.org/source/license.html
  */
 
-/*
- * Refer to https://csrc.nist.gov/publications/detail/sp/800-56c/rev-1/final
- * Section 4.1.
- *
- * The Single Step KDF algorithm is given by:
- *
- * Result(0) = empty bit string (i.e., the null string).
- * For i = 1 to reps, do the following:
- *   Increment counter by 1.
- *   Result(i) = Result(i - 1) || H(counter || Z || FixedInfo).
- * DKM = LeftmostBits(Result(reps), L))
- *
- * NOTES:
- *   Z is a shared secret required to produce the derived key material.
- *   counter is a 4 byte buffer.
- *   FixedInfo is a bit string containing context specific data.
- *   DKM is the output derived key material.
- *   L is the required size of the DKM.
- *   reps = [L / H_outputBits]
- *   H(x) is the auxiliary function that can be either a hash, HMAC or KMAC.
- *   H_outputBits is the length of the output of the auxiliary function H(x).
- *
- * Currently there is not a comprehensive list of test vectors for this
- * algorithm, especially for H(x) = HMAC and H(x) = KMAC.
- * Test vectors for H(x) = Hash are indirectly used by CAVS KAS tests.
- */
-#include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
-#include <openssl/hmac.h>
 #include <openssl/evp.h>
-#include <openssl/kdf.h>
 #include <openssl/core_names.h>
 #include <openssl/params.h>
 #include <openssl/proverr.h>
-#include "internal/cryptlib.h"
-#include "internal/fips.h"
-#include "internal/numbers.h"
-#include "crypto/evp.h"
+#include <stdint.h>
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
 #include "prov/implementations.h"
 #include "prov/provider_util.h"
-#include "prov/securitycheck.h"
 #include "internal/params.h"
+#include "fips/fipsindicator.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 
 #define SSKDF_MAX_INLEN (1 << 30)
 #define SSKDF_MAX_INFOS 5

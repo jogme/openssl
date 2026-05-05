@@ -7,13 +7,13 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "../testutil.h"
-#include "tu_local.h"
-
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <openssl/crypto.h>
+#include "../testutil.h"
+#include "tu_local.h"
+#include "openssl/err.h"
 
 static int mfail_fail_after = -1;
 static int mfail_alloc_count = 0;

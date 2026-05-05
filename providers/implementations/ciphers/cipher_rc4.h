@@ -11,7 +11,9 @@
 #define OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_RC4_H
 
 #include <openssl/rc4.h>
+#include <stddef.h>
 #include "prov/ciphercommon.h"
+#include "internal/common.h"
 
 typedef struct prov_rc4_ctx_st {
     PROV_CIPHER_CTX base; /* Must be first */

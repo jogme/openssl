@@ -11,10 +11,18 @@
 #include <string.h>
 #include <openssl/conf.h>
 #include <openssl/err.h>
+#include <features.h>
+#include <limits.h>
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/provider.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 #ifdef _WIN32
 #include <direct.h>
+
 #define DIRSEP "/\\"
 #ifndef __BORLANDC__
 #define chdir _chdir

@@ -13,11 +13,21 @@
 #include <openssl/asn1t.h>
 #include <openssl/core_names.h>
 #include <openssl/core_object.h>
-#include <openssl/rand.h>
 #include <openssl/provider.h>
 #include "testutil.h"
 #include "fake_rsaprov.h"
 #include "internal/asn1.h"
+#include "internal/nelem.h"
+#include "openssl/bio.h"
+#include "openssl/buffer.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/objects.h"
+#include "openssl/params.h"
+#include "openssl/x509.h"
 
 static OSSL_FUNC_keymgmt_new_fn fake_rsa_keymgmt_new;
 static OSSL_FUNC_keymgmt_free_fn fake_rsa_keymgmt_free;
@@ -708,6 +718,7 @@ static const OSSL_ALGORITHM fake_rsa_store_algs[] = {
 };
 
 struct der2key_ctx_st; /* Forward declaration */
+
 typedef int check_key_fn(void *, struct der2key_ctx_st *ctx);
 typedef void adjust_key_fn(void *, struct der2key_ctx_st *ctx);
 typedef void free_key_fn(void *);

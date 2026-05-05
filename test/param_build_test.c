@@ -11,8 +11,13 @@
 #include <string.h>
 #include <openssl/params.h>
 #include <openssl/param_build.h>
-#include "internal/nelem.h"
+#include <stdint.h>
+#include <time.h>
 #include "testutil.h"
+#include "openssl/bn.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 static const OSSL_PARAM params_empty[] = { OSSL_PARAM_END };
 

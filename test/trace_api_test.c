@@ -8,8 +8,9 @@
  */
 
 #include <openssl/trace.h>
-
+#include <stddef.h>
 #include "testutil.h"
+#include "openssl/configuration.h"
 
 static int test_trace_categories(void)
 {

@@ -13,9 +13,15 @@
 #include <openssl/des.h>
 #include <openssl/evp.h>
 #include <openssl/core_dispatch.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "prov/ciphercommon.h"
 #include "prov/securitycheck.h"
 #include "crypto/des_platform.h"
+#include "fips/fipsindicator.h"
+#include "internal/common.h"
+#include "openssl/core.h"
+#include "openssl/types.h"
 
 #define DES_BLOCK_SIZE 8
 #define TDES_IVLEN 8

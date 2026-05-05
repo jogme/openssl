@@ -13,25 +13,26 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
+#include "prov/provider_ctx.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
-
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
 #include <openssl/core_object.h>
 #include <openssl/crypto.h>
-#include <openssl/err.h>
 #include <openssl/params.h>
 #include <openssl/pem.h>
-#include <openssl/proverr.h>
-#include "internal/cryptlib.h"
 #include "internal/nelem.h"
 #include "internal/sizes.h"
 #include "prov/bio.h"
 #include "prov/decoders.h"
 #include "prov/implementations.h"
-#include "prov/endecoder_local.h"
 #include "providers/implementations/encode_decode/decode_pem2der.inc"
 
 static int read_pem(PROV_CTX *provctx, OSSL_CORE_BIO *cin,

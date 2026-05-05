@@ -12,7 +12,6 @@
 #include <openssl/http.h>
 #include <openssl/x509v3.h>
 #include <openssl/bn.h>
-#include <openssl/x509.h>
 #include <string.h>
 #include "internal/cryptlib.h"
 #include "internal/safe_math.h"

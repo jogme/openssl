@@ -13,6 +13,7 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/common.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/crypto.h>
@@ -25,17 +26,19 @@
 #include <openssl/proverr.h>
 /* Just for SSL_MAX_MASTER_KEY_LENGTH */
 #include <openssl/prov_ssl.h>
+#include <string.h>
 #include "internal/constant_time.h"
-#include "internal/cryptlib.h"
-#include "internal/fips.h"
 #include "internal/sizes.h"
 #include "crypto/rsa.h"
 #include "prov/provider_ctx.h"
 #include "prov/implementations.h"
 #include "prov/providercommon.h"
 #include "prov/securitycheck.h"
-#include <stdlib.h>
 #include "providers/implementations/asymciphers/rsa_enc.inc"
+#include "fips/fipsindicator.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 static OSSL_FUNC_asym_cipher_newctx_fn rsa_newctx;
 static OSSL_FUNC_asym_cipher_encrypt_init_fn rsa_encrypt_init;

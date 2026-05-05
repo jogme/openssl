@@ -7,23 +7,26 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/trace.h>
-#include <stdlib.h>
-#include <stdarg.h>
+/* IWYU pragma: begin_keep */
+#include <openssl/core_names.h>
+/* IWYU pragma: end_keep */
+
 #include <string.h>
 #include <openssl/evp.h>
-#include <openssl/kdf.h>
-#include <openssl/core_names.h>
 #include <openssl/proverr.h>
-#include "internal/common.h"
-#include "internal/cryptlib.h"
-#include "internal/numbers.h"
-#include "crypto/evp.h"
+#include <stdint.h>
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
 #include "prov/implementations.h"
 #include "prov/provider_util.h"
 #include "providers/implementations/kdfs/pkcs12kdf.inc"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 static OSSL_FUNC_kdf_newctx_fn kdf_pkcs12_new;
 static OSSL_FUNC_kdf_dupctx_fn kdf_pkcs12_dup;

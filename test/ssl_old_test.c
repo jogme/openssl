@@ -10,6 +10,13 @@
  */
 
 #include "internal/e_os.h"
+#include "internal/common.h"
+#include "openssl/comp.h"
+#include "openssl/objects.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/safestack.h"
+#include "openssl/sslerr.h"
+#include "openssl/types.h"
 
 /* Or gethostname won't be declared properly on Linux and GNU platforms. */
 #ifndef _BSD_SOURCE
@@ -20,13 +27,12 @@
 #endif
 
 #include <assert.h>
-#include <errno.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
+#include <features.h>
 #include "internal/nelem.h"
 
 #ifdef OPENSSL_SYS_VMS
@@ -36,24 +42,13 @@
 #define _XOPEN_SOURCE 500
 #endif
 
-#include <ctype.h>
-
 #include <openssl/bio.h>
 #include <openssl/crypto.h>
 #include <openssl/evp.h>
 #include <openssl/x509.h>
-#include <openssl/x509v3.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
-#include <openssl/rand.h>
-#include <openssl/rsa.h>
-#ifndef OPENSSL_NO_DSA
-#include <openssl/dsa.h>
-#endif
 #include <openssl/bn.h>
-#ifndef OPENSSL_NO_CT
-#include <openssl/ct.h>
-#endif
 #include <openssl/provider.h>
 #include "testutil.h"
 #include "testutil/output.h"
@@ -69,7 +64,6 @@
 #ifdef OPENSSL_SYS_WINDOWS
 #include <winsock.h>
 #else
-#include <unistd.h>
 #endif
 
 #include "helpers/predefined_dhparams.h"

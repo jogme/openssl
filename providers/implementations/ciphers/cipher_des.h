@@ -11,8 +11,10 @@
 #define OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_DES_H
 
 #include <openssl/des.h>
+#include <stddef.h>
 #include "crypto/des_platform.h"
 #include "prov/ciphercommon.h"
+#include "internal/common.h"
 
 #define TDES_FLAGS 0
 

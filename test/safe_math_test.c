@@ -8,7 +8,8 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <limits.h>
+#include <stdint.h>
 
 /*
  * Uncomment this if the fallback non-builtin overflow checking is to

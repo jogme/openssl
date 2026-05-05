@@ -7,11 +7,9 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/bio.h>
-#include "internal/e_os.h"
-#include "internal/sockets.h"
-#include "internal/bio_tfo.h"
 #include "testutil.h"
+#include "openssl/configuration.h"
+#include "openssl/e_os2.h"
 
 /* If OS support is added in crypto/bio/bio_tfo.h, add it here */
 #if defined(OPENSSL_SYS_LINUX)

@@ -11,18 +11,23 @@
 #define OPENSSL_SUPPRESS_DEPRECATED
 
 #include <string.h>
-#include "internal/nelem.h"
 #include <openssl/crypto.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
-#include <openssl/obj_mac.h>
 #include <openssl/evp.h>
-#include <openssl/aes.h>
-#include "../crypto/rand/rand_local.h"
-#include "../include/crypto/rand.h"
-#include "../include/crypto/evp.h"
+#include <pthread.h>
+#include <stdlib.h>
+#include <time.h>
 #include "../providers/implementations/include/prov/drbg.h"
 #include "../crypto/evp/evp_local.h"
+#include "openssl/bio.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/core_names.h"
+#include "openssl/e_os2.h"
+#include "openssl/params.h"
+#include "openssl/provider.h"
+#include "openssl/types.h"
 
 #if defined(_WIN32)
 #include <windows.h>

@@ -7,11 +7,10 @@
  * https://www.openssl.org/source/license.html
  */
 #include <time.h>
-
-#include <openssl/asn1t.h>
 #include <openssl/posix_time.h>
-
 #include "../testutil.h"
+#include "openssl/asn1.h"
+#include "openssl/types.h"
 
 int test_asn1_string_to_time_t(const char *asn1_string, time_t *out_time_t)
 {

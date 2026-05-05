@@ -8,11 +8,12 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include <openssl/e_os2.h>
 #include <openssl/evp.h>
+#include <stdint.h>
 #include "crypto/ecx.h"
-#include "curve448_local.h"
 #include "testutil.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 static unsigned int max = 1000;
 static unsigned int verbose = 0;

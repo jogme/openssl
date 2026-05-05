@@ -13,8 +13,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/common.h"
 /* IWYU pragma: end_keep */
 
+#include "fips/fipsindicator.h"
+#include "openssl/bn.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 #include <string.h>
 #include <openssl/crypto.h>
 #include <openssl/evp.h>
@@ -24,12 +30,9 @@
 #include <openssl/params.h>
 #include <openssl/err.h>
 #include <openssl/proverr.h>
-#include "internal/cryptlib.h"
-#include "internal/fips.h"
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
 #include "prov/implementations.h"
-#include "prov/securitycheck.h"
 #include "crypto/ec.h" /* ossl_ecdh_kdf_X9_63() */
 #include "providers/implementations/exchange/ecdh_exch.inc"
 

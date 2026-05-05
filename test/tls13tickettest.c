@@ -8,8 +8,11 @@
  */
 
 #include <openssl/ssl.h>
+#include <string.h>
 #include "helpers/ssltestlib.h"
 #include "testutil.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/types.h"
 
 struct stats {
     unsigned int tickets;

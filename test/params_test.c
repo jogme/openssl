@@ -17,9 +17,12 @@
 #include <openssl/core.h>
 #include <openssl/err.h>
 #include <openssl/params.h>
-#include "internal/numbers.h"
+#include <stdint.h>
 #include "internal/nelem.h"
 #include "testutil.h"
+#include "openssl/crypto.h"
+#include "openssl/opensslv.h"
+#include "openssl/types.h"
 
 /*-
  * PROVIDER SECTION

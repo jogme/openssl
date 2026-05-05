@@ -8,15 +8,11 @@
  */
 
 #include <stdio.h>
-#include <string.h>
-
 #include <openssl/opensslconf.h>
-#include <openssl/err.h>
-#include <openssl/crypto.h>
-
 #include "internal/list.h"
 #include "internal/nelem.h"
 #include "testutil.h"
+#include "openssl/opensslconf.h"
 
 typedef struct testl_st TESTL;
 struct testl_st {

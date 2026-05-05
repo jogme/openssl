@@ -9,17 +9,18 @@
  */
 
 #include <stdio.h>
-#include <string.h>
-
 #include <openssl/opensslconf.h>
 #include <openssl/err.h>
-#include <openssl/e_os2.h>
 #include <openssl/ssl.h>
-#include <openssl/ssl3.h>
 #include <openssl/tls1.h>
-
+#include <stdint.h>
 #include "internal/nelem.h"
 #include "testutil.h"
+#include "openssl/crypto.h"
+#include "openssl/opensslconf.h"
+#include "openssl/safestack.h"
+#include "openssl/sslerr.h"
+#include "openssl/types.h"
 
 typedef struct cipherlist_test_fixture {
     const char *test_case_name;

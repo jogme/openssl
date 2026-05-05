@@ -7,12 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/cryptlib.h"
-#include <openssl/rand.h>
-#include "crypto/rand_pool.h"
-#include "crypto/rand.h"
-#include "prov/seeding.h"
-
 #if defined(OPENSSL_SYS_WINDOWS) || defined(OPENSSL_SYS_WIN32)
 
 #ifndef OPENSSL_RAND_SEED_OS
@@ -36,6 +30,7 @@
 #endif
 #else
 #include <wincrypt.h>
+
 /*
  * Intel hardware RNG CSP -- available from
  * http://developer.intel.com/design/security/rng/redist_license.htm

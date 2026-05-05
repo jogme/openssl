@@ -8,8 +8,11 @@
  */
 
 #include <openssl/obj_mac.h>
+#include <stddef.h>
 #include "internal/packet.h"
 #include "prov/der_ec.h"
+#include "internal/der.h"
+#include "openssl/types.h"
 
 /* Aliases so we can have a uniform MD_CASE */
 #define ossl_der_oid_id_ecdsa_with_sha1 ossl_der_oid_ecdsa_with_SHA1

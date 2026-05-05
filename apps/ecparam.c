@@ -17,9 +17,21 @@
 #include <openssl/core_dispatch.h>
 #include <openssl/params.h>
 #include <openssl/err.h>
+#include <assert.h>
 #include "apps.h"
 #include "progs.h"
 #include "ec_common.h"
+#include "app_libctx.h"
+#include "fmt.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/ec.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/opensslconf.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 typedef enum OPTION_choice {
     OPT_COMMON,

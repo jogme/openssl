@@ -16,14 +16,21 @@
 #define OPENSSL_SUPPRESS_DEPRECATED
 
 #include <time.h>
-#include <openssl/rand.h>
 #include <openssl/ssl.h>
 #include <openssl/rsa.h>
-#include <openssl/dsa.h>
-#include <openssl/ec.h>
-#include <openssl/dh.h>
 #include <openssl/err.h>
+#include <limits.h>
+#include <stdint.h>
+#include <stdio.h>
 #include "fuzzer.h"
+#include "openssl/bio.h"
+#include "openssl/comp.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/pem.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 static const uint8_t kCertificateDER[] = {
     0x30,

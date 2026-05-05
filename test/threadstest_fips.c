@@ -11,8 +11,11 @@
 #include <windows.h>
 #endif
 
+#include <stddef.h>
 #include "testutil.h"
 #include "threadstest.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 
 static int success;
 

@@ -7,7 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <string.h>
 #include <stdio.h>
 #include <openssl/opensslconf.h>
 #include <openssl/core.h>
@@ -22,6 +21,11 @@
 #include "prov/provider_util.h"
 #include "prov/seeding.h"
 #include "internal/nelem.h"
+#include "openssl/bio.h"
+#include "openssl/configuration.h"
+#include "openssl/opensslconf.h"
+#include "openssl/opensslv.h"
+#include "openssl/types.h"
 
 /*
  * Forward declarations to ensure that interface functions are correctly
@@ -717,6 +721,7 @@ static const OSSL_ALGORITHM deflt_skeymgmt[] = {
 static const OSSL_ALGORITHM deflt_encoder[] = {
 #define ENCODER_PROVIDER "default"
 #include "encoders.inc"
+
     { NULL, NULL, NULL }
 #undef ENCODER_PROVIDER
 };
@@ -724,6 +729,7 @@ static const OSSL_ALGORITHM deflt_encoder[] = {
 static const OSSL_ALGORITHM deflt_decoder[] = {
 #define DECODER_PROVIDER "default"
 #include "decoders.inc"
+
     { NULL, NULL, NULL }
 #undef DECODER_PROVIDER
 };
@@ -733,6 +739,7 @@ static const OSSL_ALGORITHM deflt_store[] = {
     { name, "provider=default,fips=" _fips, (func_table) },
 
 #include "stores.inc"
+
     { NULL, NULL, NULL }
 #undef STORE
 };

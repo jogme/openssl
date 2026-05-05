@@ -14,11 +14,16 @@
 #include <openssl/evp.h>
 #include <openssl/params.h>
 #include <openssl/proverr.h>
-#include <openssl/rand.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "prov/implementations.h"
 #include "prov/mlx_kem.h"
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
+#include "crypto/ml_kem.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 static OSSL_FUNC_kem_newctx_fn mlx_kem_newctx;
 static OSSL_FUNC_kem_freectx_fn mlx_kem_freectx;

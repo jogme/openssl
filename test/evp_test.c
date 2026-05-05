@@ -16,19 +16,31 @@
 #include <openssl/pem.h>
 #include <openssl/err.h>
 #include <openssl/provider.h>
-#include <openssl/x509v3.h>
 #include <openssl/pkcs12.h>
 #include <openssl/kdf.h>
 #include <openssl/params.h>
 #include <openssl/param_build.h>
 #include <openssl/core_names.h>
-#include <openssl/fips_names.h>
 #include <openssl/thread.h>
-#include "internal/numbers.h"
+#include <stdint.h>
 #include "internal/nelem.h"
 #include "internal/sizes.h"
 #include "crypto/evp.h"
 #include "testutil.h"
+#include "internal/common.h"
+#include "openssl/bio.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/ecerr.h"
+#include "openssl/evperr.h"
+#include "openssl/indicator.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 typedef struct evp_test_buffer_st EVP_TEST_BUFFER;
 DEFINE_STACK_OF(EVP_TEST_BUFFER)

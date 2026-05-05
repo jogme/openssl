@@ -8,9 +8,14 @@
  */
 
 #include <openssl/bio.h>
-#include "internal/e_os.h"
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 #include "internal/sockets.h"
 #include "testutil.h"
+#include "internal/nelem.h"
+#include "openssl/crypto.h"
 
 static int families[] = {
     AF_INET,

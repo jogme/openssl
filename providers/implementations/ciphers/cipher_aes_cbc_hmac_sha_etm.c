@@ -9,11 +9,11 @@
 
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/core.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include "cipher_aes_cbc_hmac_sha_etm.h"
-#include "prov/providercommon.h"
-#include "prov/ciphercommon_aead.h"
 #include "prov/implementations.h"
 
 #ifndef AES_CBC_HMAC_SHA_ETM_CAPABLE

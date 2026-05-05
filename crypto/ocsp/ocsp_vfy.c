@@ -10,7 +10,6 @@
 #include <string.h>
 #include <openssl/ocsp.h>
 #include <openssl/err.h>
-#include <openssl/x509.h>
 #include "internal/sizes.h"
 #include "ocsp_local.h"
 #include "crypto/asn1.h"

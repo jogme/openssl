@@ -20,8 +20,6 @@
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
 #include <openssl/ocsp.h>
-#include <openssl/ssl3.h>
-#include <openssl/x509.h>
 #include <stdint.h>
 #include <string.h>
 #include "../ssl_local.h"

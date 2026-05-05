@@ -7,12 +7,10 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include <string.h>
-
 #include <openssl/bn.h>
 #include "crypto/asn1_dsa.h"
 #include "testutil.h"
+#include "openssl/types.h"
 
 static unsigned char t_dsa_sig[] = {
     0x30, 0x06, /* SEQUENCE tag + length */

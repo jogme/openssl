@@ -7,10 +7,16 @@
  * https://www.openssl.org/source/license.html
  */
 #include <openssl/ssl.h>
-
+#include <openssl/x509.h>
+#include <stddef.h>
 #include "helpers/ssltestlib.h"
-#include "internal/dane.h"
 #include "testutil.h"
+#include "openssl/crypto.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/provider.h"
+#include "openssl/tls1.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 #undef OSSL_NO_USABLE_TLS1_3
 #if defined(OPENSSL_NO_TLS1_3) \

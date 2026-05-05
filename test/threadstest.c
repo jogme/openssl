@@ -21,21 +21,33 @@
 
 #include <string.h>
 #include <openssl/crypto.h>
-#include <openssl/rsa.h>
 #include <openssl/aes.h>
-#include <openssl/err.h>
 #include <openssl/rand.h>
 #include <openssl/pem.h>
 #include <openssl/evp.h>
+#include <openssl/x509.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <sys/time.h>
+#include <time.h>
 #include "internal/tsan_assist.h"
-#include "internal/nelem.h"
 #include "internal/time.h"
 #include "internal/rcu.h"
 #include "testutil.h"
 #include "threadstest.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/e_os2.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/provider.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "opt.h"
 
 #ifdef __SANITIZE_THREAD__
 #include <sanitizer/tsan_interface.h>
+
 #define TSAN_ACQUIRE(s) __tsan_acquire(s)
 #else
 #define TSAN_ACQUIRE(s)

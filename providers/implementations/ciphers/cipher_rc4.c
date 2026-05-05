@@ -15,6 +15,10 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include "cipher_rc4.h"

@@ -12,8 +12,6 @@
  * OpenSSL headers
  */
 
-#include <openssl/types.h>
-
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -32,13 +30,7 @@
 #endif
 
 #include <openssl/opensslconf.h>
-#ifndef OPENSSL_NO_STDIO
-#include <stdio.h>
-#endif
-
-#include <openssl/evp.h>
-#include <openssl/x509.h>
-#include <openssl/x509v3.h>
+#include "openssl/opensslconf.h"
 
 int main(void)
 {

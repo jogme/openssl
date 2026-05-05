@@ -13,9 +13,16 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/aes_platform.h"
+#include "openssl/aes.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/modes.h"
+#include "prov/ciphercommon.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/proverr.h>
+#include <stddef.h>
 #include "cipher_aes.h"
 
 static int cipher_hw_aes_initkey(PROV_CIPHER_CTX *dat,

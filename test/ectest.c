@@ -14,22 +14,28 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/opensslconf.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
-#include "internal/nelem.h"
-#include "testutil.h"
-
 #include <openssl/ec.h>
 #include <openssl/err.h>
 #include <openssl/obj_mac.h>
 #include <openssl/objects.h>
-#include <openssl/rand.h>
 #include <openssl/bn.h>
 #include <openssl/opensslconf.h>
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
 #include <openssl/evp.h>
+#include "internal/nelem.h"
+#include "testutil.h"
 
 static size_t crv_len = 0;
 static EC_builtin_curve *curves = NULL;

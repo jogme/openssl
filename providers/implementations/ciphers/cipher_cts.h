@@ -11,6 +11,8 @@
 #define OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_CTS_H
 
 #include "crypto/evp.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
 
 /* NOTE: The underlying block cipher is CBC so we reuse most of the code */
 #define IMPLEMENT_cts_cipher(alg, UCALG, lcmode, UCMODE, flags, kbits,           \

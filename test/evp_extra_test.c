@@ -10,11 +10,8 @@
 /* We need to use some deprecated APIs */
 #define OPENSSL_SUPPRESS_DEPRECATED
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <openssl/bio.h>
-#include <openssl/conf.h>
 #include <openssl/crypto.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
@@ -32,14 +29,23 @@
 #include <openssl/encoder.h>
 #include <openssl/rsa.h>
 #include <openssl/proverr.h>
-#include <openssl/rand.h>
 #include <crypto/ml_kem.h>
+#include <stdint.h>
 #include "testutil.h"
 #include "internal/nelem.h"
 #include "internal/sizes.h"
 #include "crypto/evp.h"
 #include "fake_rsaprov.h"
 #include "fake_pipelineprov.h"
+#include "openssl/bn.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/ec.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 #ifndef OPENSSL_NO_DSA
 #include "helpers/predefined_dsaparams.h"

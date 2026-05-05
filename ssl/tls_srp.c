@@ -20,7 +20,6 @@
 #include <openssl/crypto.h>
 #include <openssl/rand.h>
 #include <openssl/err.h>
-#include <openssl/ssl3.h>
 #include <string.h>
 #include "ssl_local.h"
 #include "internal/ssl_unwrap.h"

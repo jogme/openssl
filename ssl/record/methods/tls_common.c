@@ -11,7 +11,6 @@
 #include <openssl/err.h>
 #include <openssl/core_names.h>
 #include <openssl/comp.h>
-#include <openssl/ssl3.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <string.h>

@@ -11,6 +11,7 @@
 #define OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_AES_CBC_HMAC_SHA_ETM_H
 
 #include <openssl/proverr.h>
+#include <stddef.h>
 #include "prov/ciphercommon.h"
 #include "crypto/aes_platform.h"
 

@@ -9,12 +9,20 @@
 
 /* RC4_HMAC_MD5 cipher implementation */
 
+#include <stdint.h>
+#include <string.h>
 /*
  * MD5 and RC4 low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/cryptlib.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/md5.h"
+#include "openssl/rc4.h"
+#include "prov/ciphercommon.h"
 /* IWYU pragma: end_keep */
 
 #include "cipher_rc4_hmac_md5.h"

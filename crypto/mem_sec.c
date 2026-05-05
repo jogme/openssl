@@ -8,6 +8,9 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <openssl/crypto.h>
+#include <openssl/err.h>
+#include <string.h>
 /*
  * This file is in two halves. The first half implements the public API
  * to be used by external consumers, and to be used by OpenSSL to store
@@ -18,9 +21,7 @@
 /* IWYU pragma: begin_keep */
 #include "internal/e_os.h"
 /* IWYU pragma: end_keep */
-#include <openssl/crypto.h>
-#include <openssl/err.h>
-#include <string.h>
+
 #include "openssl/cryptoerr.h"
 #include "openssl/e_os2.h"
 

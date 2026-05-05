@@ -10,10 +10,9 @@
 /* Tests for the ASN1_STRING_TABLE_* functions */
 
 #include <stdio.h>
-#include <string.h>
-
 #include <openssl/asn1.h>
 #include "testutil.h"
+#include "openssl/types.h"
 
 static int test_string_tbl(void)
 {

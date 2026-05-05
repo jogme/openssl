@@ -31,4 +31,6 @@
 
 /* clang-format off */
 #include "blake2_mac_impl.c"
+#include "prov/blake2.h"
+#include "prov/implementations.h"
 /* clang-format on */

@@ -12,6 +12,7 @@
 #pragma once
 
 #include <openssl/macros.h>
+#include <openssl/opensslv.h>
 #ifndef OPENSSL_NO_DEPRECATED_3_0
 #define HEADER_PEM_H
 #endif
@@ -443,6 +444,10 @@ void PEM_proc_type(char *buf, int type);
 void PEM_dek_info(char *buf, const char *type, int len, const char *str);
 
 #include <openssl/symhacks.h>
+#include "openssl/asn1.h"
+#include "openssl/ec.h"
+#include "openssl/pkcs7.h"
+#include "openssl/types.h"
 
 DECLARE_PEM_rw(X509, X509)
 DECLARE_PEM_rw(X509_AUX, X509)

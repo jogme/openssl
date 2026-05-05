@@ -13,10 +13,13 @@
 #pragma once
 
 #include <openssl/opensslconf.h>
-
 #include <openssl/bio.h>
 #include <openssl/asn1.h>
 #include <openssl/conf.h>
+#include <stddef.h>
+#include "openssl/opensslconf.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 #ifdef __cplusplus
 extern "C" {

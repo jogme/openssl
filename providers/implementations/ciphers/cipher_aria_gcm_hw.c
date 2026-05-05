@@ -11,7 +11,10 @@
  * Generic support for ARIA GCM.
  */
 
+#include <stddef.h>
 #include "cipher_aria_gcm.h"
+#include "crypto/aria.h"
+#include "prov/ciphercommon_gcm.h"
 
 static int aria_gcm_initkey(PROV_GCM_CTX *ctx, const unsigned char *key,
     size_t keylen)

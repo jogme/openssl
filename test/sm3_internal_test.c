@@ -12,9 +12,9 @@
  * Internal tests for the SM3 module.
  */
 
-#include <string.h>
 #include <openssl/opensslconf.h>
 #include "testutil.h"
+#include "openssl/opensslconf.h"
 
 #ifndef OPENSSL_NO_SM3
 #include "internal/sm3.h"

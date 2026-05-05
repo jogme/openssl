@@ -12,8 +12,13 @@
 #include <openssl/param_build.h>
 #include <openssl/core_names.h>
 #include <openssl/evp.h>
+#include <string.h>
 #include "testutil.h"
 #include "fake_cipherprov.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 static OSSL_LIB_CTX *libctx = NULL;
 static OSSL_PROVIDER *deflprov = NULL;

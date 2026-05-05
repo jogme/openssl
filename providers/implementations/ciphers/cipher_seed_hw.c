@@ -7,12 +7,15 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 /*
  * SEED low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/seed.h"
+#include "prov/ciphercommon.h"
 /* IWYU pragma: end_keep */
 
 #include "cipher_seed.h"

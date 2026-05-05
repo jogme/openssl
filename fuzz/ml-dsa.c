@@ -8,15 +8,18 @@
  * or in the file LICENSE in the source distribution.
  */
 
-/* Test ML-DSA operation.  */
-#include <string.h>
 #include <openssl/evp.h>
-#include <openssl/err.h>
 #include <openssl/rand.h>
 #include <openssl/byteorder.h>
+#include <stdint.h>
+#include <stdio.h>
 #include "internal/nelem.h"
 #include "fuzzer.h"
 #include "crypto/ml_dsa.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 /**
  * @brief Consumes an 8-bit unsigned integer from a buffer.

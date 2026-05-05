@@ -7,16 +7,21 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <string.h>
-
 #include <openssl/opensslconf.h>
-#include <openssl/crypto.h>
 #include <openssl/ocsp.h>
 #include <openssl/x509.h>
 #include <openssl/asn1.h>
 #include <openssl/pem.h>
-
+#include <stdint.h>
+#include <time.h>
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/opensslconf.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509v3.h"
 
 static const char *certstr;
 static const char *privkeystr;

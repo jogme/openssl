@@ -10,7 +10,6 @@
 #include <openssl/objects.h>
 #include <openssl/ts.h>
 #include <openssl/pkcs7.h>
-#include <openssl/x509.h>
 #include <string.h>
 #include "internal/cryptlib.h"
 #include "internal/sizes.h"

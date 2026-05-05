@@ -10,7 +10,14 @@
 
 #include <string.h>
 #include <openssl/params.h>
+#include <inttypes.h>
+#include <stdlib.h>
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 
 /* On machines that dont support <inttypes.h> just disable the tests */
 #if !defined(OPENSSL_NO_INTTYPES_H)

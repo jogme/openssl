@@ -7,7 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/nelem.h"
 #include <string.h>
 #include <time.h>
 #include <openssl/bio.h>
@@ -15,8 +14,10 @@
 #include <openssl/err.h>
 #include <openssl/pem.h>
 #include <openssl/x509.h>
-
 #include "testutil.h"
+#include "openssl/asn1err.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 /*
  * We cannot use old certificates for new tests because the private key

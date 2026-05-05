@@ -7,14 +7,14 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <string.h>
 #include <openssl/opensslconf.h>
-#include <openssl/err.h>
+#include <openssl/ui.h>
 #include "apps_ui.h"
 #include "testutil.h"
-
-#include <openssl/ui.h>
+#include "openssl/crypto.h"
+#include "openssl/opensslconf.h"
+#include "openssl/types.h"
 
 /* Old style PEM password callback */
 static int test_pem_password_cb(char *buf, int size, int rwflag, void *userdata)

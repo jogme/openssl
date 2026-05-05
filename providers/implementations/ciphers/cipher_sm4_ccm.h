@@ -10,10 +10,12 @@
 #if !defined(OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_SM4_CCM_H)
 #define OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_SM4_CCM_H
 
+#include <stddef.h>
 #include "crypto/sm4.h"
 #include "prov/ciphercommon.h"
 #include "prov/ciphercommon_ccm.h"
 #include "crypto/sm4_platform.h"
+#include "internal/common.h"
 
 typedef struct prov_sm4_ccm_ctx_st {
     PROV_CCM_CTX base; /* Must be first */

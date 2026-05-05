@@ -10,6 +10,7 @@
 #include <string.h>
 #include <openssl/sha.h>
 #include "testutil.h"
+#include "openssl/evp.h"
 
 static int test_static_sha_common(const char *input, size_t length,
     const unsigned char *out,

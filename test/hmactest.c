@@ -13,14 +13,12 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bio.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
-
-#include "internal/nelem.h"
-
 #include <openssl/hmac.h>
 #include <openssl/sha.h>
 #ifndef OPENSSL_NO_MD5

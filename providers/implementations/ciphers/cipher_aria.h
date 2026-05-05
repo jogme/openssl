@@ -10,8 +10,10 @@
 #if !defined(OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_ARIA_H)
 #define OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_ARIA_H
 
+#include <stddef.h>
 #include "crypto/aria.h"
 #include "prov/ciphercommon.h"
+#include "internal/common.h"
 
 typedef struct prov_aria_ctx_st {
     PROV_CIPHER_CTX base; /* Must be first */

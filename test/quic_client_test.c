@@ -10,10 +10,15 @@
 #include <openssl/ssl.h>
 #include <openssl/quic.h>
 #include <openssl/bio.h>
-#include "internal/common.h"
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
 #include "internal/sockets.h"
 #include "internal/time.h"
 #include "testutil.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 static const char msg1[] = "GET LICENSE.txt\r\n";
 static char msg2[16000];

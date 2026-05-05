@@ -9,13 +9,17 @@
 #include <openssl/ssl.h>
 #include <openssl/quic.h>
 #include <openssl/bio.h>
-#include "internal/common.h"
-#include "internal/sockets.h"
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <stddef.h>
+#include <sys/socket.h>
+#include <sys/time.h>
 #include "internal/quic_tserver.h"
-#include "internal/quic_thread_assist.h"
 #include "internal/quic_ssl.h"
 #include "internal/time.h"
 #include "testutil.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 static const char msg1[] = "The quick brown fox jumped over the lazy dogs.";
 static char msg2[1024], msg3[1024];

@@ -9,21 +9,24 @@
 
 #include <openssl/crypto.h>
 #include <openssl/core_dispatch.h>
-#include <openssl/core_names.h>
 #include <openssl/err.h>
 #include <openssl/params.h>
 #include <openssl/evp.h>
 #include <openssl/proverr.h>
-#include "internal/common.h"
-#include "internal/nelem.h"
+#include <stdint.h>
+#include <string.h>
 #include "internal/sizes.h"
 #include "prov/providercommon.h"
 #include "prov/implementations.h"
-#include "prov/securitycheck.h"
 #include "prov/provider_ctx.h"
 #include "prov/der_ecx.h"
 #include "crypto/ecx.h"
-#include "internal/fips.h"
+#include "crypto/types.h"
+#include "internal/packet.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 #define eddsa_set_variant_ctx_params_st eddsa_set_ctx_params_st
 

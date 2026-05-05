@@ -8,9 +8,16 @@
  */
 
 #include <string.h>
-
+#include <stdint.h>
 #include "helpers/ssltestlib.h"
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/err.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/ssl.h"
+#include "openssl/ssl3.h"
+#include "openssl/sslerr.h"
+#include "openssl/types.h"
 
 static char *cert = NULL;
 static char *privkey = NULL;

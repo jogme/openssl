@@ -7,8 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "testutil.h"
 #include <openssl/ssl.h>
+#include <stddef.h>
+#include "testutil.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/quic.h"
+#include "openssl/types.h"
 
 typedef struct {
     int proto;

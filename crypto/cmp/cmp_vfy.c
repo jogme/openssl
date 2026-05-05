@@ -11,7 +11,6 @@
 
 /* CMP functions for PKIMessage checking */
 
-#include <openssl/x509.h>
 #include <stddef.h>
 #include "cmp_local.h"
 #include "crypto/asn1.h"

@@ -13,6 +13,7 @@
  */
 
 #include <openssl/core.h>
+#include "openssl/types.h"
 
 OSSL_provider_init_fn OSSL_provider_init; /* Check the function signature */
 int OSSL_provider_init(const OSSL_CORE_HANDLE *handle,

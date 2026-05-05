@@ -10,11 +10,13 @@
 #include <assert.h>
 /* For SSL3_VERSION, TLS1_VERSION etc */
 #include <openssl/prov_ssl.h>
-#include <openssl/rand.h>
 #include <openssl/proverr.h>
-#include "internal/constant_time.h"
+#include <string.h>
 #include "internal/ssl3_cbc.h"
 #include "ciphercommon_local.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
+#include "prov/ciphercommon.h"
 
 /*
  * Fills a single block of buffered data from the input, and returns the amount

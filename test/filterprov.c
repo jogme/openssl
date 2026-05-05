@@ -20,6 +20,9 @@
 #include "testutil.h"
 #include "filterprov.h"
 #include "prov/bio.h"
+#include "openssl/bio.h"
+#include "openssl/types.h"
+#include "prov/provider_ctx.h"
 
 #define MAX_FILTERS 10
 #define MAX_ALG_FILTERS 5

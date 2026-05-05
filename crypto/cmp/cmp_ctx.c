@@ -10,7 +10,6 @@
  */
 
 #include <openssl/ocsp.h> /* for OCSP_REVOKED_STATUS_* */
-#include <openssl/x509.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include "cmp_local.h"

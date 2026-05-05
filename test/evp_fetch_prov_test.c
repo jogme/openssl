@@ -14,6 +14,13 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/asn1.h"
+#include "openssl/crypto.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "opt.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>

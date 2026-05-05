@@ -14,10 +14,14 @@
  */
 #define OPENSSL_SUPPRESS_DEPRECATED
 
-#include <openssl/srp.h>
 #include <openssl/ssl.h>
+#include <string.h>
 #include "handshake.h"
 #include "../testutil.h"
+#include "openssl/crypto.h"
+#include "openssl/ssl3.h"
+#include "openssl/types.h"
+#include "ssl_test_ctx.h"
 
 static char *client_srp_cb(SSL *s, void *arg)
 {

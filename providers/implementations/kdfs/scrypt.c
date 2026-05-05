@@ -7,21 +7,24 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
 #include <openssl/evp.h>
-#include <openssl/kdf.h>
 #include <openssl/err.h>
-#include <openssl/core_names.h>
 #include <openssl/proverr.h>
+#include <limits.h>
+#include <stdint.h>
 #include "crypto/evp.h"
-#include "internal/common.h"
-#include "internal/numbers.h"
 #include "prov/implementations.h"
 #include "prov/provider_ctx.h"
 #include "prov/providercommon.h"
 #include "prov/provider_util.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/evperr.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_SCRYPT
 

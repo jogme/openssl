@@ -7,28 +7,29 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <assert.h>
 #include <string.h>
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
 #include <openssl/params.h>
 #include <openssl/err.h>
 #include <openssl/proverr.h>
-#include <openssl/evp.h>
 #include <openssl/rand.h>
-#include <openssl/self_test.h>
-#include "internal/fips.h"
-#include "internal/param_build_set.h"
 #include <openssl/param_build.h>
+#include <stdint.h>
+#include "internal/param_build_set.h"
 #include "crypto/ecx.h"
 #include "prov/implementations.h"
 #include "prov/providercommon.h"
 #include "prov/provider_ctx.h"
 #include "prov/ecx.h"
-#include "prov/securitycheck.h"
+#include "crypto/types.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 #ifdef S390X_EC_ASM
-#include "s390x_arch.h"
 #include <openssl/sha.h> /* For SHA512_DIGEST_LENGTH */
+#include "s390x_arch.h"
 #endif
 
 static OSSL_FUNC_keymgmt_new_fn x25519_new_key;

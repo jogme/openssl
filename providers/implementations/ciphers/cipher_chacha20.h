@@ -10,8 +10,11 @@
 #if !defined(OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_CHACHA20_H)
 #define OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_CHACHA20_H
 
+#include <stddef.h>
 #include "include/crypto/chacha.h"
 #include "prov/ciphercommon.h"
+#include "internal/common.h"
+#include "openssl/core_dispatch.h"
 
 typedef struct {
     PROV_CIPHER_CTX base; /* must be first */

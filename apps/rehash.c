@@ -8,13 +8,21 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stdlib.h>
 #include "internal/e_os.h" /* LIST_SEPARATOR_CHAR */
 #include "apps.h"
 #include "progs.h"
+#include "app_libctx.h"
+#include "internal/nelem.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 #if defined(OPENSSL_SYS_UNIX) || defined(__APPLE__) || (defined(__VMS) && defined(__DECC) && __CRTL_VER >= 80300000)
 #include <unistd.h>
-#include <stdio.h>
 #include <limits.h>
 #include <errno.h>
 #include <string.h>

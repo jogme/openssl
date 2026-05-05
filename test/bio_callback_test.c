@@ -7,11 +7,10 @@
  * https://www.openssl.org/source/license.html
  */
 #define OPENSSL_SUPPRESS_DEPRECATED
-#include <stdio.h>
 #include <string.h>
 #include <openssl/bio.h>
-
 #include "testutil.h"
+#include "openssl/types.h"
 
 #define MAXCOUNT 7
 static int my_param_count;

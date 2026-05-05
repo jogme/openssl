@@ -9,15 +9,16 @@
 
 #include <openssl/crypto.h>
 #include <openssl/core_dispatch.h>
-#include <openssl/core_names.h>
 #include <openssl/params.h>
 #include <openssl/err.h>
-#include <openssl/proverr.h>
-#include "internal/cryptlib.h"
+#include <stddef.h>
 #include "crypto/ecx.h"
 #include "prov/implementations.h"
 #include "prov/providercommon.h"
-#include "prov/securitycheck.h"
+#include "crypto/types.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 #ifdef FIPS_MODULE
 #include "providers/implementations/exchange/ecx_exch.inc"
@@ -180,10 +181,6 @@ static void *ecx_dupctx(void *vecxctx)
 
     return dstctx;
 }
-
-#ifdef FIPS_MODULE
-
-#endif
 
 static const OSSL_PARAM *ecx_gettable_ctx_params(ossl_unused void *vctx,
     ossl_unused void *provctx)

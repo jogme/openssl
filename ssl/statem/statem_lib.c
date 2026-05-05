@@ -16,7 +16,6 @@
 #include <openssl/rsa.h>
 #include <openssl/x509.h>
 #include <openssl/trace.h>
-#include <openssl/ssl3.h>
 #include <stdint.h>
 #include "../ssl_local.h"
 #include "statem_local.h"

@@ -14,8 +14,6 @@
 #include <openssl/trace.h>
 #include <openssl/core_names.h>
 #include <openssl/ocsp.h>
-#include <openssl/ssl3.h>
-#include <openssl/x509.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>

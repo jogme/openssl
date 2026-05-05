@@ -17,6 +17,13 @@
 #include <openssl/pem.h>
 #include "crypto/x509.h" /* x509_st definition */
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/conf.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 static EVP_PKEY *pubkey = NULL;
 static EVP_PKEY *privkey = NULL;

@@ -21,8 +21,10 @@
 
 #include <string.h>
 #include <openssl/evp.h>
+#include <stdint.h>
 #include "crypto/ml_dsa.h"
 #include "testutil.h"
+#include "openssl/crypto.h"
 
 /* Fixed 32-byte seed used for all three parameter-set tests. */
 static const uint8_t test_seed[ML_DSA_SEED_BYTES] = {

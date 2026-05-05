@@ -7,17 +7,21 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <string.h>
 #include <stdio.h>
 #include <openssl/core.h>
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
 #include <openssl/err.h>
 #include <openssl/params.h>
+#include <stdarg.h>
 #include "prov/provider_ctx.h"
 #include "prov/implementations.h"
 #include "prov/names.h"
 #include "prov/providercommon.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/opensslv.h"
+#include "openssl/types.h"
 
 /*
  * Forward declarations to ensure that interface functions are correctly

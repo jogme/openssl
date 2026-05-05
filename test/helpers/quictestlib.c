@@ -10,17 +10,31 @@
 #include <assert.h>
 #include <openssl/configuration.h>
 #include <openssl/bio.h>
-#include "internal/e_os.h" /* For struct timeval */
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <unistd.h>
 #include "quictestlib.h"
 #include "ssltestlib.h"
 #include "../testutil.h"
+#include "internal/quic_channel.h"
+#include "internal/quic_tserver.h"
+#include "internal/quic_wire.h"
+#include "internal/thread_arch.h"
+#include "openssl/buffer.h"
+#include "openssl/crypto.h"
+#include "openssl/quic.h"
+#include "openssl/ssl.h"
+#include "openssl/ssl3.h"
 #if defined(OPENSSL_THREADS) && !defined(CRYPTO_TDEBUG)
 #include "../threadstest.h"
 #endif
 #include "internal/quic_ssl.h"
 #include "internal/quic_wire_pkt.h"
 #include "internal/quic_record_tx.h"
-#include "internal/quic_error.h"
 #include "internal/packet.h"
 #include "internal/tsan_assist.h"
 

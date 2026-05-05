@@ -9,10 +9,14 @@
 
 #include <stdio.h>
 #include <string.h>
-
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/evp.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 /*
  * c: path of a cert in PEM format

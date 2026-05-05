@@ -18,15 +18,29 @@
 #endif
 
 #include <ctype.h>
-#include "internal/e_os.h"
-#include "http_server.h"
-#include "internal/sockets.h" /* for openssl_fdset() */
-
 #include <openssl/err.h>
 #include <openssl/trace.h>
 #include <openssl/rand.h>
+#include <errno.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <syslog.h>
+#include <unistd.h>
+#include "http_server.h"
+#include "internal/sockets.h" /* for openssl_fdset() */
 #include "s_apps.h"
 #include "log.h"
+#include "apps.h"
+#include "internal/common.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 
 #define HTTP_PREFIX "HTTP/"
 #define HTTP_VERSION_PATT "1." /* allow 1.x */

@@ -13,16 +13,17 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
-#include <openssl/crypto.h>
 #include <openssl/params.h>
 #include <openssl/mdc2.h>
-#include <openssl/core_names.h>
 #include <openssl/err.h>
 #include <openssl/proverr.h>
-#include <internal/common.h>
 #include "prov/digestcommon.h"
 #include "prov/implementations.h"
 #include "providers/implementations/digests/mdc2_prov.inc"

@@ -15,8 +15,6 @@
 #include <string.h>
 #include <openssl/ocsp.h>
 #include <openssl/core_names.h>
-#include <openssl/ssl3.h>
-#include <openssl/x509.h>
 #include <stdint.h>
 #include "internal/nelem.h"
 #include "internal/ssl_unwrap.h"

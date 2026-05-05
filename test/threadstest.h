@@ -12,7 +12,10 @@
 #endif
 
 #include <string.h>
+#include <pthread.h>
 #include "testutil.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
 
 #if !defined(OPENSSL_THREADS) || defined(CRYPTO_TDEBUG)
 

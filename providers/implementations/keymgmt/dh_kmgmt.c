@@ -7,6 +7,11 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <string.h> /* strcmp */
+#include <openssl/core_dispatch.h>
+#include <openssl/core_names.h>
+#include <openssl/bn.h>
+#include <openssl/err.h>
 /*
  * DH low level APIs are deprecated for public use, but still ok for
  * internal use.
@@ -15,21 +20,20 @@
 #include "internal/deprecated.h"
 /* IWYU pragma: end_keep */
 #include "internal/common.h"
-
-#include <string.h> /* strcmp */
-#include <openssl/core_dispatch.h>
-#include <openssl/core_names.h>
-#include <openssl/bn.h>
-#include <openssl/err.h>
-#include <openssl/self_test.h>
-#include <openssl/proverr.h>
 #include "prov/implementations.h"
 #include "prov/providercommon.h"
 #include "prov/provider_ctx.h"
 #include "crypto/dh.h"
-#include "internal/fips.h"
-#include "internal/sizes.h"
 #include "internal/cryptlib.h"
+#include "internal/ffc.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/dh.h"
+#include "openssl/e_os2.h"
+#include "openssl/obj_mac.h"
+#include "openssl/param_build.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 static OSSL_FUNC_keymgmt_new_fn dh_newdata;
 static OSSL_FUNC_keymgmt_new_ex_fn dh_newdata_ex;

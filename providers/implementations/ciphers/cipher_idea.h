@@ -11,7 +11,9 @@
 #define OSSL_PROVIDERS_IMPLEMENTATIONS_CIPHERS_CIPHER_IDEA_H
 
 #include <openssl/idea.h>
+#include <stddef.h>
 #include "prov/ciphercommon.h"
+#include "internal/common.h"
 
 typedef struct prov_idea_ctx_st {
     PROV_CIPHER_CTX base; /* Must be first */

@@ -13,11 +13,9 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/configuration.h"
 /* IWYU pragma: end_keep */
 
-#include <string.h>
-
-#include "internal/nelem.h"
 #include "testutil.h"
 
 #ifndef OPENSSL_NO_RC5

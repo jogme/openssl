@@ -15,21 +15,15 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
 #include <string.h>
-
-#include "internal/nelem.h"
-
-#include <openssl/crypto.h>
-#include <openssl/err.h>
-#include <openssl/rand.h>
 #include <openssl/bn.h>
-
-#include "testutil.h"
-
 #include <openssl/rsa.h>
+#include "internal/nelem.h"
+#include "testutil.h"
 
 #define SetKey                                     \
     RSA_set0_key(key,                              \

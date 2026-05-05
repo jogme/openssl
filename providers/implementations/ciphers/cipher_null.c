@@ -15,6 +15,11 @@
 #include "prov/ciphercommon.h"
 #include "prov/providercommon.h"
 #include "providers/implementations/ciphers/cipher_null.inc"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 typedef struct prov_cipher_null_ctx_st {
     int enc;

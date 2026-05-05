@@ -17,9 +17,10 @@
 #include <assert.h>
 #include <string.h>
 #include <openssl/crypto.h>
-#include "internal/numbers.h"
+#include <stdint.h>
 #include "blake2_impl.h"
 #include "prov/blake2.h"
+#include "openssl/e_os2.h"
 
 static const uint64_t blake2b_IV[8] = {
     0x6a09e667f3bcc908ULL, 0xbb67ae8584caa73bULL,

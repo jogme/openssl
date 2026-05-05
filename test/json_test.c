@@ -7,12 +7,15 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
-
+#include <stdint.h>
 #include "testutil.h"
 #include "internal/json_enc.h"
+#include "internal/nelem.h"
+#include "openssl/bio.h"
+#include "openssl/buffer.h"
+#include "openssl/types.h"
 
 struct helper {
     OSSL_JSON_ENC j;

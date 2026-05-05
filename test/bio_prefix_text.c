@@ -10,8 +10,11 @@
 #include <string.h>
 #include <stdarg.h>
 #include <openssl/bio.h>
-#include <openssl/safestack.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "opt.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 static BIO *bio_in = NULL;
 static BIO *bio_out = NULL;

@@ -12,20 +12,20 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/core.h>
 #include <openssl/core_dispatch.h>
-#include <openssl/core_names.h>
-#include <openssl/params.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/ec.h>
-#include "internal/passphrase.h"
+#include <stddef.h>
 #include "internal/nelem.h"
 #include "prov/implementations.h"
 #include "prov/bio.h"
-#include "prov/provider_ctx.h"
 #include "prov/endecoder_local.h"
 
 static int write_blob(void *provctx, OSSL_CORE_BIO *cout,

@@ -9,9 +9,15 @@
 
 #include <openssl/core.h>
 #include <openssl/buffer.h>
+#include <stddef.h>
 #include "internal/asn1.h"
 #include "prov/bio.h"
 #include "prov/endecoder_local.h"
+#include "openssl/bio.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
+#include "prov/provider_ctx.h"
 
 OSSL_FUNC_keymgmt_new_fn *
 ossl_prov_get_keymgmt_new(const OSSL_DISPATCH *fns)

@@ -12,6 +12,11 @@
 #include "cipher_aria_gcm.h"
 #include "prov/implementations.h"
 #include "prov/providercommon.h"
+#include "crypto/modes.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "prov/ciphercommon_aead.h"
 
 static void *aria_gcm_newctx(void *provctx, size_t keybits)
 {

@@ -8,7 +8,6 @@
  */
 
 #include <openssl/x509v3.h>
-#include <openssl/x509.h>
 #include <stdint.h>
 #include <string.h>
 #include "crypto/x509.h"

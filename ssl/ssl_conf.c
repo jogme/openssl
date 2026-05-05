@@ -10,7 +10,6 @@
 #include <openssl/conf.h>
 #include <openssl/decoder.h>
 #include <openssl/core_dispatch.h>
-#include <openssl/x509.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>

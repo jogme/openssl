@@ -18,7 +18,6 @@
 #include <openssl/param_build.h>
 #include <limits.h>
 #include <openssl/ssl3.h>
-#include <openssl/x509.h>
 #include <stdint.h>
 #include <string.h>
 #include "internal/nelem.h"

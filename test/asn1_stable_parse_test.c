@@ -7,8 +7,13 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/evp.h>
+#include <stddef.h>
 #include "testutil.h"
+#include "openssl/asn1err.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 static char *config_file = NULL;
 

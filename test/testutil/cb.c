@@ -7,6 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 #include "output.h"
 #include "tu_local.h"
 

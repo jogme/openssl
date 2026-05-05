@@ -8,18 +8,16 @@
  */
 
 #include <string.h>
-
 #include <openssl/opensslconf.h>
 #include <openssl/bio.h>
-#include <openssl/crypto.h>
-#include <openssl/evp.h>
 #include <openssl/ssl.h>
-#include <openssl/err.h>
-#include <time.h>
-
 #include "internal/packet.h"
-
 #include "testutil.h"
+#include "openssl/opensslconf.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/ssl3.h"
+#include "openssl/tls1.h"
+#include "openssl/types.h"
 
 #define CLIENT_VERSION_LEN 2
 

@@ -7,12 +7,16 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 /*
  * This file uses the low level AES functions (which are deprecated for
  * non-internal use) in order to implement provider AES ciphers.
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/siv.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include "cipher_aes_siv.h"

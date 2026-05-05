@@ -9,9 +9,16 @@
 
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
-#include <openssl/rand.h>
 #include <openssl/hpke.h>
+#include <stdint.h>
+#include <string.h>
 #include "testutil.h"
+#include "internal/nelem.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/provider.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 /* a size to use for stack buffers */
 #define OSSL_HPKE_TSTSIZE 512

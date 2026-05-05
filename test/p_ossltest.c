@@ -40,26 +40,30 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/aes.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/opensslv.h"
+#include "openssl/types.h"
+#include "prov/providercommon.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
 #include <openssl/params.h>
-#include <openssl/rand.h> /* RAND_get0_public() */
 #include <openssl/proverr.h>
 #include <openssl/md5.h>
 #include <openssl/sha.h>
 #include <openssl/prov_ssl.h>
+#include <stdint.h>
+#include <string.h>
 #include "prov/provider_ctx.h"
 #include "prov/digestcommon.h"
 #include "prov/ciphercommon.h"
 #include "prov/names.h"
-#include "prov/implementations.h"
-#include "ciphers/cipher_aes.h"
-#include "internal/cryptlib.h"
-#include "internal/provider.h"
-#include "crypto/context.h"
-#include "internal/core.h"
 
 /**
  * @brief Release resources and clean up the context.

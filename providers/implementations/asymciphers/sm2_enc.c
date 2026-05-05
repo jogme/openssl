@@ -9,21 +9,25 @@
 
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/ec.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/crypto.h>
 #include <openssl/evp.h>
 #include <openssl/core_dispatch.h>
-#include <openssl/core_names.h>
 #include <openssl/params.h>
 #include <openssl/err.h>
 #include <openssl/proverr.h>
+#include <string.h>
 #include "crypto/sm2.h"
-#include "internal/cryptlib.h"
 #include "prov/provider_ctx.h"
 #include "prov/implementations.h"
-#include "prov/providercommon.h"
 #include "prov/provider_util.h"
+#include <openssl/core_names.h> /* IWYU pragma: keep */
+#include "internal/common.h" /* IWYU pragma: keep */
 #include "providers/implementations/asymciphers/sm2_enc.inc"
 
 static OSSL_FUNC_asym_cipher_newctx_fn sm2_newctx;

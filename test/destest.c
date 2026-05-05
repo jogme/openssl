@@ -13,11 +13,11 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <openssl/e_os2.h>
 #include <string.h>
-
 #include "testutil.h"
 #include "internal/nelem.h"
 

@@ -12,16 +12,19 @@
 #include <ctype.h>
 #include <limits.h>
 #include <errno.h>
-
 #include <openssl/crypto.h>
 #include <openssl/evp.h>
 #include <openssl/x509.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
-#include <openssl/conf.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include "testutil.h"
-
-#include "internal/nelem.h"
+#include "openssl/bio.h"
+#include "openssl/e_os2.h"
+#include "openssl/pem.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 #define _UC(c) ((unsigned char)(c))
 
@@ -419,8 +422,6 @@ int setup_tests(void)
     ADD_TEST(run_tlsatest);
     return 1;
 }
-
-#include "internal/dane.h"
 
 static void store_ctx_dane_init(X509_STORE_CTX *store_ctx, SSL *ssl)
 {

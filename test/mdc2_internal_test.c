@@ -17,9 +17,7 @@
 #include "internal/deprecated.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
 #include <string.h>
-
 #include <openssl/mdc2.h>
 #include "testutil.h"
 #include "internal/nelem.h"

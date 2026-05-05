@@ -10,10 +10,17 @@
 /* For generating debug statistics during congestion controller development. */
 /*#define GENERATE_LOG*/
 
+#include <stddef.h>
+#include <stdint.h>
 #include "testutil.h"
-#include <openssl/ssl.h>
 #include "internal/quic_cc.h"
 #include "internal/priority_queue.h"
+#include "internal/quic_predef.h"
+#include "internal/time.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 /*
  * Time Simulation

@@ -9,12 +9,16 @@
 
 #include <openssl/ssl.h>
 #include <openssl/evp.h>
-#include "../ssl/ssl_local.h"
-#include "../ssl/record/record_local.h"
+#include <string.h>
 #include "internal/recordmethod.h"
 #include "../ssl/record/methods/recmethod_local.h"
 #include "internal/nelem.h"
 #include "testutil.h"
+#include "openssl/crypto.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/ssl3.h"
+#include "openssl/types.h"
+#include "ssl/record/record.h"
 
 /*
  * Based on the test vectors provided in:

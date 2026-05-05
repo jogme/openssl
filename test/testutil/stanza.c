@@ -6,15 +6,13 @@
  * in the file LICENSE in the source distribution or at
  * https://www.openssl.org/source/license.html
  */
-#include <assert.h>
-#include <errno.h>
-#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-
-#include "internal/nelem.h"
 #include "../testutil.h"
 #include "tu_local.h"
+#include "internal/common.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
 
 int test_start_file(STANZA *s, const char *testfile)
 {

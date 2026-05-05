@@ -12,6 +12,15 @@
 #include <openssl/store.h>
 #include <openssl/ui.h>
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/provider.h"
+#include "openssl/storeerr.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 #ifndef PATH_MAX
 #if defined(_WIN32) && defined(_MAX_PATH)

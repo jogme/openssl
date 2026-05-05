@@ -10,7 +10,6 @@
  */
 
 #include <limits.h>
-#include <openssl/x509.h>
 #include <string.h>
 #include "cmp_local.h"
 #include "crypto/asn1.h" /* for ossl_X509_ALGOR_from_nid() */

@@ -10,7 +10,6 @@
 #include <openssl/ech.h>
 #include <openssl/rand.h>
 #include <openssl/kdf.h>
-#include <openssl/ssl3.h>
 #include <stdint.h>
 #include <string.h>
 #include <time.h>

@@ -13,15 +13,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/opensslconf.h"
+#include "opt.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include <openssl/opensslconf.h> /* To see if OPENSSL_NO_BF is defined */
 #include "testutil.h"
-
-#include "internal/nelem.h"
 
 #ifndef OPENSSL_NO_BF
 #include <openssl/blowfish.h>

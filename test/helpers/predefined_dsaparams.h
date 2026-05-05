@@ -8,5 +8,6 @@
  */
 
 #include <openssl/dsa.h>
+#include "openssl/types.h"
 
 DSA *load_dsa_params(void);

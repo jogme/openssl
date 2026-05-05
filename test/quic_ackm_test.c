@@ -7,10 +7,18 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stdint.h>
+#include <string.h>
 #include "testutil.h"
-#include <openssl/ssl.h>
 #include "internal/quic_ackm.h"
 #include "internal/quic_cc.h"
+#include "internal/nelem.h"
+#include "internal/quic_predef.h"
+#include "internal/quic_statm.h"
+#include "internal/quic_types.h"
+#include "internal/quic_wire.h"
+#include "internal/time.h"
+#include "openssl/crypto.h"
 
 static OSSL_TIME fake_time = { 0 };
 

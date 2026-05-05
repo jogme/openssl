@@ -7,9 +7,10 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/obj_mac.h>
 #include "internal/packet.h"
 #include "prov/der_ec.h"
+#include "internal/der.h"
+#include "openssl/types.h"
 
 int ossl_DER_w_algorithmIdentifier_EC(WPACKET *pkt, int cont, EC_KEY *ec)
 {

@@ -10,9 +10,14 @@
 /* ASN1_STRING tests */
 
 #include <stdio.h>
-
 #include <openssl/asn1.h>
+#include <limits.h>
+#include <openssl/opensslv.h>
+#include <stdint.h>
 #include "testutil.h"
+#include "internal/nelem.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 struct abs_get_length_test {
     const char *descr;

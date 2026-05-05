@@ -8,9 +8,12 @@
  */
 
 #include <openssl/obj_mac.h>
-#include <openssl/objects.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/packet.h"
 #include "prov/der_slh_dsa.h"
+#include "crypto/slh_dsa.h"
+#include "internal/der.h"
 
 #define CASE_OID(nid, name)                \
     case nid:                              \

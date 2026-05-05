@@ -12,12 +12,21 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/types.h"
+#include "internal/nelem.h"
+#include "internal/packet.h"
+#include "openssl/bio.h"
+#include "openssl/configuration.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/rsa.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <openssl/byteorder.h>
 #include <openssl/core.h>
 #include <openssl/core_dispatch.h>
-#include <openssl/core_names.h>
 #include <openssl/crypto.h>
 #include <openssl/params.h>
 #include <openssl/asn1.h>
@@ -29,12 +38,13 @@
 #include <openssl/dsa.h>
 #include <openssl/ec.h>
 #include <openssl/proverr.h>
+#include <crypto/asn1.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/passphrase.h"
-#include "internal/cryptlib.h"
 #include "crypto/ecx.h"
 #include "crypto/ml_kem.h"
 #include "crypto/rsa.h"
-#include "crypto/ml_dsa.h"
 #include "crypto/slh_dsa.h"
 #include "prov/implementations.h"
 #include "prov/bio.h"
@@ -43,10 +53,7 @@
 #include "prov/endecoder_local.h"
 #include "prov/ml_dsa_codecs.h"
 #include "prov/ml_kem_codecs.h"
-#include "prov/lms_codecs.h"
 #include "providers/implementations/encode_decode/encode_key2any.inc"
-
-#include <crypto/asn1.h>
 
 #if defined(OPENSSL_NO_DH) && defined(OPENSSL_NO_DSA) && defined(OPENSSL_NO_EC)
 #define OPENSSL_NO_KEYPARAMS

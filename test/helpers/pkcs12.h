@@ -10,15 +10,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
-#include "internal/nelem.h"
-
 #include <openssl/pkcs12.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 #include <openssl/pem.h>
-
+#include "internal/nelem.h"
 #include "../testutil.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 /* -------------------------------------------------------------------------
  * PKCS#12 Test structures

@@ -10,10 +10,8 @@
 /* The AES_ige_* functions are deprecated, so we suppress warnings about them */
 #define OPENSSL_SUPPRESS_DEPRECATED
 
-#include <openssl/crypto.h>
 #include <openssl/aes.h>
 #include <openssl/rand.h>
-#include <stdio.h>
 #include <string.h>
 #include "internal/nelem.h"
 #include "testutil.h"

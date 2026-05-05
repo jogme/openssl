@@ -19,13 +19,20 @@
 
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
+#include "prov/providercommon.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/proverr.h>
-#include <openssl/core_names.h>
+#include <stdint.h>
 #include "crypto/ml_dsa.h"
 #include "prov/provider_ctx.h"
 #include "prov/digestcommon.h"

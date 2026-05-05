@@ -8,7 +8,10 @@
  */
 
 #include <openssl/bio.h>
+#include <stddef.h>
 #include "testutil.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 static const char *filename = NULL;
 

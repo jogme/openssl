@@ -6,13 +6,12 @@
  * in the file LICENSE in the source distribution or at
  * https://www.openssl.org/source/license.html
  */
-#include <stdio.h>
 #include <string.h>
 #include <openssl/evp.h>
 #include <openssl/bio.h>
 #include <openssl/rand.h>
-
 #include "testutil.h"
+#include "openssl/types.h"
 
 #define ENCRYPT 1
 #define DECRYPT 0

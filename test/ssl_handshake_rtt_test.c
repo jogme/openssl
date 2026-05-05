@@ -16,20 +16,19 @@
 #endif
 
 #include <stdio.h>
-#include <string.h>
-
 #include <openssl/opensslconf.h>
-#include <openssl/bio.h>
 #include <openssl/crypto.h>
 #include <openssl/ssl.h>
-
+#include <stdint.h>
 #include "helpers/ssltestlib.h"
 #include "testutil.h"
-#include "testutil/output.h"
-#include "internal/ktls.h"
 #include "../ssl/ssl_local.h"
 #include "../ssl/statem/statem_local.h"
 #include "internal/ssl_unwrap.h"
+#include "internal/statem.h"
+#include "openssl/opensslconf.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/types.h"
 
 static OSSL_LIB_CTX *libctx = NULL;
 static char *cert = NULL;

@@ -10,7 +10,12 @@
 
 #include <openssl/pem.h>
 #include <openssl/err.h>
+#include <limits.h>
+#include <stdint.h>
+#include <string.h>
 #include "fuzzer.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
 
 int FuzzerInitialize(int *argc, char ***argv)
 {

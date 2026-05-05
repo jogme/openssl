@@ -9,10 +9,14 @@
 
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/provider.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/rsa.h>
 #include <openssl/bn.h>
+#include <stddef.h>
 #include "crypto/rsa.h"
 #include "testutil.h"
 

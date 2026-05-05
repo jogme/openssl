@@ -13,18 +13,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bio.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
-
-#include "internal/nelem.h"
-
 #include <openssl/cmac.h>
 #include <openssl/aes.h>
 #include <openssl/evp.h>
-
+#include "internal/nelem.h"
 #include "testutil.h"
 
 static const char xtskey[32] = {

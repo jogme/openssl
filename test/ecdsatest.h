@@ -10,6 +10,7 @@
 #ifndef OSSL_TEST_ECDSATEST_H
 #define OSSL_TEST_ECDSATEST_H
 
+#include "openssl/obj_mac.h"
 /*-
  * NIST CAVP ECDSA KATs:
  * https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Algorithm-Validation-Program/documents/dss/186-3ecdsatestvectors.zip

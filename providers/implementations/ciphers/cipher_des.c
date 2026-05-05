@@ -13,10 +13,21 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/core_names.h"
+#include "openssl/crypto.h"
+#include "openssl/des.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/rand.h>
 #include <openssl/proverr.h>
+#include <stdint.h>
+#include <string.h>
 #include "prov/ciphercommon.h"
 #include "cipher_des.h"
 #include "prov/implementations.h"

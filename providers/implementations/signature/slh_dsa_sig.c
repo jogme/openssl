@@ -7,20 +7,26 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/core_names.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
 #include <openssl/proverr.h>
-#include <openssl/self_test.h>
+#include <stdint.h>
+#include <string.h>
 #include "prov/implementations.h"
 #include "prov/providercommon.h"
 #include "prov/provider_ctx.h"
 #include "prov/der_slh_dsa.h"
 #include "crypto/slh_dsa.h"
-#include "internal/cryptlib.h"
 #include "internal/sizes.h"
-#include "internal/fips.h"
 #include "providers/implementations/signature/slh_dsa_sig.inc"
+#include "internal/packet.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 #define SLH_DSA_MAX_ADD_RANDOM_LEN 32
 

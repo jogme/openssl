@@ -8,9 +8,13 @@
  */
 
 #include <string.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
 #include "apps.h"
 #include "testutil.h"
-#include "crypto/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/types.h"
 
 #define binname "ca_internals_test"
 

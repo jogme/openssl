@@ -12,14 +12,21 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bn.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/ecerr.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include "internal/nelem.h"
-#include "testutil.h"
 #include <openssl/ec.h>
-#include "ec_local.h"
 #include <crypto/bn.h>
 #include <openssl/objects.h>
+#include <stdio.h>
+#include "testutil.h"
+#include "ec_local.h"
 
 static size_t crv_len = 0;
 static EC_builtin_curve *curves = NULL;

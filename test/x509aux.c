@@ -8,15 +8,15 @@
  * or in the file LICENSE in the source distribution.
  */
 
-#include <stdio.h>
 #include <string.h>
-#include <errno.h>
-
 #include <openssl/x509.h>
 #include <openssl/pem.h>
-#include <openssl/conf.h>
 #include <openssl/err.h>
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/pemerr.h"
+#include "openssl/types.h"
 
 static int test_certs(int num)
 {

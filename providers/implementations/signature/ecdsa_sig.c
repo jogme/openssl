@@ -13,28 +13,32 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "fips/fipsindicator.h"
+#include "internal/packet.h"
+#include "openssl/bn.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/ec.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h> /* memcpy */
 #include <openssl/crypto.h>
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
-#include <openssl/dsa.h>
 #include <openssl/params.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/proverr.h>
-#include "internal/nelem.h"
 #include "internal/sizes.h"
-#include "internal/cryptlib.h"
-#include "internal/deterministic_nonce.h"
 #include "prov/providercommon.h"
 #include "prov/implementations.h"
 #include "prov/provider_ctx.h"
 #include "prov/securitycheck.h"
 #include "prov/der_ec.h"
 #include "crypto/ec.h"
-#include "internal/fips.h"
 
 struct ecdsa_all_set_ctx_params_st {
     OSSL_PARAM *digest; /* ecdsa_set_ctx_params */

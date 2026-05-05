@@ -7,10 +7,14 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdlib.h>
 #include <string.h>
 #include "prov/provider_ctx.h"
-#include "prov/bio.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 PROV_CTX *ossl_prov_ctx_new(void)
 {

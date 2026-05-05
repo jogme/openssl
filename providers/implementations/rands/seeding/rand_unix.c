@@ -10,16 +10,20 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
-#include "internal/e_os.h"
-#include <stdio.h>
-#include "internal/cryptlib.h"
-#include <openssl/rand.h>
 #include <openssl/crypto.h>
+#include <errno.h>
+#include <features.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/ipc.h>
+#include <sys/select.h>
+#include <time.h>
 #include "crypto/rand_pool.h"
 #include "crypto/rand.h"
-#include "internal/dso.h"
 #include "internal/nelem.h"
-#include "prov/seeding.h"
+#include "openssl/configuration.h"
+#include "openssl/e_os2.h"
 
 #ifndef OPENSSL_SYS_UEFI
 #ifdef __linux

@@ -15,12 +15,6 @@
  * 'fips' provider as inputs.
  */
 
-/*
- * DSA/DH low level APIs are deprecated for public use, but still ok for
- * internal use.
- */
-/* IWYU pragma: begin_keep */
-#include "internal/deprecated.h"
 /* IWYU pragma: end_keep */
 #include <assert.h>
 #include <string.h>
@@ -29,13 +23,23 @@
 #include <openssl/dsa.h>
 #include <openssl/dh.h>
 #include <openssl/safestack.h>
-#include <openssl/core_dispatch.h>
-#include <openssl/core_names.h>
 #include <openssl/x509.h>
 #include <openssl/encoder.h>
+/*
+ * DSA/DH low level APIs are deprecated for public use, but still ok for
+ * internal use.
+ */
+/* IWYU pragma: begin_keep */
+#include "internal/deprecated.h"
 #include "testutil.h"
-#include "internal/nelem.h"
 #include "crypto/bn_dh.h" /* _bignum_ffdhe2048_p */
+#include "openssl/bio.h"
+#include "openssl/bn.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 static OSSL_LIB_CTX *libctx = NULL;
 static OSSL_PROVIDER *nullprov = NULL;

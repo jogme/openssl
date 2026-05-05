@@ -8,14 +8,21 @@
  */
 
 #include <string.h>
-
 #include <openssl/pem.h>
 #include <openssl/cms.h>
 #include <openssl/bio.h>
 #include <openssl/x509.h>
+#include <limits.h>
+#include <stdint.h>
 #include "../crypto/cms/cms_local.h" /* for d.signedData and d.envelopedData */
-
 #include "testutil.h"
+#include "openssl/cmserr.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/pkcs7.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 static X509 *cert = NULL;
 static EVP_PKEY *privkey = NULL;

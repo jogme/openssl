@@ -9,10 +9,15 @@
 
 #include <openssl/ssl.h>
 #include <openssl/evp.h>
-
+#include <stdint.h>
+#include <string.h>
 #include "../ssl/ssl_local.h"
 #include "internal/ssl_unwrap.h"
 #include "testutil.h"
+#include "internal/statem.h"
+#include "openssl/comp.h"
+#include "openssl/types.h"
+#include "ssl/record/record.h"
 
 #define IVLEN 12
 #define KEYLEN 16

@@ -8,10 +8,16 @@
  */
 
 #include <string.h>
-#include <openssl/types.h>
+#include <features.h>
+#include <limits.h>
+#include <stdint.h>
+#include <sys/time.h>
 #include "testutil.h"
 #include "internal/numbers.h"
 #include "internal/time.h"
+#include "internal/nelem.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
 
 #if defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L
 #include <signal.h>

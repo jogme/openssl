@@ -9,7 +9,15 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "helpers/cmp_testlib.h"
+#include <limits.h>
+#include <stddef.h>
+#include <stdint.h>
+#include "crypto/cmp/cmp_local.h"
+#include "openssl/asn1.h"
+#include "openssl/crypto.h"
+#include "openssl/rand.h"
+#include "openssl/types.h"
+#include "test/testutil.h"
 
 static unsigned char rand_data[OSSL_CMP_TRANSACTIONID_LENGTH];
 

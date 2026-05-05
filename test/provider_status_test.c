@@ -7,7 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stddef.h>
 #include <string.h>
 #include <openssl/provider.h>
 #include <openssl/params.h>
@@ -16,6 +15,11 @@
 #include <openssl/evp.h>
 #include <openssl/rsa.h>
 #include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 typedef enum OPTION_choice {
     OPT_ERR = -1,

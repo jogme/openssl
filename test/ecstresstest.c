@@ -8,13 +8,13 @@
  * or in the file LICENSE in the source distribution.
  */
 
-#include "internal/nelem.h"
-#include "testutil.h"
-
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+#include "testutil.h"
+#include "openssl/bio.h"
+#include "openssl/e_os2.h"
+#include "openssl/opensslconf.h"
+#include "openssl/types.h"
+#include "opt.h"
 
 #define NUM_REPEATS "1000000"
 
@@ -23,10 +23,7 @@ static int print_mode = 0;
 
 #ifndef OPENSSL_NO_EC
 #include <openssl/ec.h>
-#include <openssl/err.h>
 #include <openssl/obj_mac.h>
-#include <openssl/objects.h>
-#include <openssl/rand.h>
 #include <openssl/bn.h>
 #include <openssl/opensslconf.h>
 

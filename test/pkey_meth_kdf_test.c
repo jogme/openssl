@@ -9,12 +9,11 @@
 
 /* Tests of the EVP_PKEY_CTX_set_* macro family */
 
-#include <stdio.h>
 #include <string.h>
-
 #include <openssl/evp.h>
 #include <openssl/kdf.h>
 #include "testutil.h"
+#include "openssl/types.h"
 
 static int test_kdf_tls1_prf(int index)
 {

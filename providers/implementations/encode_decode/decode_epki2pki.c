@@ -7,26 +7,34 @@
  * https://www.openssl.org/source/license.html
  */
 
+/* IWYU pragma: begin_keep */
+#include "internal/common.h"
+/* IWYU pragma: end_keep */
+
 #include <openssl/core.h>
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
 #include <openssl/core_object.h>
-#include <openssl/asn1.h>
 #include <openssl/err.h>
 #include <openssl/objects.h>
 #include <openssl/pkcs12.h>
 #include <openssl/x509.h>
 #include <openssl/proverr.h>
-#include "internal/cryptlib.h"
+#include <crypto/asn1.h>
+#include <stddef.h>
 #include "internal/asn1.h"
 #include "internal/sizes.h"
 #include "prov/bio.h"
 #include "prov/decoders.h"
 #include "prov/implementations.h"
-#include "prov/endecoder_local.h"
 #include "providers/implementations/encode_decode/decode_epki2pki.inc"
-
-#include <crypto/asn1.h>
+#include "openssl/bio.h"
+#include "openssl/buffer.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
+#include "prov/provider_ctx.h"
 
 static OSSL_FUNC_decoder_newctx_fn epki2pki_newctx;
 static OSSL_FUNC_decoder_freectx_fn epki2pki_freectx;

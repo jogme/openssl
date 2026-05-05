@@ -11,7 +11,9 @@
 #define OPENSSL_ENGINE_STUBS /* switch on stub macros */
 
 #include <openssl/engine.h>
+#include <stddef.h>
 #include "testutil.h"
+#include "openssl/configuration.h"
 
 /* Test stubs for removed ENGINE_* API */
 static int test_engine_stubs(void)

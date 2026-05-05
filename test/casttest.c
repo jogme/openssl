@@ -13,12 +13,10 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/opensslconf.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
-
 #include <openssl/opensslconf.h> /* To see if OPENSSL_NO_CAST is defined */
 #include "internal/nelem.h"
 #include "testutil.h"

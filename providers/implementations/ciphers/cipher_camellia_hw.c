@@ -13,10 +13,15 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/modes.h"
+#include "prov/ciphercommon.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/camellia.h>
 #include <openssl/proverr.h>
+#include <stddef.h>
 #include "cipher_camellia.h"
 
 static int cipher_hw_camellia_initkey(PROV_CIPHER_CTX *dat,

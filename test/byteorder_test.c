@@ -1,8 +1,7 @@
 #include <string.h>
-#include <openssl/e_os2.h>
 #include <openssl/byteorder.h>
+#include <stdint.h>
 #include "testutil.h"
-#include "testutil/output.h"
 
 static int test_byteorder(void)
 {

@@ -15,6 +15,15 @@
 #include "prov/implementations.h"
 #include "prov/providercommon.h"
 #include "providers/implementations/ciphers/cipher_chacha20_poly1305.inc"
+#include "crypto/chacha.h"
+#include "crypto/poly1305.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 #define CHACHA20_POLY1305_KEYLEN CHACHA_KEY_SIZE
 #define CHACHA20_POLY1305_BLKLEN 1

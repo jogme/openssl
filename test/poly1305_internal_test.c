@@ -10,8 +10,6 @@
 /* Internal tests for the poly1305 module */
 
 #include <stdio.h>
-#include <string.h>
-
 #include "testutil.h"
 #include "crypto/poly1305.h"
 #include "internal/nelem.h"

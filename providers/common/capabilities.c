@@ -7,9 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <assert.h>
 #include <string.h>
-#include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>
 /* For TLS1_VERSION etc */
 #include <openssl/prov_ssl.h>
@@ -18,8 +16,11 @@
 #include "internal/tlsgroups.h"
 #include "internal/tlssigalgs.h"
 #include "prov/providercommon.h"
-#include "internal/e_os.h"
 #include "crypto/ml_kem.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 /*
  * If none of EC, DH OR ML-KEM are available then we have no TLS-GROUP

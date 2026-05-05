@@ -9,7 +9,6 @@
 
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
-#include <openssl/ssl3.h>
 #include <stdint.h>
 #include <string.h>
 #include "recmethod_local.h"

@@ -14,6 +14,12 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/modes.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "prov/ciphercommon.h"
+#include "prov/ciphercommon_aead.h"
 /* IWYU pragma: end_keep */
 
 /* Dispatch functions for AES CCM mode */

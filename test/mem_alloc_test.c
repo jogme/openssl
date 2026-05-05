@@ -12,8 +12,13 @@
 #include <stdint.h>
 #include <string.h>
 #include <openssl/err.h>
-#include <openssl/types.h>
+#include <features.h>
+#include <openssl/opensslv.h>
 #include "testutil.h"
+#include "internal/nelem.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/cryptoerr.h"
 
 #ifndef USE_CUSTOM_ALLOC_FNS
 #define USE_CUSTOM_ALLOC_FNS 0

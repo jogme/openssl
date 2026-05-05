@@ -7,24 +7,26 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdlib.h>
 #include <string.h>
 #include <openssl/crypto.h>
 #include <openssl/err.h>
-#include <openssl/rand.h>
 #include <openssl/aes.h>
 #include <openssl/proverr.h>
 #include "crypto/modes.h"
-#include "internal/thread_once.h"
 #include "prov/implementations.h"
 #include "prov/providercommon.h"
 #include "prov/provider_ctx.h"
 #include "prov/drbg.h"
-#include "crypto/evp.h"
 #include "crypto/evp/evp_local.h"
 #include "internal/provider.h"
 #include "internal/common.h"
-#include "internal/fips.h"
+#include "fips/fipsindicator.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 #define drbg_ctr_get_ctx_params_st drbg_get_ctx_params_st
 #define drbg_ctr_set_ctx_params_st drbg_set_ctx_params_st

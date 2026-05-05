@@ -16,7 +16,10 @@
 #include <stdio.h>
 #include <openssl/bn.h>
 #include <openssl/err.h>
+#include <stdint.h>
 #include "fuzzer.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 int FuzzerInitialize(int *argc, char ***argv)
 {
