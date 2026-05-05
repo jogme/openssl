@@ -12,7 +12,9 @@
  * internal use.  The prov/md5_sha1.h include requires this, but this must
  * be the first include loaded.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include "crypto/evp.h"
 #include "prov/md5_sha1.h" /* diverse MD5_SHA1 macros */

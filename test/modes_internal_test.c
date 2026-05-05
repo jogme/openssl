@@ -13,7 +13,9 @@
  * This file uses the low level AES functions (which are deprecated for
  * non-internal use) in order to test the modes code
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <stdio.h>
 #include <string.h>

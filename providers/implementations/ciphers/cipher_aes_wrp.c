@@ -11,7 +11,9 @@
  * This file uses the low level AES functions (which are deprecated for
  * non-internal use) in order to implement provider AES ciphers.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <openssl/proverr.h>
 #include "cipher_aes.h"

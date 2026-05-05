@@ -38,7 +38,9 @@
  *
  * The random number generator just returns incremental data of the requested size
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <openssl/core_dispatch.h>
 #include <openssl/core_names.h>

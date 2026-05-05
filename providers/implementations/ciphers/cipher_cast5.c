@@ -11,7 +11,9 @@
  * CAST low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 /* Dispatch functions for cast cipher modes ecb, cbc, ofb, cfb */
 

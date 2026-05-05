@@ -20,7 +20,9 @@
 #include <openssl/evp.h>
 #include <openssl/objects.h>
 #include "testutil.h"
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 #include "internal/nelem.h"
 
 struct testdata {

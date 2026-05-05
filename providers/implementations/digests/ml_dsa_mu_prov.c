@@ -17,7 +17,9 @@
  *   (2) PreHash: M' = 01 || ctx_len || ctx || OID || in (where in = hashed(msg))
  */
 
-#include "internal/deprecated.h" /* including crypto/sha.h requires this */
+/* IWYU pragma: begin_keep */
+#include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <string.h>
 #include <openssl/evp.h>

@@ -11,7 +11,9 @@
 /*
  * Low level APIs are deprecated for public use, but still ok for internal use.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <openssl/opensslconf.h> /* To see if OPENSSL_NO_EC is defined */
 #include "testutil.h"

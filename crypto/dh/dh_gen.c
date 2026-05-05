@@ -21,7 +21,9 @@
  * specified in SP800-56A) when generating keys. Hence DH pairwise tests are
  * omitted here.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <stdio.h>
 #include "internal/cryptlib.h"

@@ -10,7 +10,9 @@
 /*
  * We need to use some EVP_PKEY_asn1 deprecated APIs
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <stdio.h>
 #include "crypto/ctype.h"

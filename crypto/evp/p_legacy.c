@@ -11,7 +11,9 @@
  * Legacy EVP_PKEY assign/set/get APIs are deprecated for public use, but
  * still ok for internal use, particularly in providers.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <openssl/types.h>
 #include <openssl/evp.h>

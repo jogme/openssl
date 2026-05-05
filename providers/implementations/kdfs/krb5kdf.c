@@ -11,7 +11,9 @@
  * DES low level APIs are deprecated for public use, but still ok for internal
  * use.  We access the DES_set_odd_parity(3) function here.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <stdlib.h>
 #include <stdarg.h>

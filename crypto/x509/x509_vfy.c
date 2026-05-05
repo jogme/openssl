@@ -8,7 +8,9 @@
  */
 
 #define OPENSSL_SUPPRESS_DEPRECATED
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <stdio.h>
 #include <time.h>

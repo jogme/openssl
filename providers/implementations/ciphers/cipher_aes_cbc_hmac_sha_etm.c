@@ -7,7 +7,9 @@
  * https://www.openssl.org/source/license.html
  */
 
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include "cipher_aes_cbc_hmac_sha_etm.h"
 #include "prov/providercommon.h"

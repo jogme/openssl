@@ -11,7 +11,9 @@
  * AES_encrypt/AES_decrypt are deprecated - but we need to use them to implement
  * these functions
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include "internal/cryptlib.h"
 

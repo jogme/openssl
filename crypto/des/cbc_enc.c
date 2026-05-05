@@ -11,7 +11,9 @@
  * DES low level APIs are deprecated for public use, but still ok for internal
  * use.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #define CBC_ENC_C__DONT_UPDATE_IV
 

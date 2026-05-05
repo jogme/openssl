@@ -8,7 +8,9 @@
  */
 
 /* including crypto/sha.h requires this for SHA256_CTX */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 /*
  * NIST.SP.800-185 Encoding/Padding Methods used for SHA3 derived functions

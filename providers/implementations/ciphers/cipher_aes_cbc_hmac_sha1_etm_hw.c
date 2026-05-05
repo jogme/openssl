@@ -6,7 +6,9 @@
  * in the file LICENSE in the source distribution or at
  * https://www.openssl.org/source/license.html
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 #include "cipher_aes_cbc_hmac_sha_etm.h"
 
 #if !defined(AES_CBC_HMAC_SHA_ETM_CAPABLE)

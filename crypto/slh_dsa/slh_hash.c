@@ -7,7 +7,9 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/deprecated.h" /* PKCS1_MGF1() */
+/* IWYU pragma: begin_keep */
+#include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <string.h>
 #include <openssl/evp.h>

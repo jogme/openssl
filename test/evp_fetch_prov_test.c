@@ -12,7 +12,9 @@
  * internal use.  Note, that due to symbols not being exported, only the
  * #defines can be accessed.  In this case SHA256_CBLOCK.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <string.h>
 #include <openssl/sha.h>

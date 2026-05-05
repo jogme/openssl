@@ -9,7 +9,9 @@
  * https://www.openssl.org/source/license.html
  */
 
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include "crypto/sm2.h"
 #include "crypto/sm2err.h"

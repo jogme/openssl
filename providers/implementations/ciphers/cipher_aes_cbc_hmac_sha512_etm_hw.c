@@ -12,7 +12,9 @@
  * use where we're using them to implement the higher level EVP interface, as is
  * the case here.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 #include "cipher_aes_cbc_hmac_sha_etm.h"
 
 #if !defined(AES_CBC_HMAC_SHA_ETM_CAPABLE)

@@ -27,7 +27,9 @@
  * ECDSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 /*
  * A 64-bit implementation of the NIST P-256 elliptic curve point multiplication

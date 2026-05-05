@@ -13,7 +13,9 @@
  * configured.  When we drop #legacy EVP_PKEYs, this source should be
  * possible to drop as well.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <string.h>
 

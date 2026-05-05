@@ -11,7 +11,9 @@
  * MD4 low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <openssl/md4.h>
 #include "crypto/evp.h"

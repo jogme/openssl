@@ -11,7 +11,9 @@
  * AES_encrypt is deprecated - but we need to use it to implement
  * AES_ofb128_encrypt
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <openssl/aes.h>
 #include <openssl/modes.h>

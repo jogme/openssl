@@ -12,7 +12,9 @@
  * This is an internal test that is intentionally using internal APIs. Some of
  * those APIs are deprecated for public use.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -11,7 +11,9 @@
  * Low level APIs related to EC_KEY are deprecated for public use,
  * but still ok for internal use.
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <openssl/core_names.h>
 #include <openssl/objects.h>

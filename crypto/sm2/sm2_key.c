@@ -7,7 +7,9 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/deprecated.h" /* to be able to use EC_KEY and EC_GROUP */
+/* IWYU pragma: begin_keep */
+#include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <openssl/err.h>
 #include "crypto/sm2err.h"

@@ -13,7 +13,9 @@
  * References to Sections in the comments below refer to RFC 9180.
  */
 
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <string.h>
 #include <openssl/crypto.h>

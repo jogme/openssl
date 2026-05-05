@@ -8,7 +8,9 @@
  */
 
 /* including crypto/sha.h requires this for SHA256_CTX */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 /*
  * NOTE: By default CSHAKE sets secure xof lengths (OSSL_DIGEST_PARAM_XOFLEN)
  * that are used by EVP_DigestFinal_ex(). This differs from SHAKE where the

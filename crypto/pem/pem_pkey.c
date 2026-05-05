@@ -10,7 +10,9 @@
 /*
  * We need to use some deprecated APIs
  */
+/* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+/* IWYU pragma: end_keep */
 
 #include <stdio.h>
 #include <openssl/buffer.h>
