@@ -16,6 +16,8 @@
  * This header *must* be the first OpenSSL header included by a source file.
  */
 
+/* IWYU pragma: always_keep */
+
 #ifndef OSSL_INTERNAL_DEPRECATED_H
 #define OSSL_INTERNAL_DEPRECATED_H
 #pragma once
