@@ -7,12 +7,32 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/ssl.h>
+#include <assert.h>
+#include <limits.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
 #include "internal/quic_record_rx.h"
 #include "quic_record_shared.h"
 #include "internal/common.h"
 #include "internal/list.h"
-#include "../ssl_local.h"
+#include "internal/bio_addr.h"
+#include "internal/nelem.h"
+#include "internal/packet.h"
+#include "internal/quic_demux.h"
+#include "internal/quic_predef.h"
+#include "internal/quic_record_util.h"
+#include "internal/quic_types.h"
+#include "internal/quic_wire_pkt.h"
+#include "internal/ssl.h"
+#include "internal/time.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/ssl3.h"
+#include "openssl/types.h"
 
 /*
  * Mark a packet in a bitfield.
@@ -80,6 +100,7 @@ struct rxe_st {
 };
 
 DEFINE_LIST_OF(rxe, RXE);
+
 typedef OSSL_LIST(rxe) RXE_LIST;
 
 static ossl_inline unsigned char *rxe_data(const RXE *e)

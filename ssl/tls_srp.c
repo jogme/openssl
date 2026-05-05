@@ -20,8 +20,16 @@
 #include <openssl/crypto.h>
 #include <openssl/rand.h>
 #include <openssl/err.h>
+#include <openssl/ssl3.h>
+#include <string.h>
 #include "ssl_local.h"
 #include "internal/ssl_unwrap.h"
+#include "internal/statem.h"
+#include "openssl/bn.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/ssl3.h"
+#include "openssl/sslerr.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_SRP
 #include <openssl/srp.h>

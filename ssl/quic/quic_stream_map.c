@@ -10,6 +10,10 @@
 #include "internal/quic_stream_map.h"
 #include "internal/nelem.h"
 #include "internal/quic_channel.h"
+#include "internal/quic_record_tx.h"
+#include "internal/quic_wire.h"
+#include "openssl/crypto.h"
+#include "openssl/lhash.h"
 
 /*
  * QUIC Stream Map

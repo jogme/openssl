@@ -8,6 +8,10 @@
  */
 
 #include "internal/quic_port.h"
+#include <openssl/rand.h>
+#include <assert.h>
+#include <string.h>
+#include <sys/socket.h>
 #include "internal/quic_channel.h"
 #include "internal/quic_lcidm.h"
 #include "internal/quic_srtm.h"
@@ -18,7 +22,28 @@
 #include "quic_engine_local.h"
 #include "quic_local.h"
 #include "../ssl_local.h"
-#include <openssl/rand.h>
+#include "internal/common.h"
+#include "internal/list.h"
+#include "internal/nelem.h"
+#include "internal/packet.h"
+#include "internal/quic_demux.h"
+#include "internal/quic_engine.h"
+#include "internal/quic_reactor.h"
+#include "internal/quic_record_rx.h"
+#include "internal/quic_record_tx.h"
+#include "internal/quic_record_util.h"
+#include "internal/quic_types.h"
+#include "internal/quic_wire_pkt.h"
+#include "internal/ssl.h"
+#include "internal/statem.h"
+#include "openssl/bio.h"
+#include "openssl/buffer.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/ssl.h"
+#include "openssl/sslerr.h"
+#include "ssl/quic/quic_obj_local.h"
 
 /*
  * QUIC Port Structure

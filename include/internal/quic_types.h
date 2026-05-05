@@ -14,6 +14,9 @@
 #include <internal/ssl.h>
 #include <assert.h>
 #include <string.h>
+#include <stdint.h>
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_QUIC
 

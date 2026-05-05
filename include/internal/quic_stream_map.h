@@ -11,6 +11,10 @@
 #define OSSL_INTERNAL_QUIC_STREAM_MAP_H
 #pragma once
 
+#include <openssl/lhash.h>
+#include <assert.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/e_os.h"
 #include "internal/time.h"
 #include "internal/common.h"
@@ -18,7 +22,7 @@
 #include "internal/quic_predef.h"
 #include "internal/quic_stream.h"
 #include "internal/quic_fc.h"
-#include <openssl/lhash.h>
+#include "openssl/e_os2.h"
 
 #ifndef OPENSSL_NO_QUIC
 

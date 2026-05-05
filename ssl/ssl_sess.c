@@ -12,13 +12,32 @@
 #include <spthread.h>
 #include <spt_extensions.h> /* timeval */
 #endif
-#include <stdio.h>
 #include <openssl/rand.h>
+#include <openssl/ssl3.h>
+#include <openssl/x509.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
 #include "internal/refcount.h"
-#include "internal/cryptlib.h"
 #include "internal/ssl_unwrap.h"
 #include "ssl_local.h"
 #include "statem/statem_local.h"
+#include "internal/common.h"
+#include "internal/statem.h"
+#include "internal/time.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/pem.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/safestack.h"
+#include "openssl/ssl3.h"
+#include "openssl/sslerr.h"
+#include "openssl/tls1.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 static void SSL_SESSION_list_remove(SSL_CTX *ctx, SSL_SESSION *s);
 static void SSL_SESSION_list_add(SSL_CTX *ctx, SSL_SESSION *s);

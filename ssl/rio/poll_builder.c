@@ -8,9 +8,13 @@
  */
 
 #include <assert.h>
-#include <errno.h>
+#include <string.h>
 #include "internal/safe_math.h"
 #include "poll_builder.h"
+#include "internal/nelem.h"
+#include "internal/sockets.h"
+#include "openssl/crypto.h"
+#include "ssl/rio/poll_method.h"
 
 OSSL_SAFE_MATH_UNSIGNED(size_t, size_t)
 

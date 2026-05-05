@@ -8,11 +8,20 @@
  */
 
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 #include "internal/qlog.h"
 #include "internal/json_enc.h"
 #include "internal/common.h"
 #include "internal/cryptlib.h"
 #include "crypto/ctype.h"
+#include "internal/time.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 #define BITS_PER_WORD (sizeof(size_t) * 8)
 #define NUM_ENABLED_W ((QLOG_EVENT_TYPE_NUM + BITS_PER_WORD - 1) / BITS_PER_WORD)
@@ -648,6 +657,7 @@ static void filter_apply(size_t *enabled, int add,
 	if (filter_match_event(cat, cat_l, event, event_l, #e_cat, #e_name)) \
 		bit_set(enabled, QLOG_EVENT_TYPE_##e_cat##_##e_name, add);
 #include "internal/qlog_events.inc"
+
 #undef QLOG_EVENT
     /* clang-format on */
 }

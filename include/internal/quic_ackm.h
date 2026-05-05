@@ -9,6 +9,8 @@
 #ifndef OSSL_QUIC_ACKM_H
 #define OSSL_QUIC_ACKM_H
 
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/quic_statm.h"
 #include "internal/quic_cc.h"
 #include "internal/quic_types.h"

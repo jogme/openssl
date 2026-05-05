@@ -11,6 +11,8 @@
 #define OSSL_QUIC_CFQ_H
 
 #include <openssl/ssl.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/quic_types.h"
 #include "internal/quic_predef.h"
 

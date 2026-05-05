@@ -8,10 +8,13 @@
  */
 
 #include "internal/json_enc.h"
-#include "internal/nelem.h"
-#include "internal/numbers.h"
 #include <string.h>
 #include <stdbool.h>
+#include <limits.h>
+#include "internal/nelem.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
 
 /*
  * wbuf

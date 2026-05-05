@@ -9,6 +9,12 @@
 #include "internal/quic_srt_gen.h"
 #include <openssl/core_names.h>
 #include <openssl/evp.h>
+#include <assert.h>
+#include <string.h>
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/params.h"
+#include "openssl/sha.h"
 
 struct quic_srt_gen_st {
     EVP_MAC *mac;

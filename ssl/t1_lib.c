@@ -7,27 +7,45 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <ctype.h>
 #include <openssl/objects.h>
 #include <openssl/evp.h>
-#include <openssl/hmac.h>
 #include <openssl/core_names.h>
-#include <openssl/ocsp.h>
 #include <openssl/conf.h>
 #include <openssl/x509v3.h>
-#include <openssl/dh.h>
 #include <openssl/bn.h>
 #include <openssl/provider.h>
 #include <openssl/param_build.h>
+#include <limits.h>
+#include <openssl/ssl3.h>
+#include <openssl/x509.h>
+#include <stdint.h>
+#include <string.h>
 #include "internal/nelem.h"
 #include "internal/sizes.h"
 #include "internal/tlsgroups.h"
 #include "internal/ssl_unwrap.h"
 #include "ssl_local.h"
-#include "quic/quic_local.h"
-#include <openssl/ct.h>
+#include "internal/common.h"
+#include "internal/packet.h"
+#include "internal/ssl.h"
+#include "internal/statem.h"
+#include "internal/time.h"
+#include "internal/tlssigalgs.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/dtls1.h"
+#include "openssl/e_os2.h"
+#include "openssl/ec.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/params.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/safestack.h"
+#include "openssl/sslerr.h"
+#include "openssl/tls1.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 #define MAX_SIGALGS 128
 

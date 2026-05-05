@@ -11,12 +11,14 @@
 #define OSSL_QUIC_FIFD_H
 
 #include <openssl/ssl.h>
+#include <stdint.h>
 #include "internal/quic_types.h"
 #include "internal/quic_cfq.h"
 #include "internal/quic_ackm.h"
 #include "internal/quic_txpim.h"
 #include "internal/quic_stream.h"
 #include "internal/qlog.h"
+#include "internal/quic_predef.h"
 
 #ifndef OPENSSL_NO_QUIC
 

@@ -12,6 +12,9 @@
 
 #include <stdbool.h>
 #include <openssl/bio.h>
+#include <stddef.h>
+#include <stdint.h>
+#include "openssl/types.h"
 
 /*
  * JSON Encoder

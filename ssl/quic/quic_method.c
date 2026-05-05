@@ -7,9 +7,10 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/macros.h>
-#include <openssl/objects.h>
 #include "quic_local.h"
+#include "internal/quic_ssl.h"
+#include "openssl/quic.h"
+#include "ssl/ssl_local.h"
 
 /*
  * NOTE: An endpoint method can be used to create a quic connection

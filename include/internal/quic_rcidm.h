@@ -11,6 +11,8 @@
 #define OSSL_INTERNAL_QUIC_RCIDM_H
 #pragma once
 
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/e_os.h"
 #include "internal/time.h"
 #include "internal/quic_types.h"

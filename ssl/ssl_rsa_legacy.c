@@ -13,6 +13,13 @@
 #include <openssl/err.h>
 #include <openssl/rsa.h>
 #include <openssl/ssl.h>
+#include <stddef.h>
+#include "openssl/bio.h"
+#include "openssl/evp.h"
+#include "openssl/pem.h"
+#include "openssl/sslerr.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 int SSL_use_RSAPrivateKey(SSL *ssl, RSA *rsa)
 {

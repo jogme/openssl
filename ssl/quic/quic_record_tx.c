@@ -8,12 +8,24 @@
  */
 
 #include "internal/quic_record_tx.h"
+#include <assert.h>
+#include <string.h>
+#include <sys/socket.h>
 #include "internal/qlog_event_helpers.h"
 #include "internal/bio_addr.h"
 #include "internal/common.h"
 #include "quic_record_shared.h"
 #include "internal/list.h"
-#include "../ssl_local.h"
+#include "internal/nelem.h"
+#include "internal/packet.h"
+#include "internal/quic_record_util.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/ssl3.h"
+#include "openssl/sslerr.h"
 
 #define QTX_DEFAULT_MTU 1500
 
@@ -42,6 +54,7 @@ struct txe_st {
 };
 
 DEFINE_LIST_OF(txe, TXE);
+
 typedef OSSL_LIST(txe) TXE_LIST;
 
 static ossl_inline unsigned char *txe_data(const TXE *e)

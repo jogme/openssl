@@ -13,13 +13,38 @@
 #endif
 
 #include <string.h>
+#include <openssl/ocsp.h>
+#include <openssl/core_names.h>
+#include <openssl/ssl3.h>
+#include <openssl/x509.h>
+#include <stdint.h>
 #include "internal/nelem.h"
-#include "internal/cryptlib.h"
 #include "internal/ssl_unwrap.h"
 #include "../ssl_local.h"
 #include "statem_local.h"
-#include <openssl/ocsp.h>
-#include <openssl/core_names.h>
+#include "internal/common.h"
+#include "internal/packet.h"
+#include "internal/recordmethod.h"
+#include "internal/statem.h"
+#include "internal/tsan_assist.h"
+#include "openssl/bio.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/ech.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/params.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/safestack.h"
+#include "openssl/ssl3.h"
+#include "openssl/sslerr.h"
+#include "openssl/tls1.h"
+#include "openssl/trace.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "ssl/ech/ech_local.h"
 
 /*
  * values for ext_defs ech_handling field

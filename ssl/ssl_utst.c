@@ -7,8 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "ssl_local.h"
-
+#include "openssl/configuration.h"
 #ifndef OPENSSL_NO_UNIT_TEST
 
 static const struct openssl_ssl_test_functions ssl_test_functions = {

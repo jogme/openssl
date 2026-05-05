@@ -11,6 +11,11 @@
 #include <stdio.h>
 #include "ssl_local.h" /* IWYU pragma: keep */
 #include "internal/ssl_unwrap.h"
+#include "internal/statem.h"
+#include "openssl/ssl.h"
+#include "openssl/ssl3.h"
+#include "openssl/tls1.h"
+#include "openssl/types.h"
 
 const char *SSL_state_string_long(const SSL *s)
 {

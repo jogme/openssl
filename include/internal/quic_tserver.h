@@ -12,10 +12,16 @@
 
 #include <openssl/ssl.h>
 #include <openssl/bio.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/quic_stream.h"
 #include "internal/quic_channel.h"
 #include "internal/statem.h"
 #include "internal/time.h"
+#include "internal/quic_predef.h"
+#include "internal/quic_record_tx.h"
+#include "internal/quic_types.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_QUIC
 

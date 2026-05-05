@@ -13,10 +13,16 @@
  * Copyright (C) 2006, Network Resonance, Inc. Copyright (C) 2011, RTFM, Inc.
  */
 
-#include <stdio.h>
-#include <openssl/objects.h>
+#include <string.h>
 #include "ssl_local.h"
 #include "internal/ssl_unwrap.h"
+#include "internal/statem.h"
+#include "openssl/err.h"
+#include "openssl/safestack.h"
+#include "openssl/srtp.h"
+#include "openssl/ssl.h"
+#include "openssl/sslerr.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_SRTP
 

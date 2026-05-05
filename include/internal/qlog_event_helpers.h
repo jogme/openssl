@@ -11,6 +11,8 @@
 #define OSSL_QLOG_EVENT_HELPERS_H
 
 #include <openssl/ssl.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/qlog.h"
 #include "internal/quic_types.h"
 #include "internal/quic_channel.h"

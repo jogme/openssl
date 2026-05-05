@@ -11,10 +11,21 @@
 #include <openssl/core_names.h>
 #include <openssl/rand.h>
 #include <openssl/ssl.h>
+#include <string.h>
 #include "internal/ssl3_cbc.h"
-#include "../../ssl_local.h"
-#include "../record_local.h"
 #include "recmethod_local.h"
+#include "internal/common.h"
+#include "internal/packet.h"
+#include "internal/recordmethod.h"
+#include "openssl/bio.h"
+#include "openssl/comp.h"
+#include "openssl/core.h"
+#include "openssl/err.h"
+#include "openssl/params.h"
+#include "openssl/ssl3.h"
+#include "openssl/sslerr.h"
+#include "openssl/trace.h"
+#include "openssl/types.h"
 
 static int tls1_set_crypto_state(OSSL_RECORD_LAYER *rl, int level,
     unsigned char *key, size_t keylen,

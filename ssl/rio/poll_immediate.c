@@ -7,13 +7,22 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/common.h"
-#include "internal/quic_ssl.h"
-#include "internal/quic_reactor_wait_ctx.h"
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/time.h>
+#include "internal/quic_ssl.h"
+#include "internal/quic_reactor_wait_ctx.h"
 #include "../ssl_local.h"
 #include "poll_builder.h"
+#include "internal/quic_predef.h"
+#include "internal/time.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/sslerr.h"
+#include "openssl/types.h"
 
 #if defined(_AIX)
 /*

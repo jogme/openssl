@@ -7,9 +7,13 @@
  * https://www.openssl.org/source/license.html
  */
 #include "internal/quic_reactor.h"
+#include <assert.h>
+#include <poll.h>
 #include "internal/common.h"
 #include "internal/thread_arch.h"
-#include <assert.h>
+#include "internal/sockets.h"
+#include "openssl/bio.h"
+#include "openssl/configuration.h"
 
 #if defined(OPENSSL_SYS_WINDOWS)
 #include <winsock2.h>

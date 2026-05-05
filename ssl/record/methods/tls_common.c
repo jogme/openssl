@@ -7,19 +7,35 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <assert.h>
 #include <openssl/bio.h>
-#include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <openssl/core_names.h>
 #include <openssl/comp.h>
-#include <openssl/ssl.h>
+#include <openssl/ssl3.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <string.h>
 #include "internal/e_os.h"
 #include "internal/packet.h"
 #include "internal/ssl3_cbc.h"
 #include "../../ssl_local.h"
-#include "../record_local.h"
 #include "recmethod_local.h"
+#include "internal/common.h"
+#include "internal/recordmethod.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/dtls1.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/params.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/ssl2.h"
+#include "openssl/ssl3.h"
+#include "openssl/sslerr.h"
+#include "openssl/tls1.h"
+#include "openssl/trace.h"
+#include "openssl/types.h"
+#include "ssl/record/record.h"
 
 static void tls_int_free(OSSL_RECORD_LAYER *rl);
 

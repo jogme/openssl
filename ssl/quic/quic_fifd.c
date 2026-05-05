@@ -8,8 +8,13 @@
  */
 
 #include "internal/quic_fifd.h"
+#include <stddef.h>
 #include "internal/quic_wire.h"
 #include "internal/qlog_event_helpers.h"
+#include "internal/list.h"
+#include "internal/quic_ackm.h"
+#include "internal/quic_cfq.h"
+#include "internal/quic_stream.h"
 
 DEFINE_LIST_OF(tx_history, OSSL_ACKM_TX_PKT);
 

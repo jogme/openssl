@@ -11,11 +11,16 @@
 #define OSSL_QUIC_DEMUX_H
 
 #include <openssl/ssl.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/quic_types.h"
 #include "internal/quic_predef.h"
 #include "internal/bio_addr.h"
 #include "internal/time.h"
 #include "internal/list.h"
+#include "openssl/bio.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_QUIC
 
@@ -153,6 +158,7 @@ ossl_quic_urxe_data_end(const QUIC_URXE *e)
 
 /* List structure tracking a queue of URXEs. */
 DEFINE_LIST_OF(urxe, QUIC_URXE);
+
 typedef OSSL_LIST(urxe) QUIC_URXE_LIST;
 
 /*

@@ -1,7 +1,11 @@
 #include "quic_record_shared.h"
+#include <assert.h>
+#include <string.h>
 #include "internal/quic_record_util.h"
 #include "internal/common.h"
 #include "../ssl_local.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
 
 /* Constants used for key derivation in QUIC v1. */
 static const unsigned char quic_v1_iv_label[] = {

@@ -8,10 +8,14 @@
  */
 
 #include "internal/qlog_event_helpers.h"
-#include "internal/common.h"
 #include "internal/packet.h"
 #include "internal/quic_channel.h"
-#include "internal/quic_error.h"
+#include "internal/nelem.h"
+#include "internal/quic_ackm.h"
+#include "internal/quic_wire.h"
+#include "internal/time.h"
+#include "openssl/bio.h"
+#include "openssl/quic.h"
 
 void ossl_qlog_event_connectivity_connection_started(QLOG *qlog,
     const QUIC_CONN_ID *init_dcid)

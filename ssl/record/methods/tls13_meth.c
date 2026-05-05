@@ -9,9 +9,22 @@
 
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
-#include "../../ssl_local.h"
-#include "../record_local.h"
+#include <openssl/ssl3.h>
+#include <stdint.h>
+#include <string.h>
 #include "recmethod_local.h"
+#include "internal/packet.h"
+#include "internal/recordmethod.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/params.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/ssl3.h"
+#include "openssl/sslerr.h"
+#include "openssl/types.h"
+#include "ssl/record/record.h"
 
 static int tls13_set_crypto_state(OSSL_RECORD_LAYER *rl, int level,
     unsigned char *key, size_t keylen,

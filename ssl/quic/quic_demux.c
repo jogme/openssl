@@ -8,10 +8,13 @@
  */
 
 #include "internal/quic_demux.h"
+#include <openssl/err.h>
+#include <assert.h>
+#include <string.h>
 #include "internal/quic_wire_pkt.h"
 #include "internal/common.h"
-#include <openssl/lhash.h>
-#include <openssl/err.h>
+#include "internal/nelem.h"
+#include "openssl/crypto.h"
 
 #define URXE_DEMUX_STATE_FREE 0 /* on urx_free list */
 #define URXE_DEMUX_STATE_PENDING 1 /* on urx_pending list */

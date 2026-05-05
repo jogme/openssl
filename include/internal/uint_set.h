@@ -9,6 +9,7 @@
 #ifndef OSSL_UINT_SET_H
 #define OSSL_UINT_SET_H
 
+#include <stdint.h>
 #include "openssl/params.h"
 #include "internal/list.h"
 

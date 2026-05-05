@@ -7,10 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include <openssl/macros.h>
-#include <openssl/objects.h>
 #include "ssl_local.h"
+#include "internal/statem.h"
+#include "openssl/dtls1.h"
+#include "openssl/prov_ssl.h"
+#include "openssl/ssl.h"
+#include "openssl/tls1.h"
 
 /*-
  * TLS/SSLv3 methods

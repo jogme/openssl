@@ -22,17 +22,18 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/common.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/evp.h>
+#include <string.h>
 #ifndef FIPS_MODULE
 #include <openssl/md5.h>
 #endif
 #include <openssl/sha.h>
-
 #include "internal/ssl3_cbc.h"
 #include "internal/constant_time.h"
-#include "internal/cryptlib.h"
 
 /*
  * MAX_HASH_BIT_COUNT_BYTES is the maximum number of bytes in the hash's

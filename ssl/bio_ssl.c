@@ -7,16 +7,18 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 #include <openssl/crypto.h>
+#include <limits.h>
+#include <sys/socket.h>
+#include <time.h>
 #include "internal/bio.h"
-#include <openssl/err.h>
 #include "ssl_local.h"
 #include "internal/ssl_unwrap.h"
-#include "internal/sockets.h"
+#include "internal/statem.h"
+#include "openssl/bio.h"
+#include "openssl/ssl.h"
+#include "openssl/types.h"
 
 static int ssl_write(BIO *h, const char *buf, size_t size, size_t *written);
 static int ssl_read(BIO *b, char *buf, size_t size, size_t *readbytes);

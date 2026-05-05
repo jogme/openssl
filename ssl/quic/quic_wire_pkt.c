@@ -8,8 +8,18 @@
  */
 
 #include <openssl/err.h>
+#include <assert.h>
+#include <stdint.h>
+#include <string.h>
 #include "internal/common.h"
 #include "internal/quic_wire_pkt.h"
+#include "internal/packet.h"
+#include "internal/packet_quic.h"
+#include "internal/quic_types.h"
+#include "internal/quic_vlint.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 
 int ossl_quic_hdr_protector_init(QUIC_HDR_PROTECTOR *hpr,
     OSSL_LIB_CTX *libctx,

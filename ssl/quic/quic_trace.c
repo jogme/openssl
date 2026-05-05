@@ -8,13 +8,20 @@
  */
 
 #include <openssl/bio.h>
-#include "../ssl_local.h"
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/quic_trace.h"
 #include "internal/quic_ssl.h"
 #include "internal/quic_channel.h"
 #include "internal/quic_wire_pkt.h"
 #include "internal/quic_wire.h"
-#include "internal/ssl_unwrap.h"
+#include "internal/packet.h"
+#include "internal/quic_predef.h"
+#include "internal/quic_types.h"
+#include "internal/time.h"
+#include "openssl/crypto.h"
+#include "openssl/ssl3.h"
+#include "openssl/types.h"
 
 static const char *packet_type(int type)
 {
