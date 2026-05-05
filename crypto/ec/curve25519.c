@@ -13,14 +13,16 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
-#include "crypto/ecx.h"
-#include "ec_local.h"
 #include <openssl/evp.h>
 #include <openssl/sha.h>
-
+#include <stdint.h>
+#include "crypto/ecx.h"
 #include "internal/numbers.h"
 
 #if defined(X25519_ASM) && (defined(__x86_64) || defined(__x86_64__) || defined(_M_AMD64) || defined(_M_X64))

@@ -16,8 +16,15 @@
 #define _GNU_SOURCE /* make sure dladdr is declared */
 #endif
 
+#include <string.h>
 #include "dso_local.h"
 #include "internal/e_os.h"
+#include "crypto/dso_conf.h"
+#include "internal/dso.h"
+#include "internal/dsoerr.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
 
 #ifdef DSO_DLFCN
 
@@ -26,6 +33,7 @@
 #define __EXTENSIONS__
 #endif
 #include <dlfcn.h>
+
 #define HAVE_DLINFO 1
 #if defined(__SCO_VERSION__) || defined(_SCO_ELF) || (defined(__osf__) && !defined(RTLD_NEXT)) || (defined(__OpenBSD__) && !defined(RTLD_SELF)) || defined(__ANDROID__) || defined(__TANDEM)
 #undef HAVE_DLINFO
@@ -318,6 +326,7 @@ static int dladdr(void *address, Dl_info *dl)
  */
 #include <sys/ldr.h>
 #include <errno.h>
+
 /* ~ 64 * (sizeof(struct ld_info) + _XOPEN_PATH_MAX + _XOPEN_NAME_MAX) */
 #define DLFCN_LDINFO_SIZE 86976
 typedef struct Dl_info {

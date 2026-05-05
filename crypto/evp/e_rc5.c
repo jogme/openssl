@@ -7,11 +7,11 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/macros.h>
-
+#include <openssl/opensslv.h>
+#include "openssl/configuration.h"
 #ifndef OPENSSL_NO_RC5
-#include "crypto/evp.h"
 #include <openssl/rc5.h>
+#include "crypto/evp.h"
 
 IMPLEMENT_BLOCK_CIPHER(rc5_32_12_16, ks, RC5_32, EVP_RC5_KEY, NID_rc5,
     8, RC5_32_KEY_LENGTH, 8, 64,

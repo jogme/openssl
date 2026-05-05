@@ -8,12 +8,11 @@
  */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/asn1.h>
-#include <openssl/objects.h>
-#include <openssl/evp.h>
 #include <openssl/x509.h>
 #include "crypto/x509.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 
 int X509_REQ_set_version(X509_REQ *x, long version)
 {

@@ -8,15 +8,11 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <openssl/objects.h>
 #include "internal/comp.h"
-#include <openssl/err.h>
-#include "crypto/cryptlib.h"
-#include "internal/bio.h"
-#include "internal/thread_once.h"
-#include "comp_local.h"
+#include "openssl/bio.h"
+#include "openssl/comp.h"
+#include "openssl/configuration.h"
+#include "openssl/types.h"
 
 COMP_METHOD *COMP_zlib(void);
 

@@ -8,12 +8,10 @@
  */
 
 #include <stdio.h>
-#include <string.h>
-#include "internal/cryptlib.h"
-#include "crypto/ctype.h"
-#include "internal/numbers.h"
 #include <openssl/bio.h>
-#include <openssl/configuration.h>
+#include <stdarg.h>
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 int BIO_printf(BIO *bio, const char *format, ...)
 {

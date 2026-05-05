@@ -7,14 +7,11 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdlib.h>
 #include <string.h>
-#include <assert.h>
+#include <stdarg.h>
 
 /* We need to use some STORE deprecated APIs */
 #define OPENSSL_SUPPRESS_DEPRECATED
-
-#include "internal/e_os.h"
 
 #include <openssl/crypto.h>
 #include <openssl/err.h>
@@ -23,12 +20,19 @@
 #include <openssl/provider.h>
 #include <openssl/param_build.h>
 #include <openssl/store.h>
-#include "internal/thread_once.h"
-#include "internal/cryptlib.h"
 #include "internal/provider.h"
 #include "internal/bio.h"
-#include "crypto/store.h"
 #include "store_local.h"
+#include "internal/common.h"
+#include "internal/passphrase.h"
+#include "openssl/asn1.h"
+#include "openssl/bn.h"
+#include "openssl/core.h"
+#include "openssl/evp.h"
+#include "openssl/params.h"
+#include "openssl/storeerr.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 static int ossl_store_close_it(OSSL_STORE_CTX *ctx);
 

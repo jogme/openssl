@@ -17,6 +17,10 @@
 #include "internal/cryptlib.h"
 #include "provider_local.h"
 #include "crypto/context.h"
+#include "openssl/conferr.h"
+#include "openssl/crypto.h"
+#include "openssl/cryptoerr.h"
+#include "openssl/types.h"
 
 DEFINE_STACK_OF(OSSL_PROVIDER)
 

@@ -13,10 +13,10 @@
 #include <openssl/httperr.h>
 #include <openssl/bio.h> /* for BIO_snprintf() */
 #include <openssl/err.h>
+#include <netdb.h>
 #include "internal/cryptlib.h" /* for ossl_assert() */
-#ifndef OPENSSL_NO_SOCK
-#include "internal/bio_addr.h" /* for NI_MAXHOST */
-#endif
+#include "internal/common.h"
+#include "openssl/crypto.h"
 #ifndef NI_MAXHOST
 #define NI_MAXHOST 255
 #endif

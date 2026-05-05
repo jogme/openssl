@@ -7,9 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/e_os.h"
-#include "dso_local.h"
-
 #if defined(DSO_WIN32)
 
 #ifdef _WIN32_WCE

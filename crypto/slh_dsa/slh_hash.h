@@ -12,9 +12,9 @@
 #pragma once
 
 #include <openssl/e_os2.h>
-
+#include <stddef.h>
+#include <stdint.h>
 #include "crypto/slh_dsa.h"
-
 #include "slh_adrs.h"
 #include "internal/packet.h"
 

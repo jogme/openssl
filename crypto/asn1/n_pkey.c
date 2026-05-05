@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include "openssl/asn1.h"
 #include "openssl/types.h"
+#include "openssl/opensslconf.h"
 
 #define ASN1_BROKEN_SEQUENCE(tname)                                             \
     static const ASN1_AUX tname##_aux = { NULL, ASN1_AFLG_BROKEN, 0, 0, 0, 0 }; \

@@ -13,15 +13,16 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/common.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/opensslconf.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include "internal/cryptlib.h"
 #include <openssl/opensslconf.h>
 #include <openssl/hmac.h>
-#include <openssl/core_names.h>
 #include "hmac_local.h"
 
 int HMAC_Init_ex(HMAC_CTX *ctx, const void *key, int len,

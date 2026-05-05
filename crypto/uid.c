@@ -9,6 +9,8 @@
 
 #include <openssl/crypto.h>
 #include <openssl/opensslconf.h>
+#include <features.h>
+#include "openssl/opensslconf.h"
 
 #if defined(OPENSSL_SYS_WIN32) || defined(OPENSSL_SYS_VXWORKS) || defined(OPENSSL_SYS_UEFI) || defined(__wasi__)
 
@@ -28,18 +30,17 @@ int OPENSSL_issetugid(void)
 
 #else
 
-#include <unistd.h>
-#include <sys/types.h>
-
 #if defined(__GLIBC__) && defined(__GLIBC_PREREQ)
 #if __GLIBC_PREREQ(2, 16)
 #include <sys/auxv.h>
+
 #define OSSL_IMPLEMENT_GETAUXVAL
 #endif
 #elif defined(__ANDROID_API__)
 /* see https://developer.android.google.cn/ndk/guides/cpu-features */
 #if __ANDROID_API__ >= 18
 #include <sys/auxv.h>
+
 #define OSSL_IMPLEMENT_GETAUXVAL
 #endif
 #endif

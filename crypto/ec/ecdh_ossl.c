@@ -14,16 +14,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/ecerr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
-#include <limits.h>
-
-#include "internal/cryptlib.h"
-
 #include <openssl/err.h>
 #include <openssl/bn.h>
-#include <openssl/objects.h>
 #include <openssl/ec.h>
 #include "ec_local.h"
 

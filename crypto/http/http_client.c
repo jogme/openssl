@@ -8,21 +8,26 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/e_os.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "crypto/ctype.h"
 #include <string.h>
 #include <openssl/asn1.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/httperr.h>
 #include <openssl/cmperr.h>
-#include <openssl/buffer.h>
 #include <openssl/http.h>
 #include <openssl/trace.h>
-#include "internal/sockets.h"
+#include <limits.h>
+#include <time.h>
+#include "crypto/ctype.h"
 #include "internal/common.h" /* for ossl_assert() */
+#include "openssl/bio.h"
+#include "openssl/bioerr.h"
+#include "openssl/conf.h"
+#include "openssl/crypto.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 #define HTTP_PREFIX "HTTP/"
 #define HTTP_VERSION_PATT "1." /* allow 1.x */

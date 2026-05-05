@@ -13,9 +13,13 @@
 
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "openssl/bio.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
+#include <limits.h>
+#include <string.h>
 
 #define DUMP_WIDTH 16
 #define DUMP_WIDTH_LESS_INDENT(i) (DUMP_WIDTH - ((i - (i > 6 ? 6 : i) + 3) / 4))

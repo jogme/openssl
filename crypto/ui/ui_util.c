@@ -7,10 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <string.h>
 #include <openssl/pem.h> /* PEM_def_callback() */
+#include <stdio.h>
 #include "internal/thread_once.h"
-#include "ui_local.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
+#include "openssl/ui.h"
 
 #ifndef BUFSIZ
 #define BUFSIZ 256

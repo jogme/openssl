@@ -13,30 +13,35 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/types.h"
+#include "internal/nelem.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/evperr.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 /* IWYU pragma: end_keep */
 
 #include <assert.h>
 #include <stdio.h>
-#include "internal/cryptlib.h"
-#include "internal/refcount.h"
-#include "internal/namemap.h"
 #include <openssl/bn.h>
 #include <openssl/err.h>
 #include <openssl/objects.h>
 #include <openssl/evp.h>
-#include <openssl/rsa.h>
 #include <openssl/dsa.h>
 #include <openssl/dh.h>
 #include <openssl/ec.h>
-#include <openssl/cmac.h>
 #include <openssl/params.h>
-#include <openssl/param_build.h>
 #include <openssl/encoder.h>
 #include <openssl/core_names.h>
 #include <openssl/provider.h>
-
-#include "internal/numbers.h" /* includes SIZE_MAX */
-#include "internal/ffc.h"
+#include <limits.h>
+#include <string.h>
+#include "internal/refcount.h"
+#include "internal/namemap.h"
 #include "crypto/evp.h"
 #include "crypto/dh.h"
 #include "crypto/dsa.h"

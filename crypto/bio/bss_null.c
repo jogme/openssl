@@ -7,13 +7,14 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <limits.h>
+#include <string.h>
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "internal/bio.h"
+#include "openssl/bio.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
-
-#include <stdio.h>
-#include <errno.h>
-#include "internal/cryptlib.h"
 
 static int null_write(BIO *h, const char *buf, int num);
 static int null_read(BIO *h, char *buf, int size);

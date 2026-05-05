@@ -7,12 +7,23 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <poll.h>
+#include <string.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <time.h>
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "internal/common.h"
+#include "openssl/bio.h"
+#include "openssl/bioerr.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
 /* IWYU pragma: end_keep */
-
-#include <stdio.h>
-#include <stdlib.h>
 
 #ifndef OPENSSL_NO_SOCK
 #define SOCKET_PROTOCOL IPPROTO_TCP
@@ -33,13 +44,11 @@ static int wsa_init_done = 0;
 #elif defined _WIN32
 #include <winsock.h> /* for type fd_set */
 #else
-#include <unistd.h>
 #if defined __VMS
 #include <sys/socket.h>
 #elif defined _HPUX_SOURCE
 #include <sys/time.h>
 #else
-#include <sys/select.h>
 #endif
 #endif
 #include "internal/sockets.h" /* for openssl_fdset() */

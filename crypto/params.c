@@ -11,12 +11,17 @@
 #include <string.h>
 #include <openssl/params.h>
 #include <openssl/err.h>
-#include "internal/thread_once.h"
-#include "internal/numbers.h"
+#include <stdint.h>
+#include <time.h>
 #include "internal/endian.h"
 #include "internal/params.h"
 #include "internal/packet.h"
 #include "internal/common.h"
+#include "openssl/bn.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/cryptoerr.h"
+#include "openssl/types.h"
 
 /* Shortcuts for raising errors that are widely used */
 #define err_unsigned_negative \

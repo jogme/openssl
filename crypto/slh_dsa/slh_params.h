@@ -11,6 +11,8 @@
 #define OSSL_LIBCRYPTO_SLH_DSA_SLH_PARAMS_H
 
 #include <openssl/e_os2.h>
+#include <stddef.h>
+#include <stdint.h>
 
 /*
  * PRF(), F() use this value to calculate the number of zeros

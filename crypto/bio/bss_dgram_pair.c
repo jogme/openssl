@@ -7,13 +7,21 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <limits.h>
+#include <stdint.h>
+#include <string.h>
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "internal/bio.h"
+#include "internal/common.h"
+#include "openssl/bio.h"
+#include "openssl/bioerr.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include <errno.h>
-#include "internal/cryptlib.h"
 #include "internal/safe_math.h"
 
 #if !defined(OPENSSL_NO_DGRAM) && !defined(OPENSSL_NO_SOCK)
@@ -178,6 +186,7 @@ static int ring_buf_resize(struct ring_buf *r, size_t nbytes)
  * BIO_recvmmsg/BIO_sendmmsg.
  */
 struct bio_dgram_pair_st;
+
 static int dgram_pair_write(BIO *bio, const char *buf, int sz_);
 static int dgram_pair_read(BIO *bio, char *buf, int sz_);
 static int dgram_mem_read(BIO *bio, char *buf, int sz_);

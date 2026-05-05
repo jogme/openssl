@@ -14,7 +14,22 @@
 #include <openssl/provider.h>
 #include <openssl/params.h>
 #include <openssl/opensslv.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <string.h>
 #include "crypto/cryptlib.h"
+#include "internal/common.h"
+#include "internal/cryptlib.h"
+#include "internal/dso.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/safestack.h"
+#include "openssl/trace.h"
+#include "openssl/types.h"
 #ifndef FIPS_MODULE
 #include "crypto/decoder.h" /* ossl_decoder_store_cache_flush */
 #include "crypto/encoder.h" /* ossl_encoder_store_cache_flush */
@@ -22,12 +37,9 @@
 #endif
 #include "crypto/evp.h" /* evp_method_store_cache_flush */
 #include "crypto/rand.h"
-#include "internal/nelem.h"
-#include "internal/thread_once.h"
 #include "internal/provider.h"
 #include "internal/refcount.h"
 #include "internal/bio.h"
-#include "internal/core.h"
 #include "provider_local.h"
 #include "crypto/context.h"
 #ifndef FIPS_MODULE
@@ -136,8 +148,6 @@ typedef struct {
 } OSSL_PROVIDER_CHILD_CB;
 DEFINE_STACK_OF(OSSL_PROVIDER_CHILD_CB)
 #endif
-
-struct provider_store_st; /* Forward declaration */
 
 struct ossl_provider_st {
     /* Flag bits */

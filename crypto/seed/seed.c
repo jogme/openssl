@@ -42,9 +42,6 @@
 #include "internal/deprecated.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #ifdef _WIN32
 #include <memory.h>
 #endif

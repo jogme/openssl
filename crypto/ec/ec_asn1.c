@@ -13,14 +13,25 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/packet.h"
+#include "openssl/asn1.h"
+#include "openssl/bn.h"
+#include "openssl/buffer.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/ec.h"
+#include "openssl/ecerr.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
-#include "ec_local.h"
 #include <openssl/err.h>
 #include <openssl/asn1t.h>
 #include <openssl/objects.h>
-#include "internal/nelem.h"
+#include <limits.h>
+#include <stdint.h>
+#include "ec_local.h"
 #include "crypto/asn1.h"
 #include "crypto/asn1_dsa.h"
 

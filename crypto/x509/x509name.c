@@ -8,15 +8,17 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/asn1.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
+#include "openssl/x509err.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/safestack.h>
 #include <openssl/asn1.h>
 #include <openssl/objects.h>
-#include <openssl/evp.h>
 #include <openssl/x509.h>
+#include <string.h>
 #include "crypto/x509.h"
 
 OSSL_BEGIN_ALLOW_DEPRECATED

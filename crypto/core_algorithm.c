@@ -9,9 +9,13 @@
 
 #include <openssl/core.h>
 #include <openssl/core_dispatch.h>
+#include <string.h>
 #include "internal/core.h"
-#include "internal/property.h"
 #include "internal/provider.h"
+#include "internal/common.h"
+#include "internal/cryptlib.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 struct algorithm_data_st {
     OSSL_LIB_CTX *libctx;

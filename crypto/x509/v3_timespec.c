@@ -11,7 +11,12 @@
 #include <openssl/asn1t.h>
 #include <openssl/x509v3.h>
 #include <crypto/asn1.h>
+#include <stdint.h>
 #include "ext_dat.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 static const char *const WEEKDAY_NAMES[7] = {
     "SUN",

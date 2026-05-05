@@ -21,6 +21,8 @@
 #include <openssl/crypto.h>
 #include <openssl/err.h>
 #include <string.h>
+#include "openssl/cryptoerr.h"
+#include "openssl/e_os2.h"
 
 #ifndef OPENSSL_NO_SECURE_MEMORY
 #if defined(_WIN32)

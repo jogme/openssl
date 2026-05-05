@@ -54,7 +54,11 @@
 #include <internal/rcu.h>
 #include <internal/hashtable.h>
 #include <internal/hashfunc.h>
-#include <openssl/rand.h>
+#include <stdint.h>
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+
+struct ht_neighborhood_entry_st;
 
 /*
  * gcc defines __SANITIZE_THREAD__

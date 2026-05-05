@@ -8,16 +8,16 @@
  */
 
 #include <stdio.h>
-#include <time.h>
-#include <errno.h>
-
-#include "internal/cryptlib.h"
-#include <openssl/buffer.h>
 #include <openssl/x509.h>
 #include <openssl/pem.h>
+#include "internal/cryptlib.h"
 #include "x509_local.h"
-
-#include <crypto/asn1.h>
+#include "openssl/bio.h"
+#include "openssl/err.h"
+#include "openssl/pemerr.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509err.h"
 
 static int by_file_ctrl(X509_LOOKUP *ctx, int cmd, const char *argc,
     long argl, char **ret);

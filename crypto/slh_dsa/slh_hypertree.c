@@ -8,8 +8,13 @@
  */
 
 #include <string.h>
+#include <stdint.h>
 #include "slh_dsa_local.h"
 #include "slh_dsa_key.h"
+#include "crypto/slh_dsa.h"
+#include "crypto/slh_dsa/slh_adrs.h"
+#include "crypto/slh_dsa/slh_params.h"
+#include "internal/packet.h"
 
 /**
  * @brief Generate a Hypertree Signature

@@ -7,8 +7,17 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <limits.h>
+#include <stddef.h>
+#include <stdint.h>
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "internal/bio.h"
+#include "internal/refcount.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include "internal/thread_once.h"

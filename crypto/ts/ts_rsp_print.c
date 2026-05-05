@@ -8,12 +8,15 @@
  */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
-#include <openssl/objects.h>
-#include <openssl/bn.h>
 #include <openssl/x509v3.h>
 #include <openssl/ts.h>
 #include "ts_local.h"
+#include "internal/nelem.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/conf.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 struct status_map_st {
     int bit;

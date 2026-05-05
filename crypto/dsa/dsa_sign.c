@@ -13,10 +13,16 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/packet.h"
+#include "openssl/buffer.h"
+#include "openssl/crypto.h"
+#include "openssl/dsa.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/bn.h>
-#include "internal/cryptlib.h"
+#include <stdint.h>
+#include <string.h>
 #include "dsa_local.h"
 #include "crypto/asn1_dsa.h"
 #include "crypto/dsa.h"

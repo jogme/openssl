@@ -7,8 +7,10 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <errno.h>
 #include <openssl/err.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/time.h>
 #include "internal/time.h"
 #include "internal/e_os.h"
 

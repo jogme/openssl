@@ -8,7 +8,11 @@
  */
 
 #include <openssl/err.h>
+#include <string.h>
 #include "err_local.h"
+#include "internal/err.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 /*
  * Save and restore error state.

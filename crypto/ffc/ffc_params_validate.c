@@ -17,7 +17,9 @@
 #include <openssl/bn.h>
 #include <openssl/dsaerr.h>
 #include <openssl/dherr.h>
+#include <stddef.h>
 #include "internal/ffc.h"
+#include "openssl/types.h"
 
 /* FIPS186-4 A.2.2 Unverifiable partial validation of Generator g */
 int ossl_ffc_params_validate_unverifiable_g(BN_CTX *ctx, BN_MONT_CTX *mont,

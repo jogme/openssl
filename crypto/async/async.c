@@ -15,13 +15,19 @@
  */
 #undef _FORTIFY_SOURCE
 
+#include <openssl/err.h>
+#include <string.h>
+#include <limits.h>
 /* This must be the first #include file */
 #include "async_local.h"
 #include "internal/threads_common.h"
-
-#include <openssl/err.h>
 #include "crypto/cryptlib.h"
-#include <string.h>
+#include "crypto/async.h"
+#include "internal/cryptlib.h"
+#include "openssl/async.h"
+#include "openssl/asyncerr.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 #define ASYNC_JOB_RUNNING 0
 #define ASYNC_JOB_PAUSING 1

@@ -8,14 +8,17 @@
  */
 
 #include <string.h>
-#include <stdlib.h>
 #include <openssl/crypto.h>
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
 #include <openssl/params.h>
+#include <stdint.h>
 #include "internal/endian.h"
 #include "crypto/modes.h"
 #include "crypto/siv.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_SIV
 

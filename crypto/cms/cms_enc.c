@@ -7,16 +7,22 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/cryptlib.h"
-#include <openssl/asn1t.h>
-#include <openssl/pem.h>
-#include <openssl/x509v3.h>
 #include <openssl/err.h>
 #include <openssl/cms.h>
 #include <openssl/rand.h>
+#include <string.h>
 #include "crypto/evp.h"
 #include "crypto/asn1.h"
 #include "cms_local.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/cmserr.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 /* CMS EncryptedData Utilities */
 

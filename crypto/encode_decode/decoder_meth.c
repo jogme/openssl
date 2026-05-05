@@ -10,14 +10,21 @@
 #include <openssl/core.h>
 #include <openssl/core_dispatch.h>
 #include <openssl/decoder.h>
-#include <openssl/ui.h>
+#include <string.h>
 #include "internal/core.h"
 #include "internal/namemap.h"
 #include "internal/property.h"
 #include "internal/provider.h"
 #include "crypto/decoder.h"
 #include "encoder_local.h"
-#include "crypto/context.h"
+#include "internal/common.h"
+#include "internal/cryptlib.h"
+#include "internal/passphrase.h"
+#include "internal/refcount.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 
 /*
  * Decoder can have multiple names, separated with colons in a name string

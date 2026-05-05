@@ -7,8 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "dso_local.h"
-
 #ifdef DSO_DL
 
 #include <dl.h>

@@ -7,8 +7,13 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 #include "dso_local.h"
 #include "internal/refcount.h"
+#include "internal/dso.h"
+#include "internal/dsoerr.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
 
 static DSO *DSO_new_method(DSO_METHOD *meth)
 {

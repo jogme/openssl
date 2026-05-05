@@ -7,13 +7,15 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "rand_local.h"
+#include <openssl/err.h>
+#include <stddef.h>
 #include "crypto/evp.h"
 #include "crypto/rand.h"
 #include "crypto/rand_pool.h"
-#include "internal/core.h"
-#include <openssl/core_dispatch.h>
-#include <openssl/err.h>
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/types.h"
 
 size_t ossl_rand_get_entropy(ossl_unused OSSL_LIB_CTX *ctx,
     unsigned char **pout, int entropy,

@@ -8,9 +8,7 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/err.h>
-#include <openssl/kdferr.h>
-
+#include "openssl/cryptoerr_legacy.h"
 #ifndef OPENSSL_NO_DEPRECATED_3_0
 int ERR_load_KDF_strings(void)
 {

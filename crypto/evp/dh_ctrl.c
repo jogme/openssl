@@ -9,13 +9,19 @@
 
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/evperr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/core_names.h>
 #include <openssl/params.h>
 #include <openssl/err.h>
 #include <openssl/dh.h>
-#include "crypto/dh.h"
+#include <limits.h>
+#include <stddef.h>
 #include "crypto/evp.h"
 
 static int dh_paramgen_check(EVP_PKEY_CTX *ctx)

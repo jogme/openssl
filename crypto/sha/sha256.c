@@ -13,17 +13,12 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/opensslconf.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/opensslconf.h>
-
-#include <stdlib.h>
 #include <string.h>
-
-#include <openssl/crypto.h>
 #include <openssl/sha.h>
-#include <openssl/opensslv.h>
-#include "internal/endian.h"
 #include "crypto/sha.h"
 
 int SHA224_Init(SHA256_CTX *c)
@@ -137,6 +132,7 @@ void sha256_block_data_order_c(SHA256_CTX *ctx, const void *in, size_t num);
 
 /* clang-format off */
 #include "crypto/md32_common.inc"
+
 /* clang-format on */
 #undef HASH_UPDATE_THUNK
 

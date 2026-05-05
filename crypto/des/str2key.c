@@ -13,10 +13,12 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/des.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/crypto.h>
-#include "des_local.h"
+#include <limits.h>
+#include <string.h>
 
 void DES_string_to_key(const char *str, DES_cblock *key)
 {

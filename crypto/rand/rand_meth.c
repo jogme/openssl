@@ -9,7 +9,9 @@
 
 #include <openssl/evp.h>
 #include <openssl/rand.h>
+#include <stddef.h>
 #include "rand_local.h"
+#include "openssl/types.h"
 
 /* Implements the default OpenSSL RAND_add() method */
 static int drbg_add(const void *buf, int num, double randomness)

@@ -7,13 +7,10 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stddef.h>
 #include <openssl/x509.h>
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
 #include "x509_local.h"
-
-#include <crypto/asn1.h>
 
 ASN1_SEQUENCE(X509_EXTENSION) = {
     ASN1_SIMPLE(X509_EXTENSION, object, ASN1_OBJECT),

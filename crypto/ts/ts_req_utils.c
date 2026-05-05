@@ -8,11 +8,15 @@
  */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/objects.h>
 #include <openssl/x509v3.h>
 #include <openssl/ts.h>
 #include "ts_local.h"
+#include "openssl/asn1.h"
+#include "openssl/err.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 int TS_REQ_set_version(TS_REQ *a, long version)
 {

@@ -7,14 +7,14 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <ucontext.h>
 /* This must be the first #include file */
 #include "../async_local.h"
+#include "openssl/async.h"
 
 #ifdef ASYNC_POSIX
 
 #include <stddef.h>
-#include <unistd.h>
-#include <openssl/err.h>
 #include <openssl/crypto.h>
 
 #define STACKSIZE 32768

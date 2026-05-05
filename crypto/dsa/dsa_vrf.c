@@ -13,9 +13,10 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/dsa.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include "internal/cryptlib.h"
 #include "dsa_local.h"
 
 int DSA_do_verify(const unsigned char *dgst, int dgst_len, DSA_SIG *sig,

@@ -10,9 +10,14 @@
  * Originally written by Mike Hamburg
  */
 #include <openssl/crypto.h>
-
+#include <assert.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "word.h"
 #include "point_448.h"
+#include "crypto/ec/curve448/arch_64/arch_intrinsics.h"
+#include "crypto/ec/curve448/curve448utils.h"
+#include "openssl/e_os2.h"
 
 static const c448_word_t MONTGOMERY_FACTOR = (c448_word_t)0x3bd440fae918bc5ULL;
 static const curve448_scalar_t sc_p = {

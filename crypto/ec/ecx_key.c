@@ -12,6 +12,10 @@
 #include <openssl/proverr.h>
 #include "crypto/ecx.h"
 #include "internal/common.h" /* for ossl_assert() */
+#include "crypto/types.h"
+#include "internal/refcount.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 #ifdef S390X_EC_ASM
 #include "s390x_arch.h"

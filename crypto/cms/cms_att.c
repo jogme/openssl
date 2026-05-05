@@ -7,14 +7,17 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/asn1t.h>
-#include <openssl/pem.h>
-#include <openssl/x509v3.h>
 #include <openssl/err.h>
 #include <openssl/cms.h>
+#include <stddef.h>
 #include "internal/nelem.h"
 #include "crypto/x509.h"
 #include "cms_local.h"
+#include "openssl/cmserr.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 /*-
  * Attribute flags.

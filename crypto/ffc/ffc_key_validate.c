@@ -7,7 +7,10 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 #include "internal/ffc.h"
+#include "openssl/bn.h"
+#include "openssl/types.h"
 
 /*
  * See SP800-56Ar3 Section 5.6.2.3.1 : FFC Partial public key validation.

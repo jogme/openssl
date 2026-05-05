@@ -16,7 +16,6 @@
 /* IWYU pragma: end_keep */
 
 #include <openssl/rc2.h>
-#include "rc2_local.h"
 
 static const unsigned char key_table[256] = {
     0xd9,

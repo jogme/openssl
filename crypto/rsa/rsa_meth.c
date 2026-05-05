@@ -13,11 +13,13 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/rsa.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
 #include "rsa_local.h"
-#include <openssl/err.h>
 
 RSA_METHOD *RSA_meth_new(const char *name, int flags)
 {

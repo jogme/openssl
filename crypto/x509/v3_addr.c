@@ -11,21 +11,27 @@
  * Implementation of RFC 3779 section 2.2.
  */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-
 #include <openssl/conf.h>
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
-#include <openssl/buffer.h>
 #include <openssl/x509v3.h>
-#include "internal/cryptlib.h"
+#include <openssl/x509.h>
 #include "crypto/asn1.h"
 #include "crypto/x509.h"
 #include "ext_dat.h"
 #include "x509_local.h"
+#include "internal/common.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "openssl/x509v3err.h"
 
 #ifndef OPENSSL_NO_RFC3779
 

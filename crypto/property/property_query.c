@@ -7,9 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/propertyerr.h"
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/property.h"
 #include "property_local.h"
+#include "internal/cryptlib.h"
+#include "openssl/types.h"
 
 static int property_idx_cmp(const void *keyp, const void *compare)
 {

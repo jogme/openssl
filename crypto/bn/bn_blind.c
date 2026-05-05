@@ -8,8 +8,15 @@
  */
 
 #include <openssl/opensslconf.h>
-#include "internal/cryptlib.h"
+#include <stddef.h>
 #include "bn_local.h"
+#include "crypto/bn.h"
+#include "openssl/bn.h"
+#include "openssl/bnerr.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/opensslconf.h"
+#include "openssl/types.h"
 
 #define BN_BLINDING_COUNTER 32
 

@@ -11,6 +11,8 @@
 #include <openssl/ec.h>
 #include "crypto/ec.h"
 #include "internal/nelem.h"
+#include "openssl/crypto.h"
+#include "openssl/obj_mac.h"
 
 typedef struct ec_name2nid_st {
     const char *name;

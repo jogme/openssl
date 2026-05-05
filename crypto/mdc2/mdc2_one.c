@@ -13,10 +13,10 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/mdc2.h>
 
 unsigned char *MDC2(const unsigned char *d, size_t n, unsigned char *md)

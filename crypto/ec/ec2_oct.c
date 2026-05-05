@@ -14,10 +14,15 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bn.h"
+#include "openssl/bnerr.h"
+#include "openssl/ec.h"
+#include "openssl/ecerr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/err.h>
-
+#include <stddef.h>
 #include "ec_local.h"
 
 #ifndef OPENSSL_NO_EC2M

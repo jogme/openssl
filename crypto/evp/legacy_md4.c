@@ -13,6 +13,9 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/md4.h>

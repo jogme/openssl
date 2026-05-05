@@ -9,6 +9,9 @@
 
 #include <openssl/ocsp.h>
 #include <openssl/http.h>
+#include <stddef.h>
+#include "openssl/asn1.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_OCSP
 

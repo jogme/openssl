@@ -7,16 +7,19 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdlib.h>
 #include <string.h>
-
 #include <openssl/conf.h>
 #include <openssl/ct.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/safestack.h>
-
+#include <stdint.h>
 #include "internal/cryptlib.h"
+#include "internal/common.h"
+#include "openssl/crypto.h"
+#include "openssl/cterr.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 /*
  * Information about a CT log server.

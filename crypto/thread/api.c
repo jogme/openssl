@@ -7,9 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/configuration.h>
 #include <openssl/thread.h>
 #include <internal/thread.h>
+#include <stddef.h>
+#include <stdint.h>
+#include "internal/thread_arch.h"
+#include "openssl/types.h"
 
 uint32_t OSSL_get_thread_support_flags(void)
 {

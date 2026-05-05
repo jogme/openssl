@@ -15,7 +15,6 @@
 #include "internal/deprecated.h"
 /* IWYU pragma: end_keep */
 
-#include "internal/cryptlib.h"
 #include <openssl/aes.h>
 #include <openssl/modes.h>
 

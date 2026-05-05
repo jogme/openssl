@@ -8,16 +8,20 @@
  */
 
 #include <stdio.h>
-#include <time.h>
-#include "internal/cryptlib.h"
 #include "bn_local.h"
-
 /*
  * The quick sieve algorithm approach to weeding out primes is Philip
  * Zimmermann's, as implemented in PGP.  I have had a read of his comments
  * and implemented my own version.
  */
 #include "bn_prime.h"
+#include "crypto/bn.h"
+#include "internal/nelem.h"
+#include "openssl/bn.h"
+#include "openssl/bnerr.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 
 static int probable_prime(BIGNUM *rnd, int bits, int safe, prime_t *mods,
     BN_CTX *ctx);

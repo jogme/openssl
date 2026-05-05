@@ -3,6 +3,7 @@
 
 #include <openssl/evp.h>
 #include <stddef.h>
+#include "openssl/types.h"
 
 #if defined(__clang__)
 #define HAVE_AVX2_INTRINSICS 1

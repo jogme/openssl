@@ -8,17 +8,21 @@
  */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
-#include "internal/refcount.h"
 #include <openssl/asn1.h>
 #include <openssl/objects.h>
 #include <openssl/evp.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
+#include <stdint.h>
+#include "internal/refcount.h"
 #include "crypto/asn1.h"
 #include "crypto/x509.h"
 #include "crypto/evp.h"
-#include "x509_local.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509err.h"
 
 int X509_set_version(X509 *x, long version)
 {

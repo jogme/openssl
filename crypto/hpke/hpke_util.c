@@ -15,13 +15,16 @@
 #include <openssl/proverr.h>
 #include <openssl/hpke.h>
 #include <openssl/sha.h>
-#include <openssl/rand.h>
+#include <stdint.h>
 #include "crypto/ecx.h"
 #include "crypto/rand.h"
 #include "internal/hpke_util.h"
 #include "internal/packet.h"
 #include "internal/nelem.h"
-#include "internal/common.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 /*
  * Delimiter used in OSSL_HPKE_str2suite

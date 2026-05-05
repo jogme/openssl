@@ -27,11 +27,20 @@
 
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "internal/bio.h"
+#include "internal/cryptlib.h"
+#include "internal/e_os.h"
+#include "openssl/bio.h"
+#include "openssl/bioerr.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
 #include <errno.h>
 #include <openssl/err.h>
+#include <limits.h>
+#include <string.h>
 
 #if !defined(OPENSSL_NO_STDIO)
 

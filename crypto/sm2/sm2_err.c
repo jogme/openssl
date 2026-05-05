@@ -9,6 +9,7 @@
  */
 
 #include <openssl/err.h>
+#include <stddef.h>
 #include "crypto/sm2err.h"
 
 #ifndef OPENSSL_NO_SM2

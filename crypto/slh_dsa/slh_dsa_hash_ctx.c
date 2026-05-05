@@ -8,11 +8,11 @@
  */
 #include <stddef.h>
 #include <openssl/crypto.h>
+#include <openssl/evp.h>
+#include <stdint.h>
 #include "slh_dsa_local.h"
 #include "slh_dsa_key.h"
-#include <openssl/evp.h>
-#include <openssl/sha.h>
-#include "crypto/evp.h"
+#include "crypto/slh_dsa.h"
 
 /**
  * @brief Create a SLH_DSA_HASH_CTX that contains parameters, functions, and

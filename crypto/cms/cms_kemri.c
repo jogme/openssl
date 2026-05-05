@@ -14,11 +14,18 @@
 #include <openssl/evp.h>
 #include <openssl/kdf.h>
 #include <openssl/x509.h>
-#include "cms_local.h"
-#include "crypto/evp.h"
-#include "internal/sizes.h"
-
 #include <crypto/asn1.h>
+#include <stddef.h>
+#include <stdint.h>
+#include "cms_local.h"
+#include "internal/sizes.h"
+#include "openssl/asn1.h"
+#include "openssl/cmserr.h"
+#include "openssl/core.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 /* KEM Recipient Info (KEMRI) routines */
 

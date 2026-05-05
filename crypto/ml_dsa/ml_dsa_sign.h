@@ -10,7 +10,10 @@
 #if !defined(OSSL_LIBCRYPTO_ML_DSA_ML_DSA_SIGN_H)
 #define OSSL_LIBCRYPTO_ML_DSA_ML_DSA_SIGN_H
 
+#include <stddef.h>
+#include <stdint.h>
 #include "ml_dsa_vector.h"
+#include "crypto/ml_dsa/ml_dsa_local.h"
 
 struct ml_dsa_sig_st {
     VECTOR z;

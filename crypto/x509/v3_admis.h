@@ -13,6 +13,7 @@
 #include <openssl/asn1.h>
 #include <openssl/safestack.h>
 #include <openssl/x509v3.h>
+#include "openssl/types.h"
 
 struct NamingAuthority_st {
     ASN1_OBJECT *namingAuthorityId;

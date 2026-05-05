@@ -13,16 +13,17 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/ffc.h"
+#include "openssl/crypto.h"
+#include "openssl/dh.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
 #include <openssl/bn.h>
-#include <openssl/obj_mac.h>
-#include <openssl/core_names.h>
-#include "internal/cryptlib.h"
 #include "internal/refcount.h"
 #include "internal/common.h"
-#include "crypto/evp.h"
 #include "crypto/dh.h"
 #include "dh_local.h"
 

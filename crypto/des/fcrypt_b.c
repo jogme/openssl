@@ -13,12 +13,12 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/des.h"
 /* IWYU pragma: end_keep */
-
-#include <stdio.h>
 
 #define DES_FCRYPT
 #include "des_local.h"
+
 #undef DES_FCRYPT
 
 #undef PERM_OP

@@ -7,13 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <openssl/crypto.h>
-#include "internal/cryptlib.h"
+#include <stdlib.h>
+#include <string.h>
 #include "internal/conf.h"
-#include "conf_local.h"
-#include <openssl/x509.h>
-#include <openssl/asn1.h>
+#include "openssl/conf.h"
+#include "openssl/types.h"
 
 #if defined(_WIN32) && !defined(__BORLANDC__)
 #define strdup _strdup

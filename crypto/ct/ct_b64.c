@@ -9,12 +9,16 @@
 
 #include <limits.h>
 #include <string.h>
-
 #include <openssl/ct.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
-
+#include <stdint.h>
 #include "ct_local.h"
+#include "openssl/crypto.h"
+#include "openssl/cterr.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "openssl/x509err.h"
 
 /*
  * Decodes the base64 string |in| into |out|.

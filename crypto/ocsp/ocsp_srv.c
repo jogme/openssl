@@ -7,14 +7,20 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/objects.h>
 #include <openssl/x509.h>
-#include <openssl/pem.h>
-#include <openssl/x509v3.h>
 #include <openssl/ocsp.h>
+#include <string.h>
 #include "ocsp_local.h"
+#include "crypto/x509.h"
+#include "openssl/asn1.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/ocsperr.h"
+#include "openssl/safestack.h"
+#include "openssl/sha.h"
+#include "openssl/types.h"
 
 /*
  * Utility functions related to sending OCSP responses and extracting

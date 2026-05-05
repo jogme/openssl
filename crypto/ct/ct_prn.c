@@ -13,8 +13,14 @@
 
 #include <openssl/asn1.h>
 #include <openssl/bio.h>
-
+#include <stdint.h>
+#include <time.h>
 #include "ct_local.h"
+#include "openssl/ct.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 static void SCT_signature_algorithms_print(const SCT *sct, BIO *out)
 {

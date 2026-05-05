@@ -9,23 +9,24 @@
  */
 
 #include <string.h>
-#include <stdio.h>
-#include <stdarg.h>
 #include <openssl/crypto.h>
-#include <openssl/provider.h>
+#include <openssl/trace.h>
+#include <stdint.h>
 #include "internal/property.h"
 #include "internal/provider.h"
 #include "internal/hashtable.h"
 #include "internal/tsan_assist.h"
 #include "internal/list.h"
-#include "internal/hashfunc.h"
 #include "internal/time.h"
-#include <openssl/lhash.h>
-#include <openssl/rand.h>
-#include <openssl/trace.h>
 #include "crypto/sparse_array.h"
 #include "property_local.h"
 #include "crypto/context.h"
+#include "internal/common.h"
+#include "internal/cryptlib.h"
+#include "openssl/bio.h"
+#include "openssl/e_os2.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 /*
  * The shard count was determined through performance testing with the evp_fetch
@@ -157,7 +158,6 @@ struct ossl_method_store_st {
 };
 
 DEFINE_SPARSE_ARRAY_OF(ALGORITHM);
-
 DEFINE_STACK_OF(ALGORITHM)
 
 typedef struct ossl_global_properties_st {

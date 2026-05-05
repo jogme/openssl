@@ -17,6 +17,7 @@
 
 #include <openssl/camellia.h>
 #include <openssl/modes.h>
+#include <stddef.h>
 
 /*
  * The input and output encrypted as though 128bit ofb mode is being used.

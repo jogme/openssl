@@ -13,14 +13,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/opensslconf.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/crypto.h>
 #include <openssl/opensslconf.h>
-
-#include <openssl/opensslv.h>
 #include <openssl/evp.h>
 #include <openssl/sha.h>
+#include <string.h>
 
 /* The implementation is in crypto/md32_common.inc */
 

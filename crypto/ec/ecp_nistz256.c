@@ -24,11 +24,19 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/common.h"
+#include "openssl/bn.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/ec.h"
+#include "openssl/ecerr.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
-
-#include "internal/cryptlib.h"
+#include <stdint.h>
 #include "crypto/bn.h"
 #include "ec_local.h"
 #include "internal/refcount.h"

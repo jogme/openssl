@@ -7,9 +7,15 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/ffc.h"
 #include "internal/nelem.h"
 #include "crypto/bn_dh.h"
+#include "openssl/bn.h"
+#include "openssl/crypto.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_DH
 

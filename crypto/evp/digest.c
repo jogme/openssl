@@ -10,18 +10,24 @@
 #include <stdio.h>
 #include <openssl/objects.h>
 #include <openssl/evp.h>
-#include <openssl/ec.h>
 #include <openssl/params.h>
 #include <openssl/core_names.h>
-#include "internal/cryptlib.h"
+#include <crypto/asn1.h>
+#include <limits.h>
 #include "internal/nelem.h"
 #include "internal/provider.h"
 #include "internal/core.h"
 #include "internal/common.h"
 #include "crypto/evp.h"
 #include "evp_local.h"
-
-#include <crypto/asn1.h>
+#include "internal/refcount.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/evperr.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 void evp_md_ctx_clear_digest(EVP_MD_CTX *ctx, int force, int keep_fetched)
 {

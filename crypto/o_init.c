@@ -7,13 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/e_os.h"
-#include <openssl/err.h>
-
 /*
  * Perform any essential OpenSSL initialization operations. Currently does
  * nothing.
  */
+
+#include "openssl/crypto.h"
 
 void OPENSSL_init(void)
 {

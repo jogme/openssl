@@ -13,17 +13,34 @@
 
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "internal/bio.h"
+#include "internal/common.h"
+#include "internal/sockets.h"
+#include "openssl/bio.h"
+#include "openssl/bioerr.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
 #include <errno.h>
-
+#include <features.h>
+#include <limits.h>
+#include <netinet/in.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <sys/uio.h>
 #include "internal/time.h"
 #ifndef OPENSSL_NO_DGRAM
 
 #ifndef OPENSSL_NO_SCTP
 #include <netinet/sctp.h>
 #include <fcntl.h>
+
 #define OPENSSL_SCTP_DATA_CHUNK_TYPE 0x00
 #define OPENSSL_SCTP_FORWARD_CUM_TSN_CHUNK_TYPE 0xc0
 #endif
@@ -2806,14 +2823,6 @@ static int BIO_dgram_should_retry(int i)
 
     if ((i == 0) || (i == -1)) {
         err = get_last_socket_error();
-
-#if defined(OPENSSL_SYS_WINDOWS)
-        /*
-         * If the socket return value (i) is -1 and err is unexpectedly 0 at
-         * this point, the error code was overwritten by another system call
-         * before this error handling is called.
-         */
-#endif
 
         return BIO_dgram_non_fatal_error(err);
     }

@@ -14,12 +14,16 @@
 #include <openssl/kdf.h>
 #include <openssl/core_names.h>
 #include <openssl/hpke.h>
-#include <openssl/sha.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
+#include <limits.h>
+#include <stdint.h>
 #include "internal/hpke_util.h"
-#include "internal/nelem.h"
 #include "internal/common.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 /* default buffer size for keys and internal buffers we use */
 #define OSSL_HPKE_MAXSIZE 512

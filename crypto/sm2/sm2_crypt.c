@@ -15,17 +15,22 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/ec.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include "crypto/sm2.h"
-#include "crypto/sm2err.h"
-#include "crypto/ec.h" /* ossl_ecdh_kdf_X9_63() */
 #include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/bn.h>
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
 #include <string.h>
+#include <limits.h>
+#include <stdint.h>
+#include "crypto/sm2.h"
+#include "crypto/sm2err.h"
+#include "crypto/ec.h" /* ossl_ecdh_kdf_X9_63() */
 
 typedef struct SM2_Ciphertext_st SM2_Ciphertext;
 DECLARE_ASN1_FUNCTIONS(SM2_Ciphertext)

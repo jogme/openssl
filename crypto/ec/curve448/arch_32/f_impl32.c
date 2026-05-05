@@ -10,8 +10,7 @@
  * Originally written by Mike Hamburg
  */
 
-#include "internal/e_os.h"
-#include <openssl/macros.h>
+#include <openssl/opensslv.h>
 #include "internal/numbers.h"
 
 #ifdef UINT128_MAX

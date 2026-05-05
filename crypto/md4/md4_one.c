@@ -16,7 +16,6 @@
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include <string.h>
 #include <openssl/md4.h>
 #include <openssl/crypto.h>
 

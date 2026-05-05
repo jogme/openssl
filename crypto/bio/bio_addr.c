@@ -23,16 +23,23 @@
 
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "internal/sockets.h"
+#include "openssl/bio.h"
+#include "openssl/bioerr.h"
 /* IWYU pragma: end_keep */
 
 #include <assert.h>
 #include <string.h>
-
 #include <openssl/crypto.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 
 #ifndef OPENSSL_NO_SOCK
 #include <openssl/err.h>
-#include <openssl/buffer.h>
 #include "internal/thread_once.h"
 
 CRYPTO_RWLOCK *bio_lookup_lock;

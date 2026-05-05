@@ -8,9 +8,11 @@
  */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/x509v3.h>
 #include "ext_dat.h"
+#include "openssl/asn1.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 const X509V3_EXT_METHOD ossl_v3_crl_num = {
     NID_crl_number, 0, ASN1_ITEM_ref(ASN1_INTEGER),

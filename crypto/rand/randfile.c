@@ -16,28 +16,27 @@
 #include <sys/stat.h>
 #endif
 
-#include "internal/e_os.h"
-#include "internal/cryptlib.h"
-
 #include <errno.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
 #include <openssl/crypto.h>
 #include <openssl/rand.h>
-#include <openssl/buffer.h>
+#include <limits.h>
+#include <unistd.h>
+#include "internal/cryptlib.h"
+#include "openssl/err.h"
+#include "openssl/randerr.h"
 
 #ifdef OPENSSL_SYS_VMS
 #include <unixio.h>
 #endif
-#include <sys/types.h>
 #ifndef OPENSSL_NO_POSIX_IO
 #include <sys/stat.h>
 #include <fcntl.h>
 #if defined(_WIN32) && !defined(_WIN32_WCE)
 #include <windows.h>
 #include <io.h>
+
 #define stat _stat
 #define chmod _chmod
 #define open _open

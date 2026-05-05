@@ -58,11 +58,12 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/whrlpool.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/crypto.h>
-#include "wp_local.h"
 #include <string.h>
+#include "wp_local.h"
 
 int WHIRLPOOL_Init(WHIRLPOOL_CTX *c)
 {

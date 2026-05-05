@@ -13,13 +13,13 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/rsaerr.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
-#include <openssl/bn.h>
 #include <openssl/rsa.h>
-#include <openssl/objects.h>
+#include <string.h>
 
 /*
  * X9.31 Embeds the hash inside the following data structure

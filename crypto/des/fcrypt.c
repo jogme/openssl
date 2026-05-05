@@ -13,6 +13,7 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/des.h"
 /* IWYU pragma: end_keep */
 
 /* NOCW */
@@ -26,7 +27,6 @@
 #include <openssl/ebcdic.h>
 #endif
 
-#include <openssl/crypto.h>
 #include "des_local.h"
 
 /*

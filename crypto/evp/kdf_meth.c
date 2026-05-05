@@ -7,15 +7,19 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/core.h>
 #include <openssl/core_dispatch.h>
 #include <openssl/kdf.h>
+#include <stddef.h>
 #include "internal/provider.h"
 #include "internal/core.h"
 #include "crypto/evp.h"
 #include "evp_local.h"
+#include "internal/refcount.h"
+#include "openssl/crypto.h"
+#include "openssl/evperr.h"
+#include "openssl/types.h"
 
 static int evp_kdf_up_ref(void *vkdf)
 {

@@ -7,14 +7,22 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "crypto/ctype.h"
-#include "internal/cryptlib.h"
 #include <openssl/asn1t.h>
 #include <openssl/x509.h>
+#include <limits.h>
+#include <string.h>
+#include "crypto/ctype.h"
 #include "crypto/x509.h"
 #include "crypto/asn1.h"
 #include "x509_local.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/buffer.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/objects.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 /*
  * Maximum length of X509_NAME: much larger than anything we should

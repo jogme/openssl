@@ -7,8 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "dso_local.h"
-
 #ifdef DSO_NONE
 
 static DSO_METHOD dso_meth_null = {

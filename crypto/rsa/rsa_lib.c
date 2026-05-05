@@ -13,19 +13,28 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bn.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/evperr.h"
+#include "openssl/params.h"
+#include "openssl/rsa.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/crypto.h>
 #include <openssl/core_names.h>
 #include <openssl/evp.h>
-#include <openssl/param_build.h>
-#include "internal/cryptlib.h"
+#include <limits.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/refcount.h"
 #include "internal/common.h"
-#include "crypto/bn.h"
 #include "crypto/evp.h"
 #include "crypto/rsa.h"
-#include "crypto/sparse_array.h"
 #include "crypto/security_bits.h"
 #include "rsa_local.h"
 

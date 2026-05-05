@@ -19,13 +19,21 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/rsa.h"
+#include "openssl/bnerr.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/rsa.h"
+#include "openssl/rsaerr.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include <time.h>
-#include "internal/cryptlib.h"
 #include <openssl/bn.h>
 #include <openssl/self_test.h>
+#include <stdint.h>
+#include <string.h>
 #include "prov/providercommon.h"
 #include "rsa_local.h"
 

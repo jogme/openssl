@@ -12,13 +12,15 @@
 #endif
 
 #include <stddef.h>
-#include <string.h>
-
-#include <openssl/err.h>
 #include <openssl/obj_mac.h>
 #include <openssl/x509.h>
-
+#include <stdint.h>
 #include "ct_local.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/evp.h"
+#include "openssl/sha.h"
+#include "openssl/types.h"
 
 SCT_CTX *SCT_CTX_new(OSSL_LIB_CTX *libctx, const char *propq)
 {

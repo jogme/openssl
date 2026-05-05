@@ -9,19 +9,26 @@
 
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/slh_dsa.h"
+#include "crypto/slh_dsa/slh_adrs.h"
+#include "crypto/slh_dsa/slh_params.h"
+#include "internal/packet.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
+#include "crypto/slh_dsa/slh_hash.h"
 #include <string.h>
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
 #include <openssl/rsa.h> /* PKCS1_MGF1() */
+#include <stdint.h>
 #include "slh_dsa_local.h"
 #include "slh_dsa_key.h"
-
 #include "openssl/sha.h"
 #include "internal/sha3.h"
-#include "crypto/evp.h"
-#include "crypto/sha.h"
 
 #define MAX_DIGEST_SIZE 64 /* SHA-512 is used for security category 3 & 5 */
 #define NIBBLE_MASK 15

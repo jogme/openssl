@@ -7,11 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/crypto.h>
-#include "internal/cryptlib.h"
-#include "internal/rcu.h"
-#include "rcu_internal.h"
-
+#include "openssl/configuration.h"
 #if !defined(OPENSSL_THREADS) || defined(CRYPTO_TDEBUG)
 
 #if defined(OPENSSL_SYS_UNIX)

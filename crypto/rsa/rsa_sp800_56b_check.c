@@ -10,8 +10,13 @@
 
 #include <openssl/err.h>
 #include <openssl/bn.h>
+#include <stddef.h>
 #include "crypto/bn.h"
 #include "rsa_local.h"
+#include "crypto/rsa.h"
+#include "openssl/rsa.h"
+#include "openssl/rsaerr.h"
+#include "openssl/types.h"
 
 /*
  * Part of the RSA keypair test.

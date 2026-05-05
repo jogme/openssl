@@ -9,8 +9,26 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <limits.h>
+#include <openssl/x509.h>
+#include <string.h>
 #include "cmp_local.h"
 #include "crypto/asn1.h" /* for ossl_X509_ALGOR_from_nid() */
+#include "crypto/x509.h"
+#include "internal/common.h"
+#include "openssl/asn1.h"
+#include "openssl/cmp.h"
+#include "openssl/cmp_util.h"
+#include "openssl/cmperr.h"
+#include "openssl/crmf.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "openssl/x509v3.h"
 
 /*
  * This function is also used by the internal verify_PBMAC() in cmp_vfy.c.

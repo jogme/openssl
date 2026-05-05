@@ -9,10 +9,11 @@
 
 #include "bn_local.h"
 #include "internal/nelem.h"
+#include "openssl/bn.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_SRP
 
-#include <openssl/srp.h>
 #include "crypto/bn_srp.h"
 
 #if (BN_BYTES == 8)

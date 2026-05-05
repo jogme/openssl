@@ -9,12 +9,15 @@
 
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bn.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/err.h>
+#include <openssl/ec.h> /* EC_KEY and EC_GROUP functions */
+#include <stddef.h>
 #include "crypto/sm2err.h"
 #include "crypto/sm2.h"
-#include <openssl/ec.h> /* EC_KEY and EC_GROUP functions */
 
 /*
  * SM2 key generation is implemented within ec_generate_key() in

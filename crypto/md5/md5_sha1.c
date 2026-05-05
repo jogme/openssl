@@ -13,11 +13,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/md5.h"
+#include "openssl/sha.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
-#include "prov/md5_sha1.h"
 #include <openssl/evp.h>
+#include "prov/md5_sha1.h"
 
 int ossl_md5_sha1_init(MD5_SHA1_CTX *mctx)
 {

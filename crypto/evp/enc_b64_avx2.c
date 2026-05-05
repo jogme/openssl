@@ -1,9 +1,11 @@
-#include <openssl/evp.h>
+#include <emmintrin.h>
+#include <mmintrin.h>
+#include <xmmintrin.h>
 #include "enc_b64_scalar.h"
 #include "enc_b64_avx2.h"
-#include "internal/cryptlib.h"
 #include "crypto/evp.h"
 #include "evp_local.h"
+#include "openssl/e_os2.h"
 
 #if defined(__x86_64) || defined(__x86_64__) || defined(_M_AMD64) || defined(_M_X64)
 #if !defined(_M_ARM64EC)

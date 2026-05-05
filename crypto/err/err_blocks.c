@@ -9,7 +9,11 @@
 
 #include <string.h>
 #include <openssl/err.h>
+#include <stdarg.h>
 #include "err_local.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 void ERR_new(void)
 {

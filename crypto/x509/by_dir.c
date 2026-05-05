@@ -18,16 +18,20 @@
 
 #include "internal/e_os.h"
 #include "internal/cryptlib.h"
-#include <stdio.h>
-#include <time.h>
-#include <errno.h>
-#include <sys/types.h>
+#include "openssl/bio.h"
+#include "openssl/buffer.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509err.h"
 
 #ifndef OPENSSL_NO_POSIX_IO
 #include <sys/stat.h>
 #endif
 
 #include <openssl/x509.h>
+#include <string.h>
 #include "crypto/x509.h"
 #include "x509_local.h"
 

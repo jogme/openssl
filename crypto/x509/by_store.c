@@ -9,9 +9,14 @@
 
 #include <openssl/safestack.h>
 #include <openssl/store.h>
-#include "internal/cryptlib.h"
+#include <openssl/x509.h>
+#include <stddef.h>
 #include "crypto/x509.h"
 #include "x509_local.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 typedef struct cached_store_st {
     char *uri;

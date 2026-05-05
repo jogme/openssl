@@ -7,16 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/cryptlib.h"
-#include <openssl/asn1t.h>
-#include <openssl/pem.h>
-#include <openssl/x509v3.h>
-#include <openssl/err.h>
-#include <openssl/cms.h>
-#include <openssl/bio.h>
-#include <openssl/comp.h>
-#include "cms_local.h"
-
+#include "openssl/configuration.h"
 #ifndef OPENSSL_NO_ZLIB
 
 /* CMS CompressedData Utilities */

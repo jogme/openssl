@@ -10,6 +10,9 @@
 
 #include "crypto/evp.h"
 #include "internal/sm3.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 static const EVP_MD sm3_md = {
     NID_sm3,

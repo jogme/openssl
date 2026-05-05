@@ -11,11 +11,15 @@
 #include <openssl/core_dispatch.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
+#include <stddef.h>
 #include "internal/core.h"
 #include "internal/provider.h"
 #include "internal/refcount.h"
 #include "crypto/evp.h"
 #include "evp_local.h"
+#include "openssl/core.h"
+#include "openssl/evperr.h"
+#include "openssl/types.h"
 
 void *evp_skeymgmt_generate(const EVP_SKEYMGMT *skeymgmt, const OSSL_PARAM params[])
 {

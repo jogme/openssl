@@ -13,11 +13,16 @@
 
 #include <openssl/ct.h>
 #include <openssl/err.h>
-#include <openssl/evp.h>
 #include <openssl/tls1.h>
 #include <openssl/x509.h>
-
+#include <stddef.h>
+#include <stdint.h>
 #include "ct_local.h"
+#include "openssl/crypto.h"
+#include "openssl/cterr.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 SCT *SCT_new(void)
 {

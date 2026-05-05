@@ -10,6 +10,7 @@
 
 #include <openssl/err.h>
 #include <openssl/dsaerr.h>
+#include <stddef.h>
 #include "crypto/dsaerr.h"
 
 #ifndef OPENSSL_NO_DSA

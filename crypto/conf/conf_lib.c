@@ -7,17 +7,21 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/e_os.h"
 #include <stdio.h>
 #include <string.h>
-#include "internal/conf.h"
-#include "crypto/ctype.h"
 #include <openssl/crypto.h>
 #include <openssl/err.h>
 #include <openssl/conf.h>
 #include <openssl/conf_api.h>
-#include "conf_local.h"
 #include <openssl/lhash.h>
+#include <limits.h>
+#include <stdlib.h>
+#include "internal/conf.h"
+#include "crypto/ctype.h"
+#include "openssl/bio.h"
+#include "openssl/conferr.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 static CONF_METHOD *default_CONF_method = NULL;
 

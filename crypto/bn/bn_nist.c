@@ -7,8 +7,14 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stdint.h>
+#include <string.h>
 #include "bn_local.h"
-#include "internal/cryptlib.h"
+#include "crypto/bn.h"
+#include "internal/nelem.h"
+#include "openssl/bn.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 #define BN_NIST_192_TOP (192 + BN_BITS2 - 1) / BN_BITS2
 #define BN_NIST_224_TOP (224 + BN_BITS2 - 1) / BN_BITS2

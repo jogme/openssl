@@ -13,10 +13,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/rsa.h"
+#include "openssl/rsaerr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/bn.h>
 #include <openssl/err.h>
+#include <stddef.h>
 #include "crypto/rsa.h"
 #include "rsa_local.h"
 

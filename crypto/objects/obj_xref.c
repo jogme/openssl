@@ -8,10 +8,13 @@
  */
 
 #include <openssl/objects.h>
+#include <openssl/err.h>
+#include <stddef.h>
 #include "obj_xref.h"
 #include "internal/nelem.h"
 #include "internal/thread_once.h"
-#include <openssl/err.h>
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
 
 static STACK_OF(nid_triple) *sig_app, *sigx_app;
 static CRYPTO_RWLOCK *sig_lock;

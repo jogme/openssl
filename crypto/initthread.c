@@ -8,12 +8,15 @@
  */
 
 #include <openssl/crypto.h>
-#include <openssl/core_dispatch.h>
+#include <stddef.h>
 #include "crypto/cryptlib.h"
-#include "prov/providercommon.h"
 #include "internal/thread_once.h"
 #include "internal/threads_common.h"
-#include "crypto/context.h"
+#include "internal/cryptlib.h"
+#include "openssl/core.h"
+#include "openssl/e_os2.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 #ifdef FIPS_MODULE
 #include "prov/provider_ctx.h"

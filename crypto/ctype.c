@@ -7,10 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <string.h>
-#include <stdio.h>
 #include "crypto/ctype.h"
-#include <openssl/ebcdic.h>
 
 /*
  * Define the character classes for each character in the seven bit ASCII

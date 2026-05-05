@@ -10,12 +10,16 @@
 
 #include <openssl/err.h>
 #include <openssl/bn.h>
-#include <openssl/core.h>
-#include <openssl/evp.h>
 #include <openssl/rand.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "crypto/bn.h"
 #include "crypto/security_bits.h"
 #include "rsa_local.h"
+#include "crypto/rsa.h"
+#include "openssl/configuration.h"
+#include "openssl/rsaerr.h"
+#include "openssl/types.h"
 
 #define RSA_FIPS186_5_MIN_KEYGEN_KEYSIZE 2048
 #define RSA_FIPS186_5_MIN_KEYGEN_STRENGTH 112

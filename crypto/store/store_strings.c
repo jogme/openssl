@@ -8,7 +8,7 @@
  */
 
 #include <openssl/store.h>
-
+#include <stddef.h>
 #include "internal/nelem.h"
 
 static const char *const type_strings[] = {

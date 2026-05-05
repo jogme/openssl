@@ -7,11 +7,17 @@
  * https://www.openssl.org/source/license.html
  */
 #include <stddef.h>
-#include <string.h>
 #include <openssl/err.h>
 #include <openssl/proverr.h>
+#include <stdint.h>
 #include "slh_dsa_local.h"
 #include "slh_dsa_key.h"
+#include "crypto/slh_dsa.h"
+#include "crypto/slh_dsa/slh_adrs.h"
+#include "crypto/slh_dsa/slh_hash.h"
+#include "crypto/slh_dsa/slh_params.h"
+#include "internal/packet.h"
+#include "openssl/crypto.h"
 
 #define SLH_MAX_M 49 /* See slh_params.c */
 /* The size of md is (21..40 bytes) - since a is in bits round up to nearest byte */

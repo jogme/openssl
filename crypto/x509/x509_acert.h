@@ -11,6 +11,7 @@
 #define OSSL_CRYPTO_X509_X509_ACERT_H
 
 #include <crypto/x509_acert.h>
+#include "openssl/asn1.h"
 
 #define X509_ACERT_ISSUER_V2 1
 

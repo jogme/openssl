@@ -7,10 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/e_os.h"
-#include <openssl/e_os2.h>
 #include <openssl/err.h>
 #include <openssl/ui.h>
+#include <features.h>
+#include "openssl/crypto.h"
+#include "openssl/types.h"
+#include "openssl/uierr.h"
 
 #ifndef OPENSSL_NO_UI_CONSOLE
 /*
@@ -50,7 +52,6 @@
 #endif
 
 #include "ui_local.h"
-#include "internal/cryptlib.h"
 
 #ifdef OPENSSL_SYS_VMS /* prototypes for sys$whatever */
 #include <starlet.h>
@@ -105,6 +106,7 @@
 
 #ifdef TERMIOS
 #include <termios.h>
+
 #define TTY_STRUCT struct termios
 #define TTY_FLAGS c_lflag
 #define TTY_get(tty, data) tcgetattr(tty, data)
@@ -113,6 +115,7 @@
 
 #ifdef TERMIO
 #include <termio.h>
+
 #define TTY_STRUCT struct termio
 #define TTY_FLAGS c_lflag
 #define TTY_get(tty, data) ioctl(tty, TCGETA, data)
@@ -121,14 +124,11 @@
 
 #ifdef SGTTY
 #include <sgtty.h>
+
 #define TTY_STRUCT struct sgttyb
 #define TTY_FLAGS sg_flags
 #define TTY_get(tty, data) ioctl(tty, TIOCGETP, data)
 #define TTY_set(tty, data) ioctl(tty, TIOCSETP, data)
-#endif
-
-#if !defined(_LIBC) && !defined(OPENSSL_SYS_MSDOS) && !defined(OPENSSL_SYS_VMS) && !(defined(OPENSSL_SYS_TANDEM) && defined(_SPT_MODEL_))
-#include <sys/ioctl.h>
 #endif
 
 #ifdef OPENSSL_SYS_MSDOS
@@ -140,6 +140,7 @@
 #include <iodef.h>
 #include <ttdef.h>
 #include <descrip.h>
+
 struct IOSB {
     short iosb$w_value;
     short iosb$w_count;

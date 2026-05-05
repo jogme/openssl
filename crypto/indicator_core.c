@@ -8,10 +8,11 @@
  */
 
 #include <openssl/indicator.h>
-#include <openssl/core_names.h>
-#include <openssl/params.h>
+#include <stddef.h>
 #include "internal/cryptlib.h"
 #include "crypto/context.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 typedef struct indicator_cb_st {
     OSSL_INDICATOR_CALLBACK *cb;

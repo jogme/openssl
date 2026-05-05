@@ -8,12 +8,14 @@
  */
 
 #include <internal/thread_arch.h>
+#include <pthread.h>
+#include <time.h>
+#include "internal/time.h"
+#include "openssl/crypto.h"
 
 #if defined(OPENSSL_THREADS_POSIX)
 #define _GNU_SOURCE
 #include <errno.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 static void *thread_start_thunk(void *vthread)
 {

@@ -13,6 +13,10 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/ec.h"
+#include "openssl/core.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
@@ -20,7 +24,6 @@
 #include <openssl/ec.h>
 #include <openssl/evp.h>
 #include <openssl/kdf.h>
-#include "ec_local.h"
 
 /* Key derivation function from X9.63/SECG */
 int ossl_ecdh_kdf_X9_63(unsigned char *out, size_t outlen,

@@ -9,18 +9,28 @@
 
 /* X509 v3 extension utilities */
 
-#include "internal/e_os.h"
-#include "internal/cryptlib.h"
-#include <stdio.h>
 #include <string.h>
-#include "crypto/ctype.h"
 #include <openssl/conf.h>
 #include <openssl/crypto.h>
 #include <openssl/x509v3.h>
-#include "crypto/x509.h"
 #include <openssl/bn.h>
+#include <stdint.h>
+#include "internal/cryptlib.h"
+#include "crypto/ctype.h"
+#include "crypto/x509.h"
 #include "ext_dat.h"
 #include "x509_local.h"
+#include "crypto/asn1.h"
+#include "internal/common.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "openssl/x509v3err.h"
 
 static char *strip_spaces(char *name);
 static int sk_strcmp(const char *const *a, const char *const *b);

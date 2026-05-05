@@ -10,6 +10,7 @@
 
 #include <openssl/err.h>
 #include <openssl/pemerr.h>
+#include <stddef.h>
 #include "crypto/pemerr.h"
 
 #ifndef OPENSSL_NO_ERR

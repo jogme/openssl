@@ -10,6 +10,9 @@
 #if !defined(OSSL_LIBCRYPTO_EC_ECX_BACKEND_H)
 #define OSSL_LIBCRYPTO_EC_ECX_BACKEND_H
 
+#include "crypto/ecx.h"
+#include "openssl/evp.h"
+
 #define ISX448(id) ((id) == EVP_PKEY_X448)
 #define IS25519(id) ((id) == EVP_PKEY_X25519 || (id) == EVP_PKEY_ED25519)
 #define KEYLENID(id) (IS25519(id) ? X25519_KEYLEN                        \

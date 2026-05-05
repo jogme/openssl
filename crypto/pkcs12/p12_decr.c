@@ -8,11 +8,17 @@
  */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/pkcs12.h>
 #include <openssl/trace.h>
-
 #include <crypto/asn1.h>
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/pkcs12err.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 /*
  * Encrypt/Decrypt a buffer based on password and algor, result in a

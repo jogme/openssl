@@ -7,19 +7,24 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/cryptlib.h"
-#include "internal/rcu.h"
-#include <stdio.h>
 #include <ctype.h>
 #include <openssl/crypto.h>
 #include <openssl/conf.h>
-#include "internal/conf.h"
 #include <openssl/conf_api.h>
-#include "internal/dso.h"
-#include "internal/thread_once.h"
 #include <openssl/x509.h>
 #include <openssl/trace.h>
-#include "conf_local.h"
+#include <string.h>
+#include "internal/cryptlib.h"
+#include "internal/rcu.h"
+#include "internal/conf.h"
+#include "internal/dso.h"
+#include "internal/thread_once.h"
+#include "internal/common.h"
+#include "openssl/bio.h"
+#include "openssl/conferr.h"
+#include "openssl/err.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 DEFINE_STACK_OF(CONF_MODULE)
 DEFINE_STACK_OF(CONF_IMODULE)

@@ -11,8 +11,11 @@
 #define OSSL_LIBCRYPTO_ML_DSA_ML_DSA_KEY_H
 
 #include <openssl/e_os2.h>
+#include <stdint.h>
 #include "ml_dsa_local.h"
 #include "ml_dsa_vector.h"
+#include "crypto/ml_dsa.h"
+#include "openssl/types.h"
 
 /* NOTE - any changes to this struct may require updates to ossl_ml_dsa_dup() */
 struct ml_dsa_key_st {

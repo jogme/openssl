@@ -13,15 +13,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/ffc.h"
+#include "openssl/dsa.h"
+#include "openssl/opensslconf.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/opensslconf.h>
 #include <stdio.h>
-#include "internal/cryptlib.h"
-#include <openssl/evp.h>
-#include <openssl/bn.h>
-#include <openssl/rand.h>
-#include <openssl/sha.h>
 #include "crypto/dsa.h"
 #include "dsa_local.h"
 

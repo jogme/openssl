@@ -8,8 +8,9 @@
  */
 
 #include <openssl/crypto.h>
-#include "internal/e_os.h"
+#include <stdint.h>
 #include "internal/time.h"
+#include "openssl/e_os2.h"
 
 /* system-specific variants defining OSSL_sleep() */
 #if (defined(OPENSSL_SYS_UNIX) || defined(__DJGPP__)) && !defined(OPENSSL_USE_SLEEP_BUSYLOOP)
@@ -27,6 +28,7 @@
  */
 
 #include <unistd.h>
+
 static void ossl_sleep_millis(uint64_t millis)
 {
     unsigned int s = (unsigned int)(millis / 1000);
@@ -46,6 +48,7 @@ static void ossl_sleep_millis(uint64_t millis)
 #elif defined(__TANDEM) && !defined(_REENTRANT)
 
 #include <cextdecs.h(PROCESS_DELAY_)>
+
 static void ossl_sleep_millis(uint64_t millis)
 {
     /* HPNS does not support usleep for non threaded apps */
@@ -56,6 +59,7 @@ static void ossl_sleep_millis(uint64_t millis)
 
 /* nanosleep is defined by POSIX.1-2001 */
 #include <time.h>
+
 static void ossl_sleep_millis(uint64_t millis)
 {
     struct timespec ts;

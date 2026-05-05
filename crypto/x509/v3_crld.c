@@ -7,16 +7,22 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/conf.h>
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
 #include <openssl/x509v3.h>
-
+#include <string.h>
 #include "crypto/x509.h"
 #include "ext_dat.h"
 #include "x509_local.h"
+#include "internal/common.h"
+#include "openssl/bio.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "openssl/x509v3err.h"
 
 static void *v2i_crld(const X509V3_EXT_METHOD *method,
     X509V3_CTX *ctx, STACK_OF(CONF_VALUE) *nval);

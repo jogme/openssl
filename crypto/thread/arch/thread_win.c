@@ -7,8 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <internal/thread_arch.h>
-
 #if defined(OPENSSL_THREADS_WINNT)
 #include <process.h>
 #include <windows.h>

@@ -11,7 +11,12 @@
 #include <openssl/err.h>
 #include <openssl/kdf.h>
 #include <openssl/core_names.h>
-#include "internal/numbers.h"
+#include <stddef.h>
+#include <stdint.h>
+#include "openssl/core.h"
+#include "openssl/evperr.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_SCRYPT
 

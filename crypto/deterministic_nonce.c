@@ -9,11 +9,14 @@
 
 #include <string.h>
 #include <openssl/bn.h>
-#include <openssl/evp.h>
 #include <openssl/core_names.h>
 #include <openssl/kdf.h>
 #include "internal/deterministic_nonce.h"
 #include "crypto/bn.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 
 /*
  * Convert a Bit String to an Integer (See RFC 6979 Section 2.3.2)

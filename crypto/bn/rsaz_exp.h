@@ -19,9 +19,11 @@
 #if defined(OPENSSL_BN_ASM_MONT) && (defined(__x86_64) || defined(__x86_64__) || defined(_M_AMD64) || defined(_M_X64))
 #define RSAZ_ENABLED
 
+#include <stddef.h>
 #include <openssl/bn.h>
 #include "internal/constant_time.h"
 #include "bn_local.h"
+#include "openssl/e_os2.h"
 
 void RSAZ_1024_mod_exp_avx2(BN_ULONG result[16],
     const BN_ULONG base_norm[16],

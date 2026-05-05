@@ -13,24 +13,24 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bn.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/evperr.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
-#include <openssl/dh.h>
-#include <openssl/rsa.h>
 #include <openssl/kdf.h>
-#include "internal/cryptlib.h"
-#ifndef FIPS_MODULE
-#include "crypto/asn1.h"
-#endif
+#include <limits.h>
+#include <stdint.h>
+#include <string.h>
 #include "crypto/evp.h"
-#include "crypto/dh.h"
-#include "crypto/ec.h"
-#include "internal/ffc.h"
-#include "internal/numbers.h"
 #include "internal/provider.h"
 #include "internal/common.h"
 #include "evp_local.h"

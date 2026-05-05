@@ -7,12 +7,14 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/configuration.h>
 #include <openssl/e_os2.h>
 #include <openssl/types.h>
 #include <openssl/crypto.h>
 #include <internal/thread.h>
 #include <internal/thread_arch.h>
+#include <stddef.h>
+#include <stdint.h>
+#include "crypto/context.h"
 
 #if !defined(OPENSSL_NO_DEFAULT_THREAD_POOL)
 

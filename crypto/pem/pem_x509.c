@@ -7,12 +7,8 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
-#include <openssl/bio.h>
-#include <openssl/evp.h>
 #include <openssl/x509.h>
-#include <openssl/pkcs7.h>
 #include <openssl/pem.h>
+#include "openssl/types.h"
 
 IMPLEMENT_PEM_rw(X509, X509, PEM_STRING_X509, X509)

@@ -10,6 +10,13 @@
 #include <openssl/err.h>
 #include <openssl/asn1t.h>
 #include <openssl/x509_acert.h>
+#include <stddef.h>
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/objects.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509v3.h"
 
 /*-
  * Definition of IetfAttrSyntax from RFC 5755 4.4

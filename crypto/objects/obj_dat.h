@@ -16,8 +16,10 @@
 
 #include <openssl/asn1.h>
 #include <openssl/objects.h>
-
 #include <crypto/asn1.h>
+#include <stddef.h>
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 /* Serialized OID's */
 static const unsigned char so[9582] = {

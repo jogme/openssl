@@ -8,16 +8,10 @@
  */
 
 #include <stdio.h>
-#include <time.h>
-#include <errno.h>
-
-#include "internal/cryptlib.h"
-#include <openssl/asn1.h>
 #include <openssl/x509.h>
 #include <openssl/types.h>
 #include "x509_local.h"
-
-#include <crypto/asn1.h>
+#include "openssl/crypto.h"
 
 X509_LOOKUP_METHOD *X509_LOOKUP_meth_new(const char *name)
 {

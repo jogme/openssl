@@ -8,13 +8,17 @@
  */
 
 #include <string.h>
-#include "crypto/ctype.h"
 #include <assert.h>
-
 #include <openssl/err.h>
 #include <openssl/lhash.h>
+#include "crypto/ctype.h"
 #include "internal/common.h"
 #include "store_local.h"
+#include "internal/thread_once.h"
+#include "openssl/crypto.h"
+#include "openssl/store.h"
+#include "openssl/storeerr.h"
+#include "openssl/types.h"
 
 static CRYPTO_RWLOCK *registry_lock;
 static CRYPTO_ONCE registry_init = CRYPTO_ONCE_STATIC_INIT;
@@ -288,6 +292,7 @@ void ossl_store_destroy_loaders_int(void)
  */
 
 IMPLEMENT_LHASH_DOALL_ARG_CONST(OSSL_STORE_LOADER, void);
+
 int OSSL_STORE_do_all_loaders(void (*do_function)(const OSSL_STORE_LOADER
                                                       *loader,
                                   void *do_arg),

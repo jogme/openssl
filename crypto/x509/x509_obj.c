@@ -7,13 +7,20 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/objects.h>
 #include <openssl/x509.h>
 #include <openssl/buffer.h>
+#include <string.h>
+#include "internal/cryptlib.h"
 #include "crypto/x509.h"
 #include "crypto/ctype.h"
+#include "crypto/asn1.h"
+#include "openssl/asn1.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
+#include "openssl/x509err.h"
 
 /*
  * Limit to ensure we don't overflow: much greater than

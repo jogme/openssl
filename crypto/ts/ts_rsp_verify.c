@@ -7,14 +7,27 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <openssl/objects.h>
 #include <openssl/ts.h>
 #include <openssl/pkcs7.h>
+#include <openssl/x509.h>
+#include <string.h>
 #include "internal/cryptlib.h"
 #include "internal/sizes.h"
-#include "crypto/ess.h"
 #include "ts_local.h"
+#include "internal/nelem.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/ess.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/tserr.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "openssl/x509v3.h"
 
 static int ts_verify_cert(X509_STORE *store, STACK_OF(X509) *untrusted,
     X509 *signer, STACK_OF(X509) **chain);

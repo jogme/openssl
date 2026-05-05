@@ -11,8 +11,10 @@
 #include <openssl/core_names.h>
 #include <openssl/evp.h>
 #include <openssl/obj_mac.h>
+#include <stddef.h>
 #include "internal/nelem.h"
 #include "crypto/rsa.h"
+#include "openssl/types.h"
 
 static int meth2nid(const void *meth,
     int (*meth_is_a)(const void *meth, const char *name),

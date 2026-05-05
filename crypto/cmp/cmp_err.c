@@ -10,6 +10,7 @@
 
 #include <openssl/err.h>
 #include <openssl/cmperr.h>
+#include <stddef.h>
 #include "crypto/cmperr.h"
 
 #ifndef OPENSSL_NO_CMP

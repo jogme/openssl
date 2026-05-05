@@ -15,10 +15,7 @@
 #include "internal/deprecated.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <openssl/crypto.h>
 #include <openssl/des.h>
 #include <openssl/mdc2.h>
 

@@ -10,6 +10,7 @@
 
 #include <openssl/err.h>
 #include <openssl/bnerr.h>
+#include <stddef.h>
 #include "crypto/bnerr.h"
 
 #ifndef OPENSSL_NO_ERR

@@ -7,21 +7,13 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include "openssl/configuration.h"
 #if defined(_WIN32)
 #include <windows.h>
 #if defined(_WIN32_WINNT) && _WIN32_WINNT >= 0x600
 #define USE_RWLOCK
 #endif
 #endif
-#include <assert.h>
-
-#include <openssl/crypto.h>
-#include <crypto/cryptlib.h>
-#include "internal/common.h"
-#include "internal/thread_arch.h"
-#include "internal/threads_common.h"
-#include "internal/rcu.h"
-#include "rcu_internal.h"
 
 #if defined(OPENSSL_THREADS) && !defined(CRYPTO_TDEBUG) && defined(OPENSSL_SYS_WINDOWS)
 

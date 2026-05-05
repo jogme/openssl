@@ -18,6 +18,16 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/common.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/params.h"
+#include "openssl/pemerr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/pem.h>
@@ -27,9 +37,8 @@
 #include <openssl/rsa.h>
 #include <openssl/kdf.h>
 #include <openssl/core_names.h>
-#include "internal/cryptlib.h"
+#include <string.h>
 #include "crypto/pem.h"
-#include "crypto/evp.h"
 
 /*
  * Utility function: read a DWORD (4 byte unsigned integer) in little endian

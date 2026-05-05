@@ -15,25 +15,33 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/common.h"
+#include "internal/sizes.h"
+#include "openssl/bio.h"
+#include "openssl/bn.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/rsaerr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
-
 /* The following includes get us all the EVP_PKEY_CTRL macros */
 #include <openssl/dh.h>
 #include <openssl/dsa.h>
 #include <openssl/ec.h>
 #include <openssl/rsa.h>
 #include <openssl/kdf.h>
-
 /* This include gets us all the OSSL_PARAM key string macros */
 #include <openssl/core_names.h>
-
 #include <openssl/err.h>
 #include <openssl/evperr.h>
 #include <openssl/params.h>
+#include <stdlib.h>
 #include "internal/nelem.h"
-#include "internal/cryptlib.h"
 #include "internal/ffc.h"
 #include "crypto/evp.h"
 #include "crypto/dh.h"

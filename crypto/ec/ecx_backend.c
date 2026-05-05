@@ -8,9 +8,7 @@
  */
 
 #include <string.h>
-#include <openssl/core_names.h>
 #include <openssl/params.h>
-#include <openssl/ec.h>
 #include <openssl/rand.h>
 #include <openssl/err.h>
 #ifndef FIPS_MODULE
@@ -18,6 +16,14 @@
 #endif
 #include "crypto/ecx.h"
 #include "ecx_backend.h"
+#include "crypto/types.h"
+#include "internal/refcount.h"
+#include "openssl/asn1.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/ecerr.h"
+#include "openssl/objects.h"
+#include "openssl/types.h"
 
 /*
  * The intention with the "backend" source file is to offer backend functions

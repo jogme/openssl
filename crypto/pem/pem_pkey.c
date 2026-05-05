@@ -12,19 +12,23 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/encoder.h"
+#include "openssl/err.h"
+#include "openssl/pemerr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include <openssl/buffer.h>
-#include <openssl/objects.h>
 #include <openssl/evp.h>
 #include <openssl/x509.h>
 #include <openssl/pkcs12.h>
 #include <openssl/pem.h>
-#include <openssl/dh.h>
 #include <openssl/decoder.h>
-#include <openssl/ui.h>
-#include "internal/cryptlib.h"
+#include <string.h>
 #include "internal/passphrase.h"
 #include "crypto/asn1.h"
 #include "crypto/x509.h"

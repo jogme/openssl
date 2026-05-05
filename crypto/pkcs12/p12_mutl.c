@@ -13,18 +13,26 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/asn1.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/pkcs12err.h"
+#include "openssl/pkcs7.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
-#include "crypto/evp.h"
 #include <openssl/crypto.h>
-#include <openssl/hmac.h>
 #include <openssl/rand.h>
 #include <openssl/pkcs12.h>
-#include "p12_local.h"
-
 #include <crypto/asn1.h>
+#include <limits.h>
+#include <string.h>
+#include "internal/cryptlib.h"
+#include "crypto/evp.h"
+#include "p12_local.h"
 
 static int pkcs12_pbmac1_pbkdf2_key_gen(const char *pass, int passlen,
     unsigned char *salt, int saltlen,

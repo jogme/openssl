@@ -7,18 +7,23 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-
-#include "internal/cryptlib.h"
 #include <openssl/crypto.h>
-#include <openssl/buffer.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
-
+#include <limits.h>
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
+#include "internal/cryptlib.h"
 #include "crypto/ctype.h"
 #include "crypto/x509.h"
-
 #include "x509_local.h"
+#include "internal/nelem.h"
+#include "openssl/asn1.h"
+#include "openssl/err.h"
+#include "openssl/objects.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 typedef enum {
     OSSL_CHARSET_NONASCII,

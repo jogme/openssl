@@ -14,14 +14,23 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/ec.h"
+#include "openssl/bn.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/ec.h"
+#include "openssl/ecerr.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include "internal/cryptlib.h"
 #include <string.h>
-#include "ec_local.h"
-#include "internal/refcount.h"
 #include <openssl/err.h>
 #include <openssl/self_test.h>
+#include <limits.h>
+#include "ec_local.h"
+#include "internal/refcount.h"
 #include "prov/providercommon.h"
 #include "prov/ecx.h"
 #include "crypto/bn.h"

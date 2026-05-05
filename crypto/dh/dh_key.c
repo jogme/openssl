@@ -7,18 +7,25 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <limits.h>
+#include <string.h>
 /*
  * DH low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "internal/ffc.h"
+#include "openssl/bn.h"
+#include "openssl/crypto.h"
+#include "openssl/dh.h"
+#include "openssl/dherr.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
 #include "dh_local.h"
-#include "crypto/bn.h"
 #include "crypto/dh.h"
 #include "crypto/security_bits.h"
 

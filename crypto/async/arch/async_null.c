@@ -7,9 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-/* This must be the first #include file */
-#include "../async_local.h"
-
 #ifdef ASYNC_NULL
 int ASYNC_is_capable(void)
 {

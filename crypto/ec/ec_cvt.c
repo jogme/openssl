@@ -8,15 +8,17 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 /*
  * ECDSA low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/ec.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <openssl/err.h>
 #include "crypto/bn.h"
 #include "ec_local.h"
 

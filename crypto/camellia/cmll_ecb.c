@@ -16,7 +16,6 @@
 /* IWYU pragma: end_keep */
 
 #include <openssl/camellia.h>
-#include "cmll_local.h"
 
 void Camellia_ecb_encrypt(const unsigned char *in, unsigned char *out,
     const CAMELLIA_KEY *key, int enc)

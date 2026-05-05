@@ -13,19 +13,31 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/ec.h"
+#include "internal/common.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/core.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/ecerr.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/x509.h>
 #include <openssl/ec.h>
 #include <openssl/bn.h>
-#include <openssl/asn1t.h>
+#include <openssl/core_names.h>
+#include <openssl/param_build.h>
 #include "crypto/asn1.h"
 #include "crypto/evp.h"
 #include "crypto/x509.h"
-#include <openssl/core_names.h>
-#include <openssl/param_build.h>
 #include "ec_local.h"
 
 static int eckey_param2type(int *pptype, void **ppval, const EC_KEY *ec_key)

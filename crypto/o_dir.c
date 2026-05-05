@@ -7,9 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/e_os.h"
-#include <errno.h>
-
 /*
  * The routines really come from the Levitte Programming, so to make life
  * simple, let's just use the raw files and hack the symbols to fit our
@@ -21,6 +18,7 @@
 #define LP_find_file_end OPENSSL_DIR_end
 
 #include "internal/o_dir.h"
+#include "openssl/e_os2.h"
 
 /* clang-format off */
 #define LPDIR_H

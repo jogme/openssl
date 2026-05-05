@@ -12,10 +12,13 @@
 #endif
 
 #include <openssl/ct.h>
-#include <openssl/err.h>
+#include <stdint.h>
+#include <time.h>
 #include "internal/time.h"
-
 #include "ct_local.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 /*
  * Number of seconds in the future that an SCT timestamp can be, by default,

@@ -10,6 +10,7 @@
 
 #include <openssl/err.h>
 #include <openssl/cterr.h>
+#include <stddef.h>
 #include "crypto/cterr.h"
 
 #ifndef OPENSSL_NO_CT

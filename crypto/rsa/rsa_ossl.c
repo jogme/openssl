@@ -13,9 +13,16 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/rsa.h"
+#include "openssl/bn.h"
+#include "openssl/crypto.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/rsa.h"
+#include "openssl/rsaerr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include "internal/cryptlib.h"
 #include "crypto/bn.h"
 #include "crypto/sparse_array.h"
 #include "rsa_local.h"
@@ -27,6 +34,8 @@
 #include <openssl/evp.h>
 #include <openssl/sha.h>
 #include <openssl/hmac.h>
+#include <stdint.h>
+#include <string.h>
 
 DEFINE_SPARSE_ARRAY_OF(BN_BLINDING);
 

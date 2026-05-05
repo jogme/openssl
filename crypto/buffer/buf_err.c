@@ -9,7 +9,7 @@
  */
 
 #include <openssl/err.h>
-#include <openssl/buffererr.h>
+#include <stddef.h>
 #include "crypto/buffererr.h"
 
 #ifndef OPENSSL_NO_ERR

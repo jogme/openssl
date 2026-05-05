@@ -32,10 +32,16 @@
 
 #include <openssl/crypto.h>
 #include <crypto/cryptlib.h>
-#include <crypto/sparse_array.h>
+#include <pthread.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/cryptlib.h"
 #include "internal/threads_common.h"
 #include "internal/rcu.h"
+#include "internal/common.h"
+#include "openssl/configuration.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 #ifdef REPORT_RWLOCK_CONTENTION
 #include <fcntl.h>
 #include <stdbool.h>
@@ -65,7 +71,6 @@
 #if defined(OPENSSL_THREADS) && !defined(CRYPTO_TDEBUG) && !defined(OPENSSL_SYS_WINDOWS)
 
 #if defined(OPENSSL_SYS_UNIX)
-#include <sys/types.h>
 #include <unistd.h>
 #endif
 

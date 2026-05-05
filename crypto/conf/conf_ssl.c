@@ -7,7 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <string.h>
 #include <openssl/conf.h>
 #include <openssl/err.h>
@@ -15,6 +14,10 @@
 #include "internal/sslconf.h"
 #include "internal/core.h"
 #include "internal/cryptlib.h"
+#include "openssl/conferr.h"
+#include "openssl/crypto.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 typedef struct ssl_module_st SSL_MODULE;
 

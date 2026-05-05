@@ -8,8 +8,10 @@
  */
 
 #include <openssl/opensslconf.h>
-
 #include <openssl/evp.h>
+#include "openssl/configuration.h"
+#include "openssl/opensslconf.h"
+#include "openssl/types.h"
 
 /*
  * Define some deprecated functions, so older programs don't crash and burn

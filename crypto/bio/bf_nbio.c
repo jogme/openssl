@@ -9,11 +9,13 @@
 
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "internal/bio.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include <errno.h>
-#include "internal/cryptlib.h"
 #include <openssl/rand.h>
 
 /*

@@ -7,12 +7,14 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/cryptlib.h"
-#include <openssl/x509.h>
 #include <openssl/x509v3.h>
+#include <stddef.h>
 #include "crypto/x509.h"
-
 #include "pcy_local.h"
+#include "openssl/asn1.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/types.h"
 
 /*
  * Set policy mapping entries in cache. Note: this modifies the passed

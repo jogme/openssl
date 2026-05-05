@@ -11,19 +11,26 @@
  * for the EdelKey project.
  */
 
-/* All the SRP APIs in this file are deprecated */
 #define OPENSSL_SUPPRESS_DEPRECATED
 
+/* All the SRP APIs in this file are deprecated */
+#include <limits.h>
+#include <string.h>
+#include "openssl/bio.h"
+#include "openssl/bn.h"
+#include "openssl/crypto.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+
 #ifndef OPENSSL_NO_SRP
-#include "internal/cryptlib.h"
-#include "crypto/evp.h"
 #include <openssl/sha.h>
 #include <openssl/srp.h>
 #include <openssl/evp.h>
-#include <openssl/buffer.h>
 #include <openssl/rand.h>
 #include <openssl/txt_db.h>
 #include <openssl/err.h>
+#include "crypto/evp.h"
 
 #define SRP_RANDOM_SALT_LEN 20
 #define MAX_LEN 2500

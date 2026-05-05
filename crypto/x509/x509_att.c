@@ -8,15 +8,16 @@
  */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/safestack.h>
 #include <openssl/asn1.h>
 #include <openssl/objects.h>
-#include <openssl/evp.h>
 #include <openssl/x509.h>
-#include <openssl/x509v3.h>
 #include "crypto/x509.h"
 #include "x509_local.h"
+#include "crypto/asn1.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
+#include "openssl/x509err.h"
 
 int X509at_get_attr_count(const STACK_OF(X509_ATTRIBUTE) *x)
 {

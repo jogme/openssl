@@ -8,7 +8,6 @@
  */
 
 #include <ctype.h>
-
 #include <openssl/core_names.h>
 #include <openssl/bio.h>
 #include <openssl/encoder.h>
@@ -17,11 +16,24 @@
 #include <openssl/provider.h>
 #include <openssl/trace.h>
 #include <crypto/bn.h>
+#include <stdio.h>
+#include <string.h>
 #include "internal/bio.h"
 #include "internal/ffc.h"
 #include "internal/provider.h"
 #include "internal/encoder.h"
 #include "encoder_local.h"
+#include "internal/common.h"
+#include "internal/passphrase.h"
+#include "internal/property.h"
+#include "openssl/bn.h"
+#include "openssl/configuration.h"
+#include "openssl/core.h"
+#include "openssl/crypto.h"
+#include "openssl/encodererr.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 /* Number of octets per line */
 #define LABELED_BUF_PRINT_WIDTH 16

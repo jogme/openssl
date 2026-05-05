@@ -13,13 +13,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bn.h"
+#include "openssl/err.h"
+#include "openssl/rsa.h"
+#include "openssl/rsaerr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include <openssl/crypto.h>
-#include "internal/cryptlib.h"
-#include "crypto/bn.h"
-#include <openssl/rand.h>
 #include "rsa_local.h"
 
 int RSA_bits(const RSA *r)

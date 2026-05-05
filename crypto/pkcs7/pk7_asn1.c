@@ -8,11 +8,15 @@
  */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/asn1t.h>
 #include <openssl/pkcs7.h>
 #include <openssl/x509.h>
-#include "pk7_local.h"
+#include "crypto/pkcs7.h"
+#include "openssl/asn1.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 /* PKCS#7 ASN1 module */
 

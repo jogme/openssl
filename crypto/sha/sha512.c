@@ -13,53 +13,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/opensslconf.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
 #include <openssl/opensslconf.h>
 #include <openssl/byteorder.h>
-/*-
- * IMPLEMENTATION NOTES.
- *
- * As you might have noticed, 32-bit hash algorithms:
- *
- * - permit SHA_LONG to be wider than 32-bit
- * - optimized versions implement two transform functions: one operating
- *   on [aligned] data in host byte order, and one operating on data in input
- *   stream byte order;
- * - share common byte-order neutral collector and padding function
- *   implementations, crypto/md32_common.inc;
- *
- * Neither of the above applies to this SHA-512 implementation. Reasons
- * [in reverse order] are:
- *
- * - it's the only 64-bit hash algorithm for the moment of this writing,
- *   there is no need for common collector/padding implementation [yet];
- * - by supporting only one transform function [which operates on
- *   *aligned* data in input stream byte order, big-endian in this case]
- *   we minimize burden of maintenance in two ways: a) collector/padding
- *   function is simpler; b) only one transform function to stare at;
- * - SHA_LONG64 is required to be exactly 64-bit in order to be able to
- *   apply a number of optimizations to mitigate potential performance
- *   penalties caused by previous design decision;
- *
- * Caveat lector.
- *
- * Implementation relies on the fact that "long long" is 64-bit on
- * both 32- and 64-bit platforms. If some compiler vendor comes up
- * with 128-bit long long, adjustment to sha.h would be required.
- * As this implementation relies on 64-bit integer type, it's totally
- * inappropriate for platforms which don't support it, most notably
- * 16-bit platforms.
- */
-#include <stdlib.h>
 #include <string.h>
-
-#include <openssl/crypto.h>
 #include <openssl/sha.h>
-#include <openssl/opensslv.h>
-
-#include "internal/cryptlib.h"
+#include <stdint.h>
 #include "crypto/sha.h"
 
 #if defined(__i386) || defined(__i386__) || defined(_M_IX86) || defined(__x86_64) || defined(_M_AMD64) || defined(_M_X64) || defined(__s390__) || defined(__s390x__) || defined(__aarch64__) || defined(SHA512_ASM)

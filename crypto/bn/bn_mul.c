@@ -8,8 +8,11 @@
  */
 
 #include <assert.h>
-#include "internal/cryptlib.h"
+#include <string.h>
 #include "bn_local.h"
+#include "crypto/bn.h"
+#include "openssl/bn.h"
+#include "openssl/types.h"
 
 #if defined(OPENSSL_NO_ASM) || !defined(OPENSSL_BN_ASM_PART_WORDS)
 /*

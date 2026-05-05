@@ -11,7 +11,10 @@
 #define OSSL_INTERNAL_QUIC_VLINT_H
 #pragma once
 
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/e_os.h"
+#include "openssl/e_os2.h"
 
 #ifndef OPENSSL_NO_QUIC
 

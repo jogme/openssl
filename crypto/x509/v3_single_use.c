@@ -8,11 +8,12 @@
  */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/asn1.h>
-#include <openssl/asn1t.h>
 #include <openssl/x509v3.h>
 #include "ext_dat.h"
+#include "openssl/crypto.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 static int i2r_SINGLE_USE(X509V3_EXT_METHOD *method,
     void *su, BIO *out,

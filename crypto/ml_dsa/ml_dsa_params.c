@@ -7,9 +7,9 @@
  * https://www.openssl.org/source/license.html
  */
 #include <stddef.h>
-#include <string.h>
 #include <openssl/evp.h>
 #include "ml_dsa_local.h"
+#include "crypto/ml_dsa.h"
 
 /* See FIPS 204 Section 4 Table 1 & Table 2 */
 #define ML_DSA_44_TAU 39

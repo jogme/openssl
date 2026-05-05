@@ -9,22 +9,27 @@
 
 /* Part of the code in here was originally in conf.c, which is now removed */
 
-#include <stdio.h>
 #include <string.h>
-#include "internal/e_os.h" /* struct stat */
+#include <errno.h>
 #ifdef __TANDEM
 #include <sys/types.h> /* needed for stat.h */
 #include <sys/stat.h> /* struct stat */
 #endif
-#include "internal/cryptlib.h"
-#include "internal/o_dir.h"
 #include <openssl/lhash.h>
 #include <openssl/conf.h>
 #include <openssl/conf_api.h>
-#include "conf_local.h"
-#include "conf_def.h"
 #include <openssl/buffer.h>
 #include <openssl/err.h>
+#include "internal/cryptlib.h"
+#include "internal/o_dir.h"
+#include "conf_def.h"
+#include "internal/common.h"
+#include "openssl/bio.h"
+#include "openssl/bioerr.h"
+#include "openssl/conferr.h"
+#include "openssl/crypto.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 #ifndef OPENSSL_NO_POSIX_IO
 #include <sys/stat.h>
 #ifdef _WIN32

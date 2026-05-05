@@ -7,14 +7,16 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include <openssl/crypto.h>
-#include "internal/cryptlib.h"
 #include <openssl/conf.h>
-#include <openssl/x509.h>
 #include <openssl/x509v3.h>
 #include <openssl/trace.h>
+#include <string.h>
 #include "crypto/evp.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/evperr.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 /* Algorithm configuration module. */
 

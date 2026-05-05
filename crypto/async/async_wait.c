@@ -7,10 +7,11 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 /* This must be the first #include file */
 #include "async_local.h"
-
-#include <openssl/err.h>
+#include "openssl/async.h"
+#include "openssl/crypto.h"
 
 ASYNC_WAIT_CTX *ASYNC_WAIT_CTX_new(void)
 {

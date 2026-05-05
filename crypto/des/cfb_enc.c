@@ -13,11 +13,12 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/des.h"
 /* IWYU pragma: end_keep */
 
-#include "internal/e_os.h"
-#include "des_local.h"
 #include <assert.h>
+#include <string.h>
+#include "des_local.h"
 
 /*
  * The input and output are loaded in multiples of 8 bits. What this means is

@@ -7,16 +7,16 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <string.h>
 /*
  * MD4 low level APIs are deprecated for public use, but still ok for
  * internal use.
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/md4.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include <openssl/opensslv.h>
 #include "md4_local.h"
 
 /*

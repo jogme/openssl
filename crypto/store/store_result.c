@@ -7,9 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/e_os.h"
 #include <string.h>
-
 #include <openssl/core.h>
 #include <openssl/core_names.h>
 #include <openssl/core_object.h>
@@ -24,6 +22,16 @@
 #include "crypto/evp.h"
 #include "crypto/x509.h"
 #include "store_local.h"
+#include "crypto/asn1.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/crypto.h"
+#include "openssl/evp.h"
+#include "openssl/params.h"
+#include "openssl/pem.h"
+#include "openssl/safestack.h"
+#include "openssl/storeerr.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 #ifndef OSSL_OBJECT_PKCS12
 /*

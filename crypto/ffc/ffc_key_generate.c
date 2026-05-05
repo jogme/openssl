@@ -7,7 +7,10 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stddef.h>
 #include "internal/ffc.h"
+#include "openssl/bn.h"
+#include "openssl/types.h"
 
 /*
  * SP800-56Ar3 5.6.1.1.4 Key pair generation by testing candidates.

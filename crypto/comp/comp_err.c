@@ -10,6 +10,7 @@
 
 #include <openssl/err.h>
 #include <openssl/comperr.h>
+#include <stddef.h>
 #include "crypto/comperr.h"
 
 #ifndef OPENSSL_NO_COMP

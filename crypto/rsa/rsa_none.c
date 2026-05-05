@@ -13,11 +13,12 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/err.h"
+#include "openssl/rsaerr.h"
 /* IWYU pragma: end_keep */
 
-#include "internal/cryptlib.h"
-#include <openssl/bn.h>
 #include <openssl/rsa.h>
+#include <string.h>
 
 int RSA_padding_add_none(unsigned char *to, int tlen,
     const unsigned char *from, int flen)

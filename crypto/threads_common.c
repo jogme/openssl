@@ -85,10 +85,13 @@
  */
 
 #include <openssl/crypto.h>
-#include <crypto/cryptlib.h>
 #include <crypto/sparse_array.h>
+#include <stddef.h>
+#include <stdint.h>
 #include "internal/cryptlib.h"
 #include "internal/threads_common.h"
+#include "internal/common.h"
+#include "openssl/types.h"
 
 /**
  * @struct CTX_TABLE_ENTRY

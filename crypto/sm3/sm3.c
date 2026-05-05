@@ -9,8 +9,9 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/e_os2.h>
+#include <string.h>
 #include "sm3_local.h"
+#include "internal/sm3.h"
 
 int ossl_sm3_init(SM3_CTX *c)
 {

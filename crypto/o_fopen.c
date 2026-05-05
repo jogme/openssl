@@ -25,7 +25,6 @@
 #endif
 #endif
 
-#include "internal/e_os.h"
 #include "internal/cryptlib.h"
 
 #if !defined(OPENSSL_NO_STDIO)

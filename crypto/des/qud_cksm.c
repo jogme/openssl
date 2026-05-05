@@ -14,15 +14,15 @@
  * as the MIT implementation.
  */
 
+#include <stddef.h>
 /*
  * DES low level APIs are deprecated for public use, but still ok for internal
  * use.
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/des.h"
 /* IWYU pragma: end_keep */
-
-#include "des_local.h"
 
 #define Q_B0(a) (((DES_LONG)(a)))
 #define Q_B1(a) (((DES_LONG)(a)) << 8)

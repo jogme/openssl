@@ -13,15 +13,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/dsa.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
-#include "dsa_local.h"
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
-#include <openssl/rand.h>
-#include "crypto/asn1_dsa.h"
+#include "dsa_local.h"
 
 /* Override the default free and new methods */
 static int dsa_cb(int operation, ASN1_VALUE **pval, const ASN1_ITEM *it,

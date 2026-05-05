@@ -26,17 +26,18 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/rsa.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/rsa.h"
+#include "openssl/rsaerr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include "internal/constant_time.h"
-
-#include <stdio.h>
-#include "internal/cryptlib.h"
-#include <openssl/bn.h>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
-#include <openssl/sha.h>
-#include "rsa_local.h"
+#include <string.h>
+#include "internal/constant_time.h"
 
 int RSA_padding_add_PKCS1_OAEP(unsigned char *to, int tlen,
     const unsigned char *from, int flen,

@@ -11,7 +11,26 @@
 
 /* CMP functions for PKIMessage checking */
 
+#include <openssl/x509.h>
+#include <stddef.h>
 #include "cmp_local.h"
+#include "crypto/asn1.h"
+#include "crypto/x509.h"
+#include "internal/common.h"
+#include "openssl/asn1.h"
+#include "openssl/bio.h"
+#include "openssl/cmp.h"
+#include "openssl/cmp_util.h"
+#include "openssl/cmperr.h"
+#include "openssl/crmf.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "openssl/x509v3.h"
 
 /* Verify a message protected by signature according to RFC section 5.1.3.3 */
 static int verify_signature(const OSSL_CMP_CTX *cmp_ctx,

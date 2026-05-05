@@ -10,7 +10,16 @@
 #include <openssl/ts.h>
 #include <openssl/err.h>
 #include <openssl/asn1t.h>
+#include <stdio.h>
 #include "ts_local.h"
+#include "openssl/asn1.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/pkcs7.h"
+#include "openssl/tserr.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "openssl/x509v3.h"
 
 ASN1_SEQUENCE(TS_MSG_IMPRINT) = {
     ASN1_SIMPLE(TS_MSG_IMPRINT, hash_algo, X509_ALGOR),

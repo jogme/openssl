@@ -7,8 +7,11 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <stdint.h>
 #include "crypto/rand.h"
 #include "internal/common.h"
+#include "openssl/rand.h"
+#include "openssl/types.h"
 
 /*
  * Implementation an optimal random integer in a range function.

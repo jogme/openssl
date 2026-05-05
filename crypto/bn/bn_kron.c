@@ -7,8 +7,10 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/cryptlib.h"
+#include <stddef.h>
 #include "bn_local.h"
+#include "openssl/bn.h"
+#include "openssl/types.h"
 
 /* least significant word */
 #define BN_lsw(n) (((n)->top == 0) ? (BN_ULONG)0 : (n)->d[0])

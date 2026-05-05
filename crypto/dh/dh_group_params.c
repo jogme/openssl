@@ -15,15 +15,16 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/dh.h"
+#include "openssl/dherr.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include "internal/ffc.h"
 #include "dh_local.h"
-#include <openssl/bn.h>
-#include <openssl/objects.h>
-#include "internal/nelem.h"
 #include "crypto/dh.h"
 
 static DH *dh_param_init(OSSL_LIB_CTX *libctx, const DH_NAMED_GROUP *group)

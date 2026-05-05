@@ -16,6 +16,8 @@
 /* clang-format off */
 
 #include <openssl/objects.h>
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
 
 typedef struct {
     int sign_id;

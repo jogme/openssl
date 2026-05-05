@@ -1,5 +1,4 @@
-#include <openssl/evp.h>
-#include "internal/cryptlib.h"
+#include <stdint.h>
 #include "crypto/evp.h"
 #include "evp_local.h"
 #include "enc_b64_scalar.h"

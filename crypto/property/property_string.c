@@ -11,9 +11,12 @@
 #include <string.h>
 #include <openssl/crypto.h>
 #include <openssl/lhash.h>
-#include "crypto/lhash.h"
 #include "property_local.h"
 #include "crypto/context.h"
+#include "internal/cryptlib.h"
+#include "openssl/err.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 /*
  * Property strings are a consolidation of all strings seen by the property
@@ -33,6 +36,7 @@ typedef struct {
 } PROPERTY_STRING;
 
 DEFINE_LHASH_OF_EX(PROPERTY_STRING);
+
 typedef LHASH_OF(PROPERTY_STRING) PROP_TABLE;
 
 typedef struct {

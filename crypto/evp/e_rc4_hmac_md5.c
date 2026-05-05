@@ -7,8 +7,9 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/macros.h>
-
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 #if !defined(OPENSSL_NO_RC4) && !defined(OPENSSL_NO_MD5)
 #include "crypto/evp.h"
 

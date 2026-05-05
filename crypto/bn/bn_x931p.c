@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <openssl/bn.h>
 #include "bn_local.h"
+#include "openssl/types.h"
 
 /* X9.31 routines for prime derivation */
 

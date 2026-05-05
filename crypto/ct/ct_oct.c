@@ -13,13 +13,15 @@
 
 #include <limits.h>
 #include <string.h>
-
 #include <openssl/asn1.h>
-#include <openssl/buffer.h>
 #include <openssl/ct.h>
 #include <openssl/err.h>
-
 #include "ct_local.h"
+#include "openssl/crypto.h"
+#include "openssl/cterr.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 int o2i_SCT_signature(SCT *sct, const unsigned char **in, size_t len)
 {

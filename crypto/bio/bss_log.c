@@ -16,14 +16,14 @@
  *
  */
 
+#include <string.h>
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "internal/bio.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
-
-#include <stdio.h>
-#include <errno.h>
-
-#include "internal/cryptlib.h"
 
 #if defined(OPENSSL_SYS_WINCE)
 #elif defined(OPENSSL_SYS_WIN32)
@@ -49,9 +49,6 @@ void *_malloc32(__size_t);
 #elif (!defined(MSDOS) || defined(WATT32)) && !defined(OPENSSL_SYS_VXWORKS) && !defined(NO_SYSLOG)
 #include <syslog.h>
 #endif
-
-#include <openssl/buffer.h>
-#include <openssl/err.h>
 
 #ifndef NO_SYSLOG
 

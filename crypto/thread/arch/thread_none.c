@@ -7,8 +7,6 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <internal/thread_arch.h>
-
 #if defined(OPENSSL_THREADS_NONE)
 
 int ossl_crypto_thread_native_spawn(CRYPTO_THREAD *thread)

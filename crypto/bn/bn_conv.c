@@ -8,8 +8,16 @@
  */
 
 #include <openssl/err.h>
+#include <limits.h>
+#include <stddef.h>
 #include "crypto/ctype.h"
 #include "bn_local.h"
+#include "crypto/bn.h"
+#include "internal/cryptlib.h"
+#include "openssl/bio.h"
+#include "openssl/bn.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 /* Must 'OPENSSL_free' the returned data */
 char *BN_bn2hex(const BIGNUM *a)

@@ -11,6 +11,7 @@
 #define OSSL_LIBCRYPTO_SLH_DSA_SLH_ADRS_H
 
 #include <openssl/e_os2.h>
+#include <stdint.h>
 
 /*
  * An Address object is used to store a blob of data that is used by hash

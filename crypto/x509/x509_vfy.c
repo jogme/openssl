@@ -10,17 +10,20 @@
 #define OPENSSL_SUPPRESS_DEPRECATED
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "crypto/asn1.h"
+#include "internal/common.h"
+#include "internal/nelem.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509err.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
 #include <time.h>
-#include <errno.h>
 #include <limits.h>
-
-#include "crypto/ctype.h"
-#include "internal/cryptlib.h"
 #include <openssl/crypto.h>
-#include <openssl/buffer.h>
 #include <openssl/evp.h>
 #include <openssl/asn1.h>
 #include <openssl/x509.h>
@@ -29,6 +32,9 @@
 #include <openssl/objects.h>
 #include <openssl/posix_time.h>
 #include <openssl/core_names.h>
+#include <stdint.h>
+#include <string.h>
+#include "crypto/ctype.h"
 #include "internal/dane.h"
 #include "crypto/x509.h"
 #include "x509_local.h"

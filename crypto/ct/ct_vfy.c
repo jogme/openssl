@@ -8,13 +8,12 @@
  */
 
 #include <string.h>
-
 #include <openssl/ct.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
-#include <openssl/x509.h>
-
 #include "ct_local.h"
+#include "openssl/cterr.h"
+#include "openssl/types.h"
 
 typedef enum sct_signature_type_t {
     SIGNATURE_TYPE_NOT_SET = -1,

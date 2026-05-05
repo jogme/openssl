@@ -7,8 +7,8 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/macros.h>
-
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
 #ifndef OPENSSL_NO_CAST
 #include <openssl/cast.h>
 #include "crypto/evp.h"

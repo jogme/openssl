@@ -18,13 +18,12 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/opensslconf.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/opensslconf.h>
-
 #include <stdio.h>
-#include <time.h>
-#include "internal/cryptlib.h"
 #include <openssl/bn.h>
 #include <openssl/rsa.h>
 

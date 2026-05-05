@@ -14,13 +14,15 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/ec.h"
+#include "openssl/ecerr.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <string.h>
-
 #include <openssl/err.h>
-#include <openssl/opensslv.h>
-
 #include "ec_local.h"
 
 int EC_POINT_set_compressed_coordinates(const EC_GROUP *group, EC_POINT *point,

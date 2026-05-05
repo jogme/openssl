@@ -13,15 +13,16 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/dsa.h"
+#include "openssl/dsaerr.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
-#include "crypto/bn.h"
 #include <openssl/bn.h>
-#include <openssl/sha.h>
+#include "crypto/bn.h"
 #include "dsa_local.h"
-#include <openssl/asn1.h>
 #include "internal/deterministic_nonce.h"
 
 #define MIN_DSA_SIGN_QBITS 128

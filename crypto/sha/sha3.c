@@ -8,8 +8,10 @@
  */
 
 #include <string.h>
+#include <stdint.h>
 #include "internal/sha3.h"
 #include "internal/common.h"
+#include "openssl/crypto.h"
 
 #if defined(__aarch64__) && defined(KECCAK1600_ASM)
 #include "crypto/arm_arch.h"

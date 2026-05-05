@@ -11,12 +11,18 @@
 
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "internal/bio.h"
+#include "internal/refcount.h"
+#include "openssl/bio.h"
+#include "openssl/bioerr.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include <errno.h>
 #include <openssl/crypto.h>
-#include "internal/numbers.h"
+#include <limits.h>
+#include <stdint.h>
+#include <time.h>
 
 /*
  * Helper macro for the callback to determine whether an operator expects a

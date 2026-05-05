@@ -8,11 +8,17 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <assert.h>
-#include <limits.h>
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include "bn_local.h"
+#include "crypto/bn.h"
+#include "internal/common.h"
+#include "internal/nelem.h"
+#include "openssl/bn.h"
+#include "openssl/bnerr.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_EC2M
 #include <openssl/ec.h>

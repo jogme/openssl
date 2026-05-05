@@ -9,13 +9,18 @@
 
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "internal/bio.h"
+#include "internal/sockets.h"
+#include "openssl/bioerr.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
 #include <errno.h>
-#include "internal/bio_tfo.h"
-#include "internal/cryptlib.h"
-#include "internal/ktls.h"
+#include <limits.h>
+#include <string.h>
 
 #ifndef OPENSSL_NO_SOCK
 

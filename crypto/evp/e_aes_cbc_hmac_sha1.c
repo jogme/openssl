@@ -8,8 +8,12 @@
  */
 
 #include <openssl/aes.h>
+#include <stddef.h>
 #include "internal/cryptlib.h"
 #include "crypto/evp.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 #if defined(AES_ASM) && (defined(__x86_64) || defined(__x86_64__) || defined(_M_AMD64) || defined(_M_X64))
 

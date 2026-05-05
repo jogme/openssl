@@ -11,7 +11,11 @@
 #if !defined(OSSL_LIBCRYPTO_ML_DSA_ML_DSA_MATRIX_H)
 #define OSSL_LIBCRYPTO_ML_DSA_ML_DSA_MATRIX_H
 
+#include <stddef.h>
+#include <stdint.h>
 #include "ml_dsa_local.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 
 struct matrix_st {
     POLY *m_poly;

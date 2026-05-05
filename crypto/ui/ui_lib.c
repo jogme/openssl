@@ -8,12 +8,12 @@
  */
 
 #include <string.h>
-#include "internal/cryptlib.h"
-#include <openssl/e_os2.h>
-#include <openssl/buffer.h>
 #include <openssl/ui.h>
 #include <openssl/err.h>
 #include "ui_local.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
+#include "openssl/uierr.h"
 
 UI *UI_new(void)
 {

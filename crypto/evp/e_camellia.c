@@ -8,6 +8,9 @@
  */
 
 #include "crypto/evp.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 #define BLOCK_CIPHER_generic(nid, keylen, blocksize, ivlen, nmode, mode, MODE, flags) \
     static const EVP_CIPHER camellia_##keylen##_##mode = {                            \

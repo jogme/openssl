@@ -7,6 +7,7 @@
  * https://www.openssl.org/source/license.html
  */
 #include <openssl/crypto.h>
+#include "openssl/e_os2.h"
 
 #ifdef OPENSSL_SYS_UNIX
 #ifndef OPENSSL_NO_DEPRECATED_3_0

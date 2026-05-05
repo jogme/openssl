@@ -10,8 +10,20 @@
 #include <string.h>
 #include <openssl/ocsp.h>
 #include <openssl/err.h>
+#include <openssl/x509.h>
 #include "internal/sizes.h"
 #include "ocsp_local.h"
+#include "crypto/asn1.h"
+#include "crypto/x509.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/ocsperr.h"
+#include "openssl/safestack.h"
+#include "openssl/sha.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
+#include "openssl/x509v3.h"
 
 static int ocsp_find_signer(X509 **psigner, OCSP_BASICRESP *bs,
     const STACK_OF(X509) *certs, unsigned long flags);

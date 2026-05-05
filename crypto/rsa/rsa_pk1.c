@@ -13,12 +13,12 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/rsaerr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include "internal/constant_time.h"
-
-#include <stdio.h>
-#include <openssl/bn.h>
 #include <openssl/rsa.h>
 #include <openssl/rand.h>
 /* Just for the SSL_MAX_MASTER_KEY_LENGTH value */
@@ -26,7 +26,9 @@
 #include <openssl/evp.h>
 #include <openssl/sha.h>
 #include <openssl/hmac.h>
-#include "internal/cryptlib.h"
+#include <stdint.h>
+#include <string.h>
+#include "internal/constant_time.h"
 #include "crypto/rsa.h"
 #include "rsa_local.h"
 

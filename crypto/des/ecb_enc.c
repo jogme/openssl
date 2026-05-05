@@ -13,11 +13,11 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/des.h"
 /* IWYU pragma: end_keep */
 
 #include "des_local.h"
-#include <openssl/opensslv.h>
-#include <openssl/bio.h>
 
 const char *DES_options(void)
 {

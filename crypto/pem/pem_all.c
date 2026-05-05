@@ -13,10 +13,14 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/ec.h"
+#include "openssl/encoder.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 #include <openssl/x509.h>
@@ -25,6 +29,7 @@
 #include <openssl/rsa.h>
 #include <openssl/dsa.h>
 #include <openssl/dh.h>
+#include <string.h>
 #include "pem_local.h"
 
 static RSA *pkey_get_rsa(EVP_PKEY *key, RSA **rsa);

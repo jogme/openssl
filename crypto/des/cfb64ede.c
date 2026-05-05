@@ -7,12 +7,14 @@
  * https://www.openssl.org/source/license.html
  */
 
+#include <string.h>
 /*
  * DES low level APIs are deprecated for public use, but still ok for internal
  * use.
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/des.h"
 /* IWYU pragma: end_keep */
 
 #include "des_local.h"

@@ -17,14 +17,16 @@
 
 /* IWYU pragma: begin_keep */
 #include "bio_local.h"
+#include "internal/bio.h"
+#include "openssl/bio.h"
+#include "openssl/bioerr.h"
+#include "openssl/e_os2.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include "internal/e_os.h"
 #include <assert.h>
 #include <limits.h>
-#include <stdlib.h>
 #include <string.h>
-
 #include <openssl/err.h>
 #include <openssl/crypto.h>
 

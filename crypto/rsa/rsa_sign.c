@@ -13,13 +13,16 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/configuration.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/rsaerr.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
-#include <openssl/bn.h>
 #include <openssl/rsa.h>
-#include <openssl/objects.h>
+#include <string.h>
 #ifndef FIPS_MODULE
 #ifndef OPENSSL_NO_MD2
 #include <openssl/md2.h> /* uses MD2_DIGEST_LENGTH */

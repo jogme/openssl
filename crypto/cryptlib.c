@@ -8,10 +8,11 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "internal/e_os.h"
-#include "crypto/cryptlib.h"
-#include <openssl/safestack.h>
-
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "internal/cryptlib.h"
+#include "openssl/crypto.h"
 #if defined(_WIN32) && !defined(OPENSSL_SYS_UEFI)
 #include <tchar.h>
 #include <signal.h>

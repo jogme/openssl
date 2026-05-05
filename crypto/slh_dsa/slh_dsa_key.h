@@ -12,12 +12,14 @@
 
 #include <openssl/crypto.h>
 #include <openssl/e_os2.h>
-
+#include <stdint.h>
 #include "crypto/slh_dsa.h"
-
 #include "slh_params.h"
 #include "slh_adrs.h"
 #include "slh_hash.h"
+#include "openssl/types.h"
+
+struct slh_dsa_key_st;
 
 #define SLH_DSA_MAX_N 32
 #define SLH_DSA_SK_SEED(key) ((key)->priv)

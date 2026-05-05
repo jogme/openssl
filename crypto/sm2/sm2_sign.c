@@ -11,16 +11,19 @@
 
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/crypto.h"
+#include "openssl/ec.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
-#include "crypto/sm2.h"
-#include "crypto/sm2err.h"
-#include "crypto/ec.h" /* ossl_ec_group_do_inverse_ord() */
-#include "internal/numbers.h"
 #include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/bn.h>
 #include <string.h>
+#include <stdint.h>
+#include "crypto/sm2.h"
+#include "crypto/sm2err.h"
+#include "crypto/ec.h" /* ossl_ec_group_do_inverse_ord() */
 
 /*
  * [SM2 Signature Scheme]

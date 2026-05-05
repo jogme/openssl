@@ -8,15 +8,16 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <openssl/core.h>
 #include <openssl/core_names.h>
-#include "internal/cryptlib.h"
-#include "internal/core.h"
-#include "internal/common.h"
-#include <openssl/objects.h>
 #include <openssl/evp.h>
-#include "crypto/bn.h"
+#include "internal/common.h"
+#include "openssl/bn.h"
+#include "openssl/core_dispatch.h"
+#include "openssl/err.h"
+#include "openssl/evperr.h"
+#include "openssl/params.h"
+#include "openssl/types.h"
 #ifndef FIPS_MODULE
 #include "crypto/asn1.h"
 #endif

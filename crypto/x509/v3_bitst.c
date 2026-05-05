@@ -7,11 +7,16 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/conf.h>
 #include <openssl/x509v3.h>
+#include <string.h>
 #include "ext_dat.h"
+#include "openssl/asn1.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
+#include "openssl/x509v3err.h"
 
 static BIT_STRING_BITNAME ns_cert_type_table[] = {
     { 0, "SSL Client", "client" },

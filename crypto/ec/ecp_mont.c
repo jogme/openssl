@@ -14,10 +14,15 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/bn.h"
+#include "openssl/ec.h"
+#include "openssl/ecerr.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <openssl/err.h>
-
+#include <stddef.h>
 #include "ec_local.h"
 
 const EC_METHOD *EC_GFp_mont_method(void)
