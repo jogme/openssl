@@ -7,9 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
+/* IWYU pragma: begin_keep */
+#include "bio_local.h"
+/* IWYU pragma: end_keep */
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "bio_local.h"
 
 #ifndef OPENSSL_NO_SOCK
 #define SOCKET_PROTOCOL IPPROTO_TCP

@@ -9,10 +9,13 @@
 
 #define OPENSSL_SUPPRESS_DEPRECATED
 
+/* IWYU pragma: begin_keep */
+#include "bio_local.h"
+/* IWYU pragma: end_keep */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "bio_local.h"
 #include "internal/cryptlib.h"
 #include <openssl/err.h>
 

@@ -21,10 +21,13 @@
  */
 #undef UNICODE
 
+/* IWYU pragma: begin_keep */
+#include "bio_local.h"
+/* IWYU pragma: end_keep */
+
 #include <assert.h>
 #include <string.h>
 
-#include "bio_local.h"
 #include <openssl/crypto.h>
 
 #ifndef OPENSSL_NO_SOCK

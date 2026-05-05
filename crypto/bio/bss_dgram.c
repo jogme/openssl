@@ -11,11 +11,14 @@
 #define _GNU_SOURCE
 #endif
 
+/* IWYU pragma: begin_keep */
+#include "bio_local.h"
+/* IWYU pragma: end_keep */
+
 #include <stdio.h>
 #include <errno.h>
 
 #include "internal/time.h"
-#include "bio_local.h"
 #ifndef OPENSSL_NO_DGRAM
 
 #ifndef OPENSSL_NO_SCTP

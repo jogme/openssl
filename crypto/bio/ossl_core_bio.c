@@ -8,7 +8,9 @@
  */
 
 #include <openssl/core.h>
+/* IWYU pragma: begin_keep */
 #include "bio_local.h"
+/* IWYU pragma: end_keep */
 
 /*-
  * Core BIO structure

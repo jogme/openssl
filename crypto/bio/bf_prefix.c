@@ -7,10 +7,13 @@
  * https://www.openssl.org/source/license.html
  */
 
+/* IWYU pragma: begin_keep */
+#include "bio_local.h"
+/* IWYU pragma: end_keep */
+
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include "bio_local.h"
 
 static int prefix_write(BIO *b, const char *out, size_t outl,
     size_t *numwritten);

@@ -7,7 +7,10 @@
  * https://www.openssl.org/source/license.html
  */
 
+/* IWYU pragma: begin_keep */
 #include "bio_local.h"
+/* IWYU pragma: end_keep */
+
 #include "internal/thread_once.h"
 
 CRYPTO_REF_COUNT bio_type_count;

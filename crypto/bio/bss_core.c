@@ -7,8 +7,11 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <openssl/core_dispatch.h>
+/* IWYU pragma: begin_keep */
 #include "bio_local.h"
+/* IWYU pragma: end_keep */
+
+#include <openssl/core_dispatch.h>
 #include "internal/cryptlib.h"
 #include "crypto/context.h"
 

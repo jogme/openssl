@@ -15,13 +15,16 @@
  * See ssl/ssltest.c for some hints on how this can be used.
  */
 
+/* IWYU pragma: begin_keep */
+#include "bio_local.h"
+/* IWYU pragma: end_keep */
+
 #include "internal/e_os.h"
 #include <assert.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "bio_local.h"
 #include <openssl/err.h>
 #include <openssl/crypto.h>
 

@@ -25,9 +25,12 @@
 #endif
 #endif
 
+/* IWYU pragma: begin_keep */
+#include "bio_local.h"
+/* IWYU pragma: end_keep */
+
 #include <stdio.h>
 #include <errno.h>
-#include "bio_local.h"
 #include <openssl/err.h>
 
 #if !defined(OPENSSL_NO_STDIO)

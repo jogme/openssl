@@ -14,9 +14,12 @@
  * resizable memory buffer.
  */
 
+/* IWYU pragma: begin_keep */
+#include "bio_local.h"
+/* IWYU pragma: end_keep */
+
 #include <stdio.h>
 #include <errno.h>
-#include "bio_local.h"
 #include "internal/cryptlib.h"
 
 #define DEFAULT_BUFFER_SIZE 4096

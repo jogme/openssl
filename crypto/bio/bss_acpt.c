@@ -9,9 +9,12 @@
 
 #define OPENSSL_SUPPRESS_DEPRECATED
 
+/* IWYU pragma: begin_keep */
+#include "bio_local.h"
+/* IWYU pragma: end_keep */
+
 #include <stdio.h>
 #include <errno.h>
-#include "bio_local.h"
 
 #ifndef OPENSSL_NO_SOCK
 

@@ -9,11 +9,14 @@
 
 #define OPENSSL_SUPPRESS_DEPRECATED
 
+/* IWYU pragma: begin_keep */
+#include "bio_local.h"
+/* IWYU pragma: end_keep */
+
 #include <stdio.h>
 #include <errno.h>
 #include <openssl/crypto.h>
 #include "internal/numbers.h"
-#include "bio_local.h"
 
 /*
  * Helper macro for the callback to determine whether an operator expects a
