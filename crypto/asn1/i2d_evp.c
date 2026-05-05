@@ -13,17 +13,20 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/asn1.h"
+#include "openssl/asn1err.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 /* IWYU pragma: end_keep */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/evp.h>
 #include <openssl/encoder.h>
-#include <openssl/buffer.h>
 #include <openssl/x509.h>
 #include <openssl/rsa.h> /* For i2d_RSAPublicKey */
 #include <openssl/dsa.h> /* For i2d_DSAPublicKey */
 #include <openssl/ec.h> /* For i2o_ECPublicKey */
+#include <limits.h>
 #include "crypto/asn1.h"
 #include "crypto/evp.h"
 

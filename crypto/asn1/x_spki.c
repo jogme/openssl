@@ -7,10 +7,9 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/x509.h>
 #include <openssl/asn1t.h>
+#include "openssl/asn1.h"
 
 ASN1_SEQUENCE(NETSCAPE_SPKAC) = {
     ASN1_SIMPLE(NETSCAPE_SPKAC, pubkey, X509_PUBKEY),

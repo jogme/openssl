@@ -7,17 +7,25 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "crypto/ctype.h"
-#include "internal/cryptlib.h"
 #include <openssl/rand.h>
 #include <openssl/x509.h>
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
 #include <openssl/cms.h>
-#include "crypto/evp.h"
-#include "internal/bio.h"
+#include <string.h>
+#include "crypto/ctype.h"
 #include "asn1_local.h"
+#include "internal/common.h"
+#include "openssl/asn1err.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/evp.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/pkcs7.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 /*
  * Generalised MIME like utilities for streaming ASN1. Although many have a

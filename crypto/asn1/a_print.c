@@ -7,12 +7,12 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "crypto/ctype.h"
-#include "internal/cryptlib.h"
 #include <openssl/asn1.h>
-
 #include <crypto/asn1.h>
+#include <string.h>
+#include "crypto/ctype.h"
+#include "openssl/bio.h"
+#include "openssl/types.h"
 
 int ASN1_PRINTABLE_type(const unsigned char *s, int len)
 {

@@ -7,16 +7,18 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stddef.h>
 #include <string.h>
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
-#include <openssl/objects.h>
 #include <openssl/buffer.h>
 #include <openssl/err.h>
+#include <stdint.h>
 #include "crypto/asn1.h"
-#include "internal/numbers.h"
 #include "asn1_local.h"
+#include "openssl/asn1err.h"
+#include "openssl/crypto.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 /*
  * Constructed types with a recursive definition (such as can be found in PKCS7)

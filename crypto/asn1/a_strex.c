@@ -9,15 +9,21 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "internal/cryptlib.h"
-#include "internal/sizes.h"
-#include "internal/unicode.h"
-#include "crypto/asn1.h"
 #include <openssl/crypto.h>
 #include <openssl/x509.h>
 #include <openssl/asn1.h>
-
+#include <limits.h>
+#include "internal/cryptlib.h"
+#include "internal/unicode.h"
+#include "crypto/asn1.h"
 #include "charmap.h"
+#include "internal/common.h"
+#include "openssl/asn1err.h"
+#include "openssl/bio.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/types.h"
 
 /*
  * ASN1_STRING_print_ex() and X509_NAME_print_ex(). Enhanced string and name

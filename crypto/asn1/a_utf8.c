@@ -7,10 +7,8 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
-#include "internal/unicode.h"
 #include <openssl/asn1.h>
+#include "internal/unicode.h"
 
 /* UTF8 utilities */
 

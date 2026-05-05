@@ -8,9 +8,6 @@
  */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
-#include <openssl/buffer.h>
-#include <openssl/objects.h>
 #include <openssl/asn1.h>
 
 #ifndef ASN1_PARSE_MAXDEPTH
@@ -18,6 +15,8 @@
 #endif
 
 #include <crypto/asn1.h>
+#include "openssl/bio.h"
+#include "openssl/types.h"
 
 static int asn1_parse2(BIO *bp, const unsigned char **pp, long length,
     int offset, int depth, int indent, int dump);

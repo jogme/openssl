@@ -7,11 +7,15 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
+#include <stdint.h>
+#include <string.h>
 #include "crypto/asn1.h"
+#include "openssl/asn1err.h"
+#include "openssl/e_os2.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 
 int ASN1_TYPE_set_octetstring(ASN1_TYPE *a, unsigned char *data, int len)
 {

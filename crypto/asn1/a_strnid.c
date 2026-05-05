@@ -7,11 +7,17 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/asn1.h>
 #include <openssl/objects.h>
+#include <stdlib.h>
+#include <string.h>
 #include "tbl_standard.h"
+#include "internal/common.h"
+#include "internal/nelem.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 static STACK_OF(ASN1_STRING_TABLE) *stable = NULL;
 static void st_free(ASN1_STRING_TABLE *tbl);

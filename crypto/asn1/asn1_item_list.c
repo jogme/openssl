@@ -10,8 +10,6 @@
 /* We need to use the low level ASN1 items until they are removed */
 #define OPENSSL_SUPPRESS_DEPRECATED
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/asn1.h>
 #include <openssl/asn1t.h>
 #include <openssl/cms.h>
@@ -22,6 +20,11 @@
 #include <openssl/rsa.h>
 #include <openssl/x509v3.h>
 #include <openssl/x509_acert.h>
+#include <string.h>
+#include "internal/nelem.h"
+#include "openssl/ec.h"
+#include "openssl/types.h"
+#include "openssl/x509.h"
 
 static ASN1_ITEM_EXP *asn1_item_list[] = {
 

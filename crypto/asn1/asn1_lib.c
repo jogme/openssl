@@ -7,11 +7,17 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <limits.h>
-#include "internal/cryptlib.h"
 #include <openssl/asn1.h>
+#include <string.h>
+#include "internal/cryptlib.h"
 #include "asn1_local.h"
+#include "crypto/asn1.h"
+#include "openssl/asn1err.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 static int asn1_get_length(const unsigned char **pp, int *inf, long *rl,
     long max);

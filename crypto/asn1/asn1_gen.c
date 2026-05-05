@@ -9,8 +9,18 @@
 
 #include <openssl/asn1.h>
 #include <openssl/x509v3.h>
-#include "internal/cryptlib.h"
+#include <stdlib.h>
+#include <string.h>
 #include "crypto/asn1.h"
+#include "internal/common.h"
+#include "internal/nelem.h"
+#include "openssl/asn1err.h"
+#include "openssl/conf.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/objects.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 #define ASN1_GEN_FLAG 0x10000
 #define ASN1_GEN_FLAG_IMP (ASN1_GEN_FLAG | 1)

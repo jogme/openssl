@@ -7,9 +7,13 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/asn1t.h>
+#include <string.h>
+#include "openssl/asn1.h"
+#include "openssl/asn1err.h"
+#include "openssl/bio.h"
+#include "openssl/err.h"
+#include "openssl/types.h"
 
 #define COPY_SIZE(a, b) (sizeof(a) < sizeof(b) ? sizeof(a) : sizeof(b))
 

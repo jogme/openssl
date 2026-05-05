@@ -8,10 +8,14 @@
  */
 
 #include <stdio.h>
-#include "internal/cryptlib.h"
 #include <openssl/asn1t.h>
 #include <openssl/x509.h>
 #include "crypto/x509.h"
+#include "crypto/asn1.h"
+#include "openssl/asn1.h"
+#include "openssl/crypto.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 /* Minor tweak to operation: zero private key data */
 static int pkey_cb(int operation, ASN1_VALUE **pval, const ASN1_ITEM *it,

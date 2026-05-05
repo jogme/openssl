@@ -8,19 +8,18 @@
  */
 
 #include <stdio.h>
-#include <time.h>
-#include <sys/types.h>
-
-#include "internal/cryptlib.h"
-
-#include <openssl/bn.h>
 #include <openssl/x509.h>
 #include <openssl/objects.h>
-#include <openssl/buffer.h>
 #include <openssl/evp.h>
 #include "crypto/asn1.h"
 #include "crypto/evp.h"
 #include "crypto/rsa.h"
+#include "openssl/asn1.h"
+#include "openssl/asn1err.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 #ifndef OPENSSL_NO_DEPRECATED_3_0
 

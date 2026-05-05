@@ -7,16 +7,20 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
 #include <limits.h>
-#include "crypto/ctype.h"
-#include "internal/cryptlib.h"
-#include <openssl/buffer.h>
 #include <openssl/asn1.h>
 #include <openssl/objects.h>
 #include <openssl/bn.h>
+#include <string.h>
+#include "crypto/ctype.h"
 #include "crypto/asn1.h"
 #include "asn1_local.h"
+#include "openssl/asn1err.h"
+#include "openssl/bio.h"
+#include "openssl/crypto.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/types.h"
 
 int i2d_ASN1_OBJECT(const ASN1_OBJECT *a, unsigned char **pp)
 {

@@ -7,11 +7,17 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include <openssl/crypto.h>
-#include "internal/cryptlib.h"
 #include <openssl/conf.h>
 #include <openssl/x509v3.h>
+#include <stdlib.h>
+#include <string.h>
+#include "openssl/asn1.h"
+#include "openssl/asn1err.h"
+#include "openssl/err.h"
+#include "openssl/obj_mac.h"
+#include "openssl/objects.h"
+#include "openssl/safestack.h"
+#include "openssl/types.h"
 
 /* Multi string module: add table entries from a given section */
 

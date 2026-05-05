@@ -11,8 +11,10 @@
 #include <openssl/asn1t.h>
 #include <openssl/bio.h>
 #include <openssl/err.h>
-
 #include <stdio.h>
+#include "openssl/asn1err.h"
+#include "openssl/crypto.h"
+#include "openssl/types.h"
 
 /* Experimental NDEF ASN1 BIO support routines */
 
