@@ -15,6 +15,7 @@
 #if !defined(OSSL_LIBCRYPTO_X509_STANDARD_EXTS_H)
 #define OSSL_LIBCRYPTO_X509_STANDARD_EXTS_H
 
+#include "internal/nelem.h"
 #include "ext_dat.h"
 
 static const X509V3_EXT_METHOD *const standard_exts[] = {
