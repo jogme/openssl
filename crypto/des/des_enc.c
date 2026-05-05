@@ -13,11 +13,11 @@
  */
 /* IWYU pragma: begin_keep */
 #include "internal/deprecated.h"
+#include "openssl/des.h"
 /* IWYU pragma: end_keep */
 
-#include <openssl/crypto.h>
 #include "des_local.h"
-#include "spr.h"
+#include "spr.h" /* IWYU pragma: keep */
 
 void DES_encrypt1(DES_LONG *data, DES_key_schedule *ks, int enc)
 {
