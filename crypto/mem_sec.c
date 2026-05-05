@@ -15,10 +15,11 @@
  * For details on that implementation, see below (look for uppercase
  * "SECURE HEAP IMPLEMENTATION").
  */
+/* IWYU pragma: begin_keep */
 #include "internal/e_os.h"
+/* IWYU pragma: end_keep */
 #include <openssl/crypto.h>
 #include <openssl/err.h>
-
 #include <string.h>
 
 #ifndef OPENSSL_NO_SECURE_MEMORY
@@ -42,12 +43,9 @@ BOOL
 #endif
 #endif
 #endif
-#include <stdlib.h>
-#include <assert.h>
 #if defined(OPENSSL_SYS_UNIX)
 #include <unistd.h>
 #endif
-#include <sys/types.h>
 #if defined(OPENSSL_SYS_UNIX)
 #include <sys/mman.h>
 #if defined(__FreeBSD__)
@@ -63,10 +61,7 @@ BOOL
 #include <linux/mman.h>
 #include <errno.h>
 #endif
-#include <sys/param.h>
 #endif
-#include <sys/stat.h>
-#include <fcntl.h>
 #endif
 #ifndef HAVE_MADVISE
 #if defined(MADV_DONTDUMP)
