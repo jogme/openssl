@@ -50,6 +50,8 @@
 #include <ctype.h>
 #endif
 
+#include <openssl/crypto.h>
+
 /*
  * The POSIX macro for the maximum number of characters in a file path is
  * NAME_MAX.  However, some operating systems use PATH_MAX instead.
