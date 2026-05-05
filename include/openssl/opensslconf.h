@@ -7,6 +7,8 @@
  * https://www.openssl.org/source/license.html
  */
 
+/* IWYU pragma: always_keep */
+
 #ifndef OPENSSL_OPENSSLCONF_H
 #define OPENSSL_OPENSSLCONF_H
 #pragma once
