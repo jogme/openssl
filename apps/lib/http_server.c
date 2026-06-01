@@ -18,13 +18,13 @@
 #include <sys/syslog.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <unistd.h>
 
 #include "internal/common.h"
 
 #include "apps.h"
 #include "openssl/asn1.h"
 #include "openssl/bio.h"
+#include "openssl/core.h"
 #include "openssl/crypto.h"
 #include "openssl/evp.h"
 #if !defined(_POSIX_C_SOURCE) && defined(OPENSSL_SYS_VMS)
