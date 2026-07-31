@@ -970,7 +970,7 @@ Result = VERIFY_ERROR
 Verify = RSA-2048-PUBLIC
 Ctrl = rsa_padding_mode:pss
 Ctrl = rsa_pss_saltlen:1x
-Result = PKEY_CTRL_ERROR
+Result = VERIFY_ERROR
 
 # Verify using default parameters, explicitly setting parameters
 Verify = RSA-PSS-DEFAULT
